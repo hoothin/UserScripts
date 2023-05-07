@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.87.64
+// @version      1.6.6.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -210,7 +210,7 @@
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "💲USD to RMB",
-                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 <i>%s USD = {json.result*%s.replace(/\D/,'')} RMB</i>",
+                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 {name}<br/><i>%s USD = {json.result*%s.replace(/\D/,'')} RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
@@ -4953,22 +4953,7 @@
             setInPageWords(inPageWords) {
                 this.initInPageWords.push(inPageWords);
                 this.searchInPageTab.checked = true;
-                if (document.readyState != "complete") {
-                    let loadHandler = e => {
-                        if (document.readyState != "complete") return;
-                        document.removeEventListener("readystatechange", loadHandler);
-                        setTimeout(() => {
-                            if (getBody(document).style.display === "none") getBody(document).style.display = "";
-                            let word = this.initInPageWords.shift();
-                            while (word) {
-                                this.searchJumperInPageInput.value = word;
-                                this.submitInPageWords(true);
-                                word = this.initInPageWords.shift();
-                            }
-                        }, 600);
-                    };
-                    document.addEventListener("readystatechange", loadHandler);
-                } else {
+                let beginHandler = () => {
                     setTimeout(() => {
                         if (getBody(document).style.display === "none") getBody(document).style.display = "";
                         let word = this.initInPageWords.shift();
@@ -4978,6 +4963,16 @@
                             word = this.initInPageWords.shift();
                         }
                     }, 600);
+                };
+                if (document.readyState != "complete") {
+                    let loadHandler = e => {
+                        if (document.readyState != "complete") return;
+                        document.removeEventListener("readystatechange", loadHandler);
+                        beginHandler();
+                    };
+                    document.addEventListener("readystatechange", loadHandler);
+                } else {
+                    beginHandler();
                 }
             }
 
@@ -7244,13 +7239,13 @@
                             if (url) {
                                 try {
                                     url = url.replace(/^showTips:/, '');
-                                    let tipsResult = await self.anylizeShowTips(url);
+                                    let tipsResult = await self.anylizeShowTips(url, tips);
                                     if (Array && Array.isArray && Array.isArray(tipsResult)) {
                                         tipsData = tipsResult[1];
                                         tipsResult = tipsResult[0];
                                     }
                                     if (tipsResult) {
-                                        tips += "<br/>" + tipsResult;
+                                        tips = tipsResult;
                                         self.tipsPos(ele, tips);
                                     }
                                 } catch(e) {debug(e)}
@@ -7260,11 +7255,12 @@
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     self.tips.style.opacity = 0;
+                    clearTimeout(self.requestShowTipsTimer);
                 }, false);
                 return ele;
             }
 
-            async anylizeShowTips(data) {
+            async anylizeShowTips(data, name) {
                 let tipsResult;
                 try {
                     const calcReg = /([^\\])([\+\-*/])(\d+)$/;
@@ -7275,7 +7271,7 @@
                         let url = data.split("\n");
                         if (url.length == 1) url = data.split(" ");
                         url = url[0];
-                        data = data.replace(url, "").trim().replace(/\\{/g, "showTipsLeftBrace").replace(/\\}/g, "showTipsRightBrace");
+                        data = data.replace(url, "").trim().replace(/\\{/g, "showTipsLeftBrace").replace(/\\}/g, "showTipsRightBrace").replace(/{name}/g, name);
                         let cache = url.match(cacheReg);
                         if (cache) {
                             cache = parseInt(cache[1]);
@@ -7402,7 +7398,7 @@
                             storage.setItem("tipsStorage", tipsStorage);
                         }
                     } else {
-                        tipsResult = /\breturn\b/.test(data) ? await new AsyncFunction('fetch', 'storage', '"use strict";' + data)(GM_fetch, storage) : data;
+                        tipsResult = /\breturn\b/.test(data) ? await new AsyncFunction('fetch', 'storage', 'name', '"use strict";' + data)(GM_fetch, storage, name) : data;
                     }
                 } catch(e) {debug(e)}
                 return tipsResult;
