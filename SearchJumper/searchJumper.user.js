@@ -1873,6 +1873,7 @@
                      line-height: 35px;
                      word-break: break-all;
                      text-align: center;
+                     box-sizing: content-box;
                  }
                  .search-jumper-tips * {
                      max-width: 640px;
