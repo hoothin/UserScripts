@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86116",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('ListPage1 ctl00_ContentPlaceHolder1_m_contentLBL')/*[not(@class='ListButtons')]",
+    "nextLink": "//a[@onclick='ListNPage();return false;']",
+    "url": "^https://(sffgazette|comicbookmovie).com/.",
+    "exampleUrl": "https://sffgazette.com/sci_fi/star-wars/star-wars-return-of-the-jedi-revisited---looking-back-at-5-things-a1686?cp=2#gs.wvztfs https://comicbookmovie.com/x_men/x-men-5-things-20th-century-fox-got-right-with-the-franchise-and-5-things-they-got-badly-wrong-a202782#gs.wvx7e5"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Tanookirby3",
+  "name": "Best Little Sites LLC",
+  "created_at": "2023-05-08T04:08:57+09:00",
+  "updated_at": "2023-05-08T04:08:57+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86112",
   "data": {
     "pageElement": "//div[contains(@class, \"herald-entry-content\")]",
