@@ -4623,6 +4623,20 @@
                     this.batchOpen(lastSign.sites, {button: 2});
                 }
                 lastSign = false;
+                let searchWithCurrentFilter = () => {
+                    clearTimeout(inputTimer);
+                    let siteEle, forceTarget = "";
+                    if (currentSite && !self.searchInput.value) {
+                        siteEle = self.con.querySelector(".search-jumper-btn.current");
+                        forceTarget = "_self";
+                    } else {
+                        siteEle = self.con.querySelector(".search-jumper-type.search-jumper-open>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector(".search-jumper-needInPage>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
+                        forceTarget = "_blank";
+                    }
+                    if (siteEle) {
+                        self.openSiteBtn(siteEle, forceTarget);
+                    }
+                };
                 let inputTimer;
                 this.inInput = false;
                 this.searchInput.addEventListener("input", e => {
@@ -4656,7 +4670,12 @@
                                 if (siteEle) {
                                     self.openSiteBtn(siteEle, forceTarget);
                                 }
-                            } else this.searchJumperInputKeyWords.focus();
+                            } else {
+                                this.searchJumperInputKeyWords.focus();
+                                if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) {
+                                    searchWithCurrentFilter();
+                                }
+                            }
                             break;
                         case 8://退格
                             /*if (self.lockSiteKeywords && !self.searchInput.value) {
@@ -4694,20 +4713,7 @@
                             }
                             break;
                         case 13://回车
-                            {
-                                clearTimeout(inputTimer);
-                                let siteEle, forceTarget = "";
-                                if (currentSite && !self.searchInput.value) {
-                                    siteEle = self.con.querySelector(".search-jumper-btn.current");
-                                    forceTarget = "_self";
-                                } else {
-                                    siteEle = self.con.querySelector(".search-jumper-type.search-jumper-open>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector(".search-jumper-needInPage>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
-                                    forceTarget = "_blank";
-                                }
-                                if (siteEle) {
-                                    self.openSiteBtn(siteEle, forceTarget);
-                                }
-                            }
+                            searchWithCurrentFilter();
                             break;
                         default:
                             break;
