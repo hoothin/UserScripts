@@ -15834,7 +15834,13 @@ ImgOps | https://imgops.com/#b#`;
                     index:index,
                 };
             },
-            keyDownListener:function(e){
+          keyDownListener: function (e) {
+                if (e.key === prefs.floatBar.keys.gallery) { 
+                  setTimeout(function () {
+                    this.close();
+                  }.bind(this), 10);
+                  return;
+                }
                 switch(e.keyCode){
                     case 27:
                         if(prefs.imgWindow.close.escKey){
