@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.9.88.64
+// @version      1.6.10.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -7234,26 +7234,28 @@
                 ele.addEventListener('mousedown', action, false);
                 ele.addEventListener('click', clickHandler, true);
 
+                let tipsStr = ele.dataset.name;
+                if (data.shortcut) {
+                    tipsStr += ` (${data.ctrl ? "Ctrl + " : ""}${data.shift ? "Shift + " : ""}${data.alt ? "Alt + " : ""}${data.meta ? "Meta + " : ""}${data.shortcut.replace("Key", "")})`;
+                }
                 ele.addEventListener('mouseenter', async e => {
                     tipsData = null;
                     clearTimeout(self.requestShowTipsTimer);
-                    self.tipsPos(ele, ele.dataset.name);
+                    self.tipsPos(ele, tipsStr);
                     if (showTips) {
                         self.requestShowTipsTimer = setTimeout(async() => {
                             let url = await getUrl();
-                            let tips = ele.dataset.name;
-                            self.tipsPos(ele, tips + "<br/>Loading...");
+                            self.tipsPos(ele, ele.dataset.name + "<br/>Loading...");
                             if (url) {
                                 try {
                                     url = url.replace(/^showTips:/, '');
-                                    let tipsResult = await self.anylizeShowTips(url, tips);
+                                    let tipsResult = await self.anylizeShowTips(url, ele.dataset.name);
                                     if (Array && Array.isArray && Array.isArray(tipsResult)) {
                                         tipsData = tipsResult[1];
                                         tipsResult = tipsResult[0];
                                     }
                                     if (tipsResult) {
-                                        tips = tipsResult;
-                                        self.tipsPos(ele, tips);
+                                        self.tipsPos(ele, tipsResult);
                                     }
                                 } catch(e) {debug(e)}
                             }
