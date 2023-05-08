@@ -9225,8 +9225,17 @@
                     url += "%p{" + params.join("&") + "}";
                     if (parentForm.action.indexOf(location.origin) == 0 && location.pathname && location.pathname !== "/") url += `#from{${location.pathname.slice(1)}}`;
                 } else {
-                    if (url.indexOf("?") === -1) {
-                        url += "?";
+                    let existParams = url.match(/\?(.*)/);
+                    if (existParams) {
+                        url = url.replace(existParams[0], "") + "?";
+                        existParams[1].split("&").forEach(existParam => {
+                            let existSplit = existParam.split("=");
+                            let key = existSplit[0];
+                            if (params.findIndex(p => p.indexOf(key + "=") === 0) !== -1) return;
+                            let value = existSplit[1];
+                            if (value == input.value) value = "%s";
+                            params.push(key + "=" + value);
+                        });
                     }
                     url += params.join("&");
                 }
