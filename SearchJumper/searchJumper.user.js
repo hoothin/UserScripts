@@ -5175,6 +5175,7 @@
                                 let hostReg = /^https?:\/\/([^\/]*)\/[\s\S]*$/;
                                 let href = data.url;
                                 btn.dataset.host = hostReg.test(href) ? href.replace(hostReg, "$1") : href;
+                                if (btn.dataset.host) btn.dataset.host = btn.dataset.host.toLowerCase();
                             }
                             canMatch = this.globMatch(inputWords, btn.dataset.host);
                         }
