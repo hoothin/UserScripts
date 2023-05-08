@@ -9228,7 +9228,7 @@
                 } else {
                     let existParams = url.match(/\?(.*)/);
                     if (existParams) {
-                        url = url.replace(existParams[0], "") + "?";
+                        url = url.replace(existParams[0], "");
                         existParams[1].split("&").forEach(existParam => {
                             let existSplit = existParam.split("=");
                             let key = existSplit[0];
@@ -9238,7 +9238,7 @@
                             params.push(key + "=" + value);
                         });
                     }
-                    url += params.join("&");
+                    url += "?" + params.join("&");
                 }
             } else if (input && input.value) {
                 if (location.href.indexOf(input.value) !== -1) {
