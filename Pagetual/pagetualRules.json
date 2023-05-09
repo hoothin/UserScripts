@@ -9800,5 +9800,10 @@
         "name": "toodledo",
         "url": "^https?://www\\.toodledo\\.com/tasks",
         "enable": 0
+    },
+    {
+        "name": "imgur",
+        "url": "^https?://imgur\\.com/",
+        "enable": 0
     }
 ]
