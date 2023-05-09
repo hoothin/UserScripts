@@ -4724,7 +4724,6 @@
 
                 let startLeft = window.innerWidth / 2;
                 let startBottom;
-                let halfContainerWidth = 0.4 * window.innerWidth;
                 let currentGroup, startX, startY;
 
                 let clientX = e => {
@@ -4743,17 +4742,8 @@
                     }
                 };
 
-
-                let grabMouseupHandler = e => {
-                    document.removeEventListener("mouseup", grabMouseupHandler);
-                    document.removeEventListener("mousemove", grabMousemoveHandler);
-                    document.removeEventListener("touchend", grabMouseupHandler);
-                    document.removeEventListener("touchmove", grabMousemoveHandler);
-                    currentGroup.style.cursor = "";
-                    startLeft += clientX(e) - startX;
-                    startBottom -= clientY(e) - startY;
-                };
                 let grabMousemoveHandler = e => {
+                    let halfContainerWidth = 0.4 * window.innerWidth;
                     let left = startLeft + clientX(e) - startX;
                     self.searchInputDiv.style.top = 'unset';
                     self.searchInputDiv.style.left = left + "px";
@@ -4771,6 +4761,16 @@
                     }
                     e.stopPropagation();
                     e.preventDefault();
+                };
+
+                let grabMouseupHandler = e => {
+                    document.removeEventListener("mouseup", grabMouseupHandler);
+                    document.removeEventListener("mousemove", grabMousemoveHandler);
+                    document.removeEventListener("touchend", grabMouseupHandler);
+                    document.removeEventListener("touchmove", grabMousemoveHandler);
+                    currentGroup.style.cursor = "";
+                    startLeft += clientX(e) - startX;
+                    startBottom -= clientY(e) - startY;
                 };
 
                 let setStartBottom = () => {
