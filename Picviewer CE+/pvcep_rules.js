@@ -714,7 +714,7 @@ var siteInfo = [
 {
  name: "Reddit",
  url: /reddit\.com|redd\.it/,
- r: /\/\/preview\.redd.it\/([^\?]+)?.*/i,
+ r: /https?:\/\/preview\.redd.it\/([^\?]+)?.*/i,
  s: "https://i.redd.it/$1"
 },
 {
