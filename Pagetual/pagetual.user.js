@@ -2521,7 +2521,7 @@
         checkStopSign(nextLink, doc) {
             if (this.curSiteRule.stopSign) {
                 let typeArray = Array && Array.isArray && Array.isArray(this.curSiteRule.stopSign);
-                let typeObject = !typeArray && typeof this.curSiteRule.stopSign != 'string';
+                let typeObject = !typeArray && (this.curSiteRule.stopSign.include || this.curSiteRule.stopSign.exclude || this.curSiteRule.stopSign.pageNum);
                 if (typeArray || typeObject) {
                     let includeSel, excludeSel, curSign, maxSign;
                     if (typeArray) {
