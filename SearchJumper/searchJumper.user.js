@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.12.88.64
+// @version      1.6.13.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -210,7 +210,7 @@
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "💲USD to RMB",
-                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 {name}<br/><i>%s USD = {json.result*%s.replace(/\D/,'')} RMB</i>",
+                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\D/,'')} RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
@@ -7279,7 +7279,7 @@
             async anylizeShowTips(data, name) {
                 let tipsResult;
                 try {
-                    const calcReg = /([^\\])([\+\-*/])(\d+)$/;
+                    const calcReg = /([^\\]|^)([\+\-*/])([\d\.]+)$/;
                     const cacheReg = /\|cache\=(\d+)$/;
                     const postReg = /%p{(.*)}/;
                     data = data.replace(/^showTips:/, '');
@@ -7309,7 +7309,8 @@
                         let calcJson = (json, template) => {
                             let finalData = data;
                             while (template) {
-                                let props = template[1].split("."), value = json;
+                                let templateArr = template[1].split("|");
+                                let props = templateArr[0].split("."), value = json;
                                 props.shift();
                                 props.forEach(prop => {
                                     let needCalc = prop.match(calcReg);
@@ -7346,6 +7347,36 @@
                                         if (!value) return null;
                                     }
                                 });
+                                if (templateArr.length != 1) {
+                                    let calcStr = templateArr[1];
+                                    let needCalc = calcStr.match(calcReg);
+                                    if (needCalc) {
+                                        let calcArr = [];
+                                        while (needCalc) {
+                                            calcStr = calcStr.replace(calcReg, "$1");
+                                            calcArr.unshift([needCalc[2], needCalc[3]]);
+                                            needCalc = calcStr.match(calcReg);
+                                        }
+                                        calcArr.forEach(calc => {
+                                            let param = parseFloat(calc[1]);
+                                            switch (calc[0]) {
+                                                case "+":
+                                                    value += param;
+                                                    break;
+                                                case "-":
+                                                    value -= param;
+                                                    break;
+                                                case "*":
+                                                    value *= param;
+                                                    break;
+                                                case "/":
+                                                    value /= param;
+                                                    break;
+                                            }
+                                        });
+                                        value = value.toFixed(2);
+                                    }
+                                }
                                 allValue.push(value);
                                 finalData = finalData.replace(template[0], value);
                                 template = finalData.match(/{(.*?)}/);
@@ -9671,6 +9702,7 @@
                     }
                     .searchJumperFrame-body>.sitesCon>details>summary>button {
                         display: none;
+                        position: absolute;
                     }
                     .searchJumperFrame-body>.sitesCon>details>summary:hover>button {
                         display: inline-block;
