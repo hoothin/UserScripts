@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.21
+// @version      1.9.36.22
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -816,7 +816,7 @@
         return /^\(*(descendant::|\.\/|\/|id\()/.test(xpath);
     }
 
-    function getAllElements(sel, doc) {
+    function getAllElements(sel, doc, contextNode) {
         try {
             if (!isXPath(sel)) {
                 return doc.querySelectorAll(sel);
@@ -824,10 +824,10 @@
         } catch(e) {
             debug(e, 'Error selector');
         }
-        return getAllElementsByXpath(sel, doc, doc);
+        return getAllElementsByXpath(sel, contextNode, doc);
     }
 
-    function getElement(sel, doc) {
+    function getElement(sel, doc, contextNode) {
         try {
             if (!isXPath(sel)) {
                 return doc.querySelector(sel);
@@ -835,7 +835,7 @@
         } catch(e) {
             debug(e, 'Error selector');
         }
-        return getElementByXpath(sel, doc, doc);
+        return getElementByXpath(sel, contextNode, doc);
     }
 
     function geneSelector(ele, addID) {
@@ -1139,6 +1139,9 @@
 
         waitElement(doc, selArr) {
             if (!selArr) selArr = this.curSiteRule.waitElement;
+            if (!Array.isArray(selArr)) {
+                selArr = [selArr];
+            }
             let includeSel = selArr[0].trim(), excludeSel;
             if (selArr.length == 2) {
                 excludeSel = selArr[1].trim().replace(/^!/, '');
@@ -1712,9 +1715,11 @@
             if (doc !== document) {
                 this.setPageElementCss(pageElement);
                 this.lazyImgAction(pageElement);
+                this.filterEles(doc, pageElement);
             } else if (!this.docPageElement) {
                 this.setPageElementCss(pageElement, true);
                 this.docPageElement = pageElement;
+                this.filterEles(doc, pageElement);
                 if (this.nextLinkHref) {
                     this.openInNewTab(pageElement);
                 }
@@ -2468,20 +2473,74 @@
             return url1Arr == url2Arr;
         }
 
+        filterEles(doc, eles) {
+            let filter = this.curSiteRule.filter;
+            if (!filter || !eles || eles.length === 0) return;
+            if (eles.length === 1) {
+                eles = eles[0].children;
+                if (eles.length === 1) {
+                    eles = eles[0].children;
+                }
+            }
+            if (typeof filter == "string") {
+                if (/^\d+$/.test(filter)) {
+                    filter = {count: parseInt(filter)};
+                } else filter = {words: filter};
+            }
+            [].forEach.call(eles, ele => {
+                if (!ele.parentNode) return;
+                let canKeep = (() => {
+                    let innerText = (ele.innerText && ele.innerText.trim()) || "";
+                    if (filter.count) {
+                        if (innerText.length < filter.count) return false;
+                    }
+                    if (filter.words) {
+                        let wordsRegExp = new RegExp(filter.words, "i");
+                        if (innerText && wordsRegExp.test(innerText)) return false;
+                    }
+                    if (filter.link) {
+                        let linkRegExp = new RegExp(filter.link, "i");
+                        if (/^A$/i.test(ele.nodeName) && linkRegExp.test(ele.href)) return false;
+                        let aChildren = ele.querySelectorAll("a");
+                        for (let i = 0; i < aChildren.length; i++) {
+                            let child = aChildren[i];
+                            if (linkRegExp.test(child.href)) return false;
+                        }
+                    }
+                    if (filter.selector) {
+                        if (getElement(filter.selector, doc, ele)) return false;
+                    }
+                    return true;
+                })();
+                if (!canKeep) {
+                    ele.parentNode.removeChild(ele);
+                }
+            });
+        }
+
         checkStopSign(nextLink, doc) {
             if (this.curSiteRule.stopSign) {
-                if (Array && Array.isArray && Array.isArray(this.curSiteRule.stopSign)) {
-                    let includeSel = this.curSiteRule.stopSign[0];
-                    let excludeSel = this.curSiteRule.stopSign[1];
-                    let curSign = this.curSiteRule.stopSign[2];
-                    let maxSign = this.curSiteRule.stopSign[3];
-                    if (Array && Array.isArray && Array.isArray(includeSel) && !curSign) {
-                        curSign = includeSel;
-                        includeSel = false;
-                    }
-                    if (Array && Array.isArray && Array.isArray(excludeSel) && !maxSign) {
-                        maxSign = excludeSel;
-                        excludeSel = false;
+                let typeArray = Array && Array.isArray && Array.isArray(this.curSiteRule.stopSign);
+                let typeObject = !typeArray && typeof this.curSiteRule.stopSign != 'string';
+                if (typeArray || typeObject) {
+                    let includeSel, excludeSel, curSign, maxSign;
+                    if (typeArray) {
+                        includeSel = this.curSiteRule.stopSign[0];
+                        excludeSel = this.curSiteRule.stopSign[1];
+                        curSign = this.curSiteRule.stopSign[2];
+                        maxSign = this.curSiteRule.stopSign[3];
+                        if (Array && Array.isArray && Array.isArray(includeSel) && !curSign) {
+                            curSign = includeSel;
+                            includeSel = false;
+                        }
+                        if (excludeSel && Array && Array.isArray && Array.isArray(excludeSel) && !maxSign) {
+                            maxSign = excludeSel;
+                            excludeSel = false;
+                        }
+                    } else {
+                        includeSel = this.curSiteRule.stopSign.include;
+                        excludeSel = this.curSiteRule.stopSign.exclude;
+                        curSign = this.curSiteRule.stopSign.pageNum;
                     }
                     if (includeSel) {
                         includeSel = includeSel.trim();
@@ -2499,7 +2558,8 @@
                             return false;
                         }
                     }
-                    if (curSign && maxSign) {
+                    if (curSign) {
+                        if (!maxSign) maxSign = curSign.slice(2);
                         let currentEle = getElement(curSign[0], doc);
                         let maxEle = getElement(maxSign[0], doc);
                         if (currentEle && maxEle) {
@@ -3110,7 +3170,7 @@
                  pointer-events: none;
              }
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
-                 opacity: 0.6;
+                 opacity: 0.8;
              }
             `;
             let frame = document.createElement("div");
@@ -3805,7 +3865,10 @@
                 }
             }, true);
             saveDetailBtn.addEventListener("click", e => {
-                let editTemp = self.getTempRule();
+                let editTemp = self.getTempRule(true);
+                if (tempRule.value && !editTemp) {
+                    return showTips(i18n("errorJson"));
+                }
                 if(!ruleParser.customRules) {
                     ruleParser.customRules = [];
                 }
@@ -3956,12 +4019,13 @@
             };
         }
 
-        getTempRule() {
+        getTempRule(detail) {
             if (this.tempRule.value) {
                 try {
                     this.editTemp = JSON.parse(this.tempRule.value);
                 } catch (e) {
                     this.editTemp = null;
+                    if (detail) return null;
                 }
             }
             if (!this.editTemp) {
@@ -4462,6 +4526,12 @@
                 let click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
                 if (click2import) click2import.innerText = i18n("click2ImportRule")
                 configCon = document.querySelector(".markdown-body,.theme-default-content");
+                if (!configCon) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                    return true;
+                }
                 insertPos = configCon.querySelector("hr,#jsoneditor");
 
                 if (!noRules) {
