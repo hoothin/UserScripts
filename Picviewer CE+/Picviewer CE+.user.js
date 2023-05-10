@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.5.4.1
+// @version              2023.5.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -41,7 +41,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1185312
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1188180
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1185366
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -20146,93 +20146,94 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 };
 
-                switch(keyCode){
-                    case 82:{//r键,切换到旋转工具
-                        if(this.rKeyUp){
-                            this.rKeyUp=false;
-                            this.beforeTool=this.selectedTool;
-                            if (this.beforeTool != 'rotate') {
-                                this.selectTool('rotate');
-                            }
-                            var PI = Math.PI;
-                            var value = this.rotatedRadians + (e.shiftKey ? -90 : 90) * PI / 180;
-                            if (value >= 2 * PI) {
-                                value -= 2 * PI;
-                            } else if (value < 0) {
-                                value += 2 * PI;
-                            }
-                            this.rotate(value,true);
-                        };
-                    }break;
-                    case 72:{//h键,切换到抓手工具
-                        if(this.hKeyUp){
-                            this.hKeyUp=false;
-                            this.beforeTool=this.selectedTool;
-                            this.selectTool('hand');
-                        };
-                    }break;
-                    case 90:{//z键,切换到缩放工具
-                        if(this.zKeyUp){
-                            this.zKeyUp=false;
-                            this.beforeTool=this.selectedTool;
-                            this.selectTool('zoom');
-                            let level = e.shiftKey ? (this.zoomLevel - 0.5) : (this.zoomLevel + 0.5);
-                            if (typeof level != 'undefined') {
-                                this.zoom(level, { x: 0, y: 0});
-                            }
-                        };
-                    }break;
-                    case 32:{//空格键阻止,临时切换到抓手功能
-                        if(this.spaceKeyUp){
-                            this.spaceKeyUp=false;
-                            if(this.selectedTool!='hand'){
-                                this.tempHand=true;
-                                this.changeCursor('hand');
+                if (e.key == prefs.floatBar.keys.gallery) {
+                    if (!gallery) {
+                        gallery = new GalleryC();
+                        gallery.data = [];
+                    }
+                    var allData = gallery.getAllValidImgs();
+                    if (allData.length < 1) return;
+                    allData.target = {src: this.img.src};
+                    gallery.data = allData;
+                    gallery.load(gallery.data);
+                    this.remove();
+                } else {
+                    switch(keyCode){
+                        case 82:{//r键,切换到旋转工具
+                            if(this.rKeyUp){
+                                this.rKeyUp=false;
+                                this.beforeTool=this.selectedTool;
+                                if (this.beforeTool != 'rotate') {
+                                    this.selectTool('rotate');
+                                }
+                                var PI = Math.PI;
+                                var value = this.rotatedRadians + (e.shiftKey ? -90 : 90) * PI / 180;
+                                if (value >= 2 * PI) {
+                                    value -= 2 * PI;
+                                } else if (value < 0) {
+                                    value += 2 * PI;
+                                }
+                                this.rotate(value,true);
                             };
-                        };
-                    }break;
-                    case 18:{//alt键,在当前选择是缩放工具的时候，按下的时候切换到缩小功能
-                        if(this.altKeyUp){
-                            if((this.selectedTool!='zoom' && !this.tempZoom) || this.zoomOut)return;
-                            this.zoomOut=true;
-                            this.altKeyUp=false;
-                            this.changeCursor('zoom',true);
-                        };
-                    }break;
-                    case 17:{//ctrl键临时切换到缩放工具
-                        if(this.ctrlKeyUp){
-                            var self=this;
-                            this.ctrlkeyDownTimer=setTimeout(function(){//规避词典软件的ctrl+c，一瞬间切换到缩放的问题
-                                self.ctrlKeyUp=false;
-                                if(self.selectedTool!='zoom'){
-                                    self.tempZoom=true;
-                                    self.changeCursor('zoom');
+                        }break;
+                        case 72:{//h键,切换到抓手工具
+                            if(this.hKeyUp){
+                                this.hKeyUp=false;
+                                this.beforeTool=this.selectedTool;
+                                this.selectTool('hand');
+                            };
+                        }break;
+                        case 90:{//z键,切换到缩放工具
+                            if(this.zKeyUp){
+                                this.zKeyUp=false;
+                                this.beforeTool=this.selectedTool;
+                                this.selectTool('zoom');
+                                let level = e.shiftKey ? (this.zoomLevel - 0.5) : (this.zoomLevel + 0.5);
+                                if (typeof level != 'undefined') {
+                                    this.zoom(level, { x: 0, y: 0});
+                                }
+                            };
+                        }break;
+                        case 32:{//空格键阻止,临时切换到抓手功能
+                            if(this.spaceKeyUp){
+                                this.spaceKeyUp=false;
+                                if(this.selectedTool!='hand'){
+                                    this.tempHand=true;
+                                    this.changeCursor('hand');
                                 };
-                            },100);
-                        };
-                    }break;
-                    case 67:{//c键
-                        clearTimeout(this.ctrlkeyDownTimer);
-                    }break;
-                    case 71:{//g键
-                        if(!gallery){
-                            gallery=new GalleryC();
-                            gallery.data=[];
-                        }
-                        var allData=gallery.getAllValidImgs();
-                        if(allData.length<1)return;
-                        allData.target={src:this.img.src};
-                        gallery.data=allData;
-                        gallery.load(gallery.data);
-                        this.remove();
-                    }break;
-                    case 27:{//ese关闭窗口
-                        if(prefs.imgWindow.close.escKey){
-                            this.remove();
-                        };
-                    }break;
-                    default:break;
-                };
+                            };
+                        }break;
+                        case 18:{//alt键,在当前选择是缩放工具的时候，按下的时候切换到缩小功能
+                            if(this.altKeyUp){
+                                if((this.selectedTool!='zoom' && !this.tempZoom) || this.zoomOut)return;
+                                this.zoomOut=true;
+                                this.altKeyUp=false;
+                                this.changeCursor('zoom',true);
+                            };
+                        }break;
+                        case 17:{//ctrl键临时切换到缩放工具
+                            if(this.ctrlKeyUp){
+                                var self=this;
+                                this.ctrlkeyDownTimer=setTimeout(function(){//规避词典软件的ctrl+c，一瞬间切换到缩放的问题
+                                    self.ctrlKeyUp=false;
+                                    if(self.selectedTool!='zoom'){
+                                        self.tempZoom=true;
+                                        self.changeCursor('zoom');
+                                    };
+                                },100);
+                            };
+                        }break;
+                        case 67:{//c键
+                            clearTimeout(this.ctrlkeyDownTimer);
+                        }break;
+                        case 27:{//ese关闭窗口
+                            if(prefs.imgWindow.close.escKey){
+                                this.remove();
+                            };
+                        }break;
+                        default:break;
+                    }
+                }
                 e.stopPropagation();
                 return false;
             },
