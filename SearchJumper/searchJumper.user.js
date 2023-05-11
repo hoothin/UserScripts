@@ -7285,7 +7285,7 @@
                                 try {
                                     url = url.replace(/^showTips:/, '');
                                     let tipsResult = await self.anylizeShowTips(url, ele.dataset.name);
-                                    if (self.tips.style.opacity != 1) return;
+                                    if (self.tips.style.opacity == 0) return;
                                     if (Array && Array.isArray && Array.isArray(tipsResult)) {
                                         tipsData = tipsResult[1];
                                         tipsResult = tipsResult[0];
