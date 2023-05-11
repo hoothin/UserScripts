@@ -931,6 +931,22 @@
             return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
         }
 
+        function getAllElementsByXpath(xpath, contextNode, doc) {
+            doc = doc || document;
+            contextNode = contextNode || doc;
+            var result = [];
+            try {
+                var query = doc.evaluate(xpath, contextNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                for (var i = 0; i < query.snapshotLength; i++) {
+                    var node = query.snapshotItem(i);
+                    if (node.nodeType === 1) result.push(node);
+                }
+            } catch (err) {
+                debug(`Invalid xpath: ${xpath}`);
+            }
+            return result;
+        }
+
         function getElementByXpath(xpath, contextNode, doc) {
             doc = doc || document;
             contextNode = contextNode || doc;
@@ -945,6 +961,17 @@
         function isXPath(xpath) {
             if (!xpath) return false;
             return /^\(*(descendant::|\.\/|\/\/|id\()/.test(xpath);
+        }
+
+        function getAllElements(sel, doc, contextNode) {
+            try {
+                if (!isXPath(sel)) {
+                    return doc.querySelectorAll(sel);
+                }
+            } catch(e) {
+                debug(e, 'Error selector');
+            }
+            return getAllElementsByXpath(sel, contextNode, doc);
         }
 
         function getElement(sel, doc) {
@@ -7450,7 +7477,7 @@
                                             value = doc.title;
                                         } else {
                                             let selArr = template[1].split("|");
-                                            let eles = doc.querySelectorAll(selArr[0]);
+                                            let eles = getAllElements(selArr[0], doc);
                                             if (eles && eles.length) {
                                                 if (selArr.length == 1) {
                                                     value = eles[0].innerText;
