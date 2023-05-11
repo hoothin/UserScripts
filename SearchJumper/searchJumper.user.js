@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.14.88.64
+// @version      1.6.15.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1349,6 +1349,17 @@
                      opacity: 1;
                      display: inline-flex!important;
                  }
+                 .in-input.in-find>.search-jumper-searchBar {
+                     opacity: 0!important;
+                     pointer-events: none;
+                 }
+                 .in-input.in-find>.search-jumper-input {
+                     opacity: 0.6;
+                     transition:opacity 0.25s ease;
+                 }
+                 .in-input.in-find>.search-jumper-input:hover {
+                     opacity: 1;
+                 }
                  .funcKeyCall>.search-jumper-searchBar {
                      flex-direction: column;
                  }
@@ -1768,7 +1779,7 @@
                  #search-jumper .sitelist a>p {
                      display: inline-block;
                      font-size: 15px;
-                     font-family: Arial,sans-serif;
+                     font-family: Arial, sans-serif;
                      line-height: 25px;
                      margin: 5px auto;
                      color: #6b6e74;
@@ -1959,7 +1970,7 @@
                      left: 50%;
                      margin: 0 0 0 -40%;
                      position: fixed;
-                     font-family: sans-serif;
+                     font-family: Arial, sans-serif;
                      text-align: left;
                      box-shadow: 0px 2px 10px rgb(0 0 0 / 80%);
                      border: 1px solid rgb(179 179 179 / 70%);
@@ -4183,6 +4194,7 @@
                 this.searchInput.value = "";
                 this.contentContainer.appendChild(this.filterSites);
                 if (this.filterSitesTab.checked) {
+                    this.con.classList.remove("in-find");
                     this.searchInput.focus();
                     if (!this.initShowPicker && searchData.prefConfig.defaultPicker) {
                         this.initShowPicker = true;
@@ -4207,6 +4219,7 @@
                         }
                     }
                 } else if (this.searchInPageTab.checked) {
+                    this.con.classList.add("in-find");
                     this.searchJumperInPageInput.focus();
                     if (!this.searchJumperInPageInput.value) {
                         this.submitIgnoreSpace(selectStr);
@@ -4230,6 +4243,7 @@
             hideSearchInput() {
                 this.inInput = false;
                 this.clearInputHide();
+                this.con.classList.remove("in-find");
                 this.con.classList.remove("in-input");
                 this.con.classList.remove("lock-input");
                 this.searchInput.value = "";
@@ -4417,6 +4431,7 @@
                             e.stopPropagation();
                             e.preventDefault();
                             this.filterSitesTab.checked = true;
+                            this.con.classList.remove("in-find");
                             this.searchInput.focus();
                             break;
                         case 13://回车
@@ -4442,9 +4457,11 @@
                 this.searchInPageTab.addEventListener("change", e => {
                     this.initSetInPageWords();
                     this.searchJumperInPageInput.focus();
+                    this.con.classList.add("in-find");
                 });
                 this.filterSitesTab.addEventListener("change", e => {
                     this.searchInput.focus();
+                    this.con.classList.remove("in-find");
                 });
                 if (globalInPageWords) {
                     this.recoverBtn.addEventListener("click", e => {
@@ -4667,6 +4684,7 @@
                                 e.stopPropagation();
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
+                                this.con.classList.add("in-find");
                                 this.searchJumperInPageInput.focus();
                                 this.initSetInPageWords();
                             }
@@ -4723,6 +4741,7 @@
                                 e.stopPropagation();
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
+                                this.con.classList.add("in-find");
                                 this.searchJumperInPageInput.focus();
                                 this.initSetInPageWords();
                             }
@@ -4974,6 +4993,7 @@
             setInPageWords(inPageWords) {
                 this.initInPageWords.push(inPageWords);
                 this.searchInPageTab.checked = true;
+                this.con.classList.add("in-find");
                 let beginHandler = () => {
                     setTimeout(() => {
                         if (getBody(document).style.display === "none") getBody(document).style.display = "";
