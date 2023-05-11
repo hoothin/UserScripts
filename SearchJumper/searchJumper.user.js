@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.15.88.64
+// @version      1.6.16.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1266,6 +1266,7 @@
                      white-space: nowrap;
                      margin: 20px;
                      pointer-events: none;
+                     text-shadow: 0 0 3px black;
                  }
                  #search-jumper-alllist>.dayInAll {
                      left: 0;
@@ -4110,10 +4111,7 @@
                 this.con.classList.add("search-jumper-showall");
                 clearInterval(this.showAllTimeTimer);
                 const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-                if (window.innerWidth > 1666) {
-                    self.timeInAll.style.fontSize = "25px";
-                    self.dayInAll.style.fontSize = "25px";
-                } else if (window.innerWidth < 1000) {
+                if (window.innerWidth < 1000) {
                     self.timeInAll.style.fontSize = "15px";
                     self.dayInAll.style.fontSize = "15px";
                 } else {
@@ -4506,17 +4504,18 @@
                 this.pinBtn.addEventListener("click", e => {
                     this.submitInPageWords();
                     if (this.pinBtn.classList.contains("checked")) {
-                        storage.setItem("globalInPageWords", "");
+                        globalInPageWords = "";
                         this.pinBtn.classList.remove("checked");
                     } else if (this.lockWords) {
-                        storage.setItem("globalInPageWords", this.lockWords);
+                        globalInPageWords = this.lockWords;
                         this.pinBtn.classList.add("checked");
                     }
+                    storage.setItem("globalInPageWords", globalInPageWords);
                 });
                 this.saveRuleBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
                     let inPageRule = searchData.prefConfig.inPageRule || {};
-                    inPageRule[location.href] = this.lockWords;
+                    inPageRule[location.href.replace(/\b_i=.*/, "")] = this.lockWords;
                     searchData.prefConfig.inPageRule = inPageRule;
                     searchData.lastModified = new Date().getTime();
                     storage.setItem("searchData", searchData);
@@ -11398,6 +11397,7 @@
         if (document.title == 'SearchJumper Multi') return;
 
         var inited = false;
+        var checkGlobalIntv, flashTitleIntv, defaultTitle;
         async function init(cb) {
             if (inited) {
                 if (cb) cb();
@@ -11413,12 +11413,28 @@
                 initRun();
                 if (cb) cb();
             }
+            defaultTitle = document.title;
             document.addEventListener('visibilitychange', visibilitychangeHandler);
         }
 
         function checkVisibility() {
             if (document.hidden) {
                 if (searchBar) searchBar.closeShowAll();
+                if (!searchData.prefConfig.globalSearchNow) return;
+                checkGlobalIntv = setInterval(async () => {
+                    let oldGlobalInPageWords = globalInPageWords;
+                    globalInPageWords = await storage.getItem("globalInPageWords");
+                    if ((oldGlobalInPageWords || '') == (globalInPageWords || '')) return;
+                    searchBar.refreshPageWords();
+                    if (searchBar.lockWords) {
+                        clearInterval(checkGlobalIntv);
+                        clearInterval(flashTitleIntv);
+                        defaultTitle = document.title;
+                        flashTitleIntv = setInterval(() => {
+                            document.title = document.title == defaultTitle ? '🚩' : defaultTitle;
+                        }, 500);
+                    }
+                }, parseInt(500 + Math.random() * 500));
                 return;
             }
             init(() => {
@@ -11441,6 +11457,11 @@
 
         var waiting = false;
         function visibilitychangeHandler() {
+            if (searchData.prefConfig.globalSearchNow) {
+                clearInterval(checkGlobalIntv);
+                clearInterval(flashTitleIntv);
+                document.title = defaultTitle;
+            }
             if (waiting) return;
             waiting = true;
             setTimeout(() => {
