@@ -5,8 +5,8 @@
 // @namespace    hoothin
 // @version      0.1
 // @description  Add pinyin support for SearchJumper
-// @description:zh-CN  为搜索酱的页内高亮添加拼音支持
-// @description:zh-TW  為搜尋醬的頁内高亮添加拼音支援
+// @description:zh-CN  为搜索酱的页内高亮查找添加拼音支持
+// @description:zh-TW  為搜尋醬的頁内高亮查找添加拼音支援
 // @author       hoothin
 // @match        *://*/*
 // @grant        unsafeWindow
