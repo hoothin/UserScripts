@@ -11426,7 +11426,7 @@
                     globalInPageWords = await storage.getItem("globalInPageWords");
                     if ((oldGlobalInPageWords || '') == (globalInPageWords || '')) return;
                     searchBar.refreshPageWords();
-                    if (searchBar.lockWords) {
+                    if (searchBar.navMarks.innerHTML) {
                         clearInterval(checkGlobalIntv);
                         clearInterval(flashTitleIntv);
                         defaultTitle = document.title;
