@@ -7751,7 +7751,7 @@
                                 let saladict = document.querySelector('#saladict-saladbowl-root>.saladict-external');
                                 if (saladict) {
                                     let saladbowl = saladict.shadowRoot.querySelector('.saladbowl');
-                                    saladbowl.style.transform = saladbowl.style.transform.replace(/\d+px\)/, `${e.pageY - 15}px)`);
+                                    saladbowl.style.transform = saladbowl.style.transform.replace(/\d+px\)/, `${e.clientY - 15}px)`);
                                 }
                             }, 100);
                         }, 10);
