@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.22
+// @version      1.9.36.23
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1563,7 +1563,7 @@
                         let h = self.getValidHeight(curNode);
                         let w = curNode.scrollWidth;
                         if (isNaN(h) || isNaN(w)) continue;
-                        isHori = preOffsetTop == curNode.offsetTop ? true : (preOffsetTop == -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop);
+                        isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop == -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop);
                         if (isHori && h <= 50) continue;
                         if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
                             let curRect = curNode.getBoundingClientRect();
@@ -1605,7 +1605,7 @@
                                 }
                             }
                             if (h < minHeight) {
-                                if (!needCheckNext || h < windowHeight || !ele.contains(self.initNext)) {
+                                if (!needCheckNext || h < (windowHeight>>1) || !ele.contains(self.initNext)) {
                                     continue;
                                 }
                             }
@@ -1912,8 +1912,7 @@
                 body.querySelector(".pageButtonsCurrent+a") ||
                 body.querySelector("a[class*=nextpage]") ||
                 body.querySelector("li.page-current+li>a") ||
-                body.querySelector(".pager-section a[rel=next]") ||
-                body.querySelector(".pagination a[rel=next]") ||
+                body.querySelector("[class^=pag] a[rel=next]") ||
                 body.querySelector(".pagination-nav__item--next>a");
             if (!next) {
                 await sleep(1);
@@ -3867,7 +3866,7 @@
             saveDetailBtn.addEventListener("click", e => {
                 let editTemp = self.getTempRule(true);
                 if (tempRule.value && !editTemp) {
-                    return showTips(i18n("errorJson"));
+                    return;
                 }
                 if(!ruleParser.customRules) {
                     ruleParser.customRules = [];
@@ -4025,7 +4024,15 @@
                     this.editTemp = JSON.parse(this.tempRule.value);
                 } catch (e) {
                     this.editTemp = null;
-                    if (detail) return null;
+                    if (detail) {
+                        let pos = e && e.message && e.message.match(/position (\d+)/);
+                        if (pos) {
+                            pos = parseInt(pos[1]);
+                            this.tempRule.value = this.tempRule.value.slice(0, pos) + "➡️" + this.tempRule.value[pos] + "⬅️" + this.tempRule.value.slice(pos + 1);
+                        }
+                        showTips(i18n("errorJson"));
+                        return null;
+                    }
                 }
             }
             if (!this.editTemp) {
@@ -5006,6 +5013,11 @@
                 storage.setItem("customRules", customRules);
             } catch(e) {
                 debug(e);
+                let pos = e && e.message && e.message.match(/position (\d+)/);
+                if (pos && !editor) {
+                    pos = parseInt(pos[1]);
+                    customRulesInput.value = customRulesInput.value.slice(0, pos) + "➡️" + customRulesInput.value[pos] + "⬅️" + customRulesInput.value.slice(pos + 1);
+                }
                 showTips(i18n("errorJson"));
                 return;
             }
