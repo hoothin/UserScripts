@@ -200,8 +200,8 @@
                 nobatch: true
             }, {
                 name: "🔗 Open text link",
-                url: "%sr.replace(/(点|。)/g,\".\").replace(/[^ \\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/.*(1[a-z0-9]{22,}).*?\\b([a-z0-9]{4}\\b|$).*/i,\"https://pan.baidu.com/s/$1?pwd=$2\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
-                kwFilter: "\\w.*[\\.点。].*\\w|1[a-zA-Z0-9]{22,}",
+                url: "%sr.replace(/。/g,\".\").replace(/[^ \\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
+                kwFilter: "\\w.*\\..*\\w",
                 nobatch: true
             }, {
                 name: "Google Search in site",
