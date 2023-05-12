@@ -1875,7 +1875,7 @@
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
             let _url = url.replace(/\.s?html?$/i, "").toLowerCase();
             let pageNum = 1, preStr = "", afterStr = "";
-            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
+            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/[^\/]*$|\?|&|$)/i;
             let pageMatch1 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             let doubtTextReg = /^\s*(»|>>)\s*$/;
             if (pageMatch1) {
