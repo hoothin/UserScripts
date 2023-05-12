@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.16.88.64
+// @version      1.6.17.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -191,11 +191,15 @@
                 name: "Wikipedia ",
                 url: "[\"Wikipedia\"]"
             }, {
-                name: "📄  Copy",
+                name: "📄 Copy",
                 url: "copy:%sr",
                 nobatch: true
             }, {
-                name: "🔗  Open text link",
+                name: "🔆 Highlight",
+                url: "find:%sr",
+                nobatch: true
+            }, {
+                name: "🔗 Open text link",
                 url: "%sr.replace(/(点|。)/g,\".\").replace(/[^ \\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/.*(1[a-z0-9]{22,}).*?\\b([a-z0-9]{4}\\b|$).*/i,\"https://pan.baidu.com/s/$1?pwd=$2\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
                 kwFilter: "\\w.*[\\.点。].*\\w|1[a-zA-Z0-9]{22,}",
                 nobatch: true
@@ -209,7 +213,7 @@
                 name: "Words to QRCode",
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
-                name: "💲USD to RMB",
+                name: "💲 USD to RMB",
                 url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\D/,'')} RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
@@ -2752,7 +2756,7 @@
                     this.searchJumperInPageInput.value = words || globalInPageWords;
                     if (!this.lockWords) {
                         this.submitIgnoreSpace(this.searchJumperInPageInput.value);
-                        this.submitInPageWords();
+                        //this.submitInPageWords();
                     }
                 }
             }
@@ -4213,27 +4217,26 @@
 
             showSearchInput() {
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
-                let selectStr = getSelectStr();
                 this.recoveHistory();
                 this.con.classList.add("in-input");
                 this.searchInput.value = "";
                 this.contentContainer.appendChild(this.filterSites);
                 if (this.filterSitesTab.checked) {
                     this.con.classList.remove("in-find");
-                    this.searchInput.focus();
                     if (!this.initShowPicker && searchData.prefConfig.defaultPicker) {
                         this.initShowPicker = true;
                         this.togglePicker();
                     }
                     if (this.bar.classList.contains("search-jumper-isInPage")) {
                         //this.lockSearchInput("*");
-                        this.searchJumperInputKeyWords.value = selectStr;
+                        this.searchJumperInputKeyWords.value = getSelectStr();
+                        this.searchInput.focus();
                         //this.searchJumperInputKeyWords.focus();
                     } else if (!this.searchJumperInputKeyWords.value && currentSite) {
                         this.searchJumperInputKeyWords.value = getKeywords() || cacheKeywords;
                         this.searchJumperInputKeyWords.focus();
                         this.searchJumperInputKeyWords.select();
-                    }
+                    } else this.searchInput.focus();
                     let firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     if (firstType && !firstType.parentNode.classList.contains('search-jumper-open')) {
                         if (firstType.onmousedown) {
@@ -4245,10 +4248,15 @@
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.con.classList.add("in-find");
-                    this.searchJumperInPageInput.focus();
-                    if (!this.searchJumperInPageInput.value) {
-                        this.submitIgnoreSpace(selectStr);
+                    if (this.searchJumperInPageInput.value) {
+                        this.submitInPageWords();
+                    } else if (!this.navMarks.innerHTML) {
+                        this.submitIgnoreSpace(getSelectStr());
+                    } else {
+                        this.searchJumperInPageInput.value = getSelectStr();
+                        this.submitInPageWords();
                     }
+                    this.searchJumperInPageInput.focus();
                 }
                 this.inInput = true;
                 this.clearInputHide();
@@ -7126,7 +7134,23 @@
                             });
                         }
                     }
-                    if (/^c(opy)?:/.test(data.url)) {
+                    if (/^find:/.test(data.url)) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                        let findWords = targetUrlData.replace(/^find:/, "");
+                        if (!findWords) {
+                            return false;
+                        } else if (findWords.indexOf('%input{') !== -1) {
+                            self.showCustomInputWindow(findWords, _url => {
+                                searchBar.searchJumperInPageInput.value = _url;
+                                searchBar.showInPageSearch();
+                            });
+                        } else {
+                            searchBar.searchJumperInPageInput.value = findWords;
+                            searchBar.showInPageSearch();
+                        }
+                        return false;
+                    } else if (/^c(opy)?:/.test(data.url)) {
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
                         if (!targetUrlData) {
@@ -11438,14 +11462,14 @@
                 return;
             }
             init(() => {
-                let oldGlobalInPageWords = globalInPageWords;
+                let oldGlobalInPageWords = globalInPageWords || '';
                 storage.getItem("globalInPageWords", data => {
                     globalInPageWords = (data || '');
                     if (oldGlobalInPageWords != globalInPageWords) {
                         searchBar.refreshPageWords();
                     }
                 });
-                let oldNavEnable = navEnable;
+                let oldNavEnable = navEnable || false;
                 storage.getItem("navEnable", data => {
                     navEnable = (typeof data === "undefined" ? true : data);
                     if (oldNavEnable != navEnable) {
