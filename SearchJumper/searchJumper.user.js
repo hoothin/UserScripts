@@ -1413,7 +1413,9 @@
                  }
                  .in-input.in-find>.search-jumper-searchBar {
                      opacity: 0!important;
-                     pointer-events: none;
+                 }
+                 .in-input.in-find>.search-jumper-searchBar:hover {
+                     opacity: 1!important;
                  }
                  .in-input.in-find>.search-jumper-input {
                      opacity: 0.6;
