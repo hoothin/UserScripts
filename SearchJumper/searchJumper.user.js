@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.17.88.64
+// @version      1.6.18.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1048,6 +1048,36 @@
                 }
             }
             return actualLeft;
+        }
+
+        function getActiveElement(root) {
+            const activeEl = root.activeElement;
+            if (!activeEl) {
+                return null;
+            }
+            if (activeEl.shadowRoot) {
+                return getActiveElement(activeEl.shadowRoot);
+            } else {
+                return activeEl;
+            }
+        }
+
+        function inputActive(doc) {
+            let activeEl = getActiveElement(doc);
+            if (activeEl &&
+                (/INPUT|TEXTAREA/i.test(activeEl.nodeName) ||
+                 activeEl.contentEditable == 'true')) {
+                return true;
+            } else {
+                while (activeEl && activeEl.nodeName) {
+                    if (activeEl.contentEditable == 'true') return true;
+                    if (activeEl.nodeName.toUpperCase() == 'BODY') {
+                        break;
+                    }
+                    activeEl = activeEl.parentNode;
+                }
+            }
+            return false;
         }
 
         function waitForFontAwesome(callback) {
@@ -5974,23 +6004,7 @@
                             return;
                         }
                         if (!searchData.prefConfig.enableInInput) {
-                            if (document.activeElement &&
-                                (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
-                                 document.activeElement.contentEditable == 'true')) {
-                                return;
-                            } else {
-                                let contentEditable = false;
-                                let parent = document.activeElement;
-                                while (parent && parent.nodeName) {
-                                    contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
-                                        break;
-                                    }
-                                    parent = parent.parentNode;
-                                }
-                                if (contentEditable) return;
-                            }
+                            if (inputActive(document)) return;
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == e.code || data.shortcut == key) {
@@ -6636,23 +6650,7 @@
                             }
                         }
                         if (!searchData.prefConfig.enableInInput) {
-                            if (document.activeElement &&
-                                (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
-                                 document.activeElement.contentEditable == 'true')) {
-                                return;
-                            } else {
-                                let contentEditable = false;
-                                let parent = document.activeElement;
-                                while (parent && parent.nodeName) {
-                                    contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
-                                        break;
-                                    }
-                                    parent = parent.parentNode;
-                                }
-                                if (contentEditable) return;
-                            }
+                            if (inputActive(document)) return;
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == e.code || data.shortcut == key) {
@@ -7747,6 +7745,13 @@
                         self.appendBar();
                         setTimeout(() => {
                             self.bar.style.opacity = 1;
+                            setTimeout(() => {
+                                let saladict = document.querySelector('#saladict-saladbowl-root>.saladict-external');
+                                if (saladict) {
+                                    let saladbowl = saladict.shadowRoot.querySelector('.saladbowl');
+                                    saladbowl.style.transform = saladbowl.style.transform.replace(/\d+px\)/, `${e.pageY - 15}px)`);
+                                }
+                            }, 100);
                         }, 10);
                     }, 1);
                 } else {
@@ -8574,7 +8579,7 @@
         function getSelectStr() {
             let selStr = picker.getPickerStr() || window.getSelection().toString();
             if (!selStr) {
-                let tar = document.activeElement;
+                let tar = getActiveElement(document);
                 if (tar && /^(TEXTAREA|INPUT)$/i.test(tar.nodeName)) {
                     let start = tar.selectionStart;
                     let finish = tar.selectionEnd;
@@ -8953,25 +8958,7 @@
                     }
                     if (!searchData.prefConfig.enableInInput && inputing == -1) {
                         inputing = 1;
-                        if (document.activeElement &&
-                            (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                             document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
-                             document.activeElement.contentEditable == 'true')) {
-                            return false;
-                        } else {
-                            let contentEditable = false;
-                            let parent = document.activeElement;
-                            while (parent && parent.nodeName) {
-                                contentEditable = parent.contentEditable == 'true';
-                                if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
-                                    break;
-                                }
-                                parent = parent.parentNode;
-                            }
-                            if (contentEditable) {
-                                return false;
-                            }
-                        }
+                        if (inputActive(document)) return false;
                     }
                     inputing = 0;
                     e.preventDefault();
