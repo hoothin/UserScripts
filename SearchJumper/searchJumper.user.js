@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.18.88.64
+// @version      1.6.19.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4689,7 +4689,7 @@
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
                 this.searchInPageRule();
-                if (currentSite && /%s[lurst]?\b/.test(currentSite.url)) {
+                if (currentSite && /%s[lurest]?\b/.test(currentSite.url)) {
                     this.inSearchEngine();
                 } else if (searchData.prefConfig.alwaysShow) {
                     this.bar.style.display = "";
@@ -4983,7 +4983,7 @@
                 if (disableHighlight && disableHighlight != location.hostname && window.top == window.self) {
                     storage.setItem("disableHighlight", "");
                 }
-                let foundKeyword = currentSite && /%s[lurst]?\b/.test(currentSite.url);
+                let foundKeyword = currentSite && /%s[lurest]?\b/.test(currentSite.url);
                 if (!hasCurrent && foundKeyword) {
                     this.inSearchEngine();
                 } else if (!foundKeyword && window.top == window.self) {
@@ -5391,7 +5391,7 @@
                 currentSite = data;
                 siteEle.classList.add('current');
                 localKeywords = "";
-                if (!/#p{|^showTips/.test(data.url) && /%s[lurst]?\b/.test(data.url)) {
+                if (!/#p{|^showTips/.test(data.url) && /%s[lurest]?\b/.test(data.url)) {
                     let keywords = getKeywords();
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
@@ -6703,11 +6703,13 @@
                         ele.dataset.target = 1;
                     } else ele.setAttribute("target", "_self");
                 }
+                let inputString;
                 let getUrl = async () => {
                     self.customInput = false;
+                    inputString = "";
                     let selStr = getSelectStr();
                     let keywords = self.searchJumperInputKeyWords.value || selStr;
-                    let hasWordParam = /%s[lure]?\b/.test(data.url);
+                    let hasWordParam = /%s[lurest]?\b/.test(data.url);
                     if (!keywords) {
                         keywords = getKeywords();
                     }
@@ -6716,10 +6718,13 @@
                             keywords = await navigator.clipboard.readText();
                         }
                     }
-                    if (keywords && keywords != cacheKeywords) {
-                        cacheKeywords = keywords;
-                        self.keywordIndex = 0;
-                        storage.setItem("cacheKeywords", keywords);
+                    if (keywords) {
+                        if (keywords != cacheKeywords) {
+                            cacheKeywords = keywords;
+                            self.keywordIndex = 0;
+                            storage.setItem("cacheKeywords", keywords);
+                        }
+                        inputString = keywords;
                     }
                     let postMatch;
                     if (inPagePost) {
@@ -7251,15 +7256,14 @@
                         return;
                     }
                     if (isPage && (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2)) {
-                        let selStr = getSelectStr();
-                        if (selStr &&
-                            /%s\b/.test(ele.dataset.url) &&
-                            selStr.indexOf("\n") !== -1) {
+                        if (inputString &&
+                            /%s[lurest]?\b/.test(ele.dataset.url) &&
+                            inputString.indexOf("\n") !== -1) {
                             if (searchData.prefConfig.multiline == 1 ||
                                 confirm(i18n("multiline"))) {
-                                let selStrArr = selStr.split("\n");
+                                let selStrArr = inputString.split("\n");
                                 if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
-                                let encodeSelStr = encodeURIComponent(selStr);
+                                let encodeSelStr = encodeURIComponent(inputString);
                                 let searchIndex = 0;
                                 let searchByLine = () => {
                                     _GM_openInTab(targetUrlData.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
@@ -8643,15 +8647,15 @@
                         keywords = '';
                     }
                 }
-            } else if (isUtf8 && /%s[lurst]?\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
+            } else if (isUtf8 && /%s[lurest]?\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
-                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s[lurst]?\b.*/);
+                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s[lurest]?\b.*/);
                     if (keywordsMatch) {
                         keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
                     }
                 }
                 if (!keywords) {
-                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s[lurst]?\b/);
+                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s[lurest]?\b/);
                     if (keywordsMatch) {
                         keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
