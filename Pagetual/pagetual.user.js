@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.24
+// @version      1.9.36.25
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -173,6 +173,10 @@
                 forceStateIframe: "以 iframe 嵌入整页",
                 forceStateDynamic: "通过 iframe 加载动态内容后取出",
                 forceStateDisable: "在此站禁用",
+                autoScrollRate: "滚动速度（1~1000）",
+                disableAutoScroll: "停止自动滚动",
+                enableAutoScroll: "开启自动滚动",
+                toggleAutoScroll: "自动滚动开关",
                 page: "Page ",
                 prevPage: "上一页",
                 nextPage: "下一页",
@@ -283,6 +287,10 @@
                 forceStateIframe: "以 iframe 嵌入整頁",
                 forceStateDynamic: "通過 iframe 加載動態內容後取出",
                 forceStateDisable: "在此站禁用",
+                autoScrollRate: "滾動速度（1~1000）",
+                disableAutoScroll: "停止自動滾動",
+                enableAutoScroll: "開啟自動滾動",
+                toggleAutoScroll: "自動滾動開關",
                 page: "Page ",
                 prevPage: "上一頁",
                 nextPage: "下一頁",
@@ -392,6 +400,10 @@
                 forceStateIframe: "iframe にページ全体を埋め込む",
                 forceStateDynamic: "iframe 経由で動的コンテンツを読み込む",
                 forceStateDisable: "このステーションでのページめくりを無効にする",
+                autoScrollRate: "スクロール速度 (1~1000)",
+                disableAutoScroll: "自動スクロールを停止します",
+                EnableAutoScroll: "自動スクロールを有効にする",
+                toggleAutoScroll: "自動スクロールの切り替え",
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
@@ -502,6 +514,10 @@
                 forceStateIframe: "Вставить полную страницу как iframe",
                 forceStateDynamic: "Загружать динамический контент через iframe",
                 forceStateDisable: "Отключить перелистывание страниц на этой станции",
+                autoScrollRate: "Скорость прокрутки (1~1000)",
+                disableAutoScroll: "Остановить автоматическую прокрутку",
+                enableAutoScroll: "Включить автопрокрутку",
+                toggleAutoScroll: "Переключить автопрокрутку",
                 page: "Страница ",
                 prevPage: "Предыдущая страница",
                 nextPage: "Следующая страница",
@@ -611,6 +627,10 @@
                 forceStateIframe: "Embed full page as iframe",
                 forceStateDynamic: "Load dynamic content via iframe",
                 forceStateDisable: "Disable page turning on this site",
+                autoScrollRate: "Scroll speed (1~1000)",
+                disableAutoScroll: "Stop Auto Scroll",
+                enableAutoScroll: "Enable Auto Scroll",
+                toggleAutoScroll: "Toggle Auto Scroll",
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
@@ -1913,6 +1933,7 @@
                 body.querySelector("a[class*=nextpage]") ||
                 body.querySelector("li.page-current+li>a") ||
                 body.querySelector("[class^=pag] a[rel=next]") ||
+                body.querySelector("[class^=Pag] [aria-label=next]") ||
                 body.querySelector(".pagination-nav__item--next>a");
             if (!next) {
                 await sleep(1);
@@ -3760,6 +3781,7 @@
                 </div>
                 <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
+                <button id="autoScroll" class="command" title="${i18n("toggleAutoScroll")}" type="button"></button>
                 <div>
                   <textarea style="display: none;" class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
@@ -3797,7 +3819,7 @@
                             return;
                     }
                 }
-                storage.setItem("forceState_"+location.host, forceState);
+                storage.setItem("forceState_" + location.host, forceState);
                 self.close();
                 location.reload();
             };
@@ -3816,6 +3838,7 @@
             let checkBtn = frame.querySelector("#check");
             let editBtn = frame.querySelector("#edit");
             let nextSwitchBtn = frame.querySelector("#nextSwitch");
+            let autoScrollBtn = frame.querySelector("#autoScroll");
             let loadNow = frame.querySelector("#loadNow");
             let tempRule = frame.querySelector(".tempRule");
             let showDetailBtn = frame.querySelector("#showDetail");
@@ -3823,6 +3846,15 @@
             let addOtherProp = frame.querySelector("#addOtherProp");
             let addNextSelector = frame.querySelector("#addNextSelector");
             let addPageSelector = frame.querySelector("#addPageSelector");
+            autoScrollBtn.addEventListener("click", e => {
+                self.close();
+                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 10)) || 0;
+                autoScroll = parseInt(autoScroll) || 0;
+                if (autoScroll < 0) autoScroll = 0;
+                else if (autoScroll > 1000) autoScroll = 1000;
+                storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
+                startAutoScroll();
+            }, true);
             addOtherProp.addEventListener("click", e => {
                 let propName = prompt(i18n("propName"));
                 if (!propName) return;
@@ -3986,6 +4018,7 @@
             this.allpath = allpath;
             this.selectorInput = selectorInput;
             this.nextSwitchBtn = nextSwitchBtn;
+            this.autoScrollBtn = autoScrollBtn;
             this.loadNow = loadNow;
             this.tempRule = tempRule;
             this.logoBtn = logoBtn;
@@ -4194,6 +4227,7 @@
             } else {
                 this.nextSwitchBtn.style.display = "none";
             }
+            this.autoScrollBtn.innerText = i18n(autoScroll ? "disableAutoScroll" : "enableAutoScroll");
 
             let pageElementSel = ruleParser.curSiteRule.pageElement || "";
             if (Array && Array.isArray && Array.isArray(pageElementSel)) {
@@ -4279,6 +4313,14 @@
         return false;
     }
 
+    function startAutoScroll() {
+        clearInterval(autoScrollInterval);
+        if (autoScroll <= 0) return;
+        autoScrollInterval = setInterval(() => {
+            window.scroll(window.scrollX, window.scrollY + 1);
+        }, parseInt(1000 / autoScroll));
+    }
+
     function initConfig() {
         listenUrl();
         let href = location.href.slice(0, 100);
@@ -4301,6 +4343,21 @@
                 debug(err);
             });
         });
+        _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
+            forceState = (forceState == 1 ? 0 : 1);
+            storage.setItem("forceState_" + location.host, forceState);
+            showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+            if (!ruleParser.curSiteRule.url) location.reload();
+        });
+        _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
+            autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 10)) || 0;
+            autoScroll = parseInt(autoScroll) || 0;
+            if (autoScroll < 0) autoScroll = 0;
+            else if (autoScroll > 1000) autoScroll = 1000;
+            storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
+            startAutoScroll();
+        });
+        startAutoScroll();
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
             if (href.indexOf("PagetualGuide") != -1) return true;
@@ -5340,25 +5397,28 @@
                 enableDebug = rulesData.enableDebug;
                 storage.getItem("nextSwitch_" + location.host, i => {
                     storage.getItem("forceState_" + location.host, v => {
-                        storage.getItem("ruleLastUpdate", date => {
-                            if (typeof(i) !== "undefined") {
-                                nextIndex = i;
-                            }
-                            if (typeof(v) == "undefined") {
-                                v = (rulesData.enableWhiteList ? 1 : 0);
-                            }
-                            forceState = v;
-                            updateDate = date;
-                            if (initConfig()) return;
-                            pageReady = true;
-                            if (forceState == 1) return;
-                            let now = new Date().getTime();
-                            if (!date || now - date > 2 * 24 * 60 * 60 * 1000) {
-                                updateRules(() => {
-                                }, (rule, err) => {}, true);
-                                storage.setItem("ruleLastUpdate", now);
-                            }
-                            callback();
+                        storage.getItem("autoScroll_" + location.host + location.pathname, _autoScroll => {
+                            storage.getItem("ruleLastUpdate", date => {
+                                autoScroll = _autoScroll || 0;
+                                if (typeof(i) !== "undefined") {
+                                    nextIndex = i;
+                                }
+                                if (typeof(v) == "undefined") {
+                                    v = (rulesData.enableWhiteList ? 1 : 0);
+                                }
+                                forceState = v;
+                                updateDate = date;
+                                if (initConfig()) return;
+                                pageReady = true;
+                                if (forceState == 1) return;
+                                let now = new Date().getTime();
+                                if (!date || now - date > 2 * 24 * 60 * 60 * 1000) {
+                                    updateRules(() => {
+                                    }, (rule, err) => {}, true);
+                                    storage.setItem("ruleLastUpdate", now);
+                                }
+                                callback();
+                            });
                         });
                     });
                 });
@@ -5513,12 +5573,6 @@
                     nextPage();
                 });
             }
-            _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
-                forceState = (forceState == 1 ? 0 : 1);
-                storage.setItem("forceState_" + location.host, forceState);
-                showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
-                if (!ruleParser.curSiteRule.url) location.reload();
-            });
             initListener();
         });
     }
@@ -5719,7 +5773,7 @@
     var tipsWords = document.createElement("div");
     tipsWords.className = "pagetual_tipsWords";
 
-    var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false;
+    var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false;
     var openInNewTab = 0;
 
     function changeStop(stop) {
