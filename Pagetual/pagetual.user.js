@@ -5958,7 +5958,13 @@
             }, 1000);
         }
         clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
+        let clickingNext = false;
         let clickNext = async () => {
+            if (clickingNext) return;
+            clickingNext = true;
+            setTimeout(() => {
+                clickingNext = false;
+            }, 1500);
             let nextLink = ruleParser.nextLinkHref;
             if (!nextLink) return;
             let isJs = /^(javascript|#)/.test(nextLink.replace(location.href, ""));
