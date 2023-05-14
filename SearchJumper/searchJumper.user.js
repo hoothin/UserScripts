@@ -9685,12 +9685,14 @@
                                 let pre = "", sep = value.sep || "";
                                 if (sep) {
                                     pre = "$c" + sep;
-                                } else if (value.words.length === 1) {
+                                } else {
                                     sep = " ";
-                                    let onlyWord = value.words[0];
-                                    if (onlyWord.indexOf(" ") !== -1) {
-                                        sep = "";
-                                        pre = "$o";
+                                    if (value.words.length === 1) {
+                                        let onlyWord = value.words[0];
+                                        if (onlyWord.indexOf(" ") !== -1) {
+                                            sep = "";
+                                            pre = "$o";
+                                        }
                                     }
                                 }
                                 searchData.prefConfig.inPageRule[key] = pre + value.words.join(sep);
