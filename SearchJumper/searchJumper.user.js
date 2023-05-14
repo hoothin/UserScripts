@@ -9681,6 +9681,10 @@
                             Object.keys(configData).forEach(key => {
                                 let value = configData[key];
                                 if (!value) return;
+                                if (key.indexOf("@") === 0) {
+                                    searchData.prefConfig.inPageRule[key] = value;
+                                    return;
+                                }
                                 if (!value.words || value.words.length === 0) return;
                                 let pre = "", sep = value.sep || "";
                                 if (sep) {
