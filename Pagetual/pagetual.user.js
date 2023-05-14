@@ -3848,7 +3848,7 @@
             let addPageSelector = frame.querySelector("#addPageSelector");
             autoScrollBtn.addEventListener("click", e => {
                 self.close();
-                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 10)) || 0;
+                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
                 autoScroll = parseInt(autoScroll) || 0;
                 if (autoScroll < 0) autoScroll = 0;
                 else if (autoScroll > 1000) autoScroll = 1000;
@@ -4350,7 +4350,7 @@
             if (!ruleParser.curSiteRule.url) location.reload();
         });
         _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
-            autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 10)) || 0;
+            autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
             autoScroll = parseInt(autoScroll) || 0;
             if (autoScroll < 0) autoScroll = 0;
             else if (autoScroll > 1000) autoScroll = 1000;
