@@ -3938,7 +3938,7 @@
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     let pa = node.parentNode;
-                    if (word.link && node.nodeType == 1 && node.href) {
+                    if (word.link && node.nodeType == 1 && node.href && node.href.match) {
                         let wordMatch = node.href.match(new RegExp(word.content, word.reCase));
                         if (wordMatch) {
                             let parentDepth = word.hideParent || 0;
@@ -3950,7 +3950,7 @@
                                 parent.innerHTML = createHTML("");
                                 parent.dataset.content = word.content;
                                 parent.classList.add("searchJumper-hide");
-                                return;
+                                return 0;
                             }
                         }
                     } else if (!word.link && node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^BODY$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
@@ -3992,7 +3992,7 @@
                                     parent.innerHTML = createHTML("");
                                     parent.dataset.content = word.content;
                                     parent.classList.add("searchJumper-hide");
-                                    return;
+                                    return 0;
                                 }
                             }
                             let curList = self.marks[word.content];
