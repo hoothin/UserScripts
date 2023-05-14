@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.20.88.64
+// @version      1.6.21.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -301,7 +301,7 @@
             icon: "book-open-reader",
             sites: [ {
                 name: "Wikipedia",
-                url: "https://zh.wikipedia.org/wiki/%s"
+                url: "https://en.wikipedia.org/wiki/%s"
             }, {
                 name: "Quora",
                 url: "https://www.quora.com/search?q=%s"
@@ -6672,6 +6672,8 @@
                     imgSrc = icon;
                 } else if (!isBookmark && isPage) {
                     imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
+                } else if (/^showTips:https?:\/\//.test(data.url)) {
+                    imgSrc = data.url.replace(/^showTips:(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                 }
                 if (imgSrc) {
                     img.onload = e => {
@@ -7504,7 +7506,7 @@
                                 tipsResult = await GM_fetch(_url, fetchOption).then(r => r.text()).then(r => {
                                     let doc = document.implementation.createHTMLDocument('');
                                     doc.documentElement.innerHTML = r;
-                                    let finalData = data;
+                                    let finalData = data, hasData = false;
                                     while (template) {
                                         let value = "";
                                         if (template[1] == "title") {
@@ -7513,6 +7515,7 @@
                                             let selArr = template[1].split("|");
                                             let eles = getAllElements(selArr[0], doc);
                                             if (eles && eles.length) {
+                                                hasData = true;
                                                 if (selArr.length == 1) {
                                                     value = eles[0].innerText;
                                                 } else {
@@ -7533,11 +7536,12 @@
                                                         value = eles[0].getAttribute(selArr[1]);
                                                     }
                                                 }
-                                            } else return;
+                                            }
                                         }
                                         finalData = finalData.replace(template[0], value);
                                         template = finalData.match(/{(.*?)}/);
                                     }
+                                    if (!hasData) return null;
                                     finalData = finalData.replace(/showTipsLeftBrace/g, "{").replace(/showTipsRightBrace/g, "}");
                                     return finalData;
                                 });
@@ -8733,12 +8737,12 @@
                     showSiteAddFromOpenSearch(openSearch.href, (type, e) => {
                         if (type != 'load') {
                             if (e) debug(e.statusText || e.error || e.response || e);
-                            let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input:not([type])');
+                            let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input[type=search]:not([readonly]),input:not([type])');
                             quickAddByInput(firstInput);
                         }
                     });
                 } else {
-                    let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input:not([type])');
+                    let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input[type=search]:not([readonly]),input:not([type])');
                     quickAddByInput(firstInput);
                 }
             });
@@ -9202,7 +9206,7 @@
                 document.addEventListener('click', e => {
                     if (!(((e.ctrlKey || e.metaKey) && e.shiftKey) || ((e.ctrlKey || e.metaKey) && e.altKey) || (e.altKey && e.shiftKey))) return;
                     if (!/^(INPUT|TEXTAREA)$/i.test(e.target.nodeName)) return;
-                    if (/^INPUT$/i.test(e.target.nodeName) && e.target.type && e.target.type != 'text') return;
+                    if (/^INPUT$/i.test(e.target.nodeName) && e.target.type && e.target.type != 'text' && e.target.type != 'search') return;
                     quickAddByInput(e.target);
                 }, true);
             }
