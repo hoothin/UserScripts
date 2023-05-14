@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.21.88.64
+// @version      1.6.22.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -513,6 +513,9 @@
                         wordHideTips: '元素深度，0为当前父级',
                         wordStyle: '搜索词样式',
                         wordTitle: '搜索词注释',
+                        re: '正则',
+                        ignoreCase: '不区分大小写',
+                        filterLink: '筛选链接',
                         modify: '修改',
                         cancel: '取消',
                         modifyWord: '修改页内搜索词',
@@ -604,6 +607,9 @@
                         wordHideTips: '元素深度，0為當前父級',
                         wordStyle: '搜索詞樣式',
                         wordTitle: '搜索詞注釋',
+                        re: '正則',
+                        ignoreCase: '不區分大小寫',
+                        filterLink: '篩選鏈接',
                         modify: '修改',
                         cancel: '取消',
                         modifyWord: '修改頁內搜索詞',
@@ -694,6 +700,9 @@
                         wordHideTips: 'Element depth, 0 means the current',
                         wordStyle: 'Search word style',
                         wordTitle: 'Search word annotation',
+                        re: 'RegExp',
+                        ignoreCase: 'Ignore case',
+                        filterLink: 'Filter link',
                         modify: 'Modify',
                         cancel: 'Cancel',
                         modifyWord: 'Modify search word',
@@ -2823,6 +2832,7 @@
                         let style = "";
                         let popup = false;
                         let hideParent;
+                        let link;
                         let inRange;
                         let isRe = false;
                         let reCase = "";
@@ -2858,19 +2868,31 @@
                         let styleReg = /\$s{(.*?)}($|\$)/;
                         let styleMatch = word.match(styleReg);
                         if (styleMatch) {
+                            let bg = styleMatch[1], otherCss = "";
                             styleMatch = styleMatch[1].match(/(.*?);(.*)/);
-                            style = self.getHighlightStyle(self.curWordIndex, styleMatch[1], styleMatch[2]);
+                            if (styleMatch) {
+                                bg = styleMatch[1];
+                                otherCss = styleMatch[2];
+                            }
+                            style = self.getHighlightStyle(self.curWordIndex, bg, otherCss);
                             word = word.replace(styleReg, "$2");
                         } else {
                             style = self.getHighlightStyle(self.curWordIndex, "", "");
                         }
-                        let reMatch = word.match(/^\/(.*)\/(i?)($|\$)/);
+                        if (word.indexOf("@") === 0) {
+                            let wordTemp = searchData.prefConfig.inPageRule && searchData.prefConfig.inPageRule[word];
+                            if (wordTemp) word = wordTemp;
+                        } else {
+                            word = word.replace(/^\\@/, "@");
+                        }
+                        let reMatch = word.match(/^\/(.*)\/([il]*)($|\$)/);
                         if (reMatch) {
                             isRe = true;
                             word = reMatch[1];
-                            reCase = reMatch[2];
+                            reCase = reMatch[2].indexOf("i") != -1 ? "i" : "";
+                            link = reMatch[2].indexOf("l") != -1;
                         }
-                        result.push({content: word, isRe: isRe, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup});
+                        result.push({content: word, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup});
                         self.curWordIndex++;
                     });
                 } else {
@@ -3424,6 +3446,15 @@
                         cursor: pointer;
                         background: rgb(255 255 255 / 80%);
                     }
+                    .searchJumperModify-checkGroup {
+                        margin: 5px;
+                    }
+                    #searchJumperModify-re + label ~ * {
+                        display: none;
+                    }
+                    #searchJumperModify-re:checked + label ~ * {
+                        display: inline;
+                    }
                     @media (prefers-color-scheme: dark) {
                       .searchJumperModify-body,
                       .searchJumperModify-input-title,
@@ -3464,14 +3495,22 @@
                              <img width="32px" height="32px" src="${logoBase64}" />${i18n("modifyWord")}
                          </a>
                          <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
-                         <input name="wordContent" type="text" placeholder="word /aPPle\\d/ /google/i"/>
+                         <input name="wordContent" placeholder="words" type="text"/>
+                         <div class="searchJumperModify-checkGroup">
+                             <input id="searchJumperModify-re" type="checkbox"/>
+                             <label for="searchJumperModify-re">${i18n("re")}</label>
+                             <input id="searchJumperModify-case" type="checkbox"/>
+                             <label for="searchJumperModify-case">${i18n("ignoreCase")}</label>
+                             <input id="searchJumperModify-link" type="checkbox"/>
+                             <label for="searchJumperModify-link">${i18n("filterLink")}</label>
+                         </div>
                          <div class="searchJumperModify-input-title">${i18n("wordHide")}</div>
                          <input name="wordHide" min="0" placeholder="${i18n("wordHideTips")}" type="number" />
                          <div class="searchJumperModify-input-title">${i18n("wordRange")}</div>
                          <input name="wordRange" placeholder="#main" type="text" />
                          <svg id="rangePickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
-                         <input name="wordStyle" placeholder="#333333;color:red;" type="text" />
+                         <input name="wordStyle" placeholder="orange or #333333;color:red;" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
                          <textarea name="wordTitle" type="text" placeholder="$popup to popup"></textarea>
                          <div class="searchJumperModify-buttons">
@@ -3500,6 +3539,9 @@
                         let newWord = wordContent.value;
                         if (!newWord) return;
                         let contentChange = newWord !== this.modifyWord.content;
+                        if (wordIsRe.checked) {
+                            newWord = `/${newWord}/${wordReCase.checked ? "i" : ""}${wordLink.checked ? "l" : ""}`;
+                        }
                         let hide = wordHide.value;
                         if (hide) {
                             if (this.splitSep) hide = hide.replaceAll(this.splitSep, "");
@@ -3537,7 +3579,10 @@
                 wordStyle = this.modifyFrame.querySelector("[name='wordStyle']"),
                 wordTitle = this.modifyFrame.querySelector("[name='wordTitle']"),
                 wordRange = this.modifyFrame.querySelector("[name='wordRange']"),
-                wordHide = this.modifyFrame.querySelector("[name='wordHide']");
+                wordHide = this.modifyFrame.querySelector("[name='wordHide']"),
+                wordIsRe = this.modifyFrame.querySelector("#searchJumperModify-re"),
+                wordReCase = this.modifyFrame.querySelector("#searchJumperModify-case"),
+                wordLink = this.modifyFrame.querySelector("#searchJumperModify-link");
 
                 if (this.addNew) {
                     wordContent.value = "";
@@ -3545,6 +3590,9 @@
                     wordRange.value = "";
                     wordHide.value = "";
                     wordTitle.value = "";
+                    wordIsRe.checked = false;
+                    wordReCase.checked = false;
+                    wordLink.checked = false;
                     this.modifyBtn.innerText = i18n('add');
                 } else {
                     this.modifyBtn.innerText = i18n('modify');
@@ -3558,6 +3606,9 @@
                     wordContent.value = word.content || "";
                     wordStyle.value = style || "";
                     wordRange.value = word.inRange || "";
+                    wordIsRe.checked = !!word.isRe;
+                    wordReCase.checked = !!word.reCase;
+                    wordLink.checked = !!word.link;
                     if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
                     try {
                         wordTitle.value = word.title !== word.content ? JSON.parse('"' + word.title + '"') : "";
@@ -3590,8 +3641,13 @@
                     let styleReg = /\$s{(.*?)}($|\$)/;
                     let styleMatch = newWord.match(styleReg);
                     if (styleMatch) {
+                        let bg = styleMatch[1], otherCss = "";
                         styleMatch = styleMatch[1].match(/(.*?);(.*)/);
-                        style = self.getHighlightStyle(this.curWordIndex, styleMatch[1], styleMatch[2]);
+                        if (styleMatch) {
+                            bg = styleMatch[1];
+                            otherCss = styleMatch[2];
+                        }
+                        style = self.getHighlightStyle(this.curWordIndex, bg, otherCss);
                         word.style = style;
                         modifySpan.style = style;
                     }
@@ -3882,7 +3938,22 @@
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     let pa = node.parentNode;
-                    if (node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^BODY$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
+                    if (word.link && node.nodeType == 1 && node.href) {
+                        let wordMatch = node.href.match(new RegExp(word.content, word.reCase));
+                        if (wordMatch) {
+                            let parentDepth = word.hideParent || 0;
+                            let parent = node;
+                            while(parentDepth-- > 0 && parent) {
+                                parent = parent.parentElement;
+                            }
+                            if (parent) {
+                                parent.innerHTML = createHTML("");
+                                parent.dataset.content = word.content;
+                                parent.classList.add("searchJumper-hide");
+                                return;
+                            }
+                        }
+                    } else if (!word.link && node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^BODY$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
                         if (word.isRe) {
                             let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
                             if (wordMatch) {
@@ -4011,9 +4082,11 @@
                     if (!self.marks[w.content]) {
                         self.marks[w.content] = [];
                     }
-                    if (w.inRange) {
-                        [].forEach.call(ele.querySelectorAll(w.inRange), e => {
-                            searchWithinNode(e, w);
+                    if (w.inRange && ele.parentNode) {
+                        [].forEach.call(ele.parentNode.querySelectorAll(w.inRange), e => {
+                            if (e == ele || ele.contains(e)) {
+                                searchWithinNode(e, w);
+                            }
                         })
                     } else searchWithinNode(ele, w);
                 });
@@ -7183,12 +7256,14 @@
                             return false;
                         } else if (findWords.indexOf('%input{') !== -1) {
                             self.showCustomInputWindow(findWords, _url => {
-                                searchBar.searchJumperInPageInput.value = _url;
-                                searchBar.showInPageSearch();
+                                self.searchJumperInPageInput.value = _url;
+                                self.submitInPageWords();
+                                self.waitForHide(1);
                             });
                         } else {
-                            searchBar.searchJumperInPageInput.value = findWords;
-                            searchBar.showInPageSearch();
+                            self.searchJumperInPageInput.value = findWords;
+                            self.submitInPageWords();
+                            self.waitForHide(1);
                         }
                         return false;
                     } else if (/^c(opy)?:/.test(data.url)) {
