@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.19.88.64
+// @version      1.6.20.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -332,6 +332,10 @@
                 name: "QR code",
                 url: "https://hoothin.github.io/SearchJumper/qrcode.html#%U"
             }, {
+                name: "📦 Batch open links",
+                url: "%s[all]",
+                kwFilter: "^https?:"
+            }, {
                 name: "Share to Twitter",
                 url: "https://twitter.com/intent/tweet?url=%T"
             }, {
@@ -341,10 +345,10 @@
                 name: "Share to Facebook",
                 url: "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
             }, {
-                name: "🧮  Calculator",
+                name: "🧮 Calculator",
                 url: "calculator://"
             }, {
-                name: "🔎  Everything",
+                name: "🔎 Everything",
                 url: "ES://%s"
             }, {
                 name: "Convert currency",
@@ -1292,7 +1296,6 @@
                      font-size: 1.5vw;
                      line-height: 1;
                      color: white;
-                     height: 60px;
                      opacity: 0.6;
                      font-weight: bold;
                      font-family: Arial,sans-serif;
@@ -6704,21 +6707,20 @@
                     } else ele.setAttribute("target", "_self");
                 }
                 let inputString;
-                let getUrl = async () => {
+                let getUrl = async (_keyWords) => {
                     self.customInput = false;
                     inputString = "";
-                    let selStr = getSelectStr();
-                    let keywords = self.searchJumperInputKeyWords.value || selStr;
                     let hasWordParam = /%s[lurest]?\b/.test(data.url);
+                    let keywords = _keyWords || self.searchJumperInputKeyWords.value || getSelectStr();
                     if (!keywords) {
                         keywords = getKeywords();
-                    }
-                    if (!keywords && hasWordParam) {
-                        if (typeof navigator.clipboard.readText !== "undefined") {
-                            keywords = await navigator.clipboard.readText();
+                        if (!keywords && hasWordParam) {
+                            if (typeof navigator.clipboard.readText !== "undefined") {
+                                keywords = await navigator.clipboard.readText();
+                            }
                         }
                     }
-                    if (keywords) {
+                    if (keywords && !_keyWords) {
                         if (keywords != cacheKeywords) {
                             cacheKeywords = keywords;
                             self.keywordIndex = 0;
@@ -6754,6 +6756,9 @@
                                 }
                                 if (!self.keywordIndex) self.keywordIndex = 0;
                                 switch(multiMatch[1]) {
+                                    case "all":
+                                        inputString = valueArr.join('\n');
+                                        break;
                                     case ""://next
                                         value = valueArr[self.keywordIndex];
                                         if (++self.keywordIndex >= valueArr.length) {
@@ -6865,7 +6870,7 @@
                         ele.dataset.url = tempUrl.replace(/%e\b/g, document.characterSet).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
                     }
                     let targetUrl = '';
-                    let targetName = selStr || document.title;
+                    let targetName = inputString || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     if (targetElement && targetElement.nodeName) {
                         targetUrl = (typeData.selectImg || typeData.selectAudio || typeData.selectVideo) ? (targetElement.src || '') : (targetElement.href || (targetElement.parentNode && targetElement.parentNode.href) || '');
@@ -7139,6 +7144,35 @@
                             });
                         }
                     }
+                    if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
+                        if (inputString &&
+                            /%s[lurest]?\b/.test(ele.dataset.url) &&
+                            inputString.indexOf("\n") !== -1) {
+                            if (searchData.prefConfig.multiline == 1 ||
+                                confirm(i18n("multiline"))) {
+                                let selStrArr = inputString.split("\n");
+                                if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
+                                let searchIndex = 0;
+                                let defaultTarget = ele.target;
+                                ele.target = "_blank";
+                                let searchByLine = async () => {
+                                    targetUrlData = await getUrl(selStrArr[searchIndex++]);
+                                    ele.href = targetUrlData;
+                                    ele.click();
+                                    if (searchIndex < selStrArr.length) {
+                                        setTimeout(() => {
+                                            searchByLine();
+                                        }, searchData.prefConfig.multilineGap || 1000);
+                                    } else ele.target = defaultTarget;
+                                };
+                                searchByLine();
+                                ele.href = "";
+                                if (e.preventDefault) e.preventDefault();
+                                if (e.stopPropagation) e.stopPropagation();
+                                return false;
+                            }
+                        }
+                    }
                     if (/^find:/.test(data.url)) {
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
@@ -7254,33 +7288,6 @@
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
                         return;
-                    }
-                    if (isPage && (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2)) {
-                        if (inputString &&
-                            /%s[lurest]?\b/.test(ele.dataset.url) &&
-                            inputString.indexOf("\n") !== -1) {
-                            if (searchData.prefConfig.multiline == 1 ||
-                                confirm(i18n("multiline"))) {
-                                let selStrArr = inputString.split("\n");
-                                if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
-                                let encodeSelStr = encodeURIComponent(inputString);
-                                let searchIndex = 0;
-                                let searchByLine = () => {
-                                    _GM_openInTab(targetUrlData.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
-                                    if (searchIndex < selStrArr.length) {
-                                        setTimeout(() => {
-                                            searchByLine();
-                                        }, searchData.prefConfig.multilineGap || 1000);
-                                    }
-                                };
-                                searchByLine();
-                                if (searchData.prefConfig.multiline == 1) {
-                                    ele.href = "";
-                                }
-                                if (e.preventDefault) e.preventDefault();
-                                if (e.stopPropagation) e.stopPropagation();
-                            }
-                        }
                     }
                     if (shift && !ctrl && !meta && !alt && e.isTrusted) return;
                     if (/^(chrome|edge|about):/.test(targetUrlData)) {
@@ -9194,7 +9201,8 @@
             if (searchData.prefConfig.quickAddRule) {
                 document.addEventListener('click', e => {
                     if (!(((e.ctrlKey || e.metaKey) && e.shiftKey) || ((e.ctrlKey || e.metaKey) && e.altKey) || (e.altKey && e.shiftKey))) return;
-                    if (e.target.nodeName.toUpperCase() !== 'INPUT' && e.target.nodeName.toUpperCase() !== 'TEXTAREA') return;
+                    if (!/^(INPUT|TEXTAREA)$/i.test(e.target.nodeName)) return;
+                    if (/^INPUT$/i.test(e.target.nodeName) && e.target.type && e.target.type != 'text') return;
                     quickAddByInput(e.target);
                 }, true);
             }
