@@ -3765,7 +3765,7 @@
                 if (this.focusMark) this.focusMark.removeAttribute('data-current');
                 setTimeout(() => {
                     ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-                    ele.dataset.current=true;
+                    ele.dataset.current = true;
                 }, 0);
                 this.focusMark = ele;
                 if (!this.wPosBar) {
@@ -3779,11 +3779,12 @@
                     getBody(document).appendChild(this.hPosBar);
                 }
 
-                this.wPosBar.style.top = getElementTop(ele) + "px";
-                this.wPosBar.style.height = ele.offsetHeight + "px";
+                let rect = ele.getBoundingClientRect();
+                this.wPosBar.style.top = rect.top + document.documentElement.scrollTop + getBody(document).scrollTop + "px";
+                this.wPosBar.style.height = rect.height + "px";
 
-                this.hPosBar.style.left = getElementLeft(ele) + "px";
-                this.hPosBar.style.width = ele.offsetWidth + "px";
+                this.hPosBar.style.left = rect.left + "px";
+                this.hPosBar.style.width = rect.width + "px";
 
                 this.wPosBar.style.animationName = "";
                 this.hPosBar.style.animationName = "";
@@ -3897,6 +3898,7 @@
                 if (!ele) {
                     this.highlight(words, getBody(document), root);
                     [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
+                        if (!iframe.offsetParent) return;
                         let iframeDoc;
                         try {
                             iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -3951,6 +3953,7 @@
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     let pa = node.parentNode;
+                    if (node.nodeType == 1 && node.classList && node.classList.contains("searchJumper")) return 0;
                     if (word.link && node.nodeType == 1 && node.href && node.href.match) {
                         let wordMatch = node.href.match(new RegExp(word.content, word.reCase));
                         if (wordMatch) {
