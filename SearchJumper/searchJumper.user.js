@@ -4573,15 +4573,12 @@
                 if (!noSave && navEnable != enable) {
                     storage.setItem("navEnable", enable || "");
                     navEnable = enable;
-                    if (enable) {
-                        this.locBtn.classList.add("checked");
-                    } else {
-                        this.locBtn.classList.remove("checked");
-                    }
                 }
                 if (enable) {
+                    if (!noSave) this.locBtn.classList.add("checked");
                     this.searchJumperNavBar.style.display = "";
                 } else {
+                    if (!noSave) this.locBtn.classList.remove("checked");
                     this.searchJumperNavBar.style.display = "none";
                     this.navPointer.style.display = "none";
                 }
