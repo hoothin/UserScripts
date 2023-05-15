@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.22.88.64
+// @version      1.6.23.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -206,9 +206,6 @@
             }, {
                 name: "Google Search in site",
                 url: "https://www.google.com/search?q=%s%20site%3A%h&ie=utf-8&oe=utf-8",
-            }, {
-                name: "Bing Search in site",
-                url: "https://www.bing.com/search?q=%s%20site%3A%h"
             }, {
                 name: "Words to QRCode",
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
@@ -2388,7 +2385,8 @@
                      left: 0;
                      border-radius: 0px!important;
                  }
-                 mark.searchJumper {
+                 mark.searchJumper,
+                 a.searchJumper {
                      visibility: visible;
                      font-style: normal;
                      box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px;
@@ -2396,7 +2394,8 @@
                      text-decoration: none;
                      padding: 1px 0;
                  }
-                 mark.searchJumper[data-current=true] {
+                 mark.searchJumper[data-current=true],
+                 a.searchJumper[data-current=true] {
                      border-bottom: 0.2em solid;
                      border-bottom-left-radius: 0;
                      border-bottom-right-radius: 0;
@@ -2879,9 +2878,12 @@
                         } else {
                             style = self.getHighlightStyle(self.curWordIndex, "", "");
                         }
+                        let showWords = "";
                         if (word.indexOf("@") === 0) {
+                            showWords = word;
                             let wordTemp = searchData.prefConfig.inPageRule && searchData.prefConfig.inPageRule[word];
                             if (wordTemp) word = wordTemp;
+                            else return;
                         } else {
                             word = word.replace(/^\\@/, "@");
                         }
@@ -2892,7 +2894,8 @@
                             reCase = reMatch[2].indexOf("i") != -1 ? "i" : "";
                             link = reMatch[2].indexOf("l") != -1;
                         }
-                        result.push({content: word, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup});
+                        if (!showWords) showWords = word;
+                        result.push({content: word, showWords: showWords, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup});
                         self.curWordIndex++;
                     });
                 } else {
@@ -2935,8 +2938,8 @@
                 targetWords.forEach(word => {
                     if (!word) return;
                     let wordSpan = document.createElement("span");
-                    wordSpan.innerHTML = word.content;
-                    wordSpan.title = word.title ? JSON.parse('"' + word.title + '"') : word.content;
+                    wordSpan.innerHTML = word.showWords;
+                    wordSpan.title = word.title ? JSON.parse('"' + word.title + '"') : word.showWords;
                     let background = word.style.match(/background: *(#?\w+)/);
                     if (background) wordSpan.style.background = background[1];
                     let color = word.style.match(/color: *(#?\w+)/);
@@ -2959,9 +2962,9 @@
                     }, true);
                     wordSpan.addEventListener("mousedown", e => {
                         if (e.button === 0) {
-                            this.focusHighlightByText(word.content, true, wordSpan);
+                            this.focusHighlightByText(word.showWords, true, wordSpan);
                         } else if (e.button === 2){
-                            this.focusHighlightByText(word.content, false, wordSpan);
+                            this.focusHighlightByText(word.showWords, false, wordSpan);
                         }
                     });
                     let removeBtn = document.createElement("div");
@@ -2975,9 +2978,9 @@
                     removeBtn.innerHTML = createHTML(`<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("removeBtn")}</title>${closePath}</svg>`);
                     wordSpan.appendChild(removeBtn);
 
-                    let curList = this.marks[word.content];
+                    let curList = this.marks[word.showWords];
                     this.setHighlightSpan(wordSpan, -1, curList ? curList.length : 1);
-                    this.highlightSpans[word.content] = wordSpan;
+                    this.highlightSpans[word.showWords] = wordSpan;
 
                     this.searchInPageLockWords.appendChild(wordSpan);
                     wordSpans.push(wordSpan);
@@ -3538,8 +3541,8 @@
                     modifyBtn.addEventListener("click", e => {
                         let newWord = wordContent.value;
                         if (!newWord) return;
-                        let contentChange = newWord !== this.modifyWord.content;
-                        if (wordIsRe.checked) {
+                        let contentChange = newWord !== this.modifyWord.showWords || wordReCase.checked !== this.modifyWord.isRe || wordLink.checked !== this.modifyWord.link;
+                        if (wordIsRe.checked && newWord.indexOf("@") !== 0) {
                             newWord = `/${newWord}/${wordReCase.checked ? "i" : ""}${wordLink.checked ? "l" : ""}`;
                         }
                         let hide = wordHide.value;
@@ -3603,7 +3606,7 @@
                         style = styleMatch[1];
                     }
 
-                    wordContent.value = word.content || "";
+                    wordContent.value = word.showWords || "";
                     wordStyle.value = style || "";
                     wordRange.value = word.inRange || "";
                     wordIsRe.checked = !!word.isRe;
@@ -3611,7 +3614,7 @@
                     wordLink.checked = !!word.link;
                     if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
                     try {
-                        wordTitle.value = word.title !== word.content ? JSON.parse('"' + word.title + '"') : "";
+                        wordTitle.value = word.title !== word.showWords ? JSON.parse('"' + word.title + '"') : "";
                     } catch (e) {
                         debug(e);
                     }
@@ -3661,7 +3664,7 @@
 
                     if (hideChange) {
                         [].forEach.call(document.querySelectorAll(".searchJumper-hide"), hide => {
-                            if (hide.dataset.content === word.content) {
+                            if (hide.dataset.content === word.showWords) {
                                 hide.classList.remove("searchJumper-hide");
                                 hide.style.display = "";
                                 hide.removeAttribute('data-content');
@@ -3669,7 +3672,7 @@
                         });
                     }
 
-                    this.marks[word.content].forEach(mark => {
+                    this.marks[word.showWords].forEach(mark => {
                         if (mark) {
                             mark.title = title;
                             if (style) mark.style = style;
@@ -3681,7 +3684,7 @@
                                     parent = parent.parentElement;
                                 }
                                 if (parent) {
-                                    parent.dataset.content = word.content;
+                                    parent.dataset.content = word.showWords;
                                     parent.classList.add("searchJumper-hide");
                                     parent.innerHTML = createHTML("");
                                 }
@@ -3708,20 +3711,25 @@
                 if (findIndex < 0) return;
                 targetArr.splice(findIndex, 1);
                 this.lockWords = preStr + targetArr.join(this.splitSep);
-                delete this.highlightSpans[word.content];
+                delete this.highlightSpans[word.showWords];
                 findIndex = this.curHighlightWords.indexOf(word);
                 if (findIndex < 0) return;
                 this.curHighlightWords.splice(findIndex, 1);
 
-                this.marks[word.content].forEach(mark => {
+                this.marks[word.showWords].forEach(mark => {
                     if (mark.parentNode) {
-                        let newNode = document.createTextNode(mark.innerText);
-                        mark.parentNode.replaceChild(newNode, mark);
-                        newNode.parentNode.normalize();
+                        if (/^A$/i.test(mark.nodeName)) {
+                            mark.classList.remove("searchJumper");
+                            mark.style.cssText = "";
+                        } else {
+                            let newNode = document.createTextNode(mark.innerText);
+                            mark.parentNode.replaceChild(newNode, mark);
+                            newNode.parentNode.normalize();
+                        }
                     }
                 });
-                delete this.marks[word.content];
-                let targetNav = this.navMarks.querySelector(`[data-content="${word.content}"]`);
+                delete this.marks[word.showWords];
+                let targetNav = this.navMarks.querySelector(`[data-content="${word.showWords}"]`);
                 if (targetNav) targetNav.parentNode.removeChild(targetNav);
                 this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
             }
@@ -3913,9 +3921,14 @@
                         if (!markList) return;
                         markList.forEach(mark => {
                             if (!mark.parentNode) return;
-                            let newNode = document.createTextNode(mark.innerText);
-                            mark.parentNode.replaceChild(newNode, mark);
-                            newNode.parentNode.normalize();
+                            if (/^A$/i.test(mark.nodeName)) {
+                                mark.classList.remove("searchJumper");
+                                mark.style.cssText = "";
+                            } else {
+                                let newNode = document.createTextNode(mark.innerText);
+                                mark.parentNode.replaceChild(newNode, mark);
+                                newNode.parentNode.normalize();
+                            }
                         });
                     });
                     [].forEach.call(ele.querySelectorAll(".searchJumper-hide"), hide => {
@@ -3941,16 +3954,77 @@
                     if (word.link && node.nodeType == 1 && node.href && node.href.match) {
                         let wordMatch = node.href.match(new RegExp(word.content, word.reCase));
                         if (wordMatch) {
-                            let parentDepth = word.hideParent || 0;
-                            let parent = node;
-                            while(parentDepth-- > 0 && parent) {
-                                parent = parent.parentElement;
-                            }
-                            if (parent) {
-                                parent.innerHTML = createHTML("");
-                                parent.dataset.content = word.content;
-                                parent.classList.add("searchJumper-hide");
-                                return 0;
+                            if (typeof word.hideParent !== 'undefined') {
+                                let parentDepth = word.hideParent;
+                                let parent = node;
+                                while(parentDepth-- > 0 && parent) {
+                                    parent = parent.parentElement;
+                                }
+                                if (parent) {
+                                    parent.innerHTML = createHTML("");
+                                    parent.dataset.content = word.showWords;
+                                    parent.classList.add("searchJumper-hide");
+                                    return 0;
+                                }
+                            } else {
+                                let curList = self.marks[word.showWords];
+                                let index = curList.length;
+                                node.classList.add("searchJumper");
+                                if (word.title) node.title = JSON.parse('"' + word.title + '"');
+                                if (word.popup) {
+                                    node.addEventListener("mouseenter", e => {
+                                        if (targetElement != node || !searchBar.funcKeyCall) {
+                                            targetElement = node;
+                                            searchBar.showInPage(true, e);
+                                        }
+                                    });
+                                }
+                                if (word.style) node.style.cssText = word.style;
+                                node.addEventListener("click", e => {
+                                    if (!e.altKey) return;
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    return false;
+                                });
+                                node.dataset.content = word.showWords;
+                                node.addEventListener("mousedown", e => {
+                                    if (!e.altKey) return;
+                                    let target;
+                                    if (e.button === 0) {
+                                        if (index != curList.length - 1) {
+                                            self.focusIndex = index + 1;
+                                        } else self.focusIndex = 0;
+                                    } else if (e.button === 2){
+                                        if (index != 0) {
+                                            self.focusIndex = index - 1;
+                                        } else self.focusIndex = curList.length - 1;
+                                    }
+                                    target = curList[self.focusIndex];
+                                    self.focusHighlight(target);
+                                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
+                                    self.focusText = word.showWords;
+                                });
+                                self.marks[word.showWords].push(node);
+
+                                let navMark = document.createElement("span");
+                                let top = getElementTop(node);
+                                navMark.dataset.top = top;
+                                navMark.dataset.content = word.showWords;
+                                navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                                navMark.style.background = node.style.background || "yellow";
+                                navMark.addEventListener("click", e => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    self.focusIndex = index;
+                                    self.focusHighlight(node);
+                                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                                    self.navPointer.style.display = "";
+                                    self.navPointer.style.top = navMark.offsetTop + 16 + "px";
+                                    return false;
+                                }, true);
+                                self.navMarks.appendChild(navMark);
+
+                                skip = 1;
                             }
                         }
                     } else if (!word.link && node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^BODY$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
@@ -3990,12 +4064,12 @@
                                 }
                                 if (parent) {
                                     parent.innerHTML = createHTML("");
-                                    parent.dataset.content = word.content;
+                                    parent.dataset.content = word.showWords;
                                     parent.classList.add("searchJumper-hide");
                                     return 0;
                                 }
                             }
-                            let curList = self.marks[word.content];
+                            let curList = self.marks[word.showWords];
                             let index = curList.length;
                             spannode = document.createElement("mark");
                             spannode.className = "searchJumper";
@@ -4015,7 +4089,7 @@
                                 e.preventDefault();
                                 return false;
                             });
-                            spannode.dataset.content = word.content;
+                            spannode.dataset.content = word.showWords;
                             spannode.addEventListener("mousedown", e => {
                                 if (!e.altKey) return;
                                 let target;
@@ -4030,20 +4104,20 @@
                                 }
                                 target = curList[self.focusIndex];
                                 self.focusHighlight(target);
-                                self.setHighlightSpan(self.getHighlightSpanByText(word.content), self.focusIndex, curList.length);
-                                self.focusText = word.content;
+                                self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
+                                self.focusText = word.showWords;
                             });
                             middlebit = node.splitText(pos);
                             middlebit.splitText(len);
                             middleclone = middlebit.cloneNode(true);
                             spannode.appendChild(middleclone);
                             middlebit.parentNode.replaceChild(spannode, middlebit);
-                            self.marks[word.content].push(spannode);
+                            self.marks[word.showWords].push(spannode);
 
                             let navMark = document.createElement("span");
                             let top = getElementTop(spannode);
                             navMark.dataset.top = top;
-                            navMark.dataset.content = word.content;
+                            navMark.dataset.content = word.showWords;
                             navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
                             navMark.style.background = spannode.style.background || "yellow";
                             navMark.addEventListener("click", e => {
@@ -4051,7 +4125,7 @@
                                 e.preventDefault();
                                 self.focusIndex = index;
                                 self.focusHighlight(spannode);
-                                self.setHighlightSpan(self.getHighlightSpanByText(word.content), index, curList.length);
+                                self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
                                 self.navPointer.style.display = "";
                                 self.navPointer.style.top = navMark.offsetTop + 16 + "px";
                                 return false;
@@ -4079,8 +4153,8 @@
                     return skip;
                 }
                 words.forEach(w => {
-                    if (!self.marks[w.content]) {
-                        self.marks[w.content] = [];
+                    if (!self.marks[w.showWords]) {
+                        self.marks[w.showWords] = [];
                     }
                     if (w.inRange && ele.parentNode) {
                         [].forEach.call(ele.parentNode.querySelectorAll(w.inRange), e => {
@@ -4100,17 +4174,21 @@
                 }, 1000);
                 if (this.navMarks.innerHTML != "") {
                     this.searchJumperNavBar.classList.add("show");
+                    if (navEnable) {
+                        this.appendBar();
+                        this.setNav(true, true);
+                    }
                 }
             }
 
-            refreshPageWords() {
+            refreshPageWords(newWords) {
                 this.lockWords = "";
                 this.searchJumperInPageInput.value = "";
                 this.searchInPageLockWords.innerHTML = createHTML();
                 this.searchJumperInPageInput.style.paddingLeft = "";
                 this.submitInPageWords();
-                if (globalInPageWords) {
-                    this.searchJumperInPageInput.value = globalInPageWords;
+                if (newWords || globalInPageWords) {
+                    this.searchJumperInPageInput.value = newWords || globalInPageWords;
                     this.submitInPageWords();
                     this.appendBar();
                 }
@@ -4492,12 +4570,15 @@
                 if (!noSave && navEnable != enable) {
                     storage.setItem("navEnable", enable || "");
                     navEnable = enable;
+                    if (enable) {
+                        this.locBtn.classList.add("checked");
+                    } else {
+                        this.locBtn.classList.remove("checked");
+                    }
                 }
                 if (enable) {
-                    this.locBtn.classList.add("checked");
                     this.searchJumperNavBar.style.display = "";
                 } else {
-                    this.locBtn.classList.remove("checked");
                     this.searchJumperNavBar.style.display = "none";
                     this.navPointer.style.display = "none";
                 }
@@ -4631,7 +4712,7 @@
                 this.saveRuleBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
                     let inPageRule = searchData.prefConfig.inPageRule || {};
-                    inPageRule[location.href.replace(/\b_i=.*/, "")] = this.lockWords;
+                    inPageRule[location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
                     searchData.prefConfig.inPageRule = inPageRule;
                     searchData.lastModified = new Date().getTime();
                     storage.setItem("searchData", searchData);
@@ -5467,7 +5548,7 @@
                 currentSite = data;
                 siteEle.classList.add('current');
                 localKeywords = "";
-                if (!/#p{|^showTips/.test(data.url) && /%s[lurest]?\b/.test(data.url)) {
+                if (!/#p{|^(showTips|find)/.test(data.url) && /%s[lurest]?\b/.test(data.url)) {
                     let keywords = getKeywords();
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
@@ -7248,22 +7329,37 @@
                             }
                         }
                     }
-                    if (/^find:/.test(data.url)) {
+                    let findWordsMatch = targetUrlData.match(/^find(\.addto\((.*?)\))?:(.*)/);
+                    if (findWordsMatch) {
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
-                        let findWords = targetUrlData.replace(/^find:/, "");
+                        let addToGroup = findWordsMatch[2];
+                        let findWords = findWordsMatch[3];
                         if (!findWords) {
                             return false;
-                        } else if (findWords.indexOf('%input{') !== -1) {
-                            self.showCustomInputWindow(findWords, _url => {
-                                self.searchJumperInPageInput.value = _url;
-                                self.submitInPageWords();
-                                self.waitForHide(1);
-                            });
                         } else {
-                            self.searchJumperInPageInput.value = findWords;
-                            self.submitInPageWords();
-                            self.waitForHide(1);
+                            if (addToGroup && searchData.prefConfig.inPageRule) {
+                                if (addToGroup.indexOf("@") !== 0) addToGroup = "@" + addToGroup;
+                            }
+                            if (findWords.indexOf('%input{') !== -1) {
+                                self.showCustomInputWindow(findWords, _url => {
+                                    if (addToGroup) {
+                                        self.addToHighlightGroup(_url, addToGroup);
+                                    } else {
+                                        self.searchJumperInPageInput.value = _url;
+                                        self.submitInPageWords();
+                                        self.waitForHide(1);
+                                    }
+                                });
+                            } else {
+                                if (addToGroup) {
+                                    self.addToHighlightGroup(findWords, addToGroup);
+                                } else {
+                                    self.searchJumperInPageInput.value = findWords;
+                                    self.submitInPageWords();
+                                    self.waitForHide(1);
+                                }
+                            }
                         }
                         return false;
                     } else if (/^c(opy)?:/.test(data.url)) {
@@ -7441,6 +7537,21 @@
                     clearTimeout(self.requestShowTipsTimer);
                 }, false);
                 return ele;
+            }
+
+            addToHighlightGroup(findWords, addToGroup) {
+                let group = searchData.prefConfig.inPageRule[addToGroup];
+                if (group) {
+                    let groupMatch = group.match(/^\/(.*)\/([il]*)$/);
+                    if (groupMatch) {
+                        group = `/${groupMatch[1]}|${findWords}/${groupMatch[2] || ''}`;
+                    } else group = `/${group}|${findWords}/`;
+                } else {
+                    group = `/${findWords}/`;
+                }
+                searchData.prefConfig.inPageRule[addToGroup] = group;
+                storage.setItem("searchData", searchData);
+                this.refreshPageWords(this.lockWords);
             }
 
             async anylizeShowTips(data, name) {
@@ -9218,7 +9329,9 @@
                             document.removeEventListener('mousemove', inpageMouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
                             clearTimeout(showToolbarTimer);
-                            searchBar.showInPage(true, e);
+                            setTimeout(() => {//wait for triple click
+                                searchBar.showInPage(true, e);
+                            }, 200);
                         }
                         return;
                     }
@@ -9366,10 +9479,10 @@
                         if (mutation.removedNodes.length) {
                             [].forEach.call(mutation.removedNodes, removedNode => {
                                 let target = removedNode.nodeType === 1 ? removedNode : mutation.target;
-                                if (target.className === "searchJumper") {
+                                if (target.classList && target.classList.contains("searchJumper")) {
                                     removeMark(target);
                                 } else if (target.children.length) {
-                                    [].forEach.call(target.querySelectorAll("mark.searchJumper"), node => {
+                                    [].forEach.call(target.querySelectorAll("mark.searchJumper,a.searchJumper"), node => {
                                         removeMark(node);
                                     });
                                 }
