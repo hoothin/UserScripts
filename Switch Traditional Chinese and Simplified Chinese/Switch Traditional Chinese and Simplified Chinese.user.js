@@ -865,7 +865,8 @@
         if (childs) {
             for (var i = 0;i<childs.length;i++){
                 var child=childs[i];
-                if (/BR|META|SCRIPT|HR|STYLE/.test(child.nodeName.toUpperCase())) continue;
+                if (/BR|META|SCRIPT|HR|STYLE|TEXTAREA/i.test(child.nodeName)) continue;
+                if (child.contentEditable == 'true') continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
                 if (child.title) {
                     let title = stranText(child.title);
