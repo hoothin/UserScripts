@@ -1288,7 +1288,7 @@
 
             let customTermTitle = document.createElement('h3');
             customTermTitle.style.margin = '5px 0';
-            customTermTitle.innerText = '自定義用語轉換（可透過通配符設置生效網址範圍）：';
+            customTermTitle.innerText = '自定義簡繁用語轉換（可透過通配符設置生效網址範圍）：';
             let addNewGlob1 = document.createElement('button');
             addNewGlob1.innerText = '添加生效網站';
             addNewGlob1.addEventListener("click", function(e) {
