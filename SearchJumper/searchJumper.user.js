@@ -11685,7 +11685,9 @@
             if (searchData.prefConfig.globalSearchNow) {
                 clearInterval(checkGlobalIntv);
                 clearInterval(flashTitleIntv);
-                document.title = defaultTitle;
+                if (document.hidden) {
+                    defaultTitle = document.title;
+                } else document.title = defaultTitle;
             }
             if (waiting) return;
             waiting = true;
