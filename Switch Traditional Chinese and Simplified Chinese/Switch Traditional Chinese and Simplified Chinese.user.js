@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.26
+// @version      1.2.6.27
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -644,6 +644,10 @@
         'yyds':'永遠的神'
     };
 
+    var illiteracyConfig = {
+        "*": fuckIlliteracy
+    }
+
     //繁轉簡
     var tc2sc = {
         '著':[
@@ -676,25 +680,30 @@
 
     var isSimple = (lang === "zh-cn" || lang === "zh-hans" || lang === "zh-sg" || lang === "zh-my");
     var action = 0;//1:noChange, 2:showSimplified, 3:showTraditional
+    var enable = false;
 
-    var stDict={},tsDict={};
-    var sc2tcCombTree={}, tc2scCombTree={}, fuckIlliteracyTree={};
+    var stDict = {}, tsDict = {};
+    var sc2tcCombTree = {}, tc2scCombTree = {}, fuckIlliteracyTree = {};
 
-    function stranText(txt){
-        if(!txt)return "";
-        if(action == 2){return simplized(txt);}
-        else if(action == 3){return traditionalized(txt);}
+    function stranText(txt) {
+        if (!txt) return "";
+        txt = generalReplace(txt);
+        if (enable) {
+            if (action == 2) return simplized(txt);
+            else if (action == 3) return traditionalized(txt);
+        }
+        else return txt;
     }
 
-    function traditionalized(orgStr){
+    function generalReplace(orgStr){
         var str='', char;
         for(var i=0;i<orgStr.length;i++){
             char=orgStr.charAt(i);
-            let search=sc2tcCombTree[char],searchIndex=i,hasMatch=false;
+            let search=fuckIlliteracyTree[char.toLowerCase()],searchIndex=i,hasMatch=false;
             while(search && searchIndex<orgStr.length){
                 let downTree=null;
                 if(searchIndex<orgStr.length-1){
-                    downTree=search[orgStr.charAt(searchIndex+1)];
+                    downTree=search[orgStr.charAt(searchIndex+1).toLowerCase()];
                 }
                 if(!downTree && search.end){
                     hasMatch=true;
@@ -705,10 +714,16 @@
                 searchIndex++;
                 search=downTree;
             }
-            if(hasMatch){
-                continue;
-            }
-            search=fuckIlliteracyTree[char];searchIndex=i;
+            if(!hasMatch)str+=char;
+        }
+        return str;
+    }
+
+    function traditionalized(orgStr){
+        var str='', char;
+        for(var i=0;i<orgStr.length;i++){
+            char=orgStr.charAt(i);
+            let search=sc2tcCombTree[char],searchIndex=i,hasMatch=false;
             while(search && searchIndex<orgStr.length){
                 let downTree=null;
                 if(searchIndex<orgStr.length-1){
@@ -791,27 +806,6 @@
             if(hasMatch){
                 continue;
             }
-            search=fuckIlliteracyTree[char];searchIndex=i;
-            while(search && searchIndex<orgStr.length){
-                let downTree=null;
-                if(searchIndex<orgStr.length-1){
-                    downTree=search[orgStr.charAt(searchIndex+1)];
-                }
-                if(!downTree && search.end){
-                    hasMatch=true;
-                    i=searchIndex;
-                    for(let s=0;s<search.end.length;s++){
-                        let curChar=search.end.charAt(s);
-                        str+=tsDict[curChar]||curChar;
-                    }
-                    break;
-                }
-                searchIndex++;
-                search=downTree;
-            }
-            if(hasMatch){
-                continue;
-            }
             if(char.charCodeAt(0) > 10000){
                 var sChar=tsDict[char], tc2scItem=tc2sc[char];
                 if(sChar || tc2scItem){
@@ -865,6 +859,7 @@
         if (pNode) {
             childs = pNode.nodeType == 3 ? [pNode] : pNode.childNodes;
         } else {
+            document.title = stranText(document.title);
             childs = document.documentElement.childNodes;
         }
         if (childs) {
@@ -1006,6 +1001,7 @@
 
     let currentAction = "action_" + location.hostname.toString().replace(/\./g,"_");
     function setLanguage(){
+        enable = true;
         storage.setItem(currentAction, action);
         switch(action){
             case 1:
@@ -1032,7 +1028,7 @@
     }
 
     function disableOnSite(){
-        action = action === 1 ? "" : 1;
+        action = saveAction === 1 ? "" : 1;
         setLanguage();
         location.reload();
     }
@@ -1053,9 +1049,10 @@
                 if(i==key.length-1){
                     newTree={"end":value};
                 }
-                let branch=curTree[key.charAt(i)];
+                let curKey=value.charAt(i);
+                let branch=curTree[curKey];
                 if(!branch){
-                    curTree[key.charAt(i)]=newTree;
+                    curTree[curKey]=newTree;
                     curTree=newTree;
                 }else{
                     curTree=branch;
@@ -1067,9 +1064,10 @@
                 if(i==value.length-1){
                     newTree={"end":key};
                 }
-                let branch=curTree[value.charAt(i)];
+                let curKey=value.charAt(i);
+                let branch=curTree[curKey];
                 if(!branch){
-                    curTree[value.charAt(i)]=newTree;
+                    curTree[curKey]=newTree;
                     curTree=newTree;
                 }else{
                     curTree=branch;
@@ -1084,9 +1082,10 @@
                 if(i==key.length-1){
                     newTree={"end":value};
                 }
-                let branch=curTree[key.charAt(i)];
+                let curKey=key.charAt(i).toLowerCase();
+                let branch=curTree[curKey];
                 if(!branch){
-                    curTree[key.charAt(i)]=newTree;
+                    curTree[curKey]=newTree;
                     curTree=newTree;
                 }else{
                     curTree=branch;
@@ -1094,47 +1093,46 @@
             }
         }
         action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
-        if((auto||saveAction) && action > 1){
-            let startStrans = () => {
-                stranBody();
-                var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-                var observer = new MutationObserver(function(records){
-                    records.map(function(record) {
-                        if (record.type === "characterData") {
-                            let parentNode = record.target && record.target.parentNode;
-                            if (!parentNode) {
-                                return;
-                            }
-                            stranBody(parentNode);
+        enable = !!(auto || saveAction);
+        let startStrans = () => {
+            stranBody();
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+            var observer = new MutationObserver(function(records){
+                records.map(function(record) {
+                    if (record.type === "characterData") {
+                        let parentNode = record.target && record.target.parentNode;
+                        if (!parentNode) {
+                            return;
                         }
-                        if(record.addedNodes){
-                            [].forEach.call(record.addedNodes,function(item){
-                                stranBody(item);
-                            });
-                        }
-                    });
+                        stranBody(parentNode);
+                    }
+                    if(record.addedNodes){
+                        [].forEach.call(record.addedNodes,function(item){
+                            stranBody(item);
+                        });
+                    }
                 });
-                var option = {
-                    childList: true,
-                    subtree: true,
-                    characterData: true
-                };
-                observer.observe(document.body, option);
+            });
+            var option = {
+                childList: true,
+                subtree: true,
+                characterData: true
             };
-            setTimeout(function(){
-                if (document.readyState !== 'complete') {
-                    let loadHandler = e => {
-                        if (document.readyState !== 'complete') return;
-                        document.removeEventListener("readystatechange", loadHandler);
-                        startStrans();
-                    };
-                    document.addEventListener("readystatechange", loadHandler);
-                    return;
-                } else {
+            observer.observe(document.body, option);
+        };
+        setTimeout(function(){
+            if (document.readyState !== 'complete') {
+                let loadHandler = e => {
+                    if (document.readyState !== 'complete') return;
+                    document.removeEventListener("readystatechange", loadHandler);
                     startStrans();
-                }
-            },50);
-        }
+                };
+                document.addEventListener("readystatechange", loadHandler);
+                return;
+            } else {
+                startStrans();
+            }
+        },50);
 
         var curLang=isSimple;
         document.addEventListener("keydown", function(e) {
@@ -1291,12 +1289,54 @@
             let customTermTitle = document.createElement('h3');
             customTermTitle.style.margin = '5px 0';
             customTermTitle.innerText = '自定義用語轉換（可透過通配符設置生效網址範圍）：';
+            let addNewGlob1 = document.createElement('button');
+            addNewGlob1.innerText = '添加生效網站';
+            addNewGlob1.addEventListener("click", function(e) {
+                let glob = prompt("生效網站通配符", "https://google.com/*");
+                if (!glob) return;
+                let words = prompt("轉換用語", "简体,正體") || "";
+                if (!sc2tcCombConfig[glob]) sc2tcCombConfig[glob] = {};
+                if (words) {
+                    words = words.split(/[,， ]/);
+                    if (words.length == 2) {
+                        sc2tcCombConfig[glob][words[0]] = words[1];
+                    }
+                }
+                customTermInput.value = JSON.stringify(sc2tcCombConfig, null, 4);
+            });
+            customTermTitle.appendChild(addNewGlob1);
             baseCon.appendChild(customTermTitle);
             let customTermInput = document.createElement('textarea');
             customTermInput.style.width = '100%';
             customTermInput.style.minHeight = "60px";
             customTermInput.value = JSON.stringify(sc2tcCombConfig, null, 4);
             baseCon.appendChild(customTermInput);
+
+            let customIlliteracyTitle = document.createElement('h3');
+            customIlliteracyTitle.style.margin = '5px 0';
+            customIlliteracyTitle.innerText = '通用字詞轉換（可透過通配符設置生效網址範圍）：';
+            let addNewGlob2 = document.createElement('button');
+            addNewGlob2.innerText = '添加生效網站';
+            addNewGlob2.addEventListener("click", function(e) {
+                let glob = prompt("生效網站通配符", "https://google.com/*");
+                if (!glob) return;
+                let words = prompt("轉換字詞", "yyds,永遠的神") || "";
+                if (!illiteracyConfig[glob]) illiteracyConfig[glob] = {};
+                if (words) {
+                    words = words.split(/[,， ]/);
+                    if (words.length == 2) {
+                        illiteracyConfig[glob][words[0]] = words[1];
+                    }
+                }
+                customIlliteracyInput.value = JSON.stringify(illiteracyConfig, null, 4);
+            });
+            customIlliteracyTitle.appendChild(addNewGlob2);
+            baseCon.appendChild(customIlliteracyTitle);
+            let customIlliteracyInput = document.createElement('textarea');
+            customIlliteracyInput.style.width = '100%';
+            customIlliteracyInput.style.minHeight = "60px";
+            customIlliteracyInput.value = JSON.stringify(illiteracyConfig, null, 4);
+            baseCon.appendChild(customIlliteracyInput);
 
             let sitesList;
             _GM_listValues(list => {
@@ -1358,8 +1398,14 @@
                 storage.setItem('notification', notification);
                 storage.setItem('isSimple', isSimple);
                 try {
-                    sc2tcCombConfig = JSON.parse(customTermInput.value);
+                    sc2tcCombConfig = customTermInput.value ? JSON.parse(customTermInput.value) : "";
                     storage.setItem('sc2tcCombConfig', sc2tcCombConfig);
+                } catch (e) {
+                    console.log(e);
+                }
+                try {
+                    illiteracyConfig = customIlliteracyInput.value ? JSON.parse(customIlliteracyInput.value) : "";
+                    storage.setItem('illiteracyConfig', illiteracyConfig);
                 } catch (e) {
                     console.log(e);
                 }
@@ -1419,7 +1465,8 @@
         return false;
     }
 
-    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", "notification", "isSimple", currentAction], values => {
+    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", "illiteracyConfig", "notification", "isSimple", currentAction], values => {
+        let href = location.href.slice(0, 500);
         if (values.sc2tcCombConfig) {
             auto = values.auto;
             shortcutKey = values.shortcutKey;
@@ -1431,12 +1478,23 @@
             notification = values.notification;
             if (typeof values.isSimple != 'undefined') isSimple = values.isSimple;
             sc2tcComb = {};
-            let href = location.href.slice(0, 500);
             for (let key in sc2tcCombConfig) {
                  if (globMatch(key, href)) {
                      let sc2tc = sc2tcCombConfig[key];
                      for (let sc in sc2tc) {
                          sc2tcComb[sc] = sc2tc[sc];
+                     }
+                 }
+            }
+        }
+        if (values.illiteracyConfig) {
+            illiteracyConfig = values.illiteracyConfig;
+            fuckIlliteracy = {};
+            for (let key in illiteracyConfig) {
+                 if (globMatch(key, href)) {
+                     let illiteracy = illiteracyConfig[key];
+                     for (let w in illiteracy) {
+                         fuckIlliteracy[w] = illiteracy[w];
                      }
                  }
             }
@@ -1456,7 +1514,7 @@
         _GM_registerMenuCommand("自定義設置", () => {
             _GM_openInTab("https://greasyfork.org/scripts/24300", {active: true});
         });
-        if (saveAction) _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
+        _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
         if (!isSimple) {
             _GM_registerMenuCommand("提交新增詞彙", () => {
                 _GM_openInTab("https://github.com/hoothin/UserScripts/issues", {active: true});
