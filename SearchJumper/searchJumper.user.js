@@ -3899,6 +3899,7 @@
                     this.highlight(words, getBody(document), root);
                     [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
                         if (!iframe.offsetParent) return;
+                        if (iframe.offsetHeight < 100 || iframe.offsetWidth < 100) return;
                         let iframeDoc;
                         try {
                             iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -4712,7 +4713,7 @@
                 this.saveRuleBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
                     let inPageRule = searchData.prefConfig.inPageRule || {};
-                    inPageRule[location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
+                    inPageRule[this.inPageRuleKey || location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
                     searchData.prefConfig.inPageRule = inPageRule;
                     searchData.lastModified = new Date().getTime();
                     storage.setItem("searchData", searchData);
@@ -5259,6 +5260,7 @@
                         if (isMatch) {
                             let rule = searchData.prefConfig.inPageRule[key];
                             if (!rule) continue;
+                            this.inPageRuleKey = key;
                             this.setInPageWords(rule);
                             break;
                         }
