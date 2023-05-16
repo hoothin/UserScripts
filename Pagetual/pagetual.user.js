@@ -1960,7 +1960,6 @@
                 body.querySelector("button.next:not([disabled])") ||
                 body.querySelector(".btn_next:not([disabled])") ||
                 body.querySelector(".btn-next:not([disabled])") ||
-                body.querySelector("[title=next]") ||
                 body.querySelector("a#linkNext") ||
                 body.querySelector("a[class*=page__next]");
             }
