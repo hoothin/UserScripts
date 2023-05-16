@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.25
+// @version      1.9.36.26
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -60,8 +60,7 @@
     'use strict';
 
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) {
-        var domloaded = function (){
-            window.scroll(window.scrollX, 999999);
+        var domloaded = function() {
             window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
         };
         if (window.opera) {
@@ -1486,6 +1485,23 @@
                             this.curSiteRule.pageElement = tempSel + (targetChild ? ">*" : "");
                             break;
                         }
+                    }
+                    if (!pageElement || pageElement.length == 0) {
+                        pageElementSel = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
+                        pageElement = getAllElements(pageElementSel, doc);
+                        if (pageElement && pageElement.length == 1) {
+                            if (targetChild) {
+                                pageElement = pageElement.children;
+                            }
+                            this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
+                        }
+                    }
+                }
+                if (this.curSiteRule.singleUrl && pageElement && pageElement.length && curWin && curWin != _unsafeWindow) {
+                    let parent = pageElement[0].parentNode;
+                    let loading = parent.querySelector('[class*=loading]');
+                    if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
+                        pageElement = null;
                     }
                 }
             }
