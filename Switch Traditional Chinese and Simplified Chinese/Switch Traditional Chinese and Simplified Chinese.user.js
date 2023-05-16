@@ -865,8 +865,7 @@
         if (childs) {
             for (var i = 0;i<childs.length;i++){
                 var child=childs[i];
-                if (/BR|META|SCRIPT|HR|STYLE|TEXTAREA/i.test(child.nodeName)) continue;
-                if (child.contentEditable == 'true') continue;
+                if (/BR|META|SCRIPT|HR|STYLE/i.test(child.nodeName)) continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
                 if (child.title) {
                     let title = stranText(child.title);
@@ -889,7 +888,8 @@
                         }
                     }
                 }
-                if (child.nodeName.toUpperCase() == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
+                if (/TEXTAREA/i.test(child.nodeName) || child.contentEditable == 'true') continue;
+                if (/INPUT/i.test(child.nodeName) && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
                     let value = stranText(child.value);
                     if (child.value != value) {
                         child.value = value;
