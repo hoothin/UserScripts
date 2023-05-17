@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.23.88.64
+// @version      1.6.24.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4504,15 +4504,15 @@
                 }
             }
 
-            async searchBySiteName(siteName, e) {
+            async searchBySiteName(siteName, e, selfTab) {
                 for (let [siteBtn, siteData] of this.allSiteBtns) {
                     if (siteBtn.dataset.name == siteName) {
                         await this.siteSetUrl(siteBtn, {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey});
                         let isPage = /^(https?|ftp):/.test(siteBtn.href);
                         if (isPage) {
-                            siteBtn.setAttribute("target", "_blank");
+                            siteBtn.setAttribute("target", selfTab ? "_self" : "_blank");
                         }
-                        if (!isPage) {
+                        if (!isPage || selfTab) {
                             siteBtn.click();
                         } else {
                             _GM_openInTab(siteBtn.href, {active: true});
@@ -4782,12 +4782,12 @@
                 //Search in page
 
                 let expandTypeHandler = e => {
-                    let typeEle = this.searchJumperExpand.parentNode;
+                    let typeEle = self.searchJumperExpand.parentNode;
                     if (!typeEle || !typeEle.classList.contains('not-expand')) return;
                     typeEle.classList.remove('not-expand');
-                    let leftRight = this.con.classList.contains("search-jumper-left") ||
-                        this.con.classList.contains("search-jumper-right");
-                    typeEle.removeChild(this.searchJumperExpand);
+                    let leftRight = self.con.classList.contains("search-jumper-left") ||
+                        self.con.classList.contains("search-jumper-right");
+                    typeEle.removeChild(self.searchJumperExpand);
                     let scrollSize = Math.max(typeEle.scrollWidth, typeEle.scrollHeight) + 5 + "px";
                     if (leftRight) {
                         typeEle.style.height = scrollSize;
@@ -4796,7 +4796,9 @@
                         typeEle.style.width = scrollSize;
                         typeEle.style.height = "";
                     }
+                    self.bar.style.pointerEvents = "none";
                     setTimeout(() => {
+                        self.bar.style.pointerEvents = "";
                         self.checkScroll();
                     }, 251);
                 }, showTimer;
@@ -11386,7 +11388,11 @@
                     try {
                         hash = decodeURIComponent(hash);
                     } catch (e) {}
-                    searchBar.searchJumperInputKeyWords.value = hash;
+                    hash = hash.replace(/\\&/g, "◎SJ").split("&");
+                    searchBar.searchJumperInputKeyWords.value = hash[0].replace(/◎SJ/g, "&");
+                    if (hash.length >= 2 && searchBar.searchJumperInputKeyWords.value) {
+                        searchBar.searchBySiteName(hash[1].replace(/◎SJ/g, "&"), {}, !!hash[2]);
+                    }
                 }
                 getBody(document).style.cssText = `
                     zoom: 1;
