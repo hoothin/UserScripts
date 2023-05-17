@@ -11394,6 +11394,33 @@
                     if (hash.length >= 2 && searchBar.searchJumperInputKeyWords.value) {
                         searchBar.searchBySiteName(hash[1].replace(/◎SJ/g, "&"), {}, !!hash[2]);
                     }
+                } else if (location.search) {
+                    let search = location.search.slice(1).split("&");
+                    let _keyWords, _engine, _self;
+                    search.forEach(s => {
+                        let sArr = s.split("=");
+                        let k = sArr[0], v = sArr[1];
+                        try {
+                            v = decodeURIComponent(v);
+                        } catch (e) {}
+                        switch(k) {
+                            case "kw":
+                                _keyWords = v;
+                                break;
+                            case "engine":
+                                _engine = v;
+                                break;
+                            case "self":
+                                _self = v;
+                                break;
+                        }
+                    });
+                    if (_keyWords) {
+                        searchBar.searchJumperInputKeyWords.value = _keyWords;
+                        if (_engine && searchBar.searchJumperInputKeyWords.value) {
+                            searchBar.searchBySiteName(_engine, {}, !!_self);
+                        }
+                    }
                 }
                 getBody(document).style.cssText = `
                     zoom: 1;
