@@ -11389,11 +11389,7 @@
                     try {
                         hash = decodeURIComponent(hash);
                     } catch (e) {}
-                    hash = hash.replace(/\\&/g, "◎SJ").split("&");
-                    searchBar.searchJumperInputKeyWords.value = hash[0].replace(/◎SJ/g, "&");
-                    if (hash.length >= 2 && searchBar.searchJumperInputKeyWords.value) {
-                        searchBar.searchBySiteName(hash[1].replace(/◎SJ/g, "&"), {}, !!hash[2]);
-                    }
+                    searchBar.searchJumperInputKeyWords.value = hash;
                 } else if (location.search) {
                     let search = location.search.slice(1).split("&");
                     let _keyWords, _engine, _self;
