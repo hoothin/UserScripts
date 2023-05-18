@@ -785,7 +785,7 @@
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
-    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
+    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
     const mainSel = "article,.article,[role=main],main,.main,#main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
@@ -6510,9 +6510,16 @@
     }
 
     function emuClick(btn) {
+        let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         let orgHref = btn.getAttribute('href');
-        if (orgHref && orgHref != "#") {
-            btn.setAttribute('href', orgHref.replace(/#$/,""));
+        if (orgHref && orgHref.replace(location.origin + location.pathname, "").indexOf("#") === 0) {
+            let hashAction = e => {
+                e.preventDefault();
+                getBody(document).scrollTop = curScroll;
+                document.documentElement.scrollTop = curScroll;
+                btn.removeEventListener('click', hashAction, false);
+            };
+            btn.addEventListener('click', hashAction, false);
         }
         if (!PointerEvent) return btn.click();
         let eventParam = {
@@ -6594,9 +6601,6 @@
         dispatchTouchEvent(btn, "touchend");
 
         btn.click();
-        if (orgHref && orgHref != "#") {
-            setTimeout(() => btn.setAttribute('href', orgHref), 0);
-        }
     }
 
     var failFromIframe = 0;
