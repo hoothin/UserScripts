@@ -9513,10 +9513,6 @@
         "name": "SpankBang",
         "example": "https://jp.spankbang.com/trending_videos/",
         "url": "^https?://([a-z]{2}\\.)?spankbang\\.com/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)",
-        "nextLinkByUrl": [
-            "/(\\d+)/$",
-            "/{$1+1}/"
-        ],
         "pageElement": ".video-list.video-rotate.video-list-with-ads",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar+div {margin-top: -5px !important;}"
