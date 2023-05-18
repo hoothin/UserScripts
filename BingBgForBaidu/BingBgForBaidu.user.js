@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.34
+// @version      2.3.35
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -91,22 +91,15 @@
         rili.after("<br/><br/>");
         $("#head,.head_nums_cont_outer,#searchTag",iframe.contentDocument).hide();
         iframe.setAttribute("scrolling","no");
-        var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today,.op-calendar-pc-table-border,.op-calendar-pc-table-today,.cell-today",iframe.contentDocument);
         var t;
         //riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date,.op-calendar-pc-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmouseenter=function(){
             clearTimeout(t);
                 $(iframe).show(200);
-                var top=rili.offset().top;
-                var left=rili.offset().left;
-                if(top===0)top=138;
-                iframeDoc.scrollTop(top);
-                if(left===0)left=121;
-                iframeDoc.scrollLeft(left);
-                var width=rili.width();
-                var height=rili.height();
-                iframe.width=width===0?538:width;
-                iframe.height=height===0?366:height;
+                iframeDoc.scrollTop(137);
+                iframeDoc.scrollLeft(130);
+                iframe.width=600;
+                iframe.height=665;
         };
         riliLink.onmouseleave=function(){
             clearTimeout(t);
@@ -123,14 +116,11 @@
                 $(iframe).hide(500);
             },100);
         };
-        var holiday=$('[class*="calendar-right-holiday"]',iframe.contentDocument)[0];
-        if(holiday || today[0].classList.contains("op-calendar-new-table-festival") || today[0].classList.contains("op-calendar-pc-table-festival")){
-            var title=holiday.innerHTML;
-            title=title || today[0].title || $(".op-calendar-new-table-almanac,.op-calendar-pc-table-almanac",today).text();
-            if(!/^(一|二|三|四|五|六|七|八|九|十|初|廿)+$/.test(title)){
-                riliLink.innerHTML+=title?" <font color='#FFFF66' style='background-color:#e02d2d;font-weight:bold;border-radius: 8px; padding: 3px; border: solid 1px #e02d2d;'>"+title+"</font>":"";
-                riliLink.title=title;
-            }
+        var holiday=$('.cos-search-link',iframe.contentDocument)[0];
+        if(holiday){
+            var title=holiday.innerText.slice(0, -1);
+            riliLink.innerHTML+=title?" <font color='#FFFF66' style='background-color:#e02d2d;font-weight:bold;border-radius: 8px; padding: 3px; border: solid 1px #e02d2d;'>"+title+"</font>":"";
+            riliLink.title=title;
         }
     };
     var skinContainer=document.querySelector(".s-skin-container");
