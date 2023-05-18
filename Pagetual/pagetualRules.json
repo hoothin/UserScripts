@@ -9177,8 +9177,7 @@
         "url": "^https://xfantazy\\.com",
         "pageElement": ".MuiGrid-container",
         "action": 2,
-        "fitWidth": false,
-        "init": "if(!doc||win.loaded)return;win.loaded=true;doc.querySelector('[data-stats=\"feed:button:choose-sort\"]').click();doc.querySelector('[data-stats=\"feed:button:sort:mostViewed\"]').click()"
+        "fitWidth": false
     },
     {
         "name": "PornAV",
