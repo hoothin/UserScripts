@@ -3035,12 +3035,15 @@
                 return false;
             }
             let lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
-            if (callback) callback(eles);
             this.getInsert();
             var self = this, newEles = [];
             if (!eles || eles.length == 0 || !self.insert || !self.insert.parentNode) {
+                if (callback) callback(eles);
+                loadPageOver();
             } else {
                 await this.pageInit(doc, eles);
+                if (callback) callback(eles);
+                loadPageOver();
                 [].forEach.call(eles, ele => {
                     let newEle = ele.cloneNode(true);
                     let oldCanvass = ele.querySelectorAll("canvas");
@@ -3063,7 +3066,6 @@
                     newEles.push(newEle);
                 });
             }
-            loadPageOver();
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
             this.pageAction(doc, newEles);
