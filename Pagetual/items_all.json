@@ -32654,18 +32654,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/61669",
-  "name": "英辞郎 on the WEB：アルク",
-  "created_by": "terepanda",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-04-30T06:38:08+09:00",
   "data": {
-    "exampleUrl": "https://eow.alc.co.jp/search?q=test",
-    "comment": "AutoPatchWorkで動いていなかったし、httpsならnextLinkが取得できたので書き換えた",
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' search-sentence-list ')]/ul/li",
+    "nextLink": "//link[@rel='next']",
     "url": "^https://eow\\.alc\\.co\\.jp/",
-    "pageElement": "id('resultsList')/ul/li",
-    "nextLink": "//link[@rel='next']"
+    "exampleUrl": "https://eow.alc.co.jp/search?q=test"
   },
-  "created_at": "2012-06-10T22:56:51+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "terepanda",
+  "name": "英辞郎 on the WEB：アルク",
+  "created_at": "2012-06-10T22:56:51+09:00",
+  "updated_at": "2023-05-18T18:25:52+09:00"
 },
 {
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
