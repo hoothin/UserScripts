@@ -1230,7 +1230,7 @@
                         let waitTime = 500;
                         let checkReady = () => {
                             setTimeout(() => {
-                                if (!self.waitElement(document, r.waitElement)) {
+                                if (!self.waitElement(document, r.waitElement) || !self.ruleMatchReady(r)) {
                                     checkReady();
                                 } else {
                                     setRule(r);
