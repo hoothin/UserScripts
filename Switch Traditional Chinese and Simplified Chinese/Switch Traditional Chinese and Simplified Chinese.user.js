@@ -1594,6 +1594,7 @@
         }
         saveAction = values[currentAction];
         if (saveAction !== 1 || inConfigPage) run();
+        if (window.top != window.self) return;
         let currentState = "";
         switch (saveAction) {
             case 2:
