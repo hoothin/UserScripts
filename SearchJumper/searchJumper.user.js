@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.25.88.64
+// @version      1.6.26.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1613,7 +1613,7 @@
                      font-family: Arial, sans-serif;
                      text-shadow: 0 1px white, 1px 0 white, -1px 0 white, 0 -1px white;
                      font-size: ${12 * this.scale}px;
-                     font-weight: bold;
+                     font-weight: normal;
                      opacity: 0.8;
                  }
                  .search-jumper-btn>img {
@@ -4505,6 +4505,7 @@
             }
 
             async searchBySiteName(siteName, e, selfTab) {
+                if (!e) e = {};
                 for (let [siteBtn, siteData] of this.allSiteBtns) {
                     if (siteBtn.dataset.name == siteName) {
                         await this.siteSetUrl(siteBtn, {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey});
@@ -4520,6 +4521,13 @@
                         if (isPage) {
                             siteBtn.setAttribute("target", siteBtn.dataset.target == 1 ? "_blank" : "_self");
                         }
+                        return;
+                    }
+                }
+                for (let i = searchTypes.length - 1; i >= 0; i--) {
+                    let typeEle = searchTypes[i];
+                    if (typeEle.dataset.type == siteName) {
+                        typeEle.firstChild.onmousedown({button: 2});
                         return;
                     }
                 }
@@ -6436,18 +6444,18 @@
             }
 
             async openSiteBtn(siteEle, forceTarget) {
+                await this.siteSetUrl(siteEle);
                 let isPage = siteEle.dataset.isPage;
                 if (!forceTarget) forceTarget = "_blank";
                 if (isPage) {
                     siteEle.setAttribute("target", forceTarget);
                 }
-                await this.siteSetUrl(siteEle);
-                if (isPage) {
+                if (isPage && forceTarget == "_blank" && siteEle.href) {
                     _GM_openInTab(siteEle.href);
-                    siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
                 } else {
                     siteEle.click();
                 }
+                siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
             }
 
             async batchOpen(siteNames, e) {
@@ -6462,6 +6470,7 @@
                         if (siteEle.dataset.isPage) {
                             await self.siteSetUrl(siteEle);
                             if (self.stopInput) return;
+                            if (!siteEle.href) continue;
                             let iframe = document.createElement('iframe');
                             iframe.width = targetSites.length <= 2 ? '50%' : '33%';
                             iframe.height = '100%';
@@ -6513,7 +6522,7 @@
                     for (let siteEle of targetSites) {
                         await self.siteSetUrl(siteEle);
                         if (self.stopInput) return;
-                        if (siteEle.dataset.isPage) {
+                        if (siteEle.dataset.isPage && siteEle.href) {
                             let target = {};
                             if (targetElement) {
                                 target = {src: targetElement.src || targetElement.href || '', title: targetElement.title || targetElement.alt};
@@ -6533,6 +6542,7 @@
                         if (siteEle.dataset.isPage) {
                             await self.siteSetUrl(siteEle);
                             if (self.stopInput) return;
+                            if (!siteEle.href) continue;
                             urls.push(siteEle.href);
                         }
                     }
@@ -6542,7 +6552,7 @@
                     if (numPerLine > urls.length) numPerLine = urls.length;
                     let _width = parseInt(viewWidth / numPerLine);
                     let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 65;
-                    for (let i = 0; i< urls.length; i++) {
+                    for (let i = 0; i < urls.length; i++) {
                         let left = (i % numPerLine) * _width;
                         let top = parseInt(i / numPerLine) * (_height + 70);
                         window.open(urls[i] + "#searchJumperMin", "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
@@ -6552,7 +6562,7 @@
                     for (let siteEle of targetSites) {
                         await self.siteSetUrl(siteEle);
                         if (self.stopInput) return;
-                        if (siteEle.dataset.isPage) {
+                        if (siteEle.dataset.isPage && siteEle.href) {
                             let target = {};
                             if (targetElement) {
                                 target = {src: targetElement.src || targetElement.href || '', title: targetElement.title || targetElement.alt};
@@ -6566,22 +6576,20 @@
                         }
                     }
                 } else if (e.ctrlKey || e.metaKey) {
-                    let targetSites = self.getTargetSitesByName(siteNames);
+                    let targetSites = self.getTargetSitesByName(siteNames).reverse();
                     for (let siteEle of targetSites) {
-                        let isPage = siteEle.dataset.isPage;
-                        if (isPage) {
-                            siteEle.setAttribute("target", "_blank");
-                        }
                         await self.siteSetUrl(siteEle);
+                        let isPage = siteEle.dataset.isPage;
+                        if (isPage && siteEle.href) {
+                            _GM_openInTab(siteEle.href, {active: false});
+                            continue;
+                        }
                         if (self.stopInput) return;
                         siteEle.click();
-                        if (isPage) {
-                            siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
-                        }
                     }
                 } else if (e.button === 2) {
                     let targetSites = self.getTargetSitesByName(siteNames);
-                    targetSites.forEach(siteEle => {
+                    targetSites.reverse().forEach(siteEle => {
                         if (siteEle.dataset.current) return;
                         self.openSiteBtn(siteEle);
                     });
@@ -7074,10 +7082,12 @@
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
                     if (!keywords) keywords = (currentSite && cacheKeywords);
                     if (!keywords && hasWordParam && typeof navigator.clipboard.readText !== "undefined") {
-                        keywords = await navigator.clipboard.readText();
-                        if (keywords && !_keyWords) {
-                            inputString = keywords;
-                        }
+                        try {
+                            keywords = await navigator.clipboard.readText();
+                            if (keywords && !_keyWords) {
+                                inputString = keywords;
+                            }
+                        } catch(e) {}
                     }
                     if (!keywords && hasWordParam) {
                         self.customInput = true;
@@ -7207,8 +7217,8 @@
                 let clicked = false;
                 let alt, ctrl, meta, shift;
                 let action = async e => {
+                    delete ele.href;
                     if (showTips) {
-                        delete ele.href;
                         ele.removeAttribute("target");
                         if (tipsData) {
                             if (/^(https?|ftp):/.test(tipsData)) {
@@ -11241,8 +11251,17 @@
             urlInput.value = url;
             if (icons && icons[0]) {
                 iconShow.style.display = "";
-                iconInput.value = icons[0];
-                iconShow.src = icons[0];
+                if (url.indexOf(location.origin) === 0) {
+                    iconShow.onerror = e => {
+                        iconShow.onerror = null;
+                        iconInput.value = icons[0];
+                        iconShow.src = icons[0];
+                    }
+                    iconShow.src = location.origin + "/favicon.ico";
+                } else {
+                    iconInput.value = icons[0];
+                    iconShow.src = icons[0];
+                }
             } else {
                 iconShow.style.display = "none";
             }
