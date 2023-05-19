@@ -2806,14 +2806,17 @@
                             img.removeAttribute(prop.trim());
                         });
                     }
+                    if (realSrc) img.src = realSrc;
                 }
                 if (!realSrc) {
+                    let lazyAttr = "";
                     if (img.getAttribute("_src") && !img.src) {
-                        realSrc = img.getAttribute("_src");
+                        lazyAttr = "_src";
+                        realSrc = img.getAttribute(lazyAttr);
                     } else {
                         for (let i in lazyImgAttr) {
-                            let attrName = lazyImgAttr[i];
-                            let attrValue = img.getAttribute(attrName);
+                            lazyAttr = lazyImgAttr[i];
+                            let attrValue = img.getAttribute(lazyAttr);
                             if (attrValue) {
                                 realSrc = attrValue;
                                 break;
@@ -2822,10 +2825,10 @@
                     }
                     if (!realSrc && img._lazyrias && img._lazyrias.srcset) {
                         realSrc = img._lazyrias.srcset[img._lazyrias.srcset.length - 1];
+                        lazyAttr = "_lazyrias";
                     }
-                    if (realSrc) {
-                        img.removeAttribute("srcset");
-                    } else if (img.srcset) {
+                    if (!realSrc && img.srcset) {
+                        lazyAttr = "srcset";
                         var srcs = img.srcset.split(/[xw],/i), largeSize = 0;
                         srcs.forEach(srci => {
                             let srcInfo = srci.trim().split(" "), curSize = parseInt(srcInfo[1]);
@@ -2835,18 +2838,19 @@
                             }
                         });
                     }
-                }
-                if (realSrc) {
-                    img.src = realSrc;
-                    img.removeAttribute("data-src");
-                    if (img.style.display == "none") {
-                        img.style.display = "";
-                    }
-                    if (img.style.visibility == "hidden") {
-                       img.style.visibility = "";
-                    }
-                    if (img.style.opacity == 0) {
-                        img.style.opacity = "";
+                    if (realSrc) {
+                        img.src = realSrc;
+                        img.removeAttribute("srcset");
+                        img.removeAttribute(lazyAttr);
+                        if (img.style.display == "none") {
+                            img.style.display = "";
+                        }
+                        if (img.style.visibility == "hidden") {
+                            img.style.visibility = "";
+                        }
+                        if (img.style.opacity == 0) {
+                            img.style.opacity = "";
+                        }
                     }
                 }
             };
