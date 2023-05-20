@@ -9557,6 +9557,13 @@
         "wait": "if(doc==document)return true;let tabName=document.querySelector('[data-active=true]').dataset.title;doc.querySelector('[data-title='+tabName+']').click();return true;"
     },
     {
+        "name": "Upwork",
+        "url": "^https?://www\\.upwork\\.com/.*/search/",
+        "pageElement": ".up-card-section.up-card-hover",
+        "wait": 1000,
+        "iframeInit": "win.self=win.top"
+    },
+    {
         "name": "All the Internet",
         "url": "^https://www\\.alltheinternet\\.com",
         "pageElement": ".gsc-result",
