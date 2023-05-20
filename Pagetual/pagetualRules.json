@@ -8101,13 +8101,6 @@
         "pageElement": "section.container > div.content-wrap > div.content > article"
     },
     {
-        "name": "Soccercatch shows",
-        "url": "^https://www\\.soccercatch\\.com.*#shows",
-        "nextLink": ".tabs-page[data-title=shows] .pagination-next",
-        "init": "if(doc)doc.querySelector('[data-title=shows]').click();",
-        "pageElement": ".show-item"
-    },
-    {
         "name": "16Personalities",
         "url": "^https://www\\.16personalities\\.com",
         "enable": 0
@@ -8491,7 +8484,7 @@
         "url": "^https://kns\\.cnki\\.net/kns8/defaultresult/index",
         "nextLink": "a#PageNext",
         "pageElement": ".result-table-list tbody>*",
-        "init": "if(doc){let fn1=window.BriefExtend.setFullTextState;window.BriefExtend.setFullTextState=()=>{fn1();win.$('#PageNext').attr('data-curPage',window.$('#PageNext').attr('data-curPage'))}; win.BriefParam._getSearchPaperArgModel=(isSearch, cPage)=>{return window.BriefParam._getSearchPaperArgModel(isSearch, (!!cPage ? cPage : win.BriefParam._getCurPage()))};doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
+        "iframeInit": "let doc;let ready=()=>{let fn1=window.BriefExtend.setFullTextState;window.BriefExtend.setFullTextState=()=>{fn1();win.$('#PageNext').attr('data-curPage',window.$('#PageNext').attr('data-curPage'))}; win.BriefParam._getSearchPaperArgModel=(isSearch, cPage)=>{return window.BriefParam._getSearchPaperArgModel(isSearch, (!!cPage ? cPage : win.BriefParam._getCurPage()))};doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()};let checkPage=()=>{if(win.document.querySelector('#txt_search')){doc=win.document;ready();}else setTimeout(checkPage,100)};checkPage();",
         "initRun": 0,
         "wait": 1000
     },
@@ -8581,15 +8574,6 @@
         "url": "^https?://www\\.fodizi\\.net/",
         "nextLink": "a.current+a",
         "pageElement": "div.wrap>*:not(.page)"
-    },
-    {
-        "name": "动漫之家",
-        "action": 1,
-        "url": "^https?://(www|manhua)\\.(dmzj|178)\\.com/.*/\\d+\\.s?html",
-        "nextLink": "a.btm_chapter_btn.fr",
-        "pageElement": "div.comic_wraCon",
-        "init": "let imgCon=document.querySelector('div.comic_wraCon'),ops=document.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})",
-        "pageInit": "let imgCon=eles[0],ops=doc.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})"
     },
     {
         "name": "smzdm",
@@ -8958,7 +8942,6 @@
     {
         "name": "中国大学MOOC课程评论区",
         "url": "^https://www\\.icourse163\\.org/course/",
-        "action": 1,
         "wait": 1000,
         "type": 0,
         "init": "if(doc)doc.querySelector('#review-tag-button').click()",
