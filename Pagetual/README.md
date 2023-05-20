@@ -1,4 +1,4 @@
-☯️東方永頁機 v.1.9.36.28
+☯️東方永頁機 v.1.9.36.29
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites ! [**Wiki**](https://pagetual.hoothin.com/en/)*
 
@@ -136,9 +136,9 @@ Which position you want to insert, you can let it to be a array to contains mult
 --
 1 means insert before, 2 means just append to the bottom of target
 
-[init `(doc,win,iframe)`](https://pagetual.hoothin.com/en/rules/init.html)
+[init](https://pagetual.hoothin.com/en/rules/init.html)
 --
-The javaScript code to run only once with current main page with doc:(document of main page)
+The javaScript code to run only once with current main page with document
 
 [pagePre `(response)`](https://pagetual.hoothin.com/en/rules/pagePre.html)
 --
