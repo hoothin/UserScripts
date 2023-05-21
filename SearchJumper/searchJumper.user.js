@@ -548,7 +548,8 @@
                         deleteConfirm: '确定要删除此项吗？',
                         sleepPrompt: '等待时间（毫秒）',
                         startCache: '开始缓存，请耐心等待缓存完毕，勿关闭配置页！',
-                        cacheOver: '所有图标都已缓存完毕！'
+                        cacheOver: '所有图标都已缓存完毕！',
+                        cspDisabled: '脚本样式被当前站点的 CSP 阻止，因此无法显示，请尝试安装 Allow CSP: Content-Security-Policy 扩展获取权限'
                     };
                     break;
                 case "zh-TW":
@@ -642,7 +643,8 @@
                         deleteConfirm: '確定要刪除此項嗎？ ',
                         sleepPrompt: '等待時間（毫秒）',
                         startCache: '開始緩存，請耐心等待緩存完畢，勿關閉配置頁！',
-                        cacheOver: '所有圖標都已緩存完畢！'
+                        cacheOver: '所有圖標都已緩存完畢！',
+                        cspDisabled: '腳本樣式被當前站點的 CSP 阻止，因此無法顯示，請嘗試安裝 Allow CSP: Content-Security-Policy 擴展獲取權限'
                     };
                     break;
                 default:
@@ -735,7 +737,8 @@
                         deleteConfirm: 'Are you sure you want to delete this item? ',
                         sleepPrompt: 'Wait time (milliseconds)',
                         startCache: 'Start cache icons of engines, do not close this page!',
-                        cacheOver: 'All icons cached!'
+                        cacheOver: 'All icons cached!',
+                        cspDisabled: 'The style of SearchJumper is blocked by the CSP of current site, please try to install the Allow CSP: Content-Security-Policy extension to obtain permission'
                     };
                     break;
             }
@@ -1623,19 +1626,14 @@
                  }
                  .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
-                     font-size: ${13 * this.scale}px;
+                     font-size: ${14 * this.scale}px;
                      letter-spacing: 0;
                      color: white;
                      opacity: 0.9;
+                     text-shadow: 0 0 1px #d9d9d9cc;
                  }
                  .search-jumper-btn:hover>b {
                      opacity: 1;
-                 }
-                 .search-jumper-btn.noIcon>b {
-                     color: #f6e9d2;
-                 }
-                 .search-jumper-btn.noIcon:hover>b {
-                     color: wheat;
                  }
                  .search-jumper-btn>div {
                      position: absolute;
@@ -4500,8 +4498,9 @@
                         if (getComputedStyle(this.con).zIndex != "2147483647") {
                             disabled = true;
                             this.removeBar();
+                            debug(i18n("cspDisabled"));
                         } else disabled = false;
-                    }, 1);
+                    }, 0);
                 }
             }
 
@@ -6116,15 +6115,14 @@
                     };
                     if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
-                        if (cache === 'fail') {
-                        } else if (cache) {
+                        if (cache === 'fail' || !cache) {
+                            iEle.className = icon.indexOf("fa") === 0 ? icon : "fa fa-" + icon;
+                            this.fontPool.push(iEle);
+                        } else {
                             img.src = cache;
                             img.style.width = '100%';
                             img.style.height = '100%';
                             typeBtn.appendChild(img);
-                        } else {
-                            iEle.className = icon.indexOf("fa") === 0 ? icon : "fa fa-" + icon;
-                            this.fontPool.push(iEle);
                         }
                     } else {
                         let isBase64 = /^data:/.test(icon);
