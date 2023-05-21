@@ -9713,7 +9713,7 @@
                             }
                             type.sites.forEach(site => {
                                 let icon = site.icon;
-                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                                 if (/^http/.test(icon)) {
                                     let siteCache = cacheIcon[icon];
                                     if (siteCache) {
@@ -9736,7 +9736,7 @@
                             }
                             type.sites.forEach(site => {
                                 let icon = site.icon;
-                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                                 if (/^http/.test(icon)) {
                                     let siteCache = cacheIcon[icon];
                                     if (siteCache && siteCache !== 'fail') {
@@ -11058,7 +11058,7 @@
                             name: nameInput.value,
                             url: urlInput.value
                         };
-                        if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico")) {
+                        if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico")) {
                             siteObj.icon = iconInput.value;
                         }
                         if (descInput.value && descInput.value != nameInput.value) {
