@@ -1931,6 +1931,7 @@
                      border-radius: 20px;
                      line-height: unset;
                      text-align: center;
+                     text-shadow: 0 0 0.7px #787878dd;
                  }
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
@@ -7087,7 +7088,9 @@
                             if (keywords && !_keyWords) {
                                 inputString = keywords;
                             }
-                        } catch(e) {}
+                        } catch(e) {
+                            return false;
+                        }
                     }
                     if (!keywords && hasWordParam) {
                         self.customInput = true;
