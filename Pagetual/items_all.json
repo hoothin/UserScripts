@@ -1,5 +1,18 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86122",
+  "data": {
+    "pageElement": "id('main')//div[@class='panel-body']//div[contains(@class,'row-eq-height')]/div",
+    "nextLink": "(//a[@rel='next'])[1]",
+    "url": "^https://fantia\\.jp/fanclubs/\\d+/posts\r\n"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "jawata",
+  "name": "Fantia Club",
+  "created_at": "2023-05-23T13:32:13+09:00",
+  "updated_at": "2023-05-23T13:48:11+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86116",
   "data": {
     "insertBefore": "",
