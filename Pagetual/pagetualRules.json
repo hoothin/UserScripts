@@ -556,14 +556,14 @@
         "example": "https://www.cartoonmad.com/m/comic/618700022010001.html",
         "url": "^https?://www\\.cartoonmad\\.(cc|com)/m/comic/\\d+\\.html",
         "history": 2,
-        "init": "let ge=e=>document.querySelector(e);let _src=ge('img[oncontextmenu]').src.replace(/\\d+$/,'');let max=ge('.onpage').parentNode.lastElementChild.previousElementSibling.innerText;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};let E=ge('img[oncontextmenu]').parentNode.parentNode;E.innerHTML='';E.appendChild(F);",
+        "init": "let ge=e=>document.querySelector(e);let _src=ge('img[oncontextmenu]').src.match(/.+\\//)[0];let max=ge('.onpage').parentNode.lastElementChild.previousElementSibling.innerText;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};let E=ge('img[oncontextmenu]').parentNode.parentNode;E.innerHTML='';E.appendChild(F);",
         "nextLinkByJs": "let lastPage=doc.querySelector('.onpage').parentNode.lastElementChild.previousElementSibling;let parseHTML=srt=>new DOMParser().parseFromString(srt,'text/html');return fetch(lastPage.href).then(res=>res.text()).then(async res=>{let fdoc=parseHTML(res);let ele=fdoc.querySelector('body>table>tbody>tr:nth-child(3)>td>a');return await fetch(ele.href).then(res=>res.text()).then(res=>{let ffdoc=parseHTML(res);let next=ffdoc.querySelector('.pages');if(next){return next.href}else{return null}})})",
-        "pageElement": "script[src*='/init.js']",
+        "pageElement": "script[src*='/gpt.js']",
         "insert": "body>table>tbody>tr:nth-child(3)>td",
         "insertPos": 2,
-        "pageInit": "let ge=e=>doc.querySelector(e);let _src=ge('img[oncontextmenu]').src.replace(/\\d+$/,'');let max=ge('.onpage').parentNode.lastElementChild.previousElementSibling.innerText;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};let E=document.querySelector('.PagetualImg').parentNode;E.appendChild(F);",
+        "pageInit": "let ge=e=>doc.querySelector(e);let _src=ge('img[oncontextmenu]').src.match(/.+\\//)[0];let max=ge('.onpage').parentNode.lastElementChild.previousElementSibling.innerText;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};let E=document.querySelector('.PagetualImg').parentNode;E.appendChild(F);",
         "pageAction": "let ps=document.querySelectorAll('.pagetual_pageBar');if(ps.length>10){ps[0].remove();let ds=document.querySelector('.PagetualImg').parentNode.querySelectorAll('*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}};const fetchPicSrc=url=>{return fetch(url).then(res=>{return res.url})};document.querySelectorAll('img.PagetualImg[src*=file]').forEach(async(img)=>{img.src=await fetchPicSrc(img.src)})",
-        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let ge=e=>doc.querySelector(e);let _src=ge('img[oncontextmenu]').src.replace(/\\d+$/,'');let max=ge('.onpage').parentNode.lastElementChild.previousElementSibling.innerText;let imgSrcArr=[];for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}imgSrcArr.push(imgSrc)};return imgSrcArr",
+        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let ge=e=>doc.querySelector(e);let _src=ge('img[oncontextmenu]').src.match(/.+\\//)[0];let max=ge('.onpage').parentNode.lastElementChild.previousElementSibling.innerText;let imgSrcArr=[];for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}imgSrcArr.push(imgSrc)};return imgSrcArr",
         "pageBarText": "let t=doc.querySelector('body>table>tbody>tr:nth-child(1)>td>table>tbody>tr>td:nth-child(2)>li>a:nth-child(3)');if(t)return t.innerText;",
         "css": ".PagetualImg{max-width: 100% !important;display: block !important;margin: 0 auto !important;}body>table>tbody>tr:nth-child(5){display:none!important}"
     },
@@ -572,15 +572,15 @@
         "url": "^https?://www\\.cartoonmad\\.(cc|com)/comic/\\d+\\.html",
         "example": "https://www.cartoonmad.com/comic/6187.html",
         "history": 2,
-        "init": "document.onkeydown=null;let ge=e=>document.querySelector(e);let _src=ge('img[onload]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let E=ge('img[onload]').parentNode.parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.innerHTML='';E.appendChild(F);let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
+        "init": "document.onkeydown=null;let ge=e=>document.querySelector(e);let _src=ge('img[onload]').src.match(/.+\\//)[0];let max=document.querySelectorAll('option[value]').length;let E=ge('img[onload]').parentNode.parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.innerHTML='';E.appendChild(F);let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
         "nextLink": "//a[img[@src='/image/rad.gif']]",
         "pageElement": "//script[contains(text(),'top.')]",
         "replaceElement": "head>title",
         "insert": "//td[@align]//td",
         "insertPos": 2,
-        "pageInit": "let docge=e=>doc.querySelector(e);let ge=e=>document.querySelector(e);let _src=docge('img[onload]').src.replace(/\\d+$/,'');let max=doc.querySelectorAll('option[value]').length;let E=ge('.PagetualImg').parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.appendChild(F);let re=docge('body>table>tbody>tr:nth-child(2)').outerHTML;ge('body>table>tbody>tr:nth-child(2)').outerHTML=re;ge('body>table>tbody>tr:nth-child(6)').outerHTML=re;",
+        "pageInit": "let docge=e=>doc.querySelector(e);let ge=e=>document.querySelector(e);let _src=docge('img[onload]').src.match(/.+\\//)[0];let max=doc.querySelectorAll('option[value]').length;let E=ge('.PagetualImg').parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.appendChild(F);let re=docge('body>table>tbody>tr:nth-child(2)').outerHTML;ge('body>table>tbody>tr:nth-child(2)').outerHTML=re;ge('body>table>tbody>tr:nth-child(6)').outerHTML=re;",
         "pageAction": "let ps=document.querySelectorAll('.pagetual_pageBar');if(ps.length>10){ps[0].remove();let ds=document.querySelector('.PagetualImg').parentNode.querySelectorAll('*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}};const fetchPicSrc=url=>{return fetch(url).then(res=>{return res.url})};document.querySelectorAll('img.PagetualImg[src*=file]').forEach(async(img)=>{img.src=await fetchPicSrc(img.src)})",
-        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let ge=e=>doc.querySelector(e);let _src=ge('img[onload]').src.replace(/\\d+$/,'');let max=doc.querySelectorAll('option[value]').length;let imgSrcArr=[];for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}imgSrcArr.push(imgSrc)};return imgSrcArr",
+        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let ge=e=>doc.querySelector(e);let _src=ge('img[onload]').src.match(/.+\\//)[0];let max=doc.querySelectorAll('option[value]').length;let imgSrcArr=[];for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}imgSrcArr.push(imgSrc)};return imgSrcArr",
         "pageBarText": "let t=doc.querySelector('b+a[style]');if(t)return t.innerText;",
         "css": ".PagetualImg{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12'],select[name],body>table>tbody>tr:nth-child(5){display:none!important}"
     },
@@ -2051,15 +2051,6 @@
         "css": ".pagetual_pageBar{margin-top:-15px!important}.acgn-comic-list{margin-bottom:0px!important}"
     },
     {
-        "name": "拷貝漫畫 - PC版閱讀 - 雙擊下一話，鍵盤左右鍵下一話",
-        "example": "https://www.copymanga.site/comic/huizuoliaolidemofashi/chapter/6120a218-4b02-11ed-8536-024352452ce0",
-        "url": "^https?://(www\\.)?copymanga\\.site/comic/\\w+/chapter/",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[text()='下一話' and starts-with(@href,'/')]\");if(n){n.click()}else{alert('沒有下一話了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[text()='上一話' and starts-with(@href,'/')]\");if(p){p.click()}else{alert('沒有上一話了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[text()='下一話' and starts-with(@href,'/')]\");if(n){n.click()}else{alert('沒有下一話了！')}};document.addEventListener('dblclick',dcnext);document.querySelector('.container-fluid').setAttribute('style','padding-right: 0px;padding-left: 0px;');document.querySelectorAll(`[class*='comic-size']`).forEach(div=>{let c=div.getAttribute('class').replace(/comic-size-\\d+/,'comic-size-99');div.setAttribute('class',c);div.setAttribute('style','min-width: 800px !important;')})",
-        "nextLink": "0",
-        "pinUrl": true,
-        "manualMode": true
-    },
-    {
         "name": "拷貝漫畫 - 分類頁",
         "example": "https://copymanga.site/comics",
         "url": "^https?://copymanga\\.site/comics",
@@ -3398,7 +3389,7 @@
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
         "nextLink": ".num+.next",
-        "pageElement": ".hezi>ul",
+        "pageElement": "div.hezi>ul>li",
         "replaceElement": "#pages"
     },
     {
@@ -5491,21 +5482,12 @@
     },
     {
         "name": "E-Hentai",
-        "example": "http://(e-hentai|exhentai).org/",
-        "url": "^https?://e-hentai\\.org/",
+        "example": "http://e-hentai.org/，https://exhentai.org/",
+        "url": "^https?://(e-hentai|exhentai)\\.org/",
         "nextLink": "//table[@class='ptt']//a[string()='>'] | id('next') | id('unext')",
-        "pageElement": ".itg>div, .itg>tbody>tr:not(:first-of-type), #gdt>div:not(.c), #img",
-        "replaceElement": ".ptt, .ptb, .sn, .searchnav",
+        "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c), #img",
+        "replaceElement": ".ptt,.ptb,.sn,.searchnav",
         "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}"
-    },
-    {
-        "name": "ExHentai.org",
-        "url": "^https?://exhentai\\.org/(?!g)",
-        "nextLink": "body > div.ido > div:nth-of-type(2) > div.searchnav > div:nth-of-type(5) > a",
-        "pageElement": "body > div.ido > div:nth-of-type(2)",
-        "insert": "body > div.ido > div:nth-of-type(2)",
-        "insertPos": 2,
-        "pinUrl": true
     },
     {
         "name": "177 漫画/xxiav - 圖片",
@@ -5596,6 +5578,45 @@
         "replaceElement": ".pagination",
         "lazyImgSrc": "data-srcset",
         "css": ".home-rows-videos-div{margin-bottom:10px!important;}.search-pagination{margin-top:-50px!important;}"
+    },
+    {
+        "name": "Models Vibe",
+        "example": "https://www.modelsvibe.com/albums/china/",
+        "url": "^https?://www\\.modelsvibe\\.com/albums/\\w+/",
+        "nextLinkByUrl": [
+            "(albums/\\w+/)(page/(\\d+)/)?",
+            "$1page/{$3+1}/"
+        ],
+        "pageElement": ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
+        "pageInit": "doc.querySelectorAll('span[data-img-url]').forEach(span=>{span.classList.add('td-animation-stack-type0-2');span.style.backgroundImage=`url('${span.dataset.imgUrl}')`})"
+    },
+    {
+        "name": "尤美图库",
+        "example": "https://www.umeitu.com/i/",
+        "url": "^https?://www\\.umeitu\\.com/",
+        "nextLink": "a.current+a",
+        "pageElement": ".viptop~li",
+        "replaceElement": ".page_navi",
+        "css": "img{opacity:1!important}"
+    },
+    {
+        "name": "劍心回憶",
+        "example": "https://kenshin.hk/category/jnews/photoalbum/",
+        "url": "^https?://kenshin\\.hk/",
+        "nextLink": "span.current+a",
+        "pageElement": "div[id^=post].post",
+        "replaceElement": ".navigation"
+    },
+    {
+        "name": "芸能アイドルモデル女優水着画像集",
+        "example": "https://www.mizugigurabia.com/",
+        "url": "^https?://www\\.mizugigurabia\\.com/",
+        "action": 1,
+        "nextLink": ".pn2 .page-link+a",
+        "pageElement": ".list>li",
+        "replaceElement": ".pn2",
+        "css": ".kb-l img,.kb-r{opacity:1!important}#content1>br{display:none!important}",
+        "rate": 3
     },
     {
         "name": "免费私房图 - 看圖",
@@ -6439,6 +6460,7 @@
         "name": "麻豆村",
         "example": "https://madoucun.com/",
         "url": "^https?://madoucun\\.com/",
+        "include": ".hl-page-wrap",
         "pageElement": ".hl-list-item",
         "replaceElement": ".hl-page-wrap",
         "pageInit": "doc.querySelectorAll('a[data-original]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.original}')`})"
@@ -6561,6 +6583,13 @@
         "example": "https://onejav.com/",
         "url": "^https?://onejav\\.com/$",
         "loadMore": "#button-load-more"
+    },
+    {
+        "name": "女神社",
+        "example": "https://nshens.com/，https://inewgirl.com/",
+        "url": "^https?://(nshens\\.com|inewgirl\\.com)/",
+        "include": ".v-pagination",
+        "pageElement": ".justify-start>.col"
     },
     {
         "name": "微圖坊 - 看圖",
@@ -6809,12 +6838,6 @@
         "pageElement": ".card-deck.row>.px-1",
         "replaceElement": ".pagination.pagination-sm",
         "pageBar": 0
-    },
-    {
-        "name": "Supjav 自動點擊SERVER TV播放按鈕",
-        "url": "^https?://supjav\\.com/(zh/|ja/)?\\d+\\.html",
-        "init": "let loop=setInterval(()=>{let play=document.querySelector('#vserver.play-button');if(play){play.click();clearInterval(loop)}},100);let t=document.querySelector('title');t.innerText=t.innerText.replace(/-\\sSupjav.com.+/,'').trim()",
-        "pinUrl": true
     },
     {
         "name": "Supjav",
@@ -7282,13 +7305,13 @@
         "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
         "pinUrl": true,
         "nextLink": "a.next",
-        "pageElement": ".list>.item,.list>.fiction,.list>.torrent,.videos>.item",
+        "pageElement": ".list>.item:not(._300x250),.list>.fiction,.list>.torrent,.videos>.item",
         "replaceElement": [
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
         "rate": 3,
-        "css": ".pagetual_pageBar{margin-bottom:5px!important}.videos .pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad,.tips,.aside>.center{display:none!important}"
+        "css": ".pagetual_pageBar{margin-bottom:5px!important}.videos .pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad,.tips,.aside>.center,.item._300x250{display:none!important}"
     },
     {
         "name": "hitxhot - 寫真",
@@ -7330,21 +7353,6 @@
         "pageElement": ".posts-wrapper>*",
         "replaceElement": "ul.page-numbers",
         "pageBar": 0
-    },
-    {
-        "name": "MediaFire 自動下載",
-        "url": "^https?://www\\.mediafire\\.com/",
-        "autoClick": ".download_link:not(.started) #downloadButton",
-        "pinUrl": true,
-        "nextLink": "0"
-    },
-    {
-        "name": "ouo.io 自動跳轉",
-        "url": "^https?://ouo\\.",
-        "init": "let loop=setInterval(()=>{let set=document.querySelector('#btn-main:not(.disabled)');if(set){clearInterval(loop);set.click()}},100)",
-        "include": "#btn-main",
-        "pinUrl": true,
-        "nextLink": "0"
     },
     {
         "name": "YINGPIAN影片社",
