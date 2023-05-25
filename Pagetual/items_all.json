@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86123",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='box']/img",
+    "nextLink": "//a[span[contains(text(), '下一頁')]]",
+    "url": "^https?://www\\.kaom\\.net/img\\.php",
+    "exampleUrl": "http://www.kaom.net/img.php?b=xungu_jyxb&p=1"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "PDF圖片·古音小鏡",
+  "created_at": "2023-05-24T17:18:03+09:00",
+  "updated_at": "2023-05-24T17:18:03+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86122",
   "data": {
     "pageElement": "id('main')//div[@class='panel-body']//div[contains(@class,'row-eq-height')]/div",
