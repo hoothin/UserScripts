@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.29
+// @version      1.9.36.30
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -22,7 +22,7 @@
 // @description:it     Caricamento automatico delle pagine Web impaginate successive e inserimento nella pagina corrente. Supporta migliaia di siti web senza alcuna regola.
 // @description:ko     페이지가 매겨진 다음 웹 페이지를 자동으로 로드하고 현재 페이지에 삽입합니다. 규칙 없이 수천 개의 웹 사이트를 지원합니다.
 // @author       hoothin
-// @license      MPL License
+// @license      MPL-2.0
 // @match        *://*/*
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUAAAD3VU33VU32VEz8U073VU32VU33VU32VUz0Uk/3VE32VU32VUz2VU32VU32VU32VU33VU33U0z2VU34Wkv3VE32VUz/mpj/nJj2VUz2VU32VE33VEz2VU32VU32VUz3VE32VEz3VE3/mZf2Vkz2VU3/mpilFFolAAAAJXRSTlMA3Lp/GvTBT5YQLuawZ/DOyZwlPQeKc21N04+FX1bqpm9DNoB4T68ePwAAAitJREFUWMPt1tuasiAUBuCFCG5Rs3QybTPV1/1f4v/3PDkyIojn8x5qBrI+ltAfh32/yysmBKvyXb+njb6bDL9kzTd5SzjDAsYT8nFoGSxYe6BVqoNDp2jFDit25BRgVUAODB4YWcETWVTwVNGiGN5iWtBgg4YMCpsoI38dNunmmWyxUTvbPwwbsYR0fIzZLQ0pTG8eieRmBLMmpdH9uimQEf6TNRnXXKLZHixpJtywLzOgMHtFCqdM64DahHRnOE1dsrekm9wr2WtLcAlpdHwcp1pAJySXYnERclzp4+v19jXdmcTvQUJtz+ZaI4i05/V/UGYrCxbaAsOYoNfIKEQxpqQuzCgJJJ/3f42O8ywEZuMVWi/8hODxGj3GW2b0udkbGULLDOjimAG0S3fLGlBnXQM9irG1CiQdVQi0dqQsOSDlyEEz7Vy9OxxfR71VCXsSB23jMrKJYZXSjw57sqgLn5Z0wolsOCz0RyJkyeYjgz7pwwVq20eboZwtVUl2EnN5gJ50dQZFdryATvABRTr/tJXkUMdaAK5pwtCapwtFLskguwuyMh/Sd9WChQ4sIvIUYSk3PYqQvCQlOC04IfN7PkdjOyRKWhdKXMmiAFt9i3sJ5jxoRuR0vqAghxxwHuqfQE5OHGDKOrwEnqs1DgAZ2e4Eev1d45TN7JfhrQLKgfwMFYAsvp33dXII073aVQLI2gN5S58lfmGnKKFtah7nkgnBZB7zlP7Y/QNiTM6sYNzawwAAAABJRU5ErkJggg==
 // @grant        GM_xmlhttpRequest
@@ -781,7 +781,7 @@
             cb(value);
         }
     };
-    var rulesData = {}, ruleUrls, updateDate;
+    var rulesData = {uninited: true}, ruleUrls, updateDate;
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
@@ -2064,7 +2064,7 @@
                         if (innerText.length > 80) continue;
                     }
                     let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
-                    if (availableHref && /next$/i.test(aTag.href)) continue;
+                    if (availableHref && /next\-?(page)?$/i.test(aTag.href)) continue;
                     if (aTag.className) {
                         if (/slick|slide|gallery/i.test(aTag.className)) continue;
                         if (aTag.classList && aTag.classList.contains('disabled')) continue;
@@ -3136,7 +3136,7 @@
                  user-select: none;
                  z-index: 2147483646!important;
                  padding: 0!important;
-                 opacity: 0.5;
+                 opacity: 0.35;
                  transition: opacity .5s ease, background .5s, box-shadow .5s;
              }
              #pagetual-sideController:hover {
@@ -3604,7 +3604,7 @@
              #pagetual-picker textarea{
               display: inline-block;
               width: calc(100% - 65px);
-              height: 40px;
+              height: 20px;
               min-width: 290px;
               max-width: calc(65vw - 50px);
               min-height: unset;
@@ -4389,7 +4389,6 @@
         }
 
         var configCon, insertPos;
-        var noRules = !rulesData.urls || rulesData.urls.length === 0;
 
         let inConfig = isGuidePage;
         if (!inConfig) {
@@ -4402,7 +4401,7 @@
         }
         if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
-            if (noRules) {
+            if (rulesData.uninited) {
                 setTimeout(() => {
                     if (!importing) showTips(i18n("firstAlert"));
                 }, 3000);
@@ -4491,6 +4490,16 @@
                             }
                             if (!diff) {
                                 showTips(i18n("errorAlreadyExists"));
+                                setTimeout(() => {
+                                    showTips(i18n("beginUpdate"), "", 30000);
+                                    updateRules(() => {
+                                        showTips(i18n("updateSucc"));
+                                        location.reload();
+                                    }, (rule, err) => {
+                                        showTips(`Update ${rule.url} rules fail!`);
+                                        debug(err);
+                                    });
+                                }, 500);
                                 return;
                             }
                             storage.setItem("rulesData", rulesData);
@@ -4622,7 +4631,7 @@
                 }
                 insertPos = configCon.querySelector("hr,#jsoneditor");
 
-                if (!noRules) {
+                if (!rulesData.uninited) {
                     let importUrlPre = document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']");
                     if (importUrlPre) importUrlPre.style.display = "none";
                     if (click2import) click2import.style.display = "none";
@@ -4835,7 +4844,7 @@
         loadingTextTitle.innerHTML = i18n("loadingTextTitle");
         loadingText.appendChild(loadingTextTitle);
         let loadingTextInput = document.createElement("input");
-        loadingTextInput.value = rulesData.loadingText||'';
+        loadingTextInput.value = rulesData.loadingText || '';
         loadingTextInput.placeholder = i18n("loadingText");
         loadingTextInput.style.width = "100%";
         loadingTextInput.style.margin = "0";
@@ -5200,17 +5209,23 @@
             storage.setItem("hpRules", []);
             storage.setItem("smartRules", []);
         }
+        let allOk = true;
         function addNextRule() {
             if (ruleIndex < 0) {
                 let now = new Date().getTime();
                 storage.setItem("ruleLastUpdate", now);
                 storage.setItem("rules", ruleParser.rules);
                 inUpdate = false;
+                if (allOk) {
+                    rulesData.uninited = false;
+                    storage.setItem("rulesData", rulesData);
+                }
                 success();
             } else {
                 let rule = ruleUrls[ruleIndex--];
                 ruleParser.addRuleByUrl(rule.url, rule.id, (json, err) => {
                     if (!json) {
+                        allOk = false;
                         fail(rule, err);
                     }
                     addNextRule();
