@@ -5553,7 +5553,7 @@
                         requestFromIframe(url, (doc, eles) => {
                             if (eles) {
                                 ruleParser.insertPage(doc, eles, url, callback, true);
-                            }
+                            } else isLoading = false;
                         });
                     } else ruleParser.curSiteRule.action = 0;
                 } else if ((ruleParser.curSiteRule.singleUrl || curPage == 1) && !inCors) {
@@ -5561,7 +5561,7 @@
                     requestFromIframe(url, (doc, eles) => {
                         if (eles) {
                             ruleParser.insertPage(doc, eles, url, callback, true);
-                        }
+                        } else isLoading = false;
                     });
                 } else {
                     debug("Stop as no page element");
