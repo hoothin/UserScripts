@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.29
+// @version      1.2.6.30
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1096,6 +1096,7 @@
         action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
         enable = !!(auto || saveAction);
         let startStrans = () => {
+            if (action == 1) return;
             stranBody();
             var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
             var observer = new MutationObserver(function(records){
@@ -1524,7 +1525,22 @@
             let testInput = document.createElement('textarea');
             testInput.style.width = '100%';
             testInput.setAttribute('placeholder', "輸入文字后，按下快捷鍵");
+            testInput.onclick = e => {
+                if (!testInput.style.height) {
+                    testInput.style.height = "80vh";
+                    testInput.scrollIntoView({block: "center", inline: "nearest"});
+                }
+            };
             baseCon.appendChild(testInput);
+            let testBtn = document.createElement('button');
+            testBtn.innerText = '立即轉換';
+            testBtn.style.display = 'block';
+            testBtn.addEventListener("click", function(e) {
+                testInput.focus();
+                curLang=!curLang;
+                testInput.value=curLang?traditionalized(testInput.value):simplized(testInput.value);
+            });
+            baseCon.appendChild(testBtn);
         }
     }
 
