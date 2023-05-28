@@ -773,6 +773,7 @@ var siteInfo = [
  },
  getImage: function(a, p) {
      var newsrc=this.src;
+     if(!newsrc || newsrc.indexOf("ytimg.com") == -1) return;
      if(p[2] && this.classList.contains('ytd-moving-thumbnail-renderer')){
          newsrc = p[2].querySelector("img").src;
      }
