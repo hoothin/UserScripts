@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.30
+// @version      1.2.6.31
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1050,7 +1050,7 @@
                 if(i==key.length-1){
                     newTree={"end":value};
                 }
-                let curKey=value.charAt(i);
+                let curKey=key.charAt(i);
                 let branch=curTree[curKey];
                 if(!branch){
                     curTree[curKey]=newTree;
