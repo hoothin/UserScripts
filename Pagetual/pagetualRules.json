@@ -1673,7 +1673,8 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".newpic_bg,.newpic_bgno,.tcaricature_block.tcaricature_block2",
         "replaceElement": ".pages",
-        "css": ".pagetual_pageBar{margin:20px 5px 0!important}.newpic_bgno,.tcaricature_block+.pagetual_pageBar{margin-top:5px!important}.pagetual_pageBar+.tcaricature_block{margin-top:0px!important}"
+        "css": ".pagetual_pageBar{margin:20px 5px 0!important}.newpic_bgno,.tcaricature_block+.pagetual_pageBar{margin-top:5px!important}.pagetual_pageBar+.tcaricature_block{margin-top:0px!important}",
+        "iframeInit": "win.self=win.top"
     },
     {
         "name": "漫画猫 - 閱讀",

@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.30
+// @version      1.9.36.31
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -871,7 +871,7 @@
                     let classList = ele.classList, i = 0;
                     for (let i = 0; i < classList.length; i++) {
                         let c = classList[i];
-                        if (/^[\w\-_]+$/.test(c) && !/\d{3,}/.test(c)) {
+                        if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
                             className += '.' + c;
                         }
                     }
@@ -1201,6 +1201,13 @@
                     return callback();
                 }
             }
+            if (this.possibleRule) {
+                let urlReg = new RegExp(this.possibleRule.url, "i");
+                if (urlReg.test(href) && this.ruleMatch(this.possibleRule)) {
+                    this.curSiteRule = this.possibleRule;
+                    return callback();
+                }
+            }
             this.curSiteRule = {};
             var self = this;
 
@@ -1226,6 +1233,9 @@
                 let urlReg = new RegExp(r.url, "i");
                 if (urlReg.test(href)) {
                     if (!self.ruleMatchPre(r)) return false;
+                    if (r.url.length > 15) {
+                        self.possibleRule = r;
+                    }
                     if (r.waitElement) {
                         let waitTime = 500;
                         let checkReady = () => {
@@ -2049,6 +2059,20 @@
                 }
             }
             if (!next) {
+                await sleep(1);
+                let pageDivs = body.querySelectorAll("[class*=pagination],[class*=Pagination]");
+                if (pageDivs && pageDivs.length) {
+                    for (let i = 0; i < pageDivs.length; i++) {
+                        let p = pageDivs[i];
+                        let innerText = (p.innerText || p.value || p.title || '');
+                        if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(innerText)) {
+                            next = p;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!next) {
                 let aTags = body.querySelectorAll("a,button,[type='button']");
                 for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
@@ -2144,7 +2168,7 @@
                                 }
                             }
                         }
-                        if (next4) {
+                        if (next4 && !/page/.test(next4.href)) {
                             let curHref = next4.getAttribute("href");
                             let curPageReg = new RegExp("(.*)" + (pageNum + 1) + afterStr.replace(/([\.\?])/g, '\\$1'));
                             let otherPageHref = curHref.replace(curPageReg, `$1${pageNum}${afterStr}`);
@@ -2717,7 +2741,7 @@
                 }
                 this.insert = getElement(insertSel, document);
             } else {
-                if (refresh) this.docPageElement = null;
+                this.docPageElement = null;
                 let pageElement = this.getPageElement(document, _unsafeWindow);
                 if (this.curSiteRule.singleUrl && this.nextLinkHref == "#" && this.curSiteRule.pageElement === 'body') {
                     debug("Stop as jsNext & whole body");
@@ -2959,12 +2983,17 @@
                 let code = self.curSiteRule.init;
                 if (code) {
                     try {
-                        ((typeof _unsafeWindow.pagetualInit == 'undefined') ? Function('doc','win','iframe','"use strict";' + code) : _unsafeWindow.pagetualInit)(null, null, null);
+                        ((typeof _unsafeWindow.pagetualInit == 'undefined') ? new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', '"use strict";' + code) : _unsafeWindow.pagetualInit)(null, null, null, sel => {clickAction(sel, document)}, sel => {enterAction(sel, document)}, (sel, v) =>{inputAction(sel, v, document)});
                     } catch(e) {
                         debug(e);
                     }
                 }
                 await self.getNextLink(document);
+                if (self.curSiteRule.singleUrl && self.nextLinkHref == false && self.possibleRule) {
+                    setTimeout(() => {
+                        self.initPage(() => {});
+                    }, 1000);
+                }
                 self.refreshByClick();
 
                 let pageElementCss = self.curSiteRule.pageElementCss || rulesData.pageElementCss;
@@ -3045,6 +3074,7 @@
                 await this.pageInit(doc, eles);
                 if (callback) callback(eles);
                 loadPageOver();
+                const collection = document.createDocumentFragment();
                 [].forEach.call(eles, ele => {
                     let newEle = ele.cloneNode(true);
                     let oldCanvass = ele.querySelectorAll("canvas");
@@ -3063,9 +3093,10 @@
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
                     if (!/^(STYLE|SCRIPT)$/.test(newEle.nodeName)) self.visibilityItems.push(newEle);
-                    self.insertElement(newEle);
+                    collection.appendChild(newEle)
                     newEles.push(newEle);
                 });
+                self.insertElement(collection);
             }
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
@@ -6533,6 +6564,60 @@
         return pageBar;
     }
 
+    async function waitForElement(sel, doc) {
+        if (!sel) return null;
+        return new Promise((resolve) => {
+            let checkInv = setInterval(() => {
+                let result = getElement(sel, doc);
+                if (result) {
+                    clearInterval(checkInv);
+                    resolve(result);
+                }
+            }, 100);
+        });
+    }
+
+    async function clickAction(sel, doc) {
+        let btn = await waitForElement(sel, doc);
+        emuClick(btn);
+    }
+
+    async function enterAction(sel, doc) {
+        let btn = await waitForElement(sel, doc);
+        let eventParam = { key: "Enter", keyCode: 13, bubbles: true };
+        let event = new KeyboardEvent('keydown', eventParam);
+        btn.dispatchEvent(event);
+        event = new KeyboardEvent('keyup', eventParam);
+        btn.dispatchEvent(event);
+        event = new KeyboardEvent('keypress', eventParam);
+        btn.dispatchEvent(event);
+    }
+
+    async function inputAction(sel, v, doc) {
+        let input = await waitForElement(sel, doc);
+        let event = new Event('focus', { bubbles: true });
+        input.dispatchEvent(event);
+        let lastValue = input.value;
+        if (input.nodeName.toUpperCase() == "INPUT") {
+            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+            nativeInputValueSetter.call(input, v);
+        } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
+            var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+            nativeTextareaValueSetter.call(input, v);
+        } else {
+            input.innerHTML = createHTML(v);
+        }
+        event = new Event('input', { bubbles: true });
+        let tracker = input._valueTracker;
+        if (tracker) {
+            tracker.setValue(lastValue);
+        }
+        input.dispatchEvent(event);
+        event = new Event('change', { bubbles: true });
+        input.dispatchEvent(event);
+        debug(input, `input ${sel}`);
+    }
+
     function emuClick(btn) {
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         let orgHref = btn.getAttribute('href');
@@ -6979,7 +7064,7 @@
                     let code = ruleParser.curSiteRule.init;
                     if (code) {
                         try {
-                            Function('doc','win','iframe','"use strict";' + code)(iframeDoc, emuIframe.contentWindow, emuIframe);
+                            new AsyncFunction('doc','win','iframe','click', 'enter', 'input', '"use strict";' + code)(iframeDoc, emuIframe.contentWindow, emuIframe, sel => {clickAction(sel, iframeDoc)}, sel => {enterAction(sel, iframeDoc)}, (sel, v) =>{inputAction(sel, v, iframeDoc)});
                         } catch(e) {
                             debug(e);
                         }
@@ -7045,8 +7130,11 @@
     function resizeIframe(iframe, frameDoc, pageEle) {
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
-            iframe.style.height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500) + "px";
-            iframe.style.minHeight = iframe.style.height;
+            let height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500);
+            if (!iframe.style.height || height - parseInt(iframe.style.height) > 50) {
+                iframe.style.height = height + "px";
+                iframe.style.minHeight = iframe.style.height;
+            }
             iframe.style.width = "100%";
             frameDoc.documentElement.scrollTop = 0;
             frameDoc.documentElement.scrollLeft = 0;
@@ -7213,7 +7301,7 @@
             let code = ruleParser.curSiteRule.init;
             if (code) {
                 try {
-                    Function('doc', 'win', 'iframe', '"use strict";' + code)(iframeDoc, curIframe.contentWindow, curIframe);
+                    new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', '"use strict";' + code)(iframeDoc, curIframe.contentWindow, curIframe, sel => {clickAction(sel, iframeDoc)}, sel => {enterAction(sel, iframeDoc)}, (sel, v) =>{inputAction(sel, v, iframeDoc)});
                 } catch(e) {
                     debug(e);
                 }
