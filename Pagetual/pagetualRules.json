@@ -8098,13 +8098,6 @@
         "css": "ol>li{display: inline-flex;}"
     },
     {
-        "name": "Google cse",
-        "nextLink": ".gsc-cursor-current-page+div",
-        "pageElement": ".gsc-expansionArea>.gsc-result",
-        "url": "^https://cse\\.google\\.com.*&gsc\\.q=",
-        "wait": 2000
-    },
-    {
         "name": "Apphot",
         "url": "^https?://apphot\\.cc/",
         "pageElement": "section.container > div.content-wrap > div.content > article"
@@ -9580,9 +9573,9 @@
         "wait": 500
     },
     {
-        "name": "Lukol",
-        "url": "^https://www\\.lukol\\.com",
-        "pageElement": ".gsc-result",
+        "name": "Google cse",
+        "url": "^(https://www\\.lukol\\.com|https://www\\.searchcraigslist\\.net|https://cse\\.google\\.com.*&gsc\\.q=)",
+        "pageElement": ".gsc-expansionArea>.gsc-result",
         "nextLink": ".gsc-cursor-current-page+div",
         "wait": 500
     },
