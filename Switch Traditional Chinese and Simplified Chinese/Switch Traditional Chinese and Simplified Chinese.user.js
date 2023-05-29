@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.31
+// @version      1.2.6.32
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1532,15 +1532,25 @@
                 }
             };
             baseCon.appendChild(testInput);
-            let testBtn = document.createElement('button');
-            testBtn.innerText = '立即轉換';
-            testBtn.style.display = 'block';
-            testBtn.addEventListener("click", function(e) {
+            let testTcBtn = document.createElement('button');
+            testTcBtn.innerText = '切換正體';
+            testTcBtn.style.display = 'block';
+            testTcBtn.addEventListener("click", function(e) {
+                testInput.value=traditionalized(testInput.value);
                 testInput.focus();
-                curLang=!curLang;
-                testInput.value=curLang?traditionalized(testInput.value):simplized(testInput.value);
             });
-            baseCon.appendChild(testBtn);
+            let testScBtn = document.createElement('button');
+            testScBtn.innerText = '切换简体';
+            testScBtn.style.display = 'block';
+            testScBtn.addEventListener("click", function(e) {
+                testInput.value=simplized(testInput.value);
+                testInput.focus();
+            });
+            let testBtnGroup = document.createElement('div');
+            testBtnGroup.style.display = "flex";
+            testBtnGroup.appendChild(testTcBtn);
+            testBtnGroup.appendChild(testScBtn);
+            baseCon.appendChild(testBtnGroup);
         }
     }
 
