@@ -21158,14 +21158,16 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.data.img.offsetWidth==0){
                     return true;
                 };
-                var paPosi=getContentClientRect(this.data.img.parentNode);
                 var targetPosi=getContentClientRect(this.data.img);
-                if (paPosi.width > 20 && paPosi.height > 20) {
-                    if (paPosi.width < targetPosi.width) {
-                        targetPosi.left = paPosi.left;
-                    }
-                    if (paPosi.height < targetPosi.height) {
-                        targetPosi.top = paPosi.top;
+                if (this.data.img.parentNode && this.data.img.parentNode.scrollHeight > 20 && this.data.img.parentNode.scrollWidth > 20) {
+                    var paPosi=getContentClientRect(this.data.img.parentNode);
+                    if (paPosi.width > 20 && paPosi.height > 20) {
+                        if (paPosi.width < targetPosi.width) {
+                            targetPosi.left = paPosi.left;
+                        }
+                        if (paPosi.height < targetPosi.height) {
+                            targetPosi.top = paPosi.top;
+                        }
                     }
                 }
                 var bodyPosi=getContentClientRect(document.documentElement);
