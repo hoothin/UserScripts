@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.31
+// @version      1.9.36.32
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -863,9 +863,12 @@
         if (selector != "html" && selector != "body") {
             let hasId = false;
             if (addID && ele.id && /^[a-z_][\w\-_]*$/i.test(ele.id)) {
-                hasId = true;
-                selector = '#' + ele.id;
-            } else {
+                if (ele.ownerDocument && ele.ownerDocument.querySelectorAll("#" + ele.id).length == 1) {
+                    hasId = true;
+                    selector = '#' + ele.id;
+                }
+            }
+            if (!hasId) {
                 let className = "";
                 if (ele.className) {
                     let classList = ele.classList, i = 0;
@@ -1594,7 +1597,7 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
-                    let i, minHeight = curHeight * 0.52, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.38;
+                    let i, minHeight = curHeight * 0.52, curMaxEle = null, curMaxArea = 0, minWidth = Math.min(curWidth * 0.38, 500);
                     let isHori, preOffsetTop = -1;
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
@@ -2064,8 +2067,10 @@
                 if (pageDivs && pageDivs.length) {
                     for (let i = 0; i < pageDivs.length; i++) {
                         let p = pageDivs[i];
-                        let innerText = (p.innerText || p.value || p.title || '');
-                        if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(innerText)) {
+                        if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(p.title || p.value || '')) {
+                            next = p;
+                            break;
+                        } else if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test((p.innerText || '').trim())) {
                             next = p;
                             break;
                         }
@@ -4085,13 +4090,13 @@
                 clearTimeout(setTitleTimer);
                 setTitleTimer = setTimeout(() => {
                     if (self.inPicker && target.hasAttributes()) {
-                        let title = target.nodeName + "\n";
+                        let title = target.nodeName.toLowerCase() + "\n";
                         for (const attr of target.attributes) {
-                            title += `${attr.name}${attr.value ? " ➡️ " + attr.value : ""}\n`;
+                            title += `【${attr.name}】${attr.value ? " ➡️ " + attr.value : ""}\n`;
                         }
                         getBody(document).title = title;
                     }
-                }, 500);
+                }, 100);
             };
             this.clickHandler = e => {
                 if (!self.showSign) return;
