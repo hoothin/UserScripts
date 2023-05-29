@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.5.29.1
+// @version              2023.5.29.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14466,7 +14466,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.tipsTimeout=setTimeout(()=>{tipsWords.style.opacity=0},(time||1500));
             },
             showCompressProgress:function(meta){
-                console.debug(meta);
+                //console.debug(meta);
                 this.showTips(parseInt(meta.percent)+"% Compress "+(meta.currentFile||""), 100000);
             },
             batchDownload:function(saveParams, callback){
@@ -14478,9 +14478,9 @@ ImgOps | https://imgops.com/#b#`;
                     var len = saveParams.length;
                     function downloadOne(imgSrc, imgName){
                         let crosHandler = imgSrc => {
-                            self.corsUrlToBlob(imgSrc, blob=>{
-                                if (blob && blob.byteLength>58) {
-                                    zip.file(imgName.replace(/\//g,""), blob);
+                            urlToBlob(imgSrc, blob=>{
+                                if (blob && blob.size>58) {
+                                    zip.file(imgName.replace(/\//g, "").replace(/\.webp$/, ".png"), blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 100000);
@@ -16702,7 +16702,7 @@ ImgOps | https://imgops.com/#b#`;
                     overflow: hidden;\
                     text-overflow: ellipsis;\
                     white-space: nowrap;\
-                    max-width: 800px;\
+                    max-width: 65%;\
                     }\
                     /*顶栏*/\
                     .pv-gallery-head {\
