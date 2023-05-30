@@ -797,7 +797,7 @@
                                     r(null);
                                 }
                             });
-                            resolve({text: text, json: json});
+                            resolve({text: text, json: json, finalUrl: (d.finalUrl || url)});
                         },
                         onerror: function(e) {
                             debug(e);
@@ -1161,6 +1161,9 @@
                  }
                  #search-jumper.search-jumper-showall>.search-jumper-searchBar {
                      display: none;
+                 }
+                 #search-jumper>.search-jumper-searchBar.grabbing>.search-jumper-type {
+                     display: none!important;
                  }
                  #search-jumper.search-jumper-showall #filterSites {
                      background-color: #2a282cc0;
@@ -4496,12 +4499,14 @@
                 if (!this.con.parentNode) {
                     document.documentElement.appendChild(this.con);
                     setTimeout(() => {
-                        if (getComputedStyle(this.con).zIndex != "2147483647") {
-                            disabled = true;
-                            this.removeBar();
-                            debug(i18n("cspDisabled"));
-                        } else disabled = false;
-                    }, 0);
+                        if (this.con.parentNode) {
+                            if (getComputedStyle(this.con).zIndex != "2147483647") {
+                                disabled = true;
+                                this.removeBar();
+                                debug(i18n("cspDisabled"));
+                            } else disabled = false;
+                        }
+                    }, 1);
                 }
             }
 
@@ -5707,6 +5712,7 @@
                 let self = this;
                 this.historyInserted = true;
                 let num = 0;
+                let toFirst = !init && searchData.prefConfig.historyInsertFirst;
                 for (let i = 0; i < this.historySiteBtns.length; i++) {
                     let btn = this.historySiteBtns[i];
                     if (btn.parentNode != typeEle) {
@@ -5714,14 +5720,14 @@
                         let findSame = false;
                         for (let j = 0; j < sites.length; j++) {
                             let site = sites[j];
-                            if (site.name == btn.dataset.name) {
+                            if ((site.dataset.oriName || site.dataset.name) == (btn.dataset.oriName || btn.dataset.name)) {
                                 findSame = true;
                                 break;
                             }
                         }
                         if (findSame) continue;
                         btn.classList.add("historySite");
-                        if (!init && searchData.prefConfig.historyInsertFirst) {
+                        if (toFirst) {
                             if (typeEle.children.length > 1) {
                                 typeEle.insertBefore(btn, typeEle.children[1]);
                             } else typeEle.appendChild(btn);
@@ -5731,6 +5737,11 @@
                             } else typeEle.appendChild(btn);
                         }
                         if (++num >= searchData.prefConfig.historyLength) break;
+                    } else if (toFirst) {
+                        btn.classList.add("historySite");
+                        if (typeEle.children.length > 1) {
+                            typeEle.insertBefore(btn, typeEle.children[1]);
+                        } else typeEle.appendChild(btn);
                     }
                 }
                 typeEle.style.width = typeEle.scrollWidth + "px";
@@ -6715,6 +6726,7 @@
                                 if (/^\[/.test(siteData.url)) continue;
                                 if (siteData.name == siteNames[0]) {
                                     findSite = true;
+                                    ele.dataset.oriName = siteData.name;
                                     data = siteData;
                                     if (data.icon && icon !== "0") icon = data.icon;
                                     break;
@@ -7582,7 +7594,7 @@
                         let url = data.split("\n");
                         if (url.length == 1) url = data.split(" ");
                         url = url[0];
-                        data = data.replace(url, "").trim().replace(/\\{/g, "showTipsLeftBrace").replace(/\\}/g, "showTipsRightBrace").replace(/{name}/g, name);
+                        data = data.replace(url, "").trim().replace(/\\{/g, "showTipsLeftBrace").replace(/\\}/g, "showTipsRightBrace").replace(/{name}/g, name).replace(/{url}/g, '【SEARCHJUMPERURL】');
                         let cache = url.match(cacheReg);
                         if (cache) {
                             cache = parseInt(cache[1]);
@@ -7683,21 +7695,24 @@
                         let template = data.match(/{(.*?)}/);
                         if (tipsResult) {
                             if (template && template[1].indexOf("json.") === 0) {
+                                data = data.replace(/【SEARCHJUMPERURL】/g, url);
                                 tipsResult = calcJson(tipsResult, template);
                                 tipsResult = [tipsResult, "\n" + allValue.join(",")];
                             }
                         } else {
                             let storeData;
-                            if (!template) return;
                             let postMatch = url.match(postReg), fetchOption = {}, _url = url;
                             if (postMatch) {
                                 fetchOption.body = postMatch[1];
                                 fetchOption.method = "POST";
                                 _url = _url.replace(postMatch[0], "");
                             }
-                            if (template[1].indexOf("json.") === 0) {
+                            if (template && template[1].indexOf("json.") === 0) {
                                 let allValue = [];
-                                tipsResult = await GM_fetch(_url, fetchOption).then(r => r.json()).then(r => {
+                                tipsResult = await GM_fetch(_url, fetchOption).then(r => {
+                                    data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                    return r.json();
+                                }).then(r => {
                                     if (!r) return null;
                                     storeData = r;
                                     let finalData = calcJson(r, template);
@@ -7706,10 +7721,17 @@
                                 if (!tipsResult) tipsResult = "No result";
                                 tipsResult = [tipsResult, "\n" + allValue.join(",")];
                             } else {
-                                tipsResult = await GM_fetch(_url, fetchOption).then(r => r.text()).then(r => {
+                                let hasData = false;
+                                tipsResult = await GM_fetch(_url, fetchOption).then(r => {
+                                    if (data.indexOf('【SEARCHJUMPERURL】') != -1) {
+                                        data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                        hasData = true;
+                                    }
+                                    return r.text();
+                                }).then(r => {
                                     let doc = document.implementation.createHTMLDocument('');
                                     doc.documentElement.innerHTML = r;
-                                    let finalData = data, hasData = false;
+                                    let finalData = data;
                                     while (template) {
                                         let value = "";
                                         if (template[1] == "title") {
@@ -8121,7 +8143,7 @@
                         self.bar.style.bottom = posY + "px";
                     }
                 } else if (relX == "right" && relY == "bottom") {
-                    if (posX >= posY) {
+                    if (posX > posY) {
                         //下右
                         setClass("search-jumper-bottom");
                         self.bar.style.position = "fixed";
@@ -8996,7 +9018,7 @@
                 let curY = clientY(e);
                 if (curX < baseWidth) {
                     relX = "left";
-                    posX = parseInt(searchBar.bar.style.left) > 0 ? parseInt(searchBar.bar.style.left) : "0";
+                    posX = parseInt(searchBar.bar.style.left) > 0 ? parseInt(searchBar.bar.style.left) : 0;
                 } else if (curX < baseWidth * 2) {
                     relX = "center";
                     posX = parseInt(searchBar.bar.style.left) - viewWidth / 2;
@@ -9322,10 +9344,13 @@
                         draging = false;
                         if (searchBar.bar.contains(e.target) || shown) {
                             e.preventDefault();
-                        } else if (!inputSign) {
+                        } else {
                             setTimeout(() => {
                                 if (shown) return;
-                                if ((matchKey && e.button !== 0) || (moved && e.button === 0 && searchData.prefConfig.selectToShow && getSelectStr())) {
+                                if (!inputSign && (
+                                    (matchKey && e.button !== 0) ||
+                                    (moved && e.button === 0 && searchData.prefConfig.selectToShow && getSelectStr())
+                                )) {
                                     searchBar.showInPage(true, e);
                                 } else {
                                     waitForMouse = false;
