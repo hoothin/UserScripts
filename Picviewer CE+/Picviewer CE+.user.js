@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.5.30.1
+// @version              2023.5.30.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -19357,8 +19357,6 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 this.following=false;
                 var wSize=getWindowSize();
-                wSize.h -= 26;
-                wSize.w -= 26;
                 this.zoom(1);
                 if(prefs.imgWindow.fitToScreen && !imgWindow.classList.contains("pv-pic-window-scroll")){
                     var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
@@ -20840,13 +20838,13 @@ ImgOps | https://imgops.com/#b#`;
             open:function(){
                 switch(this.buttonType){
                     case 'popup':
+                        if(uniqueImgWin && uniqueImgWin.src != this.data.src && (!this.data.srcs || !this.data.srcs.includes(uniqueImgWin.src))){
+                            uniqueImgWin.remove();
+                        }
                         if(!uniqueImgWin || uniqueImgWin.removed){
                             this.data.src=this.img.src;
                             uniqueImgWin = new ImgWindowC(this.img, this.data);
                             //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
-                        }
-                        if(uniqueImgWin.src != this.data.src && (!this.data.srcs || !this.data.srcs.includes(uniqueImgWin.src))){
-                            uniqueImgWin.changeData(this.data);
                         }
                         uniqueImgWin.blur({target:this.data.img});
                         if(!uniqueImgWin.loaded){
@@ -22623,8 +22621,12 @@ ImgOps | https://imgops.com/#b#`;
             let isFuncKey = event.key == 'Alt' || event.key == 'Control' || event.key == 'Shift' || event.key == 'Meta';
             if(isFuncKey && (prefs.floatBar.globalkeys.type == "hold" || !checkPreview(event)) && (uniqueImgWin && !uniqueImgWin.removed)){
                 if(prefs.floatBar.globalkeys.closeAfterPreview){
-                    if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
-                    removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
+                    if (removeUniqueWinTimer) clearTimeout(removeUniqueWinTimer);
+                    if (uniqueImgWin) {
+                        removeUniqueWinTimer = setTimeout(()=>{
+                            if (uniqueImgWin) uniqueImgWin.remove()
+                        },100);
+                    }
                 }else{
                     uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     uniqueImgWin.focus();
