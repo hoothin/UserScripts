@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86127",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(concat(' ',@class,' '),' series-list ')]/div",
+    "nextLink": "//ul[@class='mode-paging']/li[span]/following-sibling::li/a",
+    "url": "^https://bigcomics\\.jp/series/list",
+    "exampleUrl": "https://bigcomics.jp/series/list?page=1&sortType=%E6%9B%B4%E6%96%B0%E9%A0%86&page2=0"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "ビッコミ",
+  "created_at": "2023-05-30T20:32:16+09:00",
+  "updated_at": "2023-05-30T20:32:16+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86123",
   "data": {
     "insertBefore": "",
@@ -15732,16 +15747,16 @@
 {
   "resource_url": "http://wedata.net/items/81073",
   "data": {
-    "pageElement": "id(\"post-meta\")/following-sibling::*",
-    "nextLink": "//span[@aria-current=\"page\"]/following-sibling::a[1]",
+    "pageElement": "//div[contains(concat(' ', normalize-space(@class), ' '), ' article-body-pc ')]",
+    "nextLink": "//link[@rel=\"next\"]",
     "url": "^https://(www\\.)?moneypost\\.jp",
-    "exampleUrl": "https://www.moneypost.jp/94756"
+    "exampleUrl": "https://www.moneypost.jp/1026270"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "nnn",
   "name": "moneypost.jp",
   "created_at": "2016-11-08T11:48:03+09:00",
-  "updated_at": "2020-12-04T08:17:28+09:00"
+  "updated_at": "2023-05-30T21:25:26+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81072",
