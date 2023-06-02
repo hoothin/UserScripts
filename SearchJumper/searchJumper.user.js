@@ -1306,7 +1306,7 @@
                      position: fixed;
                      bottom: 5%;
                      font-size: 1.5vw;
-                     line-height: 1;
+                     line-height: 1.5;
                      color: white;
                      opacity: 0.6;
                      font-weight: bold;
@@ -1350,7 +1350,7 @@
                      pointer-events: all;
                      margin-top: -${this.scale * 25}px;
                      vertical-align: top;
-                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.3;"}
+                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.6;"}
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 1s ease, margin-left 1s, right 1s, opacity 1s, transform 1s;"}
                      user-select: none;
                      text-align: center;
@@ -1401,7 +1401,7 @@
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .funcKeyCall>.search-jumper-searchBar.initShow {
-                     ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.5s ease-out;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.15s ease-out;"}
                  }
                  #search-jumper.funcKeyCall {
                      overflow: visible;
@@ -1453,11 +1453,13 @@
                      box-shadow: #000000 0px 0px 10px;
                      overflow: auto;
                      scrollbar-width: none;
-                     overscroll-behavior: contain;
-                     -ms-scroll-chaining: contain;
                      transition: none;
                      background: #d0d0d0d0;
                      box-sizing: content-box;
+                 }
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type.search-jumper-open {
+                     overscroll-behavior: contain;
+                     -ms-scroll-chaining: contain;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>.sitelist {
                      display: none;
@@ -1792,7 +1794,7 @@
                      bottom: unset;
                      top: 5%;
                  }
-                 #search-jumper .search-jumper-type.not-expand>a:nth-of-type(${searchData.prefConfig.expandTypeLength || 12})~a {
+                 #search-jumper .search-jumper-type.search-jumper-open.not-expand>a:nth-of-type(${searchData.prefConfig.expandTypeLength || 12})~a {
                      display: none!important;
                  }
                  #search-jumper .sitelist {
@@ -5705,7 +5707,7 @@
             }
 
             insertHistory(typeEle, init) {
-                if (searchData.prefConfig.disableAutoOpen) return;
+                //if (searchData.prefConfig.disableAutoOpen) return;
                 if (!searchData.prefConfig.historyLength) return;
                 typeEle.style.width = "auto";
                 typeEle.style.height = "auto";
