@@ -10,8 +10,8 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.32
-// @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
+// @version      1.9.36.33
+// @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
@@ -883,17 +883,18 @@
                 let parent = ele.parentElement;
                 if (parent) {
                     selector = geneSelector(parent, addID) + ' > ' + selector;
-                    if (!className && !hasId && parent.children.length > 1) {
-                        let i, j = 0;
+                    if (!className && !hasId && parent.children.length > 1 && !/^HTML$/i.test(parent.nodeName)) {
+                        let i, nth = 0, all = 0;
                         for (i = 0; i < parent.children.length; i++) {
                             if (parent.children[i].nodeName == ele.nodeName) {
-                                j++;
+                                all++;
                                 if (parent.children[i] == ele) {
-                                    break;
+                                    nth = all;
                                 }
+                                if (nth > 0 && all > 1) break;
                             }
                         }
-                        selector += (/^HTML$/i.test(parent.nodeName) ? "" : `:nth-of-type(${j})`);
+                        selector += (all == 1 ? "" : `:nth-of-type(${nth})`);
                     }
                 }
             }
@@ -1574,7 +1575,7 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
                     }
-                    if (curHeight / bodyHeight <= 0.25) {
+                    if (curHeight / bodyHeight <= 0.22) {
                         let article = doc.querySelectorAll(mainSel);
                         if (article && article.length == 1) {
                             article = article[0];
@@ -1654,7 +1655,7 @@
                                 }
                             }
                             if (h < minHeight) {
-                                if (!needCheckNext || h < (windowHeight>>1) || !ele.contains(self.initNext)) {
+                                if (!needCheckNext || h < (windowHeight>>2) || !ele.contains(self.initNext)) {
                                     continue;
                                 }
                             }
@@ -4377,6 +4378,7 @@
         clearInterval(autoScrollInterval);
         if (autoScroll <= 0) return;
         autoScrollInterval = setInterval(() => {
+            if (isPause) return;
             window.scroll(window.scrollX, window.scrollY + 1);
         }, parseInt(1000 / autoScroll));
     }
