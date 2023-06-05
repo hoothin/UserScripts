@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.5.30.2
+// @version              2023.6.5.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12369,7 +12369,7 @@ ImgOps | https://imgops.com/#b#`;
             var rect=target.getBoundingClientRect();
             var compStyle=unsafeWindow.getComputedStyle(target);
             var pFloat=parseFloat;
-            var top=rect.top + pFloat(compStyle.paddingTop) + pFloat(compStyle.borderTopWidth);
+            var top=rect.top + pFloat(compStyle.paddingTop) + pFloat(compStyle.borderTopWidth) - pFloat(compStyle.marginTop);
             var right=rect.right - pFloat(compStyle.paddingRight) - pFloat(compStyle.borderRightWidth);
             var bottom=rect.bottom - pFloat(compStyle.paddingBottom) - pFloat(compStyle.borderBottomWidth);
             var left=rect.left + pFloat(compStyle.paddingLeft) + pFloat(compStyle.borderLeftWidth);
@@ -19001,7 +19001,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-window-scrollSign {\
                     display: none;\
-                    width: 15%;\
+                    width: 100px;\
                     height: auto;\
                     fill: black;\
                     top: 10px;\
@@ -22713,6 +22713,7 @@ ImgOps | https://imgops.com/#b#`;
         for(let key in editSitesFunc){
             editSitesName[key]=key;
         }
+        var newsInited = false, news = "";
 
         initLang();
         var customLangOption={
@@ -23294,7 +23295,7 @@ ImgOps | https://imgops.com/#b#`;
                 },*/
             },
             events: {
-                open: function(doc, win, frame) {
+                open: async function(doc, win, frame) {
                     let saveBtn=doc.querySelector("#"+this.id+"_saveBtn");
                     let closeBtn=doc.querySelector("#"+this.id+"_closeBtn");
                     let resetLink=doc.querySelector("#"+this.id+"_resetLink");
@@ -23309,6 +23310,17 @@ ImgOps | https://imgops.com/#b#`;
                     let searchData=doc.getElementById(this.id+"_field_gallery.searchData");
                     if(searchData && searchData.value==""){
                         searchData.value=defaultSearchData;
+                    }
+                    let header=doc.getElementById(this.id+"_header");
+                    if(header && header.children.length==1){
+                        if (!newsInited) {
+                            news = await fetch(`https://www.hoothin.com/news.php?from=pvcep&lang=${lang}`).then(response => response.text()).catch(e => console.error(e));
+                            newsInited = true;
+                        }
+                        if (!news) return;
+                        let newsEle = document.createElement("div");
+                        newsEle.innerHTML = news;
+                        header.appendChild(newsEle);
                     }
                 },
                 save: function() {
