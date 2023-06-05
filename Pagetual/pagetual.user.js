@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.33
+// @version      1.9.36.34
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1570,7 +1570,7 @@
                             curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
                         }
                     }
-                    if (/^PICTURE$/i.test(ele.nodeName)) {
+                    if (/^PICTURE$/i.test(ele.nodeName) || !ele.innerText || ele.innerText.trim() == '') {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
@@ -1777,7 +1777,7 @@
             }
             if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0) {
                 let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
-                let video = targetEle.querySelector("video") || targetEle.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+                let video = targetEle.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
                 if (video && doc == document) {
                     if (video && video.offsetParent && video.name != 'pagetual-iframe') {
                         let scrollWidth = video.scrollWidth || video.offsetWidth;
@@ -1970,6 +1970,7 @@
                 await sleep(1);
                 next = body.querySelector("a.pageright") ||
                 body.querySelector(".page-numbers.current+a") ||
+                body.querySelector(".page_current+a") ||
                 body.querySelector("input[value='next']") ||
                 body.querySelector("input[value='Next page']") ||
                 body.querySelector("input[value='下一页']") ||
@@ -2099,6 +2100,7 @@
                         if (/slick|slide|gallery/i.test(aTag.className)) continue;
                         if (aTag.classList && aTag.classList.contains('disabled')) continue;
                     }
+                    if (aTag.dataset && aTag.dataset.preview) continue;
                     let ariaLabel = aTag.getAttribute("aria-label");
                     if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
                     if (aTag.parentNode) {
@@ -4347,11 +4349,13 @@
                 editorChanged = true;
             }
         };
-        var container = document.getElementById("jsoneditor");
-        container.style.height = '800px';
-        container.innerHTML = "";
-        editor = new JSONEditor(container, options);
-        editor.set(ruleParser.customRules);
+        setTimeout(() => {
+            var container = document.getElementById("jsoneditor");
+            container.style.height = '800px';
+            container.innerHTML = "";
+            editor = new JSONEditor(container, options);
+            editor.set(ruleParser.customRules);
+        }, 500);
     }
 
     function checkGuidePage(href) {
@@ -4383,43 +4387,7 @@
         }, parseInt(1000 / autoScroll));
     }
 
-    function initConfig() {
-        listenUrl();
-        let href = location.href.slice(0, 100);
-        try {
-            if (_unsafeWindow.initedPagetual) {
-                if (ruleImportUrlReg.test(href)) {
-                    showTips(i18n('duplicate'));
-                }
-                return true;
-            }
-            _unsafeWindow.initedPagetual = true;
-        } catch(e) {showTips(e)}
-        _GM_registerMenuCommand(i18n("update"), () => {
-            showTips(i18n("beginUpdate"), "", 60000);
-            updateRules(() => {
-                showTips(i18n("updateSucc"));
-                location.reload();
-            },(rule, err) => {
-                showTips(`Update ${rule.url} rules fail!`);
-                debug(err);
-            });
-        });
-        _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
-            forceState = (forceState == 1 ? 0 : 1);
-            storage.setItem("forceState_" + location.host, forceState);
-            showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
-            if (!ruleParser.curSiteRule.url) location.reload();
-        });
-        _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
-            autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
-            autoScroll = parseInt(autoScroll) || 0;
-            if (autoScroll < 0) autoScroll = 0;
-            else if (autoScroll > 1000) autoScroll = 1000;
-            storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
-            startAutoScroll();
-        });
-        startAutoScroll();
+    function initConfig(href) {
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
             if (href.indexOf("PagetualGuide") != -1) return true;
@@ -5485,7 +5453,47 @@
                                 }
                                 forceState = v;
                                 updateDate = date;
-                                if (initConfig()) return;
+
+
+                                listenUrl();
+                                let href = location.href.slice(0, 100);
+                                try {
+                                    if (_unsafeWindow.initedPagetual) {
+                                        if (ruleImportUrlReg.test(href)) {
+                                            showTips(i18n('duplicate'));
+                                        }
+                                        return;
+                                    }
+                                    _unsafeWindow.initedPagetual = true;
+                                } catch(e) {showTips(e)}
+                                _GM_registerMenuCommand(i18n("update"), () => {
+                                    showTips(i18n("beginUpdate"), "", 60000);
+                                    updateRules(() => {
+                                        showTips(i18n("updateSucc"));
+                                        location.reload();
+                                    },(rule, err) => {
+                                        showTips(`Update ${rule.url} rules fail!`);
+                                        debug(err);
+                                    });
+                                });
+                                _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
+                                    forceState = (forceState == 1 ? 0 : 1);
+                                    storage.setItem("forceState_" + location.host, forceState);
+                                    showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+                                    if (!ruleParser.curSiteRule.url) location.reload();
+                                });
+                                _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
+                                    autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
+                                    autoScroll = parseInt(autoScroll) || 0;
+                                    if (autoScroll < 0) autoScroll = 0;
+                                    else if (autoScroll > 1000) autoScroll = 1000;
+                                    storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
+                                    startAutoScroll();
+                                });
+                                startAutoScroll();
+
+
+                                if (initConfig(href)) return;
                                 pageReady = true;
                                 if (forceState == 1) return;
                                 let now = new Date().getTime();
@@ -5936,11 +5944,15 @@
             lastActiveUrl = location.href;
             let href = location.href.slice(0, 60);
             if (href == configPage[0]) {
-                location.reload();
+                setTimeout(() => {
+                    initConfig(href);
+                }, 1000);
             } else {
                 setTimeout(() => {
                     if (guidePage.test(href)) {
-                        location.reload();
+                        setTimeout(() => {
+                            initConfig(href);
+                        }, 1000);
                     } else {
                         urlChanged = true;
                         if (!ruleParser.nextLinkHref) {
