@@ -1512,6 +1512,8 @@
                  .search-jumper-left {
                      height: 100%;
                      text-align: initial;
+                 }
+                 .search-jumper-left:not(.search-jumper-showall) {
                      width: initial;
                  }
                  .search-jumper-right {
