@@ -432,11 +432,11 @@
         case "ru-RU":
             config = {
                 enableDebug: "Включить отладку",
-                disable: "Выключено",
+                disable: "Выключить",
                 disableSite: "Включить/выключить на сайте",
                 disableSiteTips: "Выключено для этого сайта",
                 enableSiteTips: "Включено для этого сайта",
-                enable: "Включено",
+                enable: "Включить",
                 toTop: "Наверх",
                 toBottom: "Вниз",
                 current: "Текущая страница",
