@@ -9286,7 +9286,7 @@
     },
     {
         "name": "微博搜索",
-        "url": "^https://s\\.weibo\\.com/weibo",
+        "url": "^https://s\\.weibo\\.com/",
         "pageElement": "#pl_feedlist_index>div>div.card-wrap",
         "action": 1,
         "pageAction": "eles.forEach(e=>{let vc=e.querySelector('a.WB_video_h5');if(vc){let v=vc.querySelector('video');let b=vc.querySelector('button.wbpv-big-play-button');b.onclick=e=>{v.style.zIndex=9;v.controls=true;v.play()}}})"
