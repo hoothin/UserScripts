@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86132",
+  "data": {
+    "pageElement": "//*[@id=\"CmsMembersControl\"]",
+    "nextLink": "//*[@id=\"next\"]/a",
+    "url": "^https://www.itmedia.co.jp/business/",
+    "exampleUrl": "https://www.itmedia.co.jp/business/articles/2305/30/news066.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "autopagerizebanzai",
+  "name": "ITmedia ビジネスオンライン",
+  "created_at": "2023-06-08T09:27:59+09:00",
+  "updated_at": "2023-06-08T09:33:12+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86129",
   "data": {
     "insertBefore": "",
