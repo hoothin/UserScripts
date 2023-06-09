@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.6.5
+// @version      1.6.6
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -26,7 +26,7 @@
 // @grant        GM.notification
 // @connect      greasyfork.org
 // @connect      sleazyfork.org
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
+// @contributionURL https://www.buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
 
@@ -182,17 +182,22 @@
         if(/greasyfork\.org\/.*\/scripts\/23840[^\/]*$/.test(location.href)){
             var p=document.createElement("p"),_bullshit;
             p.style.width="99%";
-            p.innerHTML="<b>Filter RegExp Config</b><button id='ok' style='margin-left: 20px;'>Save</button><button id='reset' style='margin-left: 20px;'>Reset</button>";
+            p.innerHTML="<b>Filter RegExp</b><button id='ok' style='margin-left: 20px;'>Save</button><button id='reset' style='margin-left: 20px;'>Reset</button>";
             var okBtn=p.querySelector("#ok");
             var resetBtn=p.querySelector("#reset");
             var filterTextarea=document.createElement("pre");
             var prettifyScript=document.createElement("script");
-            prettifyScript.src="https://cdn.jsdelivr.net/npm/code-prettify@0.1.0/loader/run_prettify.js?lang=js&skin=sunburst";
+            prettifyScript.src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js?skin=sons-of-obsidian";
             document.head.appendChild(prettifyScript);
+            var prettifyStyle=document.createElement("link");
+            prettifyStyle.rel="stylesheet";
+            prettifyStyle.href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css";
+            document.head.appendChild(prettifyStyle);
             filterTextarea.contentEditable="true";
             filterTextarea.className="prettyprint lang-js";
             filterTextarea.style.whiteSpace="pre-wrap";
             filterTextarea.style.overflowWrap="break-word";
+            filterTextarea.style.width="100%";
             filterTextarea.innerHTML=bullshit;
             var additionalInfo=document.querySelector("#additional-info");
             p.appendChild(filterTextarea);
