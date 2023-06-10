@@ -25677,8 +25677,8 @@
 {
   "resource_url": "http://wedata.net/items/74923",
   "data": {
-    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|descendant::*[./div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]",
-    "nextLink": "descendant::a[contains(@class,'next')][last()]|//div[@class='nav-previous']/a|//div[contains(@class,'more-stories')]/a[contains(@class,'a-icon-right-arrow')]",
+    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|descendant::*[div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]|//div[@class='_cardsRiver_1ssom_1 _cardsRiver_1hspf_1']/div/div[@class='_cards_qg10f_1 ']/div[@class='_inner_qg10f_1 ']/div[@data-alias='cards__inner-wrapper']/div[@class='_card_504re_1']",
+    "nextLink": "descendant::a[contains(@class,'next')][last()]|//div[@class='nav-previous']/a|//div[contains(@class,'more-stories')]/a[contains(@class,'a-icon-right-arrow')]|//a[span[normalize-space(.)='Next']]",
     "url": "^https?://.*(?:bollywoodlife|(dead|tv)line|footwearnews)\\.com",
     "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/ https://www.bollywoodlife.com/ https://footwearnews.com/page/2/ https://tvline.com/"
   },
@@ -25686,7 +25686,7 @@
   "created_by": "Tanookirby",
   "name": "PMC Brands",
   "created_at": "2014-06-26T02:58:29+09:00",
-  "updated_at": "2023-01-19T10:38:53+09:00"
+  "updated_at": "2023-06-10T09:56:23+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74912",
