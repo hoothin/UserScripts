@@ -76,6 +76,7 @@ def main():
       simplified = matchObject.group(2)
       pinyin = prettify(matchObject.group(3))
       add_to_dict(tree, simplified, pinyin)
+      add_to_dict(tree, traditional, pinyin)
 
   with open(outputFile, 'w', encoding='utf-8') as f:
     json.dump(tree, f, ensure_ascii=False)
