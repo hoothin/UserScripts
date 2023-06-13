@@ -18865,6 +18865,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding-top:2px;\
                     background-color:#1771FF;\
                     display: none;\
+                    z-index: 2;\
                     }\
                     .pv-pic-window-close:hover {\
                     background-color:red;\
@@ -18903,6 +18904,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding-top:2px;\
                     background-color:#1771FF;\
                     display: none;\
+                    z-index: 2;\
                     }\
                     .pv-pic-window-max:hover {\
                     background-color:red;\
@@ -18968,6 +18970,8 @@ ImgOps | https://imgops.com/#b#`;
                     pointer-events: all;\
                     }\
                     .pv-pic-window-container:hover>.pv-pic-search-state{\
+                    border-radius: 0 0 8px 0;\
+                    top: 8px;\
                     opacity:0.8;\
                     }\
                     .pv-pic-window-container>span.pv-pic-search-state:hover{\
