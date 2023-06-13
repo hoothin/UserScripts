@@ -18995,7 +18995,6 @@ ImgOps | https://imgops.com/#b#`;
                     box-sizing: content-box;\
                     }\
                     .pv-pic-window-container_focus>.pv-pic-search-state {\
-                    opacity:1;\
                     top: -25px;\
                     }\
                     .pv-pic-window-scrollSign {\
