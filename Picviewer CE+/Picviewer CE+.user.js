@@ -18974,14 +18974,14 @@ ImgOps | https://imgops.com/#b#`;
                     opacity:0;\
                     }\
                     .pv-pic-search-state {\
-                    top: -14px;\
+                    top: -12px;\
                     left: 8px;\
                     display: block;\
                     position: absolute;\
                     z-index: 1;\
                     color: #ffff00;\
-                    height: 20px;\
-                    line-height: 20px;\
+                    height: 18px;\
+                    line-height: 18px;\
                     background: rgb(0 0 0 / 80%);\
                     border-radius: 1px 1px 0 0;\
                     padding: 1px 5px;\
@@ -18995,9 +18995,8 @@ ImgOps | https://imgops.com/#b#`;
                     box-sizing: content-box;\
                     }\
                     .pv-pic-window-container_focus>.pv-pic-search-state {\
-                    border-radius: 0 0 8px 0;\
-                    opacity:0.3;\
-                    top: 8px;\
+                    opacity:1;\
+                    top: -25px;\
                     }\
                     .pv-pic-window-scrollSign {\
                     display: none;\
