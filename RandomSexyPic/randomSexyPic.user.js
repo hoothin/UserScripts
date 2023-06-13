@@ -3,7 +3,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.16
+// @version      1.3.17
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
@@ -25,7 +25,9 @@
 // @run-at       document-idle
 // @license      MIT
 // ==/UserScript==
-
+if (window.top != window.self) {
+    return;
+}
 
 (function() {
     'use strict';
@@ -391,6 +393,7 @@
     var viewportMeta=document.createElement("meta");
     var overMask=document.createElement("div");
     var homepage=document.createElement("a");
+    var lightBtn=document.createElement("span");
     for(var name in setuConfig){
         var config=setuConfig[name];
         if(config.hide || !config.name)continue;
@@ -419,6 +422,7 @@
     btns.appendChild(modeSelect);
     btns.appendChild(submit);
     btns.appendChild(homepage);
+    btns.appendChild(lightBtn);
     overMask.className="over-mask";
     imgCon.appendChild(overMask);
     referrerMeta.name="referrer";
@@ -660,12 +664,13 @@
     }
     .list-show:hover,.list-show.hover{
       opacity: 1;
+      transform: scale(1.05);
     }
     .list-show{
       opacity: 0.6;
-      transition: opacity .3s ease-in-out;
-      -moz-transition: opacity .3s ease-in-out;
-      -webkit-transition: opacity .3s ease-in-out;
+      transition: opacity .3s ease-in-out, transform .3s;
+      -moz-transition: opacity .3s ease-in-out, transform .3s;
+      -webkit-transition: opacity .3s ease-in-out, transform .3s;
     }
     .img-con{
         overflow-x: hidden;
@@ -673,6 +678,11 @@
         width: 100%;
         min-height: calc(100vh - 70px);
         display: block;
+        scrollbar-width: none;
+    }
+    .img-con::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
     }
     .img-con>img{
       -webkit-column-break-inside: avoid;
@@ -720,6 +730,16 @@
     .btns>a:hover{
       background: #ffa31a;
     }
+    .btns>a>span{
+      background: #2f2f2f;
+      color: white;
+      padding: 5px;
+      margin: 0 5px 0 -5px;
+      border-radius: 5px 0 0 5px;
+    }
+    .btns>a:hover>span{
+      background: #3f3f3f;
+    }
     .btns>label{
       background: #f8981e;
       color: black;
@@ -751,8 +771,21 @@
       vertical-align: top;
       margin: 0 5px;
     }
+    .btns>span{
+      right: 10px;
+      font-size: x-large;
+      position: absolute;
+      cursor: pointer;
+      filter: brightness(0.5);
+    }
+    .lighted>.btns>span{
+      filter: none;
+    }
     .btns>button:hover{
       transform: scale3d(1.1, 1.1, 1.1);
+    }
+    .lighted>.img-con>img.list-show{
+      opacity: 1;
     }
     .btns>button{
       cursor: pointer;
@@ -770,7 +803,7 @@
 
     btns.className="btns";
     document.body.appendChild(btns);
-    homepage.innerHTML="Homepage";
+    homepage.innerHTML="<span>Home</span>page";
     homepage.href="https://sleazyfork.org/en/users/8227-hoothin";
     homepage.target="_blank";
     numInput.type="number";
@@ -792,6 +825,10 @@
             submitParam();
         }
     };
+    lightBtn.innerText="💡";
+    lightBtn.onclick=e=>{
+        document.body.classList.toggle("lighted");
+    }
 
     imgCon.className="img-con";
     document.body.appendChild(imgCon);
