@@ -1453,7 +1453,7 @@
             }
             let moreChild = ele.children[0], minOffsetTop = h;
             while (moreChild) {
-                if (moreChild.offsetParent && moreChild.offsetTop < minOffsetTop) {
+                if (moreChild.offsetParent == ele && moreChild.offsetTop < minOffsetTop) {
                     minOffsetTop = moreChild.offsetTop;
                 }
                 moreChild = moreChild.nextElementSibling;
