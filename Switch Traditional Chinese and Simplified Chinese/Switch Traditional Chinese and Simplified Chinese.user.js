@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.33
+// @version      1.2.6.34
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -38,6 +38,15 @@
 (function() {
     'use strict';
     if (window.stcascInited) return;
+    if (window.top != window.self) {
+        try {
+            if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
+                return;
+            }
+        } catch(e) {
+            return;
+        }
+    }
     window.stcascInited = true;
     var auto = false;
     var notification = true;
@@ -1680,10 +1689,14 @@
         if (!values) values = {};
         let curKey = keyList.shift();
         if (curKey) {
-            storage.getItem(curKey, value => {
-                values[curKey] = value;
+            if (curKey == "pinyinTree" && values.disablePinyin) {
                 getMulValue(keyList, callback, values);
-            });
+            } else {
+                storage.getItem(curKey, value => {
+                    values[curKey] = value;
+                    getMulValue(keyList, callback, values);
+                });
+            }
         } else {
             callback(values);
         }
@@ -1831,19 +1844,10 @@
             storage.setItem("stDict", stDict);
             storage.setItem("tsDict", tsDict);
         }
-        _GM_registerMenuCommand("繁簡切換", switchLanguage);
-        if (!disablePinyin) {
-            if (values.pinyinTree) {
-                pinyinTree = values.pinyinTree;
-            } else {
-                pinyinTree = JSON.parse(await GM_getResourceText("pinyinTree"));
-                storage.setItem("pinyinTree", pinyinTree);
-            }
-            _GM_registerMenuCommand("顯示拼音", () => showPinyinNode());
-        }
         saveAction = values[currentAction];
         if (saveAction !== 1 || inConfigPage) run();
         if (window.top != window.self) return;
+        _GM_registerMenuCommand("繁簡切換", switchLanguage);
         let currentState = "";
         switch (saveAction) {
             case 2:
@@ -1852,6 +1856,22 @@
             case 3:
                 currentState = "（正體）";
                 break;
+        }
+        if (!disablePinyin) {
+            if (values.pinyinTree) {
+                pinyinTree = values.pinyinTree;
+            } else {
+                try {
+                    pinyinTree = JSON.parse(await GM_getResourceText("pinyinTree"));
+                } catch(e) {}
+                if (!pinyinTree || pinyinTree == {}) {
+                    pinyinTree = {};
+                    alert("拼音詞典加載失敗，請檢查網路服務");
+                } else {
+                    storage.setItem("pinyinTree", pinyinTree);
+                }
+            }
+            _GM_registerMenuCommand("顯示拼音", () => showPinyinNode());
         }
 
         _GM_registerMenuCommand("個性設定", () => {
