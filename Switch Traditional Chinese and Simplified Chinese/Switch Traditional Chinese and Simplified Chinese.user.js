@@ -1866,7 +1866,7 @@
                 } catch(e) {}
                 if (!pinyinTree || pinyinTree == {}) {
                     pinyinTree = {};
-                    alert("拼音詞典加載失敗，請檢查網路服務");
+                    alert("拼音詞典加載失敗，請檢查網路服務或者禁用拼音顯示");
                 } else {
                     storage.setItem("pinyinTree", pinyinTree);
                 }
