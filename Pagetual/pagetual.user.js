@@ -1783,18 +1783,16 @@
             }
             if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0) {
                 let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
-                let video = targetEle.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+                let video = targetEle.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
                 if (video && doc == document) {
                     if (video && video.offsetParent && video.name != 'pagetual-iframe') {
                         let scrollWidth = video.scrollWidth || video.offsetWidth;
                         let scrollHeight = video.scrollHeight || video.offsetHeight;
-                        if (scrollWidth > 420 && scrollHeight > 420) {
-                            debug("Disable when large media found");
-                        } else if (scrollWidth > 100 && scrollHeight > 100) {
+                        if (scrollWidth > 100 && scrollHeight > 100) {
                             let winWidth = window.innerWidth || document.documentElement.clientWidth;
                             let winHeight = window.innerHeight || document.documentElement.clientHeight;
-                            if (scrollWidth > winWidth>>1 || scrollHeight > winHeight>>1) {
-                                debug("Disable when large media found under mobile");
+                            if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
+                                debug("Disable when large media found");
                             } else {
                                 video = null;
                             }
