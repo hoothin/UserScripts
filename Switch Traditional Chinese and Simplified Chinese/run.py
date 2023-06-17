@@ -49,7 +49,7 @@ def prettify(_str):
       syllables[i] = syllable[:len(syllable) - 1];
     else:
       for j in range(0, len(syllable)):
-        currentLetter = syllable[j];
+        currentLetter = syllable[j].lower();
 
         if replacements.get(currentLetter, "") != "":
           nextLetter = syllable[j + 1];
