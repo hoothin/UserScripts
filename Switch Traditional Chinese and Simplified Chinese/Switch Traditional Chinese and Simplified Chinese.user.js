@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.34
+// @version      1.2.6.35
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -700,7 +700,7 @@
     var action = 0;//1:noChange, 2:showSimplified, 3:showTraditional
     var enable = false;
 
-    var stDict = {}, tsDict = {}, pinyinTree = {};
+    var stDict = {}, tsDict = {}, pinyinTree = null;
     var sc2tcCombTree = {}, tc2scCombTree = {}, fuckIlliteracyTree = {};
 
     function stranText(txt) {
@@ -1001,6 +1001,31 @@
         }
     }
 
+    function showPinyinInit() {
+        if (disablePinyin) return;
+        if (pinyinTree) {
+            showPinyinNode();
+        } else {
+            storage.getItem("pinyinTree", async value => {
+                if (value) {
+                    pinyinTree = value;
+                    showPinyinNode();
+                } else {
+                    try {
+                        pinyinTree = JSON.parse(await _GM_getResourceText("pinyinTree"));
+                    } catch(e) {}
+                    if (!pinyinTree) {
+                        pinyinTree = {};
+                        alert("拼音詞典加載失敗，請檢查網路服務或者禁用拼音顯示");
+                    } else {
+                        storage.setItem("pinyinTree", pinyinTree);
+                        showPinyinNode();
+                    }
+                }
+            });
+        }
+    }
+
     function showPinyinNode(pNode) {
         var childs;
         if (pNode) {
@@ -1241,7 +1266,7 @@
                     }
                 }
             } else if(e.key == pinyinShortcutKey && e.ctrlKey == pinyinCtrlKey && e.altKey == pinyinAltKey && e.shiftKey == pinyinShiftKey && e.metaKey == pinyinMetaKey) {
-                showPinyinNode();
+                showPinyinInit();
             }
         });
 
@@ -1689,14 +1714,10 @@
         if (!values) values = {};
         let curKey = keyList.shift();
         if (curKey) {
-            if (curKey == "pinyinTree" && values.disablePinyin) {
+            storage.getItem(curKey, value => {
+                values[curKey] = value;
                 getMulValue(keyList, callback, values);
-            } else {
-                storage.getItem(curKey, value => {
-                    values[curKey] = value;
-                    getMulValue(keyList, callback, values);
-                });
-            }
+            });
         } else {
             callback(values);
         }
@@ -1726,7 +1747,7 @@
         return false;
     }
 
-    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "disablePinyin", "pinyinShortcutKey", "pinyinCtrlKey", "pinyinAltKey", "pinyinShiftKey", "pinyinMetaKey", "sc2tcCombConfig", "illiteracyConfig", "notification", "isSimple", "pinyinTree", "sc2tcCombTree", "tc2scCombTree", "fuckIlliteracyTree", "stDict", "tsDict", currentAction], async values => {
+    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "disablePinyin", "pinyinShortcutKey", "pinyinCtrlKey", "pinyinAltKey", "pinyinShiftKey", "pinyinMetaKey", "sc2tcCombConfig", "illiteracyConfig", "notification", "isSimple", "sc2tcCombTree", "tc2scCombTree", "fuckIlliteracyTree", "stDict", "tsDict", currentAction], async values => {
         let href = location.href.slice(0, 500);
         if (values.sc2tcCombConfig) {
             auto = values.auto;
@@ -1858,20 +1879,7 @@
                 break;
         }
         if (!disablePinyin) {
-            if (values.pinyinTree) {
-                pinyinTree = values.pinyinTree;
-            } else {
-                try {
-                    pinyinTree = JSON.parse(await GM_getResourceText("pinyinTree"));
-                } catch(e) {}
-                if (!pinyinTree || pinyinTree == {}) {
-                    pinyinTree = {};
-                    alert("拼音詞典加載失敗，請檢查網路服務或者禁用拼音顯示");
-                } else {
-                    storage.setItem("pinyinTree", pinyinTree);
-                }
-            }
-            _GM_registerMenuCommand("顯示拼音", () => showPinyinNode());
+            _GM_registerMenuCommand("顯示拼音", () => showPinyinInit());
         }
 
         _GM_registerMenuCommand("個性設定", () => {
