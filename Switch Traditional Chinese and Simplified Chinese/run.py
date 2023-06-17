@@ -31,7 +31,7 @@ replacements = {
 medials = ['i', 'u', 'ü'];
 
 def prettify(_str):
-  _str = _str.replace('v', 'ü');
+  _str = _str.replace('v', 'ü').replace('u:', 'ü');
   syllables = _str.split(' ');
 
   for i in range(0, len(syllables)):
