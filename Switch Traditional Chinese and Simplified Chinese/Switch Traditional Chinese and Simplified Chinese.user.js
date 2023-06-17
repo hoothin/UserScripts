@@ -1037,7 +1037,7 @@
             for (let i = 0; i < childs.length; i++) {
                 let child = childs[i];
                 if (/^(RUBY|RB|RP)$/i.test(child.nodeName)) continue;
-                if (child.nodeType == 1 && child.offsetParent) showPinyinNode(child);
+                if (child.nodeType == 1) showPinyinNode(child);
             }
             for (let i = 0; i < childs.length; i++) {
                 let child = childs[i];
