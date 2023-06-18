@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.90.1
+// @version      1.6.29.90.2
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -34,6 +34,13 @@
 // @grant        GM.info
 // @grant        GM_info
 // @grant        unsafeWindow
+// @compatible   edge tested with tm
+// @compatible   Chrome tested with tm
+// @compatible   Firefox tested with tm
+// @compatible   Opera untested
+// @compatible   Safari untested
+// @compatible   ios tested with userscript
+// @compatible   android tested with kiwi
 // @supportURL   https://github.com/hoothin/SearchJumper/issues
 // @homepage     https://github.com/hoothin/SearchJumper
 // @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
@@ -1140,6 +1147,159 @@
         var targetElement, cssText, mainStyleEle;
         var inMinMode = false;
 
+        function sloarToLunar(sy, sm, sd) {
+            if (!sy && !sm && !sd) {
+                let now = new Date();
+                let year = now.getFullYear(), month = now.getMonth(), date = now.getDate();
+                sy = now.getFullYear();
+                sm = now.getMonth() + 1;
+                sd = now.getDate();
+            }
+            let firstYear = 2000;
+            let firsrMonth = 2;
+            let firstDay = 5;
+            let lunarYearArr = [
+                0x0c960, 0x0d954, 0x0d4a0, 0x0da50, 0x07552, 0x056a0, 0x0abb7, 0x025d0, 0x092d0, 0x0cab5, //2000-2009
+                0x0a950, 0x0b4a0, 0x0baa4, 0x0ad50, 0x055d9, 0x04ba0, 0x0a5b0, 0x15176, 0x052b0, 0x0a930, //2010-2019
+                0x07954, 0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0, 0x0d260, 0x0ea65, 0x0d530, //2020-2029
+                0x05aa0, 0x076a3, 0x096d0, 0x04afb, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45, //2030-2039
+                0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0, //2040-2049
+                0x14b63, 0x09370, 0x049f8, 0x04970, 0x064b0, 0x168a6, 0x0ea50, 0x06b20, 0x1a6c4, 0x0aae0, //2050-2059
+                0x0a2e0, 0x0d2e3, 0x0c960, 0x0d557, 0x0d4a0, 0x0da50, 0x05d55, 0x056a0, 0x0a6d0, 0x055d4, //2060-2069
+                0x052d0, 0x0a9b8, 0x0a950, 0x0b4a0, 0x0b6a6, 0x0ad50, 0x055a0, 0x0aba4, 0x0a5b0, 0x052b0, //2070-2079
+                0x0b273, 0x06930, 0x07337, 0x06aa0, 0x0ad50, 0x14b55, 0x04b60, 0x0a570, 0x054e4, 0x0d160, //2080-2089
+                0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252, //2090-2099
+                0x0d520 //2100
+            ],
+                lunarMonth = '正二三四五六七八九十冬臘',
+                lunarDay = '一二三四五六七八九十初廿',
+                tianGan = '甲乙丙丁戊己庚辛壬癸',
+                diZhi = '子丑寅卯辰巳午未申酉戌亥',
+                shengxiao = '鼠牛虎兔龍蛇馬羊猴雞狗豬';
+
+            function sloarToLunar(sy, sm, sd) {
+                sm -= 1;
+
+                let daySpan = (Date.UTC(sy, sm, sd) - Date.UTC(firstYear, firsrMonth - 1, firstDay)) / (24 * 60 * 60 * 1000) + 1;
+                let ly, lm, ld;
+                let lunarData;
+                for (let j = 0; j < lunarYearArr.length; j++) {
+                    daySpan -= lunarYearDays(lunarYearArr[j]);
+                    if (daySpan <= 0) {
+                        ly = firstYear + j;
+                        lunarData = lunarYearArr[j];
+                        daySpan += lunarYearDays(lunarData);
+                        break
+                    }
+                }
+
+                for (let k = 0; k < lunarYearMonths(lunarData).length; k++) {
+                    daySpan -= lunarYearMonths(lunarData)[k];
+                    if (daySpan <= 0) {
+                        if (hasLeapMonth(lunarData) && hasLeapMonth(lunarData) <= k) {
+                            if (hasLeapMonth(lunarData) < k) {
+                                lm = k;
+                            } else if (hasLeapMonth(lunarData) === k) {
+                                lm = '闰' + k;
+                            } else {
+                                lm = k + 1;
+                            }
+                        } else {
+                            lm = k + 1;
+                        }
+                        daySpan += lunarYearMonths(lunarData)[k];
+                        break
+                    }
+                }
+
+                ld = daySpan;
+
+                if (hasLeapMonth(lunarData) && (typeof (lm) === 'string' && lm.indexOf('闰') > -1)) {
+                    lm = `闰${lunarMonth[/\d/.exec(lm) - 1]}`
+                } else {
+                    lm = lunarMonth[lm - 1];
+                }
+
+                ly = getTianGan(ly) + getDiZhi(ly);
+
+                if (ld < 11) {
+                    ld = `${lunarDay[10]}${lunarDay[ld-1]}`
+                } else if (ld > 10 && ld < 20) {
+                    ld = `${lunarDay[9]}${lunarDay[ld-11]}`
+                } else if (ld === 20) {
+                    ld = `${lunarDay[1]}${lunarDay[9]}`
+                } else if (ld > 20 && ld < 30) {
+                    ld = `${lunarDay[11]}${lunarDay[ld-21]}`
+                } else if (ld === 30) {
+                    ld = `${lunarDay[2]}${lunarDay[9]}`
+                }
+
+
+                return {
+                    lunarYear: ly,
+                    lunarMonth: lm,
+                    lunarDay: ld,
+                }
+            }
+
+            function hasLeapMonth(ly) {
+                if (ly & 0xf) {
+                    return ly & 0xf
+                } else {
+                    return false
+                }
+            }
+
+            function leapMonthDays(ly) {
+                if (hasLeapMonth(ly)) {
+                    return (ly & 0xf0000) ? 30 : 29
+                } else {
+                    return 0
+                }
+            }
+
+            function lunarYearDays(ly) {
+                let totalDays = 0;
+
+                for (let i = 0x8000; i > 0x8; i >>= 1) {
+                    let monthDays = (ly & i) ? 30 : 29;
+                    totalDays += monthDays;
+                }
+                if (hasLeapMonth(ly)) {
+                    totalDays += leapMonthDays(ly);
+                }
+
+                return totalDays
+            }
+
+            function lunarYearMonths(ly) {
+                let monthArr = [];
+
+                for (let i = 0x8000; i > 0x8; i >>= 1) {
+                    monthArr.push((ly & i) ? 30 : 29);
+                }
+                if (hasLeapMonth(ly)) {
+                    monthArr.splice(hasLeapMonth(ly), 0, leapMonthDays(ly));
+                }
+
+                return monthArr
+            }
+
+            function getTianGan(ly) {
+                let tianGanKey = (ly - 3) % 10;
+                if (tianGanKey === 0) tianGanKey = 10;
+                return tianGan[tianGanKey - 1]
+            }
+
+            function getDiZhi(ly) {
+                let diZhiKey = (ly - 3) % 12;
+                if (diZhiKey === 0) diZhiKey = 12;
+                diZhiKey--;
+                return diZhi[diZhiKey] + `【${shengxiao[diZhiKey]}】`
+            }
+            return sloarToLunar(sy, sm, sd)
+        }
+
         class SearchBar {
             constructor() {
                 this.scale = searchData.prefConfig.customSize / 100;
@@ -1306,12 +1466,11 @@
                  #search-jumper-alllist>.dayInAll {
                      position: fixed;
                      bottom: 5%;
-                     font-size: 1.5vw;
                      line-height: 1.5;
                      color: white;
                      opacity: 0.6;
                      font-weight: bold;
-                     font-family: Arial,sans-serif;
+                     font-family: Arial,sans-serif,微软雅黑;
                      overflow-wrap: normal;
                      white-space: nowrap;
                      margin: 20px;
@@ -1320,9 +1479,11 @@
                  }
                  #search-jumper-alllist>.dayInAll {
                      left: 0;
+                     font-size: 1.5vw;
                  }
                  #search-jumper-alllist>.timeInAll {
                      right: 0;
+                     font-size: 2vw;
                  }
                  .search-jumper-searchBarCon {
                      all: unset;
@@ -4321,11 +4482,20 @@
                     self.timeInAll.style.fontSize = "";
                     self.dayInAll.style.fontSize = "";
                 }
+                let now = new Date();
+                let year = now.getFullYear(), month = now.getMonth(), date = now.getDate();
+                let dayLabelStr = days[now.getDay()] + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date);
+                if (lang.indexOf("zh-") == 0) {
+                    let lunar = sloarToLunar(year, month, date);
+                    let lunarStr = `${lunar.lunarYear}年${lunar.lunarMonth}月${lunar.lunarDay}`;
+                    self.dayInAll.innerHTML = createHTML(dayLabelStr + "<br/>" + lunarStr);
+                } else {
+                    self.dayInAll.innerHTML = createHTML(dayLabelStr);
+                }
                 let setTimeLabel = () => {
                     let now = new Date();
-                    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = now.getHours(), minute = now.getMinutes(), seconds = now.getSeconds();
+                    let hour = now.getHours(), minute = now.getMinutes(), seconds = now.getSeconds();
                     self.timeInAll.innerText = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute) + ':' + (seconds < 10 ? '0' + seconds : seconds);
-                    self.dayInAll.innerHTML = createHTML(days[now.getDay()] + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date));
                 };
                 this.showAllTimeTimer = setInterval(setTimeLabel, 1000);
                 setTimeLabel();
@@ -11499,44 +11669,44 @@
         }
 
         function initAllPage() {
-            if (isAllPage) {
-                searchBar.appendBar();
-                searchBar.showAllSites();
-                if (location.hash) {
-                    let hash = location.hash.slice(1);
+            if (!isAllPage) return;
+            searchBar.appendBar();
+            searchBar.showAllSites();
+            if (location.hash) {
+                let hash = location.hash.slice(1);
+                try {
+                    hash = decodeURIComponent(hash);
+                } catch (e) {}
+                searchBar.searchJumperInputKeyWords.value = hash;
+            } else if (location.search) {
+                let search = location.search.slice(1).split("&");
+                let _keyWords, _engine, _self;
+                search.forEach(s => {
+                    let sArr = s.split("=");
+                    let k = sArr[0], v = sArr[1];
                     try {
-                        hash = decodeURIComponent(hash);
+                        v = decodeURIComponent(v);
                     } catch (e) {}
-                    searchBar.searchJumperInputKeyWords.value = hash;
-                } else if (location.search) {
-                    let search = location.search.slice(1).split("&");
-                    let _keyWords, _engine, _self;
-                    search.forEach(s => {
-                        let sArr = s.split("=");
-                        let k = sArr[0], v = sArr[1];
-                        try {
-                            v = decodeURIComponent(v);
-                        } catch (e) {}
-                        switch(k) {
-                            case "kw":
-                                _keyWords = v;
-                                break;
-                            case "engine":
-                                _engine = v;
-                                break;
-                            case "self":
-                                _self = v;
-                                break;
-                        }
-                    });
-                    if (_keyWords) {
-                        searchBar.searchJumperInputKeyWords.value = _keyWords;
-                        if (_engine && searchBar.searchJumperInputKeyWords.value) {
-                            searchBar.searchBySiteName(_engine, {}, !!_self);
-                        }
+                    switch(k) {
+                        case "kw":
+                            _keyWords = v;
+                            break;
+                        case "engine":
+                            _engine = v;
+                            break;
+                        case "self":
+                            _self = v;
+                            break;
+                    }
+                });
+                if (_keyWords) {
+                    searchBar.searchJumperInputKeyWords.value = _keyWords;
+                    if (_engine && searchBar.searchJumperInputKeyWords.value) {
+                        searchBar.searchBySiteName(_engine, {}, !!_self);
                     }
                 }
-                getBody(document).style.cssText = `
+            }
+            getBody(document).style.cssText = `
                     zoom: 1;
                     margin: 0;
                     padding: 0;
@@ -11548,45 +11718,44 @@
                     -webkit-background-size: cover;
                     -o-background-size: cover;
                 `;
-                storage.getItem("allPageBg", allPageBg => {
-                    if (allPageBg) {
-                        getBody(document).style.backgroundImage = `url("${allPageBg.base64}")`;
-                    } else allPageBg = {url: ""};
-                    _GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
-                        onload: function(result) {
-                            var jsonData = null;
-                            try {
-                                jsonData = JSON.parse(result.responseText);
-                                var bgUrl = jsonData.images[0].url;
-                                if (!/^https?:\/\//.test(bgUrl)) {
-                                    bgUrl = "https://global.bing.com" + bgUrl;
-                                }
-                                if (bgUrl == allPageBg.url) return;
-                                _GM_xmlhttpRequest({
-                                    method: 'GET',
-                                    url: bgUrl,
-                                    responseType: "blob",
-                                    onload: function(r) {
-                                        var blob = r.response;
-                                        var fr = new FileReader();
-                                        fr.readAsDataURL(blob);
-                                        fr.onload = function (e) {
-                                            var base64ImgData = e.target.result;
-                                            allPageBg = {url: bgUrl, base64: base64ImgData};
-                                            storage.setItem("allPageBg", allPageBg);
-                                        };
-                                    }
-                                });
-                                if (!allPageBg.base64) getBody(document).style.backgroundImage = `url("${bgUrl}")`;
-                            } catch (e) {
-                                console.log(e);
+            storage.getItem("allPageBg", allPageBg => {
+                if (allPageBg) {
+                    getBody(document).style.backgroundImage = `url("${allPageBg.base64}")`;
+                } else allPageBg = {url: ""};
+                _GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
+                    onload: function(result) {
+                        var jsonData = null;
+                        try {
+                            jsonData = JSON.parse(result.responseText);
+                            var bgUrl = jsonData.images[0].url;
+                            if (!/^https?:\/\//.test(bgUrl)) {
+                                bgUrl = "https://global.bing.com" + bgUrl;
                             }
+                            if (bgUrl == allPageBg.url) return;
+                            _GM_xmlhttpRequest({
+                                method: 'GET',
+                                url: bgUrl,
+                                responseType: "blob",
+                                onload: function(r) {
+                                    var blob = r.response;
+                                    var fr = new FileReader();
+                                    fr.readAsDataURL(blob);
+                                    fr.onload = function (e) {
+                                        var base64ImgData = e.target.result;
+                                        allPageBg = {url: bgUrl, base64: base64ImgData};
+                                        storage.setItem("allPageBg", allPageBg);
+                                    };
+                                }
+                            });
+                            if (!allPageBg.base64) getBody(document).style.backgroundImage = `url("${bgUrl}")`;
+                        } catch (e) {
+                            console.log(e);
                         }
-                    });
+                    }
                 });
-            }
+            });
         }
 
         async function initRun() {
