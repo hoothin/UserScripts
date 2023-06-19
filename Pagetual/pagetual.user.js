@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.38
+// @version      1.9.36.39
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4393,6 +4393,7 @@
         }, parseInt(1000 / autoScroll));
     }
 
+    var inUpdate = false;
     function initConfig(href) {
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
@@ -4400,7 +4401,7 @@
             if (location.hostname === "pagetual.hoothin.com") return true;
         }
 
-        var configCon, insertPos;
+        var configCon, insertPos, click2import, importUrlPre;
 
         let inConfig = isGuidePage;
         if (!inConfig) {
@@ -4413,12 +4414,12 @@
         }
         if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
-            if (rulesData.uninited) {
+            if (!inUpdate && rulesData.uninited) {
                 setTimeout(() => {
-                    if (!importing) showTips(i18n("firstAlert"));
+                    if (!inUpdate && !importing) showTips(i18n("firstAlert"));
                 }, 3000);
                 setTimeout(() => {
-                    if (!importing) showTips(i18n("firstAlert"));
+                    if (!inUpdate && !importing) showTips(i18n("firstAlert"));
                 }, 6000);
                 showTips(i18n("firstAlert"));
             }
@@ -4565,7 +4566,7 @@
             });
 
             if (inConfig) {
-                if (_GM_info.script && _GM_info.script.version && _GM_info.script.version !== '1.0.0') {
+                if (!inUpdate && _GM_info.script && _GM_info.script.version && _GM_info.script.version !== '1.0.0') {
                     let versionEle = document.querySelector('.markdown-body>h1[id],article>h1');
                     let latestVer = versionEle && versionEle.innerText.match(/\d[\d\.]+/)[0];
                     if (latestVer && latestVer != _GM_info.script.version) {
@@ -4632,7 +4633,7 @@
                   opacity: 1;
                  }
                 `);
-                let click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
+                click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
                 if (click2import) click2import.innerText = i18n("click2ImportRule")
                 configCon = document.querySelector(".markdown-body,.theme-default-content");
                 if (!configCon) {
@@ -4643,8 +4644,8 @@
                 }
                 insertPos = configCon.querySelector("hr,#jsoneditor");
 
+                importUrlPre = document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']");
                 if (!rulesData.uninited) {
-                    let importUrlPre = document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']");
                     if (importUrlPre) importUrlPre.style.display = "none";
                     if (click2import) click2import.style.display = "none";
                 }
@@ -4654,10 +4655,12 @@
         } else return false;
         class Rulebar {
             init(ruleUrl) {
+                let id = ruleUrl.id;
                 this.ruleUrl = ruleUrl;
                 this.item = document.createElement("p");
-                this.item.dataset.id = this.ruleUrl.id;
-                let url = document.createElement("span");
+                this.item.dataset.id = id;
+                let url = document.createElement("a");
+                url.href = ruleUrl.url;
                 url.innerHTML = ruleUrl.url;
                 let up = document.createElement("span");
                 up.innerHTML = "↑ ";
@@ -4680,7 +4683,21 @@
                 this.item.appendChild(down);
                 this.item.appendChild(del);
                 this.item.appendChild(url);
+                if (ruleParser.rules) {
+                    let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == id ? 1 : 0), 0);
+                    let idSpan = document.createElement("span");
+                    idSpan.style.float = "right";
+                    idSpan.innerHTML = `[rules: ${rulesLength}]`;
+                    this.item.appendChild(idSpan);
+                    this.idSpan = idSpan;
+                }
                 configCon.insertBefore(this.item, insertPos);
+            }
+            updateNum() {
+                if (ruleParser.rules) {
+                    let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == this.item.dataset.id ? 1 : 0), 0);
+                    this.idSpan.innerHTML = `[rules: ${rulesLength}]`;
+                }
             }
             saveSort() {
                 let sort = [];
@@ -4745,7 +4762,7 @@
             }
         }
         let updateP = document.createElement("p"), i = 0;
-        let now = new Date().getTime(), inUpdate = false;
+        let now = new Date().getTime();
 
 
         let pastDate = (new Date(updateDate)).toString(), passStr;
@@ -4765,27 +4782,16 @@
             passStr += " 👆 " + i18n("click2update");
         }
 
-
+        let rulebarList = [], updateFail = false;
         updateP.className = "updateDate";
         updateP.innerHTML = passStr;
         updateP.title = i18n("update") + " - " + pastDate;
-        updateP.onclick = e => {
-            ruleParser.rules = [];
-            showTips(i18n("beginUpdate"), "", 30000);
-            updateRules(() => {
-                showTips(i18n("updateSucc"));
-                updateP.innerHTML = i18n("passSec", 0);
-                updateP.title = i18n("update");
-            }, (rule, err) => {
-                showTips(`Update ${rule.url} rules fail!`);
-                debug(err);
-            });
-        };
         configCon.insertBefore(updateP, insertPos);
         if (ruleUrls) {
             ruleUrls.forEach(ruleUrl => {
-                var rulebar = new Rulebar();
+                let rulebar = new Rulebar();
                 rulebar.init(ruleUrl);
+                rulebarList.push(rulebar);
             });
         }
         let customUrlsTitle = document.createElement("h2");
@@ -5031,6 +5037,33 @@
         if (!otherConfigPage) {
             setConfigPageInput.parentNode.parentNode.style.display = "none";
         }
+
+        updateP.onclick = e => {
+            updateFail = false;
+            ruleParser.rules = [];
+            showTips(i18n("beginUpdate"), "", 30000);
+            updateRules(() => {
+                if (!updateFail) {
+                    showTips(i18n("updateSucc"));
+                    if (importUrlPre) importUrlPre.style.display = "none";
+                    if (click2import) click2import.style.display = "none";
+                }
+                updateP.innerHTML = i18n("passSec", 0);
+                updateP.title = i18n("update");
+                rulebarList.forEach(rulebar => {
+                    rulebar.updateNum();
+                });
+            }, (rule, err) => {
+                if (rule.id == 1) {
+                    showTips(`Update wedata rules fail! Try to switch to wedata mirror!`);
+                    wedata2githubInput.scrollIntoView();
+                } else {
+                    showTips(`Update ${rule.url} rules fail!`);
+                }
+                debug(err);
+                updateFail = true;
+            });
+        };
         let customRulesTitle = document.createElement("h2");
         customRulesTitle.innerHTML = i18n("customRules", /tree/.test(location.href) ? location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json' : 'https://github.com/hoothin/UserScripts/edit/master/Pagetual/pagetualRules.json');
         configCon.insertBefore(customRulesTitle, insertPos);
@@ -5207,7 +5240,6 @@
         return true;
     }
 
-    var inUpdate = false;
     function updateRules (success, fail, keepCache) {
         if (!storage.supportCrossSave()) {
             fail({url:''}, "Not support cross storage");
@@ -5460,8 +5492,6 @@
                                 forceState = v;
                                 updateDate = date;
 
-
-                                listenUrl();
                                 let href = location.href.slice(0, 100);
                                 try {
                                     if (_unsafeWindow.initedPagetual) {
@@ -5472,6 +5502,7 @@
                                     }
                                     _unsafeWindow.initedPagetual = true;
                                 } catch(e) {showTips(e)}
+                                listenUrl();
                                 _GM_registerMenuCommand(i18n("update"), () => {
                                     showTips(i18n("beginUpdate"), "", 60000);
                                     updateRules(() => {
