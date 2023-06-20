@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.90.2
+// @version      1.6.29.90.3
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -437,6 +437,7 @@
         altToHighlight: true,
         defaultPicker: false,
         disableInputOnWords: false,
+        disableTypeOpen: false,
         callBarAlt: false,
         callBarCtrl: false,
         callBarShift: false,
@@ -2134,6 +2135,7 @@
                  }
                  .search-jumper-searchBar>.search-jumper-type {
                      padding: 0px;
+                     ${searchData.prefConfig.disableTypeOpen ? "background: unset;" : ""}
                  }
                  .search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      background: unset;
@@ -6415,6 +6417,10 @@
                             ele.appendChild(self.searchJumperExpand);
                         }
                         let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
+                        if (searchData.prefConfig.disableTypeOpen) {
+                            scrollSize = baseSize + "px";
+                            self.listPos(ele.children[0], siteList);
+                        }
                         if (leftRight) {
                             ele.style.height = scrollSize;
                             ele.style.width = "";
@@ -6474,10 +6480,15 @@
                             ele.style.width = baseSize + "px";
                         }
                         ele.style.flexWrap = "";
+                        if (searchData.prefConfig.disableTypeOpen) {
+                            siteList.style.visibility = "hidden";
+                        }
                     }
-                    setTimeout(() => {
-                        self.checkScroll();
-                    }, 500);
+                    if (!searchData.prefConfig.disableTypeOpen) {
+                        setTimeout(() => {
+                            self.checkScroll();
+                        }, 500);
+                    }
                 };
                 typeBtn.onmousedown = typeAction;
                 typeBtn.oncontextmenu = function (event) {
@@ -6865,6 +6876,7 @@
                     } else if (param[0] === '@call') {
                         let func = window[param[1]] || new AsyncFunction('"use strict";' + param[1]);
                         if (func) await func();
+                    } else if (param[0] === '@reload') {
                     } else if (param[0] === '@wait') {
                         if (param[1].indexOf("!") === 0) {
                             await waitForElementHide(param[1].slice(1));
@@ -6891,6 +6903,10 @@
                     if (inPagePostParams) {
                         inPagePostParams.shift();
                         storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
+                        if (param[0] === '@reload') {
+                            location.reload(!!param[1]);
+                            return;
+                        }
                     }
                 }
 
@@ -7391,6 +7407,9 @@
                                 if (func) {
                                     postParams.push(['@call', func.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
+                            } else if (pair.startsWith("reload(") && pair.endsWith(')')) {
+                                let func = pair.slice(7, pair.length - 1);
+                                postParams.push(['@reload', func.trim()]);
                             } else if (pair.startsWith("wait(") && pair.endsWith(')')) {
                                 let wait = pair.slice(5, pair.length - 1);
                                 if (wait) {
@@ -8167,6 +8186,17 @@
                             firstType.dispatchEvent(mouseEvent);
                         }
                         self.insertHistory(firstType.parentNode);
+                    }
+                }
+                if (!_funcKeyCall && searchData.prefConfig.disableAutoOpen) {
+                    let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
+                    if (openType) {
+                        if (openType.onmousedown) {
+                            openType.onmousedown();
+                        } else {
+                            let mouseEvent = new PointerEvent("mousedown");
+                            openType.dispatchEvent(mouseEvent);
+                        }
                     }
                 }
                 self.setFuncKeyCall(_funcKeyCall);
@@ -11276,6 +11306,9 @@
                                 if (sleep) {
                                     postParams.push(['@sleep', sleep[1]]);
                                 }
+                            } else if (/^reload\(\d?\)$/.test(pair)) {
+                                let reload = pair.match(/reload\((.*)\)/);
+                                postParams.push(['@reload', reload[1]]);
                             } else {
                                 pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
                                 let pairArr = pair.split("SJ^PARAM");
@@ -11440,6 +11473,9 @@
                             if (sleep) {
                                 addAction('sleep', '', sleep[1]);
                             }
+                        } else if (/^reload\(\d?\)$/.test(pair)) {
+                            let reload = pair.match(/reload\((.*)\)/);
+                            addAction('reload', '', reload[1]);
                         } else {
                             pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
                             let pairArr = pair.split("SJ^PARAM");
