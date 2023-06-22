@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.90.3
+// @version      1.6.29.91
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5762,7 +5762,8 @@
                     let oldWords = this.curHighlightWords;
                     this.highlight("");
                     this.highlight(oldWords);
-                    if (!currentSite && this.bar.style.display == "none") {
+                    if (this.bar.style.display == "none") {
+                        currentSite = null;
                         let typeData;
                         for (let i in searchData.sitesConfig) {
                             if (currentSite) break;
@@ -5801,11 +5802,20 @@
                                 }
                                 if (currentData) {
                                     let siteEle = this.getTargetSitesByName([currentData.name])[0];
+                                    this.currentType = siteEle.parentNode;
                                     this.setCurrentSite(currentData, siteEle);
                                 }
                             }
                         }
-                        if (currentSite) {
+                        if (currentSite && /%s[lurest]?\b/.test(currentSite.url) && (!/#p{/.test(currentSite.url) || currentSite.keywords) && !searchData.prefConfig.hideOnSearchEngine) {
+                            if (this.currentType.classList.contains("search-jumper-targetAll") ||
+                                this.currentType.classList.contains("search-jumper-targetImg") ||
+                                this.currentType.classList.contains("search-jumper-targetAudio") ||
+                                this.currentType.classList.contains("search-jumper-targetVideo") ||
+                                this.currentType.classList.contains("search-jumper-targetLink") ||
+                                this.currentType.classList.contains("search-jumper-targetPage")) {
+                                return;
+                            }
                             this.appendBar();
                             this.bar.style.display = "";
                             this.initPos();
