@@ -712,6 +712,12 @@ var siteInfo = [
  s: ""
 },
 {
+ name: "imgbox",
+ src: /imgbox\.com/,
+ r: /thumbs(\d\.imgbox.*)_t\./i,
+ s: "images$1_o."
+},
+{
  name: "Reddit",
  url: /reddit\.com|redd\.it/,
  r: /https?:\/\/preview\.redd.it\/([^\?]+)?.*/i,
