@@ -3,7 +3,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.17
+// @version      1.3.18
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
@@ -225,7 +225,7 @@ if (window.top != window.self) {
                 modeObj.forEach(item=>{
                     var option=document.createElement("option");
                     option.value=item[1];
-                    option.innerHTML=item[0];
+                    option.innerText=item[0];
                     if(item[1]==searchMode){
                         option.selected=true;
                     }
@@ -265,6 +265,14 @@ if (window.top != window.self) {
         targetUrl=luckyUrls[randomIndex];
         location.href=targetUrl;
     });
+    const _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
+    const escapeHTMLPolicy = (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) ? _unsafeWindow.trustedTypes.createPolicy('rspp_default', {
+        createHTML: (string, sink) => string
+    }) : null;
+
+    function createHTML(html) {
+        return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
+    }
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
     if(curConfig){
         if(!curConfig.run){
@@ -379,7 +387,7 @@ if (window.top != window.self) {
         console.log(e);
         jsonData=firstText;
     }
-    document.body.innerHTML="";
+    document.body.innerHTML=createHTML("");
     var imgCon=document.createElement("div");
     var btns=document.createElement("div");
     var numInput=document.createElement("input");
@@ -405,13 +413,13 @@ if (window.top != window.self) {
             config.url=url;
         }
         siteA.href=url;
-        siteA.innerHTML=config.name;
+        siteA.innerText=config.name;
         btns.appendChild(siteA);
     }
     if(customRuleArr.length){
         var otherSiteA=document.createElement("a");
         otherSiteA.href=customRuleArr[Math.floor(Math.random()*customRuleArr.length)];
-        otherSiteA.innerHTML="Other";
+        otherSiteA.innerText="Other";
         btns.appendChild(otherSiteA);
     }
     btns.appendChild(numInput);
@@ -803,20 +811,20 @@ if (window.top != window.self) {
 
     btns.className="btns";
     document.body.appendChild(btns);
-    homepage.innerHTML="<span>Home</span>page";
+    homepage.innerHTML=createHTML("<span>Home</span>page");
     homepage.href="https://sleazyfork.org/en/users/8227-hoothin";
     homepage.target="_blank";
     numInput.type="number";
     numInput.title=numInput.placeholder="Num of sexy pictures";
     r18Check.type="checkbox";
     r18Check.id="r18Check";
-    r18CheckLabel.innerHTML="R18 ";
+    r18CheckLabel.innerText="R18 ";
     r18CheckLabel.htmlFor="r18Check";
     sfwCheck.type="checkbox";
     sfwCheck.id="sfwCheck";
-    sfwCheckLabel.innerHTML="SFW ";
+    sfwCheckLabel.innerText="SFW ";
     sfwCheckLabel.htmlFor="sfwCheck";
-    submit.innerHTML="Refresh";
+    submit.innerText="Refresh";
     submit.onclick=submitParam;
     document.onkeyup = function(e) {
         var event = e || window.event;
