@@ -3,24 +3,24 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
+// @name:ko      東方永頁機
 // @name:ru      Pagetual
 // @name:de      Pagetual
 // @name:es      Pagetual
 // @name:fr      Pagetual
 // @name:it      Pagetual
-// @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.39
+// @version      1.9.36.40
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
+// @description:ko     페이지가 매겨진 다음 웹 페이지를 자동으로 로드하고 현재 페이지에 삽입합니다. 규칙 없이 수천 개의 웹 사이트를 지원합니다.
 // @description:ru     Автоматическая подгрузка следующих страниц и вставка их содержимого в текущую страницу. Поддерживает тысячи сайтов даже с настройками по умолчанию.
 // @description:de     Automatisches Laden der nächsten paginierten Webseiten und Einfügen in die aktuelle Seite. Unterstützen Sie Tausende von Websites ohne Regeln.
 // @description:es     Carga automática de las siguientes páginas web paginadas e inserción en la página actual. Admite miles de sitios web sin ninguna regla.
 // @description:fr     Chargement automatique des pages Web paginées suivantes et insertion dans la page en cours. Prend en charge des milliers de sites Web sans aucune règle.
 // @description:it     Caricamento automatico delle pagine Web impaginate successive e inserimento nella pagina corrente. Supporta migliaia di siti web senza alcuna regola.
-// @description:ko     페이지가 매겨진 다음 웹 페이지를 자동으로 로드하고 현재 페이지에 삽입합니다. 규칙 없이 수천 개의 웹 사이트를 지원합니다.
 // @author       hoothin
 // @license      MPL-2.0
 // @match        *://*/*
@@ -198,7 +198,8 @@
                 addNextSelector: "添加选择器内容为 nextLink",
                 addPageSelector: "添加选择器内容为 pageElement",
                 propName: "输入规则属性名",
-                propValue: "输入规则属性值"
+                propValue: "输入规则属性值",
+                customFirst: "为本地自定义规则忽略缓存"
             };
             break;
         case "zh-TW":
@@ -312,7 +313,8 @@
                 addNextSelector: "添加選擇器內容為 nextLink",
                 addPageSelector: "添加選擇器內容為 pageElement",
                 propName: "輸入規則屬性名",
-                propValue: "輸入規則屬性值"
+                propValue: "輸入規則屬性值",
+                customFirst: "為本地自定義規則忽略緩存"
             };
             break;
         case "ja":
@@ -425,7 +427,8 @@
                 addNextSelector: "セレクターのコンテンツを nextLink として追加",
                 addPageSelector: "セレクタ コンテンツを pageElement として追加",
                 propName: "ルールのプロパティ名を入力してください",
-                propValue: "ルールのプロパティ値を入力してください"
+                propValue: "ルールのプロパティ値を入力してください",
+                customFirst: "ローカルカスタムルールのキャッシュを無視する"
             };
             break;
         case "ru":
@@ -539,7 +542,8 @@
                 addNextSelector: "Добавить содержимое селектора как nextLink",
                 addPageSelector: "Добавить содержимое селектора как pageElement",
                 propName: "Введите имя свойства правила",
-                propValue: "Введите значение свойства правила"
+                propValue: "Введите значение свойства правила",
+                customFirst: "Игнорировать кеш для локальных пользовательских правил"
             };
             break;
         default:
@@ -652,7 +656,8 @@
                 addNextSelector: "Add selector content as nextLink",
                 addPageSelector: "Add selector content as pageElement",
                 propName: "Enter rule property name",
-                propValue: "Enter rule property value"
+                propValue: "Enter rule property value",
+                customFirst: "Ignore cache for local custom rules"
             };
             break;
     }
@@ -1295,18 +1300,33 @@
                 return false;
             }
 
-            for (let i in this.hpRules) {
-                let rule = this.hpRules[i];
-                if (!rule || !rule.url) continue;
-                if (rule.singleUrl) {
-                    continue;
+            function checkHpRules() {
+                for (let i in self.hpRules) {
+                    let rule = self.hpRules[i];
+                    if (!rule || !rule.url) continue;
+                    if (rule.singleUrl) {
+                        continue;
+                    }
+                    if (checkRule(rule)) return true;
                 }
-                if (checkRule(rule)) return;
+                return false;
             }
-            for (let i in this.customRules) {
-                let rule = this.customRules[i];
-                if (!rule || !rule.url) continue;
-                if (checkRule(rule)) return;
+
+            function checkCustomRules() {
+                for (let i in self.customRules) {
+                    let rule = self.customRules[i];
+                    if (!rule || !rule.url) continue;
+                    if (checkRule(rule)) return true;
+                }
+                return false;
+            }
+
+            if (rulesData.customFirst) {
+                if (checkCustomRules()) return;
+                if (checkHpRules()) return;
+            } else {
+                if (checkHpRules()) return;
+                if (checkCustomRules()) return;
             }
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
@@ -1785,10 +1805,11 @@
                 let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
                 let video = targetEle.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
                 if (video && doc == document) {
-                    if (video && video.offsetParent && video.name != 'pagetual-iframe') {
+                    if (video.offsetParent && video.name != 'pagetual-iframe') {
                         let scrollWidth = video.scrollWidth || video.offsetWidth;
                         let scrollHeight = video.scrollHeight || video.offsetHeight;
-                        if (scrollWidth > 100 && scrollHeight > 100) {
+                        if (/IFRAME/i.test(video.nodeName)) {
+                        } else if (scrollWidth > 100 && scrollHeight > 100) {
                             let winWidth = window.innerWidth || document.documentElement.clientWidth;
                             let winHeight = window.innerHeight || document.documentElement.clientHeight;
                             if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
@@ -3999,9 +4020,9 @@
             }, true);
             loadNow.addEventListener("click", e => {
                 self.close();
-                let loadNum=window.prompt(i18n("loadConfirm"), "1");
-                if(loadNum==="" || loadNum===null)return;
-                autoLoadNum=Math.abs(parseInt(loadNum));
+                let loadNum = window.prompt(i18n("loadConfirm"), "1");
+                if (loadNum === "" || loadNum === null) return;
+                autoLoadNum = Math.abs(parseInt(loadNum));
                 nextPage();
             }, true);
             closeBtn.addEventListener("click", e => {
@@ -5008,6 +5029,7 @@
         let arrowToScrollInput = createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
         let contentVisibilityInput = createCheckbox(i18n("contentVisibility"), rulesData.contentVisibility);
         let wedata2githubInput = createCheckbox(i18n("wedata2github"), rulesData.wedata2github);
+        let customFirstInput = createCheckbox(i18n("customFirst"), rulesData.customFirst);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -5173,6 +5195,7 @@
             rulesData.openInNewTab = openInNewTabInput.checked;
             rulesData.hideLoadingIcon = hideLoadingIconInput.checked;
             rulesData.hideBarArrow = hidePageBarArrowInput.checked;
+            rulesData.customFirst = customFirstInput.checked;
             rulesData.initRun = initRunInput.checked;
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
             rulesData.rate = parseInt(rateInput.value) || 1;
@@ -5454,6 +5477,9 @@
                 }
                 if (typeof(rulesData.preload) == "undefined") {
                     rulesData.preload = true;
+                }
+                if (typeof(rulesData.customFirst) == "undefined") {
+                    rulesData.customFirst = false;
                 }
                 if (typeof(rulesData.manualMode) == "undefined") {
                     rulesData.manualMode = false;
