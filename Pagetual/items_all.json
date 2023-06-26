@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86134",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('show_image_area')/div",
+    "nextLink": "id('page_num1')/ul/li[\r\n@class\r\n='active']/following-sibling::li/a",
+    "url": "^https://caitlin\\.top/index\\.php",
+    "exampleUrl": "https://caitlin.top/index.php?route=comic/readOnline&comic_id=48722&host_id=0"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "unknown11",
+  "name": "caitlin.top",
+  "created_at": "2023-06-25T11:25:43+09:00",
+  "updated_at": "2023-06-25T11:25:43+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86133",
   "data": {
     "pageElement": "descendant::div[@data-component='cards-river'][last()]//div[@data-component='card']",
