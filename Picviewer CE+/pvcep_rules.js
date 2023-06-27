@@ -618,7 +618,7 @@ var siteInfo = [
  name: "推特",
  url: /twitter\.com|pbs\.twimg\.com/,
  getImage: function(){
-     let newsrc=this.src.replace("_normal.",".").replace("_200x200.",".");
+     let newsrc=this.src.replace("_normal.",".").replace("_200x200.",".").replace("_mini.",".");
      if(newsrc!=this.src)return newsrc;
      newsrc=newsrc.replace(/\?format=/i, ".").replace(/\&name=/i, ":").replace(/\.(?=[^.]*$)/, "?format=").replace( /(:large|:medium|:small|:orig|:thumb|:[\dx]+)/i, "");
      if(newsrc!=this.src)return newsrc+"&name=orig";
