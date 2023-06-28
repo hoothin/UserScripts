@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.40
+// @version      1.9.36.41
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -807,12 +807,23 @@
         return doc.body || doc.querySelector('body') || doc;
     }
 
-    function getElementByXpath(xpath, contextNode, doc) {
+    function getElementByXpath(xpath, doc, contextNode, bySort) {
         doc = doc || document;
         contextNode = contextNode || doc;
         try {
-            var result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-            return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            if (!bySort) {
+                let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            } else {
+                let xpathArr = xpath.split("|");
+                try {
+                    for (let i = 0; i < xpathArr.length; i++) {
+                        let result = doc.evaluate(xpathArr[i].trim(), contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                        if (result.singleNodeValue && result.singleNodeValue.nodeType === 1) return result.singleNodeValue;
+                    }
+                } catch(e) {}
+                return null;
+            }
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
         }
@@ -851,15 +862,26 @@
         return getAllElementsByXpath(sel, contextNode, doc);
     }
 
-    function getElement(sel, doc, contextNode) {
+    function getElement(sel, doc, contextNode, bySort) {
         try {
             if (!isXPath(sel)) {
-                return doc.querySelector(sel);
+                if (!bySort) {
+                    return doc.querySelector(sel);
+                } else {
+                    let selArr = sel.split(",");
+                    try {
+                        for (let i = 0; i < selArr.length; i++) {
+                            let ele = doc.querySelector(selArr[i].trim());
+                            if (ele) return ele;
+                        }
+                    } catch(e) {}
+                    return null;
+                }
             }
         } catch(e) {
             debug(e, 'Error selector');
         }
-        return getElementByXpath(sel, contextNode, doc);
+        return getElementByXpath(sel, doc, contextNode, bySort);
     }
 
     function geneSelector(ele, addID) {
@@ -2429,12 +2451,12 @@
                 let nextLinkSel = this.curSiteRule.nextLink;
                 if (nextLinkSel != 0) {
                     if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
-                        nextLink = getElement(nextLinkSel[nextIndex], doc);
+                        nextLink = getElement(nextLinkSel[nextIndex], doc, null, true);
                         if (!nextLink && curPage == 1 && nextIndex != 0) {
                             nextIndex = 0;
-                            nextLink = getElement(nextLinkSel[nextIndex], doc);
+                            nextLink = getElement(nextLinkSel[nextIndex], doc, null, true);
                         }
-                    } else nextLink = getElement(nextLinkSel, doc);
+                    } else nextLink = getElement(nextLinkSel, doc, null, true);
                 }
                 if (nextLink && (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2)) {
                     let form = doc.querySelector('#search-form');
@@ -2774,7 +2796,7 @@
                 if (Array && Array.isArray && Array.isArray(insertSel)) {
                     insertSel = insertSel[nextIndex < insertSel.length ? nextIndex : 0];
                 }
-                this.insert = getElement(insertSel, document);
+                this.insert = getElement(insertSel, document, null, true);
             } else {
                 this.docPageElement = null;
                 let pageElement = this.getPageElement(document, _unsafeWindow);
@@ -3010,7 +3032,7 @@
                 let autoClick = self.curSiteRule.autoClick;
                 if (autoClick) {
                     let autoClickBtn;
-                    autoClickBtn = getElement(autoClick, document);
+                    autoClickBtn = getElement(autoClick, document, null, true);
                     if (autoClickBtn) {
                         emuClick(autoClickBtn);
                     }
@@ -6330,7 +6352,7 @@
         if (loadmoreBtn) return loadmoreBtn;
         let btnSel = ruleParser.curSiteRule.loadMore || defaultLoadmoreSel;
         if (btnSel) {
-            loadmoreBtn = getElement(btnSel, doc);
+            loadmoreBtn = getElement(btnSel, doc, null, true);
         }
         if (!loadmoreBtn) {
             let buttons = doc.querySelectorAll("input,button,a,div[onclick]");
@@ -6650,7 +6672,7 @@
         if (!sel) return null;
         return new Promise((resolve) => {
             let checkInv = setInterval(() => {
-                let result = getElement(sel, doc);
+                let result = getElement(sel, doc, null, true);
                 if (result) {
                     clearInterval(checkInv);
                     resolve(result);
