@@ -811,7 +811,7 @@
         doc = doc || document;
         contextNode = contextNode || doc;
         try {
-            if (!bySort) {
+            if (!bySort || /\([^\)]+\|/.test(xpath)) {
                 let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
                 return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
             } else {
@@ -821,7 +821,10 @@
                         let result = doc.evaluate(xpathArr[i].trim(), contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
                         if (result.singleNodeValue && result.singleNodeValue.nodeType === 1) return result.singleNodeValue;
                     }
-                } catch(e) {}
+                } catch(e) {
+                    let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                    return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+                }
                 return null;
             }
         } catch (err) {
@@ -874,7 +877,9 @@
                             let ele = doc.querySelector(selArr[i].trim());
                             if (ele) return ele;
                         }
-                    } catch(e) {}
+                    } catch(e) {
+                        return doc.querySelector(sel);
+                    }
                     return null;
                 }
             }
