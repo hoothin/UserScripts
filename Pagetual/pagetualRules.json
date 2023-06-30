@@ -1,5 +1,56 @@
 [
     {
+        "name": "youtube",
+        "url": "^https?://(m\\.|www\\.)?youtube\\.com",
+        "enable": 1,
+        "from": 2
+    },
+    {
+        "name": "gettyimages",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?gettyimages\\.com"
+    },
+    {
+        "name": "pixabay",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?pixabay\\.com"
+    },
+    {
+        "name": "unsplash",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?unsplash\\.com"
+    },
+    {
+        "name": "reddit",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?reddit\\.com"
+    },
+    {
+        "name": "stackoverflow",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?stackoverflow\\.com"
+    },
+    {
+        "name": "gyfycat",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?gfycat\\.com"
+    },
+    {
+        "name": "redgifs",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?redgifs\\.com"
+    },
+    {
+        "name": "tumblr",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?tumblr\\.com"
+    },
+    {
+        "name": "imgur",
+        "author": "4ndr0666",
+        "url": "^https?://(m\\.|www\\.)?imgur\\.com"
+    },
+    {
         "name": "ICONFINDER ",
         "enable": 0,
         "example": "https://www.iconfinder.com/search?q=Download",
@@ -9793,4 +9844,5 @@
         "url": "^https?://imgur\\.com/",
         "enable": 0
     }
-]
+]<script src="https://gist.github.com/4ndr0666/c0b47a93eb37dea0880294b1a423602d.js"></script>
+2
