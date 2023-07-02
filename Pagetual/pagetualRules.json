@@ -8688,7 +8688,7 @@
         "name": "bilibili space",
         "url": "^https://space\\.bilibili\\.com/",
         "sandbox": false,
-        "pageElement": "ul.cube-list>li,ul.video-list>li",
+        "pageElement": "ul.cube-list>li,ul.video-list>li,ul.relation-list>li",
         "nextLink": ".be-pager-next,.next-page",
         "wait": 1000
     },
