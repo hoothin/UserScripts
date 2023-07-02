@@ -33,7 +33,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="3">Buy me a coffee if it helps you💞</th>
     </tr>
     <tr>
-        <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://buymeacoffee.com/hoothin">BuyMeACoffee</a></td><td><a href="https://afdian.net/@hoothin">爱发电</a></td>
+        <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://buymeacoffee.com/hoothin">BuyMeACoffee</a></td><td><a href="https://afdian.net/@hoothin">愛發電</a></td>
     </tr>
 </table>
 
