@@ -4718,6 +4718,11 @@
                 this.item.appendChild(del);
                 this.item.appendChild(url);
                 if (ruleParser.rules) {
+                    url.style.maxWidth = "80%";
+                    url.style.overflow = "hidden";
+                    url.style.display = "inline-block";
+                    url.style.textOverflow = "ellipsis";
+                    url.style.verticalAlign = "bottom";
                     let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == id ? 1 : 0), 0);
                     let idSpan = document.createElement("span");
                     idSpan.style.float = "right";
