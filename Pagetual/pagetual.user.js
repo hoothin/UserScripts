@@ -199,7 +199,8 @@
                 addPageSelector: "添加选择器内容为 pageElement",
                 propName: "输入规则属性名",
                 propValue: "输入规则属性值",
-                customFirst: "为本地自定义规则忽略缓存"
+                customFirst: "为本地自定义规则忽略缓存",
+                rulesExample: "自定义规则详解"
             };
             break;
         case "zh-TW":
@@ -314,7 +315,8 @@
                 addPageSelector: "添加選擇器內容為 pageElement",
                 propName: "輸入規則屬性名",
                 propValue: "輸入規則屬性值",
-                customFirst: "為本地自定義規則忽略緩存"
+                customFirst: "為本地自定義規則忽略緩存",
+                rulesExample: "自定義規則詳解"
             };
             break;
         case "ja":
@@ -428,7 +430,8 @@
                 addPageSelector: "セレクタ コンテンツを pageElement として追加",
                 propName: "ルールのプロパティ名を入力してください",
                 propValue: "ルールのプロパティ値を入力してください",
-                customFirst: "ローカルカスタムルールのキャッシュを無視する"
+                customFirst: "ローカルカスタムルールのキャッシュを無視する",
+                rulesExample: "カスタムルールの詳しい説明"
             };
             break;
         case "ru":
@@ -543,7 +546,8 @@
                 addPageSelector: "Добавить содержимое селектора как pageElement",
                 propName: "Введите имя свойства правила",
                 propValue: "Введите значение свойства правила",
-                customFirst: "Игнорировать кеш для локальных пользовательских правил"
+                customFirst: "Игнорировать кеш для локальных пользовательских правил",
+                rulesExample: "Подробное объяснение настраиваемых правил"
             };
             break;
         default:
@@ -657,7 +661,8 @@
                 addPageSelector: "Add selector content as pageElement",
                 propName: "Enter rule property name",
                 propValue: "Enter rule property value",
-                customFirst: "Ignore cache for local custom rules"
+                customFirst: "Ignore cache for local custom rules",
+                rulesExample: "Rules Example"
             };
             break;
     }
@@ -4685,6 +4690,15 @@
                 }
                 let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
                 if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
+                let rulesExample = document.querySelector("#user-content-rules-example+a,#rules-example>a");
+                if (rulesExample) {
+                    rulesExample.innerText = i18n("rulesExample");
+                    if (lang == "zh-CN") {
+                        rulesExample.href = rulesExample.href.replace("en", "cn");
+                    } else if (lang == "zh-TW") {
+                        rulesExample.href = rulesExample.href.replace("/en", "");
+                    }
+                }
             } else return true;
         } else return false;
         class Rulebar {
@@ -4954,7 +4968,7 @@
         customCssInput.value = rulesData.customCss || '';
         customCssInput.style.width = "100%";
         customCssInput.style.margin = "0";
-        customCssInput.placeholder = ".pagetual{\n}";
+        customCssInput.placeholder = ".pagetual {\n}";
         customCssInput.spellcheck = false;
         customCss.appendChild(customCssInput);
         configCon.insertBefore(customCss, insertPos);
