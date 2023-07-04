@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@id=\"attachment_box\"]",
+    "nextLink": "//div[@class=\"next_attachment\"]//a",
+    "url": "^https://realsound\\.jp\\/",
+    "exampleUrl": "https://realsound.jp/book/2023/07/post-1363201.html/20230702-sonna000"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "knoa-openid-cn",
+  "resource_url": "http://wedata.net/items/86136",
+  "name": "Real Sound 画像",
+  "created_at": "2023-07-03T12:43:50+09:00",
+  "updated_at": "2023-07-03T12:43:50+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86134",
   "data": {
     "insertBefore": "",
@@ -14901,16 +14916,16 @@
 {
   "resource_url": "http://wedata.net/items/81231",
   "data": {
-    "pageElement": "//div[@class=\"articleImageGallery__mainImage\"]",
-    "nextLink": "//div[@class=\"articleImageGallery__control__button__pageNext\"]/a",
-    "url": "^https?://www\\.asahi\\.com/articles/photo/",
-    "exampleUrl": "https://www.asahi.com/articles/photo/AS20170312001726.html"
+    "pageElement": "//div[@x-component-name=\"Gallery\"]",
+    "nextLink": "//div[@x-component-name=\"Gallery\"]//div[@class=\"Nu8aK\"]//a",
+    "url": "^https://www\\.asahi\\.com\\/articles\\/photo\\/",
+    "exampleUrl": "https://www.asahi.com/articles/photo/AS20230628003639.html"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
   "name": "朝日新聞デジタル 記事画像",
   "created_at": "2017-03-13T15:08:38+09:00",
-  "updated_at": "2022-02-22T14:08:14+09:00"
+  "updated_at": "2023-07-03T12:55:49+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81227",
