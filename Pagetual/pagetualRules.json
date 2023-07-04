@@ -8444,9 +8444,14 @@
     },
     {
         "name": "搜狗wap",
-        "url": "^https?://wap\\.sogou\\.com/web/(searchList\\.jsp|sl\\?)",
+        "url": "^https?://(wap|m)\\.sogou\\.com/web/(searchList\\.jsp|sl\\?)",
         "loadMore": "#ajax_next_page",
         "nextLink": 0
+    },
+    {
+        "name": "头条搜索手机版",
+        "url": "^https?://(so|m)\\.toutiao\\.com/search/",
+        "nextLink": "a[class^=container_],a[class^=containerRight]"
     },
     {
         "name": "Camp Firefox Forum",
