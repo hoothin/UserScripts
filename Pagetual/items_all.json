@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86137",
+  "data": {
+    "pageElement": "//*[@id=\"page-top\"]/div/div[2]/div[1]/main/article/div[2]/div[1]",
+    "nextLink": "//*[@id=\"page-top\"]/div/div[2]/div[1]/main/article/div[2]/nav/ul/li[3]/a",
+    "url": "^https://natalie.mu/eiga/gallery/news",
+    "exampleUrl": "https://natalie.mu/eiga/gallery/news/531484/2094897"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "2q5HAX7iN8QG7Fp3gngW",
+  "name": "映画ナタリー",
+  "created_at": "2023-07-05T20:51:02+09:00",
+  "updated_at": "2023-07-05T20:59:46+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "//div[@id=\"attachment_box\"]",
