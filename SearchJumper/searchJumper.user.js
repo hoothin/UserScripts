@@ -5,9 +5,9 @@
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
 // @version      1.6.29.91
-// @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
-// @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
-// @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
+// @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
+// @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词搜索与自定义
+// @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞搜尋與自定義
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
 // @license      MPL-2.0
@@ -558,7 +558,14 @@
                         sleepPrompt: '等待时间（毫秒）',
                         startCache: '开始缓存，请耐心等待缓存完毕，勿关闭配置页！',
                         cacheOver: '所有图标都已缓存完毕！',
-                        cspDisabled: '脚本样式被当前站点的 CSP 阻止，因此无法显示，请尝试安装 Allow CSP: Content-Security-Policy 扩展获取权限'
+                        cspDisabled: '脚本样式被当前站点的 CSP 阻止，因此无法显示，请尝试安装 Allow CSP: Content-Security-Policy 扩展获取权限',
+                        Sunday: '星期日 (日)',
+                        Monday: '星期一 (月)',
+                        Tuesday: '星期二 (火)',
+                        Wednesday: '星期三 (水)',
+                        Thursday: '星期四 (木)',
+                        Friday: '星期五 (金)',
+                        Saturday: '星期六 (土)'
                     };
                     break;
                 case "zh-TW":
@@ -653,7 +660,14 @@
                         sleepPrompt: '等待時間（毫秒）',
                         startCache: '開始緩存，請耐心等待緩存完畢，勿關閉配置頁！',
                         cacheOver: '所有圖標都已緩存完畢！',
-                        cspDisabled: '腳本樣式被當前站點的 CSP 阻止，因此無法顯示，請嘗試安裝 Allow CSP: Content-Security-Policy 擴展獲取權限'
+                        cspDisabled: '腳本樣式被當前站點的 CSP 阻止，因此無法顯示，請嘗試安裝 Allow CSP: Content-Security-Policy 擴展獲取權限',
+                        Sunday: '星期日 (日)',
+                        Monday: '星期一 (月)',
+                        Tuesday: '星期二 (火)',
+                        Wednesday: '星期三 (水)',
+                        Thursday: '星期四 (木)',
+                        Friday: '星期五 (金)',
+                        Saturday: '星期六 (土)'
                     };
                     break;
                 default:
@@ -4476,7 +4490,7 @@
                 this.hideSearchInput();
                 this.con.classList.add("search-jumper-showall");
                 clearInterval(this.showAllTimeTimer);
-                const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 if (window.innerWidth < 1000) {
                     self.timeInAll.style.fontSize = "15px";
                     self.dayInAll.style.fontSize = "15px";
@@ -4486,7 +4500,7 @@
                 }
                 let now = new Date();
                 let year = now.getFullYear(), month = now.getMonth(), date = now.getDate();
-                let dayLabelStr = days[now.getDay()] + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date);
+                let dayLabelStr = i18n(days[now.getDay()]) + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date);
                 if (lang.indexOf("zh-") == 0) {
                     let lunar = sloarToLunar(year, month, date);
                     let lunarStr = `${lunar.lunarYear}年${lunar.lunarMonth}月${lunar.lunarDay}`;
