@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.91
+// @version      1.6.29.92
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词搜索与自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞搜尋與自定義
@@ -1803,6 +1803,9 @@
                      font-size: ${12 * this.scale}px;
                      font-weight: normal;
                      opacity: 0.8;
+                 }
+                 .search-jumper-type>a.search-jumper-btn.historySite {
+                     box-shadow: 0px 0px 8px 0px #00000080;
                  }
                  .search-jumper-btn>img {
                      width: ${32 * this.scale}px;
@@ -4429,7 +4432,8 @@
             }
 
             siteBtnReturnHome(btn) {
-                for (let i = 0; i < searchTypes.length; i++) {
+                if (btn.parentNode) btn.parentNode.removeChild(btn);
+                /*for (let i = 0; i < searchTypes.length; i++) {
                     let typeBtn = searchTypes[i];
                     if (typeBtn.dataset.type == btn.dataset.type) {
                         if (btn.dataset.id) {
@@ -4448,7 +4452,7 @@
                         } else typeBtn.insertBefore(btn, typeBtn.children[1]);
                         break;
                     }
-                }
+                }*/
             }
 
             closeShowAll() {
@@ -4459,9 +4463,10 @@
                 document.removeEventListener("keydown", self.showAllKeydownHandler);
                 this.con.classList.remove("search-jumper-showall");
                 this.searchJumperInputKeyWords.value = "";
-                this.historySiteBtns.slice(0, 10).forEach(btn => {
+                this.historylist.innerHTML = createHTML();
+                /*this.historySiteBtns.slice(0, 10).forEach(btn => {
                     this.siteBtnReturnHome(btn);
-                });
+                });*/
                 this.touched = false;
                 if (currentSite && !currentSite.hideNotMatch) {
                     this.initPos();
@@ -5891,18 +5896,26 @@
             initHistorySites() {
                 this.historySiteBtns = [];
                 let self = this;
-                historySites.forEach(n => {
-                    for (let i = 0; i < self.allSiteBtns.length; i++) {
-                        let siteBtn = self.allSiteBtns[i][0];
-                        if (siteBtn.dataset.name == n) {
-                            let siteImg = siteBtn.querySelector('img');
-                            if (siteImg && siteImg.dataset.src) {
-                                siteImg.src = siteImg.dataset.src;
-                                delete siteImg.dataset.src;
+                historySites.forEach(async n => {
+                    for (let siteConfig of searchData.sitesConfig) {
+                        let found = false;
+                        let isBookmark = siteConfig.bookmark || siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
+                        for (let i = 0; i < siteConfig.sites.length; i++) {
+                            let site = siteConfig.sites[i];
+                            if (site.name == n) {
+                                let siteBtn = await self.createSiteBtn((searchData.prefConfig.noIcons ? "0" : site.icon), site, true, isBookmark, siteConfig);
+                                let siteImg = siteBtn.querySelector('img');
+                                if (siteImg && siteImg.dataset.src) {
+                                    siteImg.src = siteImg.dataset.src;
+                                    delete siteImg.dataset.src;
+                                }
+                                siteBtn.classList.add("historySite");
+                                self.historySiteBtns.push(siteBtn);
+                                found = true;
+                                break;
                             }
-                            self.historySiteBtns.push(siteBtn);
-                            break;
                         }
+                        if (found) break;
                     }
                 });
             }
@@ -5929,19 +5942,21 @@
                             }
                         }
                         if (findSame) continue;
-                        btn.classList.add("historySite");
                         if (toFirst) {
                             if (typeEle.children.length > 1) {
                                 typeEle.insertBefore(btn, typeEle.children[1]);
                             } else typeEle.appendChild(btn);
                         } else {
-                            if (self.searchJumperExpand.parentNode == typeEle) {
-                                typeEle.insertBefore(btn, self.searchJumperExpand);
+                            if (self.searchJumperExpand.parentNode == typeEle && !searchData.prefConfig.expandType) {
+                                let siteBtns = typeEle.querySelectorAll("a.search-jumper-btn");
+                                let maxSiteNum = searchData.prefConfig.historyLength < 6 ? (6 + 6 - searchData.prefConfig.historyLength) : 6;
+                                if (siteBtns.length > maxSiteNum) {
+                                    typeEle.insertBefore(btn, siteBtns[maxSiteNum]);
+                                } else typeEle.insertBefore(btn, self.searchJumperExpand);
                             } else typeEle.appendChild(btn);
                         }
                         if (++num >= searchData.prefConfig.historyLength) break;
                     } else if (toFirst) {
-                        btn.classList.add("historySite");
                         if (typeEle.children.length > 1) {
                             typeEle.insertBefore(btn, typeEle.children[1]);
                         } else typeEle.appendChild(btn);
@@ -5960,7 +5975,6 @@
                 for (let i = 0; i < this.historySiteBtns.length; i++) {
                     let btn = this.historySiteBtns[i];
                     if (!btn.classList.contains("historySite")) continue;
-                    btn.classList.remove("historySite");
                     curParent = btn.parentNode;
                     this.siteBtnReturnHome(btn);
                 }
@@ -7551,7 +7565,7 @@
                                     historySites = historySites.slice(0, historyLength);
                                 }
                                 storage.setItem("historySites", historySites);
-                                self.initHistorySites();
+                                //self.initHistorySites();
                             });
                         }
                         if (searchData.prefConfig.shiftLastUsedType && !isCurrent) {
