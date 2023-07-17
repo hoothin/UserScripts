@@ -2264,8 +2264,8 @@
                 next = jsNext || nextJs1 || nextJs3 || nextJs2;
                 if (next && next.parentNode.className.indexOf('tab') != -1) next = null;
             }
-            if (next && next.classList && next.classList.contains("results-more")) next=null;
-            if (next && next.hasAttribute && next.hasAttribute("disabled")) next=null;
+            if (next && next.classList && (next.classList.contains("results-more") || next.classList.contains("no"))) next = null;
+            if (next && next.hasAttribute && next.hasAttribute("disabled")) next = null;
             return {next:next, canSave:canSave};
         }
 
@@ -6358,7 +6358,7 @@
     }
 
     const loadmoreReg = /^\s*((点击)?加载更多|(點擊)?加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
-    const defaultLoadmoreSel = ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
+    const defaultLoadmoreSel = ".loadMore,.LoadMore,.load-more,button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         if (!ruleParser.curSiteRule.singleUrl && !ruleParser.curSiteRule.loadMore) return null;
