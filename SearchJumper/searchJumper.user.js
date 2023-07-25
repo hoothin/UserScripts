@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.93
+// @version      1.6.29.94
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词搜索与自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞搜尋與自定義
@@ -6895,12 +6895,13 @@
 
             async submitAction(params) {
                 params = params.slice();
-                if (document.readyState !== 'complete') {
-                    await sleep(500);
+                if (document.readyState !== 'complete' && document.readyState !== 'interactive') {
+                    await sleep(300);
                     this.submitAction(params);
                     return;
                 }
                 let form, input, clicked = false, self = this;
+                let opened = false;
 
                 for (let param of params) {
                     if (param[0] === "sleep" || param[0] === "@sleep") {
@@ -6915,6 +6916,16 @@
                     } else if (param[0] === '@call') {
                         let func = window[param[1]] || new AsyncFunction('"use strict";' + param[1]);
                         if (func) await func();
+                    } else if (param[0] === '@open') {
+                        let btn = await waitForElement(param[1]);
+                        if (opened) {
+                            _GM_openInTab(btn.href);
+                        } else {
+                            opened = true;
+                            setTimeout(() => {
+                                location.href = btn.href;
+                            }, 50);
+                        }
                     } else if (param[0] === '@reload') {
                     } else if (param[0] === '@wait') {
                         if (param[1].indexOf("!") === 0) {
@@ -7057,11 +7068,10 @@
                     }
                     if (ele.dataset.current) {
                         if (!currentSite && inPagePostParams) {
-                            if (inPagePost) {
-                                await this.submitAction(inPagePostParams);
-                            } else {
-                                //storage.setItem("inPagePostParams", false);
-                            }
+                            await this.submitAction(inPagePostParams);
+                            setTimeout(() => {
+                                storage.setItem("inPagePostParams_" + location.hostname, "");
+                            }, 10000);
                         }
                     } else if (data.hideNotMatch) {
                         ele = null;
@@ -7454,6 +7464,11 @@
                                 if (wait) {
                                     postParams.push(['@wait', wait.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
+                            } else if (pair.startsWith("open(") && pair.endsWith(')')) {
+                                let open = pair.slice(5, pair.length - 1);
+                                if (open) {
+                                    postParams.push(['@open', open.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
                             } else if (/^sleep\(\d+\)$/.test(pair)) {
                                 let sleep = pair.match(/sleep\((.*)\)/);
                                 if (sleep) {
@@ -7571,12 +7586,12 @@
                         }
                         if (searchData.prefConfig.shiftLastUsedType && !isCurrent) {
                             let parent = ele.parentNode;
-                            let dismissHistory = parent && (parent.classList.contains("search-jumper-isInPage") ||
-                                                            parent.classList.contains("search-jumper-isTargetImg") ||
-                                                            parent.classList.contains("search-jumper-isTargetAudio") ||
-                                                            parent.classList.contains("search-jumper-isTargetVideo") ||
-                                                            parent.classList.contains("search-jumper-isTargetLink") ||
-                                                            parent.classList.contains("search-jumper-isTargetPage"));
+                            let dismissHistory = parent && (parent.classList.contains("search-jumper-targetAll") ||
+                                                            parent.classList.contains("search-jumper-targetImg") ||
+                                                            parent.classList.contains("search-jumper-targetAudio") ||
+                                                            parent.classList.contains("search-jumper-targetVideo") ||
+                                                            parent.classList.contains("search-jumper-targetLink") ||
+                                                            parent.classList.contains("search-jumper-targetPage"));
                             if (!dismissHistory && historyType != ele.dataset.type) {
                                 historyType = ele.dataset.type;
                                 storage.setItem("historyType", historyType);
