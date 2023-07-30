@@ -9436,6 +9436,17 @@
         "pageElement": "#leftContents>div.workshopBrowsePaging+div.workshopBrowseItems"
     },
     {
+        "name": "SteamPeek",
+        "url": "^https?://steampeek\\.hu/",
+        "example": "https://steampeek.hu/?from=108&tagid=86",
+        "pageElement": "#lister_result_container>article",
+        "nextLinkByUrl": [
+            "\\?(from=(\\d+)&)?",
+            "?from={$2+36}&"
+        ],
+        "lazyImgSrc": "data-src"
+    },
+    {
         "name": "buondua",
         "url": "^https://(.*\\.)?buondua\\.com/",
         "type": 0,
