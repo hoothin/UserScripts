@@ -26521,17 +26521,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74732",
-  "name": "The Wrap",
-  "created_by": "Tanookirby",
-  "updated_at": "2017-12-06T11:05:49+09:00",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
-    "exampleUrl": "https://www.thewrap.com/category/movies/\r\nhttps://www.thewrap.com/category/channelphoto/",
+    "pageElement": "//div[@class='content-area']/ul/li/",
+    "nextLink": "//a[@class='wp-block-query-pagination-next']",
     "url": "^https?://(www\\.)?thewrap\\.com/",
-    "pageElement": "id('main')/div/ul/li[.//img]",
-    "nextLink": "//a[@class='p-next page-numbers']"
+    "exampleUrl": "https://www.thewrap.com/category/movies/"
   },
-  "created_at": "2014-04-14T04:03:48+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Tanookirby",
+  "name": "The Wrap",
+  "created_at": "2014-04-14T04:03:48+09:00",
+  "updated_at": "2023-07-31T05:55:25+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74731",
