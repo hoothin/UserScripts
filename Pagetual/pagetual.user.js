@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.43
+// @version      1.9.36.44
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2053,7 +2053,7 @@
                     }
                 }
             }
-            if (next && (!next.href || /^(javascript|#)/.test(next.href.replace(location.href, "")))) {
+            if (next && (!next.href || /^(javascript|#)/.test(next.href.replace("#p{", "").replace(location.href, "")))) {
                 jsNext = next;
                 next = null;
             }
@@ -2061,7 +2061,7 @@
                 next = body.querySelectorAll("[aria-label='Next page']");
                 if (next && next.length == 1) {
                     next = next[0];
-                    if (!next.href || /^(javascript|#)/.test(next.href.replace(location.href, ""))) {
+                    if (!next.href || /^(javascript|#)/.test(next.href.replace("#p{", "").replace(location.href, ""))) {
                         if (!jsNext) jsNext = next;
                         next = null;
                     }
@@ -2157,7 +2157,7 @@
                     }
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
-                    let isJs = !aTag.href || !aTag.href.replace || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
+                    let isJs = !aTag.href || !aTag.href.replace || /^(javascript|#)/.test(aTag.href.replace("#p{", "").replace(location.href, ""));
                     if (innerText) {
                         innerText = innerText.split(/\n/)[0].replace(/ /g, '');
                         if (isJs && /^(»|>>|>|›|→|❯)$/.test(innerText)) continue;
@@ -2514,7 +2514,7 @@
                         parent = parent.parentNode;
                     }
                     if (doc == document) {
-                        if ((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace(location.href, ""))) && !isVisible(nextLink, _unsafeWindow)) {
+                        if ((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace("#p{", "").replace(location.href, ""))) && !isVisible(nextLink, _unsafeWindow)) {
                             this.nextLinkHref = false;
                             return null;
                         } else {
@@ -2561,7 +2561,7 @@
                         this.nextLinkHref = false;
                     } else {
                         this.nextLinkHref = (href && !/^(javascript:|#)/.test(href)) ? this.canonicalUri(href) : "#";
-                        let tempUrl = this.nextLinkHref.replace(/#p{.*/, "");
+                        let tempUrl = this.nextLinkHref;
                         if (tempUrl != "#" && (this.compareUrl(tempUrl, this.initUrl) || this.compareUrl(tempUrl, this.curUrl) || this.compareUrl(tempUrl, this.curUrl + "#") || this.compareUrl(tempUrl, this.oldUrl) || this.compareUrl(tempUrl, this.oldUrl + "#"))) {
                             this.nextLinkHref = false;
                         } else if (doc == document) {
@@ -3173,7 +3173,7 @@
             if (enableHistory) {
                 this.historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
                 if(this.historyUrl != location.href) {
-                    let isJs = /^(javascript|#)/.test(this.historyUrl.replace(location.href, ""));
+                    let isJs = /^(javascript|#)/.test(this.historyUrl.replace("#p{", "").replace(location.href, ""));
                     if (!isJs) {
                         let historyTitle = enableHistoryAfterInsert ? doc.title : oldTitle;
                         _unsafeWindow.history.replaceState(undefined, historyTitle, this.historyUrl);
@@ -5736,7 +5736,7 @@
                 });
             }
             if (ruleParser.nextLinkHref) {
-                let isJs = /^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href, ""));
+                let isJs = /^(javascript|#)/.test(ruleParser.nextLinkHref.replace("#p{", "").replace(location.href, ""));
                 if (!isJs) {
                     let inForce = (forceState == 2 || forceState == 3);
                     _GM_registerMenuCommand(i18n(inForce ? "cancelForceIframe" : "forceIframe"), () => {
@@ -6154,7 +6154,7 @@
             }, 1500);
             let nextLink = ruleParser.nextLinkHref;
             if (!nextLink) return;
-            let isJs = /^(javascript|#)/.test(nextLink.replace(location.href, ""));
+            let isJs = /^(javascript|#)/.test(nextLink.replace("#p{", "").replace(location.href, ""));
             if (isJs) {
                 let nextBtn = ruleParser.nextLinkEle;
                 if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document);
@@ -6380,7 +6380,7 @@
         }
         if (loadmoreBtn && !ruleParser.curSiteRule.loadMore && loadmoreBtn.dataset.ajax !== "true") {
             let href = loadmoreBtn.getAttribute("href");
-            if (href && href != "/" && !/^(javascript|#)/.test(href.replace(location.href, ""))) {
+            if (href && href != "/" && !/^(javascript|#)/.test(href.replace("#p{", "").replace(location.href, ""))) {
                 loadmoreBtn = null;
             }
         }
@@ -7543,7 +7543,7 @@
                     command: 'pagetual.insert'
                 }, '*');
             }*/
-            let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace(location.href, ""));
+            let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace("#p{", "").replace(location.href, ""));
             if (!isJs) {
                 emuIframe = null;
                 lastActiveUrl = nextLink;
