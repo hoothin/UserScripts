@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86143",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//figure/*[self::figcaption or @class='photo-slide-img' or @class='photo-link-main']",
+    "nextLink": "//figure/div/p/a[@class='arrow-right-link']",
+    "url": "^https://www\\.crank-in\\.net/(?:.*(gallery|person).*)/\\d+",
+    "exampleUrl": "https://www.crank-in.net/person/2729\r\nhttps://www.crank-in.net/gallery/person/2729/157#gallery-img\r\nhttps://www.crank-in.net/gallery/column/76673\r\nhttps://www.crank-in.net/trend/gallery/life/125002"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "クランクイン！ - 写真 -",
+  "created_at": "2023-08-01T21:21:39+09:00",
+  "updated_at": "2023-08-01T21:21:39+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86142",
   "data": {
     "pageElement": "//div[@class='p-dealer-search']//ul[contains(concat(' ',@class,' '),' c-archive02 ')]/li",
@@ -6528,16 +6543,17 @@
 {
   "resource_url": "http://wedata.net/items/85401",
   "data": {
-    "pageElement": "//p[@class=\"main-txt\"] | //*[@class=\"photo-link-main\" or @class=\"photo-caption\"] | //ul[@class=\"tag-list\"]",
-    "nextLink": "//link[@rel=\"next\"] | //a[contains(span/text(),\"もっと見る\")]",
+    "pageElement": "//p[@class='main-txt'] | //ul[@class='tag-list'] | //ul[@class='news_list_area']",
+    "considerationUrl": "https://www.crank-in.net/interview/131280/3",
+    "nextLink": "//a[span[@class='pager-arrow-right' and text()='次のページ']] | //a[@href and contains(span/text(),'もっと見る')]",
     "url": "^https?://www\\.crank-in\\.net/",
-    "exampleUrl": "https://www.crank-in.net/column/78253/1\r\nhttps://www.crank-in.net/gallery/column/76673\r\nhttps://www.crank-in.net/news"
+    "exampleUrl": "https://www.crank-in.net/column/78253/1\r\nhttps://www.crank-in.net/news\r\nhttps://www.crank-in.net/trend/report"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "brib2",
   "name": "クランクイン！",
   "created_at": "2020-07-06T18:13:04+09:00",
-  "updated_at": "2020-07-06T21:08:35+09:00"
+  "updated_at": "2023-08-01T21:21:06+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85400",
@@ -26522,7 +26538,7 @@
 {
   "resource_url": "http://wedata.net/items/74732",
   "data": {
-    "pageElement": "//div[@class='content-area']/ul/li/",
+    "pageElement": "//div[@class='content-area']/ul/li",
     "nextLink": "//a[@class='wp-block-query-pagination-next']",
     "url": "^https?://(www\\.)?thewrap\\.com/",
     "exampleUrl": "https://www.thewrap.com/category/movies/"
@@ -26531,7 +26547,7 @@
   "created_by": "Tanookirby",
   "name": "The Wrap",
   "created_at": "2014-04-14T04:03:48+09:00",
-  "updated_at": "2023-07-31T05:55:25+09:00"
+  "updated_at": "2023-08-01T21:25:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74731",
