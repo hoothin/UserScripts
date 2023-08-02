@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.35
+// @version      1.2.6.36
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -79,6 +79,10 @@
                  '叹':'嘆',
                  '线':'線',
                  '径':'徑',
+                 '巨':[
+                     '巨',
+                     ['鉅','巨款','巨富','巨细靡遗','巨子']
+                 ],
                  '折':[
                      '折',
                      ['摺','折叠','折纸','存折','对折','折痕','奏折','折页','折扇']
