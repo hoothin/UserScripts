@@ -9447,6 +9447,14 @@
         "lazyImgSrc": "data-src"
     },
     {
+        "name": "WPLOCKER.COM - GPL LICENSED WORDPRESS THEMES & PLUGINS",
+        "url": "^https?://www\\.wplocker\\.com/",
+        "example": "https://www.wplocker.com/index.php?do=search",
+        "nextLinkByJs": "let kw=document.querySelector('#searchinput').value,page=doc.querySelector('.navigations>span');page=parseInt(page.innerText)+1;return location.href+`#p{do=search&subaction=search&search_start=${page}&full_search=0&result_from=${(page-1)*16+1}&story=${kw}}`",
+        "pageElement": ".row>.col-xs-12",
+        "wait": 1000
+    },
+    {
         "name": "buondua",
         "url": "^https://(.*\\.)?buondua\\.com/",
         "type": 0,
