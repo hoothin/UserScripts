@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.7.5.1
+// @version              2023.8.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -21156,15 +21156,19 @@ ImgOps | https://imgops.com/#b#`;
                 return true;
             },
             setButton:function(){
-                if(this.data.noActual){
-                    this.buttons['actual'].style.display='none';
-                }else{
-                    this.buttons['actual'].style.removeProperty('display');
+                if(this.buttons['actual']){
+                    if(this.data.noActual){
+                        this.buttons['actual'].style.display='none';
+                    }else{
+                        this.buttons['actual'].style.removeProperty('display');
+                    }
                 }
-                if(this.data.type != "force" && this.data.img.nodeName.toUpperCase() == 'IMG'){
-                    this.buttons['magnifier'].style.removeProperty('display');
-                }else{
-                    this.buttons['magnifier'].style.display='none';
+                if(this.buttons['magnifier']){
+                    if(this.data.type != "force" && this.data.img.nodeName.toUpperCase() == 'IMG'){
+                        this.buttons['magnifier'].style.removeProperty('display');
+                    }else{
+                        this.buttons['magnifier'].style.display='none';
+                    }
                 }
                 if (this.data.img.nodeName.toUpperCase() != 'IMG') {
                     //this.buttons['gallery'].style.display = 'none';
@@ -22871,6 +22875,7 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("butonOrder"),
                     type: 'text',
                     className: 'order',
+                    title: 'actual,current,gallery,magnifier,download',
                     "default": prefs.floatBar.butonOrder.join(', '),
                 },
                 'floatBar.additionalFeature': {
