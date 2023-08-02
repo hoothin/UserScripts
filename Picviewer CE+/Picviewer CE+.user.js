@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.8.2.1
+// @version              2023.8.2.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -22268,6 +22268,26 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         }
                     }*/
+                    }
+                    if (!result && document.elementsFromPoint) {
+                        let elements = document.elementsFromPoint(clientX, clientY);
+                        for (let i = 0; i < elements.length; i++) {
+                            let ele = elements[i];
+                            if (/img/i.test(ele.nodeName)) {
+                                target = ele;
+                            } else if (prefs.floatBar.listenBg && hasBg(ele)) {
+                                target = ele;
+                                targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                                let src = targetBg, nsrc = src, noActual = true, type = "scale";
+                                result = {
+                                    src: nsrc,
+                                    type: type,
+                                    imgSrc: src,
+                                    noActual:noActual,
+                                    img: target
+                                };
+                            }
+                        }
                     }
                     if (result && !/^data:/i.test(result.src)) {
                         if (matchedRule.rules.length > 0 && target.nodeName.toUpperCase() != 'IMG') {
