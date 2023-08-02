@@ -22275,6 +22275,7 @@ ImgOps | https://imgops.com/#b#`;
                             let ele = elements[i];
                             if (/img/i.test(ele.nodeName)) {
                                 target = ele;
+                                break;
                             } else if (prefs.floatBar.listenBg && hasBg(ele)) {
                                 target = ele;
                                 targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
@@ -22286,6 +22287,7 @@ ImgOps | https://imgops.com/#b#`;
                                     noActual:noActual,
                                     img: target
                                 };
+                                break;
                             }
                         }
                     }
