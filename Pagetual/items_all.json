@@ -1,18 +1,61 @@
 [
 {
-  "resource_url": "http://wedata.net/items/86143",
+  "resource_url": "http://wedata.net/items/86146",
   "data": {
     "insertBefore": "",
+    "pageElement": "//div[@class=\"link-line\"]",
+    "nextLink": "//div[@class=\"page-next\"]/a",
+    "url": "^https://bbspirits\\.com/",
+    "exampleUrl": "https://bbspirits.com/wleague/w23072601bsr/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "eom",
+  "name": "バスケットボールスピリッツ",
+  "created_at": "2023-08-04T17:08:28+09:00",
+  "updated_at": "2023-08-04T17:08:28+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86145",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article",
+    "nextLink": "//a[img[@aria-label='次のページへ']]",
+    "url": "^https://dengekibunko\\.jp/novecomi/novel/",
+    "exampleUrl": "https://dengekibunko.jp/novecomi/novel/16817330658837934226/16817330658880855335.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "電撃ノベコミ＋",
+  "created_at": "2023-08-04T14:27:14+09:00",
+  "updated_at": "2023-08-04T14:27:14+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86144",
+  "data": {
+    "pageElement": "//div[@class='lcont']/ul/li",
+    "nextLink": "//div[@class='pfooter']/a[@style][b]/following-sibling::a",
+    "url": "^https://(?:m|www)\\.nvhai8\\.com/",
+    "exampleUrl": "https://www.nvhai8.com/f_19/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "unknown11",
+  "name": "女人吧",
+  "created_at": "2023-08-03T14:13:29+09:00",
+  "updated_at": "2023-08-03T14:15:14+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86143",
+  "data": {
     "pageElement": "//figure/*[self::figcaption or @class='photo-slide-img' or @class='photo-link-main']",
-    "nextLink": "//figure/div/p/a[@class='arrow-right-link']",
+    "nextLink": "descendant::figure[1]//a[@class='arrow-right-link'][not(contains(@href,'/1#gallery-img'))]",
     "url": "^https://www\\.crank-in\\.net/(?:.*(gallery|person).*)/\\d+",
-    "exampleUrl": "https://www.crank-in.net/person/2729\r\nhttps://www.crank-in.net/gallery/person/2729/157#gallery-img\r\nhttps://www.crank-in.net/gallery/column/76673\r\nhttps://www.crank-in.net/trend/gallery/life/125002"
+    "exampleUrl": "https://www.crank-in.net/person/2729\r\nhttps://www.crank-in.net/gallery/column/76673\r\nhttps://www.crank-in.net/trend/gallery/life/125002"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Griever3",
   "name": "クランクイン！ - 写真 -",
   "created_at": "2023-08-01T21:21:39+09:00",
-  "updated_at": "2023-08-01T21:21:39+09:00"
+  "updated_at": "2023-08-03T09:54:41+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86142",
@@ -1473,18 +1516,18 @@
   "updated_at": "2022-11-12T05:43:42+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85996",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
     "pageElement": "//div[@class='c_content']/a",
     "nextLink": "(//a[@style='background:green;color:white']/following-sibling::a)[1]",
-    "url": "^https://(www|m).gril8\\.net/",
-    "exampleUrl": "https://www.gril8.net/body/202111/51485.htm"
+    "url": "^https://(www|m).nvhai8\\.com/",
+    "exampleUrl": "https://www.gril8.net/body/202111/51485.htm\r\nhttps://www.nvhai8.com/body/202111/51485.htm"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "powertalent",
+  "resource_url": "http://wedata.net/items/85996",
   "name": "徐娘半老_成熟自拍照_美女生活照_美女自拍 - 女人吧",
   "created_at": "2022-11-11T15:20:11+09:00",
-  "updated_at": "2022-11-12T10:19:59+09:00"
+  "updated_at": "2023-08-03T14:09:18+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85994",
@@ -2002,18 +2045,18 @@
   "updated_at": "2022-08-27T22:53:13+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85945",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
-    "pageElement": "descendant::div[@class='news_feed'][last()-1]/*[not(self::div)][last()]|descendant::div[@class='news_feed'][last()-1]/*[not(self::div)][last()]/preceding-sibling::*",
+    "pageElement": "//div[@class='newsArticle_pager']/preceding-sibling::*[not(@class='label_continue' or count(./div)>1)]",
     "nextLink": "//link[@rel='next']",
     "url": "^https://thetv.jp/news/detail/",
-    "exampleUrl": "https://thetv.jp/news/detail/1097587/\r\nhttps://thetv.jp/news/detail/1103073/p2/\r\nhttps://thetv.jp/news/detail/1026443/\r\nhttps://thetv.jp/news/detail/194206/"
+    "exampleUrl": "https://thetv.jp/news/detail/1097587/\r\nhttps://thetv.jp/news/detail/1103073/p2/\r\nhttps://thetv.jp/news/detail/1026443/\r\nhttps://thetv.jp/news/detail/194206/\r\nhttps://thetv.jp/news/detail/1150149/\r\nhttps://thetv.jp/news/detail/1150220/p2/"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "autopagerizebanzai",
+  "resource_url": "http://wedata.net/items/85945",
   "name": "WEBザテレビジョン",
   "created_at": "2022-08-19T21:06:16+09:00",
-  "updated_at": "2022-10-20T16:36:46+09:00"
+  "updated_at": "2023-08-03T08:49:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85944",
@@ -6543,9 +6586,9 @@
 {
   "resource_url": "http://wedata.net/items/85401",
   "data": {
-    "pageElement": "//p[@class='main-txt'] | //ul[@class='tag-list'] | //ul[@class='news_list_area']",
+    "pageElement": "//div[./p[@class='main-txt']] | //ul[@class='tag-list' or @class='news_list_area']",
     "considerationUrl": "https://www.crank-in.net/interview/131280/3",
-    "nextLink": "//a[span[@class='pager-arrow-right' and text()='次のページ']] | //a[@href and contains(span/text(),'もっと見る')]",
+    "nextLink": "//a[@class='this_page']/following-sibling::a[1] | //a[@href and contains(span/text(),'もっと見る')]",
     "url": "^https?://www\\.crank-in\\.net/",
     "exampleUrl": "https://www.crank-in.net/column/78253/1\r\nhttps://www.crank-in.net/news\r\nhttps://www.crank-in.net/trend/report"
   },
@@ -6553,7 +6596,7 @@
   "created_by": "brib2",
   "name": "クランクイン！",
   "created_at": "2020-07-06T18:13:04+09:00",
-  "updated_at": "2023-08-01T21:21:06+09:00"
+  "updated_at": "2023-08-02T15:59:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85400",
@@ -10758,7 +10801,7 @@
 {
   "resource_url": "http://wedata.net/items/82058",
   "data": {
-    "pageElement": "//div[contains(@class, 'articleBody')]/*[contains(@class, 'pagination')][1]/preceding-sibling::*[not(contains(@class, 'adRectangle'))]",
+    "pageElement": "//div[contains(@class, 'articleBody')]/nav/preceding-sibling::*[not(./following-sibling::*[1][self::nav])]",
     "nextLink": "//li[contains(@class, \"p-pagination_list_item\") and contains(@class, \"-next\")]/a[@aria-label=\"次のページへリンク\"]",
     "url": "^https://business\\.nikkei\\.com/",
     "exampleUrl": "https://business.nikkei.com/atcl/seminar/19/00030/032200460/\r\nhttps://business.nikkei.com/atcl/gen/19/00533/030600006/\r\nhttps://business.nikkei.com/atcl/gen/19/00297/041900122/"
@@ -10767,7 +10810,7 @@
   "created_by": "love_livedoor",
   "name": "日経ビジネス電子版",
   "created_at": "2019-01-16T14:26:53+09:00",
-  "updated_at": "2023-05-06T08:53:05+09:00"
+  "updated_at": "2023-08-04T14:01:33+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82056",
@@ -38980,7 +39023,7 @@
 {
   "resource_url": "http://wedata.net/items/39011",
   "data": {
-    "pageElement": "//div[normalize-space(@class)=\"story\"]/node()[not(contains(@class, 'ad-aside') or @class=\"pager-Nextpage\" or preceding-sibling::div[@class=\"pager-Nextpage\"])]",
+    "pageElement": "//div[normalize-space(@class)='story']/br[last()]/preceding-sibling::node()[not(contains(@class, 'ad-aside'))][./preceding-sibling::div or ./preceding-sibling::script]",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://www\\.excite\\.co\\.jp/news/article/",
     "exampleUrl": "https://www.excite.co.jp/news/article/E1681948296976/\r\nhttps://www.excite.co.jp/news/article/E1683710030978/"
@@ -38989,7 +39032,7 @@
   "created_by": "t_f_m",
   "name": "エキサイトニュース 記事",
   "created_at": "2010-10-30T21:52:08+09:00",
-  "updated_at": "2023-05-22T22:23:41+09:00"
+  "updated_at": "2023-08-05T09:03:35+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/38952",
@@ -53197,16 +53240,16 @@
 {
   "resource_url": "http://wedata.net/items/446",
   "data": {
-    "pageElement": "id('groupsContent')/*",
-    "nextLink": "//li[@class='next ']/a",
+    "pageElement": "id('groupsContent')/*|//div[./div[contains(@data-hook,'content_row-')]]",
+    "nextLink": "//link[@rel='next']|//li[@class='next ']/a",
     "url": "^https://[^.]+\\.deviantart\\.com/",
-    "exampleUrl": "http://groups.deviantart.com/\r\n"
+    "exampleUrl": "https://www.deviantart.com/ https://www.deviantart.com/groups/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
   "name": "deviantART",
   "created_at": "2008-04-16T12:35:31+09:00",
-  "updated_at": "2020-07-23T11:19:12+09:00"
+  "updated_at": "2023-08-03T11:19:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/442",
