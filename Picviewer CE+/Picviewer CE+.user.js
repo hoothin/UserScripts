@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.8.2.2
+// @version              2023.8.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1211491
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1185366
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1232199
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11963,7 +11963,8 @@ ImgOps | https://imgops.com/#b#`;
                     range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0,5.0,6.0,7.0,8.0,9.0],//缩放比例.(不要出现负数,谢谢-_-!~)
                     mouseWheelZoom:true,//是否允许使用滚轮缩放。
                 },
-                zIndex: 2147483646
+                zIndex: 2147483646,
+                fixed: false
             },
 
             //等图片完全载入后,才开始执行弹出,放大等等操作,
@@ -12406,6 +12407,9 @@ ImgOps | https://imgops.com/#b#`;
 
         //获取已滚动的距离
         function getScrolled(container){
+            if(prefs.imgWindow.fixed){
+                return {x:0, y:0};
+            }
             if(container){
                 return {
                     x:container.scrollLeft,
@@ -18766,7 +18770,7 @@ ImgOps | https://imgops.com/#b#`;
                 ImgWindowC.style=style;
                 style.textContent='\
                     .pv-pic-window-container {\
-                    position: absolute;\
+                    ' + (prefs.imgWindow.fixed ? 'position: fixed;' : 'position: absolute;') + '\
                     background-color: rgba(40,40,40,0.8);\
                     padding: 8px;\
                     border: 0;\
@@ -23291,6 +23295,11 @@ ImgOps | https://imgops.com/#b#`;
                     attr: {
                         "spellcheck": "false"
                     }
+                },
+                'imgWindow.fixed': {
+                    label: i18n("positionFixed"),
+                    "default": prefs.imgWindow.fixed,
+                    type: 'checkbox',
                 },
                 'imgWindow.zIndex': {
                     label: "z-Index",
