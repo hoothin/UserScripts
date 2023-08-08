@@ -244,7 +244,8 @@ const langData = [
         initShow: "Invert Shortcut to show preview by default",
         stayOut: "Let float bar stay out of the image",
         galleryDownloadGap: "Download interval",
-        galleryDisableArrow: "Disable arrow key"
+        galleryDisableArrow: "Disable arrow key",
+        positionFixed: "Fixed position"
     }
 }, 
 {
@@ -491,7 +492,8 @@ const langData = [
         initShow: "反转快捷键，默认显示预览",
         stayOut: "使浮动工具栏显示在图片外部",
         galleryDownloadGap: "下载间隔时间",
-        galleryDisableArrow: "禁用方向键"
+        galleryDisableArrow: "禁用方向键",
+        positionFixed: "固定位置"
     }
 },
 {
@@ -738,7 +740,8 @@ const langData = [
         initShow: "反轉快捷鍵，默認顯示預覽",
         stayOut: "使浮動工具欄顯示在圖片外部",
         galleryDownloadGap: "下載間隔時間",
-        galleryDisableArrow: "禁用方向鍵"
+        galleryDisableArrow: "禁用方向鍵",
+        positionFixed: "固定位置"
     }
 },
 {
@@ -986,7 +989,8 @@ const langData = [
         initShow: "Inverter atalho para exibir a Pré-visualização por padrão",
         stayOut: "Permitir que a Barra de Ferramentas fique fora da imagem",
         galleryDownloadGap: "Intervalo para baixar",
-        galleryDisableArrow: "Desativar as teclas de seta"
+        galleryDisableArrow: "Desativar as teclas de seta",
+        positionFixed: "Posição fixa"
     }
 },
 {
@@ -1234,7 +1238,8 @@ const langData = [
         initShow: "Инвертировать сочетания клавиш, предпросмотр отображается по умолчанию",
         stayOut: "Сделать так, чтобы плавающая панель отображалась за пределами изображения",
         galleryDownloadGap: "Интервал скачивания",
-        galleryDisableArrow: "Отключить клавиши со стрелками"
+        galleryDisableArrow: "Отключить клавиши со стрелками",
+        positionFixed: "Фиксированная позиция"
     }
 },
 {
@@ -1482,7 +1487,8 @@ const langData = [
         initShow: "Varsayılan olarak önizlemeyi göstermek için kısayolu tersine çevir",
         stayOut: "Kayan araç çubuğunun görüntünün dışında kalmasına izin verin",
         galleryDownloadGap: "İndirme aralığı",
-        galleryDisableArrow: "Ok tuşlarını devre dışı bırakın"
+        galleryDisableArrow: "Ok tuşlarını devre dışı bırakın",
+        positionFixed: "sabit konum"
     }
 },
 {
@@ -1730,7 +1736,8 @@ const langData = [
         initShow: "Інвертувати комбінацію клавіш для попереднього перегляду за замовчуванням",
         stayOut: "Дозволити плавучій панелі залишитись поза зображенням",
         galleryDownloadGap: "Інтервал завантаження",
-        galleryDisableArrow: "Вимкнути клавіші зі стрілками"
+        galleryDisableArrow: "Вимкнути клавіші зі стрілками",
+        positionFixed: "Фіксоване положення"
     }
 }
 ];
