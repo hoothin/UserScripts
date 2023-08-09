@@ -25328,7 +25328,8 @@
 {
   "resource_url": "http://wedata.net/items/75006",
   "data": {
-    "pageElement": "//div[@aria-label=\"article\"][.//div[@class=\"author-list\"]]",
+    "pageElement": "//div[starts-with(@id, 'zone-twilight')]//div[@class='zone__content']",
+    "comment": "記事の取りこぼし修正。記事に css: order があるため zone__content を取得。",
     "nextLink": "//a[@rel='next']",
     "url": "^https?://www\\.huffingtonpost\\.jp/",
     "exampleUrl": "https://www.huffingtonpost.jp/news/"
@@ -25337,7 +25338,7 @@
   "created_by": "jigendaddy_be",
   "name": "ハフィントンポスト",
   "created_at": "2014-08-02T12:33:40+09:00",
-  "updated_at": "2022-01-11T08:24:06+09:00"
+  "updated_at": "2023-08-08T20:47:56+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74999",
