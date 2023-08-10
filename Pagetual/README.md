@@ -35,6 +35,9 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
     <tr>
         <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://ko-fi.com/hoothin">Ko-fi</a></td><td><a href="https://afdian.net/@hoothin">愛發電</a></td>
     </tr>
+    <tr>
+        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me a email for help</a></th>
+    </tr>
 </table>
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
