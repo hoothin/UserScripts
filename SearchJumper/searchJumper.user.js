@@ -4,10 +4,10 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.94
+// @version      1.6.29.95
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
-// @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词搜索与自定义
-// @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞搜尋與自定義
+// @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化自定义页内操作等
+// @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化自定義頁內操作等
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
 // @license      MPL-2.0
@@ -1310,7 +1310,7 @@
                 let diZhiKey = (ly - 3) % 12;
                 if (diZhiKey === 0) diZhiKey = 12;
                 diZhiKey--;
-                return diZhi[diZhiKey] + `【${shengxiao[diZhiKey]}】`
+                return diZhi[diZhiKey] + ` (${shengxiao[diZhiKey]}) `
             }
             return sloarToLunar(sy, sm, sd)
         }
@@ -1426,9 +1426,13 @@
                      cursor: pointer;
                      pointer-events: all;
                      z-index: 1;
+                     width: 32px;
+                     height: 32px;
                  }
                  #search-jumper-alllist>.search-jumper-btn>svg {
                      cursor: pointer;
+                     width: 32px;
+                     height: 32px;
                  }
                  .search-jumper-showallBg {
                      display: none;
@@ -2633,6 +2637,13 @@
                  }
                  .search-jumper-historylist>a.search-jumper-btn {
                      filter: drop-shadow(0px 0px 3px #00000050);
+                     width: 32px;
+                     height: 32px;
+                     line-height: 32px;
+                 }
+                 .search-jumper-historylist>a.search-jumper-btn>img {
+                     width: 32px;
+                     height: 32px;
                  }
                  #search-jumper .listArrow {
                      width: 0;
