@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.8.8.1
+// @version              2023.8.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12407,9 +12407,6 @@ ImgOps | https://imgops.com/#b#`;
 
         //获取已滚动的距离
         function getScrolled(container){
-            if(prefs.imgWindow.fixed){
-                return {x:0, y:0};
-            }
             if(container){
                 return {
                     x:container.scrollLeft,
@@ -19266,7 +19263,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.imgWindow.classList.remove("pv-pic-window-scroll");
                 this.focus();
                 var imgWindow=this.imgWindow;
-                var scrolled=getScrolled();
+                var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                 imgWindow.style.left=-5 + scrolled.x + 'px';
                 imgWindow.style.top=-5 + scrolled.y + 'px';
 
@@ -19407,7 +19404,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
 
-                var scrolled=getScrolled();
+                var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                 var maxWidth, maxHeight, left, top;
                 var self=this;
                 function resizeWithLimit(){
@@ -19510,7 +19507,7 @@ ImgOps | https://imgops.com/#b#`;
                 var imgWindow=this.imgWindow;
                 if(!imgWindow)return;
                 var wSize=getWindowSize();
-                var scrolled=getScrolled();
+                var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                 if(horizontal)imgWindow.style.left = (wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
                 if(vertical)imgWindow.style.top = (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + (prefs.imgWindow.suitLongImg && this.isLongImg ? 13 : 0) +'px';
             },
@@ -19945,7 +19942,7 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 var viewRangeRect=viewRange.getBoundingClientRect();
-                var scrolled=getScrolled();
+                var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                 var viewRangeCenterCoor={
                     x:viewRangeRect.left + scrolled.x + 1/2 * rangeSize.w,
                     y:viewRangeRect.top + scrolled.y + 1/2 * rangeSize.h,
@@ -19992,7 +19989,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.working=false;
                     viewRange.style.display='none';
                     self.zoom(cLevel);
-                    var scrolled=getScrolled();
+                    var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                     imgWindow.style.top= -13 -  rectSize.h * ((parseFloat(vRS.top) - moveRange.y[0])/size.h) + scrolled.y +'px';
                     imgWindow.style.left= -13 - rectSize.w * ((parseFloat(vRS.left) - moveRange.x[0])/size.w) + scrolled.x +'px';
 
@@ -20296,7 +20293,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(e.type == "click" && !this.moving){
                         var wSize=getWindowSize();
                         var imgWindow=this.imgWindow;
-                        var scrolled=getScrolled();
+                        var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                         var origTop=parseFloat(imgWindow.style.top);
                         if(inScroll){
                             imgWindow.style.top = parseFloat(imgWindow.style.top) - getScrolled(imgWindow).y +'px';
@@ -20418,7 +20415,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 if((tool=='rotate' || tool=='zoom') && done){
-                    var scrolled=getScrolled();
+                    var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                     var imgWindow=this.imgWindow;
                     var imgWinodowRect=imgWindow.getBoundingClientRect();
                     var imgWindowStyle=imgWindow.style;
