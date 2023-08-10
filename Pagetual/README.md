@@ -36,7 +36,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://ko-fi.com/hoothin">Ko-fi</a></td><td><a href="https://afdian.net/@hoothin">愛發電</a></td>
     </tr>
     <tr>
-        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me a email for help</a></th>
+        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an email for help</a></th>
     </tr>
 </table>
 
