@@ -8098,6 +8098,12 @@
         "css": "ol>li{display: inline-flex;}"
     },
     {
+        "name": "Google Trends",
+        "url": "^https?://trends\\.google\\.com/trends/trendingsearches/",
+        "example": "https://trends.google.com/trends/trendingsearches/realtime?geo=JP&hl=en-GB&category=all",
+        "loadMore": ".feed-load-more-button"
+    },
+    {
         "name": "Apphot",
         "url": "^https?://apphot\\.cc/",
         "pageElement": "section.container > div.content-wrap > div.content > article"
@@ -9818,3 +9824,4 @@
         "enable": 0
     }
 ]
+    
