@@ -2493,10 +2493,6 @@
                     }
                     let parent = nextLink;
                     while (parent && !/^BODY$/i.test(parent.nodeName)) {
-                        if (/^ASIDE$/i.test(parent.nodeName)) {
-                            this.nextLinkHref = false;
-                            return null;
-                        }
                         if (parent.hasAttribute && parent.hasAttribute("disabled")) {
                             this.nextLinkHref = false;
                             return null;
