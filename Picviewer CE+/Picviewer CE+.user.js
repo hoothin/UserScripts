@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.8.10.1
+// @version              2023.8.11.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16232,12 +16232,18 @@ ImgOps | https://imgops.com/#b#`;
                                 loadImg(img);
                             });
                         }
-                        if(prefs.gallery.loadAll && !single)self.pageAction(next);
-                        else loadOver();
+                        if(prefs.gallery.loadAll && !single){
+                            setTimeout(()=>{
+                                self.pageAction(next);
+                            },1);
+                        }else loadOver();
                     },
                     onerror: function(e) {
-                        if(prefs.gallery.loadAll && !single)self.pageAction(next);
-                        else loadOver();
+                        if(prefs.gallery.loadAll && !single){
+                            setTimeout(()=>{
+                                self.pageAction(next);
+                            },1);
+                        }else loadOver();
                     }
                 });
             },
@@ -21515,6 +21521,7 @@ ImgOps | https://imgops.com/#b#`;
             URL=location.href.slice(0, 250);
 
         function pretreatment(img) {
+            if (img.removeAttribute) img.removeAttribute("loading");
             if (img.nodeName.toUpperCase() != "IMG" || (img.src && !/^data/.test(img.src))) return;
             let src;
             tprules.find(function(rule, index, array) {
