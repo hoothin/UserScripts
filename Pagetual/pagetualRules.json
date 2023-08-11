@@ -55,7 +55,7 @@
         "pageBarText": "let t=doc.querySelector('.subj_info>h1');if(t)return t.innerText",
         "rate": 3
     },
-    {
+    {        
         "name": "webtoons - 目錄",
         "example": "https://www.webtoons.com/zh-hant/time-slip/estatedeveloper/list?title_no=4354",
         "url": "^https?://www\\.webtoons\\.com/.+/list\\?",
