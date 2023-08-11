@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.44
+// @version      1.9.36.45
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4652,9 +4652,6 @@
                  input[type=number] {
                   -moz-appearance:textfield;
                  }
-                 react-app>div>div>div>div>div>div>div[tabindex="0"]:not([data-selector]) {
-                  display: none;
-                 }
                  table td>h3 {
                   margin: 16px!important;
                  }
@@ -4698,7 +4695,7 @@
                     rulesExample.innerText = i18n("rulesExample");
                     if (lang == "zh-CN") {
                         rulesExample.href = rulesExample.href.replace("en", "cn");
-                    } else if (lang == "zh-TW") {
+                    } else if (lang == "zh-TW" || lang == "zh-HK") {
                         rulesExample.href = rulesExample.href.replace("/en", "");
                     }
                 }
@@ -6177,6 +6174,7 @@
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {});
                 urlChanged = false;
+                loadingMore = false;
             }
             if (isPause) return;
             if (!loadingMore) {
