@@ -90,3 +90,7 @@ Selector or xpath of the element which must not include
 [action](https://pagetual.hoothin.com/en/rules/action.html)
 --
 0 means load url and insert with static html, 1 means load by iframe so that dynamic javaScript code on page may effect, 2 means force insert iframe to bottom
+
+[loadMore](https://pagetual.hoothin.com/en/rules/loadMore.html)
+--
+Selector of "load more" button you want to auto click
