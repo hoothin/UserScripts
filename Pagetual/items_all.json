@@ -18754,7 +18754,7 @@
 {
   "resource_url": "http://wedata.net/items/77727",
   "data": {
-    "pageElement": "id('content')/div[contains(@class,'post')]",
+    "pageElement": "id('content')/div[contains(@class,'post') or @class='entry-utility-article']",
     "nextLink": "//a[@rel=\"prev\"]",
     "url": "^https://www\\.asagei\\.com/",
     "exampleUrl": "https://www.asagei.com/32605"
@@ -18763,7 +18763,7 @@
   "created_by": "t_f_m",
   "name": "アサ芸plus",
   "created_at": "2015-12-20T18:13:51+09:00",
-  "updated_at": "2022-02-02T22:18:39+09:00"
+  "updated_at": "2023-08-14T19:29:59+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77724",
@@ -36532,18 +36532,18 @@
   "created_by": "haragu"
 },
 {
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "name": "朝日新聞デジタル",
-  "created_by": "mi",
-  "updated_at": "2017-04-07T13:22:14+09:00",
   "resource_url": "http://wedata.net/items/53640",
   "data": {
-    "exampleUrl": "http://sitesearch.asahi.com/.cgi/sitesearch/sitesearch.pl?access=p&sort=RELEASE_DATE:desc:score:desc&output=xml_no_dtd&site=Asahi&filter=1&ie=UTF-8&oe=UTF-8&client=asahicom&Keywords=%EF%BC%92&num=12&link=0&ip=&detail=&or=&relation=&updown=&lr=lang_ja|lang_en&tvsubmit=%E6%A4%9C%E7%B4%A2&title=&start=12&start1=10&start2=2&idx=6&j_idx=4&s_idx=9",
-    "url": "^https?://sitesearch\\.asahi\\.com/",
     "pageElement": "id('SiteSearchResult')/li",
-    "nextLink": "//a[@class='Next']"
+    "nextLink": "//a[contains(text(), '次へ')]",
+    "url": "^https?://sitesearch\\.asahi\\.com/",
+    "exampleUrl": "http://sitesearch.asahi.com/.cgi/sitesearch/sitesearch.pl?access=p&sort=RELEASE_DATE:desc:score:desc&output=xml_no_dtd&site=Asahi&filter=1&ie=UTF-8&oe=UTF-8&client=asahicom&Keywords=%EF%BC%92&num=12&link=0&ip=&detail=&or=&relation=&updown=&lr=lang_ja|lang_en&tvsubmit=%E6%A4%9C%E7%B4%A2&title=&start=12&start1=10&start2=2&idx=6&j_idx=4&s_idx=9"
   },
-  "created_at": "2011-05-18T16:48:29+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "mi",
+  "name": "朝日新聞デジタル",
+  "created_at": "2011-05-18T16:48:29+09:00",
+  "updated_at": "2023-08-14T17:23:23+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/53606",
