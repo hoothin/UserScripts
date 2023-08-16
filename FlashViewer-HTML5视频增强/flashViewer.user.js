@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.8
 // @created        2013-12-27
-// @lastUpdated    2023-3-9
+// @lastUpdated    2023-8-16
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -13,6 +13,9 @@
 // @updateURL      https://userscripts.org/scripts/source/187351.meta.js
 // @include        *
 // @match          *://*/*
+// @exclude        http://www.toodledo.com/tasks/*
+// @exclude        *://maps.google.*/*
+// @exclude        *://www.google.*/
 // ==/UserScript==
 
 /*
@@ -34,6 +37,15 @@
 ;(function () {
     'use strict';
 
+    if (window.top != window.self) {
+        try {
+            if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
+                return;
+            }
+        } catch(e) {
+            return;
+        }
+    }
 
     function contentScript(messageID) {
         'use strict';
@@ -3618,7 +3630,7 @@
                             display: none;
                             padding: 5px;
                             border-radius: 3px;
-                            z-index: 999999999;
+                            z-index: 2147483647;
                             line-height: 0;
                             font-size: 0;
                             opacity: 0;
@@ -3628,6 +3640,9 @@
                         }
                         #fv-f-b-container:hover {
                             opacity: 1 !important;
+                        }
+                        #fv-f-b-container:hover+#pv-float-bar-container {
+                            display: none!important;
                         }
 
                         .fv-f-b-button {
