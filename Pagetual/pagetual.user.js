@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.45
+// @version      1.9.36.46
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1618,7 +1618,14 @@
                     if (/^PICTURE$/i.test(ele.nodeName) || !ele.innerText || ele.innerText.trim() == '') {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
-                        return [ele];
+                        let eles = [];
+                        for (let i = 0; i < ele.parentNode.children.length; i++) {
+                            let curNode = ele.parentNode.children[i];
+                            if (curNode.nodeName == ele.nodeName && curNode.id == ele.id && curNode.className == ele.className) {
+                                eles.push(curNode);
+                            }
+                        }
+                        return eles;
                     }
                     if (curHeight / bodyHeight <= 0.22) {
                         let article = doc.querySelectorAll(mainSel);
@@ -2384,7 +2391,7 @@
                     let btnValue, btnName;
                     btnName = submitBtn.getAttribute("name");
                     btnValue = submitBtn.getAttribute("value");
-                    if (btnName && btnValue) params = [btnName + "=" + btnValue];
+                    if (btnName && btnValue) params = [btnName + "=" + encodeURIComponent(btnValue)];
                 }
                 for (let [key, value] of formData) {
                     if (n && /^(p|page)$/i.test(key)) {
@@ -2482,13 +2489,15 @@
                 nextLink = page.next;
                 if (nextLink) {
                     if (/^INPUT$/i.test(nextLink.nodeName) || nextLink.type == "submit") {
-                        let form = nextLink.parentNode;
-                        while (form) {
-                            if (/^FORM$/i.test(form.nodeName)) break;
-                            else form = form.parentNode;
-                        }
-                        if (form) {
-                            nextLink.href = getNextLinkByForm(form, nextLink);
+                        if (!/next/i.test(nextLink.getAttribute("onclick"))) {
+                            let form = nextLink.parentNode;
+                            while (form) {
+                                if (/^FORM$/i.test(form.nodeName)) break;
+                                else form = form.parentNode;
+                            }
+                            if (form) {
+                                nextLink.href = getNextLinkByForm(form, nextLink);
+                            }
                         }
                     }
                     let parent = nextLink;
