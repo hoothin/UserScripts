@@ -5499,7 +5499,6 @@
     "nextLink": "//div[@class='page-links']/a[span/i[@class='be be-arrowright']]",
     "pageElement": ".single-content",
     "replaceElement": ".page-links",
-    "pageInit": "let _img='';doc.querySelectorAll('img[data-lazy-src]').forEach(e=>{_img+=`<img src='${e.getAttribute('data-lazy-src')}'>`});doc.querySelector('.single-content').innerHTML=_img;",
     "pageBar": 0,
     "initRun": 1,
     "autoLoadNum": "0",
