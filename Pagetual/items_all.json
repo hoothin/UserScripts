@@ -45161,31 +45161,31 @@
 {
   "resource_url": "http://wedata.net/items/29499",
   "data": {
-    "pageElement": "//nav[@class=\"NA_pager_wrapper\"]/preceding-sibling::*[1][contains(@class,\"NA_imglist\") or contains(@class,\"NA_card_wrapper\")]",
+    "pageElement": "//nav[@class='NA_pager_wrapper']/following-sibling::*[./following-sibling::nav]",
     "nextLink": "//li[contains(concat(' ', normalize-space(@class), ' '), ' NA_pager_next ')]/a",
-    "url": "^https://natalie\\.mu/(?:[^/]+/)*?(?:artist|(?:site)?news|pp|work|gallery/hot|tag)",
-    "exampleUrl": "http://natalie.mu/sitenews\r\nhttp://natalie.mu/comic/gallery/hot"
+    "url": "^https?://natalie\\.mu/(?:(?:(?:com|mus)ic|eiga|o(?:yatsu|warai)|stage)/)?(?:column|news|gallery/[^/]+/\\d+(?:/media)?)/",
+    "exampleUrl": "https://natalie.mu/sitenews https://natalie.mu/comic/column/394626"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "inucara",
   "name": "ナタリー - ニュース、アーティスト、作品一覧",
   "created_at": "2009-08-12T21:58:46+09:00",
-  "updated_at": "2020-12-07T21:17:08+09:00"
+  "updated_at": "2023-08-16T09:04:10+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/29498",
   "data": {
-    "pageElement": "//div[@class=\"NA_article_body\"]",
+    "pageElement": "//nav[@class='NA_pager_wrapper']/preceding-sibling::*[not(self::nav)][not(./preceding-sibling::nav)]",
     "comment": "url of 29498 must longer than http://wedata.net/items/29499",
     "nextLink": "//ul[@class=\"NA_pager\"]/li[contains(concat(\" \",@class,\" \"),\" NA_pager_next \")]/a|//div[contains(concat(\" \",@class,\" \"),\" NA_article_img \")]/a|//div[contains(concat(\" \",@class,\" \"),\" NA_article_gallery \")]/ul[@class=\"NA_imglist\"]/li/a",
     "url": "^https?://natalie\\.mu/(?:(?:(?:com|mus)ic|eiga|o(?:yatsu|warai)|stage)/)?(?:column|news|gallery/[^/]+/\\d+(?:/media)?)/\\d",
-    "exampleUrl": "https://natalie.mu/music/gallery/news/19812/28317\r\nhttps://natalie.mu/comic/gallery/news/18577/26375\r\nhttps://natalie.mu/comic/news/18577\r\nhttps://natalie.mu/music/news/120722\r\nhttps://natalie.mu/eiga/news/156194\r\nhttps://natalie.mu/stage/news/212854\r\nhttps://natalie.mu/eiga/news/288207\r\nhttps://natalie.mu/comic/news/239966\r\nhttps://natalie.mu/comic/column/394626\r\nhttps://natalie.mu/comic/gallery/column/394626/1437095\r\nhttps://natalie.mu/comic/gallery/news/407671/media/39848"
+    "exampleUrl": "https://natalie.mu/music/gallery/news/19812/28317\r\nhttps://natalie.mu/comic/gallery/news/18577/26375\r\nhttps://natalie.mu/comic/gallery/column/394626/1437095\r\nhttps://natalie.mu/comic/gallery/news/407671/media/39848"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "inucara",
   "name": "ナタリー - 画像 ニュース 統合",
   "created_at": "2009-08-12T21:40:29+09:00",
-  "updated_at": "2020-12-08T01:48:03+09:00"
+  "updated_at": "2023-08-16T09:01:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/29492",
