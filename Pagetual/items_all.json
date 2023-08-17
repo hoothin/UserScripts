@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86148",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='thumbnail-slide']/preceding-sibling::*",
+    "nextLink": "//a[@class='next']",
+    "url": "^https://toyokeizai\\.net/articles/photo/",
+    "exampleUrl": "https://toyokeizai.net/articles/photo/694833"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "東洋経済オンライン 画像",
+  "created_at": "2023-08-17T07:47:13+09:00",
+  "updated_at": "2023-08-17T07:47:13+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86146",
   "data": {
     "insertBefore": "",
@@ -45163,14 +45178,14 @@
   "data": {
     "pageElement": "//nav[@class='NA_pager_wrapper']/following-sibling::*[./following-sibling::nav]",
     "nextLink": "//li[contains(concat(' ', normalize-space(@class), ' '), ' NA_pager_next ')]/a",
-    "url": "^https?://natalie\\.mu/(?:(?:(?:com|mus)ic|eiga|o(?:yatsu|warai)|stage)/)?(?:column|news|gallery/[^/]+/\\d+(?:/media)?)/",
+    "url": "^https?://natalie\\.mu/",
     "exampleUrl": "https://natalie.mu/sitenews https://natalie.mu/comic/column/394626"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "inucara",
   "name": "ナタリー - ニュース、アーティスト、作品一覧",
   "created_at": "2009-08-12T21:58:46+09:00",
-  "updated_at": "2023-08-16T09:04:10+09:00"
+  "updated_at": "2023-08-16T09:37:15+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/29498",
