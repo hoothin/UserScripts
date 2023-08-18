@@ -2003,7 +2003,8 @@
 {
   "resource_url": "http://wedata.net/items/85949",
   "data": {
-    "pageElement": "//div[@class='contentsArea']",
+    "pageElement": "//div[@class='contentsArea']|//style",
+    "comment": "This does not work.",
     "nextLink": "//li[@class='active']/following-sibling::li/a",
     "url": "^https://magazine\\.cainz\\.com/article/",
     "exampleUrl": "https://magazine.cainz.com/article/82938"
@@ -2012,7 +2013,7 @@
   "created_by": "t_f_m'",
   "name": "となりのカインズさん 記事",
   "created_at": "2022-08-31T17:27:44+09:00",
-  "updated_at": "2022-08-31T17:34:04+09:00"
+  "updated_at": "2023-08-18T06:43:15+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85948",
@@ -5899,17 +5900,16 @@
 {
   "resource_url": "http://wedata.net/items/85461",
   "data": {
-    "insertBefore": "",
     "pageElement": "//div[contains(@class, \"entry_main\")]/*",
     "nextLink": "//span[contains(concat(\" \",@class,\" \"), \" current \")]/following-sibling::a",
-    "url": "^https://travel\\.spot-app\\.jp/(?!page).+/\\d",
+    "url": "^https://travel\\.spot-app\\.jp/",
     "exampleUrl": "https://travel.spot-app.jp/seisyun18kippu_ekimemo/2/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa",
   "name": "SPOT 個別記事",
   "created_at": "2020-08-29T21:48:33+09:00",
-  "updated_at": "2020-08-29T21:48:33+09:00"
+  "updated_at": "2023-08-17T14:43:08+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85458",
