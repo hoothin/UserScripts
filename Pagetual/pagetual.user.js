@@ -62,11 +62,11 @@
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) {
         var domloaded = function() {
             window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
+            [].forEach.call(document.querySelectorAll("video"), video => {
+                video.muted = true;
+                video.pause && video.pause();
+            });
         };
-        [].forEach.call(document.querySelectorAll("video"), video => {
-            video.muted = true;
-            video.pause && video.pause();
-        });
         if (window.opera) {
             document.addEventListener('DOMContentLoaded', domloaded, false);
         } else {
