@@ -82,6 +82,9 @@
             if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
                 return;
             }
+            [].forEach.call(document.querySelectorAll("video"), video => {
+                video.pause && video.pause();
+            });
         } catch(e) {
             return;
         }
