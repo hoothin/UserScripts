@@ -2970,7 +2970,7 @@
                     [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
                         setLazyImg(img);
                     });
-                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb]"), div => {
+                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb],div.img[data-src]"), div => {
                         div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
                     });
                 }
