@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.47
+// @version      1.9.36.48
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1884,6 +1884,33 @@
             return pageElement;
         }
 
+        showAddedElements() {
+            if (!this.addedElementsIsHide) return;
+            if (this.addedElePool && this.addedElePool.length) {
+                this.addedElePool.forEach(ele => {
+                    ele.classList && ele.classList.remove("pagetual-hide");
+                });
+            }
+            this.addedElementsIsHide = false;
+        }
+
+        hideAddedElements() {
+            if (this.addedElePool && this.addedElePool.length) {
+                this.addedElePool.forEach(ele => {
+                    ele.classList && ele.classList.add("pagetual-hide");
+                });
+            }
+            this.addedElementsIsHide = true;
+        }
+
+        toggleAddedElements() {
+            if (this.addedElementsIsHide) {
+                this.showAddedElements();
+            } else {
+                this.hideAddedElements();
+            }
+        }
+
         changeVisibility() {
             let contentVisibility = this.curSiteRule.contentVisibility || rulesData.contentVisibility;
             if (!contentVisibility) return;
@@ -3114,7 +3141,14 @@
                 this.getInsert();
             }
             if (this.insert) {
-                this.addedElePool.push(ele);
+                let self = this;
+                if (ele.nodeName == "#document-fragment") {
+                    [].forEach.call(ele.children, el => {
+                        self.addedElePool.push(el);
+                    });
+                } else {
+                    this.addedElePool.push(ele);
+                }
                 if (this.curSiteRule.insertPos == 2) {
                     this.insert.appendChild(ele);
                 } else {
@@ -3351,7 +3385,7 @@
             frame.addEventListener("dblclick", e => {
                 e.preventDefault();
                 e.stopPropagation();
-            }, true);
+            });
 
             frame.addEventListener("mouseenter", e => {
                 clearTimeout(self.hideTimer);
@@ -3413,6 +3447,17 @@
             move.addEventListener("click", e => {
                 if (!moving) {
                     changeStop(!isPause);
+                }
+            }, true);
+            move.addEventListener("dblclick", e => {
+                clearTimeout(removeTimer);
+                document.removeEventListener("mousemove", mouseMoveHandler, true);
+                document.removeEventListener("mouseup", mouseUpHandler, true);
+                changeStop(!isPause);
+                if (isPause) {
+                    ruleParser.hideAddedElements();
+                } else {
+                    ruleParser.showAddedElements();
                 }
             }, true);
 
@@ -5831,6 +5876,9 @@
          .pagetual_pageBar.hide {
            display: none!important;
          }
+         .pagetual-hide {
+           display: none!important;
+         }
          .pagetual_pageBar:hover {
            opacity: 1!important;
            box-shadow: 0px 0px 10px 0px #000000aa;
@@ -6020,6 +6068,7 @@
                 bar.classList.remove("stop");
             }
         });
+        if (!isPause) ruleParser.showAddedElements();
     }
 
     function changeHideBar(hide) {
