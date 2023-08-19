@@ -6318,9 +6318,15 @@
                     return;
                 }
             }
-            if (!/^BODY$/i.test(e.target.nodeName) && e.target.className !== 'pagetual_pageBar') {
-                let selStr = document.getSelection().toString();
-                if (selStr && selStr.trim()) {
+            if (!/^BODY$/i.test(e.target.nodeName) && !e.target.classList.contains('pagetual_pageBar')) {
+                let selection = window.getSelection();
+                let selStr = selection.toString().trim();
+                if (!selStr) {
+                    selection = selection.getRangeAt(0);
+                    selStr = selection && selection.cloneContents().children[0];
+                    if (selStr && !/^IMG$/i.test(selStr.nodeName)) selStr = false;
+                }
+                if (selStr) {
                     return;
                 }
             }
