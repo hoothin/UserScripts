@@ -2378,7 +2378,7 @@
         }
 
         getLinkByPage(url, pageNum) {
-            if (!url) return;
+            if (!url) return null;
             if (this.curSiteRule.pageNum) {
                 let result = this.curSiteRule.pageNum;
                 let strMatch = result.match(/\{.*?}/);
@@ -2404,12 +2404,12 @@
             return url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1" + pageNum).replace(/([_-])\d+\./i, "$1" + pageNum + ".");
         }
 
-        getPageNumFromUrl(url) {
-            if (!url) return curPage;
+        getPageNumFromUrl(url, defaultPage) {
+            if (!url) return defaultPage;
             if (this.curSiteRule.pageNum) {
                 let result = this.curSiteRule.pageNum;
                 let strMatch = result.match(/\{.*?}/);
-                if (!strMatch) return null;
+                if (!strMatch) return defaultPage;
                 let urlReg = new RegExp(".*" + result.replace(strMatch[0], "(\\d+)") + ".*", "i");
                 let curShowNum = url.replace(urlReg, "$1");
                 if (curShowNum != url) {
@@ -2418,25 +2418,25 @@
                         return curShowNum;
                     } else {
                         try {
-                            let page1 = Function('"use strict";return ' + code.replace("$p", "0"))();
-                            let page2 = Function('"use strict";return ' + code.replace("$p", "1"))();
+                            let page1 = parseInt(Function('"use strict";return ' + code.replace("$p", "0"))());
+                            let page2 = parseInt(Function('"use strict";return ' + code.replace("$p", "1"))());
                             let numGap = page2 - page1;
-                            let _page = (curShowNum - page1) / numGap;
+                            let _page = (parseInt(curShowNum) - page1) / numGap;
                             if (_page && _page % 1 == 0) return _page;
                             else {
                                 this.curSiteRule.pageNum = null;
-                                return curPage;
+                                return defaultPage;
                             }
                         } catch(e) {
                             debug(e);
                         }
                     }
                 } else {
-                    return curPage;
+                    return defaultPage;
                 }
             }
             let pageNum = url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
-            return pageNum == url ? curPage : (pageNum.length > 4 ? curPage : pageNum);
+            return pageNum == url ? defaultPage : (pageNum.length > 4 ? defaultPage : pageNum);
         }
 
         async getNextLink(doc) {
@@ -3107,6 +3107,13 @@
                     }
                 }
                 await self.getNextLink(document);
+                if (self.curSiteRule.pageNum && self.nextLinkHref && self.nextLinkHref != "#") {
+                    let num1st = self.getPageNumFromUrl(location.href, 1);
+                    let num2nd = self.getPageNumFromUrl(self.nextLinkHref, 1);
+                    if (num2nd != num1st + 1) {
+                        self.curSiteRule.pageNum = null;
+                    }
+                }
                 if (self.curSiteRule.singleUrl && self.nextLinkHref == false && self.possibleRule) {
                     setTimeout(() => {
                         self.initPage(() => {});
@@ -6614,7 +6621,7 @@
         if (ruleParser.curSiteRule.pageNum || pageNumReg.test(url)) {
             pageText.innerHTML += i18n("page");
             pageNum = document.createElement("span");
-            let num = ruleParser.getPageNumFromUrl(url);
+            let num = ruleParser.getPageNumFromUrl(url, curPage);
             pageNum.innerHTML = num;
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
