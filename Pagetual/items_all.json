@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86149",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//li[./article]",
+    "nextLink": "//ul[starts-with(@class,'styles_numbersList')]/li[div]/following-sibling::li/a[contains(@href, 'page=')]",
+    "url": "^https://friday\\.kodansha\\.co\\.jp/category/",
+    "exampleUrl": "https://friday.kodansha.co.jp/category/entertainment"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "FRIDAY デジタル カテゴリ",
+  "created_at": "2023-08-21T20:04:55+09:00",
+  "updated_at": "2023-08-21T20:04:55+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86148",
   "data": {
     "insertBefore": "",
@@ -2221,16 +2236,18 @@
 {
   "resource_url": "http://wedata.net/items/85928",
   "data": {
-    "pageElement": "//div[starts-with(@class,'styles_articleContent')]/div[not(//div[@data-friday-nextpage-lead])]/*|descendant::div[@data-friday-nextpage-lead][substring-before(substring-after(//script[contains(.,'{\"page\":\"')]/text(), '{\"page\":\"'), '\"')-1]/following-sibling::*",
+    "pageElement": "//div[starts-with(@class,'styles_articleContent')][not(//div[@data-friday-nextpage-lead])]/div/*|descendant::div[@data-friday-nextpage-lead][1]/following-sibling::*",
+    "considerationUrl": "https://friday.kodansha.co.jp/article/327248?page=2",
+    "comment": "AutoPagerize でリクエスト先の script 要素が参照できないためページ番号が取得できず、page=2 を開いた際に内容が重複します（対応保留）",
     "nextLink": "//ul[starts-with(@class,'styles_numbersList')]/li[div]/following-sibling::li/a[contains(@href, 'page=')]",
     "url": "^https://friday\\.kodansha\\.co\\.jp/article/",
-    "exampleUrl": "https://friday.kodansha.co.jp/article/245048\r\nhttps://friday.kodansha.co.jp/article/307496\r\nhttps://friday.kodansha.co.jp/article/327248\r\nhttps://friday.kodansha.co.jp/article/327248?page=2"
+    "exampleUrl": "https://friday.kodansha.co.jp/article/245048\r\nhttps://friday.kodansha.co.jp/article/307496\r\nhttps://friday.kodansha.co.jp/article/327248"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m'",
   "name": "FRIDAY デジタル",
   "created_at": "2022-06-02T17:22:53+09:00",
-  "updated_at": "2023-08-20T19:34:11+09:00"
+  "updated_at": "2023-08-21T18:56:56+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85925",
