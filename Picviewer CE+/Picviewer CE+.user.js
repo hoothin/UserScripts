@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.8.19.1
+// @version              2023.8.23.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1211491
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1232199
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1239416
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -53,7 +53,7 @@
 // @exclude              *://*.mega.*/*
 // @exclude              *://onedrive.live.com/*
 // @created              2011-6-15
-// @contributionURL      https://www.buymeacoffee.com/hoothin
+// @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
 // ==/UserScript==
 
@@ -11959,6 +11959,7 @@ ImgOps | https://imgops.com/#b#`;
                     shown:false,//显示
                     color:'rgba(200,200,200,0.3)',//颜色和不透明度设置.
                 },
+                switchStoreLoc:false,
                 backgroundColor:'rgba(40,40,40,0.8)',
                 shiftRotateStep:15,// 旋转的时候，按住shift键时,旋转的步进.单位:度.
                 zoom:{//滚轮缩放
@@ -18199,12 +18200,13 @@ ImgOps | https://imgops.com/#b#`;
         };
 
         //图片窗口
-        function ImgWindowC(img, data, actual){
-            this.loaded=false;
-            this.img=img;
-            this.actual=!!actual;
-            this.src=data?data.src:img.src;
+        function ImgWindowC(img, data, actual, initPos){
+            this.loaded = false;
+            this.img = img;
+            this.actual = !!actual;
+            this.src = data?data.src:img.src;
             this.data = data;
+            this.initPos = initPos || false;
 
             this.init();
             if(data){
@@ -18414,7 +18416,10 @@ ImgOps | https://imgops.com/#b#`;
                         if (prefs.imgWindow.fitToScreen) {
                             self.fitToScreen();
                         }
-                        self.center(true, true);
+                        if (self.initPos) {
+                            self.imgWindow.style.left = self.initPos.left;
+                            self.imgWindow.style.top = self.initPos.top;
+                        } else self.center(true, true);
                     }
                     self.imgWindow.style.opacity = 1;
                     self.keepScreenInside();
@@ -18738,8 +18743,9 @@ ImgOps | https://imgops.com/#b#`;
                                     imgData = allData[i];
                                 }
                                 if (imgData && imgData.img) {
+                                    let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
                                     this.remove();
-                                    new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true);
+                                    new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
                                 }
                             }
                         } else {
@@ -18752,8 +18758,9 @@ ImgOps | https://imgops.com/#b#`;
                                     imgData = allData[i];
                                 }
                                 if (imgData) {
+                                    let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
                                     this.remove();
-                                    new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true);
+                                    new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
                                 }
                             }
                         }
@@ -19296,6 +19303,10 @@ ImgOps | https://imgops.com/#b#`;
                     this.center(true,true);
                 }else{
                     this.center(rectSize.w <= wSize.w , rectSize.h <= wSize.h);
+                }
+                if (this.initPos) {
+                    this.imgWindow.style.left = this.initPos.left;
+                    this.imgWindow.style.top = this.initPos.top;
                 }
 
                 this.keepScreenInside();
@@ -20573,7 +20584,7 @@ ImgOps | https://imgops.com/#b#`;
         };
 
         // 载入动画
-        function LoadingAnimC(data, buttonType, waitImgLoad, openInTopWindow) {
+        function LoadingAnimC(data, buttonType, waitImgLoad, openInTopWindow, initPos) {
             this.args = arrayFn.slice.call(arguments, 0);
             if (data.src != data.imgSrc && !data.srcs) {
                 data.srcs = [data.imgSrc];
@@ -20582,6 +20593,7 @@ ImgOps | https://imgops.com/#b#`;
             this.buttonType = buttonType;//点击的按钮类型
             this.openInTopWindow = openInTopWindow;//是否在顶层窗口打开，如果在frame里面的话
             this.waitImgLoad = waitImgLoad;//是否等待完全读取后打开
+            this.initPos = initPos || false;
             this.init();
         }
 
@@ -20929,7 +20941,7 @@ ImgOps | https://imgops.com/#b#`;
                     case 'current':
                     case 'original'://original 是为了兼容以前的规则
                         if(this.data.src!=this.img.src)this.data.src=this.img.src;
-                        new ImgWindowC(this.img, this.data, this.buttonType == 'actual');
+                        new ImgWindowC(this.img, this.data, this.buttonType == 'actual', this.initPos || false);
                         break;
                 };
             },
@@ -23246,6 +23258,11 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("suitLongImg"),
                     type: 'checkbox',
                     "default": prefs.imgWindow.suitLongImg
+                },
+                'imgWindow.switchStoreLoc': {
+                    label: i18n("switchStoreLoc"),
+                    type: 'checkbox',
+                    "default": prefs.imgWindow.switchStoreLoc
                 },
                 'imgWindow.defaultTool': {
                     label: i18n("imgWindowDefaultTool"),
