@@ -69,11 +69,11 @@ RegExp for the url of target site
 
 [nextLink](https://pagetual.hoothin.com/en/rules/nextLink.html)
 --
-Selector or xpath of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
+Selector or xpath of next page link, disable when set to 0, you can let it to be a array to contains multiple next links. You may leave it empty because it will generate automatically.
 
 [pageElement](https://pagetual.hoothin.com/en/rules/pageElement.html)
 --
-Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
+Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements. You may leave it empty because it will generate automatically.
 
 [enable](https://pagetual.hoothin.com/en/rules/enable.html)
 --
