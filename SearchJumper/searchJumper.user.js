@@ -4607,6 +4607,11 @@
                     }
                 });
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
+                    let siteImg = btn.querySelector('img');
+                    if (siteImg && siteImg.dataset.src) {
+                        siteImg.src = siteImg.dataset.src;
+                        delete siteImg.dataset.src;
+                    }
                     self.historylist.appendChild(btn);
                 });
                 let targetKw = "";
@@ -5981,11 +5986,6 @@
                             let site = siteConfig.sites[i];
                             if (site.name == n) {
                                 let siteBtn = await self.createSiteBtn((searchData.prefConfig.noIcons ? "0" : site.icon), site, true, isBookmark, siteConfig);
-                                let siteImg = siteBtn.querySelector('img');
-                                if (siteImg && siteImg.dataset.src) {
-                                    siteImg.src = siteImg.dataset.src;
-                                    delete siteImg.dataset.src;
-                                }
                                 siteBtn.classList.add("historySite");
                                 self.historySiteBtns.push(siteBtn);
                                 found = true;
@@ -6008,6 +6008,11 @@
                 let toFirst = !init && searchData.prefConfig.historyInsertFirst;
                 for (let i = 0; i < this.historySiteBtns.length; i++) {
                     let btn = this.historySiteBtns[i];
+                    let siteImg = btn.querySelector('img');
+                    if (siteImg && siteImg.dataset.src) {
+                        siteImg.src = siteImg.dataset.src;
+                        delete siteImg.dataset.src;
+                    }
                     if (btn.parentNode != typeEle) {
                         let sites = typeEle.querySelectorAll("a.search-jumper-btn");
                         let findSame = false;
@@ -11006,6 +11011,11 @@
                 span.parentNode.parentNode.style.opacity = 0.6;
                 let targetSite = getHistorySiteBtn();
                 if (!targetSite) return;
+                let siteImg = targetSite.querySelector('img');
+                if (siteImg && siteImg.dataset.src) {
+                    siteImg.src = siteImg.dataset.src;
+                    delete siteImg.dataset.src;
+                }
                 span.parentNode.parentNode.style.opacity = 1;
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
