@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.97
+// @version      1.6.29.98
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化自定义页内操作等
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化自定義頁內操作等
@@ -3919,7 +3919,7 @@
 
                 this.marks[word.showWords].forEach(mark => {
                     if (mark.parentNode) {
-                        if (/^A$/i.test(mark.nodeName)) {
+                        if (!/^MARK$/i.test(mark.nodeName)) {
                             mark.classList.remove("searchJumper");
                             mark.style.cssText = "";
                         } else {
@@ -4206,6 +4206,75 @@
                                     self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
                                     self.focusText = word.showWords;
                                 });
+                                self.marks[word.showWords].push(node);
+
+                                let navMark = document.createElement("span");
+                                let top = getElementTop(node);
+                                navMark.dataset.top = top;
+                                navMark.dataset.content = word.showWords;
+                                navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                                navMark.style.background = node.style.background || "yellow";
+                                navMark.addEventListener("click", e => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    self.focusIndex = index;
+                                    self.focusHighlight(node);
+                                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                                    self.navPointer.style.display = "";
+                                    self.navPointer.style.top = navMark.offsetTop + 16 + "px";
+                                    return false;
+                                }, true);
+                                self.navMarks.appendChild(navMark);
+
+                                skip = 1;
+                            }
+                        }
+                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName)) {
+                        let wordMatch = false;
+                        if (word.isRe) {
+                            let wordMatch = node.value.match(new RegExp(word.content, word.reCase));
+                        } else {
+                            if (_unsafeWindow.searchJumperPinyin) {
+                                let pinyin = _unsafeWindow.searchJumperPinyin(node.value, word.content);
+                                if (pinyin.matched) {
+                                    len = pinyin.len;
+                                    pos = pinyin.pos;
+                                } else pos = -1;
+                            } else {
+                                len = word.content.length;
+                                pos = node.value.toUpperCase().indexOf(word.content.toUpperCase());
+                            }
+                            if (pos >= 0 && /^[a-z]+$/i.test(word.content)) {
+                                if (pos !== 0 && /[a-z]/i.test(node.value[pos - 1])) {
+                                    pos = -1;
+                                }
+                                if (pos + word.content.length !== node.value.length && /[a-z]/i.test(node.value[pos + word.content.length])) {
+                                    pos = -1;
+                                }
+                            }
+                            wordMatch = (pos >= 0);
+                        }
+                        if (wordMatch) {
+                            if (typeof word.hideParent !== 'undefined') {
+                                let parentDepth = word.hideParent;
+                                let parent = node.parentElement;
+                                while(parentDepth-- > 0 && parent) {
+                                    parent = parent.parentElement;
+                                }
+                                if (parent) {
+                                    parent.innerHTML = createHTML("");
+                                    parent.dataset.content = word.showWords;
+                                    parent.classList.add("searchJumper-hide");
+                                    return 0;
+                                }
+                            } else {
+                                let curList = self.marks[word.showWords];
+                                let index = curList.length;
+                                node.classList.add("searchJumper");
+                                if (word.title) node.title = JSON.parse('"' + word.title + '"');
+                                if (word.style) node.style.cssText = word.style;
+                                node.dataset.content = word.showWords;
+
                                 self.marks[word.showWords].push(node);
 
                                 let navMark = document.createElement("span");
@@ -9850,7 +9919,7 @@
                                 if (removedNode.classList && removedNode.classList.contains("searchJumper")) {
                                     removeMark(removedNode);
                                 } else if (removedNode.children.length) {
-                                    [].forEach.call(removedNode.querySelectorAll("mark.searchJumper,a.searchJumper"), node => {
+                                    [].forEach.call(removedNode.querySelectorAll("mark.searchJumper,a.searchJumper,input.searchJumper,textarea.searchJumper"), node => {
                                         removeMark(node);
                                     });
                                 }
