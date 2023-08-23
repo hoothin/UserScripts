@@ -245,7 +245,8 @@ const langData = [
         stayOut: "Let float bar stay out of the image",
         galleryDownloadGap: "Download interval",
         galleryDisableArrow: "Disable arrow key",
-        positionFixed: "Fixed position"
+        positionFixed: "Fixed position",
+        switchStoreLoc: "Memory position retention during switching"
     }
 }, 
 {
@@ -493,7 +494,8 @@ const langData = [
         stayOut: "使浮动工具栏显示在图片外部",
         galleryDownloadGap: "下载间隔时间",
         galleryDisableArrow: "禁用方向键",
-        positionFixed: "固定位置"
+        positionFixed: "固定位置",
+        switchStoreLoc: "切换时记忆位置"
     }
 },
 {
@@ -741,7 +743,8 @@ const langData = [
         stayOut: "使浮動工具欄顯示在圖片外部",
         galleryDownloadGap: "下載間隔時間",
         galleryDisableArrow: "禁用方向鍵",
-        positionFixed: "固定位置"
+        positionFixed: "固定位置",
+        switchStoreLoc: "切換時記憶位置"
     }
 },
 {
@@ -990,7 +993,8 @@ const langData = [
         stayOut: "Permitir que a Barra de Ferramentas fique fora da imagem",
         galleryDownloadGap: "Intervalo para baixar",
         galleryDisableArrow: "Desativar as teclas de seta",
-        positionFixed: "Posição fixa"
+        positionFixed: "Posição fixa",
+        switchStoreLoc: "Posição da memória ao alternar"
     }
 },
 {
@@ -1239,7 +1243,8 @@ const langData = [
         stayOut: "Сделать так, чтобы плавающая панель отображалась за пределами изображения",
         galleryDownloadGap: "Интервал скачивания",
         galleryDisableArrow: "Отключить клавиши со стрелками",
-        positionFixed: "Фиксированная позиция"
+        positionFixed: "Фиксированная позиция",
+        switchStoreLoc: "Положение памяти при переключении"
     }
 },
 {
@@ -1488,7 +1493,8 @@ const langData = [
         stayOut: "Kayan araç çubuğunun görüntünün dışında kalmasına izin verin",
         galleryDownloadGap: "İndirme aralığı",
         galleryDisableArrow: "Ok tuşlarını devre dışı bırakın",
-        positionFixed: "sabit konum"
+        positionFixed: "sabit konum",
+        switchStoreLoc: "Anahtarlama sırasında hafıza konumu"
     }
 },
 {
@@ -1737,7 +1743,8 @@ const langData = [
         stayOut: "Дозволити плавучій панелі залишитись поза зображенням",
         galleryDownloadGap: "Інтервал завантаження",
         galleryDisableArrow: "Вимкнути клавіші зі стрілками",
-        positionFixed: "Фіксоване положення"
+        positionFixed: "Фіксоване положення",
+        switchStoreLoc: "Положення пам'яті при перемиканні"
     }
 }
 ];
