@@ -4229,7 +4229,7 @@
                                 skip = 1;
                             }
                         }
-                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName)) {
+                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/^(wd|q)$/.test(node.name)) {
                         let wordMatch = false;
                         if (word.isRe) {
                             let wordMatch = node.value.match(new RegExp(word.content, word.reCase));
