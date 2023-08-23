@@ -8080,7 +8080,8 @@
     "pageElement": "id('rso')/div|id('rso')/style",
     "insert": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
     "nextLink": 0,
-    "loadMore": "div[role='progressbar']+a[role='button']"
+    "loadMore": "div[role='progressbar']+a[role='button']",
+    "exclude": "id('pnnext')"
 },
 {
     "name": "Google Search",
