@@ -2022,7 +2022,7 @@
             sideController.remove();
         }
 
-        async getPage(doc) {
+        async getPage(doc, exist) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
@@ -2215,6 +2215,7 @@
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
                     let isJs = !aTag.href || !aTag.href.replace || /^(javascript|#)/.test(aTag.href.replace("#p{", "").replace(location.href, ""));
+                    if (exist && isJs && !aTag.offsetParent) continue;
                     if (innerText) {
                         innerText = innerText.split(/\n/)[0].replace(/ /g, '');
                         if (isJs && /^(»|>>|>|›|→|❯)$/.test(innerText)) continue;
@@ -2439,7 +2440,7 @@
             return pageNum == url ? defaultPage : (pageNum.length > 4 ? defaultPage : pageNum);
         }
 
-        async getNextLink(doc) {
+        async getNextLink(doc, exist) {
             let nextLink = null, page, href;
             let getNextLinkByForm = (form, submitBtn, n) => {
                 let params = [];
@@ -2542,7 +2543,7 @@
                     }
                 }
             } else {
-                page = await this.getPage(doc);
+                page = await this.getPage(doc, exist);
                 nextLink = page.next;
                 if (nextLink) {
                     if (/^INPUT$/i.test(nextLink.nodeName) || nextLink.type == "submit") {
@@ -3106,7 +3107,7 @@
                         debug(e);
                     }
                 }
-                await self.getNextLink(document);
+                await self.getNextLink(document, true);
                 if (self.curSiteRule.pageNum && self.nextLinkHref && self.nextLinkHref != "#") {
                     let num1st = self.getPageNumFromUrl(location.href, 1);
                     let num2nd = self.getPageNumFromUrl(self.nextLinkHref, 1);
@@ -6272,7 +6273,7 @@
             let isJs = /^(javascript|#)/.test(nextLink.replace("#p{", "").replace(location.href, ""));
             if (isJs) {
                 let nextBtn = ruleParser.nextLinkEle;
-                if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document);
+                if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document, true);
                 if (nextBtn) emuClick(nextBtn);
             } else {
                 window.location.href = nextLink;
@@ -7148,7 +7149,7 @@
                     }, waitTime);
                     return;
                 } else {
-                    if (!nextLink || !nextLink.offsetParent) nextLink = await ruleParser.getNextLink(iframeDoc);
+                    if (!nextLink || !nextLink.offsetParent) nextLink = await ruleParser.getNextLink(iframeDoc, true);
                     if (nextLink) pageEle = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true);
                     if (!pageEle || pageEle.length == 0 || !nextLink) {
                         if (waitTimes-- > 0) {
@@ -7259,7 +7260,7 @@
                 } else {
                     if (checkTimes % 10 === 1) {
                         if (!nextLink || !nextLink.offsetParent) {
-                            nextLink = await ruleParser.getNextLink(iframeDoc);
+                            nextLink = await ruleParser.getNextLink(iframeDoc, true);
                         }
                         if (nextLink) {
                             emuClick(nextLink);
@@ -7557,7 +7558,7 @@
                 inAction = false;
                 if (!ruleParser.nextLinkHref && !isPause) {
                     checkTimes++;
-                    await ruleParser.getNextLink(iframeDoc);
+                    await ruleParser.getNextLink(iframeDoc, true);
                     if (ruleParser.nextLinkHref) {
                         foundNext();
                         if (isLoading) isLoading = false;
@@ -7642,7 +7643,7 @@
         if (!nextLink) {
             isLoading = true;
             if (curPage == 1) {
-                await ruleParser.getNextLink(document);
+                await ruleParser.getNextLink(document, true);
                 nextLink = ruleParser.nextLinkHref;
             }
             if (!nextLink) {
