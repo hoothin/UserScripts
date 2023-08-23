@@ -9198,12 +9198,6 @@
     "action": 0
 },
 {
-    "name": "起点中文网",
-    "url": "^https?://www\\.qidian\\.com/",
-    "nextLink": "//a[contains(@class,'lbf-pagination-current')]/parent::li/following::li/a[not(contains(@class,'lbf-pagination-disabled'))]",
-    "pinUrl": true
-},
-{
     "name": "phpwind read",
     "url": "/read\\.php\\?",
     "pageElement": ".main-box>.bbs-read-subbox"
