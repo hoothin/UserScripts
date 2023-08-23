@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.29.96
+// @version      1.6.29.97
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化自定义页内操作等
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化自定義頁內操作等
@@ -3139,7 +3139,7 @@
                 targetWords.forEach(word => {
                     if (!word) return;
                     let wordSpan = document.createElement("span");
-                    wordSpan.innerHTML = word.showWords;
+                    wordSpan.innerHTML = createHTML(word.showWords);
                     wordSpan.title = word.title ? JSON.parse('"' + word.title + '"') : word.showWords;
                     let background = word.style.match(/background: *(#?\w+)/);
                     if (background) wordSpan.style.background = background[1];
@@ -4114,9 +4114,6 @@
                     return;
                 }
                 ele = ele || getBody(document);
-                if (ele.contentEditable == 'true' || (
-                    ele.parentNode && ele.parentNode.contentEditable == 'true'
-                )) return;
                 let preEles = [];
                 let searchingPre = false;
                 let self = this;
@@ -4342,8 +4339,7 @@
                     } else if ((!root || node === ele) &&
                                node.nodeType == 1 &&
                                node.childNodes &&
-                               !/^(SCRIPT|STYLE|TEXTAREA|MARK)$/i.test(node.nodeName) &&
-                               node.contentEditable != 'true' &&
+                               !/^(SCRIPT|STYLE|MARK)$/i.test(node.nodeName) &&
                                node.ariaHidden != 'true' &&
                                node.role != "search" &&
                                (!node.hasAttribute || node.hasAttribute('jsname') == false)) {
