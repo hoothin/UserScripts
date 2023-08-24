@@ -4122,7 +4122,7 @@
                         if (!markList) return;
                         markList.forEach(mark => {
                             if (!mark.parentNode) return;
-                            if (/^A$/i.test(mark.nodeName)) {
+                            if (!/^MARK$/i.test(mark.nodeName)) {
                                 mark.classList.remove("searchJumper");
                                 mark.style.cssText = "";
                             } else {
@@ -4229,7 +4229,7 @@
                                 skip = 1;
                             }
                         }
-                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/^(wd|q|search_query|query)$/i.test(node.name)) {
+                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/(^wd|^kw|^q$|query)/i.test(node.name)) {
                         let wordMatch = false;
                         if (word.isRe) {
                             let wordMatch = node.value.match(new RegExp(word.content, word.reCase));
