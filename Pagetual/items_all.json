@@ -10865,13 +10865,13 @@
     "pageElement": "//*[./*[last()][self::div] and ./*[last()-1][self::table]]/table[last()]/tbody/tr",
     "nextLink": "id(\"mainContents\")//td[@align=\"center\"]/b/following-sibling::a[1]|//a[@rel=\"next\"]",
     "url": "^https://(?:backnumber\\.)?dailyportalz\\.jp/(?!dpq)",
-    "exampleUrl": "https://backnumber.dailyportalz.jp/cs/link/backnumber/1.htm https://dailyportalz.jp/kiji?ccm_paging_p=1&ccm_order_by=h.publicDate&ccm_order_by_direction=desc https://dailyportalz.jp/writer/kijilist/163"
+    "exampleUrl": "https://backnumber.dailyportalz.jp/cs/link/backnumber/1.htm https://dailyportalz.jp/writer/kijilist/163"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "デイリーポータルＺ バックナンバー ライタープロフィール",
   "created_at": "2019-01-12T10:22:25+09:00",
-  "updated_at": "2022-10-27T10:17:31+09:00"
+  "updated_at": "2023-08-24T07:14:20+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82055",
@@ -45215,9 +45215,9 @@
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "inucara",
-  "name": "ナタリー - ニュース、アーティスト、作品一覧",
+  "name": "ナタリー",
   "created_at": "2009-08-12T21:58:46+09:00",
-  "updated_at": "2023-08-16T09:37:15+09:00"
+  "updated_at": "2023-08-24T07:10:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/29498",
@@ -45225,14 +45225,14 @@
     "pageElement": "//nav[@class='NA_pager_wrapper']/preceding-sibling::*[not(self::nav)][not(./preceding-sibling::nav)]",
     "comment": "url of 29498 must longer than http://wedata.net/items/29499",
     "nextLink": "//ul[@class=\"NA_pager\"]/li[contains(concat(\" \",@class,\" \"),\" NA_pager_next \")]/a|//div[contains(concat(\" \",@class,\" \"),\" NA_article_img \")]/a|//div[contains(concat(\" \",@class,\" \"),\" NA_article_gallery \")]/ul[@class=\"NA_imglist\"]/li/a",
-    "url": "^https?://natalie\\.mu/(?:(?:(?:com|mus)ic|eiga|o(?:yatsu|warai)|stage)/)?(?:column|news|gallery/[^/]+/\\d+(?:/media)?)/\\d",
+    "url": "^https?://natalie\\.mu/(?:(?:(?:com|mus)ic|eiga|o(?:yatsu|warai)|stage)/)?gallery",
     "exampleUrl": "https://natalie.mu/music/gallery/news/19812/28317\r\nhttps://natalie.mu/comic/gallery/news/18577/26375\r\nhttps://natalie.mu/comic/gallery/column/394626/1437095\r\nhttps://natalie.mu/comic/gallery/news/407671/media/39848"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "inucara",
-  "name": "ナタリー - 画像 ニュース 統合",
+  "name": "ナタリー - ギャラリー",
   "created_at": "2009-08-12T21:40:29+09:00",
-  "updated_at": "2023-08-16T09:01:04+09:00"
+  "updated_at": "2023-08-24T07:07:36+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/29492",
@@ -52185,17 +52185,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/728",
-  "name": "デイリーポータルZ",
   "data": {
-    "url": "^https://(?:backnumber\\.)?dailyportalz\\.jp/20",
-    "pageElement": "//td[@width='540' or @width='640' or @width='600'][@align='center']/*",
-    "exampleUrl": "https://backnumber.dailyportalz.jp/2010/04/19/c/",
-    "nextLink": "//a[contains(.,'＞')]"
+    "pageElement": "//div[@class='ccm-pagination-wrapper']/preceding-sibling::div[contains(concat(' ', @class, ' '), ' headline-row ')]",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://dailyportalz\\.jp/kiji",
+    "exampleUrl": "https://dailyportalz.jp/kiji\r\nhttps://dailyportalz.jp/kiji/2023/1"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
+  "name": "特集 :: デイリーポータルZ",
   "created_at": "2008-04-16T12:36:46+09:00",
-  "updated_at": "2020-03-27T07:50:07+09:00"
+  "updated_at": "2023-08-23T20:29:20+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/725",
