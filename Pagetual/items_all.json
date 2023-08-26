@@ -13860,7 +13860,8 @@
 {
   "resource_url": "http://wedata.net/items/81529",
   "data": {
-    "pageElement": "//div[contains(concat(' ',@class),' UserNewsEntry')]/div",
+    "pageElement": "//div[contains(concat(' ',@class),' UserNewsEntry_userNewsEntry')]/div",
+    "considerationUrl": "https://kakuyomu.jp/users/takikotarou/news",
     "nextLink": "//div[contains(concat(' ',@class),' Pager_next')]/a",
     "url": "^https://kakuyomu\\.jp/users/",
     "exampleUrl": "https://kakuyomu.jp/users/Fafs_falira/news/1177354054883907651\r\nhttps://kakuyomu.jp/users/OmoriHanon/news/1177354054884027830\r\nhttps://kakuyomu.jp/users/rocket_syoukai/news/16816927859771687306"
@@ -13869,7 +13870,7 @@
   "created_by": "t_f_m",
   "name": "カクヨム 近況ノート",
   "created_at": "2017-09-04T13:56:15+09:00",
-  "updated_at": "2022-01-28T00:10:52+09:00"
+  "updated_at": "2023-08-25T20:43:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81527",
@@ -17991,16 +17992,16 @@
 {
   "resource_url": "http://wedata.net/items/79966",
   "data": {
-    "pageElement": "//div[@class=\"widget-pager\"]/preceding-sibling::*[self::div or self::section][not(@class=\"ui-tab\")]",
-    "nextLink": "//p[@class='widget-pagerNext']/a",
+    "pageElement": "//div[@class='widget-pager' or contains(@class, 'Pager_pager')]/preceding-sibling::*[.//a[contains(@href, '/works/') or contains(@href, '/user') or contains(@href, '/features/')]]",
+    "nextLink": "//p[@class='widget-pagerNext']/a|//div[contains(@class, 'Pager_next')]/a",
     "url": "^https://kakuyomu\\.jp/",
-    "exampleUrl": "https://kakuyomu.jp/recent_works https://kakuyomu.jp/tags/%E4%BA%BA%E5%A4%96 https://kakuyomu.jp/contests/musashino_bungaku https://kakuyomu.jp/recent_reviews https://kakuyomu.jp/search?genre_name=fantasy&order=last_episode_published_at https://kakuyomu.jp/user_events/closed https://kakuyomu.jp/recent_user_news"
+    "exampleUrl": "https://kakuyomu.jp/recent_works https://kakuyomu.jp/tags/%E4%BA%BA%E5%A4%96 https://kakuyomu.jp/recent_reviews https://kakuyomu.jp/search?genre_name=fantasy&order=last_episode_published_at https://kakuyomu.jp/user_events/closed https://kakuyomu.jp/recent_user_news https://kakuyomu.jp/features https://kakuyomu.jp/contests/kakuyomukoshien2023 https://kakuyomu.jp/users/sneaker/works https://kakuyomu.jp/works/1177354054891139802/reviews https://kakuyomu.jp/works/1177354054891139802/followers"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
   "name": "カクヨム",
   "created_at": "2016-02-29T11:49:17+09:00",
-  "updated_at": "2022-01-25T07:51:31+09:00"
+  "updated_at": "2023-08-25T20:44:41+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/79964",
