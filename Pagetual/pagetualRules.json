@@ -1,5 +1,12 @@
 [
 {
+    "name": "V2EX POST",
+    "author": "jaeger",
+    "url": "^https?://v2ex\\.com/t/",
+    "example": "https:v2ex.com/t/967813",
+    "pageElement": "#Main>.box:nth-child(4)"
+},
+{
     "name": "ICONFINDER ",
     "enable": 0,
     "example": "https://www.iconfinder.com/search?q=Download",
