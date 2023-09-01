@@ -22774,7 +22774,7 @@ ImgOps | https://imgops.com/#b#`;
                 gallery.data=[];
             }
             var allData=gallery.getAllValidImgs();
-            if(allData.length<1)return true;
+            if(allData.length<1)return;
             gallery.data=allData;
             gallery.load(gallery.data);
             return gallery;
@@ -23607,7 +23607,14 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
-            let gallery = openGallery();
+            let gallery = null;
+            if (!gallery) {
+                gallery = new GalleryC();
+                gallery.data = [];
+            }
+            var allData = gallery.getAllValidImgs();
+            gallery.data = allData;
+            gallery.load(gallery.data);
             let searchParams = new URLSearchParams(location.search);
             let viewMore = searchParams.get("mode");
             let imgs = searchParams.get("imgs");
@@ -23626,7 +23633,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(new RegExp(siteReg).test(_URL)){
                     setTimeout(function(){
                         let gallery = openGallery();
-                        if (autoViewMore) gallery.maximizeSidebar();
+                        if (gallery && autoViewMore) gallery.maximizeSidebar();
                     },2000);
                     break;
                 }
