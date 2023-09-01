@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.8.23.1
+// @version              2023.9.1.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1211491
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1239416
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1244085
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -13129,6 +13129,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="addImageUrls" title="'+i18n("addImageUrlsTips")+'">'+i18n("addImageUrls")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openImages" title="'+i18n("openImagesTips")+'">'+i18n("openImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="operate" title="'+i18n("fiddleTip")+'">'+i18n("fiddle")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="viewmore">'+i18n("viewmore")+'</span>'+
                     '<span id="pv-gallery-fullscreenbtn" class="pv-gallery-head-command-drop-list-item" data-command="fullScreen">'+i18n("enterFullsc")+'</span>'+
@@ -13885,51 +13886,44 @@ ImgOps | https://imgops.com/#b#`;
                         case 'viewmore':
                             self.maximizeSidebar();
                             break;
-                        case 'addImageUrls':
-                            var urls=window.prompt(i18n('addImageUrls')+": ',' to split multi-image, '[01-09]' to generate nine urls form 01 to 09","https://xxx.xxx/pic-[20-99].jpg, https://xxx.xxx/pic-[01-10].png");
-                            if(!urls)return;
-                            var imgs=[];
-                            [].forEach.call(urls.split(","),function(i){
-                                var varNum=/\[\d+\-\d+\]/.exec(i);
-                                if(varNum){
-                                    varNum=varNum[0].trim();
-                                }else{
-                                    imgs.push(i);
-                                    return;
-                                }
-                                var num1=/\[(\d+)/.exec(varNum)[1].trim();
-                                var num2=/(\d+)\]/.exec(varNum)[1].trim();
-                                var num1Int=parseInt(num1);
-                                var num2Int=parseInt(num2);
-                                var numLen=num1.length;
-                                var needAdd=num1.charAt(0)=="0";
-                                if(num1Int>=num2Int)return;
-                                for(var j=num1Int;j<=num2Int;j++){
-                                    var urlIndex=j.toString();
-                                    if(needAdd){
-                                        while(urlIndex.length<numLen)urlIndex="0"+urlIndex;
+                        case 'openImages':
+                            {
+                                let fileInput = document.createElement("input");
+                                fileInput.type = "file";
+                                fileInput.accept = "image/*";
+                                fileInput.setAttribute("multiple","");
+                                fileInput.addEventListener("change", e => {
+                                    const files = e.target.files;
+                                    if (files.length) {
+                                        for (var i = 0; i < files.length; i++) {
+                                            let file = files.item(i);
+                                            file = files[i];
+                                            let src = URL.createObjectURL(file);
+                                            let img=document.createElement('img');
+                                            img.src=src;
+                                            var result = {
+                                                src: src,
+                                                type: 'force',
+                                                imgSrc: src,
+
+                                                noActual:true,
+                                                description: '',
+
+                                                img: img
+                                            };
+                                            self.data.push(result);
+                                            self._appendThumbSpans([result]);
+                                        }
+                                        self.loadThumb();
                                     }
-                                    var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
-                                    imgs.push(curUrl);
-                                }
-                            });
-                            imgs.forEach(imgSrc => {
-                                let img=document.createElement('img');
-                                img.src=imgSrc;
-                                var result = {
-                                    src: img.src,
-                                    type: 'force',
-                                    imgSrc: img.src,
-
-                                    noActual:true,
-                                    description: '',
-
-                                    img: img
-                                };
-                                self.data.push(result);
-                                self._appendThumbSpans([result]);
-                            });
-                            self.loadThumb();
+                                }, false);
+                                fileInput.click();
+                            }
+                            break;
+                        case 'addImageUrls':
+                            var urls = window.prompt(i18n('addImageUrls') + ": ' ' to split multi-image, '[01-09]' to generate nine urls form 01 to 09","https://xxx.xxx/pic-[20-99].jpg https://xxx.xxx/pic-[01-10].png");
+                            if (!urls) return;
+                            self.addImageUrls(urls);
                             break;
                         case 'operate':
                             imgReady(self.src,{
@@ -14452,11 +14446,97 @@ ImgOps | https://imgops.com/#b#`;
                 this.forceRepaintTimes=0;
 
                 container.style.display='none';
+
+                container.addEventListener("drop", e => {
+                    e.preventDefault();
+                    self.eleMaps['img-parent'].style.pointerEvents = "";
+                    container.style.filter = "";
+                    var files = e.dataTransfer.files;
+                    if (files.length) {
+                        for (var i = 0; i < files.length; i++) {
+                            let file = files.item(i);
+                            file = files[i];
+                            let src = URL.createObjectURL(file);
+                            let img=document.createElement('img');
+                            img.src=src;
+                            var result = {
+                                src: src,
+                                type: 'force',
+                                imgSrc: src,
+
+                                noActual:true,
+                                description: '',
+
+                                img: img
+                            };
+                            self.data.push(result);
+                            self._appendThumbSpans([result]);
+                        }
+                        self.loadThumb();
+                    }
+                });
+
+                container.addEventListener("dragover", e => {
+                    return e.preventDefault();
+                });
+                container.addEventListener("dragenter", e => {
+                    self.eleMaps['img-parent'].style.pointerEvents = "none";
+                    container.style.filter = "contrast(0.5)";
+                });
+                container.addEventListener("dragleave", e => {
+                    self.eleMaps['img-parent'].style.pointerEvents = "";
+                    container.style.filter = "";
+                });
+
                 this.shown=false;
 
                 // 我添加的部分
                 this.initToggleBar();
                 this.initZoom();
+            },
+            addImageUrls: function(urls) {
+                let imgs = [], self = this;
+                [].forEach.call(urls.split(/\s+/), function(i) {
+                    var varNum = /\[\d+\-\d+\]/.exec(i);
+                    if (varNum) {
+                        varNum = varNum[0].trim();
+                    } else {
+                        imgs.push(i);
+                        return;
+                    }
+                    var num1 = /\[(\d+)/.exec(varNum)[1].trim();
+                    var num2 = /(\d+)\]/.exec(varNum)[1].trim();
+                    var num1Int = parseInt(num1);
+                    var num2Int = parseInt(num2);
+                    var numLen = num1.length;
+                    var needAdd = num1.charAt(0) == "0";
+                    if (num1Int >= num2Int) return;
+                    for (var j = num1Int; j <= num2Int; j++) {
+                        var urlIndex = j.toString();
+                        if (needAdd) {
+                            while (urlIndex.length < numLen) urlIndex = "0" + urlIndex;
+                        }
+                        var curUrl = i.replace(/\[\d+\-\d+\]/, urlIndex).trim();
+                        imgs.push(curUrl);
+                    }
+                });
+                imgs.forEach(imgSrc => {
+                    let img = document.createElement('img');
+                    img.src = imgSrc;
+                    var result = {
+                        src: img.src,
+                        type: 'force',
+                        imgSrc: img.src,
+
+                        noActual: true,
+                        description: '',
+
+                        img: img
+                    };
+                    self.data.push(result);
+                    self._appendThumbSpans([result]);
+                });
+                self.loadThumb();
             },
             rotateBigImg:function(){
                 this.img.style[support.cssTransform] = 'rotate(' + (this.galleryRotate || 0) + 'deg)';
@@ -18712,13 +18792,41 @@ ImgOps | https://imgops.com/#b#`;
                     this.imgWindow.classList.add("compare");
                 }
                 this.compareBox.innerHTML = createHTML("");
-                let self = this, count = 0;
+                let self = this, count = 0, compareImgConList = [], targetCompareImg;
                 otherSrcs.forEach(src => {
                     count++;
                     let percent = 100 - count * (100 / (otherSrcs.length + 1));
                     let compareImg = self.geneCompareImg(src, percent);
                     self.compareBox.appendChild(compareImg);
+                    compareImgConList.unshift(compareImg.children[0]);
                 });
+                this.img.addEventListener("mousedown", e => {
+                    targetCompareImg = null;
+                    let percentX = e.offsetX / self.img.clientWidth * 100;
+                    for (let i = 0; i < compareImgConList.length; i++) {
+                        let compareImgCon = compareImgConList[i];
+                        let compareWidth = parseInt(compareImgCon.style.width);
+                        if (percentX < compareWidth) {
+                            targetCompareImg = compareImgCon;
+                            targetCompareImg.style.opacity = 0;
+                            break;
+                        }
+                    }
+                    if (targetCompareImg == null) {
+                        self.img.style.opacity = 0;
+                        compareImgConList[compareImgConList.length - 1].style.overflow = "visible";
+                    }
+                });
+                this.img.addEventListener("mouseup", e => {
+                    if (targetCompareImg) {
+                        targetCompareImg.style.opacity = "";
+                    } else {
+                        self.img.style.opacity = "";
+                        compareImgConList[compareImgConList.length - 1].style.overflow = "";
+                    }
+                });
+                this.preButton.style.display = "none";
+                this.nextButton.style.display = "none";
             },
             switchImage:function(fw){
                 if (!gallery) {
@@ -18807,6 +18915,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-imgbox {\
                     position: relative;\
                     display: block;\
+                    overflow: hidden;\
                     }\
                     .pv-pic-window-container .compareBox {\
                     position: absolute;\
@@ -18841,6 +18950,8 @@ ImgOps | https://imgops.com/#b#`;
                     border-top: 0;\
                     border-bottom: 0;\
                     box-shadow: 0 0 2px rgba(0,0,0,.5);\
+                    overflow: visible;\
+                    z-index: 9;\
                     }\
                     .pv-pic-window-container .compareBox>div>.compareSlider>button {\
                     position: absolute;\
@@ -18980,7 +19091,8 @@ ImgOps | https://imgops.com/#b#`;
                     right: 8px;\
                     background-image: url("'+prefs.icons.arrowRight+'");\
                     }\
-                    .compare>.pv-pic-window-center {\
+                    .compare>.pv-pic-window-center,\
+                    .compare>.pv-pic-search-state{\
                     display: none;\
                     }\
                     .pv-pic-window-center {\
@@ -19093,8 +19205,10 @@ ImgOps | https://imgops.com/#b#`;
                     border:none;\
                     vertical-align:middle;\
                     }\
-                    .pv-pic-window-container_focus .pv-pic-window-pic {\
+                    .pv-pic-window-container_focus .pv-pic-window-imgbox {\
                     box-shadow: 0 0 6px black;\
+                    }\
+                    .pv-pic-window-container_focus .pv-pic-window-pic {\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
                     background-size: 20px 20px;\
                     background-position: 0 0, 10px 10px;\
@@ -21535,7 +21649,7 @@ ImgOps | https://imgops.com/#b#`;
         // ------------------- run -------------------------
 
         var matchedRule,
-            URL=location.href.slice(0, 250);
+            _URL=location.href.slice(0, 250);
 
         function pretreatment(img) {
             if (img.removeAttribute) img.removeAttribute("loading");
@@ -21690,7 +21804,7 @@ ImgOps | https://imgops.com/#b#`;
         function getMatchedRule() {
             return new MatchedRuleC();
             /*var rule = siteInfo.find(function(site, index, array) {
-                if (site.enabled != false && site.url && toRE(site.url).test(URL)) {
+                if (site.enabled != false && site.url && toRE(site.url).test(_URL)) {
                     return true;
                 }
             });
@@ -21752,7 +21866,7 @@ ImgOps | https://imgops.com/#b#`;
                         end=end>siteInfo.length?siteInfo.length:end;
                         for(;r<end;r++){
                             let site=siteInfo[r];
-                            if (site.enabled != false && (!site.url || toRE(site.url).test(URL))) {
+                            if (site.enabled != false && (!site.url || toRE(site.url).test(_URL))) {
                                 if(site.url){
                                     if(site.css){
                                         var style = document.createElement('style');
@@ -23492,16 +23606,27 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
-        if(prefs.gallery.autoOpenSites){
+        if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
+            let gallery = openGallery();
+            let searchParams = new URLSearchParams(location.search);
+            let viewMore = searchParams.get("mode");
+            let imgs = searchParams.get("imgs");
+            if (imgs) {
+                gallery.addImageUrls(imgs);
+            }
+            if (viewMore == "1") {
+                gallery.maximizeSidebar();
+            }
+        } else if (prefs.gallery.autoOpenSites) {
             var sitesArr=prefs.gallery.autoOpenSites.split("\n");
             for(let s=0;s<sitesArr.length;s++){
                 let siteReg=sitesArr[s].trim();
                 let autoViewMore=siteReg[0]=="@";
                 if(autoViewMore)siteReg=siteReg.substr(1);
-                if(new RegExp(siteReg).test(URL)){
+                if(new RegExp(siteReg).test(_URL)){
                     setTimeout(function(){
-                        var gallery = openGallery();
-                        if(autoViewMore)gallery.maximizeSidebar();
+                        let gallery = openGallery();
+                        if (autoViewMore) gallery.maximizeSidebar();
                     },2000);
                     break;
                 }
