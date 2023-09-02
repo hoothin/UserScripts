@@ -18972,6 +18972,8 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: ew-resize;\
                     box-shadow: 0 0 2px rgba(0,0,0,.5);\
                     pointer-events: all;\
+                    box-sizing: border-box;\
+                    background-image: none;\
                     }\
                     .pv-pic-window-container .compareBox>div>.compareSlider>button:hover {\
                     background-color: #777;\
