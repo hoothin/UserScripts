@@ -7623,7 +7623,6 @@
                     targetUrlData = await getUrl();
                     if (/^c(opy)?:/.test(data.url) || /^\[/.test(data.url) || /[:%]P{/.test(data.url) || (data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url) || self.customInput) {
                         if (e.button == 1 || e.button == 2) {
-                            ele.href = targetUrlData;
                             clickHandler();
                             clicked = false;
                         }
