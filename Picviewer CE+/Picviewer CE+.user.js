@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.9.1.1
+// @version              2023.9.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15643,8 +15643,10 @@ ImgOps | https://imgops.com/#b#`;
             _appendThumbSpans: function(data, index) { // 添加缩略图栏的 spans
                 var iStatisCopy = this.iStatisCopy;
 
-                if (typeof index == 'undefined' && this.selected) {
-                    index = Array.prototype.slice.call(this.imgSpans).indexOf(this.selected);
+                if (typeof index == 'undefined') {
+                    if (this.selected) {
+                        index = Array.prototype.slice.call(this.imgSpans).indexOf(this.selected);
+                    } else index = 0;
                 }
 
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
@@ -15678,6 +15680,7 @@ ImgOps | https://imgops.com/#b#`;
                     this._dataCache = {};
                     this.eleMaps['maximize-container'].innerHTML = createHTML("");
                 }
+                if (!selectData) selectData = this.data[index];
                 var createSpanMark = item => {
                     var spanMark=self._spanMarkPool[item.imgSrc];
                     if(!spanMark){
@@ -15910,7 +15913,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 if(typeof index =='undefined'){
                     index=0;
-                    data.unshift(data.target);
+                    if (data.target) data.unshift(data.target);
                 }
 
                 delete data.target;
@@ -16332,6 +16335,7 @@ ImgOps | https://imgops.com/#b#`;
                 });
             },
             runOnce:function(){//运行一次来获取某些数据。
+                if (!this.selected) return;
                 var thumbSpanCS=unsafeWindow.getComputedStyle(this.selected);
                 this.thumbSpanOuterSize=this.isHorizontal?
                     this.selected.offsetWidth + parseFloat(thumbSpanCS.marginLeft) + parseFloat(thumbSpanCS.marginRight) :
@@ -23607,11 +23611,8 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
-            let gallery = null;
-            if (!gallery) {
-                gallery = new GalleryC();
-                gallery.data = [];
-            }
+            let gallery = new GalleryC();
+            gallery.data = [];
             var allData = gallery.getAllValidImgs();
             gallery.data = allData;
             gallery.load(gallery.data);
