@@ -15985,6 +15985,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
             close:function(reload){
+                if(this.lockGallery)return;
                 if(this.hideBodyStyle.parentNode)
                     this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                 document.removeEventListener('keydown',this._keyDownListener,true);
@@ -23613,6 +23614,7 @@ ImgOps | https://imgops.com/#b#`;
         if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
             let gallery = new GalleryC();
             gallery.data = [];
+            gallery.lockGallery = true;
             var allData = gallery.getAllValidImgs();
             gallery.data = allData;
             gallery.load(gallery.data);
