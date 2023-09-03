@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.9.2.1
+// @version              2023.9.3.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11793,7 +11793,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             onload: function(d) {
                 let blob = d.response;
-                let ext = blob.type.replace("image/", "");
+                let ext = blob.type.replace(/.*image\/(\w+).*/, "$1");
                 if (ext == "webp" || forcePng) {
                     var self = this;
                     var a = new FileReader();
@@ -19566,25 +19566,26 @@ ImgOps | https://imgops.com/#b#`;
                         self.zoom(self.getRotatedImgCliSize(size).w/self.imgNaturalSize.w);
                     }
                 }
+                let padding = 50;
                 if(imgWindow.offsetWidth/imgWindow.offsetHeight>wSize.w/wSize.h){
                     //宽条，上下半屏
                     maxWidth = wSize.w;
                     if(posY > wSize.h / 2){
                         //上
-                        maxHeight=posY-50;
+                        maxHeight=posY-padding*2;
                         resizeWithLimit();
-                        imgWindow.style.top=posY - imgWindow.offsetHeight - 25 + scrolled.y +'px';
+                        imgWindow.style.top=posY - imgWindow.offsetHeight - padding + scrolled.y +'px';
                     }else{
                         //下
-                        maxHeight=wSize.h-posY-50;
+                        maxHeight=wSize.h-posY-padding*2;
                         resizeWithLimit();
-                        imgWindow.style.top=posY + 25 + scrolled.y +'px';
+                        imgWindow.style.top=posY + padding + scrolled.y +'px';
                     }
                     let left=(wSize.w - imgWindow.offsetWidth) / 2;
-                    let maxLeft=posX+50;
+                    let maxLeft=posX+padding*2;
                     if(left>maxLeft)left=maxLeft;
                     else {
-                        let minLeft=posX-imgWindow.offsetWidth-50;
+                        let minLeft=posX-imgWindow.offsetWidth-padding*2;
                         if(left<minLeft)left=minLeft;
                     }
                     imgWindow.style.left=left + scrolled.x +'px';
@@ -19593,20 +19594,20 @@ ImgOps | https://imgops.com/#b#`;
                     maxHeight = wSize.h;
                     if(posX > wSize.w / 2){
                         //左
-                        maxWidth=posX-50;
+                        maxWidth=posX-padding*2;
                         resizeWithLimit();
-                        imgWindow.style.left=posX - imgWindow.offsetWidth - 25 + scrolled.x +'px';
+                        imgWindow.style.left=posX - imgWindow.offsetWidth - padding + scrolled.x +'px';
                     }else{
                         //右
-                        maxWidth=wSize.w-posX-50;
+                        maxWidth=wSize.w-posX-padding*2;
                         resizeWithLimit();
-                        imgWindow.style.left=posX + 25 + scrolled.x +'px';
+                        imgWindow.style.left=posX + padding + scrolled.x +'px';
                     }
                     let top=(wSize.h - imgWindow.offsetHeight) / 2;
-                    let maxTop=posY+50;
+                    let maxTop=posY+padding*2;
                     if(top>maxTop)top=maxTop;
                     else {
-                        let minTop=posY-imgWindow.offsetHeight-50;
+                        let minTop=posY-imgWindow.offsetHeight-padding*2;
                         if(top<minTop)top=minTop;
                     }
                     imgWindow.style.top=top + scrolled.y +'px';
@@ -22304,7 +22305,7 @@ ImgOps | https://imgops.com/#b#`;
                     return false;
                 }
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
-                let bg = node && nodeStyle.backgroundImage;
+                let bg = node && nodeStyle.backgroundImage && nodeStyle.backgroundRepeatX != "repeat" && nodeStyle.backgroundRepeatY != "repeat";
                 if (!bg || bg == "none") return false;
                 return bg.length > 100 || (node.clientWidth > prefs.floatBar.minSizeLimit.w && node.clientHeight > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^ad\s'"]/.test(bg));
             };
@@ -22517,13 +22518,13 @@ ImgOps | https://imgops.com/#b#`;
             }
             var checkUniqueImgWin = function() {
                 if (canPreview) {
+                    uniqueImgWinInitX = clientX;
+                    uniqueImgWinInitY = clientY;
                     if (removeUniqueWinTimer) clearTimeout(removeUniqueWinTimer);
                     if (uniqueImgWin && !uniqueImgWin.removed) {
                         if (uniqueImgWin.src == result.src) return true;
                         uniqueImgWin.remove();
                     }
-                    uniqueImgWinInitX = clientX;
-                    uniqueImgWinInitY = clientY;
                     waitUntilMove(_target, () => {
                         new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
                     });
