@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.50
+// @version      1.9.36.51
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -196,7 +196,7 @@
                 dynamic: "Dynamic",
                 reloadPage: "Edit completed, reload page now?",
                 copied: "Copied",
-                noValidContent: "No valid content detected, click to view",
+                noValidContent: "No valid content detected, Captcha action may be required, click to view",
                 outOfDate: "The script is outdated, update to the latest version in time!",
                 hideBarTips: "Hide the pagination bar, toggle immersive experience",
                 setConfigPage: "Set current page as the default configuration page",
@@ -313,7 +313,7 @@
                 dynamic: "动态加载",
                 reloadPage: "编辑完成，是否立即刷新页面？",
                 copied: "已复制",
-                noValidContent: "没有检测到有效内容，点击查看",
+                noValidContent: "没有检测到有效内容，可能需要人机校验，点击查看",
                 outOfDate: "脚本已过时，请及时更新到最新版本！",
                 hideBarTips: "隐藏分页隔条，沉浸式体验",
                 setConfigPage: "将当前页面设为默认配置页",
@@ -430,7 +430,7 @@
                 dynamic: "動態加載",
                 reloadPage: "編輯完成，是否立即刷新頁面？",
                 copied: "已復制",
-                noValidContent: "沒有檢測到有效内容，點擊查看",
+                noValidContent: "沒有檢測到有效内容，可能需要人機校驗，點擊查看",
                 outOfDate: "脚本已過時，請及時更新到最新版本！",
                 hideBarTips: "隱藏分頁隔條，沉浸式體驗",
                 setConfigPage: "將當前頁面設為默認配置頁",
@@ -3172,6 +3172,10 @@
             }
         }
 
+        noValidContent(url) {
+            if (!this.curSiteRule.nextLinkByUrl) showTips(i18n("noValidContent"), url);
+        }
+
         async insertPage(doc, eles, url, callback, tried) {
             this.oldUrl = this.curUrl;
             let oldTitle = this.pageDoc.title;
@@ -4937,7 +4941,7 @@
             } else {
                 passStr = i18n("passDay", parseInt(passTime / 86400));
             }
-            passStr += " 👆 " + i18n("click2update");
+            passStr += " 🖱 " + i18n("click2update");
         }
 
         let rulebarList = [], updateFail = false;
@@ -5821,7 +5825,7 @@
                     });
                 } else {
                     debug("Stop as no page element");
-                    showTips(i18n("noValidContent"), url);
+                    ruleParser.noValidContent(url);
                     isPause = true;
                     callback(false);
                 }
@@ -6957,7 +6961,7 @@
     var checkRemoveIntv;
     function requestFromIframe(url, callback){
         if (location.protocol === 'https:' && !/^https:/.test(url)) {
-            showTips(i18n("noValidContent"), url);
+            ruleParser.noValidContent(url);
         }
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let iframe = document.createElement('iframe');
@@ -7026,7 +7030,7 @@
                             isPause = true;
                             callback(false, false);
                         } else {
-                            showTips(i18n("noValidContent"), url);
+                            ruleParser.noValidContent(url);
                             callback(false, false);
                         }
                     }
