@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.51
+// @version      1.9.36.52
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -7520,7 +7520,7 @@
         curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling = "no";
-        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;content-visibility: auto;contain-intrinsic-size: auto 300px;';
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;';
         curIframe.addEventListener("load", e => {
             clearInterval(checkIframeTimer);
             if (isPause) return callback(false);
@@ -7550,6 +7550,9 @@
                     debug(e);
                 }
             }
+            iframeDoc.addEventListener('wheel', e => {
+                document.dispatchEvent(new Event('wheel'));
+            }, true);
         });
         let checkTimes = 0, findPageEle = false;
         let forceRefresh = e => {
@@ -7585,14 +7588,19 @@
         document.addEventListener("scroll", forceRefresh);
         curIframe.src = url;
         let insert = ruleParser.getInsert();
-        let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+        let body = getBody(document);
+        let curScroll = body.scrollTop || document.documentElement.scrollTop;
         if (forceState == 2) {
-            getBody(document).appendChild(loadingDiv);
-            getBody(document).appendChild(curIframe);
+            body.appendChild(loadingDiv);
+            body.appendChild(curIframe);
+            let bodyStyle = getComputedStyle(body);
+            if (bodyStyle.display == "flex" || bodyStyle.display == "inline-flex") {
+                body.style.flexDirection = "column";
+            }
         } else {
             ruleParser.insertElement(curIframe);
         }
-        getBody(document).scrollTop = curScroll;
+        body.scrollTop = curScroll;
         document.documentElement.scrollTop = curScroll;
 
         if (!scrollToResizeInited) {
