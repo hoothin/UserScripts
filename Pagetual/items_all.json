@@ -53292,7 +53292,7 @@
 {
   "resource_url": "http://wedata.net/items/446",
   "data": {
-    "pageElement": "id('groupsContent')/*|//div[./div[contains(@data-hook,'content_row-')]]",
+    "pageElement": "id('groupsContent')/*|//div[@data-hook='all_content'][//a[@href='https://www.deviantart.com/users/login']]",
     "nextLink": "//link[@rel='next']|//li[@class='next ']/a",
     "url": "^https://[^.]+\\.deviantart\\.com/",
     "exampleUrl": "https://www.deviantart.com/ https://www.deviantart.com/groups/"
@@ -53301,7 +53301,7 @@
   "created_by": "swdyh",
   "name": "deviantART",
   "created_at": "2008-04-16T12:35:31+09:00",
-  "updated_at": "2023-08-03T11:19:44+09:00"
+  "updated_at": "2023-09-03T13:08:34+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/442",
