@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.20
+// @version      2.7.3.21
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -23,7 +23,7 @@
 // @compatible        firefox
 // @compatible        opera 未测试
 // @compatible        safari 未测试
-// @contributionURL https://buymeacoffee.com/hoothin
+// @contributionURL https://ko-fi.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
 (function (global, factory) {
@@ -205,7 +205,7 @@
 (function() {
     'use strict';
     var indexReg=/PART\b|^Prologue|Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*言|^序\s*章|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]+$|^[第（]?[\d〇零一二三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
-    var innerNextPage=/下一[页頁张張]|next\s*page|次のページ/i;
+    var innerNextPage=/^\s*(下一[页頁张張]|next\s*page|次のページ)/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
@@ -363,8 +363,9 @@
                     onload: function(result) {
                         downIndex++;
                         downNum++;
-                        var doc = getDocEle(result.responseText);
-                        let nextPage=checkNextPage(doc);
+                        let doc = getDocEle(result.responseText);
+                        let base = doc.querySelector("base");
+                        let nextPage=checkNextPage(doc, base ? base.href : aTag.href);
                         if(nextPage){
                             var inArr=false;
                             for(var ai=0;ai<aEles.length;ai++){
@@ -396,7 +397,7 @@
                                 insertSigns[targetIndex].push(aEles.length-1);
                             }
                         }
-                        processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} `:""));
+                        processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""));
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
@@ -405,7 +406,7 @@
                         console.log(e);
                         downIndex++;
                         downNum++;
-                        processDoc(curIndex, aTag, null, ` NETWORK ERROR: '+${(e.response||e.responseText)} `);
+                        processDoc(curIndex, aTag, null, ` NETWORK ERROR: '+${(e.response||e.responseText)} from: ${aTag.href} `);
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
@@ -521,13 +522,38 @@
         }*/
     }
 
-    function checkNextPage(doc){
-        if (processFunc) return false;
+    function canonicalUri(src, baseUrl) {
+        if (!src) {
+            return "";
+        }
+        if (src.charAt(0) == "#") return baseUrl + src;
+        if (src.charAt(0) == "?") return baseUrl.replace(/^([^\?#]+).*/, "$1" + src);
+        let origin = location.protocol + '//' + location.host;
+        let url = baseUrl || origin;
+        url = url.replace(/(\?|#).*/, "");
+        if (/https?:\/\/[^\/]+$/.test(url)) url = url + '/';
+        if (url.indexOf("http") !== 0) url = origin + url;
+        var root_page = /^[^\?#]*\//.exec(url)[0],
+            root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
+            absolute_regex = /^\w+\:\/\//;
+        while (src.indexOf("../") === 0) {
+            src = src.substr(3);
+            root_page = root_page.replace(/\/[^\/]+\/$/, "/");
+        }
+        src = src.replace(/\.\//, "");
+        if (/^\/\/\/?/.test(src)) {
+            src = location.protocol + src;
+        }
+        return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
+    }
+
+    function checkNextPage(doc, baseUrl){
         let aTags=doc.querySelectorAll("a"),nextPage=null;
         for(var i=0;i<aTags.length;i++){
             let aTag=aTags[i];
-            if(innerNextPage.test(aTag.innerText) && aTag.href.indexOf("javascript")==-1){
+            if(innerNextPage.test(aTag.innerText) && aTag.href && !/javascript:|#/.test(aTag.href)){
                 nextPage=aTag;
+                nextPage.href=canonicalUri(nextPage.getAttribute("href"), baseUrl || location.href);
                 break;
             }
         }
@@ -605,16 +631,16 @@
                 allSingle=false;
             }
             if(allSingle){
-                curNum=(firefox?content.textContent.length:content.innerText.length);
+                curNum=(firefox?content.textContent.trim().length:content.innerText.trim().length);
             }else {
                 if(!hasText)continue;
                 if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
                     continue;
                 [].forEach.call(content.childNodes,function(item){
-                    if(item.nodeType==3)curNum+=item.data.length;
-                    else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))curNum+=(firefox?item.textContent.length:item.innerText.length);
+                    if(item.nodeType==3)curNum+=item.data.trim().length;
+                    else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
                     else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].tagName)){
-                        curNum+=(firefox?item.textContent.length:item.innerText.length);
+                        curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
                     }
                 });
             }
@@ -643,8 +669,8 @@
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(getDepth(child)==getDepth(largestContent)){
-                if((!largestContent.className && child.className) || (largestContent.className && !child.className) || (largestContent.className && child.className && largestContent.className != child.className))continue;
-                if((largestContent.className && largestContent.className==child.className)||largestContent.parentNode ==child.parentNode){
+                if(largestContent.className != child.className || largestContent.id != child.id)continue;
+                if((largestContent.className && largestContent.className == child.className) || largestContent.parentNode == child.parentNode){
                     getRightStr(child, true);
                 }else {
                     getRightStr(child, false);
@@ -849,7 +875,21 @@
                 processFunc=(data, cb)=>{
                     let doc=data;
                     if(urlsArr[3].indexOf("return ")==-1){
-                        return eval(urlsArr[3]);
+                        if(urlsArr[3].indexOf("@")==0){
+                            let content="";
+                            [].forEach.call(data.querySelectorAll(urlsArr[3].slice(1)), ele=>{
+                                [].forEach.call(ele.childNodes, child=>{
+                                    if(child.innerHTML){
+                                        child.innerHTML=child.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n").replace(/\n+/gi,"\n").replace(/\r+/gi,"\r");
+                                    }
+                                    if(child.textContent){
+                                        content+=(child.textContent.replace(/ +/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2")+"\r\n");
+                                    }
+                                });
+                                content+="\r\n";
+                            });
+                            return content;
+                        }else return eval(urlsArr[3]);
                     }else{
                         return Function("data", "doc", "cb",urlsArr[3])(data, doc, cb);
                     }
