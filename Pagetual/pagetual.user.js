@@ -1591,7 +1591,8 @@
                 pageElement = [body];
             }
             if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && /^TR$/i.test(pageElement[0].nodeName)) {
-                let mainTr = this.insert.parentNode.querySelector('tr'), mainTdNum = 0, newTdNum = 0;
+                let mainTr = this.insert.parentNode.querySelectorAll('tr'), mainTdNum = 0, newTdNum = 0;
+                mainTr = mainTr[mainTr.length - 1];
                 [].forEach.call(mainTr.children, el => {
                     if (/^(TD|TH)$/i.test(el.nodeName)) {
                         mainTdNum += el.colSpan || 1;
