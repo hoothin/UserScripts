@@ -38,6 +38,9 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
     <tr>
         <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an email for help</a></th>
     </tr>
+    <tr>
+        <th colspan="3">Made with ♥ by <a href="https://github.com/hoothin">Hoothin</a></th>
+    </tr>
 </table>
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
