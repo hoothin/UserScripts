@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.52
+// @version      1.9.36.53
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -59,13 +59,18 @@
 (function() {
     'use strict';
 
+    const pauseVideo = () => {
+        setTimeout(() => {
+            [].forEach.call(document.querySelectorAll("video"), video => {
+                video.removeAttribute && video.removeAttribute("autoplay");
+                video.pause && video.pause();
+            });
+        }, 1000);
+    };
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) {
         var domloaded = function() {
             window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
-            [].forEach.call(document.querySelectorAll("video"), video => {
-                video.muted = true;
-                video.pause && video.pause();
-            });
+            pauseVideo();
         };
         if (window.opera) {
             document.addEventListener('DOMContentLoaded', domloaded, false);
@@ -82,9 +87,13 @@
             if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
                 return;
             }
-            [].forEach.call(document.querySelectorAll("video"), video => {
-                video.pause && video.pause();
-            });
+            if (document.readystate == 'complete') {
+                pauseVideo();
+            } else {
+                window.addEventListener('load', e => {
+                    pauseVideo();
+                }, false);
+            }
         } catch(e) {
             return;
         }
