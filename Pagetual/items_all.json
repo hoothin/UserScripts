@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86153",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' m-article-main-body ')]",
+    "comment": "有料会員限定につき動作未確認",
+    "nextLink": "//div[contains(concat(' ', @class, ' '), ' m-article-main-paginte-box ')]//a",
+    "url": "^https://premium\\.kai-you\\.net/article/\\d+",
+    "exampleUrl": "https://premium.kai-you.net/article/587"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "KAI-YOU Premium",
+  "created_at": "2023-09-05T22:11:37+09:00",
+  "updated_at": "2023-09-05T22:11:37+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86152",
+  "data": {
+    "pageElement": "//div[@class=\"info_list\"]/ul | //div[@class=\"blog_content\"]",
+    "nextLink": "//link[@rel=\"next\"]",
+    "url": "^https://fm-kyoto\\.jp/",
+    "exampleUrl": "https://fm-kyoto.jp/information\r\nhttps://fm-kyoto.jp/blog/sevencolors/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "atk",
+  "name": "α-STATION エフエム京都",
+  "created_at": "2023-09-05T15:05:02+09:00",
+  "updated_at": "2023-09-05T22:18:00+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86150",
   "data": {
     "insertBefore": "",
