@@ -3202,6 +3202,17 @@
             async showCustomInputWindow(url, callback) {
                 return new Promise((resolve) => {
                     this.customInputCallback = callback;
+                    let geneFinalUrl = () => {
+                        let finalValue = this.finalSearch.dataset.url;
+                        [].forEach.call(this.customGroup.children, ele => {
+                            let value = ele.value;
+                            if (ele.className == "select") {
+                                value = ele.children[0].value;
+                            } else if (/^DIV$/i.test(ele.nodeName)) return;
+                            finalValue = finalValue.replace('◎', value || '');
+                        });
+                        this.finalSearch.value = finalValue;
+                    };
                     if (!this.customInputFrame) {
                         this.customInputCssText = `
                          .customInputFrame-body {
@@ -3425,17 +3436,6 @@
                         this.customGroup = customGroup;
                         let finalSearch = this.customInputFrame.querySelector("[name='finalSearch']");
                         this.finalSearch = finalSearch;
-                        let geneFinalUrl = () => {
-                            let finalValue = finalSearch.dataset.url;
-                            [].forEach.call(customGroup.children, ele => {
-                                let value = ele.value;
-                                if (ele.className == "select") {
-                                    value = ele.children[0].value;
-                                } else if (/^DIV$/i.test(ele.nodeName)) return;
-                                finalValue = finalValue.replace('◎', value || '');
-                            });
-                            finalSearch.value = finalValue;
-                        };
                         finalSearch.addEventListener("click", e => {
                             geneFinalUrl();
                         });
@@ -3513,6 +3513,7 @@
                             option.addEventListener("click", e => {
                                 paramSelectInput.value = "";
                                 selectTips.innerText = 'Select option';
+                                geneFinalUrl();
                             });
 
                             for (let i = 0; i < optionSplit.length; i++) {
@@ -3532,6 +3533,7 @@
                                 option.addEventListener("click", e => {
                                     paramSelectInput.value = option.getAttribute("value");
                                     selectTips.innerText = '';
+                                    geneFinalUrl();
                                 });
                                 options.appendChild(option);
                             }
