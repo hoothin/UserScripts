@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.21
+// @version      2.7.3.22
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -345,7 +345,7 @@
         rCats=[];
         var insertSigns=[];
         // var j=0,rCats=[];
-        var downIndex=0,downNum=0,downOnce=function(){
+        var downIndex=0,downNum=0,downOnce=function(wait){
             if(downNum>=aEles.length)return;
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
@@ -397,18 +397,29 @@
                                 insertSigns[targetIndex].push(aEles.length-1);
                             }
                         }
+                        if (result.status >= 400) {
+                            console.warn("error:", `status: ${result.status} from: ${aTag.href}`);
+                        }
                         processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""));
-                        let request=downOnce();
-                        if(request)curRequests.push(request);
+                        if (wait) {
+                            setTimeout(() => {
+                                downOnce(wait);
+                            }, wait);
+                        } else downOnce();
                     },
                     onerror: function(e) {
-                        console.warn("error:");
-                        console.log(e);
+                        console.warn("error:", e);
+                        if(++tryTimes<3){
+                            return GM_xmlhttpRequest(requestBody);
+                        }
                         downIndex++;
                         downNum++;
                         processDoc(curIndex, aTag, null, ` NETWORK ERROR: '+${(e.response||e.responseText)} from: ${aTag.href} `);
-                        let request=downOnce();
-                        if(request)curRequests.push(request);
+                        if (wait) {
+                            setTimeout(() => {
+                                downOnce(wait);
+                            }, wait);
+                        } else downOnce();
                     },
                     ontimeout: function(e) {
                         console.warn("timeout: times="+tryTimes+" url="+aTag.href);
@@ -419,11 +430,14 @@
                         downIndex++;
                         downNum++;
                         processDoc(curIndex, aTag, null, ` TIMEOUT: '+${aTag.href} `);
-                        let request=downOnce();
-                        if(request)curRequests.push(request);
+                        if (wait) {
+                            setTimeout(() => {
+                                downOnce(wait);
+                            }, wait);
+                        } else downOnce();
                     }
                 };
-                return [curIndex,GM_xmlhttpRequest(requestBody),aTag.href];
+                return [curIndex, GM_xmlhttpRequest(requestBody), aTag.href];
             }
             if(!aTag){
                 let waitAtagReadyInterval=setInterval(function(){
@@ -436,7 +450,9 @@
                 },1000);
                 return null;
             }
-            return request(aTag, curIndex);
+            let result = request(aTag, curIndex);
+            if (result) curRequests.push(result);
+            return result;
         };
         function getDocEle(str){
             var doc = null;
@@ -500,12 +516,16 @@
             }
         }
         var downThreadNum = parseInt(GM_getValue("downThreadNum"));
-        downThreadNum=downThreadNum>0?downThreadNum:20;
-        for(var i=0;i<downThreadNum;i++){
-            let request=downOnce();
-            if(request)curRequests.push(request);
-            if(downIndex>=aEles.length-1 || downIndex>=downThreadNum-1)break;
-            else downIndex++;
+        downThreadNum = downThreadNum || 20;
+        if (downThreadNum > 0) {
+            for (var i = 0; i < downThreadNum; i++) {
+                downOnce();
+                if (downIndex >= aEles.length - 1 || downIndex >= downThreadNum - 1) break;
+                else downIndex++;
+            }
+        } else {
+            downOnce(-downThreadNum * 1000);
+            if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) downIndex++;
         }
 
         /*for(let i=0;i<aEles.length;i++){
