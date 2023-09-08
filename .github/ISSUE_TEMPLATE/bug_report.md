@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve. Please publish the issue according to the guidelines, otherwise the request will be ignored and closed directly.
+about: Create a report to help us improve. Please publish the issue according to the guidelines, otherwise the request will be ignored and closed directly. Your understanding and cooperation are appreciated.
 title: ''
 labels: ''
 assignees: ''
