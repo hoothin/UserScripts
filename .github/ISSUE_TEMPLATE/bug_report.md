@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help us improve. Please publish the issue according to the guidelines, otherwise the request will be ignored and closed directly.
 title: ''
 labels: ''
 assignees: ''
@@ -24,7 +24,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. iOS]
+ - OS: [e.g. Mac]
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
 
