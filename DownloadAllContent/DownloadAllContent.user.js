@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.22
+// @version      2.7.3.23
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -322,7 +322,7 @@
             let txt = i18n.info+"\n\n---\n"+document.title+"\n===\n";
             rCats.forEach(cat => {
                 cat = cat.replace("\r\n", "\n---").replace(/(\r\n|\n\r)+/g, "\n\n").replace(/[\n\r]\t+/g, "\n");
-                txt += '\n'+cat;
+                txt += '\n\n'+cat;
             });
             var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".md");
@@ -593,7 +593,7 @@
         }
         [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
             var thisStyle=doc.defaultView?doc.defaultView.getComputedStyle(item):item.style;
-            if(thisStyle && (thisStyle.display=="none" || (item.tagName=="SPAN" && thisStyle.fontSize=="0px"))){
+            if(thisStyle && (thisStyle.display=="none" || (item.nodeName=="SPAN" && thisStyle.fontSize=="0px"))){
                 item.innerHTML="";
             }
         });
@@ -619,15 +619,15 @@
                     if(/^\s*$/.test(item.data))
                         item.innerHTML="";
                     else hasText=true;
-                }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName)){
+                }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.nodeName)){
                     hasText=true;
-                }else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].tagName)){
+                }else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].nodeName)){
                     hasText=true;
                 }
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
-                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.tagName) && /^[\s\-\_\?\>\|]*$/.test(item.innerHTML))
+                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.nodeName) && /^[\s\-\_\?\>\|]*$/.test(item.innerHTML))
                     item.innerHTML="";
             }
             if(content.childNodes.length>1){
@@ -638,7 +638,7 @@
                         if(item.innerText && item.innerText.length<50 && indexReg.test(item.innerText))indexItem++;
                         for(k=0;k<item.childNodes.length;k++){
                             var childNode=item.childNodes[k];
-                            if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(childNode.tagName)){
+                            if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(childNode.nodeName)){
                                 allSingle=false;
                                 break;
                             }
@@ -650,16 +650,15 @@
             }else{
                 allSingle=false;
             }
-            if(allSingle){
-                curNum=(firefox?content.textContent.trim().length:content.innerText.trim().length);
+            if(!allSingle && !hasText){
+                continue;
             }else {
-                if(!hasText)continue;
                 if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
                     continue;
                 [].forEach.call(content.childNodes,function(item){
                     if(item.nodeType==3)curNum+=item.data.trim().length;
-                    else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
-                    else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].tagName)){
+                    else if(/^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.nodeName))curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
+                    else if(item.nodeType==1&&item.children.length==1&&/^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].nodeName)){
                         curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
                     }
                 });
@@ -670,9 +669,12 @@
             }
         }
         if(!largestContent)return i18n.error+" : NO TEXT CONTENT";
-        var childlist=pageData.querySelectorAll(largestContent.tagName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
+        var childlist=pageData.querySelectorAll(largestContent.nodeName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
         function getRightStr(ele, noTextEnable){
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
+            [].forEach.call(ele.querySelectorAll("a[href]"), a => {
+                a.parentNode && a.parentNode.removeChild(a);
+            });
             for(let j=0;j<childNodes.length;j++){
                 let childNode=childNodes[j];
                 if(childNode.nodeType==3 && childNode.data && !/^[\s\-\_\?\>\|]*$/.test(childNode.data))hasText=true;
@@ -682,7 +684,7 @@
                 if(childNode.textContent){
                     cStr+=childNode.textContent.replace(/ +/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
                 }
-                if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT)$/.test(childNode.tagName))cStr+="\r\n";
+                if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT)$/.test(childNode.nodeName))cStr+="\r\n";
             }
             if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
         }
@@ -810,7 +812,7 @@
                 try{
                     eles=document.querySelectorAll(urlSel[0]);
                     eles=[].filter.call(eles, ele=>{
-                        return ele.tagName=='BODY'||(!!ele.offsetParent&&getComputedStyle(ele).display!=='none');
+                        return ele.nodeName=='BODY'||(!!ele.offsetParent&&getComputedStyle(ele).display!=='none');
                     })
                 }catch(e){}
                 if(eles.length==0){
@@ -872,7 +874,7 @@
                         } else items = [item];
                         items.forEach(item => {
                             if(!item || !item.href)return;
-                            if(!item.tagName || item.tagName!="A"){
+                            if(!item.nodeName || item.nodeName!="A"){
                                 let href=item.href;
                                 let innerText=item.innerText;
                                 item=document.createElement("a");
