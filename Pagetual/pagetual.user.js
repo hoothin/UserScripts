@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.53
+// @version      1.9.36.54
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4801,7 +4801,7 @@
                         rulesExample.href = rulesExample.href.replace("/en", "");
                     }
                 }
-            } else return true;
+            } else return false;
         } else return false;
         class Rulebar {
             init(ruleUrl) {
@@ -6348,16 +6348,18 @@
                 }
             }
             if (!/^BODY$/i.test(e.target.nodeName) && !e.target.classList.contains('pagetual_pageBar')) {
-                let selection = window.getSelection();
-                let selStr = selection.toString().trim();
-                if (!selStr) {
-                    selection = selection.getRangeAt(0);
-                    selStr = selection && selection.cloneContents().children[0];
-                    if (selStr && !/^IMG$/i.test(selStr.nodeName)) selStr = false;
-                }
-                if (selStr) {
-                    return;
-                }
+                try {
+                    let selection = window.getSelection();
+                    let selStr = selection.toString().trim();
+                    if (!selStr) {
+                        selection = selection.getRangeAt(0);
+                        selStr = selection && selection.cloneContents().children[0];
+                        if (selStr && !/^IMG$/i.test(selStr.nodeName)) selStr = false;
+                    }
+                    if (selStr) {
+                        return;
+                    }
+                } catch (e) {}
             }
             if (rulesData.dbClick2Stop && (ruleParser.nextLinkHref || loadmoreBtn)) {
                 setTimeout(() => {
