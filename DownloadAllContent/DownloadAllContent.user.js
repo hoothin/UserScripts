@@ -610,6 +610,9 @@
         }
         [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript,iframe"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.innerHTML="";});
+        var endEle = ele => {
+            return /^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(ele.nodeName) && ele.children.length == 0;
+        };
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
         for(i=0;i<contents.length;i++){
             let content=contents[i],hasText=false,allSingle=true,item,curNum=0;
@@ -657,10 +660,7 @@
                     continue;
                 [].forEach.call(content.childNodes,function(item){
                     if(item.nodeType==3)curNum+=item.data.trim().length;
-                    else if(/^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.nodeName))curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
-                    else if(item.nodeType==1&&item.children.length==1&&/^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].nodeName)){
-                        curNum+=(firefox?item.textContent.trim().length:item.innerText.trim().length);
-                    }
+                    else if(endEle(item) || (item.nodeType == 1 && item.children.length == 1 && endEle(item.children[0]))) curNum += (firefox ? item.textContent.trim().length : item.innerText.trim().length);
                 });
             }
             if(curNum>largestNum){
