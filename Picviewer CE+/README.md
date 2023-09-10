@@ -54,8 +54,10 @@ This can add large-image rule for dmm to view high-definition original images or
 
 ### [Gallery page](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 Add `mode=1` to open gallery with view-more mode.<br/>
-Add `imgs=http://xxx/xxx.jpg` to import images.<br/>
+Add `imgs=http://xxx/xxx.jpg` to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
 For example: `https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?imgs=http://xxx/xxx[01-99].jpg`
+
+Simply drag and drop your local pictures into the gallery for viewing.
 
 *Buy me a coffee with [PayPal.Me](https://paypal.me/hoothin) or [Ko-fi](https://ko-fi.com/hoothin) to keep my scripts always up to date.*
 
