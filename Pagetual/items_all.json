@@ -2532,16 +2532,16 @@
 {
   "resource_url": "http://wedata.net/items/85904",
   "data": {
-    "pageElement": "//ul[@class='rank' or @class='list']/li",
-    "nextLink": "//a[@title='次のページ']|//li[@class='next']/a",
+    "pageElement": "//ul[@class='rank' or @class='list']/li[not(contains(concat(' ', @class, ' '), ' ads '))]",
+    "nextLink": "//a[@title='次のページ']|//ul[contains(concat(' ', @class, ' '), ' pagenavi ')]/li[@class='next']/a",
     "url": "^https://blog\\.with2\\.net/",
-    "exampleUrl": "https://blog.with2.net/ranking/1400 https://blog.with2.net/search/blog?q=internet"
+    "exampleUrl": "https://blog.with2.net/ranking/1400 https://blog.with2.net/search/blog?q=internet\r\nhttps://blog.with2.net/ranking/1000"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "usave",
   "name": "BLOG RANKING 人気ブログランキング",
   "created_at": "2022-04-24T13:42:27+09:00",
-  "updated_at": "2022-04-25T05:19:54+09:00"
+  "updated_at": "2023-09-09T18:44:08+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85903",
@@ -12365,18 +12365,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/81754",
-  "name": "pixiv series",
-  "created_by": "t_f_m",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-06-06T16:35:02+09:00",
   "data": {
-    "exampleUrl": "https://www.pixiv.net/user/10232794/series/12174",
+    "pageElement": "//li[.//a[contains(@href,'/artworks/')]]",
+    "comment": "This does not work.",
+    "nextLink": "//button[@aria-current='true']/following-sibling::a[1]",
     "url": "^https://www\\.pixiv\\.net/user/\\d+/series/",
-    "pageElement": "//div[@class=\"works\"]/*",
-    "insertBefore": "",
-    "nextLink": "//a[@rel=\"next\"]"
+    "exampleUrl": "https://www.pixiv.net/user/10232794/series/12174"
   },
-  "created_at": "2018-06-06T16:35:02+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
+  "name": "pixiv series",
+  "created_at": "2018-06-06T16:35:02+09:00",
+  "updated_at": "2023-09-09T19:16:08+09:00"
 },
 {
   "data": {
