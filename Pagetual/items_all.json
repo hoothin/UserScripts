@@ -4242,16 +4242,16 @@
 {
   "resource_url": "http://wedata.net/items/85724",
   "data": {
-    "pageElement": "descendant::div[contains(@class,'bgc_fff')][1]/*[contains(@class,'bg')]/following-sibling::*",
+    "pageElement": "//div[@class='bgc_fff mt7 cf' and div[@class='a_list02 cf']]/div",
     "nextLink": "//li[./span]/following-sibling::li[1]/a",
     "url": "^https://tvfan\\.kyodo\\.co\\.jp/",
-    "exampleUrl": "https://tvfan.kyodo.co.jp/feature-interview/interview\r\nhttps://tvfan.kyodo.co.jp/tag/%e6%ba%80%e5%b3%b6%e3%81%b2%e3%81%8b%e3%82%8a"
+    "exampleUrl": "https://tvfan.kyodo.co.jp/feature-interview/interview\r\nhttps://tvfan.kyodo.co.jp/tag/%e6%ba%80%e5%b3%b6%e3%81%b2%e3%81%8b%e3%82%8a\r\nhttps://tvfan.kyodo.co.jp/feature-interview/column"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "エンタメOVO（オーヴォ）",
   "created_at": "2021-10-03T20:07:28+09:00",
-  "updated_at": "2023-02-03T13:39:07+09:00"
+  "updated_at": "2023-09-10T20:20:49+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85723",
