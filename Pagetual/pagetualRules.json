@@ -8204,7 +8204,7 @@
     "example": "https://www.pixiv.net/tags/%E5%A5%B3%E3%81%AE%E5%AD%90/illustrations",
     "action": 2,
     "pageElement": "section div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
-    "nextLink": "a[class*='filterProps-Styled-Component']:last-child",
+    "nextLink": "a[class*='filterProps-Styled-Component'][aria-disabled='false']:last-child",
     "wait": 500,
     "fitWidth": false,
     "css": "@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
