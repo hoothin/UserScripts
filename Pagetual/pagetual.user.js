@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.54
+// @version      1.9.36.55
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1613,9 +1613,9 @@
                     }
                 });
                 if (mainTdNum != newTdNum) {
-                    this.curSiteRule.pageElement = allOfBody;
-                    pageElement = [body];
+                    this.curSiteRule.pageElement = this.curSiteRule.pageElement.replace(/> *table.*/, ">table");
                     this.getInsert(true);
+                    return this.getPageElement(doc, curWin, dontFind);
                 }
             }
             if ((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length == 0) && curWin && !dontFind) {
@@ -2078,6 +2078,7 @@
                 body.querySelector("li.page-current+li>a") ||
                 body.querySelector("[class^=pag] a[rel=next]") ||
                 body.querySelector("[class^=Pag] [aria-label=next]") ||
+                body.querySelector("[aria-label='Next page']") ||
                 body.querySelector(".pagination-nav__item--next>a");
             if (!next) {
                 await sleep(1);
@@ -7274,7 +7275,7 @@
                         callback(iframeDoc, eles);
                     }
                 } else {
-                    if (checkTimes % 10 === 1) {
+                    if (checkTimes % 10 === 5) {
                         if (!nextLink || !nextLink.offsetParent) {
                             nextLink = await ruleParser.getNextLink(iframeDoc, true);
                         }
