@@ -1,6 +1,8 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for this project. Please publish the issue according to the
+  guidelines, otherwise the request will be ignored and closed directly. Your understanding
+  and cooperation are appreciated.
 title: ''
 labels: ''
 assignees: ''
