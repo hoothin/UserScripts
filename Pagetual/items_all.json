@@ -4704,16 +4704,16 @@
 {
   "resource_url": "http://wedata.net/items/85654",
   "data": {
-    "pageElement": "id('snsArea')/following-sibling::*[following-sibling::div[@class='pager_area'][ul]]",
-    "nextLink": "//li[@class='next']/a",
-    "url": "^https://motor-fan\\.jp/article/",
-    "exampleUrl": "https://motor-fan.jp/article/10019107"
+    "pageElement": "//div[contains(concat(' ',@class,' '),' p-entry-content ')]/*",
+    "nextLink": "//div[@class='nav-links']/span[@aria-current]/following-sibling::a",
+    "url": "^https://motor-fan\\.jp/(?:bikes/)?article/",
+    "exampleUrl": "https://motor-fan.jp/bikes/article/84701/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
   "name": "motor-fan",
   "created_at": "2021-05-05T17:34:23+09:00",
-  "updated_at": "2021-05-05T17:35:34+09:00"
+  "updated_at": "2023-09-12T06:39:19+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85653",
