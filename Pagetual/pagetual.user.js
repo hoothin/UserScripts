@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.55
+// @version      1.9.36.56
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1528,6 +1528,9 @@
             if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
                 h = ele.parentNode.scrollHeight;
             }
+            if (h === 0 && ele.children && ele.children.length === 1) {
+                h = ele.children[0].scrollHeight;
+            }
             let moreChild = ele.children[0], minOffsetTop = h;
             while (moreChild) {
                 if (moreChild.offsetParent == ele && moreChild.offsetTop < minOffsetTop) {
@@ -3016,7 +3019,7 @@
                     [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
                         setLazyImg(img);
                     });
-                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb],div.img[data-src]"), div => {
+                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb],div.img[data-src],div.lazy[data-src]"), div => {
                         div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
                     });
                 }
