@@ -3901,14 +3901,14 @@
   "data": {
     "pageElement": "//article/descendant::*[count(//article//dl)=count(.//dl)][last()]",
     "nextLink": "//link[@rel=\"next\"]",
-    "url": "^https://(hisa-himi|basement-times|fis314|shoiblog|soratobunezumi)",
-    "exampleUrl": "https://hisa-himi.site/ https://basement-times.com/ https://fis314.com/category/diary/ https://shoiblog.com/page/2/ https://soratobunezumi.co.jp/media/"
+    "url": "^https://(hisa-himi|basement-times|fis314|shoiblog)",
+    "exampleUrl": "https://hisa-himi.site/ http://basement-times.com/category/posts/page/2/ https://fis314.com/category/diary/ https://shoiblog.com/page/2/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "Article dl",
   "created_at": "2022-01-02T13:56:46+09:00",
-  "updated_at": "2022-05-28T10:31:53+09:00"
+  "updated_at": "2023-09-13T09:16:48+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85774",
