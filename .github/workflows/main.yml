@@ -46,3 +46,4 @@ jobs:
       with:
         url: http://wedata.net/databases/AutoPagerize/items_all.json
         file_in_repo: Pagetual/items_all.json
+        git_user: hoothin-update
