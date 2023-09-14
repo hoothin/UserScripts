@@ -11297,18 +11297,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/82010",
-  "name": "日本将棋連盟",
-  "created_by": "jigendaddy_be",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-11-08T16:32:48+09:00",
   "data": {
-    "exampleUrl": "https://www.shogi.or.jp/column/ https://www.shogi.or.jp/tsume_shogi/everyday/",
+    "pageElement": "//div[div[@class='pagingElements01']]/preceding-sibling::*[.//a]",
+    "considerationUrl": "https://www.shogi.or.jp/column/2023/09/abema2023_0902_playback.html",
+    "nextLink": "//li[@class='active'][number()>0]/following-sibling::li[1]/a",
     "url": "^https://www\\.shogi\\.or\\.jp/",
-    "pageElement": "//div[@class=\"section04\"]//div[@class=\"inner\"]|//ul[contains(@class,\"section04\")]/li",
-    "insertBefore": "",
-    "nextLink": "//li[@class=\"next\"]/a"
+    "exampleUrl": "https://www.shogi.or.jp/column/ https://www.shogi.or.jp/tsume_shogi/everyday/\r\nhttps://www.shogi.or.jp/event/search/?from=&to=&keyword="
   },
-  "created_at": "2018-11-08T16:32:48+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "jigendaddy_be",
+  "name": "日本将棋連盟",
+  "created_at": "2018-11-08T16:32:48+09:00",
+  "updated_at": "2023-09-13T19:36:08+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82007",
