@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.56
+// @version      1.9.36.57
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2035,6 +2035,14 @@
             sideController.remove();
         }
 
+        linkHasNoHref(link) {
+            return !link.href || !link.href.replace || this.hrefIsJs(link.href);
+        }
+
+        hrefIsJs(href) {
+            return /^(javascript|#)/.test(href.replace("#p{", "").replace(location.href, ""))
+        }
+
         async getPage(doc, exist) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let body = getBody(doc);
@@ -2117,14 +2125,15 @@
                 let nexts = body.querySelectorAll("a.next");
                 for (i = 0; i < nexts.length; i++) {
                     if (nexts[i].style.display !== "none" &&
-                       nexts[i].parentNode.style.display !== "none" &&
-                       !/^\s*([上前首尾]|previous)/i.test(nexts[i].innerText.trim())) {
+                        nexts[i].parentNode.style.display !== "none" &&
+                        !this.linkHasNoHref(nexts[i]) &&
+                        !/^\s*([上前首尾]|previous)/i.test(nexts[i].innerText.trim())) {
                         next = nexts[i];
                         break;
                     }
                 }
             }
-            if (next && (!next.href || /^(javascript|#)/.test(next.href.replace("#p{", "").replace(location.href, "")))) {
+            if (next && this.linkHasNoHref(next)) {
                 jsNext = next;
                 next = null;
             }
@@ -2132,7 +2141,7 @@
                 next = body.querySelectorAll("[aria-label='Next page']");
                 if (next && next.length == 1) {
                     next = next[0];
-                    if (!next.href || /^(javascript|#)/.test(next.href.replace("#p{", "").replace(location.href, ""))) {
+                    if (this.linkHasNoHref(next)) {
                         if (!jsNext) jsNext = next;
                         next = null;
                     }
@@ -2222,13 +2231,17 @@
                     if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
                     if (aTag.parentNode) {
                         if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
+                        if (aTag.parentNode.parentNode) {
+                            if (/slick|slide|gallery/i.test(aTag.parentNode.parentNode.className)) continue;
+                            if (aTag.parentNode.parentNode.parentNode && /slick|slide|gallery/i.test(aTag.parentNode.parentNode.parentNode.className)) continue;
+                        }
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('active')) continue;
                         if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
                     }
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
-                    let isJs = !aTag.href || !aTag.href.replace || /^(javascript|#)/.test(aTag.href.replace("#p{", "").replace(location.href, ""));
+                    let isJs = this.linkHasNoHref(aTag);
                     if (exist && isJs && !aTag.offsetParent) continue;
                     if (innerText) {
                         innerText = innerText.split(/\n/)[0].replace(/ /g, '');
@@ -2591,7 +2604,7 @@
                         parent = parent.parentNode;
                     }
                     if (doc == document) {
-                        if ((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace("#p{", "").replace(location.href, ""))) && !isVisible(nextLink, _unsafeWindow)) {
+                        if (this.linkHasNoHref(nextLink) && !isVisible(nextLink, _unsafeWindow)) {
                             this.nextLinkHref = false;
                             return null;
                         } else {
@@ -3142,7 +3155,11 @@
                 }
                 callback();
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
-                if (initRun && initRun != false && self.nextLinkHref) nextPage();
+                if (initRun && initRun != false && self.nextLinkHref) {
+                    setTimeout(() => {
+                        nextPage();
+                    }, 500);
+                }
             });
         }
 
@@ -3268,7 +3285,7 @@
             if (enableHistory) {
                 this.historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
                 if(this.historyUrl != location.href) {
-                    let isJs = /^(javascript|#)/.test(this.historyUrl.replace("#p{", "").replace(location.href, ""));
+                    let isJs = this.hrefIsJs(this.historyUrl);
                     if (!isJs) {
                         let historyTitle = enableHistoryAfterInsert ? doc.title : oldTitle;
                         _unsafeWindow.history.replaceState(undefined, historyTitle, this.historyUrl);
@@ -5866,7 +5883,7 @@
                 });
             }
             if (ruleParser.nextLinkHref) {
-                let isJs = /^(javascript|#)/.test(ruleParser.nextLinkHref.replace("#p{", "").replace(location.href, ""));
+                let isJs = ruleParser.hrefIsJs(ruleParser.nextLinkHref);
                 if (!isJs) {
                     let inForce = (forceState == 2 || forceState == 3);
                     _GM_registerMenuCommand(i18n(inForce ? "cancelForceIframe" : "forceIframe"), () => {
@@ -6288,7 +6305,7 @@
             }, 1500);
             let nextLink = ruleParser.nextLinkHref;
             if (!nextLink) return;
-            let isJs = /^(javascript|#)/.test(nextLink.replace("#p{", "").replace(location.href, ""));
+            let isJs = ruleParser.hrefIsJs(nextLink);
             if (isJs) {
                 let nextBtn = ruleParser.nextLinkEle;
                 if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document, true);
@@ -6523,7 +6540,7 @@
         }
         if (loadmoreBtn && !ruleParser.curSiteRule.loadMore && loadmoreBtn.dataset.ajax !== "true") {
             let href = loadmoreBtn.getAttribute("href");
-            if (href && href != "/" && !/^(javascript|#)/.test(href.replace("#p{", "").replace(location.href, ""))) {
+            if (href && href != "/" && !ruleParser.hrefIsJs(href)) {
                 loadmoreBtn = null;
             }
         }
@@ -7694,7 +7711,7 @@
                     command: 'pagetual.insert'
                 }, '*');
             }*/
-            let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace("#p{", "").replace(location.href, ""));
+            let isJs = ruleParser.curSiteRule.action == 3 || ruleParser.hrefIsJs(nextLink);
             if (!isJs) {
                 emuIframe = null;
                 lastActiveUrl = nextLink;
