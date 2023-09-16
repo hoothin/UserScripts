@@ -3006,7 +3006,7 @@
     "name": "巴哈姆特 - 內文",
     "example": "https://forum.gamer.com.tw/C.php?bsn=23805&snA=610529&tnum=14858",
     "url": "^https?://forum\\.gamer\\.com.tw/C\\.php",
-    "nextLink": "a.next",
+    "nextLink": "a.next:not(.no)",
     "pageElement": ".c-section[id*='post']",
     "replaceElement": [
         "div.forum-ad_top+section>.c-section__main>#BH-pagebtn",
@@ -3018,7 +3018,7 @@
     "name": "巴哈姆特 - 文章列表",
     "example": "https://forum.gamer.com.tw/B.php?bsn=23805",
     "url": "^https?://forum\\.gamer\\.com.tw/B\\.php",
-    "nextLink": "a.next",
+    "nextLink": "a.next:not(.no)",
     "pageElement": ".b-list>tbody>tr:not(.b-list__head)",
     "replaceElement": [
         ".forum-ad_top+.b-pager.pager",
