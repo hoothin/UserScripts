@@ -1536,14 +1536,15 @@
             if (h === 0 && ele.children && ele.children.length === 1) {
                 h = ele.children[0].scrollHeight;
             }
-            let moreChild = ele.children[0], minOffsetTop = h;
+            const maxNum = 2147483647;
+            let moreChild = ele.children[0], minOffsetTop = maxNum;
             while (moreChild) {
-                if (moreChild.offsetParent == ele && moreChild.offsetTop < minOffsetTop) {
+                if ((moreChild.offsetParent == ele || moreChild.offsetParent == ele.offsetParent) && moreChild.offsetTop < minOffsetTop) {
                     minOffsetTop = moreChild.offsetTop;
                 }
                 moreChild = moreChild.nextElementSibling;
             }
-            if (minOffsetTop != h && minOffsetTop > 0) {
+            if (minOffsetTop != maxNum && minOffsetTop > 0) {
                 h -= minOffsetTop;
             }
             return h;
