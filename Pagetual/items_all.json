@@ -16792,7 +16792,7 @@
   "data": {
     "pageElement": "id('grid')",
     "Stylish": "@-moz-document domain(\"wornontv.net\") {\r\n  .ga-wrap{display:none;}\r\n}",
-    "nextLink": "//a[@class='next']",
+    "nextLink": "//li[@class='pagination-next']/a",
     "url": "^https://wornontv\\.net/",
     "exampleUrl": "https://wornontv.net/new/page/2/"
   },
@@ -16800,7 +16800,7 @@
   "created_by": "Tanookirby",
   "name": "WornOnTV",
   "created_at": "2016-07-15T12:19:29+09:00",
-  "updated_at": "2020-06-20T10:49:51+09:00"
+  "updated_at": "2023-09-17T08:24:15+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/80882",
@@ -25050,18 +25050,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/76259",
-  "name": "スポーツナビ　コラム本文",
-  "created_by": "hohoho",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-05-14T10:17:27+09:00",
   "data": {
-    "exampleUrl": "http://sports.yahoo.co.jp/column/detail/201507310001-spnavi\r\nhttp://sports.yahoo.co.jp/sports/soccer/eusoccer/1516/columndtl/201507310001-spnavi",
+    "pageElement": "id('series')/following-sibling::section",
     "comment": "こちらはスポーツナビのコラム関連です。スポーツナビの新旧2つのレイアウト上で動作します。コラム関連以外のものはhttp://wedata.net/items/76256を参照してください。",
-    "url": "^https://sports\\.yahoo\\.co.jp/(column|sports)",
-    "pageElement": "//*[@class=\"mod-content\" or @class=\"newsList\" or @class=\"modBody\"]",
-    "nextLink": "//a[(text()=\"次へ\") or (text()=\"次 »\")]"
+    "nextLink": "//a[(text()=\"次へ\")]",
+    "url": "^https://sports\\.yahoo\\.co.jp/column/detail/",
+    "exampleUrl": "https://sports.yahoo.co.jp/column/detail/201507310001-spnavi\r\nhttps://sports.yahoo.co.jp/column/detail/2023090900004-spnavi"
   },
-  "created_at": "2014-08-28T14:54:43+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "hohoho",
+  "name": "スポーツナビ　コラム本文",
+  "created_at": "2014-08-28T14:54:43+09:00",
+  "updated_at": "2023-09-16T13:23:50+09:00"
 },
 {
   "data": {
@@ -47260,7 +47260,7 @@
 {
   "resource_url": "http://wedata.net/items/27186",
   "data": {
-    "pageElement": "id(\"imglst\")|id(\"body\")",
+    "pageElement": "id('article_contents')",
     "nextLink": "//a[@class='next']",
     "url": "^https?://carview\\.yahoo\\.co\\.jp/article/detail/",
     "exampleUrl": "https://carview.yahoo.co.jp/article/detail/12d5012bd31849b44885026cdc03cf9e7a22f514/"
@@ -47269,7 +47269,7 @@
   "created_by": "morimasa",
   "name": "試乗レポート - carview!",
   "created_at": "2009-02-19T14:35:03+09:00",
-  "updated_at": "2020-07-12T10:33:38+09:00"
+  "updated_at": "2023-09-16T12:31:10+09:00"
 },
 {
   "name": "Unicode Character Search",
