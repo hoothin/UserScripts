@@ -1410,7 +1410,7 @@
             let r = 0;
             function searchByTime() {
                 setTimeout(() => {
-                    let end = r + 50;
+                    let end = r + 20;
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
@@ -2049,6 +2049,16 @@
             return /^(javascript|#)/.test(href.replace("#p{", "").replace(location.href, ""))
         }
 
+        async querySelectorList(source, list) {
+            for (let i = 0; i < list.length; i++) {
+                await sleep(1);
+                let sel = list[i];
+                let result = source.querySelector(sel);
+                if (result) return result;
+            }
+            return null;
+        }
+
         async getPage(doc, exist) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let body = getBody(doc);
@@ -2082,50 +2092,47 @@
             }
             let curPage = doc, i, cur, jsNext;
             let next1, next2, next3, next4, nextJs1, nextJs2, nextJs3;
-            let next = body.querySelector(".page-next>a") ||
-                body.querySelector("a.next_page") ||
-                body.querySelector("#next_page") ||
-                body.querySelector(".nextPage") ||
-                body.querySelector(".pagination-next>a") ||
-                body.querySelector("a[data-pagination=next]") ||
-                body.querySelector(".pagination li.active~li>a") ||
-                body.querySelector("[class^=pag] .current+a") ||
-                body.querySelector(".pageButtonsCurrent+a") ||
-                body.querySelector("a[class*=nextpage]") ||
-                body.querySelector("li.page-current+li>a") ||
-                body.querySelector("[class^=pag] a[rel=next]") ||
-                body.querySelector("[class^=Pag] [aria-label=next]") ||
-                body.querySelector("[aria-label='Next page']") ||
-                body.querySelector(".pagination-nav__item--next>a");
-            if (!next) {
-                await sleep(1);
-                next = body.querySelector("a.pageright") ||
-                body.querySelector(".page-numbers.current+a") ||
-                body.querySelector(".page_current+a") ||
-                body.querySelector("input[value='next']") ||
-                body.querySelector("input[value='Next page']") ||
-                body.querySelector("input[value='下一页']") ||
-                body.querySelector("input[value='下一頁']") ||
-                body.querySelector("a#pb_next") ||
-                body.querySelector("a#rightFix") ||
-                body.querySelector("a#btnPreGn") ||
-                body.querySelector("a.page-next") ||
-                body.querySelector("a.pages-next") ||
-                body.querySelector("a.page.right");
-            }
-            if (!next) {
-                await sleep(1);
-                next = body.querySelector("a#next") ||
-                body.querySelector(".next>a") ||
-                body.querySelector(".next>button") ||
-                body.querySelector("a[alt=next]") ||
-                body.querySelector(".pg_area>em+a") ||
-                body.querySelector("button.next:not([disabled])") ||
-                body.querySelector(".btn_next:not([disabled])") ||
-                body.querySelector(".btn-next:not([disabled])") ||
-                body.querySelector("a#linkNext") ||
-                body.querySelector("a[class*=page__next]");
-            }
+            let selectorList = [
+                ".page-next>a",
+                "a.next_page",
+                "#next_page",
+                ".nextPage",
+                ".pagination-next>a",
+                "a[data-pagination=next]",
+                ".pagination li.active~li>a",
+                "[class^=pag] .current+a",
+                ".pageButtonsCurrent+a",
+                "a[class*=nextpage]",
+                "li.page-current+li>a",
+                "[class^=pag] a[rel=next]",
+                "[class^=Pag] [aria-label=next]",
+                "[aria-label='Next page']",
+                ".pagination-nav__item--next>a",
+                "a.pageright",
+                ".page-numbers.current+a",
+                ".page_current+a",
+                "input[value='next']",
+                "input[value='Next page']",
+                "input[value='下一页']",
+                "input[value='下一頁']",
+                "a#pb_next",
+                "a#rightFix",
+                "a#btnPreGn",
+                "a.page-next",
+                "a.pages-next",
+                "a.page.right",
+                "a#next",
+                ".next>a",
+                ".next>button",
+                "a[alt=next]",
+                ".pg_area>em+a",
+                "button.next:not([disabled])",
+                ".btn_next:not([disabled])",
+                ".btn-next:not([disabled])",
+                "a#linkNext",
+                "a[class*=page__next]"
+            ];
+            let next = await this.querySelectorList(body, selectorList);
             if (!next) {
                 await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
@@ -2144,6 +2151,7 @@
                 next = null;
             }
             if (!next) {
+                await sleep(1);
                 next = body.querySelectorAll("[aria-label='Next page']");
                 if (next && next.length == 1) {
                     next = next[0];
@@ -2170,11 +2178,13 @@
                 next = null;
             }
             if (!next) {
+                await sleep(1);
                 next = body.querySelector("a.curr+a") ||
                     body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a") ||
                     body.querySelector(".number>ul>li.active+li>a");;
             }
             if (!next) {
+                await sleep(1);
                 let pageDiv = body.querySelector("div.pages>ul");
                 if (pageDiv) {
                     cur = pageDiv.querySelector("li>b");
@@ -2183,6 +2193,7 @@
                 }
             }
             if (!next) {
+                await sleep(1);
                 next = body.querySelector(".pages>a[href='javascript:;']+a");
                 if (next && (next.href == "javascript:;" || next.getAttribute("href") == "#")) next = null;
             }
@@ -2215,7 +2226,7 @@
                 let aTags = body.querySelectorAll("a,button,[type='button']");
                 for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
-                    if (i % 300 == 0) {
+                    if (i % 100 == 0) {
                         await sleep(1);
                     }
                     let aTag = aTags[i];
@@ -6272,9 +6283,8 @@
         return scrollH - scrolly - windowHeight;
     }
 
-    let checkLoadMore, scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
+    let scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
     function initListener () {
-        clearInterval(checkLoadMore);
         document.removeEventListener('scroll', scrollHandler, true);
         document.removeEventListener('wheel', scrollHandler, true);
         document.removeEventListener('dblclick', dblclickHandler);
@@ -6284,25 +6294,10 @@
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
         let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
-        if (!ruleParser.curSiteRule.singleUrl) {
-            if (ruleParser.curSiteRule.loadMore) {
-                loadingMore = false;
-            }
-        } else {
-            checkLoadMore = setInterval(() => {
-                loadmoreBtn = getLoadMore(document);
-                if (loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)) {
-                    loadingMore = false;
-                    if (isInViewPort(loadmoreBtn)) {
-                        emuClick(loadmoreBtn);
-                        loadingMore = true;
-                        setTimeout(() => {loadingMore = false}, 200);
-                    }
-                    clearInterval(checkLoadMore);
-                } else if (checkLoadMoreTimes++ > 10) {
-                    clearInterval(checkLoadMore);
-                }
-            }, 1000);
+        if (ruleParser.curSiteRule.singleUrl) {
+            loadingMore = false;
+        } else if (ruleParser.curSiteRule.loadMore) {
+            loadingMore = false;
         }
         clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
         let clickingNext = false;
@@ -6350,7 +6345,9 @@
                     }
                 } else {
                     loadingMore = true;
-                    setTimeout(() => {loadingMore = false}, 200);
+                    if (!ruleParser.curSiteRule.singleUrl || checkLoadMoreTimes++ < 3) {
+                        setTimeout(() => {loadingMore = false}, 200);
+                    }
                 }
             }
             if (!isLoading && !stopScroll) {
