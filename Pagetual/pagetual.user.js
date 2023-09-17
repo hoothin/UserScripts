@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.57
+// @version      1.9.36.58
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -216,7 +216,8 @@
                 propName: "Enter rule property name",
                 propValue: "Enter rule property value",
                 customFirst: "Ignore cache for local custom rules",
-                rulesExample: "Rules Example"
+                rulesExample: "Rules Example",
+                lastPage: "Reached the last page"
             }
         },
         {
@@ -333,7 +334,8 @@
                 propName: "输入规则属性名",
                 propValue: "输入规则属性值",
                 customFirst: "为本地自定义规则忽略缓存",
-                rulesExample: "自定义规则详解"
+                rulesExample: "自定义规则详解",
+                lastPage: "已到达最后一页"
             }
         },
         {
@@ -450,7 +452,8 @@
                 propName: "輸入規則屬性名",
                 propValue: "輸入規則屬性值",
                 customFirst: "為本地自定義規則忽略緩存",
-                rulesExample: "自定義規則詳解"
+                rulesExample: "自定義規則詳解",
+                lastPage: "已到達最後一頁"
             }
         },
         {
@@ -567,7 +570,8 @@
                 propName: "ルールのプロパティ名を入力してください",
                 propValue: "ルールのプロパティ値を入力してください",
                 customFirst: "ローカルカスタムルールのキャッシュを無視する",
-                rulesExample: "カスタムルールの詳しい説明"
+                rulesExample: "カスタムルールの詳しい説明",
+                lastPage: "最後のページに到達しました"
             }
         },
         {
@@ -684,7 +688,8 @@
                 propName: "Введите имя свойства правила",
                 propValue: "Введите значение свойства правила",
                 customFirst: "Игнорировать кеш для локальных пользовательских правил",
-                rulesExample: "Подробное объяснение настраиваемых правил"
+                rulesExample: "Подробное объяснение настраиваемых правил",
+                lastPage: "Достигнута последняя страница"
             }
         }
     ];
@@ -2625,7 +2630,10 @@
                 }
             }
             if (nextLink) {
-                if (!this.checkStopSign(nextLink, doc)) return null;
+                if (!this.checkStopSign(nextLink, doc)) {
+                    if (curPage > 1) showTips(i18n("lastPage"));
+                    return null;
+                }
                 if (this.curSiteRule.action == 3) {
                     if (doc == document) debug(nextLink, 'Next link');
                     this.nextLinkHref = '#';
@@ -7122,6 +7130,7 @@
     function emuPage(callback) {
         let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
+            if (curPage > 1) showTips(i18n("lastPage"));
             debug(log);
             isPause = true;
             callback(false, false);
@@ -7245,7 +7254,9 @@
                 }
                 return;
             }
-            if (!ruleParser.checkStopSign(nextLink, iframeDoc)) return returnFalse("Stop as stopSign");;
+            if (!ruleParser.checkStopSign(nextLink, iframeDoc)) {
+                return returnFalse("Stop as stopSign");;
+            }
             if (checkTimes++ > 200) {
                 returnFalse("Stop as timeout when emu");
                 return;
@@ -7694,6 +7705,8 @@
             if (!nextLink) {
                 if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 3)) {
                     setTimeout(() => {isLoading = false}, 500);
+                } else if (curPage > 1) {
+                    showTips(i18n("lastPage"));
                 }
                 return;
             }
