@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86162",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[./a[@class='card-link']]|//div[@class='container']/h2/following-sibling::div[./following-sibling::div]",
+    "nextLink": "//li[@class='page-item']/following-sibling::li[last()]/a",
+    "url": "^https://claypier\\.com/",
+    "exampleUrl": "https://claypier.com/ https://claypier.com/?s=a https://claypier.com/category/apple/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "CLAYPIER",
+  "created_at": "2023-09-17T20:07:34+09:00",
+  "updated_at": "2023-09-17T20:07:34+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86153",
   "data": {
     "insertBefore": "",
@@ -16791,7 +16806,6 @@
   "resource_url": "http://wedata.net/items/80883",
   "data": {
     "pageElement": "id('grid')",
-    "Stylish": "@-moz-document domain(\"wornontv.net\") {\r\n  .ga-wrap{display:none;}\r\n}",
     "nextLink": "//li[@class='pagination-next']/a",
     "url": "^https://wornontv\\.net/",
     "exampleUrl": "https://wornontv.net/new/page/2/"
@@ -16800,7 +16814,7 @@
   "created_by": "Tanookirby",
   "name": "WornOnTV",
   "created_at": "2016-07-15T12:19:29+09:00",
-  "updated_at": "2023-09-17T08:24:15+09:00"
+  "updated_at": "2023-09-17T11:20:42+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/80882",
