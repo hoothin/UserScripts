@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.58
+// @version      1.9.36.59
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -217,7 +217,8 @@
                 propValue: "Enter rule property value",
                 customFirst: "Ignore cache for local custom rules",
                 rulesExample: "Rules Example",
-                lastPage: "Reached the last page"
+                lastPage: "Reached the last page",
+                lastPageTips: "Show tips when reaching the last page"
             }
         },
         {
@@ -335,7 +336,8 @@
                 propValue: "输入规则属性值",
                 customFirst: "为本地自定义规则忽略缓存",
                 rulesExample: "自定义规则详解",
-                lastPage: "已到达最后一页"
+                lastPage: "已到达最后一页",
+                lastPageTips: "到达最后一页时进行提示"
             }
         },
         {
@@ -453,7 +455,8 @@
                 propValue: "輸入規則屬性值",
                 customFirst: "為本地自定義規則忽略緩存",
                 rulesExample: "自定義規則詳解",
-                lastPage: "已到達最後一頁"
+                lastPage: "已到達最後一頁",
+                lastPageTips: "到達最後一頁時進行提示"
             }
         },
         {
@@ -571,7 +574,8 @@
                 propValue: "ルールのプロパティ値を入力してください",
                 customFirst: "ローカルカスタムルールのキャッシュを無視する",
                 rulesExample: "カスタムルールの詳しい説明",
-                lastPage: "最後のページに到達しました"
+                lastPage: "最後のページに到達しました",
+                lastPageTips: "最後のページに到達した時にヒントを表示する"
             }
         },
         {
@@ -689,7 +693,8 @@
                 propValue: "Введите значение свойства правила",
                 customFirst: "Игнорировать кеш для локальных пользовательских правил",
                 rulesExample: "Подробное объяснение настраиваемых правил",
-                lastPage: "Достигнута последняя страница"
+                lastPage: "Достигнута последняя страница",
+                lastPageTips: "Показывать подсказки при достижении последней страницы"
             }
         }
     ];
@@ -2643,7 +2648,7 @@
             }
             if (nextLink) {
                 if (!this.checkStopSign(nextLink, doc)) {
-                    if (curPage > 1) showTips(i18n("lastPage"));
+                    if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"));
                     return null;
                 }
                 if (this.curSiteRule.action == 3) {
@@ -5222,6 +5227,7 @@
         let contentVisibilityInput = createCheckbox(i18n("contentVisibility"), rulesData.contentVisibility);
         let wedata2githubInput = createCheckbox(i18n("wedata2github"), rulesData.wedata2github);
         let customFirstInput = createCheckbox(i18n("customFirst"), rulesData.customFirst);
+        let lastPageTipsInput = createCheckbox(i18n("lastPageTips"), rulesData.lastPageTips);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -5389,6 +5395,7 @@
             rulesData.hideLoadingIcon = hideLoadingIconInput.checked;
             rulesData.hideBarArrow = hidePageBarArrowInput.checked;
             rulesData.customFirst = customFirstInput.checked;
+            rulesData.lastPageTips = lastPageTipsInput.checked;
             rulesData.initRun = initRunInput.checked;
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
             rulesData.rate = parseInt(rateInput.value) || 1;
@@ -5700,6 +5707,9 @@
                 }
                 if (typeof(rulesData.hideBarArrow) == "undefined") {
                     rulesData.hideBarArrow = false;
+                }
+                if (typeof(rulesData.lastPageTips) == "undefined") {
+                    rulesData.lastPageTips = true;
                 }
                 if (rulesData.autoLoadNum && rulesData.initRun) {
                     autoLoadNum = parseInt(rulesData.autoLoadNum);
@@ -7128,7 +7138,7 @@
     function emuPage(callback) {
         let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
-            if (curPage > 1) showTips(i18n("lastPage"));
+            if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"));
             debug(log);
             isPause = true;
             callback(false, false);
@@ -7703,7 +7713,7 @@
             if (!nextLink) {
                 if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 3)) {
                     setTimeout(() => {isLoading = false}, 500);
-                } else if (curPage > 1) {
+                } else if (curPage > 1 && rulesData.lastPageTips) {
                     showTips(i18n("lastPage"));
                 }
                 return;
