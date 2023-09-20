@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.9.17.1
+// @version              2023.9.20.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -56,6 +56,16 @@
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
 // ==/UserScript==
+
+if (window.top != window.self) {
+    try {
+        if (window.self.innerWidth < 250 || window.self.innerHeight < 250) {
+            return;
+        }
+    } catch(e) {
+        return;
+    }
+}
 
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
@@ -13119,7 +13129,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-others">'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="urlFilter" title="'+i18n("urlFilterTip")+'">'+i18n("urlFilter")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip"," " + prefs.gallery.editSite + " ")+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
@@ -16932,7 +16942,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-head-command-slide-show-countdown{\
                     font-size:0.8em;\
                     }\
-                    .pv-gallery-head-command-slide-show-button{\
+                    span.pv-gallery-head-command-slide-show-button{\
                     border-radius:36px;\
                     display:inline-block;\
                     width:18px;\
@@ -16948,9 +16958,11 @@ ImgOps | https://imgops.com/#b#`;
                     border-bottom:4px solid transparent;\
                     border-left:8px solid #757575;\
                     vertical-align:middle;\
+                    margin-left: 1px;\
                     }\
                     .pv-gallery-head-command-slide-show-button-inner_stop{\
                     border-color:#757575;\
+                    margin-left: 0px;\
                     }\
                     .pv-gallery-head-command-collect-icon{\
                     display:inline-block;\
