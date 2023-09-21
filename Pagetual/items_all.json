@@ -41042,17 +41042,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/33051",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2010-05-31T22:01:38+09:00",
   "data": {
-    "pageElement": "//section[@class=\"news-list\"]//li",
-    "exampleUrl": "https://news.biglobe.ne.jp/economy/whole/",
+    "pageElement": "//section[contains(@class, '-list')]/div[@class='bx']/ul",
+    "nextLink": "//a[@class='next']",
     "url": "^https://news\\.biglobe\\.ne\\.jp/",
-    "nextLink": "//a[@class='next']"
+    "exampleUrl": "https://news.biglobe.ne.jp/economy/whole/\r\nhttps://news.biglobe.ne.jp/list/006/557/%E3%83%97%E3%83%AD%E9%87%8E%E7%90%83.html\r\nhttps://news.biglobe.ne.jp/video/"
   },
-  "updated_at": "2020-05-10T11:00:20+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
   "name": "BIGLOBEニュース",
-  "created_by": "t_f_m"
+  "created_at": "2010-05-31T22:01:38+09:00",
+  "updated_at": "2023-09-20T22:24:07+09:00"
 },
 {
   "name": "\u9ad8\u6728\u6d69\u5149\uff20\u81ea\u5b85\u306e\u65e5\u8a18",
