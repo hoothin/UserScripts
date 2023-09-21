@@ -3,7 +3,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.18
+// @version      1.3.19
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
@@ -273,6 +273,9 @@ if (window.top != window.self) {
     function createHTML(html) {
         return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
     }
+    if (location.href.indexOf("randomsexypicparser") != -1) {
+        GM_addStyle(".discussion-rating{display:none}");
+    }
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
     if(curConfig){
         if(!curConfig.run){
@@ -379,7 +382,7 @@ if (window.top != window.self) {
             var curNode = document.body.childNodes[i];
             if (curNode.nodeType == 1 || curNode.nodeName == "PRE") {
                 firstText = curNode.nodeValue || curNode.innerText;
-                break;
+                if (firstText) break;
             }
         }
         if(firstText)jsonData=JSON.parse(firstText);
