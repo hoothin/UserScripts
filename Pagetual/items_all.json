@@ -6446,7 +6446,8 @@
 {
   "resource_url": "http://wedata.net/items/85419",
   "data": {
-    "pageElement": "descendant::h2[1]/following-sibling::div[last()]",
+    "pageElement": "//div[@class='article']/div[contains(@class, 'wysiwyg')]/*[not(@id='rectangle')]|//div[@class='archive_list']",
+    "comment": "個別記事の2ページ目が正しく取得できていなかったのを修正",
     "nextLink": "//span[@aria-current]/following-sibling::a[1]",
     "url": "^https?://sirabee\\.com/",
     "exampleUrl": "https://sirabee.com/2020/07/22/20162374456/\r\nhttps://sirabee.com/genre/%e3%82%a4%e3%83%b3%e3%82%bf%e3%83%93%e3%83%a5%e3%83%bc/"
@@ -6455,7 +6456,7 @@
   "created_by": "brib2",
   "name": "ニュースサイトしらべぇ",
   "created_at": "2020-07-24T10:53:21+09:00",
-  "updated_at": "2021-12-11T10:36:37+09:00"
+  "updated_at": "2023-09-21T18:54:07+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85418",
