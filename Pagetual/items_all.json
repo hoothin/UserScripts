@@ -1238,17 +1238,16 @@
 {
   "resource_url": "http://wedata.net/items/86024",
   "data": {
-    "insertBefore": "",
-    "pageElement": "id('mainwrap')/div[not(./p)][last()]/following-sibling::*[1]/preceding-sibling::*",
+    "pageElement": "id('mainwrap')/*[not(@class='unit-link-next' or @class='pagernav')]",
     "nextLink": "//link[@rel='next']",
     "url": "^https://beauty\\.oricon\\.co\\.jp/",
-    "exampleUrl": "https://beauty.oricon.co.jp/special/100852/"
+    "exampleUrl": "https://beauty.oricon.co.jp/special/100852/\r\nhttps://beauty.oricon.co.jp/special/102022/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "eltha",
   "created_at": "2022-12-09T15:57:28+09:00",
-  "updated_at": "2022-12-09T15:57:28+09:00"
+  "updated_at": "2023-09-22T20:13:22+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86022",
