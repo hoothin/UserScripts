@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86165",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('page-nav')/preceding-sibling::div[contains(@class,'-entry') or contains(@id,'-archive')]",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://karapaia\\.com/",
+    "exampleUrl": "https://karapaia.com/ https://karapaia.com/archives/cat_50034588.html https://karapaia.com/tag/K9"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "カラパイア",
+  "created_at": "2023-09-24T11:09:10+09:00",
+  "updated_at": "2023-09-24T11:09:10+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86162",
   "data": {
     "insertBefore": "",
