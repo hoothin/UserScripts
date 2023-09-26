@@ -1,5 +1,63 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86168",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//ul[@class='category__list']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://www\\.lisani\\.jp/",
+    "exampleUrl": "https://www.lisani.jp/interview/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "リスアニ！",
+  "created_at": "2023-09-25T19:41:16+09:00",
+  "updated_at": "2023-09-25T19:41:16+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86167",
+  "data": {
+    "pageElement": "//div[@class='view-content']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://research\\.impress\\.co\\.jp/",
+    "exampleUrl": "https://research.impress.co.jp/report/list https://research.impress.co.jp/topics/list https://research.impress.co.jp/search?keywords=a"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "インプレス総合研究所",
+  "created_at": "2023-09-25T14:43:21+09:00",
+  "updated_at": "2023-09-25T15:17:59+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86166",
+  "data": {
+    "pageElement": "//main/ul",
+    "nextLink": "//span[@class='current']/following-sibling::a[1]",
+    "url": "^https://www\\.gaji\\.jp/blog/",
+    "exampleUrl": "https://www.gaji.jp/blog/ https://www.gaji.jp/blog/author/emi-imanishi/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Gaji-Laboブログ",
+  "created_at": "2023-09-25T14:27:14+09:00",
+  "updated_at": "2023-09-25T14:31:29+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86165",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('page-nav')/preceding-sibling::div[contains(@class,'-entry') or contains(@id,'-archive')]",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://karapaia\\.com/",
+    "exampleUrl": "https://karapaia.com/ https://karapaia.com/archives/cat_50034588.html https://karapaia.com/tag/K9"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "カラパイア",
+  "created_at": "2023-09-24T11:09:10+09:00",
+  "updated_at": "2023-09-24T11:09:10+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86162",
   "data": {
     "insertBefore": "",
@@ -1238,17 +1296,16 @@
 {
   "resource_url": "http://wedata.net/items/86024",
   "data": {
-    "insertBefore": "",
-    "pageElement": "id('mainwrap')/div[not(./p)][last()]/following-sibling::*[1]/preceding-sibling::*",
+    "pageElement": "id('mainwrap')/*[not(@class='unit-link-next' or @class='pagernav')]",
     "nextLink": "//link[@rel='next']",
     "url": "^https://beauty\\.oricon\\.co\\.jp/",
-    "exampleUrl": "https://beauty.oricon.co.jp/special/100852/"
+    "exampleUrl": "https://beauty.oricon.co.jp/special/100852/\r\nhttps://beauty.oricon.co.jp/special/102022/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "eltha",
   "created_at": "2022-12-09T15:57:28+09:00",
-  "updated_at": "2022-12-09T15:57:28+09:00"
+  "updated_at": "2023-09-22T20:13:22+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86022",
