@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.6
+// @version      1.6.30.7
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1790,8 +1790,8 @@
                  .search-jumper-btn {
                      position: relative;
                      display: grid;
-                     padding: ${1 * this.scale}px;
-                     margin: ${3 * this.scale}px;
+                     padding: ${1 * this.scale}px!important;
+                     margin: ${3 * this.scale}px!important;
                      cursor: pointer;
                      box-sizing: content-box;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s, background 0.25s;"}
@@ -3258,6 +3258,8 @@
                          }
                          .customInputFrame-title>img {
                              margin: 5px;
+                             height: 32px;
+                             width: 32px;
                          }
                          .customInputFrame-input-title {
                              font-size: 9pt;
@@ -3603,6 +3605,8 @@
                     }
                     .searchJumperModify-title>img {
                         margin: 5px;
+                        height: 32px;
+                        width: 32px;
                     }
                     .searchJumperModify-input-title {
                         font-size: 9pt;
@@ -9846,7 +9850,8 @@
             }
             if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
                 getBody(document).addEventListener('dragstart', e => {
-                    if ((searchData.prefConfig.dragAlt && !e.altKey) ||
+                    if (!e.isTrusted ||
+                        (searchData.prefConfig.dragAlt && !e.altKey) ||
                         (searchData.prefConfig.dragCtrl && !e.ctrlKey) ||
                         (searchData.prefConfig.dragShift && !e.shiftKey) ||
                         (searchData.prefConfig.dragMeta && !e.metaKey)) {
@@ -10411,6 +10416,8 @@
                     }
                     .searchJumperFrame-title>img {
                         margin: 5px;
+                        height: 32px;
+                        width: 32px;
                     }
                     .searchJumperFrame-buttons {
                         text-align: center;
@@ -11137,6 +11144,8 @@
                     }
                     .searchJumperFrame-title>img {
                         margin: 5px;
+                        height: 32px;
+                        width: 32px;
                     }
                     .searchJumperFrame-input-title {
                         font-size: 9pt;
