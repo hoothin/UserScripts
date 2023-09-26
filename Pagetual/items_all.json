@@ -1,5 +1,48 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86168",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//ul[@class='category__list']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://www\\.lisani\\.jp/",
+    "exampleUrl": "https://www.lisani.jp/interview/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "リスアニ！",
+  "created_at": "2023-09-25T19:41:16+09:00",
+  "updated_at": "2023-09-25T19:41:16+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86167",
+  "data": {
+    "pageElement": "//div[@class='view-content']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://research\\.impress\\.co\\.jp/",
+    "exampleUrl": "https://research.impress.co.jp/report/list https://research.impress.co.jp/topics/list https://research.impress.co.jp/search?keywords=a"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "インプレス総合研究所",
+  "created_at": "2023-09-25T14:43:21+09:00",
+  "updated_at": "2023-09-25T15:17:59+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86166",
+  "data": {
+    "pageElement": "//main/ul",
+    "nextLink": "//span[@class='current']/following-sibling::a[1]",
+    "url": "^https://www\\.gaji\\.jp/blog/",
+    "exampleUrl": "https://www.gaji.jp/blog/ https://www.gaji.jp/blog/author/emi-imanishi/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Gaji-Laboブログ",
+  "created_at": "2023-09-25T14:27:14+09:00",
+  "updated_at": "2023-09-25T14:31:29+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86165",
   "data": {
     "insertBefore": "",
