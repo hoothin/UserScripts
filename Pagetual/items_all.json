@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86169",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class=\"g1-collection-viewport\"]",
+    "nextLink": "//a[@class=\"next\"]",
+    "url": "^https://watchjavidol\\.com/",
+    "exampleUrl": ""
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "mechchorogi",
+  "name": "watchjavidol",
+  "created_at": "2023-09-26T17:09:51+09:00",
+  "updated_at": "2023-09-26T17:09:51+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86168",
   "data": {
     "insertBefore": "",
