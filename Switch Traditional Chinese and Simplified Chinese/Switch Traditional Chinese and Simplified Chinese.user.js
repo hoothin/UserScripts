@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.36
+// @version      1.2.6.37
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -31,7 +31,7 @@
 // @grant        GM.getResourceText
 // @grant        unsafeWindow
 // @resource pinyinTree        https://hoothin.github.io/UserScripts/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/pinyinTree.json
-// @contributionURL      https://www.buymeacoffee.com/hoothin
+// @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
 //因一簡對多繁，所以簡轉繁需要優先排除異體字，並根據詞彙轉換。其他需要語義分析的，暫時無解。整理繁簡對照表很費時，因此不打臉的話不再更新，如有需求，刪減自用。更精細的需求可自行申請相應API或自行訓練語義AI並搭建對照數據庫。在油猴脚本裏面如此這般折騰，我是覺得沒有意義啦。。。
@@ -674,7 +674,7 @@
     var tc2sc = {
         '著':[
             '着',
-            ['著','著名','著作','巨著','著稱','顯著','昭著','卓著','所著','著述','編著','著書','名著','遺著','譯著','著：','著:']
+            ['著','著名','著作','巨著','著稱','顯著','昭著','卓著','所著','著述','編著','著書','名著','原著','遺著','譯著','著：','著:']
         ]
     };
 
@@ -964,7 +964,7 @@
             childs = document.documentElement.childNodes;
         }
         if (childs) {
-            for (let i = 0;i<childs.length;i++){
+            for (let i = 0;i<childs.length;i++) {
                 let child=childs[i];
                 if (/BR|META|SCRIPT|HR|STYLE/i.test(child.nodeName)) continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
@@ -1191,11 +1191,29 @@
     function run() {
         action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
         enable = !!(auto || saveAction);
+        var transPool = [];
+        var transWaiting = false;
+        function transTask(node) {
+            if (node) transPool.push(node);
+            if (transWaiting) return;
+            transWaiting = true;
+            setTimeout(() => {
+                transWaiting = false;
+                if (transPool.length) {
+                    for (let i = 0; i < transPool.length; i++) {
+                        if (transPool[i]) {
+                            stranBody(transPool[i]);
+                        }
+                    }
+                    transPool = [];
+                }
+            }, 500);
+        }
         let startStrans = () => {
             if (action == 1) return;
             stranBody();
             var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-            var observer = new MutationObserver(function(records){
+            var observer = new MutationObserver(function(records) {
                 records.map(function(record) {
                     if (record.type === "characterData") {
                         let target = record.target;
@@ -1210,11 +1228,11 @@
                             }
                             target = target.parentNode;
                         }
-                        stranBody(parentNode);
+                        transTask(parentNode);
                     }
                     if(record.addedNodes){
                         [].forEach.call(record.addedNodes,function(item){
-                            stranBody(item);
+                            transTask(item);
                         });
                     }
                 });
