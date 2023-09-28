@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.7
+// @version      1.6.30.8
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -7645,7 +7645,7 @@
                     clicked = false;
                     targetUrlData = "";
                     targetUrlData = await getUrl();
-                    if (/^c(opy)?:/.test(data.url) || /^\[/.test(data.url) || /[:%]P{/.test(data.url) || (data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url) || self.customInput) {
+                    if (/^c(opy)?:/.test(data.url) || /^javascript:/.test(data.url) || /^\[/.test(data.url) || /[:%]P{/.test(data.url) || (data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url) || self.customInput) {
                         if (e.button == 1 || e.button == 2) {
                             clickHandler();
                             clicked = false;
@@ -7791,6 +7791,15 @@
                                 }
                             }
                         }
+                        return false;
+                    } else if (/^javascript:/.test(data.url)) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                        _unsafeWindow.targetElement = targetElement;
+                        _unsafeWindow.keywords = getKeywords();
+                        targetUrlData = targetUrlData.replace(/^javascript:/, '');
+                        let func = (/^[_a-zA-Z0-9]+$/.test(targetUrlData) && window[targetUrlData]) || new AsyncFunction('"use strict";' + targetUrlData);
+                        if (func) func();
                         return false;
                     } else if (/^c(opy)?:/.test(data.url)) {
                         if (e.preventDefault) e.preventDefault();
