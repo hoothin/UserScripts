@@ -411,16 +411,16 @@
 {
   "resource_url": "http://wedata.net/items/86110",
   "data": {
-    "pageElement": "//section[@class='content']|id('wym_custom_archive')",
+    "pageElement": "//section[@class='content']/*[not((.|preceding-sibling::div)[contains(@class, 'pagination')])]|id('wym_custom_archive')",
     "nextLink": "//li[contains(@class, 'current')][number()>0]/following-sibling::li[1]/a",
     "url": "^https://young-machine\\.com/",
-    "exampleUrl": "https://young-machine.com/2022/08/06/354094/\r\nhttps://young-machine.com/latest-model/"
+    "exampleUrl": "https://young-machine.com/2022/08/06/354094/\r\nhttps://young-machine.com/latest-model/\r\nhttps://young-machine.com/2023/09/15/489213/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m'",
   "name": "WEBヤングマシン",
   "created_at": "2023-04-25T20:55:07+09:00",
-  "updated_at": "2023-09-15T18:04:55+09:00"
+  "updated_at": "2023-09-28T18:34:32+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86108",
@@ -40708,17 +40708,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/33375",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2010-06-30T19:18:08+09:00",
   "data": {
-    "pageElement": "//article",
-    "exampleUrl": "https://websunday.net/backstage/hata/",
-    "url": "^https://websunday\\.net/backstage/[^/]+/",
-    "nextLink": "//li[@class='prev']/a"
+    "pageElement": "id('bn')/preceding-sibling::*",
+    "nextLink": "//li[@class='prev']/a",
+    "url": "^https://websunday\\.net/author/\\d+",
+    "exampleUrl": "https://websunday.net/author/670/"
   },
-  "updated_at": "2020-05-11T07:20:48+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "furyu-tei",
   "name": "サンデーまんが家BACKSTAGE",
-  "created_by": "furyu-tei"
+  "created_at": "2010-06-30T19:18:08+09:00",
+  "updated_at": "2023-09-28T20:26:23+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/33367",
