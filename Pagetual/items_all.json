@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86170",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article",
+    "nextLink": "//div[@class='pagination']/span/following-sibling::a",
+    "url": "^https://choiyaki\\.com/",
+    "exampleUrl": "https://choiyaki.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "iPhoneと本と数学となんやかんやと",
+  "created_at": "2023-09-29T19:06:28+09:00",
+  "updated_at": "2023-09-29T19:06:28+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86169",
   "data": {
     "insertBefore": "",
