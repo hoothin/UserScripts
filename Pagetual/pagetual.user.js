@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.59
+// @version      1.9.36.60
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1876,6 +1876,7 @@
                     this.openInNewTab(pageElement);
                 }
             }
+            /*
             if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0) {
                 let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
                 let video = targetEle.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
@@ -1905,6 +1906,7 @@
                     return null;
                 }
             }
+            */
             return pageElement;
         }
 
@@ -6216,27 +6218,33 @@
     }
 
     var urlChanged = false;
+    var urlChanging = false;
     var urlchangeHandler = e => {
         if (ruleParser && ruleParser.curSiteRule && ruleParser.curSiteRule.listenUrlChange == false) return;
         isPause = true;
         setTimeout(() => {
             lastActiveUrl = location.href;
+            if (urlChanging) return;
+            urlChanging = true;
             let href = location.href.slice(0, 60);
             if (href == configPage[0]) {
                 setTimeout(() => {
                     initConfig(href);
+                    urlChanging = false;
                 }, 1000);
             } else {
                 setTimeout(() => {
                     if (guidePage.test(href)) {
                         setTimeout(() => {
                             initConfig(href);
+                            urlChanging = false;
                         }, 1000);
                     } else {
                         urlChanged = true;
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
                         }
+                        urlChanging = false;
                         //if (!pageReady && !ruleImportUrlReg.test(href)) location.reload();
                     }
                 }, 500);
@@ -6257,7 +6265,8 @@
     history.pushState = _wr('pushState');*/
 
     function listenUrl() {
-        var prevState = window.location.pathname + window.location.search;
+        var prevPathname = window.location.pathname;
+        var prevSearch = window.location.search;
         var checkUrlTime = 100;
         var checkUrlTimer;
         var checkFunc = () => {
@@ -6268,10 +6277,10 @@
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             if (document.hidden) return;
-            let url = window.location.pathname + window.location.search;
-            if (prevState !== url && window.location.href != ruleParser.historyUrl) {
+            if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search) && window.location.href != ruleParser.historyUrl) {
                 checkUrlTime = 2000;
-                prevState = url;
+                prevPathname = window.location.pathname;
+                prevSearch = window.location.search;
                 var e = new Event('pagetual_pushState');
                 e.arguments = arguments;
                 window.dispatchEvent(e);
