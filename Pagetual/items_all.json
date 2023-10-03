@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86171",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='news-list']/section",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://roundup-gamers\\.jp/.",
+    "exampleUrl": "https://roundup-gamers.jp/article/?page=2 https://roundup-gamers.jp/category/hardware/latest/?page=1"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "RUGs（ラグス）",
+  "created_at": "2023-10-02T19:43:31+09:00",
+  "updated_at": "2023-10-02T19:43:31+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86170",
   "data": {
     "insertBefore": "",
@@ -8596,19 +8611,18 @@
   "updated_at": "2020-01-15T06:17:32+09:00"
 },
 {
-  "name": "アニメイトタイムズ 記事",
+  "resource_url": "http://wedata.net/items/85188",
   "data": {
+    "pageElement": "//div[@class='c-pagination']/preceding-sibling::*[./preceding-sibling::div]",
+    "nextLink": "//a[contains(concat(\" \",@class,\" \"),\" is-current \")]/following-sibling::a",
     "url": "^https://www\\.animatetimes\\.com/news/",
-    "pageElement": "//div[contains(concat(\" \",@class,\" \"),\" news-content \")]",
-    "exampleUrl": "https://www.animatetimes.com/news/details.php?id=1578293211",
-    "insertBefore": "",
-    "nextLink": "//a[contains(concat(\" \",@class,\" \"),\" is-current \")]/following-sibling::a"
+    "exampleUrl": "https://www.animatetimes.com/news/details.php?id=1578293211"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
-  "resource_url": "http://wedata.net/items/85188",
+  "name": "アニメイトタイムズ 記事",
   "created_at": "2020-01-06T19:03:06+09:00",
-  "updated_at": "2020-01-06T19:03:06+09:00"
+  "updated_at": "2023-10-03T09:03:30+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85187",
@@ -24102,18 +24116,18 @@
   "updated_at": "2014-11-08T15:31:30+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/76448",
   "data": {
-    "pageElement": "//article/div[@class='content']/*|//ul[@class='gdy-newarticle-list gdy-list-a'][not(//article)]/li",
+    "pageElement": "//div[@class='gdy-pager']/preceding-sibling::*[@class='content' or self::ul or self::h2]",
     "nextLink": "//*[@class='gdy-btn-d next']/*",
     "url": "^https://gooday\\.nikkei\\.co\\.jp/",
-    "exampleUrl": "https://gooday.nikkei.co.jp/do/ https://gooday.nikkei.co.jp/atcl/column/14/091100001/102800002/?ST=exercise&P=2"
+    "exampleUrl": "https://gooday.nikkei.co.jp/do/ https://gooday.nikkei.co.jp/atcl/column/14/091100001/102800002/?ST=exercise&P=2\r\nhttps://gooday.nikkei.co.jp/atcl/column/14/091100006/?i_cid=nbpgdy_sied_list_col\r\nhttps://gooday.nikkei.co.jp/atcl/report/16/033100012/?ST=special&i_cid=nbpgdy_sied_breadcrumb"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "ghj",
-  "resource_url": "http://wedata.net/items/76448",
   "name": "日経Gooday",
   "created_at": "2014-11-08T14:08:25+09:00",
-  "updated_at": "2020-06-01T12:46:10+09:00"
+  "updated_at": "2023-10-02T18:11:43+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76441",
@@ -43906,17 +43920,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/31136",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2010-01-17T17:26:45+09:00",
   "data": {
-    "pageElement": "//div[@class=\"maincol_inner\"]/*[./following-sibling::ul]",
-    "exampleUrl": "https://www.publickey.jp/blog/09/post_51.html\r\nhttps://www.publickey.jp/bookmarked/09/perl.html\r\nhttps://www.publickey1.jp/blog/10/nosqlcap.html",
-    "url": "^https://(?:www\\.)?publickey1?\\.jp/[^/]+/\\d+/\\w+\\.html",
-    "nextLink": "id('maincol')//em[contains(.,'前の記事')]/following-sibling::a"
+    "pageElement": "//li[./span[@class='date']]",
+    "nextLink": "//div[@class='content-nav']/p/a",
+    "url": "^https://(?:www\\.)?publickey1?\\.jp/",
+    "exampleUrl": "https://www.publickey1.jp/cloud/"
   },
-  "updated_at": "2020-05-05T13:11:59+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
   "name": "Publickey",
-  "created_by": "t_f_m"
+  "created_at": "2010-01-17T17:26:45+09:00",
+  "updated_at": "2023-10-03T09:12:10+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/31126",
