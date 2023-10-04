@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86172",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='p2s1-banner-v__main']/ul|//ul[@class='p1s1-list-v__main']",
+    "nextLink": "//li[contains(@class, 'current')][number()>0]/following-sibling::li[1]/a",
+    "url": "^https://websunday\\.net/(news|comics)/",
+    "exampleUrl": "https://websunday.net/comics/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "少年サンデー",
+  "created_at": "2023-10-03T19:52:49+09:00",
+  "updated_at": "2023-10-03T19:52:49+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86171",
   "data": {
     "insertBefore": "",
@@ -8613,16 +8628,16 @@
 {
   "resource_url": "http://wedata.net/items/85188",
   "data": {
-    "pageElement": "//div[@class='c-pagination']/preceding-sibling::*[./preceding-sibling::div]",
+    "pageElement": "//div[@class='c-pagination']/preceding-sibling::*[not(contains(@class, 'c-banner-common'))]",
     "nextLink": "//a[contains(concat(\" \",@class,\" \"),\" is-current \")]/following-sibling::a",
     "url": "^https://www\\.animatetimes\\.com/news/",
-    "exampleUrl": "https://www.animatetimes.com/news/details.php?id=1578293211"
+    "exampleUrl": "https://www.animatetimes.com/news/details.php?id=1578293211\r\nhttps://www.animatetimes.com/news/details.php?id=1696194873\r\nhttps://www.animatetimes.com/news/details.php?id=1696194873&p=2"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
   "name": "アニメイトタイムズ 記事",
   "created_at": "2020-01-06T19:03:06+09:00",
-  "updated_at": "2023-10-03T09:03:30+09:00"
+  "updated_at": "2023-10-03T19:45:03+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85187",
@@ -40739,15 +40754,16 @@
   "resource_url": "http://wedata.net/items/33375",
   "data": {
     "pageElement": "id('bn')/preceding-sibling::*",
-    "nextLink": "//li[@class='prev']/a",
-    "url": "^https://websunday\\.net/author/\\d+",
-    "exampleUrl": "https://websunday.net/author/670/"
+    "considerationUrl": "https://websunday.net/5930/",
+    "nextLink": "//nav/ul/li[@class='prev']/a",
+    "url": "^https://websunday\\.net/.",
+    "exampleUrl": "https://websunday.net/author/670/ https://websunday.net/6369/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "furyu-tei",
   "name": "サンデーまんが家BACKSTAGE",
   "created_at": "2010-06-30T19:18:08+09:00",
-  "updated_at": "2023-09-28T20:26:23+09:00"
+  "updated_at": "2023-10-03T20:12:36+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/33367",
