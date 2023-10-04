@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.60
+// @version      1.9.36.61
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -142,12 +142,12 @@
                 hideBarButNoStop: "Hide but not stop",
                 dbClick2Stop: "Double-click on the blank space to pause",
                 sortTitle: "Sorting takes effect after the next rule update",
-                autoRun: "Auto run (black list mode)",
+                autoRun: "Auto enable (blacklist mode)",
                 autoLoadNum: "Amount for preload pages",
                 turnRate: "Turn the next page when it's less than 【X】 times page height from the footer",
                 inputPageNum: "Enter page number to jump",
-                enableHistory: "Write history after page turning",
-                enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
+                enableHistory: "Write browsing history after page turning",
+                enableHistoryAfterInsert: "Write browsing history immediately after splicing, otherwise write after browsing",
                 contentVisibility: "Automatically switch contentVisibility to improve rendering performance",
                 initRun: "Turn pages immediately after opening",
                 preload: "Preload next page for speeding up",
@@ -178,7 +178,7 @@
                 gotoEdit: "Go to edit rule with current selector",
                 manualMode: "Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
                 clickMode: "Disable splicing, automatically click the next page when scrolling to the end of the page",
-                pageBarMenu: "Click the middle of the page bar to open the menu",
+                pageBarMenu: "Click the center of the page bar to open the picker menu",
                 nextSwitch: "Switch next link",
                 arrowToScroll: "Press left arrow key to scroll prev and right arrow key to scroll next",
                 sideController: "Display the paging control bar in the sidebar",
@@ -5212,7 +5212,7 @@
         let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
-        let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true);
+        let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true, "h4", enableHistoryInput);
         let openInNewTabInput = createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab != false);
         let hidePageBarInput = createCheckbox(i18n("hideBarTips"), rulesData.opacity == 0);
         let hidePageBarArrowInput = createCheckbox(i18n("hideBarArrow"), rulesData.hideBarArrow);
@@ -5318,7 +5318,7 @@
         blacklistInput.style.height = "500px";
         blacklistInput.style.display = "none";
         blacklistInput.spellcheck = false;
-        blacklistInput.placeholder = "http://*.xxx.com/*/y\n/^https?://.*\\.xxx\\.com/i";
+        blacklistInput.placeholder = "http://*.xxx.com/*/y\n/^https?://.*\\.xxx\\.com/i \t\t<= Regexp\n//http://*.aaa.com/ \t\t<= Disable\n/*http://*.bbb.com\nhttp://*.ccc.com*/ \t\t<= Block comment";
         blacklistInput.value = rulesData.blacklist ? rulesData.blacklist.join("\n") : "";
         let blacklistBtn = document.createElement("button");
         blacklistBtn.innerText = i18n("editBlacklist");
@@ -5619,9 +5619,21 @@
             }
             if (rulesData.blacklist && rulesData.blacklist.length > 0) {
                 let href = location.href.slice(0, 500);
+                let commentStart = false;
                 for (let i = 0; i < rulesData.blacklist.length; i++) {
                     let curGlob = rulesData.blacklist[i];
                     if (!curGlob) continue;
+                    if (curGlob.indexOf("//") == 0) continue;
+                    if (commentStart) {
+                        if (/\*\/$/.test(curGlob)) {
+                            commentStart = false;
+                        }
+                        continue;
+                    }
+                    if (curGlob.indexOf("/*") == 0) {
+                        commentStart = true;
+                        continue;
+                    }
                     if (curGlob.indexOf("/") == 0) {
                         let regMatch = curGlob.match(/^\/(.*)\/(\w*)$/);
                         if (regMatch && new RegExp(regMatch[1], regMatch[2]).test(href)) {
