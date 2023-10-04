@@ -19253,7 +19253,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     .pv-pic-search-state {\
-                    top: -10px;\
+                    top: -18px;\
                     left: 8px;\
                     display: block;\
                     position: absolute;\
