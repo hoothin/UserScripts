@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.9.30.1
+// @version              2023.10.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15071,7 +15071,12 @@ ImgOps | https://imgops.com/#b#`;
                     imgPre = this.eleMaps['img-controler-pre'],
                     imgNext = this.eleMaps['img-controler-next'],
                     alreadyShow = toggleBar.style.visibility == 'hidden';
-                var sidebarContainer = this.eleMaps['sidebar-container'];
+
+                var sidebarContainer = this.eleMaps['sidebar-container'],
+                    isHidden = sidebarContainer.style.visibility == 'hidden';
+                if (isHidden) {
+                    this.showHideBottom();
+                }
                 var maximizeContainer = this.eleMaps['maximize-container'];
                 var sidebarPosition = prefs.gallery.sidebarPosition,
                     capitalize = function(string) { // 将字符串中每个单词首字母大写
@@ -16783,18 +16788,36 @@ ImgOps | https://imgops.com/#b#`;
                      .pv-gallery-range-box>input {\
                      display: none;\
                      }\
+                     .pv-gallery-head-command-drop-list {\
+                     right: 10px;\
+                     }\
+                     span.pv-gallery-sidebar-toggle-content {\
+                     font-size: 80px!important;\
+                     }\
+                     span.pv-gallery-sidebar-toggle {\
+                     height: 80px!important;\
+                     opacity: 0.6;\
+                     }\
+                     .pv-gallery-sidebar-viewmore:not(.showmore) {\
+                     opacity: 0!important;\
+                     }\
                      .pv-gallery-maximize-container{\
                      column-count: 2;\
                      -moz-column-count: 2;\
                      -webkit-column-count: 2;\
                      padding-top: 300px;\
                      }\
-                     .pv-gallery-sidebar-viewmore-bottom.showmore{\
+                     .pv-gallery-sidebar-viewmore.showmore{\
                      transform: scale(3.5);\
                      bottom: 50px;\
                      }\
                      .pv-gallery-maximize-container span>p{\
                      opacity: 0.6;\
+                     }\
+                     .pv-gallery-head-command-close {\
+                     position: fixed!important;\
+                     right: 0!important;\
+                     height: 29px!important;\
                      }\
                     }\
                     @media only screen and (min-width: 800px) {\
@@ -16839,12 +16862,11 @@ ImgOps | https://imgops.com/#b#`;
                     max-width: 65%;\
                     }\
                     /*顶栏*/\
-                    .pv-gallery-head {\
+                    span.pv-gallery-head {\
                     position: absolute;\
                     top: 0;\
                     left: 0;\
                     width: 100%;\
-                    flex-wrap: wrap;\
                     min-height: 30px;\
                     height: auto;\
                     z-index:1;\
@@ -16856,7 +16878,10 @@ ImgOps | https://imgops.com/#b#`;
                     font-size: 14px;\
                     color:#757575;\
                     padding-right:42px;\
-                    display: table;\
+                    display: block;\
+                    overflow-x: visible;\
+                    overflow-y: auto;\
+                    text-wrap: nowrap;\
                     }\
                     .pv-gallery-head > span{\
                     vertical-align:middle;\
@@ -16934,7 +16959,6 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-head-command-close{\
                     position:absolute;\
                     top:0;\
-                    right:0;\
                     width:40px;\
                     border-left: 1px solid #333333;\
                     background:transparent no-repeat center;\
@@ -16997,8 +17021,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     /*droplist*/\
                     .pv-gallery-head-command-drop-list{\
-                    position:absolute;\
-                    right:0;\
+                    position:fixed;\
                     display:none;\
                     box-shadow:0 0 3px #808080;\
                     background-color:#272727;\
@@ -17033,6 +17056,7 @@ ImgOps | https://imgops.com/#b#`;
                     text-align:left;\
                     max-width:50px;\
                     height:20px;\
+                    background: white;\
                     }\
                     .pv-gallery-head-command-drop-list-item input[type=checkbox]{\
                     width:20px\
@@ -17546,13 +17570,13 @@ ImgOps | https://imgops.com/#b#`;
                     text-align:center;\
                     margin-bottom:8px;\
                     }\
-                    .pv-gallery-sidebar-viewmore-content{\
+                    span.pv-gallery-sidebar-viewmore-content{\
                     display:inline-block;\
                     vertical-align:middle;\
                     white-space:normal;\
                     word-wrap:break-word;\
                     overflow-wrap:break-word;\
-                    line-height:1.1;\
+                    line-height:1;\
                     font-size:16px;\
                     text-align:center;\
                     }\
