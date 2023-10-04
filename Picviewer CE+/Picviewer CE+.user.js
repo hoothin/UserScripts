@@ -19021,7 +19021,7 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-transition: opacity 0.1s ease-out;\
                     transition: opacity 0.1s ease-out;\
                     overscroll-behavior: none;\
-                    box-shadow: 0 0 10px 5px rgba(0,0,0,0.6);\
+                    box-shadow: 0 0 10px 5px rgba(0,0,0,0.35);\
                     box-sizing: content-box;\
                     }\
                     .pv-pic-window-transition-all{\
