@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.23
+// @version      2.7.3.24
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -17,6 +17,8 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_openInTab
+// @grant        GM_setClipboard
 // @grant        unsafeWindow
 // @license      MIT License
 // @compatible        chrome
@@ -225,6 +227,7 @@
                 reSort:"按标题名重新排序",
                 reSortUrl:"按网址重新排序",
                 setting:"选项设置",
+                searchRule:"搜索当前网站规则",
                 abort:"跳过此章",
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
@@ -245,6 +248,7 @@
                 reSort:"按標題名重新排序",
                 reSortUrl:"按網址重新排序",
                 setting:"選項設置",
+                searchRule:"搜尋當前網站規則",
                 abort:"跳過此章",
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
@@ -264,6 +268,7 @@
                 reSort:"ReSort by title",
                 reSortUrl:"Resort by URLs",
                 setting:"Open Setting",
+                searchRule:"Search rule",
                 abort:"Abort",
                 save:"Save",
                 saveAsMd:"Save as Markdown",
@@ -751,11 +756,6 @@
         }
     }
 
-    document.addEventListener("keydown", function(e) {
-        if(e.keyCode == 120 && e.ctrlKey) {
-            fetch(e.shiftKey);
-        }
-    });
     function setDel(){
         var selValue=GM_getValue("selectors");
         var selectors=prompt(i18n.del,selValue?selValue:"");
@@ -925,7 +925,91 @@
             indexDownload(processEles);
         }
     }
+    const configPage = "https://hoothin.github.io/UserScripts/DownloadAllContent/";
+    const copySvg = '<svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" style="transition: all ease 0.5s;top: 5px;right: 5px;position: absolute;cursor: pointer;"><title>Copy</title><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg>';
+    function searchRule(){
+        GM_openInTab(configPage + "#" + location.hostname, {active: true});
+    }
+    if (location.origin + location.pathname == configPage) {
+        let exampleNode = document.getElementById("example");
+        if (!exampleNode) return;
+
+        exampleNode = exampleNode.parentNode;
+        let ruleList = exampleNode.nextElementSibling.nextElementSibling;
+        let searchInput = document.createElement("input");
+        let inputTimer;
+        function searchByInput() {
+            clearTimeout(inputTimer);
+            inputTimer = setTimeout(() => {
+                let curValue = searchInput.value;
+                let matchRules = [];
+                let dontMatchRules = [];
+                if (curValue) {
+                    for (let i = 0; i < ruleList.children.length; i++) {
+                        let curRule = ruleList.children[i];
+                        let aHref = curRule.firstChild.href;
+                        if (aHref.indexOf(curValue) == -1) {
+                            dontMatchRules.push(curRule);
+                        } else {
+                            matchRules.push(curRule);
+                        }
+                    }
+                } else {
+                    dontMatchRules = ruleList.children;
+                }
+                if (matchRules.length) {
+                    for (let i = 0; i < dontMatchRules.length; i++) {
+                        let curRule = dontMatchRules[i];
+                        curRule.style.display = "none";
+                    }
+                    for (let i = 0; i < matchRules.length; i++) {
+                        let curRule = matchRules[i];
+                        curRule.style.display = "";
+                    }
+                } else {
+                    for (let i = 0; i < dontMatchRules.length; i++) {
+                        let curRule = dontMatchRules[i];
+                        curRule.style.display = "";
+                    }
+                }
+            }, 500);
+        }
+        searchInput.style.margin = "10px";
+        searchInput.style.width = "100%";
+        searchInput.placeholder = i18n.searchRule;
+        searchInput.addEventListener("input", function(e) {
+            searchByInput();
+        });
+        if (location.hash) {
+            setTimeout(() => {
+                exampleNode.scrollIntoView();
+            }, 500);
+            searchInput.value = location.hash.slice(1);
+            searchByInput();
+        }
+        [].forEach.call(ruleList.querySelectorAll("div.highlight"), highlight => {
+            highlight.style.position = "relative";
+            highlight.innerHTML = highlight.innerHTML + copySvg;
+            let svg = highlight.children[1];
+            svg.addEventListener("click", function(e) {
+                GM_setClipboard(highlight.children[0].innerText);
+                svg.style.opacity = 0;
+                setTimeout(() => {
+                    svg.style.opacity = 1;
+                }, 1000);
+            });
+        });
+        exampleNode.parentNode.insertBefore(searchInput, ruleList);
+        return;
+    }
+
+    document.addEventListener("keydown", function(e) {
+        if(e.keyCode == 120 && e.ctrlKey) {
+            fetch(e.shiftKey);
+        }
+    });
     GM_registerMenuCommand(i18n.fetch, fetch);
     GM_registerMenuCommand(i18n.custom, customDown);
     GM_registerMenuCommand(i18n.setting, setDel);
+    GM_registerMenuCommand(i18n.searchRule, searchRule);
 })();
