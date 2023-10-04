@@ -11667,7 +11667,7 @@ KarmaDecay | http://karmadecay.com/#t#
 ZXing QRCode | https://zxing.org/w/decode?full=true&u=#t#
 ImgOps | https://imgops.com/#b#`;
 
-    var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
+    var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,GM_fetch;
     if(typeof GM_openInTab!='undefined'){
         _GM_openInTab=GM_openInTab;
     }else if(typeof GM!='undefined' && typeof GM.openInTab!='undefined'){
@@ -11703,6 +11703,57 @@ ImgOps | https://imgops.com/#b#`;
     }else{
         _GM_notification=(s)=>{alert(s)};
     }
+    if (typeof GM_xmlhttpRequest != 'undefined') {
+        _GM_xmlhttpRequest = GM_xmlhttpRequest;
+        GM_fetch = true;
+    } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
+        _GM_xmlhttpRequest = GM.xmlHttpRequest;
+        GM_fetch = true;
+    } else {
+        _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data || '', headers: f.headers}).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
+    }
+    if (GM_fetch) {
+        GM_fetch = async (url, option) => {
+            if (!url) return null;
+            return new Promise((resolve, reject) => {
+                let isPost = option && /^post$/i.test(option.method);
+                _GM_xmlhttpRequest({
+                    method: (option && option.method) || 'GET',
+                    url: url,
+                    data: (option && option.body) || '',
+                    headers: (option && option.headers) || {
+                        referer: url,
+                        origin: url,
+                        "Content-Type": (isPost ? "application/x-www-form-urlencoded" : "text/html"),
+                        'X-Requested-With': (isPost ? 'XMLHttpRequest' : '')
+                    },
+                    onload: function(d) {
+                        let response = d.response;
+                        if (d.status >= 400 || !response) response = "";
+                        let text = () => new Promise((r) => {
+                            r(response);
+                        });
+                        let json = () => new Promise((r) => {
+                            try {
+                                r(JSON.parse(response));
+                            } catch (e) {
+                                r(null);
+                            }
+                        });
+                        resolve({text: text, json: json, finalUrl: (d.finalUrl || url)});
+                    },
+                    onerror: function(e) {
+                        debug(e);
+                        reject(e);
+                    },
+                    ontimeout: function(e) {
+                        debug(e);
+                        reject(e);
+                    }
+                });
+            });
+        }
+    } else GM_fetch = fetch;
 
     function getRightSaveName(url, name, type, _ext) {
         /*
@@ -23641,7 +23692,7 @@ ImgOps | https://imgops.com/#b#`;
                     let header=doc.getElementById(this.id+"_header");
                     if(header && header.children.length==1){
                         if (!newsInited) {
-                            news = await fetch(`https://www.hoothin.com/news.php?from=pvcep&lang=${lang}`).then(response => response.text()).catch(e => {});
+                            news = await GM_fetch(`https://www.hoothin.com/news.php?from=pvcep&lang=${lang}`).then(response => response.text()).catch(e => {});
                             newsInited = true;
                         }
                         if (!news) return;
