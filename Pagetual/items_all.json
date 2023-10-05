@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86173",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//ul[@class='articleBox__items']",
+    "nextLink": "//div[@class='next']/a",
+    "url": "^https://saita-puls\\.com/",
+    "exampleUrl": "https://saita-puls.com/category/101 https://saita-puls.com/search?k=a"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "saita（サイタ）",
+  "created_at": "2023-10-04T11:39:16+09:00",
+  "updated_at": "2023-10-04T11:39:16+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86172",
   "data": {
     "insertBefore": "",
@@ -25008,16 +25023,17 @@
 {
   "resource_url": "http://wedata.net/items/76304",
   "data": {
-    "pageElement": "//div[@class='article_body' or @class='story_photoreport' or @class='article-contents']",
-    "nextLink": "//a[@id='script_pagination_next' and @data-ga_category='zd_article_pagination']|//a[ @class='mediaNext noluke']",
+    "pageElement": "//div[@class='article-contents']|//li[.//p[@class='txt-update']]",
+    "considerationUrl": "https://japan.zdnet.com/article/35148978/",
+    "nextLink": "descendant::a[@rel='next'][1][not(@href='#')]",
     "url": "^https://japan\\.zdnet\\.com/",
-    "exampleUrl": "https://japan.zdnet.com/sp/ziddy/20197967/\r\nhttps://japan.zdnet.com/sp/enterprise-trend/35011766/\r\nhttps://japan.zdnet.com/article/35148978/\r\n"
+    "exampleUrl": "https://japan.zdnet.com/article/35011766/ https://japan.zdnet.com/archives/foreign/\r\n\r\n"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "bimi",
   "name": "ZDNet Japan",
   "created_at": "2014-09-09T15:49:10+09:00",
-  "updated_at": "2020-08-12T09:38:29+09:00"
+  "updated_at": "2023-10-04T12:07:23+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76302",
