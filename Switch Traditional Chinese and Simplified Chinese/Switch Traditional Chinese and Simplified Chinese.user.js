@@ -721,6 +721,7 @@
     }
 
     function generalReplace(orgStr){
+        if (!orgStr) return "";
         var str='', char;
         for(var i=0;i<orgStr.length;i++){
             char=orgStr.charAt(i);
@@ -747,6 +748,7 @@
     }
 
     function showPinyin(orgStr, node){
+        if (!orgStr) return;
         if (!pinyinTree || /^(RUBY|RB|RP)$/i.test(node.parentNode.nodeName)) return;
         let char;
         let hasPinyin=false;
@@ -815,6 +817,7 @@
     }
 
     function traditionalized(orgStr){
+        if (!orgStr) return "";
         var str='', char;
         for(var i=0;i<orgStr.length;i++){
             char=orgStr.charAt(i);
@@ -887,6 +890,7 @@
     }
 
     function simplized(orgStr){
+        if (!orgStr) return "";
         var str='', char;
         for(var i=0;i<orgStr.length;i++){
             char=orgStr.charAt(i);
