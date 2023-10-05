@@ -16,9 +16,9 @@
 
 若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)，我若恰好有空便會嘗試幫你查錯或編寫自定義規則。
 
-*對你有幫助的話，請透過[PayPal管道](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)請我喝一杯奶茶*
+*對你有幫助的話，請透過 [愛發電](https://afdian.net/a/hoothin) 或者 [Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶*
 
-<img src='https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg' alt="donation" width=420>
+![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
 ## 怠惰心法
 <del>名喚怠惰，實為勤勉</del>
