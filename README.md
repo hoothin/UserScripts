@@ -14,7 +14,7 @@
 
 + [Picviewer CE+ ![](https://img.shields.io/greasyfork/dt/24204) ![](https://img.shields.io/greasyfork/dd/24204)](Picviewer%20CE%2B)
 
-+ [Kill Baidu AD 百度廣告(首尾推廣及右側廣告)清理 ![](https://img.shields.io/greasyfork/dt/24192)](Kill%20Baidu%20AD)
++ [Kill Baidu AD 百度廣告清理 ![](https://img.shields.io/greasyfork/dt/24192)](Kill%20Baidu%20AD)
 
 + [Kill TieBa AD 貼吧偽裝廣告清理 ![](https://img.shields.io/greasyfork/dt/24171)](Kill%20TieBa%20AD)
 
@@ -22,7 +22,7 @@
 
 + [MoreSteamRatings Steam遊戲評分集 ![](https://img.shields.io/greasyfork/dt/24113)](MoreSteamRatings)
 
-+ [Highlight Every Code 代碼片段高亮 ![](https://img.shields.io/greasyfork/dt/24150)](Highlight%20Every%20Code)
++ [Highlight Every Code 程式碼片段高亮 ![](https://img.shields.io/greasyfork/dt/24150)](Highlight%20Every%20Code)
 
 + [Switch Traditional Chinese and Simplified Chinese 簡繁自由切換 ![](https://img.shields.io/greasyfork/dt/24300)](Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese)
 
