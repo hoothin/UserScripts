@@ -88,7 +88,7 @@
                 url: "http://www.bing.com/dict/search?q=%s"
             }, {
                 name: "Translate with ChatGPT",
-                url: "https://poe.com/ChatGPT#p{sleep(1000)&textarea[class^\\='ChatMessageInput']=Please help me to translate \\`%s\\` to English, please return only translated content not include the origin text&click([class^\\='ChatMessageInputView_sendButton']>button)}"
+                url: "https://poe.com/ChatGPT#p{sleep(1000)&[class*\\='ChatMessageInputContainer'] textarea=Please help me to translate \\`%s\\` to English, please return only translated content not include the origin text&click(button[class*\\='ChatMessageSendButton_sendButton'])}"
             } ]
         },
         {
@@ -167,9 +167,10 @@
             type: "Search",
             icon: "search",
             sites: [ {
-                name: "Google",
+                name: "🔍 Google",
                 url: "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
-                match: "https://www\\.google\\..*/search"
+                match: "https://www\\.google\\..*/search",
+                icon: "0"
             }, {
                 name: "Bing",
                 url: "https://www.bing.com/search?q=%s",
