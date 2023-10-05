@@ -16119,11 +16119,13 @@ ImgOps | https://imgops.com/#b#`;
                     curPage.querySelector("a#prev")||
                     curPage.querySelector("a#leftFix")||
                     curPage.querySelector("a.prev_page")||
+                    curPage.querySelector(".prev-page>a")||
                     curPage.querySelector(".prev>a");
                 let next=curPage.querySelector("a.next")||
                     curPage.querySelector("a#next")||
                     curPage.querySelector("a#rightFix")||
                     curPage.querySelector("a.next_page")||
+                    curPage.querySelector(".next-page>a")||
                     curPage.querySelector(".next>a");
                 if(!pre && !next){
                     let pageDiv=curPage.querySelector("div.wp-pagenavi");
