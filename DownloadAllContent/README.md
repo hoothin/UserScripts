@@ -16,7 +16,7 @@
 
 若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)，我若恰好有空便會嘗試幫你查錯或編寫自定義規則。
 
-*對你有幫助的話，請透過[PayPal管道](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)请我喝一杯奶茶*
+*對你有幫助的話，請透過[PayPal管道](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)請我喝一杯奶茶*
 
 <img src='https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg' alt="donation" width=420>
 
@@ -39,17 +39,17 @@
 ### 第五層心法（難）
 
  輸入章節的 css 選擇器可以更精確地標記章節連結。例如`.l_chaptname>a`，代表 class 為 l_chaptname 的元素下的 a 連結。
- 下載內容可能含有干擾碼，此時只需點擊**懶人小說下載設置**，輸入干擾碼的 css 選擇器即可排除干擾碼。例如 `.mask,.ksam,font.jammer`，代表刪除 class 為 mask 或者 ksam 的元素或者 class 為 jammer 的 font 元素。
+ 下載內容可能含有幹擾碼，此時只需點擊**懶人小說下載設置**，輸入幹擾碼的 css 選擇器即可排除幹擾碼。例如 `.mask,.ksam,font.jammer`，代表刪除 class 為 mask 或者 ksam 的元素或者 class 為 jammer 的 font 元素。
 ### 第六層心法（超難）
 
  倘若正文不在內頁正文，是頁面加載後處理得到的，可點擊**自定義下載**，輸入自定義代碼對內頁進行分析獲取正確結果。例如 【`眾神的風車@@@@@@var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】，即可通過自定義代碼處理返回頁面獲取內容。代碼中使用 doc 可以獲得返回頁面的 document，最後一個表達式的值為最終寫入的內容。
  
  如果返回 false，代表異步回調，可自行抓取內容並等待抓取成功後用 cb(content) 返回抓取到的 content。
 
- 倘若章節沒有連結，點擊後方才生成連結跳轉，可通過 `>>` 管道處理抓取到的元素生成章節連結，詳情見下方例子。
+ 倘若章節沒有連結，點擊後方纔生成連結跳轉，可通過 `>>` 管道處理抓取到的元素生成章節連結，詳情見下方例子。
 ### 第七層心法（極難）
 
- 倘若正文已經經過加密，需要解密才能獲取正確內容，可打開瀏覽器的控制台，自定義 dacProcess 函數，調取頁面中網站自身的解密代碼處理抓取的加密數據。例如控制台輸入`dacProcess=data=>{return decrypt(xxx);}` 代表調用網站的 decrypt 解密章節頁面返回的數據。然後再點擊**自定義下載**，需要注意自定義下載時標記章節是必需的。
+ 倘若正文已經經過加密，需要解密才能獲取正確內容，可打開瀏覽器的控製臺，自定義 dacProcess 函數，調取頁面中網站自身的解密代碼處理抓取的加密數據。例如控製臺輸入`dacProcess=data=>{return decrypt(xxx);}` 代表調用網站的 decrypt 解密章節頁面返回的數據。然後再點擊**自定義下載**，需要注意自定義下載時標記章節是必需的。
 
 ### 關於配置項
  **【以下功能需要通過 Tampermonkey 等管理器的命令菜單進入】**
@@ -57,9 +57,9 @@
 ![img](https://greasyfork.s3.us-east-2.amazonaws.com/grg0pe1t13eth8t012bd1absp9id)
  - 自定義目錄：如`https://xxx.xxx/book-**[20-99]**.html,https://xxx.xxx/book-**[01-10]**.html`，意思為下載book-20.html到book-99.html，以及book-01.html到book-10.html，使用**[1-10]**則不補0。
  - 章節選擇器自定義：輸入章節連結的 css 選擇器即可，後面可以接上 url 替換碼、以及自定義處理代碼。
- - 干擾碼：填入干擾碼的 css 選擇器，如`.mask,.ksam`，意為刪除 class 為 mask 或者 ksam 的元素。
+ - 幹擾碼：填入幹擾碼的 css 選擇器，如`.mask,.ksam`，意為刪除 class 為 mask 或者 ksam 的元素。
  - 按標題名重新排序：是則把目錄頁所有連結按標題名排序後存入txt，否則按頁面位置順序排列。
- - 下載線程數：同時下載的線程數，默認為20，遇到存在限制的站點(例如下載時總有章節獲取失敗)可調低。
+ - 下載線程數：同時下載的線程數，默認為20，遇到存在限製的站點(例如下載時總有章節獲取失敗)可調低。
 
 ### 完整格式說明
 <code>某個章節名/CSS選擇器【選擇器後可跟>>傳入item添加處理代碼】 **@@** 抓取到URL的正則匹配 **@@** 對應匹配生成替換URL **@@** 根據爬取返回內容data處理並返回最終文本</code>
@@ -74,7 +74,7 @@
  ``` javascript
  a.btn_L_blue>>let a=document.createElement("a");a.innerText=item.parentNode.parentNode.querySelector('.l_chaptname').innerText;a.href=item.href;return a;@@articles@@articlescontent
  ```
- 2. [📕pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta里，需要自定義代碼提取meta-preload數據的content項。其中 "doc" 代表抓取網頁的document對象，若返回的是純文本，則用 `doc.body.innerText` 獲取。
+ 2. [📕pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta裡，需要自定義代碼提取meta-preload數據的content項。其中 "doc" 代表抓取網頁的document對象，若返回的是純文本，則用 `doc.body.innerText` 獲取。
  ``` javascript
 main>section ul>li>div>a @@@@@@ var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
  ```
@@ -116,7 +116,7 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  ```
  12. [📕lofter](https://kuencar.lofter.com/view) 此站包含雜項博文，故需要手動抓取篩選並且排序後下載
  ``` javascript
-body>>let title="俞亮/时光",chs=[];item.querySelectorAll("ul.list>li>a").forEach(a=>{if(a.children[0].innerText.indexOf(title)!=-1)chs.push(a)});return chs.reverse();
+body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").forEach(a=>{if(a.children[0].innerText.indexOf(title)!=-1)chs.push(a)});return chs.reverse();
  ```
  13. [📕頂點小説網](https://m.biqugeu.net/booklist/20128662.html) 此站同11項
  ``` javascript
@@ -134,7 +134,10 @@ body>>let title="俞亮/时光",chs=[];item.querySelectorAll("ul.list>li>a").for
  ``` javascript
 .uk-list>li>a@@@@@@let contentMatch=data.body.innerHTML.match(/url: '\/showpapercolor.php',[\s\S]*?paperid:\s*'(\w+)',\s*vercodechk:\s*'(\w+)'/);if(!contentMatch)return "";$.ajax({url: '/showpapercolor.php',type: 'POST',data: { paperid: `${contentMatch[1]}`, vercodechk: `${contentMatch[2]}`},error: function (xhr) {cb("");},success: function (colorresponse) {cb(colorresponse.replace(/<img.*?>/,"").replace(/<br \/>/g,""))}});return false;
  ```
- 
+ 17. [📕樂文網](https://www.mylewen.com/book/183921/catalog/) 分兩段，前半明文，後半加密，調用頁面自身方法解密后拼接。
+ ``` javascript
+.BCsectionTwo-top-chapter>a@@@@@@let content=doc.querySelector("#C0NTENT");let r="\n",ps=content.querySelectorAll("p");for(let i=0;i<ps.length;i++){let p=ps[i];if(p.style.cssText)break;else r+=p.innerText+"\n"};let script=content.nextElementSibling;let other=script.innerText.match(/html\(d\((".*?"), "(.*?)"\)\);/);let a=JSON.parse(other[1]),b=other[2];let cryptojs=document.createElement("script");cryptojs.src="/assets/js/cryptojs.min.js";cryptojs.charset="UTF-8";cryptojs.onload=()=>{function d(a, b) { b = CryptoJS.MD5(b).toString(); var d = CryptoJS.enc.Utf8.parse(b.substring(0, 16)); var e = CryptoJS.enc.Utf8.parse(b.substring(16)); return CryptoJS.AES.decrypt(a, e, { iv: d, padding: CryptoJS.pad.Pkcs7 }).toString(CryptoJS.enc.Utf8) };cb(r+d(a,b).replace(/<p>/g,"").replace(/<\/p>/g,"\n"));};document.head.appendChild(cryptojs);return false;
+ ```
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
@@ -145,11 +148,11 @@ body>>let title="俞亮/时光",chs=[];item.querySelectorAll("ul.list>li>a").for
 - 章節沒有「第幾章第幾節」的字樣怎麼辦？<br>
 參考第二層心法輸入其中一個章節名即可
 - 下載一定章節後失敗怎麼辦？<br>
-可能是網站限制了並發數，在設置中調低線程數即可
+可能是網站限製了並發數，在設置中調低線程數即可
 - 按下快捷鍵無效怎麼辦？<br>
 可能是快捷鍵被其他應用接管了，使用腳本管理器中的命令菜單下載即可
-- 有無關干擾字符怎麼辦？<br>
-設置里輸入干擾碼css選擇器即可，多個選擇器用逗號分隔
+- 有無關幹擾字符怎麼辦？<br>
+設置裡輸入幹擾碼css選擇器即可，多個選擇器用逗號分隔
 - 章節順序不對怎麼辦？<br>
 默認是按網頁內出現位置排序。點擊設置，嘗試更改為“按網址重新排序”或者“按章節名重新排序”即可
 - 其他問題歡迎通過 email 聯繫我，有空可幫你解決。
