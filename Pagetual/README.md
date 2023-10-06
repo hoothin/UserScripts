@@ -1,8 +1,8 @@
-[☯️](https://greasyfork.org/scripts/438684)東方永頁機 [v.1.9.36.62](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js)
+☯️東方永頁機 [v.1.9.36.63](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js)
 ==
-*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites ! [**Wiki**](https://pagetual.hoothin.com/en/)*
+*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites ! [**📖Wiki**](https://pagetual.hoothin.com/en/)*
 
-<a name="otherconfig" title="for restricted environment" href="https://pagetual.hoothin.com/en/rule.html"><strong>🔧Configuration page on wiki</strong></a>
+<h1><a name="otherconfig" title="for restricted environment" href="https://pagetual.hoothin.com/en/rule.html"><strong>🔧Configuration page</strong></a></h1>
 
 <p name="click2import"></p>
 <pre name="pagetual">
