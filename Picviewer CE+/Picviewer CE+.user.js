@@ -12328,7 +12328,9 @@ ImgOps | https://imgops.com/#b#`;
             var orig = unsafeWindow.CanvasRenderingContext2D.prototype.drawImage;
             return function() {
                 let image = arguments[0];
-                this.canvas.dataset.src = image.src;
+                if (image && image.src) {
+                    this.canvas.dataset.src = image.src;
+                }
                 var rv = orig.apply(this, arguments);
                 return rv;
             };
