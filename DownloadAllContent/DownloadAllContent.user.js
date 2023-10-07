@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.24
+// @version      2.7.3.25
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -696,7 +696,7 @@
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(getDepth(child)==getDepth(largestContent)){
-                if(largestContent.className != child.className || largestContent.id != child.id)continue;
+                if(largestContent.className != child.className)continue;
                 if((largestContent.className && largestContent.className == child.className) || largestContent.parentNode == child.parentNode){
                     getRightStr(child, true);
                 }else {
