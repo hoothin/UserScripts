@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.5.2
+// @version              2023.10.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12324,6 +12324,16 @@ ImgOps | https://imgops.com/#b#`;
             };
         }
 
+        unsafeWindow.CanvasRenderingContext2D.prototype.drawImage = function() {
+            var orig = unsafeWindow.CanvasRenderingContext2D.prototype.drawImage;
+            return function() {
+                let image = arguments[0];
+                this.canvas.dataset.src = image.src;
+                var rv = orig.apply(this, arguments);
+                return rv;
+            };
+        }();
+
         var rulerEle = document.createElement("span");
         rulerEle.style.visibility = "hidden";
         rulerEle.style.whiteSpace = "nowrap";
@@ -16596,57 +16606,62 @@ ImgOps | https://imgops.com/#b#`;
                 });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
                 var bgImgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
-                        if(node.nodeName.toUpperCase() != "IMG" && node.offsetParent && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
-                            let prop = getComputedStyle(node).backgroundImage;
-                            if (prop != "none") {
-                                let match = bgReg.exec(prop);
-                                if (match) {
-                                    node.src=match[1];
-                                    total.push(node);
-                                }
-                            }
-                            prop = getComputedStyle(node, '::before').backgroundImage;
-                            if (prop != "none") {
-                                let match = bgReg.exec(prop);
-                                if (match) {
-                                    let node=document.createElement("IMG");
-                                    node.src=match[1];
-                                    total.push(node);
-                                }
-                            }
-                            prop = getComputedStyle(node, '::after').backgroundImage;
-                            if (prop != "none") {
-                                let match = bgReg.exec(prop);
-                                if (match) {
-                                    let node=document.createElement("IMG");
-                                    node.src=match[1];
-                                    total.push(node);
-                                }
+                    if(node.nodeName.toUpperCase() != "IMG" && node.offsetParent && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
+                        let prop = getComputedStyle(node).backgroundImage;
+                        if (prop != "none") {
+                            let match = bgReg.exec(prop);
+                            if (match) {
+                                node.src=match[1];
+                                total.push(node);
                             }
                         }
-                        return total;
+                        prop = getComputedStyle(node, '::before').backgroundImage;
+                        if (prop != "none") {
+                            let match = bgReg.exec(prop);
+                            if (match) {
+                                let node=document.createElement("IMG");
+                                node.src=match[1];
+                                total.push(node);
+                            }
+                        }
+                        prop = getComputedStyle(node, '::after').backgroundImage;
+                        if (prop != "none") {
+                            let match = bgReg.exec(prop);
+                            if (match) {
+                                let node=document.createElement("IMG");
+                                node.src=match[1];
+                                total.push(node);
+                            }
+                        }
+                    }
+                    return total;
                 }, []);
                 if(bgImgs)imgs=imgs.concat(bgImgs);
                 var svgImgs=Array.from(getBody(document).querySelectorAll('svg')).reduceRight((total, svg) => {
-                        if (svg.clientHeight != 0 && (!svg.classList || !svg.classList.contains("pagetual"))) {
-                            try {
-                                const xml = new XMLSerializer().serializeToString(svg);
-                                const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(xml)}`;
-                                svg.src = ImgBase64;
-                                total.push(svg);
-                            } catch(e) {}
-                        }
-                        return total;
+                    if (svg.clientHeight != 0 && (!svg.classList || !svg.classList.contains("pagetual"))) {
+                        try {
+                            const xml = new XMLSerializer().serializeToString(svg);
+                            const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(xml)}`;
+                            svg.src = ImgBase64;
+                            total.push(svg);
+                        } catch(e) {}
+                    }
+                    return total;
                 }, []);
                 if(svgImgs)imgs=imgs.concat(svgImgs);
                 var canvasImgs=Array.from(getBody(document).querySelectorAll('canvas')).reduceRight((total, canvas) => {
-                        if (canvas.clientHeight != 0) {
-                            try {
-                                canvas.src = canvas.toDataURL("image/png");
-                                total.push(canvas);
-                            } catch(e) {}
-                        }
-                        return total;
+                    if (canvas.clientHeight != 0) {
+                        try {
+                            canvas.src = canvas.toDataURL("image/png");
+                            total.push(canvas);
+                        } catch(e) {}
+                    }
+                    if (!canvas.src && canvas.dataset.src) {
+                        canvas.src = canvas.dataset.src;
+                        delete canvas.dataset.src;
+                        total.push(canvas);
+                    }
+                    return total;
                 }, []);
                 if(canvasImgs)imgs=imgs.concat(canvasImgs);
                 // 排除库里面的图片
@@ -22488,7 +22503,19 @@ ImgOps | https://imgops.com/#b#`;
                     let img = target.parentNode.querySelector('img');
                     if (img) target = img;
                 }
-                if (target.nodeName.toUpperCase() != 'IMG') {
+                if (target.nodeName.toUpperCase() == 'CANVAS') {
+                    let src = target.src || target.dataset.src;
+                    if (src) {
+                        let nsrc = src, noActual = true, type = "scale";
+                        result = {
+                            src: nsrc,
+                            type: type,
+                            imgSrc: src,
+                            noActual:noActual,
+                            img: target
+                        };
+                    }
+                } else if (target.nodeName.toUpperCase() != 'IMG') {
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
                     var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\).*/i;
