@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.63
+// @version      1.9.36.64
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2056,7 +2056,7 @@
         }
 
         hrefIsJs(href) {
-            return /^(javascript|#)/.test(href.replace("#p{", "").replace(location.href, ""))
+            return /^(javascript|#)/.test(href.trim().replace("#p{", "").replace(location.href, ""))
         }
 
         async querySelectorList(source, list) {
@@ -6558,7 +6558,7 @@
     }
 
     const loadmoreReg = /^\s*((点击)?加载更多|(點擊)?加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
-    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
+    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         if (!ruleParser.curSiteRule.singleUrl && !ruleParser.curSiteRule.loadMore) return null;
@@ -6585,6 +6585,7 @@
             }
         }
         if (loadmoreBtn && /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
+        if (loadmoreBtn) debug(loadmoreBtn, 'Load more button');
         return loadmoreBtn;
     }
 
