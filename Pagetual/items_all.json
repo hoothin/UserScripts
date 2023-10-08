@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86175",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//section[@class='cont']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://www\\.kanaloco\\.jp/",
+    "exampleUrl": "https://www.kanaloco.jp/zenkoku"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "カナロコ",
+  "created_at": "2023-10-08T06:34:18+09:00",
+  "updated_at": "2023-10-08T06:34:18+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86174",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='card-ls-2-container']/a",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://kurukura\\.jp/",
+    "exampleUrl": "https://kurukura.jp/cars/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "KURU KURA（くるくら）",
+  "created_at": "2023-10-07T19:39:55+09:00",
+  "updated_at": "2023-10-07T19:39:55+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86173",
   "data": {
     "insertBefore": "",
@@ -14353,16 +14383,16 @@
 {
   "resource_url": "http://wedata.net/items/81435",
   "data": {
-    "pageElement": "//div[contains(concat(' ', normalize-space(@class), ' '), ' mtop10 ')]",
-    "nextLink": "//li[@class=\"active\"]/following-sibling::li[1]/a",
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' rating')]/following-sibling::div[contains(concat(' ', @class, ' '), ' clearfix ') and .//a[@href='#cancel']]\r\n|//div[@class='bg_ch']\r\n|//div[@class='rating']/table/tbody/tr",
+    "nextLink": "//li[@class=\"active\"][number()>0]/following-sibling::li[1]/a",
     "url": "^https?://kabusensor\\.com/",
-    "exampleUrl": "http://kabusensor.com/signal/kai/?t_cd=9&s_cd=2&mk=3"
+    "exampleUrl": "http://kabusensor.com/signal/kai/?t_cd=9&s_cd=2&mk=3\r\nhttps://kabusensor.com/ranking/kaisignal/\r\nhttps://kabusensor.com/ranking/tech/?sh=10&mk=2\r\nhttps://kabusensor.com/screening/?page=2&ma=0&mkt=1&sd=1"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "株センサー",
   "created_at": "2017-07-13T20:49:04+09:00",
-  "updated_at": "2020-07-20T23:58:57+09:00"
+  "updated_at": "2023-10-07T19:30:55+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81425",
@@ -25918,17 +25948,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74948",
-  "name": "スイッチサイエンス",
-  "created_by": "rei tanaka",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2016-05-08T14:34:58+09:00",
   "data": {
-    "exampleUrl": "https://www.switch-science.com/catalog/list/1/",
-    "url": "^https?://www\\.switch-science\\.com/catalog/list/",
-    "pageElement": "id('products')/ul/li",
-    "nextLink": "id('pagination')/p/a[contains(.,'>>')]"
+    "pageElement": "//li[./div[@class='productitem']]",
+    "nextLink": "//li[@class='pagination--next']/a",
+    "url": "^https?://www\\.switch-science\\.com/",
+    "exampleUrl": "https://www.switch-science.com/collections/marketplace"
   },
-  "created_at": "2014-07-05T16:24:26+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "rei tanaka",
+  "name": "スイッチサイエンス",
+  "created_at": "2014-07-05T16:24:26+09:00",
+  "updated_at": "2023-10-08T06:15:28+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74947",
