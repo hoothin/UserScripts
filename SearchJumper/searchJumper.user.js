@@ -10122,7 +10122,7 @@
                 document.addEventListener('received', e => {
                     received = true;
                     clearTimeout(sendMessageTimer);
-                    if (cachePool.length > 0) {
+                    if (cachePool.length > 0 && searchData.prefConfig.cacheSwitch) {
                         debug(`Start cache ${cachePool.length} icons!`);
                     }
                     cacheImgManager();
