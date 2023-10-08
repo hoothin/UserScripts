@@ -7799,7 +7799,7 @@
                         _unsafeWindow.targetElement = targetElement;
                         _unsafeWindow.keywords = getKeywords();
                         targetUrlData = targetUrlData.replace(/^javascript:/, '');
-                        let func = (/^[_a-zA-Z0-9]+$/.test(targetUrlData) && window[targetUrlData]) || new AsyncFunction('"use strict";' + targetUrlData);
+                        let func = (/^[_a-zA-Z0-9]+$/.test(targetUrlData) && window[targetUrlData]) || new AsyncFunction(targetUrlData);
                         if (func) func();
                         return false;
                     } else if (/^c(opy)?:/.test(data.url)) {
@@ -9980,7 +9980,7 @@
                         if (mutation.addedNodes.length) {
                             [].forEach.call(mutation.addedNodes, addedNode => {
                                 let target = addedNode.nodeType === 1 ? addedNode : mutation.target;
-                                if (!target.className || target.className.indexOf("searchJumper") == -1) {
+                                if (!target.className || !/searchJumper/.test(target.className)) {
                                     setTimeout(() => {
                                         highlight("insert", target)
                                     }, 0);
