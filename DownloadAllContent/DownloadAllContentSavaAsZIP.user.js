@@ -5,8 +5,8 @@
 // @namespace    hoothin
 // @version      0.1
 // @description  Save content as ZIP for DownloadAllContent
-// @description:zh-CN  下载时分章节保存并打包为 ZIP
-// @description:zh-TW  下載時分章節保存並打包為 ZIP
+// @description:zh-CN  下载时分章节保存 TXT 并打包为 ZIP
+// @description:zh-TW  下載時分章節儲存 TXT 並打包為 ZIP
 // @author       hoothin
 // @match        *://*/*
 // @grant        unsafeWindow
