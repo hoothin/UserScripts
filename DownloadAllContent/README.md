@@ -14,11 +14,13 @@
 + 按下 `CTRL+F9` 或點擊命令菜單
 + 按下 `SHIFT+CTRL+F9` 忽略目錄，僅下載當前頁
 
-若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)，我若恰好有空便會嘗試幫你查錯或編寫自定義規則。
+若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)
 
-*對你有幫助的話，請透過 [愛發電](https://afdian.net/a/hoothin) 或者 [Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶*
+*對你有幫助的話，可透過 [愛發電](https://afdian.net/a/hoothin) 或者 [Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶*
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
+
+[怠惰小説下載器 ZIP 擴充](https://greasyfork.org/scripts/476943) 下載時分章節保存 TXT 並打包為 ZIP
 
 ## 怠惰心法
 <del>名喚怠惰，實為勤勉</del>
