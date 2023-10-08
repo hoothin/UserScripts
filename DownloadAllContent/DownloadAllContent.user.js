@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.25
+// @version      2.7.3.26
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -212,6 +212,7 @@
     var i18n={};
     var rCats=[];
     var processFunc;
+    var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
     switch (lang){
         case "zh-CN":
         case "zh-SG":
@@ -310,13 +311,23 @@
         initTempSave();
     }
 
+    function saveContent() {
+        if (win.downloadAllContentSaveAsZip) {
+            win.downloadAllContentSaveAsZip(rCats, i18n.info, content => {
+                saveAs(content, document.title + ".zip");
+            });
+        } else {
+            var blob = new Blob([i18n.info + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, document.title + ".txt");
+        }
+    }
+
     function initTempSave(){
         var tempSavebtn = document.getElementById('tempSaveTxt');
         var abortbtn = document.getElementById('abortRequest');
         var saveAsMd = document.getElementById('saveAsMd');
         tempSavebtn.onclick = function(){
-            var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, document.title+".txt");
+            saveContent();
             console.log(curRequests);
         }
         abortbtn.onclick = function(){
@@ -507,8 +518,7 @@
                         if(downNum==aEles.length){
                             txtDownWords.innerHTML=getI18n("complete",[downNum]);
                             sortInnerPage();
-                            var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-                            saveAs(blob, document.title+".txt");
+                            saveContent();
                         }
                     },3000);
                 }
@@ -917,7 +927,6 @@
                     }
                 };
             }else{
-                var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
                 if(win.dacProcess){
                     processFunc=win.dacProcess;
                 }
