@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.8.1
+// @version              2023.10.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -43,7 +43,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1211491
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1244085
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1262309
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11765,6 +11765,7 @@ ImgOps | https://imgops.com/#b#`;
         */
         type = parseInt(type || 0);
         if (name) name = name.split("\n")[0];
+        url = url.replace(/.*?\/\/[^\/]+\//, "");
         let nameFromUrl = "";
         let ext;
         if (_ext) {
@@ -11774,14 +11775,18 @@ ImgOps | https://imgops.com/#b#`;
             if (ext) {
                 ext = ext[1];
                 nameFromUrl = url.replace(/.*\/([^\/]+?)\.\w{2,5}(\?|@|$).*/, "$1");
-                try {
-                    nameFromUrl = decodeURIComponent(nameFromUrl);
-                } catch (e) {}
+                if (/\=&/.test(nameFromUrl)) {
+                    nameFromUrl = "";
+                } else {
+                    try {
+                        nameFromUrl = decodeURIComponent(nameFromUrl);
+                    } catch (e) {}
+                }
             }
         }
         switch (type) {
             case 1:
-                name = (name || nameFromUrl || url || document.title || "image").substr(-50);
+                name = (name || nameFromUrl || "image").substr(-50);
                 break;
             case 2:
                 name = (nameFromUrl || url || "image").substr(-50);
@@ -11792,21 +11797,21 @@ ImgOps | https://imgops.com/#b#`;
                 } else if (nameFromUrl && name) {
                     name = nameFromUrl.substr(-50) + " - " + name.substr(-50);
                 } else if (!nameFromUrl && !name) {
-                    name = (url || document.title || "image").substr(-50);
+                    name = "image";
                 }
                 break;
             default:
-                name = (nameFromUrl || name || url || document.title || "image").substr(-50);
+                name = (nameFromUrl || name || "image").substr(-50);
                 break;
         }
         return name.replace(/.*\/([^\/]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
     }
-    var _GM_download=(typeof GM_download=='undefined')?(url, name, type)=>{
-        name=getRightSaveName(url, name, type);
+    var _GM_download = (typeof GM_download == 'undefined') ? (url, name, type) => {
+        name = document.title + " - " + getRightSaveName(url, name, type);
         saveAs(url, name);
-    }:(url, name, type)=>{
-        name=getRightSaveName(url, name, type);
-        let urlSplit=url.split("/");
+    } : (url, name, type) => {
+        name = document.title + " - " + getRightSaveName(url, name, type);
+        let urlSplit = url.split("/");
         GM_download({
             url: url,
             name: name,
@@ -11885,7 +11890,7 @@ ImgOps | https://imgops.com/#b#`;
     function downloadImg(url, name, type, errCb) {
         urlToBlob(url, (blob, ext) => {
             if(blob){
-                saveAs(blob, getRightSaveName(url, name, type, ext));
+                saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
             }else{
                 _GM_download(url, name, type);
                 if (errCb) errCb();
@@ -13113,12 +13118,12 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
 
                     '<span title="'+i18n("exitCollectionTip")+'" class="pv-gallery-head-command pv-gallery-head-command-exit-collection">'+
-                    '<span>'+i18n("exitCollection")+'</span>'+
+                    '<span class="pv-gallery-head-command"><span>'+i18n("exitCollection")+'</span></span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
                     '<span title="'+i18n("loadAllTip")+'" class="pv-gallery-head-command pv-gallery-head-command-nextPage">'+
-                    '<span>'+i18n("loadAll")+'</span>'+
+                    '<div class="pv-gallery-head-command"><span>'+i18n("loadAll")+'</span></div>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
@@ -13923,7 +13928,7 @@ ImgOps | https://imgops.com/#b#`;
                                     var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
                                     title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
                                     title = getRightSaveName(srcSplit, title, prefs.saveName);
-                                    var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
+                                    var picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
                                     var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
                                     if (node.dataset.srcs) {
@@ -14488,6 +14493,109 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 self.urlFilter="";
 
+
+                self.batchDl=document.createElement('p');
+                let batchDlBtn=document.createElement('input');
+                let cancelBtn=document.createElement('input');
+                let selectAllBtn=document.createElement('input');
+                let invertBtn=document.createElement('input');
+                let compareBtn=document.createElement('input');
+                let checkBoxs;
+                let maximizeContainer = eleMaps['maximize-container'];
+                batchDlBtn.value=i18n("download");
+                cancelBtn.value=i18n("closeBtn");
+                selectAllBtn.value=i18n("selectAllBtn");
+                invertBtn.value=i18n("invertBtn");
+                compareBtn.value=i18n("compareBtn");
+                batchDlBtn.type="button";
+                cancelBtn.type="button";
+                cancelBtn.className="need-checked";
+                selectAllBtn.type="button";
+                invertBtn.type="button";
+                invertBtn.className="need-checked";
+                compareBtn.type="button";
+                compareBtn.className = "compareBtn";
+                compareBtn.onclick=function(e){
+                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                    if(checkBoxs.length<2)return;
+                    let imgSrcs=[];
+                    [].forEach.call(checkBoxs, function(node){
+                        let conItem=node.parentNode;
+                        if(conItem.style.display=="none")return;
+                        let imgSrc=conItem.querySelector("img").src;
+                        imgSrcs.push(imgSrc);
+                    });
+                    if(imgSrcs.length<2)return;
+                    let mainImg=document.createElement("img");
+                    mainImg.src=imgSrcs.shift();
+                    let mainImgWin=new ImgWindowC(mainImg);
+                    mainImgWin.compare(imgSrcs);
+                };
+                batchDlBtn.onclick=function(e){
+                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                    if(checkBoxs.length<1)checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");;
+
+                    var saveParams = [],saveIndex=0;
+                    [].forEach.call(checkBoxs, function(node){
+                        let conItem=node.parentNode;
+                        if(conItem.style.display=="none")return;
+                        saveIndex++;
+
+                        let imgSrc=conItem.querySelector("img").src;
+                        let title=node.nextElementSibling.title;
+                        title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
+                        title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
+                        let srcSplit;
+                        if (imgSrc.indexOf('data') === 0) srcSplit = "";
+                        else {
+                            srcSplit=imgSrc || '';
+                        }
+                        title = getRightSaveName(srcSplit, title, prefs.saveName);
+                        var picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title || title == document.title ? "" : "-" + title);
+                        saveParams.push([imgSrc, picName]);
+                    });
+                    self.batchDownload(saveParams, ()=>{
+                        self.showTips("Completed!", 1000);
+                    });
+                };
+                cancelBtn.onclick=function(e){
+                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                    if(checkBoxs.length<1)return;
+                    [].forEach.call(checkBoxs, i=>{
+                        i.checked=false;
+                    });
+                    maximizeContainer.classList.remove("checked");
+                };
+                invertBtn.onclick=function(e){
+                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
+                    if(checkBoxs.length<1)return;
+                    [].forEach.call(checkBoxs, i=>{
+                        let conItem=i.parentNode;
+                        if(conItem.style.display=="none")i.checked=false;
+                        else i.checked=!i.checked;
+                    });
+                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                    if(checkBoxs.length==0){
+                        maximizeContainer.classList.remove("checked");
+                    }
+                };
+                selectAllBtn.onclick=function(e){
+                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
+                    if(checkBoxs.length<1)return;
+                    [].forEach.call(checkBoxs, i=>{
+                        let conItem=i.parentNode;
+                        if(conItem.style.display=="none")i.checked=false;
+                        else i.checked=true;
+                    });
+                    maximizeContainer.classList.add("checked");
+                };
+                self.batchDl.appendChild(batchDlBtn);
+                self.batchDl.appendChild(cancelBtn);
+                self.batchDl.appendChild(selectAllBtn);
+                self.batchDl.appendChild(invertBtn);
+                self.batchDl.appendChild(compareBtn);
+                maximizeContainer.parentNode.appendChild(self.batchDl);
+
                 eleMaps['head'].addEventListener('click',function(e){//顶栏上面的命令
                     if(e.button!=0)return;
                     var target=e.target;
@@ -14737,9 +14845,9 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputH.title="min height: "+sizeInputH.value+"px";
-                sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
-                sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
 
                 var self=this;
                 var viewmoreShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
@@ -14769,12 +14877,12 @@ ImgOps | https://imgops.com/#b#`;
                     sizeInputH.max=maxSizeH;
                     sizeInputH.min=minSizeH;
                     sizeInputH.title="min height: "+sizeInputH.value+"px";
-                    sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                    sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
 
                     sizeInputW.max=maxSizeW;
                     sizeInputW.min=minSizeW;
                     sizeInputW.title="min width: "+sizeInputW.value+"px";
-                    sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                    sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
                 }else{
                     this.data.forEach(function(item) {
                         if(!item)return;
@@ -14832,14 +14940,14 @@ ImgOps | https://imgops.com/#b#`;
                 sizeInputH.value=prefs.gallery.defaultSizeLimit.h;
                 sizeInputH.title="min height: "+sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
-                sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
 
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
                 sizeInputW.value=prefs.gallery.defaultSizeLimit.w;
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
                 self.loadThumb();
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
@@ -14896,7 +15004,7 @@ ImgOps | https://imgops.com/#b#`;
                         return words.join(" ");
                     };
                 maximizeContainer.style.minHeight = 0;
-                maximizeContainer.parentNode.style.visibility = "hidden";
+                maximizeContainer.parentNode.style.display = "none";
                 if(this.hideBodyStyle.parentNode)
                     this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                 imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
@@ -14936,102 +15044,13 @@ ImgOps | https://imgops.com/#b#`;
                 let self=this;
                 checkBox.onclick=function(e){
                     let checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                    if(!self.batchDl || self.batchDl.parentNode!=maximizeContainer){
-                        self.batchDl=document.createElement('p');
-                        let batchDlBtn=document.createElement('input');
-                        let cancelBtn=document.createElement('input');
-                        let invertBtn=document.createElement('input');
-                        let compareBtn=document.createElement('input');
-                        batchDlBtn.value=i18n("download");
-                        cancelBtn.value=i18n("closeBtn");
-                        invertBtn.value=i18n("invertBtn");
-                        compareBtn.value=i18n("compareBtn");
-                        batchDlBtn.type="button";
-                        cancelBtn.type="button";
-                        invertBtn.type="button";
-                        compareBtn.type="button";
-                        compareBtn.className = "compareBtn";
-                        compareBtn.onclick=function(e){
-                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                            if(checkBoxs.length<2)return;
-                            let imgSrcs=[];
-                            [].forEach.call(checkBoxs, function(node){
-                                let conItem=node.parentNode;
-                                if(conItem.style.display=="none")return;
-                                let imgSrc=conItem.querySelector("img").src;
-                                imgSrcs.push(imgSrc);
-                            });
-                            if(imgSrcs.length<2)return;
-                            let mainImg=document.createElement("img");
-                            mainImg.src=imgSrcs.shift();
-                            let mainImgWin=new ImgWindowC(mainImg);
-                            mainImgWin.compare(imgSrcs);
-                        };
-                        batchDlBtn.onclick=function(e){
-                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                            if(checkBoxs.length<1)return;
-
-                            var saveParams = [],saveIndex=0;
-                            [].forEach.call(checkBoxs, function(node){
-                                let conItem=node.parentNode;
-                                if(conItem.style.display=="none")return;
-                                saveIndex++;
-
-                                let imgSrc=conItem.querySelector("img").src;
-                                let title=node.nextElementSibling.title;
-                                title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
-                                title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
-                                let srcSplit;
-                                if (imgSrc.indexOf('data') === 0) srcSplit = "";
-                                else {
-                                    srcSplit=imgSrc || '';
-                                }
-                                title = getRightSaveName(srcSplit, title, prefs.saveName);
-                                var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title || title == document.title ? "" : "-" + title);
-                                saveParams.push([imgSrc, picName]);
-                            });
-                            self.batchDownload(saveParams, ()=>{
-                                self.showTips("Completed!", 1000);
-                            });
-                        };
-                        cancelBtn.onclick=function(e){
-                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                            if(checkBoxs.length<1)return;
-                            [].forEach.call(checkBoxs, i=>{
-                                i.checked=false;
-                            });
-                            maximizeContainer.removeChild(self.batchDl);
-                            maximizeContainer.classList.remove("checked");
-                        };
-                        invertBtn.onclick=function(e){
-                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
-                            if(checkBoxs.length<1)return;
-                            [].forEach.call(checkBoxs, i=>{
-                                let conItem=i.parentNode;
-                                if(conItem.style.display=="none")i.checked=false;
-                                else i.checked=!i.checked;
-                            });
-                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                            if(checkBoxs.length==0){
-                                maximizeContainer.removeChild(self.batchDl);
-                                maximizeContainer.classList.remove("checked");
-                            }
-                        };
-                        self.batchDl.appendChild(batchDlBtn);
-                        self.batchDl.appendChild(cancelBtn);
-                        self.batchDl.appendChild(invertBtn);
-                        self.batchDl.appendChild(compareBtn);
-                        maximizeContainer.appendChild(self.batchDl);
-                    }
                     maximizeContainer.classList.remove("canCompare");
                     if(checkBoxs.length>0){
-                        maximizeContainer.appendChild(self.batchDl);
                         maximizeContainer.classList.add("checked");
                         if (checkBoxs.length > 1) {
                             maximizeContainer.classList.add("canCompare");
                         }
                     }else{
-                        maximizeContainer.removeChild(self.batchDl);
                         maximizeContainer.classList.remove("checked");
                     }
                     e.stopPropagation();
@@ -15170,7 +15189,7 @@ ImgOps | https://imgops.com/#b#`;
                     this.closeViewMore();
                 }else{
                     maximizeContainer.style.minHeight = "100%";
-                    maximizeContainer.parentNode.style.visibility = "visible";
+                    maximizeContainer.parentNode.style.display = "block";
                     document.head.appendChild(this.hideBodyStyle);
                     imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'hidden';
                     imgCon.style['border' + capitalize(sidebarPosition)] = '0';
@@ -15773,13 +15792,13 @@ ImgOps | https://imgops.com/#b#`;
                             var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                             sizeInputW.value=selectData.sizeW;
                             sizeInputW.title="min width: "+sizeInputW.value+"px";
-                            sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                            sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
                         }
                         if(selectData.sizeH<sizeInputH.value){
                             var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                             sizeInputH.value=selectData.sizeH;
                             sizeInputH.title="min height: "+sizeInputH.value+"px";
-                            sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                            sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
                         }
                     }
                     thumbnails.innerHTML = createHTML("");
@@ -15815,7 +15834,9 @@ ImgOps | https://imgops.com/#b#`;
                         item.sizeW=naturalSize.w;
                         item.sizeH=naturalSize.h;
                     }
-                    if(item.sizeW && item.sizeH && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
+                    if (item.sizeW == 0 && item.sizeH == 0 && item.img.complete) {
+                        spanMark.style.display="none";
+                    } else if(item.sizeW && item.sizeH && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
                         spanMark.style.display="none";
                     }else{
                         spanMark.style.display="";
@@ -15957,7 +15978,13 @@ ImgOps | https://imgops.com/#b#`;
 
                 var pageObj = this.getPage(),textSpan = this.eleMaps['head-command-nextPage'].querySelector("span");
                 this.haveMorePage = !!pageObj.pre || !!pageObj.next;
-                textSpan.style.color=this.haveMorePage?"#e9cccc":"";
+                if (this.haveMorePage) {
+                    textSpan.style.color="#e9cccc";
+                    textSpan.parentNode.parentNode.style.display="inline-block";
+                } else {
+                    textSpan.style.color="";
+                    textSpan.parentNode.parentNode.style.display="none";
+                }
             },
             haveMorePage:false,
             clear:function(){
@@ -16623,7 +16650,7 @@ ImgOps | https://imgops.com/#b#`;
                 });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
                 var bgImgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
-                    if(node.nodeName.toUpperCase() != "IMG" && node.offsetParent && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
+                    if(node.nodeName.toUpperCase() != "IMG" && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
                         let prop = getComputedStyle(node).backgroundImage;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
@@ -17458,15 +17485,29 @@ ImgOps | https://imgops.com/#b#`;
                     opacity: 1;\
                     background-color:#000000;\
                     }\
-                    .pv-gallery-maximize-container>p{\
+                    .pv-gallery-maximize-container+p{\
                     position: fixed;\
                     width: 100%;\
                     text-align: center;\
                     pointer-events: none;\
                     margin-bottom: 45px;\
                     bottom: 0;\
+                    opacity: 0;\
+                    transition: all .3s ease;\
                     }\
-                    .pv-gallery-maximize-container>p>input{\
+                    .pv-gallery-maximize-container+p:hover,.pv-gallery-maximize-container.checked+p:hover{\
+                    opacity: 1;\
+                    }\
+                    .pv-gallery-maximize-container.checked+p{\
+                    opacity: 0.8;\
+                    }\
+                    .pv-gallery-maximize-container+p>.need-checked{\
+                    display: none;\
+                    }\
+                    .pv-gallery-maximize-container.checked+p>.need-checked{\
+                    display: inline-block;\
+                    }\
+                    .pv-gallery-maximize-container+p>input{\
                     pointer-events: all;\
                     color: white;\
                     background-color: black;\
@@ -17477,7 +17518,7 @@ ImgOps | https://imgops.com/#b#`;
                     margin: 1px;\
                     font-size: 20px;\
                     }\
-                    .pv-gallery-maximize-container>p>input:hover{\
+                    .pv-gallery-maximize-container+p>input:hover{\
                     color: red;\
                     }\
                     .pv-gallery-maximize-container{\
@@ -17597,10 +17638,10 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container.checked span>.pv-top-banner{\
                     opacity: 0.6;\
                     }\
-                    .pv-gallery-maximize-container>p>input.compareBtn{\
+                    .pv-gallery-maximize-container+p>input.compareBtn{\
                     display: none;\
                     }\
-                    .pv-gallery-maximize-container.canCompare>p>input.compareBtn{\
+                    .pv-gallery-maximize-container.canCompare+p>input.compareBtn{\
                     display: inline;\
                     }\
                     .pv-gallery-maximize-container span:hover>input{\
@@ -17611,7 +17652,7 @@ ImgOps | https://imgops.com/#b#`;
                     height: 100%;\
                     width: 100%;\
                     position: absolute;\
-                    visibility: hidden;\
+                    display: none;\
                     top: 0;\
                     left: 0;\
                     }\
