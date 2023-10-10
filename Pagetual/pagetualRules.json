@@ -8173,7 +8173,7 @@
 {
     "name": "Duckduckgo",
     "url": "^https://duckduckgo\\.com/\\?",
-    "loadMore": ".result--more>a,#more-results"
+    "loadMore": ".result--more>a,.content-wrap:not(.is-hidden) #more-results"
 },
 {
     "name": "F 搜",
