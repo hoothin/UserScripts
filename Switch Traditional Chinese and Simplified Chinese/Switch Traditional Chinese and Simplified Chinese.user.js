@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.40
+// @version      1.2.6.41
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1160,7 +1160,9 @@
         }
     };
 
-    let currentAction = "action_" + location.hostname.toString().replace(/\./g,"_");
+    var curInput = null;
+    var curLang;
+    var currentAction = "action_" + location.hostname.toString().replace(/\./g,"_");
     function setLanguage(){
         enable = true;
         storage.setItem(currentAction, action);
@@ -1183,8 +1185,7 @@
 
     function switchLanguage(){
         let reload = action === 1;
-        action = action == 2 ? 3 : 2;
-        setLanguage();
+        translateAction(document.body);
         if (reload) location.reload();
     }
 
@@ -1192,6 +1193,43 @@
         action = saveAction === 1 ? "" : 1;
         setLanguage();
         location.reload();
+    }
+
+    function translateAction(activeEle){
+        if(!activeEle)activeEle=document.activeElement;
+        if("TEXTAREA"==activeEle.nodeName.toUpperCase()||activeEle.contentEditable=="true"){
+            if (curInput != activeEle) {
+                curLang = isSimple;
+            }
+            curLang=!curLang;
+            activeEle.innerHTML=curLang?traditionalized(activeEle.innerHTML):simplized(activeEle.innerHTML);
+            activeEle.value=curLang?traditionalized(activeEle.value):simplized(activeEle.value);
+        }else if("INPUT"==activeEle.nodeName.toUpperCase()){
+            if (curInput != activeEle) {
+                curLang = isSimple;
+            }
+            curLang=!curLang;
+            activeEle.value=curLang?traditionalized(activeEle.value):simplized(activeEle.value);
+        }else{
+            var selecter;
+            if(window.getSelection()){
+                selecter=window.getSelection();
+            }else{
+                selecter=document.getSelection();
+            }
+            selecter=document.getSelection();
+            var selectStr=selecter.toString().trim();
+            if(selectStr!=""){
+                var rang = selecter.getRangeAt(0);
+                rang.deleteContents();
+                curLang=!curLang;
+                rang.insertNode(document.createTextNode(curLang?traditionalized(selectStr):simplized(selectStr)));
+            }else{
+                action=action==2?3:2;
+                setLanguage();
+            }
+        }
+        curInput = document.activeElement;
     }
 
     var saveAction;
@@ -1265,43 +1303,10 @@
             }
         },50);
 
-        var curLang = isSimple;
-        var curInput = null;
+        curLang = isSimple;
         document.addEventListener("keydown", function(e) {
             if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
-                if("TEXTAREA"==document.activeElement.nodeName.toUpperCase()||document.activeElement.contentEditable=="true"){
-                    if (curInput != document.activeElement) {
-                        curLang = isSimple;
-                    }
-                    curLang=!curLang;
-                    document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
-                    document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                }else if("INPUT"==document.activeElement.nodeName.toUpperCase()){
-                    if (curInput != document.activeElement) {
-                        curLang = isSimple;
-                    }
-                    curLang=!curLang;
-                    document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                }else{
-                    var selecter;
-                    if(window.getSelection()){
-                        selecter=window.getSelection();
-                    }else{
-                        selecter=document.getSelection();
-                    }
-                    selecter=document.getSelection();
-                    var selectStr=selecter.toString().trim();
-                    if(selectStr!=""){
-                        var rang = selecter.getRangeAt(0);
-                        rang.deleteContents();
-                        curLang=!curLang;
-                        rang.insertNode(document.createTextNode(curLang?traditionalized(selectStr):simplized(selectStr)));
-                    }else{
-                        action=action==2?3:2;
-                        setLanguage();
-                    }
-                }
-                curInput = document.activeElement;
+                translateAction();
             } else if(e.key == pinyinShortcutKey && e.ctrlKey == pinyinCtrlKey && e.altKey == pinyinAltKey && e.shiftKey == pinyinShiftKey && e.metaKey == pinyinMetaKey) {
                 showPinyinInit();
             }
