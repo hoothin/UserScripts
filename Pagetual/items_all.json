@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86176",
+  "data": {
+    "pageElement": "//div[@data-a-name=\"vine-items\"]",
+    "nextLink": "//a[@aria-current='page']/parent::node()/following-sibling::li[1]/a",
+    "url": "^https://www\\.amazon\\.co\\.jp/vine/vine-items",
+    "exampleUrl": "https://www.amazon.co.jp/vine/vine-items?queue=encore"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "OHM_79",
+  "name": "Amazon Vine 追加商品",
+  "created_at": "2023-10-08T11:22:25+09:00",
+  "updated_at": "2023-10-08T11:45:53+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86175",
   "data": {
     "insertBefore": "",
@@ -11129,14 +11143,14 @@
     "pageElement": "//*[contains(@class,\"autopagerize_page_element\")]",
     "comment": "Without this, the archive design will be corrupted. Probably because autopagerize_insert_before is not in the right place.",
     "nextLink": "//a[@rel=\"next\"]",
-    "url": "^https://(www\\.)?(srdk|onaji|e-aidem|hotpepper|fanthology|text\\.sanographix|techtekt|tech\\.nri-net|times\\.hrbrain|kaelife|inside\\.pixiv)",
-    "exampleUrl": "https://srdk.rakuten.jp/archive https://onaji.me/archive https://www.e-aidem.com/ch/listen/archive https://www.hotpepper.jp/mesitsu/archive https://www.fanthology.me/archive https://text.sanographix.net/ https://techtekt.persol-career.co.jp/archive https://tech.nri-net.com/archive/category/Technology https://times.hrbrain.co.jp/?page=1640070118 https://kaelife.hondaaccess.jp/archive https://inside.pixiv.blog/archive"
+    "url": "^https://(www\\.)?(soredoko|onaji|e-aidem|hotpepper|text\\.sanographix|techtekt|tech\\.nri-net|times\\.hrbrain|kaelife|inside\\.pixiv|tech\\.uzabase)",
+    "exampleUrl": "https://soredoko.jp/archive https://onaji.me/archive https://www.e-aidem.com/ch/listen/archive https://www.hotpepper.jp/mesitsu/archive https://text.sanographix.net/ https://techtekt.persol-career.co.jp/archive https://tech.nri-net.com/archive/category/Technology https://times.hrbrain.co.jp/?page=1640070118 https://kaelife.hondaaccess.jp/archive https://inside.pixiv.blog/archive https://tech.uzabase.com/archive/category/blog"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "autopagerize_insert_before measures",
   "created_at": "2018-12-29T20:24:47+09:00",
-  "updated_at": "2022-03-01T19:43:06+09:00"
+  "updated_at": "2023-10-08T17:02:57+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82051",
