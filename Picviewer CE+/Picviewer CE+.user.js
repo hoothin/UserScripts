@@ -16680,7 +16680,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return total;
                 }, []);
-                if(bgImgs)imgs=imgs.concat(bgImgs);
+                if(bgImgs)imgs=imgs.concat(bgImgs.reverse());
                 var svgImgs=Array.from(getBody(document).querySelectorAll('svg')).reduceRight((total, svg) => {
                     if (svg.clientHeight != 0 && (!svg.classList || !svg.classList.contains("pagetual"))) {
                         try {
@@ -16692,7 +16692,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return total;
                 }, []);
-                if(svgImgs)imgs=imgs.concat(svgImgs);
+                if(svgImgs)imgs=imgs.concat(svgImgs.reverse());
                 var canvasImgs=Array.from(getBody(document).querySelectorAll('canvas')).reduceRight((total, canvas) => {
                     if (canvas.clientHeight != 0) {
                         try {
@@ -16709,7 +16709,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return total;
                 }, []);
-                if(canvasImgs)imgs=imgs.concat(canvasImgs);
+                if(canvasImgs)imgs=imgs.concat(canvasImgs.reverse());
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
                     if (img.parentNode) {
