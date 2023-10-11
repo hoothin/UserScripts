@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.11.1
+// @version              2023.10.11.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12057,15 +12057,16 @@ ImgOps | https://imgops.com/#b#`;
             debug: false,
             customLang:'auto',
             customRules:`[
-//  {
-//    name: "Example, can be safely deleted",
-//    url: /https?:\\/\\/www.google(\\.\\w{1,3}){1,3}\\/search\\?.*/,
-//    getImage: function(a) {
-//    },
-//    src: /avatar/i,
-//    r: /\\?.*$/i,
-//    s: ''
-//  }
+/*
+  {
+    name: "Example, can be deleted safely",
+    url: /https?:\\/\\/www\\.google\\.com\\/search\\?.*$/,
+    getImage: function(a) {},
+    src: /avatar/i,
+    r: /\\?.*$/i,
+    s: ''
+  }
+*/
 ]`,
             firstEngine:"Tineye"
         };
@@ -15034,7 +15035,6 @@ ImgOps | https://imgops.com/#b#`;
                 dlSpan.className="pv-bottom-banner";
                 dlSpan.innerHTML=createHTML(prefs.icons.downloadSvgBtn+' '+i18n("download"));
                 dlSpan.src=curNode.dataset.src;
-                dlSpan.title=curNode.title||document.title;
                 dlSpan.onclick=clickCb;
                 var topP=document.createElement('p');
                 topP.className="pv-top-banner";
@@ -16781,9 +16781,11 @@ ImgOps | https://imgops.com/#b#`;
                  .gridBig{margin: 0px;}\
                  .gridBig>div { float: left;margin: 0px 0px 1px 1px;}\
                  .gridBig>div>img { max-width: 100%; }\
-                 .select{opacity: 0.8;border: 5px solid red!important;}\
-                 body>div{border: 5px solid black;margin: 1px;}\
-                 body>div:hover{border: 5px solid #dbdbdb; background: #80808060;}\
+                 .select{border: 5px solid red!important;}\
+                 body>div{border: 5px solid black;margin: 1px; overflow: hidden;}\
+                 .select>img{transform: scale3d(1.1, 1.1, 1.1);}\
+                 body>div>img{transition: transform .3s ease 0s;}\
+                 body>div:hover{border: 5px solid #dbdbdb; background: #80808020;}\
                  body>div{position: relative; cursor: pointer}\
                  body>div>p{position: absolute; margin: 0; background: #ffffff80; top: 0;}\
                  </style>\
@@ -22060,44 +22062,43 @@ ImgOps | https://imgops.com/#b#`;
 
         MatchedRuleC.prototype={
             init:function(){
-                if(!isunsafe()){
-                    try{
-                        if(unsafeWindow.pvcepRules && Array.isArray(unsafeWindow.pvcepRules)){
-                            unsafeWindow.pvcepRules.forEach(rule=>{
+                if (prefs.customRules && !isunsafe()) {
+                    try {
+                        var customRules = unsafeWindow.eval(createScript(prefs.customRules));
+                        if (Array.isArray(customRules)) {
+                            customRules.forEach(rule => {
                                 let hasRule = false;
-                                for(let s in siteInfo){
-                                    if(siteInfo[s].name == rule.name){
+                                for (let s in siteInfo) {
+                                    if (siteInfo[s].name == rule.name) {
                                         hasRule = true;
-                                        for(let si in rule){
-                                            siteInfo[s][si]=rule[si];
+                                        for (let si in rule) {
+                                            siteInfo[s][si] = rule[si];
                                         }
                                         break;
                                     }
                                 }
-                                if(!hasRule)siteInfo.unshift(rule);
+                                if (!hasRule) siteInfo.unshift(rule);
                             })
                         }
-                        var customRules=unsafeWindow.eval(createScript(prefs.customRules));
-                        if(Array.isArray(customRules)){
-                            customRules.forEach(rule=>{
-                                let hasRule = false;
-                                for(let s in siteInfo){
-                                    if(siteInfo[s].name == rule.name){
-                                        hasRule = true;
-                                        for(let si in rule){
-                                            siteInfo[s][si]=rule[si];
-                                        }
-                                        break;
-                                    }
-                                }
-                                if(!hasRule)siteInfo.unshift(rule);
-                            })
-                            //siteInfo=customRules.concat(siteInfo);
-                        }
-                    }catch(e){
+                    } catch(e) {
                         console.log("Wrong rule for Picviewer CE+");
                         console.log(e);
                     }
+                }
+                if (unsafeWindow.pvcepRules && Array.isArray(unsafeWindow.pvcepRules)) {
+                    unsafeWindow.pvcepRules.forEach(rule => {
+                        let hasRule = false;
+                        for (let s in siteInfo) {
+                            if (siteInfo[s].name == rule.name) {
+                                hasRule = true;
+                                for (let si in rule) {
+                                    siteInfo[s][si] = rule[si];
+                                }
+                                break;
+                            }
+                        }
+                        if (!hasRule) siteInfo.unshift(rule);
+                    })
                 }
 
                 var self=this,r=0;
