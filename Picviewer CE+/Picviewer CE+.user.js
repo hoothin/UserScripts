@@ -15141,13 +15141,11 @@ ImgOps | https://imgops.com/#b#`;
                     });
                     let curSrc=curNode.dataset.src;
                     let defaultDl=()=>{
-                        if(img.width>=88 && img.height>=88){
-                            self.addDlSpan(img, imgSpan, curNode, e=>{
-                                e.stopPropagation();
-                                _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
-                                return true;
-                            });
-                        }
+                        self.addDlSpan(img, imgSpan, curNode, e=>{
+                            e.stopPropagation();
+                            _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
+                            return true;
+                        });
                     };
                     if(curSrc.indexOf("data")===0){
                         defaultDl();
@@ -17586,6 +17584,7 @@ ImgOps | https://imgops.com/#b#`;
                     transition: transform .3s ease 0s;\
                     transform: scale3d(1, 1, 1);\
                     cursor: zoom-in;\
+                    min-height: 88px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover img {\
                     transform: scale3d(1.1, 1.1, 1.1);\
