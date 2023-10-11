@@ -13337,6 +13337,8 @@ ImgOps | https://imgops.com/#b#`;
                     container.querySelector("#minsizeH").value=minsizeH;
                     self.changeMinView();
                 };
+                var sizeInputH=container.querySelector("#minsizeH");
+                var sizeInputW=container.querySelector("#minsizeW");
                 container.querySelector(".pv-gallery-head-left-lock-icon").onclick=function(){
                     if(self.lockMaxSize){
                         self.lockMaxSize=null;
@@ -13344,9 +13346,9 @@ ImgOps | https://imgops.com/#b#`;
                         this.style.filter="";
                         this.title=i18n("lockSizeTip");
                     }else{
-                        var maxsizeW=window.prompt("Width:");
+                        var maxsizeW=window.prompt("Max Width:", sizeInputW.max);
                         if(!maxsizeW)return;
-                        var maxsizeH=window.prompt("Height:");
+                        var maxsizeH=window.prompt("Max Height:", sizeInputH.max);
                         if(!maxsizeH)return;
                         self.lockMaxSize={w:maxsizeW,h:maxsizeH};
                         self.changeMinView();
@@ -14023,17 +14025,18 @@ ImgOps | https://imgops.com/#b#`;
                             });
                             break;
                         case 'urlFilter':
-                            if(self.urlFilter){
-                                self.urlFilter="";
-                                target.style.color="";
-                                target.title=i18n("urlFilterTip");
-                                self.changeMinView();
-                            }else{
-                                let regStr=prompt(i18n("urlFilterTip"));
-                                if(regStr){
-                                    self.urlFilter=regStr;
-                                    target.style.color="#e9cccc";
-                                    target.title=regStr;
+                            {
+                                let filterStr = prompt(i18n("urlFilterTip"), self.urlFilter || "") || "";
+                                if (filterStr != self.urlFilter) {
+                                    self.urlFilter = filterStr;
+                                    if (self.urlFilter) {
+                                        target.style.color = "#e9cccc";
+                                        target.title = self.urlFilter;
+                                        self.changeMinView();
+                                    } else {
+                                        target.style.color = "";
+                                        target.title = i18n("urlFilterTip");
+                                    }
                                     self.changeMinView();
                                 }
                             }
