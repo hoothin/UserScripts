@@ -15511,7 +15511,7 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 };
 
-                if(this.img){
+                if(this.img && this.img.parentNode){
                     this.img.parentNode.removeChild(this.img);
                 };
 
@@ -16653,7 +16653,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 });
-                var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
+                var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
                 var bgImgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
                     if(node.nodeName.toUpperCase() != "IMG" && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
                         let prop = getComputedStyle(node).backgroundImage;
@@ -22590,7 +22590,7 @@ ImgOps | https://imgops.com/#b#`;
                 } else if (target.nodeName.toUpperCase() != 'IMG') {
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
-                    var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\).*/i;
+                    var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
                     var broEle = target.previousElementSibling, broImg;
                     while (broEle) {
                         if (broEle.nodeName == "IMG") broImg = broEle;
