@@ -21938,7 +21938,7 @@ ImgOps | https://imgops.com/#b#`;
                 xhr,
                 description; // 图片的注释
             var imgCStyle = unsafeWindow.getComputedStyle(img);
-            if (!/IMG/i.test(img.nodeName) && imgCStyle) {
+            if (!/(IMG|SVG)/i.test(img.nodeName) && imgCStyle) {
                 let sh = imgCStyle.height, sw = imgCStyle.width;
                 if (imgCStyle.backgroundRepeatX == "repeat") {
                     sw = 10;
