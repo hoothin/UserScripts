@@ -15035,6 +15035,7 @@ ImgOps | https://imgops.com/#b#`;
                 dlSpan.className="pv-bottom-banner";
                 dlSpan.innerHTML=createHTML(prefs.icons.downloadSvgBtn+' '+i18n("download"));
                 dlSpan.src=curNode.dataset.src;
+                dlSpan.title=curNode.title||document.title;
                 dlSpan.onclick=clickCb;
                 var topP=document.createElement('p');
                 topP.className="pv-top-banner";
@@ -15134,7 +15135,6 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         });
                     });
-                    imgSpan.title=curNode.title;
                     let curSrc=curNode.dataset.src;
                     let defaultDl=()=>{
                         if(img.width>=88 && img.height>=88){
@@ -17583,7 +17583,7 @@ ImgOps | https://imgops.com/#b#`;
                     transform: scale3d(1, 1, 1);\
                     cursor: zoom-in;\
                     }\
-                    .pv-gallery-maximize-container img:hover {\
+                    .pv-gallery-maximize-container>.maximizeChild:hover img {\
                     transform: scale3d(1.1, 1.1, 1.1);\
                     filter: brightness(1.1) !important;\
                     }\
