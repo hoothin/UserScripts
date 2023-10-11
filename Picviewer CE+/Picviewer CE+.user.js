@@ -11665,7 +11665,7 @@ WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#
 Trace Moe | https://trace.moe/?url=#t#
 KarmaDecay | http://karmadecay.com/#t#
-ZXing QRCode decode | https://zxing.org/w/decode?full=true&u=#t#
+QRCode decode | https://zxing.org/w/decode?full=true&u=#t#
 QRCode | https://hoothin.com/qrcode/##t#
 ImgOps | https://imgops.com/#b#`;
 
