@@ -15056,6 +15056,10 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     e.stopPropagation();
                 };
+                topP.onclick=function(e){
+                    e.stopPropagation();
+                    checkBox.click();
+                };
                 imgSpan.appendChild(topP);
                 imgSpan.appendChild(checkBox);
                 imgSpan.appendChild(dlSpan);
@@ -17617,6 +17621,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container span>p.pv-top-banner{\
                     top: 0;\
                     height: 25px;\
+                    cursor: pointer;\
                     }\
                     .pv-gallery-maximize-container span:hover>p{\
                     opacity: 1;\
@@ -17633,6 +17638,7 @@ ImgOps | https://imgops.com/#b#`;
                     opacity: 0;\
                     left: 0;\
                     display: inline;\
+                    cursor: pointer;\
                     }\
                     .pv-gallery-maximize-container.checked span>input{\
                     opacity: 1;\
