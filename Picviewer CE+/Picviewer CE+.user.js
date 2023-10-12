@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.12.1
+// @version              2023.10.12.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12060,7 +12060,7 @@ ImgOps | https://imgops.com/#b#`;
 /*
   {
     name: "Example, can be deleted safely",
-    url: /https?:\\/\\/www\\.google\\.com\\/search\\?.*$/,
+    url: /^https?:\\/\\/www\\.google\\.com\\/search\\?/,
     getImage: function(a) {},
     src: /avatar/i,
     r: /\\?.*$/i,
@@ -14062,7 +14062,7 @@ ImgOps | https://imgops.com/#b#`;
                         var btn = document.getElementById("pv-gallery-fullscreenbtn");
                         if (btn) {
                             btn.textContent = i18n("enterFullsc");
-                            btn.removeClass('fullscreenbtn');
+                            btn.classList.remove('fullscreenbtn');
                         }
                     }
                 }
@@ -15079,7 +15079,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (nodeStyle.display == "none") imgSpan.style.display = "none";
                     let popupImgWin = (i) => {
                         let imgwin=new ImgWindowC(i);
-                        self.selectViewmore(imgSpan, curNode.dataset.src);
+                        self.selectViewmore(imgSpan, curNode.dataset.thumbSrc || curNode.dataset.src);
                         if(prefs.imgWindow.overlayer.shown){
                             imgwin.blur(true);
                             self.curImgWin=imgwin;
@@ -15102,7 +15102,7 @@ ImgOps | https://imgops.com/#b#`;
                                             let imgwin=new ImgWindowC(curImgEle);
                                             imgwin.blur(true);
                                             self.curImgWin=imgwin;
-                                            self.selectViewmore(targetImgSpan, curImgEle.src);
+                                            self.selectViewmore(targetImgSpan, imgNode.src);
                                             targetImgSpan.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
                                             setTimeout(() => {targetImgSpan.scrollIntoView({block: "center", inline: "nearest"})}, 300);
                                             self.canScroll=true;
@@ -18708,17 +18708,19 @@ ImgOps | https://imgops.com/#b#`;
                         self.following=true;
                         self.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
                     } else {
-                        if (!self.imgWindow.classList.contains("pv-pic-window-scroll")) {
-                            self.zoomLevel=0;
-                            self.zoom(1);
+                        if (!self.zoomed) {
+                            if (!self.imgWindow.classList.contains("pv-pic-window-scroll")) {
+                                self.zoomLevel=0;
+                                self.zoom(1);
+                            }
+                            if (prefs.imgWindow.fitToScreen) {
+                                self.fitToScreen();
+                            }
+                            if (self.initPos) {
+                                self.imgWindow.style.left = self.initPos.left;
+                                self.imgWindow.style.top = self.initPos.top;
+                            } else self.center(true, true);
                         }
-                        if (prefs.imgWindow.fitToScreen) {
-                            self.fitToScreen();
-                        }
-                        if (self.initPos) {
-                            self.imgWindow.style.left = self.initPos.left;
-                            self.imgWindow.style.top = self.initPos.top;
-                        } else self.center(true, true);
                     }
                     self.imgWindow.style.opacity = 1;
                     self.keepScreenInside();
@@ -18901,7 +18903,7 @@ ImgOps | https://imgops.com/#b#`;
                             self.remove();
                         };
                         e.preventDefault();
-                        e.stopPropagation();
+                        //e.stopPropagation();
                     };
                     container.addEventListener('dblclick',dblClickImgWindow,true);
                 };
@@ -20760,6 +20762,7 @@ ImgOps | https://imgops.com/#b#`;
                         });
 
                         var level=this.getNextZoomLevel();
+                        this.zoomed=true;
 
                         this.zoom(level,ratio);
                         this.zoomOut=oriZoomOut;
