@@ -1299,5 +1299,11 @@ var siteInfo = [
    if(saveEle) return saveEle.href;
   }
  }
+},
+{
+ name: "blogger",
+ src: /blogger\.googleusercontent\.com\/img/,
+ r: /\/[sw]\d+\/.*/,
+ s: "/s0"
 }
 ];
