@@ -18901,9 +18901,9 @@ ImgOps | https://imgops.com/#b#`;
                         var target=e.target;
                         if(target==container || target==img || target.className=='pv-pic-window-center' || target==self.imgState || target==self.rotateOverlayer){
                             self.remove();
+                            e.stopPropagation();
                         };
                         e.preventDefault();
-                        //e.stopPropagation();
                     };
                     container.addEventListener('dblclick',dblClickImgWindow,true);
                 };
