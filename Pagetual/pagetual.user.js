@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.65
+// @version      1.9.36.66
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2258,16 +2258,16 @@
                     if (aTag.dataset && aTag.dataset.preview) continue;
                     let ariaLabel = aTag.getAttribute("aria-label");
                     if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
-                    if (aTag.parentNode) {
-                        if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
-                        if (aTag.parentNode.parentNode) {
-                            if (/slick|slide|gallery/i.test(aTag.parentNode.parentNode.className)) continue;
-                            if (aTag.parentNode.parentNode.parentNode && /slick|slide|gallery/i.test(aTag.parentNode.parentNode.parentNode.className)) continue;
-                        }
-                        if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
-                        if (aTag.parentNode.classList && aTag.parentNode.classList.contains('active')) continue;
-                        if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
+
+                    if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
+                    if (aTag.parentNode.parentNode) {
+                        if (/slick|slide|gallery/i.test(aTag.parentNode.parentNode.className)) continue;
+                        if (aTag.parentNode.parentNode.parentNode && /slick|slide|gallery/i.test(aTag.parentNode.parentNode.parentNode.className)) continue;
                     }
+                    if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
+                    if (aTag.parentNode.classList && aTag.parentNode.classList.contains('active')) continue;
+                    if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
+
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
                     let isJs = this.linkHasNoHref(aTag);
@@ -2296,7 +2296,7 @@
                                     }
                                 }
                                 if (!next3) {
-                                    if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(innerText)) {
+                                    if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(innerText) && !aTag.parentNode.getAttribute("jsaction")) {
                                         if (isJs) {
                                             if (!nextJs3) nextJs3 = aTag;
                                         } else {
@@ -2395,7 +2395,7 @@
                     next = null;
                 } else {
                     let top = getElementTop(next);
-                    if (top < 20) {
+                    if (top < 20 || (left < window.innerWidth / 3 && top < window.innerHeight / 3)) {
                         next = null;
                     } else {
                         let bottom = top + next.offsetHeight || 0;
@@ -2861,7 +2861,7 @@
                     var doc = null;
                     try {
                         doc = document.implementation.createHTMLDocument('');
-                        doc.documentElement.innerHTML = res.response;
+                        doc.documentElement.innerHTML = createHTML(res.response);
                         var body = getBody(doc);
                         if (body && body.firstChild) {
                             self.lazyImgAction(body.children);
@@ -6659,10 +6659,10 @@
         }
         pageBar.style.cssText = pageBarStyle;
         pageBar.title = i18n(isPause ? "enable" : "disable");
-        upSpan.innerHTML = upSvg;
+        upSpan.innerHTML = createHTML(upSvg);
         upSpan.children[0].style.cssText = upSvgCSS;
         upSpan.title = i18n("toTop");
-        downSpan.innerHTML = downSvg;
+        downSpan.innerHTML = createHTML(downSvg);
         downSpan.children[0].style.cssText = downSvgCSS;
         downSpan.title = i18n("toBottom");
         upSpan.style.cssText = initStyle;
@@ -6696,14 +6696,14 @@
             getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
         }, { passive: false, capture: false });
         if (ruleParser.nextTitle) {
-            pageText.innerHTML = ruleParser.nextTitle + " ";
+            pageText.innerHTML = createHTML(ruleParser.nextTitle + " ");
             pageText.title = ruleParser.nextTitle;
         }
         if (ruleParser.curSiteRule.pageNum || pageNumReg.test(url)) {
-            pageText.innerHTML += i18n("page");
+            pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page"));
             pageNum = document.createElement("span");
             let num = ruleParser.getPageNumFromUrl(url, curPage);
-            pageNum.innerHTML = num;
+            pageNum.innerHTML = createHTML(num);
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
             pageNum.style.cssText = pageTextStyle;
@@ -6728,15 +6728,15 @@
             });
             pageBar.appendChild(pageNum);
         } else {
-            pageText.innerHTML += i18n("page") + curPage;
+            pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page") + curPage);
         }
         let preBtn = document.createElement("span");
-        preBtn.innerHTML = "∧";
+        preBtn.innerHTML = createHTML("∧");
         preBtn.title = i18n("prevPage");
         preBtn.className = "prevScreen";
         preBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px; border-radius: 20px 20px 0 0; margin-top: -30px; ";
         let nextBtn = document.createElement("span");
-        nextBtn.innerHTML = "∨";
+        nextBtn.innerHTML = createHTML("∨");
         nextBtn.title = i18n("nextPage");
         nextBtn.className = "nextScreen";
         nextBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px; border-radius: 0 0 20px 20px; margin-top: 30px; ";
