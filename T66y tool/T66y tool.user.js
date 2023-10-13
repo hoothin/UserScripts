@@ -130,11 +130,12 @@
                 });
                 $('body').append('<div style="position:fixed;top:0px;background:#def7d4;width:100%;padding:4px;text-align:center;"><details>' + tmpNode + '</details></div>');
             }
-            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 0; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child { height: 200px; }');
+            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 50px; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child { height: 200px; }');
             var submitBtn = $('form[name="FORM"] .btn[name="Submit"]');
             var textarea = $('form[name="FORM"] [name="atc_content"]');
             if (submitBtn.length && textarea.length) {
-                var quickReply = $( '<input style="margin-left: 10px" class="btn" type="button" value="快速回复">' );
+                var quickReplyStr = '快速回复';
+                var quickReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="${quickReplyStr}">` );
                 quickReply.insertAfter( "form .btn" );
                 var replyStr = "1024";
                 if (document.title.indexOf("打卡签到") !== -1) {
@@ -146,9 +147,30 @@
                     replyStr = "今日签到" + spaceStr;
                 }
                 quickReply.attr('title', replyStr);
-                quickReply.click(function() {
-                    textarea.val(replyStr);
-                    submitBtn.click();
+
+                helper.getScript('//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js', e => {
+                    var lastReplyTime = $.cookie('lastReplyTime');
+                    if (lastReplyTime && Date.now() - parseFloat(lastReplyTime) < 1024000 + 1000) {
+                        quickReply.attr("disabled", true);
+                        quickReply.css("background", "initial");
+                        quickReply.val(quickReplyStr + ": " + parseInt((lastReplyTime - Date.now()) / 1000 + 1025) + "s");
+                        var countTimer = setInterval(() => {
+                            var leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
+                            if (leftTime <= 0) {
+                                quickReply.val(quickReplyStr);
+                                quickReply.removeAttr("disabled");
+                                quickReply.css("background", "");
+                                clearInterval(countTimer);
+                            } else {
+                                quickReply.val(quickReplyStr + ": " + leftTime + "s");
+                            }
+                        }, 1000);
+                    }
+                    quickReply.click(function() {
+                        textarea.val(replyStr);
+                        submitBtn.click();
+                        $.cookie('lastReplyTime', Date.now(), { expires: 7, path: '/' });
+                    });
                 });
             }
         }
