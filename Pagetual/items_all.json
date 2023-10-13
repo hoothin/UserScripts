@@ -2558,19 +2558,18 @@
   "updated_at": "2022-09-07T19:46:59+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/85918",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[@class=\"articleDetailTxtTit\"]",
-    "nextLink": "//a[@class=\"articleDetailNext\"]",
+    "pageElement": "//div[contains(concat(' ', normalize-space(@class), ' '), ' articleDetailTxt ')]",
+    "nextLink": "//li[contains(concat(' ', @class, ' '), ' pager-active ')]/following-sibling::li[1]/a",
     "url": "^https?://cinema\\.ne\\.jp/article/",
     "exampleUrl": "https://cinema.ne.jp/article/detail/49610"
   },
-  "resource_url": "http://wedata.net/items/85918",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "brib2",
   "name": "cinemas PLUS",
   "created_at": "2022-05-17T08:47:09+09:00",
-  "updated_at": "2022-05-17T08:47:09+09:00",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
+  "updated_at": "2023-10-12T20:16:36+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85916",
@@ -25963,7 +25962,8 @@
 {
   "resource_url": "http://wedata.net/items/74948",
   "data": {
-    "pageElement": "//li[./div[@class='productitem']]",
+    "pageElement": "//ul[@data-productgrid-items]",
+    "comment": "ページ下部に作られる『最近閲覧した商品』を取得しないように修正",
     "nextLink": "//li[@class='pagination--next']/a",
     "url": "^https?://www\\.switch-science\\.com/",
     "exampleUrl": "https://www.switch-science.com/collections/marketplace"
@@ -25972,7 +25972,7 @@
   "created_by": "rei tanaka",
   "name": "スイッチサイエンス",
   "created_at": "2014-07-05T16:24:26+09:00",
-  "updated_at": "2023-10-08T06:15:28+09:00"
+  "updated_at": "2023-10-12T20:29:41+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74947",
