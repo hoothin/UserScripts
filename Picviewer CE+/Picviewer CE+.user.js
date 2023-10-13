@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.12.2
+// @version              2023.10.13.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13854,6 +13854,8 @@ ImgOps | https://imgops.com/#b#`;
                     self.switchThumbVisible();//切换图片类别显隐;
                 },true);
 
+                prefs.gallery.scrollEndAndLoad = !!storage.getItem("scrollEndAndLoad");
+                eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
                 var srcSplit,downloading=false;
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',function(e){
@@ -13920,7 +13922,7 @@ ImgOps | https://imgops.com/#b#`;
                         case 'downloadImage':
                             if(downloading)break;
                             downloading=true;
-                            var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                            var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                             var saveParams = [],saveIndex=0;
                             [].forEach.call(nodes, function(node){
                                 if(unsafeWindow.getComputedStyle(node).display!="none"){
@@ -13958,6 +13960,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
 
                             prefs.gallery.scrollEndAndLoad = checkbox.checked;
+                            storage.setItem("scrollEndAndLoad", checkbox.checked);
                             break;
                         case 'fullScreen':
                             if (target.classList.contains('fullscreenbtn')) {
@@ -14479,12 +14482,21 @@ ImgOps | https://imgops.com/#b#`;
                     eleMaps['maximize-container'].classList.add("pv-gallery-flex-maximize");
                 }
 
-                if(prefs.gallery.viewmoreEndless){
+                if(prefs.gallery.viewmoreEndless || prefs.gallery.scrollEndAndLoad){
+                    var isScrolling = false;
                     addWheelEvent(eleMaps['maximize-container'],function(e){
-                        if(!self.haveMorePage)return;
+                        if (isScrolling) return;
+                        isScrolling = true;
+                        setTimeout(() => {
+                            isScrolling = false;
+                        }, 300);
                         let scrollCon=self.eleMaps['maximize-container'].parentNode;
                         let scrollPercent=scrollCon.scrollTop / (scrollCon.scrollHeight - scrollCon.clientHeight);
                         if(scrollPercent>0.8){
+                            if (prefs.gallery.scrollEndAndLoad) {
+                                self.scrollToEndAndReload();
+                            }
+                            if(!self.haveMorePage)return;
                             var textSpan=self.eleMaps['head-command-nextPage'].querySelector("span");
                             if(textSpan.innerHTML==i18n("loading")){
                                 return;
@@ -15203,7 +15215,7 @@ ImgOps | https://imgops.com/#b#`;
                     viewmoreBar.innerHTML = createHTML('✖');
                     viewmoreBar.parentNode.classList.add("showmore");//.backgroundColor = "#2a2a2a";
 
-                    var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                    var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     this.addViewmoreItem(nodes);
                 }
             },
@@ -16555,9 +16567,17 @@ ImgOps | https://imgops.com/#b#`;
                 if (this.selected.clientWidth == 0) return false;
                 if (!span) return true;
 
-                var index = Array.prototype.slice.call(this.imgSpans).indexOf(span);
+                var nodes = this.eleMaps['sidebar-thumbnails-container'].children;
+                var imgSpans = [];
+                [].forEach.call(nodes, function(node){
+                    if(unsafeWindow.getComputedStyle(node).display!="none"){
+                        imgSpans.push(node);
+                    }
+                });
+
+                var index = Array.prototype.slice.call(imgSpans).indexOf(span);
                 if (index != -1) {
-                    var total = this.imgSpans.length;
+                    var total = imgSpans.length;
                     if (total - index < prefs.gallery.scrollEndAndLoad_num) {
                         return true;
                     }
@@ -16581,7 +16601,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 // 最后几张图片，滚到底部添加新的图片
-                if (prefs.gallery.scrollEndAndLoad && this._isLastSpan(nextSpan)) {
+                if (nextSpan && prefs.gallery.scrollEndAndLoad && this._isLastSpan(nextSpan)) {
                     this.scrollToEndAndReload();
                 }
 
@@ -16746,8 +16766,12 @@ ImgOps | https://imgops.com/#b#`;
                 return validImgs;
             },
             scrollToEndAndReload: function() {// 滚动主窗口到最底部，然后自动重载库的图片
-
+                var des=document.documentElement.style;
+                des.overflow='';
                 window.scrollTo(0, 9999999);
+                setTimeout(() => {
+                    des.overflow='hidden';
+                }, 0);
 
                 var self = this;
                 clearTimeout(self.reloadTimeout);
@@ -16757,7 +16781,7 @@ ImgOps | https://imgops.com/#b#`;
                 }, 1000);
             },
             exportImages: function () {// 导出所有图片到新窗口
-                var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]'),i;
+                var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]'),i;
                 //var arr = Array.prototype.map.call(nodes, function(node){
                 //    if(unsafeWindow.getComputedStyle(node).display=="none")return "";
                 //    else return '<div><img src=' + node.dataset.src + '></div>'
@@ -16825,7 +16849,7 @@ ImgOps | https://imgops.com/#b#`;
                 _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html),{active:true});
             },
             copyImages: function(isAlert) {
-                var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                 var urls = [];
                 [].forEach.call(nodes, function(node){
                     if(unsafeWindow.getComputedStyle(node).display!="none"){
