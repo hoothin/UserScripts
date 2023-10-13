@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.13.1
+// @version              2023.10.13.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1263401
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1264243
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1262309
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -16906,6 +16906,7 @@ ImgOps | https://imgops.com/#b#`;
                     border: none;\
                     z-index:'+prefs.imgWindow.zIndex+';\
                     background-color: transparent;\
+                    display: initial;\
                     }\
                     /*全局border-box*/\
                     .pv-gallery-container span{\
@@ -17778,7 +17779,7 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:rgb(0,0,0);\
                     padding:5px;\
                     border:none;\
-                    margin:none;\
+                    margin:0;\
                     text-align:center;\
                     line-height:0;\
                     white-space:nowrap;\
@@ -19163,6 +19164,7 @@ ImgOps | https://imgops.com/#b#`;
                     overscroll-behavior: none;\
                     box-shadow: 0 0 10px 5px rgba(0,0,0,0.35);\
                     box-sizing: content-box;\
+                    display: initial;\
                     }\
                     .pv-pic-window-transition-all{\
                     -webkit-transition: top 0.2s ease, left 0.2s ease;\
@@ -23846,7 +23848,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if (!news) return;
                         let newsEle = document.createElement("div");
-                        newsEle.innerHTML = news;
+                        newsEle.innerHTML = createHTML(news);
                         header.appendChild(newsEle);
                     }
                 },
@@ -23948,6 +23950,9 @@ ImgOps | https://imgops.com/#b#`;
         // 注册按键
         document.addEventListener('keydown', keydown, true);
 
+        var configStyle = document.createElement("style");
+        configStyle.textContent = "#pv-prefs { display: initial; }";
+        configStyle.type = 'text/css';
         function openPrefs() {
             let fieldsSearchData = GM_config.fields["gallery.searchData"];
             if (fieldsSearchData && fieldsSearchData.value) {
@@ -23957,7 +23962,9 @@ ImgOps | https://imgops.com/#b#`;
             if (fieldsCustomRules && fieldsCustomRules.value) {
                 fieldsCustomRules.value = fieldsCustomRules.value.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
             }
+            document.head.appendChild(configStyle);
             GM_config.open();
+
             setTimeout(()=>{
                 if(GM_config.frame && GM_config.frame.style && GM_config.frame.style.display=="none"){
                     GM_config.frame.src="";
