@@ -14493,23 +14493,23 @@ ImgOps | https://imgops.com/#b#`;
                         isScrolling = true;
                         setTimeout(() => {
                             isScrolling = false;
-                        }, 300);
-                        let scrollCon=self.eleMaps['maximize-container'].parentNode;
-                        let scrollPercent=scrollCon.scrollTop / (scrollCon.scrollHeight - scrollCon.clientHeight);
-                        if(scrollPercent>0.8){
-                            if (prefs.gallery.scrollEndAndLoad) {
-                                self.scrollToEndAndReload();
+                            let scrollCon=self.eleMaps['maximize-container'].parentNode;
+                            let scrollPercent=scrollCon.scrollTop / (scrollCon.scrollHeight - scrollCon.clientHeight);
+                            if(scrollPercent>0.8){
+                                if (prefs.gallery.scrollEndAndLoad) {
+                                    self.scrollToEndAndReload();
+                                }
+                                if(!self.haveMorePage)return;
+                                var textSpan=self.eleMaps['head-command-nextPage'].querySelector("span");
+                                if(textSpan.innerHTML==i18n("loading")){
+                                    return;
+                                }
+                                textSpan.innerHTML=createHTML(i18n("loading"));
+                                self.completePages=[];
+                                self.pageAllReady=false;
+                                self.pageAction(true, true);
                             }
-                            if(!self.haveMorePage)return;
-                            var textSpan=self.eleMaps['head-command-nextPage'].querySelector("span");
-                            if(textSpan.innerHTML==i18n("loading")){
-                                return;
-                            }
-                            textSpan.innerHTML=createHTML(i18n("loading"));
-                            self.completePages=[];
-                            self.pageAllReady=false;
-                            self.pageAction(true, true);
-                        }
+                        }, 100);
                     })
                 }
                 self.urlFilter="";
@@ -16770,21 +16770,26 @@ ImgOps | https://imgops.com/#b#`;
                 return validImgs;
             },
             scrollToEndAndReload: function() {// 滚动主窗口到最底部，然后自动重载库的图片
-                var des=document.documentElement.style;
-                des.overflow='';
-                document.head.appendChild(this.hideScrollStyle);
-                window.scrollTo(0, 9999999);
-                setTimeout(() => {
-                    des.overflow='hidden';
-                    document.head.removeChild(this.hideScrollStyle);
-                }, 0);
-
+                if (this.isScrollToEndAndReloading) return;
+                this.isScrollToEndAndReloading = true;
                 var self = this;
-                clearTimeout(self.reloadTimeout);
-                self.reloadTimeout = setTimeout(function(){
-                    // self.reload();
-                    self.reloadNew();
-                }, 1000);
+                setTimeout(() => {
+                    self.isScrollToEndAndReloading = false;
+                    var des=document.documentElement.style;
+                    des.overflow='';
+                    document.head.appendChild(self.hideScrollStyle);
+                    window.scrollTo(0, 9999999);
+                    setTimeout(() => {
+                        des.overflow='hidden';
+                        document.head.removeChild(self.hideScrollStyle);
+                    }, 0);
+
+                    clearTimeout(self.reloadTimeout);
+                    self.reloadTimeout = setTimeout(function(){
+                        // self.reload();
+                        self.reloadNew();
+                    }, 1000);
+                }, 300);
             },
             exportImages: function () {// 导出所有图片到新窗口
                 var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]'),i;
