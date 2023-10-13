@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.1
+// @version      0.6.2
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -88,7 +88,7 @@
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        if (helper.inurl('/htm_data/')) {
+        if (helper.inurl('/htm_data/') || helper.inurl('read.php?')) {
             // 移除图片viidii跳转 & 图片自动缩放
             var imgList = new Array(0);
             var maxWidth = parseInt($("div#main").width() - 200) + 'px';
@@ -129,6 +129,27 @@
                     tmpNode += '<p><a target="_blank" href="' + magnet + '">【 磁力链:　' + magnet + ' 】</a>　　<a target="_blank" href="' + torrent + '">【 下载种子 】</a>　　<a target="_blank" href="http://apiv.ga/magnet/' + hash + '">【 九秒磁力云播 】</a></p>';
                 });
                 $('body').append('<div style="position:fixed;top:0px;background:#def7d4;width:100%;padding:4px;text-align:center;"><details>' + tmpNode + '</details></div>');
+            }
+            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 0; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child { height: 200px; }');
+            var submitBtn = $('form[name="FORM"] .btn[name="Submit"]');
+            var textarea = $('form[name="FORM"] [name="atc_content"]');
+            if (submitBtn.length && textarea.length) {
+                var quickReply = $( '<input style="margin-left: 10px" class="btn" type="button" value="快速回复">' );
+                quickReply.insertAfter( "form .btn" );
+                var replyStr = "1024";
+                if (document.title.indexOf("打卡签到") !== -1) {
+                    var spaceStr = "";
+                    var spaceLen = Math.floor(Math.random() * 10);
+                    for (var i = 0; i < spaceLen; i++) {
+                        spaceStr += " ";
+                    }
+                    replyStr = "今日签到" + spaceStr;
+                }
+                quickReply.attr('title', replyStr);
+                quickReply.click(function() {
+                    textarea.val(replyStr);
+                    submitBtn.click();
+                });
             }
         }
 
