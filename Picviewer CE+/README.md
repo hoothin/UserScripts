@@ -52,7 +52,7 @@ This can add large-image rule for dmm to view high-definition original images or
 }
 </pre>
 <b>3.</b>
-Using a standalone script, you have the ability to manage all of your custom rule.
+Using a standalone script, you have the ability to manage all of your custom rules.
 
 ```
 // ==UserScript==
