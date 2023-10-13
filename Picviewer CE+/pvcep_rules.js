@@ -782,7 +782,7 @@ var siteInfo = [
      if(p[2] && this.classList.contains('ytd-moving-thumbnail-renderer')){
          newsrc = p[2].querySelector("img").src;
      }
-     if(!newsrc || newsrc.indexOf("ytimg.com") == -1) return;
+     if(!newsrc || newsrc.indexOf("i.ytimg.com") == -1) return;
      return newsrc.replace(/\?.*$/i,"");
  }
 },
