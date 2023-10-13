@@ -1543,7 +1543,7 @@
             if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
                 h = ele.parentNode.scrollHeight;
             }
-            if (h === 0 && ele.children && ele.children.length === 1) {
+            while (h === 0 && ele.children && ele.children.length === 1) {
                 h = ele.children[0].scrollHeight;
             }
             const maxNum = 2147483647;
@@ -1554,7 +1554,7 @@
                 }
                 moreChild = moreChild.nextElementSibling;
             }
-            if (minOffsetTop != maxNum && minOffsetTop > 0) {
+            if (h && minOffsetTop != maxNum && minOffsetTop > 0) {
                 h -= minOffsetTop;
             }
             return h;
@@ -1785,6 +1785,11 @@
                         if (sameClassNum < 2 || (sameClassNum < 5 && hasDifferent)) {
                             return checkElement(curMaxEle);
                         }
+                    }
+                    if (ele.nodeName == "APP-ROOT") {
+                        isPause = true;
+                        debug(ele, "Angular root");
+                        return null;
                     }
                     if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none') ele = ele.parentNode;
                     else if (/^(P|BR|TD)$/i.test(ele.nodeName)) ele = ele.parentNode;
