@@ -6183,7 +6183,6 @@
 
     function isInViewPort(element) {
         if (!getBody(document).contains(element)) return false;
-        if (_unsafeWindow.getComputedStyle(element).display == "none") return false;
         const viewWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewHeight = window.innerHeight || document.documentElement.clientHeight;
         const {
@@ -6197,7 +6196,8 @@
             top >= 0 &&
             left >= 0 &&
             right <= viewWidth + 1 &&
-            top <= viewHeight * (ruleParser.curSiteRule.rate || rulesData.rate || 1)
+            top <= viewHeight * (ruleParser.curSiteRule.rate || rulesData.rate || 1) &&
+            isVisible(element, _unsafeWindow)
         );
     }
 
