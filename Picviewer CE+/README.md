@@ -28,7 +28,7 @@ If you wish to add more rules for peculiar sites, come to [my Github](https://gi
 
 ### Custom rules example for config:
 
-**1.**
+<b>1.</b>
 This can add click-to-open for existing asiansister rule. Place it into the '[]' of rule textarea.
 <pre>
 {
@@ -51,6 +51,32 @@ This can add large-image rule for dmm to view high-definition original images or
 &nbsp;s: "pl.jpg"
 }
 </pre>
+<b>3.</b>
+Using a standalone script, you have the ability to manage all of your custom rule.
+
+```
+// ==UserScript==
+// @name         Picviewer CE+ custom rules
+// @namespace    hoothin
+// @version      0.1
+// @description  Picviewer CE+ custom rules
+// @author       You
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    window.pvcepRules = [
+        {
+            name: "dmm",
+            src: /pics\.dmm\.co\.jp/i,
+            r: "ps.jpg",
+            s: "pl.jpg"
+        }
+    ];
+})();
+```
 
 ### [📍Gallery page](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 *A blank Gallery page designed for viewing pictures, showcasing every image you have imported.*
