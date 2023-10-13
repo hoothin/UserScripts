@@ -16788,6 +16788,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.reloadTimeout = setTimeout(function(){
                         // self.reload();
                         self.reloadNew();
+                        self.loadThumb();
                     }, 1000);
                 }, 300);
             },
@@ -16915,6 +16916,8 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-container * {\
                     font-size: 14px;\
+                    display: initial;\
+                    flex-direction: row;\
                     }\
                     /*点击还原的工具条*/\
                     .pv-gallery-maximize-trigger{\
