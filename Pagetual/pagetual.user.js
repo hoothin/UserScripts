@@ -2296,7 +2296,7 @@
                                     }
                                 }
                                 if (!next3) {
-                                    if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(innerText) && !aTag.parentNode.getAttribute("jsaction")) {
+                                    if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(innerText) && aTag.parentNode.hasAttribute && !aTag.parentNode.hasAttribute("jsaction")) {
                                         if (isJs) {
                                             if (!nextJs3) nextJs3 = aTag;
                                         } else {
