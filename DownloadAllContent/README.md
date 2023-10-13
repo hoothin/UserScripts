@@ -67,7 +67,7 @@
 <code>某個章節名 / CSS 選擇器【選擇器後可跟 >> 傳入 item 處理】 **@@** 抓取到 URL 的正則匹配 **@@** 正則替換 URL **@@** 根據爬取返回內容 data 處理並返回最終文本</code>
 
 <a id="example"></a>
-### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用 [❤️ Youtube 有聲小説](https://www.youtube.com/channel/UCe1lxuf0FrJc8Lr48Iw9wAw)
+### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用 [💗 Youtube 有聲小説](https://www.youtube.com/channel/UCe1lxuf0FrJc8Lr48Iw9wAw)
  1. [📕po18](https://www.po18.tw/books/755779/articles)，章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 `.l_chaptname>a@@articles@@articlescontent` 粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  ``` css
 .l_chaptname>a @@ articles @@ articlescontent
