@@ -992,8 +992,8 @@ var siteInfo = [
 },
 {
  name: "duitang",
- src: /duitang\.com\//i,
- r: /.thumb.(\d+_)?\d*\./i,
+ url: /duitang\.com\//i,
+ r: /.thumb.(\d+_)?\d*(_c)?\./i,
  s: '.'
 },
 {
