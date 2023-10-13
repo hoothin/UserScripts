@@ -13317,6 +13317,10 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>');
                 getBody(document).appendChild(container);
 
+                this.hideScrollStyle = document.createElement("style");
+                this.hideScrollStyle.textContent = "html {-ms-overflow-style: none; scrollbar-width: none;}html::-webkit-scrollbar { width: 0 !important; height: 0 !important; }";
+                this.hideScrollStyle.type = 'text/css';
+
                 var self=this;
 
                 var hideBodyStyle=document.createElement('style');
@@ -16768,9 +16772,11 @@ ImgOps | https://imgops.com/#b#`;
             scrollToEndAndReload: function() {// 滚动主窗口到最底部，然后自动重载库的图片
                 var des=document.documentElement.style;
                 des.overflow='';
+                document.head.appendChild(this.hideScrollStyle);
                 window.scrollTo(0, 9999999);
                 setTimeout(() => {
                     des.overflow='hidden';
+                    document.head.removeChild(this.hideScrollStyle);
                 }, 0);
 
                 var self = this;
