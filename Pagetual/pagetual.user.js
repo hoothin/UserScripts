@@ -1544,7 +1544,8 @@
                 h = ele.parentNode.scrollHeight;
             }
             while (h === 0 && ele.children && ele.children.length === 1) {
-                h = ele.children[0].scrollHeight;
+                ele = ele.children[0];
+                h = ele.scrollHeight;
             }
             const maxNum = 2147483647;
             let moreChild = ele.children[0], minOffsetTop = maxNum;
