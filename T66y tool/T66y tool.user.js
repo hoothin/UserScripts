@@ -182,6 +182,10 @@
                                     quickReply.val("回复成功");
                                     submitBtn.val("提 交");
                                     setCountdown();
+                                },
+                                fail: function () {
+                                    submitBtn.val("提 交");
+                                    quickReply.removeAttr("disabled");
                                 }
                             });
                         }
@@ -193,6 +197,7 @@
                         submitBtn.click();
                         lastReplyTime = Date.now();
                         $.cookie('lastReplyTime', lastReplyTime, { expires: 7, path: '/' });
+                        quickReply.attr("disabled", true);
                     });
                     quickReply.on('contextmenu', function(e) {
                         e.stopPropagation();
