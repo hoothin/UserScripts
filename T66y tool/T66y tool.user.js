@@ -179,12 +179,18 @@
                                 url: form.attr('action'),
                                 data: form.serialize(),
                                 success: function () {
-                                    quickReply.val("回复成功");
                                     submitBtn.val("提 交");
-                                    setCountdown();
+                                    quickReply.val("回复成功");
+                                    setTimeout(() => {
+                                        setCountdown();
+                                    }, 2000);
                                 },
                                 fail: function () {
                                     submitBtn.val("提 交");
+                                    quickReply.val("回复失败");
+                                    setTimeout(() => {
+                                        quickReply.val(quickReplyStr);
+                                    }, 2000);
                                     quickReply.removeAttr("disabled");
                                 }
                             });
