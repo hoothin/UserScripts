@@ -1281,7 +1281,6 @@
                     this.curSiteRule = this.possibleRule;
                     return callback();
                 }
-                return;
             }
             this.curSiteRule = {};
             var self = this;
