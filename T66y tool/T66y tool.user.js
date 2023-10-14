@@ -181,6 +181,7 @@
                                 success: function () {
                                     submitBtn.val("提 交");
                                     quickReply.val("回复成功");
+                                    quickReply.css("background", "yellow");
                                     setTimeout(() => {
                                         setCountdown();
                                     }, 2000);
@@ -188,8 +189,10 @@
                                 fail: function () {
                                     submitBtn.val("提 交");
                                     quickReply.val("回复失败");
+                                    quickReply.css("background", "rgb(244, 67, 54)");
                                     setTimeout(() => {
                                         quickReply.val(quickReplyStr);
+                                        quickReply.css("background", "");
                                     }, 2000);
                                     quickReply.removeAttr("disabled");
                                 }
