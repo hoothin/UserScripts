@@ -9701,6 +9701,16 @@
     "pageElementByJs": "let url='',params=[],form=document.getElementById('form');let formData=new FormData(form);for (let [key, value] of formData) { params.push(key + '=' + encodeURIComponent(value)); } params = params.join('&');url=form.action + (form.action.indexOf('?') == -1 ? '?' : '&') + params;fetch(url.replace(/&offset=\\d+/,'')+'&offset='+(pageNum+1), { headers: {'X-Requested-With': 'XMLHttpRequest'}}).then(res=>res.json()).then(res=>{let eles=[];res.data.items.forEach(item=>{let ele=document.createElement('div');ele.innerHTML=`<div class=\"card-item card-item-custom\"><div class=\"card-item-image\"><img alt=\"E-Katalog LKPP\" src=\"/public/images/${item.komoditas_kategori=='Lokal'?'katlokal-02':'katnasional-03'}.jpg\" class=\"img img-responsive\" onerror=\"this.src='/public/images/placeholder.png';\"></div><div class=\"card-item-detail\"><div class=\"card-item-title\"><a href=\"/admin/usulan/detail-pengumuman/${item.id}\"><h5>${item.judul_pengumuman}</h5></a></div><div class=\"card-item-description\" style=\"padding-bottom: 1em\"><section><p title=\"${item.komoditas}\">Etalase Produk : ${item.komoditas}</p><p>Tanggal Mulai: ${item.started_date_str}</p><p>Tanggal Akhir: ${item.finished_date_str||'-'}</p></section></div><div class=\"card-item-footer\"><a href=\"/admin/usulan/detail-pengumuman/${item.id}\">Detail</a></div><div class=\"card-item-badges\" style=\"text-align: center\">${item.komoditas_kategori}</div></div></div>`;ele.className='col-sm-6 col-md-3 col-lg-3 col-md-3-custom';eles.push(ele)});over(eles) })"
 },
 {
+    "name": "ArtStation - Human to wolf transformation study",
+    "enable": 0,
+    "url": "^https?://www\\.artstation\\.com/artwork/",
+    "example": "https://www.artstation.com/artwork/EvDNGN",
+    "nextLink": "li.next>a",
+    "pageElement": "main.justify-content-center .project-assets-list>.asset",
+    "waitElement": "li.next>a",
+    "action": 1
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
