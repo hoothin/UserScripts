@@ -6338,7 +6338,7 @@
         document.addEventListener("click", e => {
             if (!checkClickedEle) {
                 checkClickedEle = e.target;
-                checkUrlTime = 100;
+                checkUrlTime = 300;
                 clearTimeout(checkUrlTimer);
                 checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             }
