@@ -6318,6 +6318,7 @@
                 var e = new Event('pagetual_pushState');
                 e.arguments = arguments;
                 window.dispatchEvent(e);
+                clickedSth = false;
             }
         };
         checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
