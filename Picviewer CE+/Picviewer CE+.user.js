@@ -16858,7 +16858,13 @@ ImgOps | https://imgops.com/#b#`;
                  i.onclick=function(e){if(i.firstChild.style.display=="none"){i.firstChild.style.display="";i.firstChild.src=i.firstChild.src;return;}if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
                  });\
                  </script></body>';
-                _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html),{active:true});
+                if (navigator.userAgent.indexOf("Firefox") != -1) {
+                    let c = unsafeWindow.open("", "_blank");
+                    c.document.write(html);
+                    c.document.close();
+                } else {
+                    _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html),{active:true});
+                }
             },
             copyImages: function(isAlert) {
                 var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
