@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.66
+// @version      1.9.36.67
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1534,10 +1534,14 @@
             }
         }
 
-        getValidHeight(ele, win) {
-            if (!ele.offsetParent) return 0;
+        getValidSize(ele, win) {
+            if (!win) return {h: 0, w: 0};
+            let eleStyle = win.getComputedStyle(ele);
+            if (!ele.offsetParent && (eleStyle.position != "fixed" || eleStyle.opacity == 0)) {
+                return {h: 0, w: 0};
+            }
             let h = ele.scrollHeight;
-            if (win && win.getComputedStyle(ele).overflow == "hidden") {
+            if (eleStyle.overflow == "hidden") {
                 h = ele.offsetHeight;
             }
             if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
@@ -1546,6 +1550,14 @@
             while (h === 0 && ele.children && ele.children.length === 1) {
                 ele = ele.children[0];
                 h = ele.scrollHeight;
+            }
+            if (h === 0 && ele.children && ele.children.length) {
+                let maxChildSize = {h: 0}, self = this;
+                [].forEach.call(ele.children, el => {
+                    let childSize = self.getValidSize(el, win);
+                    if (childSize.h > maxChildSize.h) maxChildSize = childSize;
+                });
+                if (maxChildSize.h != 0) return maxChildSize;
             }
             const maxNum = 2147483647;
             let moreChild = ele.children[0], minOffsetTop = maxNum;
@@ -1558,18 +1570,12 @@
             if (h && minOffsetTop != maxNum && minOffsetTop > 0) {
                 h -= minOffsetTop;
             }
-            return h;
+            return {h: h, w: parseInt(ele.offsetWidth || ele.scrollWidth)};
         }
 
         getPageElement(doc, curWin, dontFind) {
-            if (doc == document && this.docPageElement) {
-                let parent = this.docPageElement && this.docPageElement[0];
-                while (parent && !/^BODY$/i.test(parent.nodeName)) {
-                    parent = parent.parentNode;
-                }
-                if (parent && /^BODY$/i.test(parent.nodeName)) {
-                    return this.docPageElement;
-                }
+            if (doc == document && this.docPageElement && document.documentElement.contains(this.docPageElement[0])) {
+                return this.docPageElement;
             }
             let pageElement = null;
             let self = this;
@@ -1664,8 +1670,9 @@
                         }
                         if (!hasText) {
                             ele = ele.children[0];
-                            curHeight = self.getValidHeight(ele, curWin);
-                            curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
+                            let validSize = self.getValidSize(ele, curWin);
+                            curHeight = validSize.h;
+                            curWidth = validSize.w;
                         }
                     }
                     if (/^PICTURE$/i.test(ele.nodeName) || !ele.innerText || ele.innerText.trim() == '') {
@@ -1709,14 +1716,18 @@
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
                         if (/^(CANVAS|NAV)$/i.test(curNode.nodeName)) continue;
-                        if (!curNode.offsetParent) continue;
+                        let curStyle = curWin.getComputedStyle(curNode);
+                        if (!curNode.offsetParent && (curStyle.position != "fixed" || curStyle.opacity == 0)) {
+                            continue;
+                        }
                         if (!/^IMG$/i.test(curNode.nodeName) && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
                         if (needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode) > windowHeight) {
                             continue;
                         }
                         if (/^ARTICLE$/i.test(curNode.nodeName)) articleNum++;
-                        let h = self.getValidHeight(curNode, curWin);
-                        let w = curNode.scrollWidth;
+                        let validSize = self.getValidSize(curNode, curWin);
+                        let h = validSize.h;
+                        let w = validSize.w;
                         if (isNaN(h) || isNaN(w)) continue;
                         isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop == -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop);
                         if (isHori && h <= 50) continue;
@@ -1728,8 +1739,9 @@
                         }
                         let a = h * w, moreChild = curNode.children[0];
                         while (moreChild) {
-                            let ch = self.getValidHeight(moreChild, curWin);
-                            let cw = moreChild.scrollWidth;
+                            let validSize = self.getValidSize(moreChild, curWin);
+                            let ch = validSize.h;
+                            let cw = validSize.w;
                             if (h < ch) {
                                 h = ch;
                             }
@@ -6318,9 +6330,28 @@
         });
     }
 
+    let scrollContainer;
     function distToBottom () {
         let scrolly = window.scrollY;
         let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        if (!scrollContainer || !document.documentElement.contains(scrollContainer)) {
+            let pageEle = ruleParser.getPageElement(document);
+            if (pageEle && pageEle.length) {
+                let parent = pageEle[0].parentNode, pageScrollY = parent.scrollTop;;
+                while (parent && pageScrollY == 0) {
+                    parent = parent.parentNode;
+                    pageScrollY = parent.scrollTop;
+                }
+                if (pageScrollY) {
+                    scrollContainer = parent;
+                    return scrollContainer.scrollHeight - pageScrollY - windowHeight;
+                }
+            }
+        }
+        if (scrollContainer) {
+            return scrollContainer.scrollHeight - scrollContainer.scrollTop - windowHeight;
+        }
+
         let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
         return scrollH - scrolly - windowHeight;
     }
@@ -7092,7 +7123,7 @@
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
                     let base = doc.querySelector("base");
                     ruleParser.basePath = base ? base.href : url;
-                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow, tryTimes < 10);
+                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow, tryTimes < 25);
                     if (checkEval && !checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
@@ -7698,7 +7729,6 @@
     function loadPageOver() {
         isLoading = false;
         stopScroll = true;
-        let dist = distToBottom();
         setTimeout(() => {stopScroll = false}, 300);
         if (loadingDiv.parentNode) {
             loadingDiv.parentNode.removeChild(loadingDiv);
@@ -7706,7 +7736,7 @@
         let rate = (ruleParser.curSiteRule.rate || rulesData.rate || 1);
         if (rate != 1 && !clickMode) {
             setTimeout(() => {
-                if (dist < bottomGap) {
+                if (distToBottom() < bottomGap) {
                     nextPage();
                 }
             }, 1);
