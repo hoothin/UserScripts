@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.2
+// @version      0.6.3
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -146,11 +146,13 @@
                     }
                     replyStr = "今日签到" + spaceStr;
                 }
-                quickReply.attr('title', replyStr);
 
                 helper.getScript('//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js', e => {
                     var lastReplyTime = $.cookie('lastReplyTime');
-                    if (lastReplyTime && Date.now() - parseFloat(lastReplyTime) < 1024000 + 1000) {
+                    var customReplyStr = $.cookie('customReplyStr');
+                    if (customReplyStr) replyStr = customReplyStr;
+                    quickReply.attr('title', replyStr + "（右击修改）");
+                    function setCountdown() {
                         quickReply.attr("disabled", true);
                         quickReply.css("background", "initial");
                         quickReply.val(quickReplyStr + ": " + parseInt((lastReplyTime - Date.now()) / 1000 + 1025) + "s");
@@ -166,10 +168,41 @@
                             }
                         }, 1000);
                     }
+                    if (lastReplyTime && Date.now() - parseFloat(lastReplyTime) < 1024000 + 1000) {
+                        setCountdown();
+                    }
+                    let form = $('form[name="FORM"]');
+                    document.FORM.onsubmit = function(event) {
+                        if (checkpost(document.FORM)) {
+                            $.ajax({
+                                type: form.attr('method'),
+                                url: form.attr('action'),
+                                data: form.serialize(),
+                                success: function () {
+                                    quickReply.val("回复成功");
+                                    submitBtn.val("提 交");
+                                    setCountdown();
+                                }
+                            });
+                        }
+                        event.preventDefault();
+                        return false;
+                    };
                     quickReply.click(function() {
                         textarea.val(replyStr);
                         submitBtn.click();
-                        $.cookie('lastReplyTime', Date.now(), { expires: 7, path: '/' });
+                        lastReplyTime = Date.now();
+                        $.cookie('lastReplyTime', lastReplyTime, { expires: 7, path: '/' });
+                    });
+                    quickReply.on('contextmenu', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        customReplyStr = prompt("输入自定义回复内容", replyStr || "1024");
+                        if (customReplyStr) {
+                            replyStr = customReplyStr;
+                            quickReply.attr('title', replyStr + "（右击修改）");
+                            $.cookie('customReplyStr', customReplyStr, { expires: 2147483647, path: '/' });
+                        }
                     });
                 });
             }
