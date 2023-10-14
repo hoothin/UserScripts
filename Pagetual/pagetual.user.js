@@ -6303,7 +6303,19 @@
         var prevSearch = window.location.search;
         var checkUrlTime = 100;
         var checkUrlTimer;
+        var checkClickedEle = null;
         var checkFunc = () => {
+            if (checkClickedEle) {
+                if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
+                    if (/^(A|BUTTON)$/i.test(checkClickedEle.nodeName)) {
+                        clickedSth = true;
+                    } else {
+                        let targetStyle = _unsafeWindow.getComputedStyle(checkClickedEle);
+                        if (targetStyle.cursor == "pointer") clickedSth = true;
+                    }
+                }
+                checkClickedEle = null;
+            }
             if (forceState == 1) return;
             if (checkUrlTime < 5000) {
                 checkUrlTime += checkUrlTime>>1;
@@ -6324,17 +6336,12 @@
         checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
 
         document.addEventListener("click", e => {
-            if (!clickedSth && e.target && e.target.nodeName) {
-                if (/^(A|BUTTON)$/i.test(e.target.nodeName)) {
-                    clickedSth = true;
-                } else {
-                    let targetStyle = _unsafeWindow.getComputedStyle(e.target);
-                    if (targetStyle.cursor == "pointer") clickedSth = true;
-                }
+            if (!checkClickedEle) {
+                checkClickedEle = e.target;
+                checkUrlTime = 100;
+                clearTimeout(checkUrlTimer);
+                checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             }
-            checkUrlTime = 100;
-            clearTimeout(checkUrlTimer);
-            checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
         });
     }
 
