@@ -6305,6 +6305,7 @@
         var checkUrlTimer;
         var checkClickedEle = null;
         var checkFunc = () => {
+            if (forceState == 1) return;
             if (checkClickedEle) {
                 if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
                     if (/^(A|BUTTON)$/i.test(checkClickedEle.nodeName)) {
@@ -6316,7 +6317,6 @@
                 }
                 checkClickedEle = null;
             }
-            if (forceState == 1) return;
             if (checkUrlTime < 5000) {
                 checkUrlTime += checkUrlTime>>1;
             }
