@@ -841,7 +841,7 @@
             cb(value);
         }
     };
-    var rulesData = {uninited: true}, ruleUrls, updateDate;
+    var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
@@ -2650,7 +2650,7 @@
                         parent = parent.parentNode;
                     }
                     if (doc == document) {
-                        if (this.linkHasNoHref(nextLink) && !isVisible(nextLink, _unsafeWindow)) {
+                        if (this.linkHasNoHref(nextLink) && (clickedSth || !isVisible(nextLink, _unsafeWindow))) {
                             this.nextLinkHref = false;
                             return null;
                         } else {
@@ -6323,6 +6323,14 @@
         checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
 
         document.addEventListener("click", e => {
+            if (!clickedSth && e.target && e.target.nodeName) {
+                if (/^(A|BUTTON)$/i.test(e.target.nodeName)) {
+                    clickedSth = true;
+                } else {
+                    let targetStyle = _unsafeWindow.getComputedStyle(e.target);
+                    if (targetStyle.cursor == "pointer") clickedSth = true;
+                }
+            }
             checkUrlTime = 100;
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
