@@ -17543,6 +17543,7 @@ ImgOps | https://imgops.com/#b#`;
                     text-align: center;\
                     pointer-events: none;\
                     margin-bottom: 45px;\
+                    left: 0;\
                     bottom: 0;\
                     opacity: 0;\
                     transition: all .3s ease;\
