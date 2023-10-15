@@ -140,6 +140,35 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
  ``` javascript
 .BCsectionTwo-top-chapter>a@@@@@@let content=doc.querySelector("#C0NTENT");let r="\n",ps=content.querySelectorAll("p");for(let i=0;i<ps.length;i++){let p=ps[i];if(p.style.cssText)break;else r+=p.innerText+"\n"};let script=content.nextElementSibling;let other=script.innerText.match(/html\(d\((".*?"), "(.*?)"\)\);/);let a=JSON.parse(other[1]),b=other[2];let cryptojs=document.createElement("script");cryptojs.src="/assets/js/cryptojs.min.js";cryptojs.charset="UTF-8";cryptojs.onload=()=>{function d(a, b) { b = CryptoJS.MD5(b).toString(); var d = CryptoJS.enc.Utf8.parse(b.substring(0, 16)); var e = CryptoJS.enc.Utf8.parse(b.substring(16)); return CryptoJS.AES.decrypt(a, e, { iv: d, padding: CryptoJS.pad.Pkcs7 }).toString(CryptoJS.enc.Utf8) };cb(r+d(a,b).replace(/<p>/g,"").replace(/<\/p>/g,"\n"));};document.head.appendChild(cryptojs);return false;
  ```
+ 18. [📕豆瓣閲讀](https://read.douban.com/column/64079189/)
+  > 礙於法律問題，不會給出具體規則。只是因爲有朋友詢問，因此手癢分析了一下，給出相關思路以供技術研究。首先，豆瓣閲讀的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，豆瓣會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到，解密方法如下
+``` javascript
+function decode(t) {
+	const s = (new TextDecoder).decode(new Uint8Array([65, 69, 83, 45, 67, 66, 67]))
+    	, r = (new TextDecoder).decode(new Uint8Array([99, 114, 121, 112, 116, 111]))
+    	, o = (new TextDecoder).decode(new Uint8Array([115, 117, 98, 116, 108, 101]))
+        , a = (new TextDecoder).decode(new Uint8Array([100, 105, 103, 101, 115, 116]))
+        , h = (new TextDecoder).decode(new Uint8Array([83, 72, 65, 45, 50, 53, 54]))
+        , l = (new TextDecoder).decode(new Uint8Array([105, 109, 112, 111, 114, 116, 75, 101, 121]))
+        , c = (new TextDecoder).decode(new Uint8Array([100, 101, 99, 114, 121, 112, 116]))
+        , u = (new TextDecoder).decode(new Uint8Array([105, 118]));
+    const e = Uint8Array.from(window.atob(t), (t=>t.charCodeAt(0)))
+      , i = e.buffer
+      , d = e.length - 16 - 13
+      , p = new Uint8Array(i,d,16)
+      , f = new Uint8Array(i,0,d)
+      , g = {};
+    return g.name = s,
+    g[u] = p,
+    function() {
+        const t = Ark.user
+          , e = t.isAnonymous ? document.cookie.replace(/.*bid=(\w+).*/,"$1") : t.id
+          , i = (new TextEncoder).encode(e);
+        return window[r][o][a](h, i).then((t=>window[r][o][l]("raw", t, s, !0, [c])))
+    }().then((t=>window[r][o][c](g, t, f))).then((t=>JSON.parse((new TextDecoder).decode(t))))
+}
+```
+  > 因此規則可按如下步驟編寫，首先調用 https://read.douban.com/j/article_v2/get_reader_data, 通過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
