@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.67
+// @version      1.9.36.68
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2242,12 +2242,16 @@
                     for (let i = 0; i < pageDivs.length; i++) {
                         let p = pageDivs[i];
                         if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(p.title || p.value || '')) {
-                            next = p;
+                            next = p.querySelector('a') || p;
                             break;
                         } else if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test((p.innerText || '').trim())) {
-                            next = p;
+                            next = p.querySelector('a') || p;
                             break;
                         }
+                    }
+                    if (next && this.linkHasNoHref(next)) {
+                        if (!jsNext) jsNext = next;
+                        next = null;
                     }
                 }
             }
@@ -7565,7 +7569,7 @@
             scrollingToResize = true;
             let resizeHandler = () => {
                 let touched = 0;
-                for (let i in resizePool) {
+                for (let i = 0; i < resizePool.length; i++) {
                     let resizeArr = resizePool[i];
                     let iframe = resizeArr[1]();
                     if (isTouchViewPort(iframe)) {
