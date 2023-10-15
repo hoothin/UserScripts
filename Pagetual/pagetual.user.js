@@ -7510,7 +7510,7 @@
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
             let height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500);
-            if (!iframe.style.height || height - parseInt(iframe.style.height) > 50) {
+            if (!iframe.style.height || height - parseInt(iframe.style.height) > window.innerHeight) {
                 iframe.style.height = height + "px";
                 iframe.style.minHeight = iframe.style.height;
             }
