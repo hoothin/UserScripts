@@ -7775,7 +7775,7 @@
         }
     }
 
-    var tryTimes = 0;
+    var tryTimes = 0, showedLastPageTips = false;
     async function nextPage() {
         if (typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
         if (clickMode) return;
@@ -7798,13 +7798,15 @@
             if (!nextLink) {
                 if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 3)) {
                     setTimeout(() => {isLoading = false}, 500);
-                } else if (curPage > 1 && rulesData.lastPageTips) {
+                } else if (curPage > 1 && rulesData.lastPageTips && !showedLastPageTips) {
                     showTips(i18n("lastPage"));
+                    showedLastPageTips = true;
                 }
                 return;
             }
             isLoading = false;
         }
+        showedLastPageTips = false;
         let pvGallery = document.querySelector("span.pv-gallery-container");
         if (pvGallery && pvGallery.style.display != "none") return;
         let insert = ruleParser.getInsert();
