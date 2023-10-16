@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.8
+// @version      1.6.30.9
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -219,7 +219,7 @@
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "💲 USD to RMB",
-                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\D/,'')} RMB</i>",
+                url: "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\D/,'')} RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
@@ -566,7 +566,8 @@
                         Wednesday: '星期三 (水)',
                         Thursday: '星期四 (木)',
                         Friday: '星期五 (金)',
-                        Saturday: '星期六 (土)'
+                        Saturday: '星期六 (土)',
+                        template: '请设置【#t#】的值'
                     };
                     break;
                 case "zh-TW":
@@ -668,7 +669,8 @@
                         Wednesday: '星期三 (水)',
                         Thursday: '星期四 (木)',
                         Friday: '星期五 (金)',
-                        Saturday: '星期六 (土)'
+                        Saturday: '星期六 (土)',
+                        template: '請設置【#t#】的值'
                     };
                     break;
                 default:
@@ -762,7 +764,8 @@
                         sleepPrompt: 'Wait time (milliseconds)',
                         startCache: 'Start cache icons of engines, do not close this page!',
                         cacheOver: 'All icons cached!',
-                        cspDisabled: 'The style of SearchJumper is blocked by the CSP of current site, please try to install the Allow CSP: Content-Security-Policy extension to obtain permission'
+                        cspDisabled: 'The style of SearchJumper is blocked by the CSP of current site, please try to install the Allow CSP: Content-Security-Policy extension to obtain permission',
+                        template: 'Please set the value of "#t#"'
                     };
                     break;
             }
@@ -2592,7 +2595,7 @@
                  }
                  mark.searchJumper,
                  a.searchJumper {
-                     visibility: visible;
+                     visibility: inherit;
                      font-style: normal;
                      box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px;
                      border-radius: 3px;
@@ -7447,6 +7450,21 @@
                         } else if ((targetElement.nodeName.toUpperCase() == 'A' || (targetElement.parentNode && targetElement.parentNode.nodeName.toUpperCase() == 'A')) && hasWordParam && !keywords) {
                             if (targetElement.textContent.trim()) keywords = targetElement.textContent.trim();
                         }
+                    }
+                    while (resultUrl.indexOf('%template{') !== -1) {
+                        let inputMatch = resultUrl.match(/%template{(.*?[^\\])}/);
+                        if (!inputMatch) return false;
+                        let templateName = inputMatch[1];
+                        if (!searchData.prefConfig.templateData) searchData.prefConfig.templateData = {};
+                        let templateResult = searchData.prefConfig.templateData[templateName];
+                        if (!templateResult) {
+                            templateResult = window.prompt(i18n("template", templateName)) || "";
+                            if (templateResult) {
+                                searchData.prefConfig.templateData[templateName] = templateResult;
+                                storage.setItem("searchData", searchData);
+                            } else return false;
+                        }
+                        resultUrl = resultUrl.replace(inputMatch[0], templateResult);
                     }
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?[^\\])}/);
