@@ -13,6 +13,7 @@
 (function() {
     'use strict';
 
+    const defaultReply = "1024 感謝分享";
     var helper = {
         addCss: function(css) {
             var style = document.createElement('style');
@@ -220,7 +221,7 @@
                     quickReply.on('contextmenu', function(e) {
                         e.stopPropagation();
                         e.preventDefault();
-                        customReplyStr = prompt("输入自定义回复内容", replyStr || "1024");
+                        customReplyStr = prompt("输入自定义回复内容", replyStr || defaultReply);
                         if (customReplyStr) {
                             replyStr = customReplyStr;
                             quickReply.attr('title', replyStr + "（右击修改）");
