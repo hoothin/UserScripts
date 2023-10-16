@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.3
+// @version      0.6.4
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -152,19 +152,24 @@
                     var customReplyStr = $.cookie('customReplyStr');
                     if (customReplyStr) replyStr = customReplyStr;
                     quickReply.attr('title', replyStr + "（右击修改）");
+                    var formTitle = $("form td.h>b").text();
                     function setCountdown() {
                         quickReply.attr("disabled", true);
                         quickReply.css("background", "initial");
-                        quickReply.val(quickReplyStr + ": " + parseInt((lastReplyTime - Date.now()) / 1000 + 1025) + "s");
+                        var leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
+                        quickReply.val(quickReplyStr + ": " + leftTime + "s");
+                        $("form td.h>b").text(`${formTitle}（${leftTime + "s"}）`);
                         var countTimer = setInterval(() => {
-                            var leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
+                            leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
                             if (leftTime <= 0) {
                                 quickReply.val(quickReplyStr);
+                                $("form td.h>b").text(formTitle);
                                 quickReply.removeAttr("disabled");
                                 quickReply.css("background", "");
                                 clearInterval(countTimer);
                             } else {
                                 quickReply.val(quickReplyStr + ": " + leftTime + "s");
+                                $("form td.h>b").text(`${formTitle}（${leftTime + "s"}）`);
                             }
                         }, 1000);
                     }
@@ -182,17 +187,21 @@
                                     submitBtn.val("提 交");
                                     quickReply.val("回复成功");
                                     quickReply.css("background", "yellow");
+                                    $("form td.h").css("background", "yellow");
                                     setTimeout(() => {
                                         setCountdown();
+                                        $("form td.h").css("background", "");
                                     }, 2000);
                                 },
                                 fail: function () {
                                     submitBtn.val("提 交");
                                     quickReply.val("回复失败");
                                     quickReply.css("background", "rgb(244, 67, 54)");
+                                    $("form td.h").css("background", "rgb(244, 67, 54)");
                                     setTimeout(() => {
                                         quickReply.val(quickReplyStr);
                                         quickReply.css("background", "");
+                                        $("form td.h").css("background", "");
                                     }, 2000);
                                     quickReply.removeAttr("disabled");
                                 }
