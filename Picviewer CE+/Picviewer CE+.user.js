@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.15.1
+// @version              2023.10.17.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1264243
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1265774
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1262309
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -13119,6 +13119,11 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '</span>'+
 
+                    '<span title="'+i18n("urlFilterTip")+'" class="pv-gallery-head-command pv-gallery-head-command-urlFilter">'+
+                    '<div class="pv-gallery-head-command"><span>'+i18n("urlFilter")+'</span></div>'+
+                    '<span class="pv-gallery-vertical-align-helper"></span>'+
+                    '</span>'+
+
                     '<span title="'+i18n("exitCollectionTip")+'" class="pv-gallery-head-command pv-gallery-head-command-exit-collection">'+
                     '<span class="pv-gallery-head-command"><span>'+i18n("exitCollection")+'</span></span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
@@ -13343,21 +13348,32 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 var sizeInputH=container.querySelector("#minsizeH");
                 var sizeInputW=container.querySelector("#minsizeW");
-                container.querySelector(".pv-gallery-head-left-lock-icon").onclick=function(){
+                var headMaxLock=container.querySelector(".pv-gallery-head-left-lock-icon");
+                headMaxLock.onclick=function(){
                     if(self.lockMaxSize){
                         self.lockMaxSize=null;
                         self.changeMinView();
-                        this.style.filter="";
-                        this.title=i18n("lockSizeTip");
+                        headMaxLock.style.filter="";
+                        headMaxLock.title=i18n("lockSizeTip");
                     }else{
-                        var maxsizeW=window.prompt("Max Width:", sizeInputW.max);
-                        if(!maxsizeW)return;
-                        var maxsizeH=window.prompt("Max Height:", sizeInputH.max);
-                        if(!maxsizeH)return;
-                        self.lockMaxSize={w:maxsizeW,h:maxsizeH};
-                        self.changeMinView();
-                        this.style.filter="brightness(5)";
-                        this.title=maxsizeW+" x "+maxsizeH;
+                        var maxsizeW, maxsizeH;
+                        maxsizeW = window.prompt("Max Width:", sizeInputW.max);
+                        if(maxsizeW) {
+                            maxsizeH = window.prompt("Max Height:", sizeInputH.max);
+                        }
+                        if (maxsizeH) {
+                            self.lockMaxSize={w:maxsizeW,h:maxsizeH};
+                            self.changeMinView();
+                            headMaxLock.style.filter="brightness(5)";
+                            headMaxLock.title=maxsizeW+" x "+maxsizeH;
+                        }
+                    }
+                    if (self.lockMaxSize) {
+                        storage.setItem("lockMaxSize" + location.hostname, self.lockMaxSize);
+                        storage.setItem("curDefaultSize" + location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                    } else {
+                        storage.setItem("lockMaxSize" + location.hostname, "");
+                        storage.setItem("curDefaultSize" + location.hostname, "");
                     }
                 };
 
@@ -13410,6 +13426,7 @@ ImgOps | https://imgops.com/#b#`;
                     'head-command-slide-show-countdown',
                     'head-command-collect',
                     'head-command-exit-collection',
+                    'head-command-urlFilter',
 
                     'head-command-drop-list-category',
                     'head-command-drop-list-others',
@@ -13829,6 +13846,37 @@ ImgOps | https://imgops.com/#b#`;
                 slideShow.setCountdown(slideShow.opts.interval);;
                 this.slideShow=slideShow;
 
+                let urlFilterHeadItem = self.eleMaps['head-command-urlFilter'];
+                function filterUrl() {
+                    let filterStr = prompt(i18n("urlFilterTip"), self.urlFilter || "www.img.com/img") || "";
+                    if (filterStr != self.urlFilter) {
+                        self.urlFilter = filterStr;
+                        storage.setItem("urlFilter" + location.hostname, filterStr);
+                        if (self.urlFilter) {
+                            urlFilterHeadItem.title = self.urlFilter;
+                            urlFilterHeadItem.style.display = "inline-block";
+                            self.changeMinView();
+                        } else {
+                            urlFilterHeadItem.style.display = "";
+                        }
+                        self.changeMinView();
+                    }
+                }
+
+                var urlFilter = storage.getItem("urlFilter" + location.hostname) || false;
+                var lockMaxSize = storage.getItem("lockMaxSize" + location.hostname) || false;
+                if (urlFilter) {
+                    self.urlFilter = urlFilter;
+                    urlFilterHeadItem.title = self.urlFilter;
+                    urlFilterHeadItem.style.display = "inline-block";
+                }
+                if (lockMaxSize) {
+                    self.lockMaxSize=lockMaxSize;
+                    headMaxLock.style.filter="brightness(5)";
+                    headMaxLock.title=lockMaxSize.w+" x "+lockMaxSize.h;
+                }
+                self.curDefaultSize = storage.getItem("curDefaultSize" + location.hostname) || false;
+
                 //幻灯片播放下拉列表change事件的处理
                 eleMaps['head-command-drop-list-slide-show'].addEventListener('change',function(e){
                     var target=e.target;
@@ -14032,21 +14080,7 @@ ImgOps | https://imgops.com/#b#`;
                             });
                             break;
                         case 'urlFilter':
-                            {
-                                let filterStr = prompt(i18n("urlFilterTip"), self.urlFilter || "") || "";
-                                if (filterStr != self.urlFilter) {
-                                    self.urlFilter = filterStr;
-                                    if (self.urlFilter) {
-                                        target.style.color = "#e9cccc";
-                                        target.title = self.urlFilter;
-                                        self.changeMinView();
-                                    } else {
-                                        target.style.color = "";
-                                        target.title = i18n("urlFilterTip");
-                                    }
-                                    self.changeMinView();
-                                }
-                            }
+                            filterUrl();
                             break;
                         case 'enterCollection':
                             //进入管理模式
@@ -14581,7 +14615,6 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 cancelBtn.onclick=function(e){
                     checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                    if(checkBoxs.length<1)return;
                     [].forEach.call(checkBoxs, i=>{
                         i.checked=false;
                     });
@@ -14640,6 +14673,8 @@ ImgOps | https://imgops.com/#b#`;
                         };
                     }else if(eleMaps['head-command-exit-collection'].contains(target)){
                         collection.exit();
+                    }else if(eleMaps['head-command-urlFilter'].contains(target)){
+                        filterUrl();
                     }else if(eleMaps['head-command-slide-show'].contains(target)){
                         slideShow.switchStatus();
                         slideShow.check();
@@ -14958,14 +14993,19 @@ ImgOps | https://imgops.com/#b#`;
                 });
                 sizeInputH.max=maxSizeH;
                 sizeInputH.min=minSizeH;
-                sizeInputH.value=prefs.gallery.defaultSizeLimit.h;
+                sizeInputW.max=maxSizeW;
+                sizeInputW.min=minSizeW;
+                if (self.curDefaultSize) {
+                    sizeInputH.value = self.curDefaultSize.h;
+                    sizeInputW.value = self.curDefaultSize.w;
+                } else {
+                    sizeInputH.value = prefs.gallery.defaultSizeLimit.h;
+                    sizeInputW.value = prefs.gallery.defaultSizeLimit.w;
+                }
                 sizeInputH.title="min height: "+sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
 
-                sizeInputW.max=maxSizeW;
-                sizeInputW.min=minSizeW;
-                sizeInputW.value=prefs.gallery.defaultSizeLimit.w;
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
@@ -15039,7 +15079,7 @@ ImgOps | https://imgops.com/#b#`;
                 //viewmoreBar.parentNode.style.backgroundColor = "#000000";
 
                 toggleBarContent.innerHTML = createHTML('▼');
-                this.changeSizeInputReset();
+                //this.changeSizeInputReset();
             },
             selectViewmore: function(imgSpan, src) {
                 if(this.curImgSpan)this.curImgSpan.classList.remove("selected");
@@ -15799,9 +15839,11 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var thumbnails=this.eleMaps['sidebar-thumbnails-container'];
                 var selectData, selectSpan;
+                if (index != -1) {
+                    selectData = this.data[index];
+                }
                 // 如果是新的，则添加，否则重置并添加。
                 if (!data){
-                    selectData=this.data[index];
                     if(selectData){
                         let spanMark=this._spanMarkPool[selectData.imgSrc];
                         if(spanMark && spanMark.dataset.naturalSize){
@@ -15826,7 +15868,6 @@ ImgOps | https://imgops.com/#b#`;
                     this._dataCache = {};
                     this.eleMaps['maximize-container'].innerHTML = createHTML("");
                 }
-                if (!selectData) selectData = this.data[index];
                 var createSpanMark = item => {
                     var spanMark=self._spanMarkPool[item.imgSrc];
                     if(!spanMark){
@@ -15976,9 +16017,10 @@ ImgOps | https://imgops.com/#b#`;
                     },true);
                 };
 
-                var unique=this.unique(data);
-                data=unique.data;
-                var index=unique.index;
+                var hasTarget = !!data.target;
+                var unique = this.unique(data);
+                data = unique.data;
+                var index = hasTarget ? unique.index : -1;
 
                 if (reload && this.data.length >= data.length) {
                     // alert('没有新增的图片');
@@ -17192,6 +17234,10 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-head-command-exit-collection{\
                     color:#939300 !important;\
+                    display:none;\
+                    }\
+                    .pv-gallery-head-command-urlFilter{\
+                    color:#e9cccc !important;\
                     display:none;\
                     }\
                     .pv-gallery-head-command:hover{\
@@ -21462,6 +21508,8 @@ ImgOps | https://imgops.com/#b#`;
                 style.textContent='\
                     #pv-float-bar-container {\
                     position: absolute;\
+                    top: 0px;\
+                    left: 0px;\
                     z-index:9999999998;\
                     padding: 5px;\
                     margin: 0;\
