@@ -961,7 +961,7 @@ var siteInfo = [
 },
 {
  name: "ytimg",
- src: /\.ytimg\.com/i,
+ src: /i\.ytimg\.com/i,
  exclude: /mqdefault_6s/i,
  r: /\?.*$/i,
  s: ''
