@@ -9848,5 +9848,10 @@
     "name": "imgur",
     "url": "^https?://imgur\\.com/",
     "enable": 0
+},
+{
+    "name": "pexels",
+    "url": "^https?://www\\.pexels\\.com/",
+    "enable": 0
 }
 ]
