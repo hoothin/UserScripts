@@ -8166,8 +8166,11 @@
     "action": 1,
     "url": "^https://.*\\.bing\\.com/",
     "nextLink": "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
-    "pageElement": "ol#b_results>li.b_algo",
-    "wait": "if(doc==document)return true;doc.documentElement.scrollTop=99999;return doc.querySelector('a[title=\\'Next page\\'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl')",
+    "pageElement": "body>style,ol#b_results>li.b_algo",
+    "waitElement": [
+        "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
+        ".siteicon>div,div.rms_iac"
+    ],
     "pageBar": "pageBar.className='b_pageBar'"
 },
 {
