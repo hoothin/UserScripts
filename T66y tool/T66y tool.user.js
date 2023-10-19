@@ -138,7 +138,7 @@
                 var quickReplyStr = '快速回复';
                 var quickReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="${quickReplyStr}">` );
                 quickReply.insertAfter( "form .btn" );
-                var replyStr = "1024";
+                var replyStr = defaultReply;
                 if (document.title.indexOf("打卡签到") !== -1) {
                     var spaceStr = "";
                     var spaceLen = Math.floor(Math.random() * 10);
@@ -225,7 +225,7 @@
                         if (customReplyStr) {
                             replyStr = customReplyStr;
                             quickReply.attr('title', replyStr + "（右击修改）");
-                            $.cookie('customReplyStr', customReplyStr, { expires: 2147483647, path: '/' });
+                            $.cookie('customReplyStr', customReplyStr, { expires: 365, path: '/' });
                         }
                     });
                 });
