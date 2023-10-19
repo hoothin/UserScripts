@@ -4900,6 +4900,7 @@
                 let url = document.createElement("a");
                 url.href = ruleUrl.url;
                 url.innerHTML = ruleUrl.url;
+                url.title = ruleUrl.url;
                 let up = document.createElement("span");
                 up.innerHTML = "↑ ";
                 up.title = i18n("sortTitle");
@@ -4922,11 +4923,12 @@
                 this.item.appendChild(del);
                 this.item.appendChild(url);
                 if (ruleParser.rules) {
-                    url.style.maxWidth = "80%";
+                    url.style.maxWidth = "calc(100% - 140px)";
                     url.style.overflow = "hidden";
                     url.style.display = "inline-block";
                     url.style.textOverflow = "ellipsis";
                     url.style.verticalAlign = "bottom";
+                    url.style.whiteSpace = "nowrap";
                     let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == id ? 1 : 0), 0);
                     let idSpan = document.createElement("span");
                     idSpan.style.float = "right";
