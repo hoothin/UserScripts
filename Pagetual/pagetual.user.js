@@ -3990,7 +3990,7 @@
               float: initial;
               margin-top: 10px;
              }
-             #pagetual-picker #showDetail.showDetail {
+             #pagetual-picker.showDetail #showDetail {
               float: right;
              }
              #pagetual-picker #showDetail>svg {
@@ -3998,13 +3998,17 @@
               -webkit-transition:transform 0.3s ease;
               transition:transform 0.3 ease;
              }
-             #pagetual-picker #showDetail.showDetail>svg {
+             #pagetual-picker.showDetail #showDetail>svg {
               transform: rotate(180deg);
              }
              #pagetual-picker .tempRule {
+              display: none;
               margin-top: 10px;
               height: 300px;
               min-height: 150px;
+             }
+             #pagetual-picker.showDetail .tempRule {
+              display: inline-block;
              }
              #pagetual-picker #saveDetail {
               display: none;
@@ -4012,7 +4016,7 @@
               bottom: 10px;
               right: 8px;
              }
-             #pagetual-picker .showDetail~#saveDetail {
+             #pagetual-picker.showDetail #saveDetail {
               display: inline-block;
              }
              #pagetual-picker #saveDetail svg {
@@ -4026,7 +4030,7 @@
               bottom: 45px;
               right: 12px;
              }
-             #pagetual-picker .showDetail~.addProp {
+             #pagetual-picker.showDetail .addProp {
               display: flex;
              }
              #pagetual-picker .addProp>button {
@@ -4083,7 +4087,7 @@
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
                 <button id="autoScroll" class="command" title="${i18n("toggleAutoScroll")}" type="button"></button>
                 <div>
-                  <textarea style="display: none;" class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
+                  <textarea class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M511.1 63.7c-247.4 0-448 200.6-448 448s200.6 448 448 448 448-200.6 448-448-200.6-448-448-448z m281.2 374.5L535.6 694.9c-12.5 12.5-32.8 12.5-45.3 0l-255.8-256c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l210.7 210.7c12.5 12.5 32.8 12.5 45.3 0l211.4-211.4c12.5-12.5 32.8-12.5 45.3 0 12.3 12.5 12.3 32.8-0.2 45.3z" fill="orangered"></path></svg>
                   </button>
@@ -4187,13 +4191,7 @@
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
             }, true);
             showDetailBtn.addEventListener("click", e => {
-                if (tempRule.style.display == "none") {
-                    tempRule.style.display = "";
-                    showDetailBtn.classList.add("showDetail");
-                } else {
-                    tempRule.style.display = "none";
-                    showDetailBtn.classList.remove("showDetail");
-                }
+                frame.classList.toggle("showDetail");
             }, true);
             saveDetailBtn.addEventListener("click", e => {
                 let editTemp = self.getTempRule(true);
@@ -4382,7 +4380,7 @@
                 delete this.editTemp.type;
                 delete this.editTemp.updatedAt;
             }
-            if (this.selectorInput.value && this.tempRule.style.display == "none") {
+            if (this.selectorInput.value && !this.frame.classList.contains("showDetail")) {
                 this.editTemp.pageElement = this.selectorInput.value;
             }
             return this.editTemp;
@@ -4434,7 +4432,7 @@
         }
 
         fillTempRuleTextarea() {
-            if (this.tempRule.style.display == "none") this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
+            if (!this.frame.classList.contains("showDetail")) this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
         }
 
         setSelectorDiv(selector) {
@@ -4521,7 +4519,8 @@
             getBody(document).addEventListener("click", this.clickHandler, true);
             this.xpath.checked = isXPath(ruleParser.curSiteRule.pageElement);
             this.tempRule.value = "";
-            this.tempRule.style.display = "none";
+            this.editTemp = null;
+            this.frame.classList.remove("showDetail");
 
             this.loadNow.style.display = ruleParser.nextLinkHref ? "block" : "none";
             if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
