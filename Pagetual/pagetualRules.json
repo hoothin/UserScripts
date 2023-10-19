@@ -9714,6 +9714,15 @@
     "action": 1
 },
 {
+    "name": "AliExpress",
+    "url": "^https?://www\\.aliexpress\\.com/",
+    "example": "https://www.aliexpress.com/w/wholesale-Pants.html",
+    "nextLink": ".comet-pagination-next>button",
+    "pageElement": "#card-list>div",
+    "waitElement": "!.lazy-load",
+    "include": ".comet-pagination-next>button"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
