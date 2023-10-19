@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.69
+// @version      1.9.36.70
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -841,7 +841,13 @@
             cb(value);
         }
     };
-    var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
+    async function getData(key) {
+        return new Promise((resolve) => {
+            storage.getItem(key, value => {
+                resolve(value);
+            });
+        })
+    }
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
@@ -851,6 +857,8 @@
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u005c\u002d\u005f\u2014\u0020\u005c\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005c\u005b\u3010\u3001\uff08\u005c\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
+    var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
+    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0;
 
     function getBody(doc) {
         return doc.body || doc.querySelector('body') || doc;
@@ -1033,21 +1041,17 @@
             this.curSiteRule = {};
         }
 
-        initSavedRules(callback) {
+        async initSavedRules(callback) {
             var self = this;
-            storage.getItem("smartRules", smartRules => {
-                if (smartRules) self.smartRules = smartRules;
-                storage.getItem("hpRules", hpRules => {
-                    if (hpRules) self.hpRules = hpRules;
-                    storage.getItem("customRules", customRules => {
-                        if (customRules) self.customRules = customRules;
-                        storage.getItem("rules", rules => {
-                            if (rules) self.rules = rules;
-                            callback();
-                        });
-                    });
-                });
-            });
+            let smartRules = await getData("smartRules");
+            if (smartRules) self.smartRules = smartRules;
+            let hpRules = await getData("hpRules");
+            if (hpRules) self.hpRules = hpRules;
+            let customRules = await getData("customRules");
+            if (customRules) self.customRules = customRules;
+            let rules = await getData("rules");
+            if (rules) self.rules = rules;
+            callback();
         }
 
         saveCurSiteRule() {
@@ -2380,6 +2384,8 @@
                                 if (parent && parent.contains(otherPageEle) && !/^\d+$/.test(otherPageEle.innerText.trim())) {
                                     next4 = null;
                                 }
+                            } else {
+                                next4 = null;
                             }
                         }
                     }
@@ -3128,7 +3134,7 @@
             let base = document.querySelector("base");
             this.basePath = base ? base.href : location.href;
             this.getRule(async () => {
-                isPause = false;
+                isPause = manualPause;
                 if (self.curSiteRule.enable == 0) {
                     debug("Stop as rule disable");
                     isPause = true;
@@ -3211,10 +3217,13 @@
                 }
                 callback();
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
-                if (initRun && initRun != false && self.nextLinkHref) {
-                    setTimeout(() => {
-                        nextPage();
-                    }, 500);
+                if (self.nextLinkHref) {
+                    sideController.setup();
+                    if (initRun && initRun != false) {
+                        setTimeout(() => {
+                            nextPage();
+                        }, 500);
+                    }
                 }
             });
         }
@@ -3480,6 +3489,7 @@
                 </div>
                 <div id="pagetual-sideController-bottom" class="pagetual-sideController-btn">⊻</div>
             `);
+            frame.classList.add("stop");
             let top = frame.querySelector("#pagetual-sideController-top");
             let pre = frame.querySelector("#pagetual-sideController-pre");
             let move = frame.querySelector("#pagetual-sideController-move");
@@ -3550,6 +3560,7 @@
             }, true);
 
             let initX, initY, moving = false;
+            let removeTimer;
             move.addEventListener("click", e => {
                 if (!moving) {
                     changeStop(!isPause);
@@ -3571,7 +3582,6 @@
                 e.preventDefault();
                 picker.start();
             };
-            let removeTimer;
 
             let mouseMoveHandler = e => {
                 if (moving) {
@@ -5684,7 +5694,7 @@
             _GM_registerMenuCommand(i18n("editCurrent"), () => {
                 picker.start();
             });
-            ruleParser.initSavedRules(() => {
+            ruleParser.initSavedRules(async () => {
                 let upBtnImg = rulesData.upBtnImg, downBtnImg = rulesData.downBtnImg, _sideControllerIcon = rulesData.sideControllerIcon;
                 if (upBtnImg && downBtnImg) {
                     downSvgCSS = downSvgCSS.replace("transform: rotate(180deg);", "");
@@ -5759,72 +5769,72 @@
                 }
                 openInNewTab = rulesData.openInNewTab ? 1 : 0;
                 enableDebug = rulesData.enableDebug;
-                storage.getItem("nextSwitch_" + location.host, i => {
-                    storage.getItem("forceState_" + location.host, v => {
-                        storage.getItem("autoScroll_" + location.host + location.pathname, _autoScroll => {
-                            storage.getItem("ruleLastUpdate", date => {
-                                autoScroll = _autoScroll || 0;
-                                if (typeof(i) !== "undefined") {
-                                    nextIndex = i;
-                                }
-                                if (typeof(v) == "undefined") {
-                                    v = (rulesData.enableWhiteList ? 1 : 0);
-                                }
-                                forceState = v;
-                                updateDate = date;
 
-                                let href = location.href.slice(0, 100);
-                                try {
-                                    if (_unsafeWindow.initedPagetual) {
-                                        if (ruleImportUrlReg.test(href)) {
-                                            showTips(i18n('duplicate'));
-                                        }
-                                        return;
-                                    }
-                                    _unsafeWindow.initedPagetual = true;
-                                } catch(e) {showTips(e)}
-                                listenUrl();
-                                _GM_registerMenuCommand(i18n("update"), () => {
-                                    showTips(i18n("beginUpdate"), "", 60000);
-                                    updateRules(() => {
-                                        showTips(i18n("updateSucc"));
-                                        location.reload();
-                                    },(rule, err) => {
-                                        showTips(`Failed to update ${rule.url} rules!`);
-                                        debug(err);
-                                    });
-                                });
-                                _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
-                                    forceState = (forceState == 1 ? 0 : 1);
-                                    storage.setItem("forceState_" + location.host, forceState);
-                                    showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
-                                    if (!ruleParser.curSiteRule.url) location.reload();
-                                });
-                                _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
-                                    autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
-                                    autoScroll = parseInt(autoScroll) || 0;
-                                    if (autoScroll < 0) autoScroll = 0;
-                                    else if (autoScroll > 1000) autoScroll = 1000;
-                                    storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
-                                    startAutoScroll();
-                                });
-                                startAutoScroll();
+                let _nextSwitch = await getData("nextSwitch_" + location.host);
+                if (typeof(_nextSwitch) !== "undefined") {
+                    nextIndex = _nextSwitch;
+                }
 
+                let _forceState = await getData("forceState_" + location.host);
+                if (typeof(_forceState) == "undefined") {
+                    _forceState = (rulesData.enableWhiteList ? 1 : 0);
+                }
+                forceState = _forceState;
 
-                                if (initConfig(href)) return;
-                                pageReady = true;
-                                if (forceState == 1) return;
-                                let now = new Date().getTime();
-                                if (!date || now - date > 2 * 24 * 60 * 60 * 1000) {
-                                    updateRules(() => {
-                                    }, (rule, err) => {}, true);
-                                    storage.setItem("ruleLastUpdate", now);
-                                }
-                                callback();
-                            });
-                        });
+                autoScroll = await getData("autoScroll_" + location.host + location.pathname) || 0;
+
+                updateDate = await getData("ruleLastUpdate");
+
+                manualPause = !!await getData("pauseState_" + location.host);
+
+                let href = location.href.slice(0, 100);
+                try {
+                    if (_unsafeWindow.initedPagetual) {
+                        if (ruleImportUrlReg.test(href)) {
+                            showTips(i18n('duplicate'));
+                        }
+                        return;
+                    }
+                    _unsafeWindow.initedPagetual = true;
+                } catch(e) {showTips(e)}
+                listenUrl();
+                _GM_registerMenuCommand(i18n("update"), () => {
+                    showTips(i18n("beginUpdate"), "", 60000);
+                    updateRules(() => {
+                        showTips(i18n("updateSucc"));
+                        location.reload();
+                    },(rule, err) => {
+                        showTips(`Failed to update ${rule.url} rules!`);
+                        debug(err);
                     });
                 });
+                _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
+                    forceState = (forceState == 1 ? 0 : 1);
+                    storage.setItem("forceState_" + location.host, forceState);
+                    showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+                    if (!ruleParser.curSiteRule.url) location.reload();
+                });
+                _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
+                    autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
+                    autoScroll = parseInt(autoScroll) || 0;
+                    if (autoScroll < 0) autoScroll = 0;
+                    else if (autoScroll > 1000) autoScroll = 1000;
+                    storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
+                    startAutoScroll();
+                });
+                startAutoScroll();
+
+
+                if (initConfig(href)) return;
+                pageReady = true;
+                if (forceState == 1) return;
+                let now = new Date().getTime();
+                if (!updateDate || now - updateDate > 2 * 24 * 60 * 60 * 1000) {
+                    updateRules(() => {
+                    }, (rule, err) => {}, true);
+                    storage.setItem("ruleLastUpdate", now);
+                }
+                callback();
             });
         });
     }
@@ -6179,19 +6189,22 @@
     var tipsWords = document.createElement("div");
     tipsWords.className = "pagetual_tipsWords";
 
-    var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false;
-    var openInNewTab = 0;
-
+    var changeStopTimer;
     function changeStop(stop) {
         isPause = stop;
-        [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
-            if (isPause) {
-                bar.classList.add("stop");
-            } else {
-                bar.classList.remove("stop");
-            }
-        });
-        if (!isPause) ruleParser.showAddedElements();
+        clearTimeout(changeStopTimer);
+        changeStopTimer = setTimeout(() => {
+            [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
+                if (isPause) {
+                    bar.classList.add("stop");
+                } else {
+                    bar.classList.remove("stop");
+                }
+            });
+            if (!isPause) ruleParser.showAddedElements();
+            manualPause = isPause;
+            storage.setItem("pauseState_" + location.host, isPause ? true : "");
+        }, 350);
     }
 
     function changeHideBar(hide) {
@@ -7812,7 +7825,6 @@
         let insert = ruleParser.getInsert();
         if (insert) {
             if (curPage == 1) initView();
-            sideController.setup();
             /*if (curPage == 1) {
                 window.postMessage({
                     command: 'pagetual.insert'
