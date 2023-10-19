@@ -16779,10 +16779,12 @@ ImgOps | https://imgops.com/#b#`;
                     if (svg.clientHeight != 0 && (!svg.classList || !svg.classList.contains("pagetual"))) {
                         try {
                             const xml = new XMLSerializer().serializeToString(svg);
-                            const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(xml)}`;
+                            const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(xml)))}`;
                             svg.src = ImgBase64;
                             total.push(svg);
-                        } catch(e) {}
+                        } catch(e) {
+                            debug(e);
+                        }
                     }
                     return total;
                 }, []);
@@ -22066,6 +22068,8 @@ ImgOps | https://imgops.com/#b#`;
             var imgCStyle = unsafeWindow.getComputedStyle(img);
             if (!/IMG/i.test(img.nodeName) && imgCStyle && imgCStyle.backgroundImage && imgCStyle.backgroundImage != "none") {
                 let sh = imgCStyle.height, sw = imgCStyle.width;
+                if (!img.offsetWidth) sw = 10;
+                if (!img.offsetHeight) sh = 10;
                 if (imgCStyle.backgroundRepeatX == "repeat") {
                     sw = 10;
                 }
