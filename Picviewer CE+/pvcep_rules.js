@@ -1305,5 +1305,17 @@ var siteInfo = [
  src: /blogger\.googleusercontent\.com\/img/,
  r: /\/[sw]\d+\/.*/,
  s: "/s0"
+},
+{
+ name: "煎蛋",
+ url: /^https:\/\/jandan\.net\//,
+ r: /\/(thumb\d+|mw\d+)\//,
+ s: "/large/"
+},
+{
+ name:"辉夜白兔",
+ url:/47\.101\.137\.235/,
+ r:"thumb",
+ s:"regular"
 }
 ];
