@@ -4520,6 +4520,8 @@
             getBody(document).addEventListener("mousemove", this.moveHandler, true);
             getBody(document).addEventListener("click", this.clickHandler, true);
             this.xpath.checked = isXPath(ruleParser.curSiteRule.pageElement);
+            this.tempRule.value = "";
+            this.tempRule.style.display = "none";
 
             this.loadNow.style.display = ruleParser.nextLinkHref ? "block" : "none";
             if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
