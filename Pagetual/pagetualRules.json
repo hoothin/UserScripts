@@ -9723,6 +9723,14 @@
     "include": ".comet-pagination-next>button"
 },
 {
+    "name": "Orion Public Issue Tracker",
+    "url": "^https?://orionfeedback\\.org/t/",
+    "example": "https://orionfeedback.org/t/desktop",
+    "nextLink": ".Orion-DiscussionListPagination > a.Button.Button--icon.hasIcon:last-child",
+    "action": 3,
+    "pageElement": "ul.DiscussionList-discussions>li"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
