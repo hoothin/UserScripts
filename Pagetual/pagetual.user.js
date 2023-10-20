@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.70
+// @version      1.9.36.71
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -957,20 +957,35 @@
                 }
                 let parent = ele.parentElement;
                 if (parent) {
-                    selector = geneSelector(parent, addID) + ' > ' + selector;
                     if (!className && !hasId && parent.children.length > 1 && !/^HTML$/i.test(parent.nodeName)) {
-                        let i, nth = 0, all = 0;
-                        for (i = 0; i < parent.children.length; i++) {
-                            if (parent.children[i].nodeName == ele.nodeName) {
-                                all++;
-                                if (parent.children[i] == ele) {
-                                    nth = all;
+                        let prevE = ele.previousElementSibling;
+                        if (prevE && prevE.className) {
+                            let classList = prevE.classList, i = 0;
+                            for (let i = 0; i < classList.length; i++) {
+                                let c = classList[i];
+                                if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
+                                    className += '.' + c;
                                 }
-                                if (nth > 0 && all > 1) break;
+                            }
+                            if (className) {
+                                selector = prevE.nodeName.toLowerCase() + className + "+" + selector;
                             }
                         }
-                        selector += (all == 1 ? "" : `:nth-of-type(${nth})`);
+                        if (!className) {
+                            let i, nth = 0, all = 0;
+                            for (i = 0; i < parent.children.length; i++) {
+                                if (parent.children[i].nodeName == ele.nodeName) {
+                                    all++;
+                                    if (parent.children[i] == ele) {
+                                        nth = all;
+                                    }
+                                    if (nth > 0 && all > 1) break;
+                                }
+                            }
+                            selector += (all == 1 ? "" : `:nth-of-type(${nth})`);
+                        }
                     }
+                    selector = geneSelector(parent, addID) + ' > ' + selector;
                 }
             }
         }
@@ -1049,6 +1064,12 @@
             if (hpRules) self.hpRules = hpRules;
             let customRules = await getData("customRules");
             if (customRules) self.customRules = customRules;
+            if (_unsafeWindow.pagetualRules && _unsafeWindow.pagetualRules.length) {
+                _unsafeWindow.pagetualRules.forEach(rule => {
+                    rule.isScript = true;
+                });
+                self.customRules = _unsafeWindow.pagetualRules.concat(self.customRules);
+            }
             let rules = await getData("rules");
             if (rules) self.rules = rules;
             callback();
@@ -1264,6 +1285,36 @@
             return true;
         }
 
+        runPageBar(pageBar) {
+            if (this.curSiteRule.pageBar && this.curSiteRule.pageBar !== 0) {
+                try {
+                    ((typeof this.curSiteRule.pageBar == 'function') ? this.curSiteRule.pageBar : Function("pageBar",'"use strict";' + this.curSiteRule.pageBar))(pageBar);
+                } catch(e) {
+                    debug(e);
+                }
+            }
+        }
+
+        runWait(cb) {
+            let checkEval = null, waitTime = 0;
+            if (this.curSiteRule.waitElement) {
+                checkEval = doc => {
+                    return this.waitElement(doc);
+                };
+            } else if(this.curSiteRule.wait) {
+                if (isNaN(this.curSiteRule.wait)) {
+                    try {
+                        checkEval = (typeof this.curSiteRule.wait == 'function') ? this.curSiteRule.wait : Function("doc", '"use strict";' + this.curSiteRule.wait);
+                    } catch(e) {
+                        debug(e);
+                    }
+                } else {
+                    waitTime = this.curSiteRule.wait;
+                }
+            }
+            cb(checkEval, waitTime);
+        }
+
         getRule(callback) {
             if(noRuleTest) {
                 this.curSiteRule = {};
@@ -1271,6 +1322,11 @@
                 this.curSiteRule.singleUrl = true;
                 callback();
                 return;
+            }
+            if (_unsafeWindow.pagetualRule) {
+                this.curSiteRule = _unsafeWindow.pagetualRule;
+                if (!this.curSiteRule.url) this.curSiteRule.url = ".";
+                this.curSiteRule.isScript = true;
             }
             var href = location.href.slice(0, 500);
             if (this.curSiteRule && this.curSiteRule.url && !this.curSiteRule.singleUrl) {
@@ -1333,7 +1389,7 @@
                         let waitTime = 500, checkEval, maxCheckTimes = 50;
                         if (isNaN(r.wait)) {
                             try {
-                                checkEval = (typeof _unsafeWindow.pagetualWait == 'undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
+                                checkEval = (typeof r.wait == 'function') ? r.wait : Function("doc",'"use strict";' + r.wait);
                             } catch(e) {
                                 debug(e, 'Error when checkeval');
                             }
@@ -1448,11 +1504,12 @@
 
         addToHpRules(instead) {
             try {
+                if (this.curSiteRule.isScript) return;
                 if (!this.hpRules) this.hpRules = [];
                 let url = this.curSiteRule && this.curSiteRule.url, self = this;
                 let href = location.href.slice(0, 500);
                 let matchedRules = this.hpRules.filter(rule => rule != self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
-                if (url) matchedRules.push(this.curSiteRule);
+                if (url) matchedRules.unshift(this.curSiteRule);
                 matchedRules.sort((a, b) => {
                     if ((a.include || a.exclude) && (!b.include && !b.exclude)) {
                         return -1;
@@ -2554,7 +2611,7 @@
                 try {
                     let over = _url => {
                     };
-                    let targetUrl = await ((typeof _unsafeWindow.pagetualNextLinkByJs == 'undefined') ? new AsyncFunction("doc", '"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
+                    let targetUrl = await ((typeof this.curSiteRule.nextLinkByJs == 'function') ? this.curSiteRule.nextLinkByJs : new AsyncFunction("doc", '"use strict";' + this.curSiteRule.nextLinkByJs))(doc);
                     if (targetUrl) nextLink = {href: targetUrl};
                 } catch(e) {
                     debug(e);
@@ -2853,7 +2910,7 @@
                     }
                 } else {
                     try {
-                        let stopSign = ((typeof _unsafeWindow.stopSign == 'undefined') ? Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign) : _unsafeWindow.stopSign)(doc, nextLink);
+                        let stopSign = ((typeof this.curSiteRule.stopSign == 'function') ? this.curSiteRule.stopSign : Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign))(doc, nextLink);
                         if (stopSign) {
                             isPause = true;
                             this.nextLinkHref = false;
@@ -2967,7 +3024,7 @@
         pageInit(doc, eles) {
             let code = this.curSiteRule.pageInit;
             if (code) {
-                let initFunc = ((typeof _unsafeWindow.pagetualPageInit == 'undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageInit);
+                let initFunc = ((typeof code == 'function') ? code : Function("doc", "eles", '"use strict";' + code));
                 let checkInit = (resolve) => {
                     try {
                         if (initFunc(doc, eles) === false) {
@@ -2994,7 +3051,7 @@
             let code = this.curSiteRule.pageAction;
             if (code) {
                 try {
-                    ((typeof _unsafeWindow.pagetualPageAction == 'undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageAction)(doc, eles);
+                    ((typeof code == 'function') ? code : Function("doc", "eles", '"use strict";' + code))(doc, eles);
                 } catch(e) {
                     debug(e);
                 }
@@ -3191,7 +3248,7 @@
                 let code = self.curSiteRule.init;
                 if (code) {
                     try {
-                        ((typeof _unsafeWindow.pagetualInit == 'undefined') ? new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', '"use strict";' + code) : _unsafeWindow.pagetualInit)(null, null, null, sel => {clickAction(sel, document)}, sel => {enterAction(sel, document)}, (sel, v) =>{inputAction(sel, v, document)});
+                        ((typeof code == 'function') ? code : new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', '"use strict";' + code))(null, null, null, sel => {clickAction(sel, document)}, sel => {enterAction(sel, document)}, (sel, v) =>{inputAction(sel, v, document)});
                     } catch(e) {
                         debug(e);
                     }
@@ -3285,7 +3342,7 @@
                     this.nextTitle = doc.title;
                 } else {
                     try {
-                        this.nextTitle = ((typeof _unsafeWindow.pagetualPageBarText == 'undefined') ? Function("doc",'"use strict";' + this.curSiteRule.pageBarText) : _unsafeWindow.pagetualPageBarText)(doc);
+                        this.nextTitle = ((typeof this.curSiteRule.pageBarText == 'function') ? this.curSiteRule.pageBarText : Function("doc",'"use strict";' + this.curSiteRule.pageBarText))(doc);
                     } catch(e) {
                         debug(e);
                     }
@@ -5885,8 +5942,8 @@
                 let preCode = ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if (preCode) {
                     try {
-                        if (typeof _unsafeWindow.pagetualPagePre != 'undefined') {
-                            response = _unsafeWindow.pagetualPagePre(response);
+                        if (typeof preCode == 'function') {
+                            response = preCode(response);
                         } else if (preCode.length == 2) {
                             response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
                         } else {
@@ -6948,13 +7005,7 @@
             pageBar.title = i18n(isPause ? "enable" : "disable");
         });
         ruleParser.insertElement(pageBar);
-        if (ruleParser.curSiteRule.pageBar && ruleParser.curSiteRule.pageBar !== 0) {
-            try {
-                ((typeof _unsafeWindow.pagetualPageBar == 'undefined') ? Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar) : _unsafeWindow.pagetualPageBar)(pageBar);
-            } catch(e) {
-                debug(e);
-            }
-        }
+        ruleParser.runPageBar(pageBar);
 
         return pageBar;
     }
@@ -7125,21 +7176,14 @@
         }
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
         let waitTime = 100, checkEval;
-        if (ruleParser.curSiteRule.waitElement) {
-            checkEval = doc => {
-                return ruleParser.waitElement(doc);
-            };
-        } else if (ruleParser.curSiteRule.wait) {
-            if (isNaN(ruleParser.curSiteRule.wait)) {
-                try {
-                    checkEval = (typeof _unsafeWindow.pagetualWait == 'undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
-                } catch(e) {
-                    debug(e);
-                }
-            } else {
-                waitTime = ruleParser.curSiteRule.wait;
+        ruleParser.runWait((_checkEval, _waitTime) => {
+            if (_checkEval) {
+                checkEval = _checkEval;
             }
-        }
+            if (_waitTime) {
+                waitTime = _waitTime;
+            }
+        });
         if (checkRemoveIntv) clearInterval(checkRemoveIntv);
         checkRemoveIntv = setInterval(() => {
             if (!iframe || !getBody(document).contains(iframe)) {
@@ -7260,21 +7304,14 @@
             }
 
             let waitTime = 200, checkEval;
-            if (ruleParser.curSiteRule.waitElement) {
-                checkEval = doc => {
-                    return ruleParser.waitElement(doc);
-                };
-            } else if(ruleParser.curSiteRule.wait) {
-                if (isNaN(ruleParser.curSiteRule.wait)) {
-                    try {
-                        checkEval = (typeof _unsafeWindow.pagetualWait == 'undefined') ? Function("doc", '"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
-                    } catch(e) {
-                        debug(e);
-                    }
-                } else {
-                    waitTime = ruleParser.curSiteRule.wait;
+            ruleParser.runWait((_checkEval, _waitTime) => {
+                if (_checkEval) {
+                    checkEval = _checkEval;
                 }
-            }
+                if (_waitTime) {
+                    waitTime = _waitTime;
+                }
+            });
 
             if (!orgPage) {
                 if (!loadmoreEnd) {
@@ -7745,7 +7782,7 @@
         let body = getBody(document);
         let curScroll = body.scrollTop || document.documentElement.scrollTop;
         if (forceState == 2) {
-            body.appendChild(loadingDiv);
+            document.documentElement.appendChild(loadingDiv);
             body.appendChild(curIframe);
             let bodyStyle = getComputedStyle(body);
             if (bodyStyle.display == "flex" || bodyStyle.display == "inline-flex") {
@@ -7798,7 +7835,7 @@
         if (isPause || isLoading || forceState == 1) return;
         if (ruleParser.curSiteRule.delay) {
             try {
-                let checkDelay = ((typeof _unsafeWindow.pagetualDelay=='undefined') ? Function('"use strict";' + ruleParser.curSiteRule.delay) : _unsafeWindow.pagetualDelay)();
+                let checkDelay = ((typeof ruleParser.curSiteRule.delay == 'function') ? ruleParser.curSiteRule.delay : Function('"use strict";' + ruleParser.curSiteRule.delay))();
                 if (!checkDelay) return;
             } catch(e) {
                 debug(e);
@@ -7865,7 +7902,7 @@
                         }
                     };
                     try {
-                        ((typeof _unsafeWindow.pagetualPageElementByJs == 'undefined') ? Function("over", "pageNum",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over, curPage);
+                        ((typeof ruleParser.curSiteRule.pageElementByJs == 'function') ? ruleParser.curSiteRule.pageElementByJs : Function("over", "pageNum",'"use strict";' + ruleParser.curSiteRule.pageElementByJs))(over, curPage);
                     } catch(e) {
                         debug(e);
                     }
