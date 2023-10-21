@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.71
+// @version      1.9.36.72
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1890,7 +1890,7 @@
                         let paStyle = curWin.getComputedStyle(ele.parentNode);
                         let paDisplay = paStyle.display;
                         let paOverflow = paStyle.overflow;
-                        pf = paDisplay.indexOf('flex') !== -1 || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
+                        pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
                     }
                     let curStyle = curWin.getComputedStyle(ele);
                     if (ele.children.length > 1) {
@@ -1914,7 +1914,7 @@
                                     ele = ele.children;
                                 } else {
                                     let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                                    if (curStyle.display === 'flex' || (rulesData.opacity != 0 && !pf)) {
+                                    if ((curStyle.display === 'flex' && curStyle.flexDirection == "row") || (rulesData.opacity != 0 && !pf)) {
                                         ele = [ele];
                                     } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || /^UL$/i.test(ele.nodeName) || curHeight == 0) {
                                         ele = [ele];
