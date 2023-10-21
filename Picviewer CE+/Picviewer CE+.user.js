@@ -14810,7 +14810,7 @@ ImgOps | https://imgops.com/#b#`;
                 self.loadThumb();
             },
             rotateBigImg:function(){
-                this.img.style[support.cssTransform] = 'rotate(' + (this.galleryRotate || 0) + 'deg)';
+                if (this.img) this.img.style[support.cssTransform] = 'rotate(' + (this.galleryRotate || 0) + 'deg)';
             },
             showTips:function(content, time){
                 var tipsWords=this.eleMaps["tipsWords"];
@@ -16995,6 +16995,8 @@ ImgOps | https://imgops.com/#b#`;
                     box-sizing: border-box;\
                     line-height: 1.6;\
                     text-overflow: unset;\
+                    background-image: initial;\
+                    float: initial;\
                     }\
                     .pv-gallery-container * {\
                     font-size: 14px;\
@@ -17002,7 +17004,7 @@ ImgOps | https://imgops.com/#b#`;
                     flex-direction: row;\
                     }\
                     /*点击还原的工具条*/\
-                    .pv-gallery-maximize-trigger{\
+                    span.pv-gallery-maximize-trigger{\
                     position:fixed;\
                     bottom:15px;\
                     left:15px;\
@@ -17020,7 +17022,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-trigger:hover{\
                     opacity:0.9;\
                     }\
-                    .pv-gallery-maximize-trigger-close{\
+                    span.pv-gallery-maximize-trigger-close{\
                     display:inline-block;\
                     padding-left:10px;\
                     vertical-align:middle;\
@@ -17062,7 +17064,7 @@ ImgOps | https://imgops.com/#b#`;
                      .pv-gallery-maximize-container span>p{\
                      opacity: 0.6;\
                      }\
-                     .pv-gallery-head-command-close {\
+                     span.pv-gallery-head-command-close {\
                      position: fixed!important;\
                      right: 0!important;\
                      height: 29px!important;\
@@ -17141,7 +17143,7 @@ ImgOps | https://imgops.com/#b#`;
                     vertical-align:middle;\
                     }\
                     /*顶栏左边*/\
-                    .pv-gallery-head-float-left{\
+                    span.pv-gallery-head-float-left{\
                     float:left;\
                     height:100%;\
                     text-align:left;\
@@ -17210,7 +17212,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-head-command > *{\
                     vertical-align:middle;\
                     }\
-                    .pv-gallery-head-command-close{\
+                    span.pv-gallery-head-command-close{\
                     position:absolute;\
                     top:0;\
                     width:40px;\
@@ -17243,13 +17245,13 @@ ImgOps | https://imgops.com/#b#`;
                     border-color:#757575;\
                     margin-left: 0px;\
                     }\
-                    .pv-gallery-head-command-collect-icon{\
+                    span.pv-gallery-head-command-collect-icon{\
                     display:inline-block;\
                     height:20px;\
                     width:20px;\
                     background:transparent url("' + prefs.icons.fivePointedStar + '") 0 0 no-repeat;\
                     }\
-                    .pv-gallery-head-left-lock-icon{\
+                    span.pv-gallery-head-left-lock-icon{\
                     display:inline-block;\
                     height:20px;\
                     width:20px;\
@@ -17430,11 +17432,11 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-toggle-hide .pv-gallery-img-controler{\
                     opacity:0;\
                     }\
-                    .pv-gallery-img-controler-pre{\
+                    span.pv-gallery-img-controler-pre{\
                     background:rgba(70,70,70,0.8) url("'+prefs.icons.arrowLeft+'") no-repeat center;\
                     left:10px;\
                     }\
-                    .pv-gallery-img-controler-next{\
+                    span.pv-gallery-img-controler-next{\
                     background:rgba(70,70,70,0.8) url("'+prefs.icons.arrowRight+'") no-repeat center;\
                     right:10px;\
                     }\
@@ -17924,7 +17926,7 @@ ImgOps | https://imgops.com/#b#`;
                     border-top: 40px solid transparent;\
                     border-bottom: 40px solid transparent;\
                     }\
-                    .pv-gallery-sidebar-controler{\
+                    span.pv-gallery-sidebar-controler{\
                     cursor:pointer;\
                     position:absolute;\
                     background:rgba(255,255,255,0.1) no-repeat center;\
@@ -17996,7 +17998,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-thumbnails-container-left {\
                     padding-right:5px;\
                     }\
-                    .pv-gallery-sidebar-thumb-container {\
+                    span.pv-gallery-sidebar-thumb-container {\
                     display:inline-block;\
                     text-align: center;\
                     border:2px solid rgb(52,52,52);\
@@ -18044,7 +18046,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-thumb_selected-left {\
                     left:5px;\
                     }\
-                    .pv-gallery-sidebar-thumb-loading{\
+                    span.pv-gallery-sidebar-thumb-loading{\
                     position:absolute;\
                     top:0;\
                     left:0;\
