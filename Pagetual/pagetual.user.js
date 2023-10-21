@@ -2473,7 +2473,10 @@
         verifyNext(next, doc) {
             if (!next) return null;
             if (next.previousElementSibling && /^BR$/i.test(next.previousElementSibling.nodeName)) return null;
-            let eles = getAllElements(`//${next.nodeName}[text()='${next.innerText}']`, doc);
+            let eles = [];
+            if (next.innerText && next.innerText.indexOf("\n") == -1) {
+                eles = getAllElements(`//${next.nodeName}[text()='${next.innerText}']`, doc);
+            }
             if (eles.length >= 2 && eles[0].href != eles[1].href) {
                 next = null;
             } else if (doc == document) {
