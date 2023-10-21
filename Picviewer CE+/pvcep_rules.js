@@ -768,7 +768,7 @@ var siteInfo = [
  },
  getExtSrc: function() {
     let newsrc = "";
-    if (this.id == "thumbnail-container") {
+    if (this.id == "thumbnail-container" && this.hasAttribute("loaded")) {
         let img = this.querySelector('img');
         if (!img) return;
         newsrc = img.src;
