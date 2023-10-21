@@ -19241,6 +19241,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container {\
                     ' + (prefs.imgWindow.fixed ? 'position: fixed;' : 'position: absolute;') + '\
                     background-color: rgba(40,40,40,0.65);\
+                    background-image: initial;\
                     padding: 8px;\
                     border: 0;\
                     border-radius: 1px;\
@@ -19253,6 +19254,10 @@ ImgOps | https://imgops.com/#b#`;
                     box-shadow: 0 0 10px 5px rgba(0,0,0,0.35);\
                     box-sizing: content-box;\
                     display: initial;\
+                    }\
+                    .pv-pic-window-container span {\
+                    background-image: initial;\
+                    float: initial;\
                     }\
                     .pv-pic-window-transition-all{\
                     -webkit-transition: top 0.2s ease, left 0.2s ease;\
@@ -19348,7 +19353,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container_focus>.pv-pic-window-toolbar {\
                     display: block;\
                     }\
-                    .pv-pic-window-close {\
+                    span.pv-pic-window-close {\
                     cursor: pointer;\
                     position: absolute;\
                     right: 0px;\
@@ -19371,7 +19376,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container_focus>.pv-pic-window-close {\
                     display: block;\
                     }\
-                    .pv-pic-window-search {\
+                    span.pv-pic-window-search {\
                     cursor: pointer;\
                     position: absolute;\
                     right: 50px;\
@@ -19386,7 +19391,7 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:#1771FF;\
                     display: none;\
                     }\
-                    .pv-pic-window-max {\
+                    span.pv-pic-window-max {\
                     cursor: pointer;\
                     position: absolute;\
                     right: 46px;\
@@ -19421,8 +19426,8 @@ ImgOps | https://imgops.com/#b#`;
                     margin-top: 20px;\
                     min-height: 20px;\
                     }\
-                    .pv-pic-window-pre,\
-                    .pv-pic-window-next{\
+                    span.pv-pic-window-pre,\
+                    span.pv-pic-window-next{\
                     -webkit-transition: opacity 0.3s ease;\
                     transition: opacity 0.3s ease;\
                     position: absolute;\
@@ -19434,11 +19439,11 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     pointer-events: none;\
                     }\
-                    .pv-pic-window-pre {\
+                    span.pv-pic-window-pre {\
                     left: 8px;\
                     background-image: url("'+prefs.icons.arrowLeft+'");\
                     }\
-                    .pv-pic-window-next {\
+                    span.pv-pic-window-next {\
                     right: 8px;\
                     background-image: url("'+prefs.icons.arrowRight+'");\
                     }\
@@ -19482,7 +19487,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container>span.pv-pic-search-state:hover>svg{\
                     display: block;\
                     }\
-                    .pv-pic-search-state {\
+                    span.pv-pic-search-state {\
                     top: -10px;\
                     left: 8px;\
                     display: block;\
@@ -19506,7 +19511,7 @@ ImgOps | https://imgops.com/#b#`;
                     white-space: nowrap;\
                     overflow: hidden;\
                     }\
-                    .pv-pic-search-state>.pv-icon {\
+                    span.pv-pic-search-state>.pv-icon {\
                     width: 20px;\
                     height: 20px;\
                     vertical-align: middle;\
@@ -19592,13 +19597,13 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container_focus .pv-pic-window-imgbox {\
                     box-shadow: 0 0 6px black;\
                     }\
-                    .pv-pic-window-container_focus .pv-pic-window-pic {\
+                    span.pv-pic-window-container_focus .pv-pic-window-pic {\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
                     background-size: 20px 20px;\
                     background-position: 0 0, 10px 10px;\
                     }\
-                    .pv-pic-window-tb-tool,\
-                    .pv-pic-window-tb-command{\
+                    span.pv-pic-window-tb-tool,\
+                    span.pv-pic-window-tb-command{\
                     box-sizing:content-box;\
                     -moz-box-sizing:content-box;\
                     -webkit-box-sizing:content-box;\
@@ -19626,29 +19631,29 @@ ImgOps | https://imgops.com/#b#`;
                     box-shadow: inset 0 21px 0 rgba(255,255,255,0.3) ,inset 0 -21px 0 rgba(0,0,0,0.3);\
                     border-left:2px solid #1771FF;\
                     }\
-                    .pv-pic-window-tb-hand {\
+                    span.pv-pic-window-tb-hand {\
                     background-image: url("'+prefs.icons.hand+'");\
                     }\
-                    .pv-pic-window-tb-rotate {\
+                    span.pv-pic-window-tb-rotate {\
                     background-image: url("'+prefs.icons.rotate+'");\
                     }\
-                    .pv-pic-window-tb-zoom {\
+                    span.pv-pic-window-tb-zoom {\
                     background-image: url("'+prefs.icons.zoom+'");\
                     }\
-                    .pv-pic-window-tb-flip-horizontal {\
+                    span.pv-pic-window-tb-flip-horizontal {\
                     background-image: url("'+prefs.icons.flipHorizontal+'");\
                     }\
-                    .pv-pic-window-tb-flip-vertical {\
+                    span.pv-pic-window-tb-flip-vertical {\
                     background-image: url("'+prefs.icons.flipVertical+'");\
                     }\
-                    .pv-pic-window-tb-compare {\
+                    span.pv-pic-window-tb-compare {\
                     background-image: url("'+prefs.icons.compare+'");\
                     }\
                     .pv-pic-window-tb-tool-badge-container {\
                     display: block;\
                     position: relative;\
                     }\
-                    .pv-pic-window-tb-tool-badge {\
+                    span.pv-pic-window-tb-tool-badge {\
                     position: absolute;\
                     top: -3px;\
                     right: 1px;\
@@ -19660,7 +19665,7 @@ ImgOps | https://imgops.com/#b#`;
                     opacity: 0.5;\
                     color: black;\
                     }\
-                    .pv-pic-window-tb-tool-extend-menu{\
+                    span.pv-pic-window-tb-tool-extend-menu{\
                     position:absolute;\
                     top:0;\
                     margin-left:-1px;\
@@ -19726,7 +19731,7 @@ ImgOps | https://imgops.com/#b#`;
                     left:0;\
                     z-index: '+prefs.imgWindow.zIndex+';\
                     }\
-                    .pv-pic-window-rotate-indicator{\
+                    span.pv-pic-window-rotate-indicator{\
                     display:none;\
                     position:fixed;\
                     width:250px;\
@@ -19736,7 +19741,7 @@ ImgOps | https://imgops.com/#b#`;
                     margin-left:-135px;\
                     background:transparent url("'+ prefs.icons.rotateIndicatorBG +'") no-repeat center;\
                     }\
-                    .pv-pic-window-rotate-indicator-pointer{\
+                    span.pv-pic-window-rotate-indicator-pointer{\
                     display:block;\
                     margin-left:auto;\
                     margin-right:auto;\
@@ -21543,6 +21548,7 @@ ImgOps | https://imgops.com/#b#`;
                 style.textContent='\
                     #pv-float-bar-container {\
                     position: absolute;\
+                    background-image: initial;\
                     top: 0px;\
                     left: 0px;\
                     z-index:9999999998;\
