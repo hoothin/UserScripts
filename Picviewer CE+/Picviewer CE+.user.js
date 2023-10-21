@@ -18031,7 +18031,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-thumb-container:hover {\
                     border:2px solid rgb(57,149,211);\
                     }\
-                    .pv-gallery-sidebar-thumb_selected {\
+                    span.pv-gallery-sidebar-thumb_selected {\
                     border:2px solid rgb(229,59,62);\
                     }\
                     .pv-gallery-sidebar-thumb_selected-top {\
