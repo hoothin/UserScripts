@@ -768,12 +768,10 @@ var siteInfo = [
  },
  getExtSrc: function() {
     let newsrc = "";
-    if (this.id == "thumbnail-container" && this.hasAttribute("loaded")) {
+    if (this.id == "thumbnail-container" && this.children[0].hasAttribute("loaded")) {
         let img = this.querySelector('img');
         if (!img) return;
         newsrc = img.src;
-    } else if (this.parentNode && this.parentNode.className == "ytp-inline-preview-ui") {
-        newsrc = this.parentNode.parentNode.querySelector(".ytp-cued-thumbnail-overlay-image").style.backgroundImage.replace(/url\("(.*)"\)/,"$1");
     }
     return newsrc.replace(/\?.*$/i,"");
  },
