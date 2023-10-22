@@ -388,7 +388,7 @@
         var customNextPageReg=GM_getValue("nextPageReg");
         if (customNextPageReg) {
             try {
-                innerNextPage = new RegExp(customNextPageReg, "i");
+                innerNextPage = new RegExp(customNextPageReg);
             } catch(e) {
                 console.warn(e);
             }
