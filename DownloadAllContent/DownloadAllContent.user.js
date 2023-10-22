@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.4.1
+// @version      2.7.4.2
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -237,7 +237,9 @@
                 reSortDefault:"默认按页面中位置排序章节",
                 reverse:"反转章节排序",
                 saveBtn:"保存设置",
-                saveOk:"保存成功"
+                saveOk:"保存成功",
+                nextPage:"嗅探章节内分页",
+                nextPageReg:"自定义分页正则"
             };
             break;
         case "zh-TW":
@@ -263,7 +265,9 @@
                 reSortDefault:"預設依頁面中位置排序章節",
                 reverse:"反轉章節排序",
                 saveBtn:"儲存設定",
-                saveOk:"儲存成功"
+                saveOk:"儲存成功",
+                nextPage:"嗅探章節內分頁",
+                nextPageReg:"自訂分頁正規"
             };
             break;
         default:
@@ -288,7 +292,9 @@
                 reSortDefault: "Default sort by position in the page",
                 reverse:"Reverse chapter ordering",
                 saveBtn:"Save Setting",
-                saveOk:"Save Over"
+                saveOk:"Save Over",
+                nextPage:"Check next page in chapter",
+                nextPageReg:"Custom RegExp of next page"
             };
             break;
     }
@@ -377,7 +383,16 @@
             aEles=aEles.reverse();
         }
         rCats=[];
-        var customTitle=!!GM_getValue("customTitle");
+        var customTitle=GM_getValue("customTitle");
+        var disableNextPage=!!GM_getValue("disableNextPage");
+        var customNextPageReg=GM_getValue("nextPageReg");
+        if (customNextPageReg) {
+            try {
+                innerNextPage = new RegExp(customNextPageReg, "i");
+            } catch(e) {
+                console.warn(e);
+            }
+        }
         var insertSigns=[];
         // var j=0,rCats=[];
         var downIndex=0,downNum=0,downOnce=function(wait){
@@ -400,7 +415,7 @@
                         downNum++;
                         let doc = getDocEle(result.responseText);
                         let base = doc.querySelector("base");
-                        let nextPage=checkNextPage(doc, base ? base.href : aTag.href);
+                        let nextPage = !disableNextPage && checkNextPage(doc, base ? base.href : aTag.href);
                         if(nextPage){
                             var inArr=false;
                             for(var ai=0;ai<aEles.length;ai++){
@@ -611,14 +626,17 @@
         return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
     }
 
-    function checkNextPage(doc, baseUrl){
-        let aTags=doc.querySelectorAll("a"),nextPage=null;
-        for(var i=0;i<aTags.length;i++){
-            let aTag=aTags[i];
-            if(innerNextPage.test(aTag.innerText) && aTag.href && !/javascript:|#/.test(aTag.href)){
-                nextPage=aTag;
-                nextPage.href=canonicalUri(nextPage.getAttribute("href"), baseUrl || location.href);
-                break;
+    function checkNextPage(doc, baseUrl) {
+        let aTags = doc.querySelectorAll("a"), nextPage = null;
+        for (var i = 0; i < aTags.length; i++) {
+            let aTag = aTags[i];
+            if (innerNextPage.test(aTag.innerText) && aTag.href && !/javascript:|#/.test(aTag.href)) {
+                let nextPageHref = canonicalUri(aTag.getAttribute("href"), baseUrl || location.href);
+                if (nextPageHref != location.href) {
+                    nextPage = aTag;
+                    nextPage.href = nextPageHref;
+                    break;
+                }
             }
         }
         return nextPage;
@@ -774,6 +792,7 @@
             if((!aEle.href || aEle.href.indexOf("javascript")!=-1) && aEle.dataset.href){
                 aEle.href=aEle.dataset.href;
             }
+            if(aEle.href==location.href)continue;
             for(var j=0;j<list.length;j++){
                 if(list[j].href==aEle.href){
                     aEle=list[j];
@@ -1044,7 +1063,7 @@
             option.type = _type;
             option.value = _value;
             option.checked = _value;
-            cap.style.margin = "10px 10px 10px 0px";
+            cap.style.margin = "0px 10px 0px 0px";
             if (_type == "radio") {
                 let label = document.createElement("label");
                 label.innerText = _name;
@@ -1053,9 +1072,14 @@
                 label.setAttribute("for", option.id);
                 cap.appendChild(label);
             } else {
+                if (_type == "input") {
+                    option.style.flexGrow = "1";
+                }
                 cap.innerText = _name;
             }
             con.style.margin = "10px 0";
+            con.style.display = "flex";
+            con.style.alignItems = "center";
             con.appendChild(cap);
             con.appendChild(option);
             insertPos.parentNode.insertBefore(con, insertPos);
@@ -1063,7 +1087,7 @@
         }
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
-        let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20");
+        let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
         let customTitle = createOption(i18n.customTitle, GM_getValue("customTitle") || "");
         customTitle.setAttribute("placeHolder", "title");
         let contentSortUrlValue = GM_getValue("contentSortUrl") || false;
@@ -1074,9 +1098,20 @@
         reSortDefault.name = "sort";
         reSortUrl.name = "sort";
         contentSort.name = "sort";
-        let reverse = createOption(i18n.reverse, GM_getValue("reverse") || false, "checkbox");
+        let reverse = createOption(i18n.reverse, !!GM_getValue("reverse"), "checkbox");
+        let disableNextPage = !!GM_getValue("disableNextPage");
+        let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
+        let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
+        nextPageReg.setAttribute("placeHolder", "^\\s*(下一[页頁张張]|next\\s*page|次のページ)");
+        if (disableNextPage) {
+            nextPageReg.parentNode.style.display = "none";
+        }
+        nextPage.onclick = e => {
+            nextPageReg.parentNode.style.display = nextPage.checked ? "flex" : "none";
+        }
         let saveBtn = document.createElement("button");
         saveBtn.innerText = i18n.saveBtn;
+        saveBtn.style.margin = "0 0 20px 0";
         insertPos.parentNode.insertBefore(saveBtn, insertPos);
         saveBtn.onclick = e => {
             GM_setValue("selectors", delSelector.value || "");
@@ -1093,6 +1128,8 @@
                 GM_setValue("contentSort", false);
             }
             GM_setValue("reverse", reverse.checked);
+            GM_setValue("disableNextPage", !nextPage.checked);
+            GM_setValue("nextPageReg", nextPageReg.value || "");
             alert(i18n.saveOk);
         };
         return;
