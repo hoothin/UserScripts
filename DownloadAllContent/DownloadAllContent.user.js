@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.26
+// @version      2.7.4.1
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -223,16 +223,21 @@
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
                 del:"设置文本干扰码的CSS选择器",
-                custom:"自定义下载",
+                custom:"自定规则下载",
                 customInfo:"输入网址或者章节CSS选择器",
-                reSort:"按标题名重新排序",
-                reSortUrl:"按网址重新排序",
-                setting:"选项设置",
+                reSort:"按标题名重新排序章节",
+                reSortUrl:"按网址重新排序章节",
+                setting:"选项参数设置",
                 searchRule:"搜索网站规则",
                 abort:"跳过此章",
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
-                downThreadNum:"设置同时下载的线程数"
+                downThreadNum:"设置同时下载的线程数",
+                customTitle:"自定义章节标题，输入内页文字对应选择器",
+                reSortDefault:"默认按页面中位置排序章节",
+                reverse:"反转章节排序",
+                saveBtn:"保存设置",
+                saveOk:"保存成功"
             };
             break;
         case "zh-TW":
@@ -244,16 +249,21 @@
                 downloading:"已下載完成 %s 段，剩餘 %s 段<br>正在下載 %s",
                 complete:"已全部下載完成，共 %s 段",
                 del:"設置文本干擾碼的CSS選擇器",
-                custom:"自定義下載",
+                custom:"自訂規則下載",
                 customInfo:"輸入網址或者章節CSS選擇器",
-                reSort:"按標題名重新排序",
-                reSortUrl:"按網址重新排序",
-                setting:"選項設置",
+                reSort:"按標題名重新排序章節",
+                reSortUrl:"按網址重新排序章節",
+                setting:"選項參數設定",
                 searchRule:"搜尋網站規則",
                 abort:"跳過此章",
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
-                downThreadNum:"設置同時下載的綫程數"
+                downThreadNum:"設置同時下載的綫程數",
+                customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
+                reSortDefault:"預設依頁面中位置排序章節",
+                reverse:"反轉章節排序",
+                saveBtn:"儲存設定",
+                saveOk:"儲存成功"
             };
             break;
         default:
@@ -273,7 +283,12 @@
                 abort:"Abort",
                 save:"Save",
                 saveAsMd:"Save as Markdown",
-                downThreadNum:"Set threadNum for download"
+                downThreadNum:"Set threadNum for download",
+                customTitle: "Customize the chapter title, enter the selector on inner page",
+                reSortDefault: "Default sort by position in the page",
+                reverse:"Reverse chapter ordering",
+                saveBtn:"Save Setting",
+                saveOk:"Save Over"
             };
             break;
     }
@@ -292,7 +307,7 @@
                     Analysing......
                 </div>
                 <div id="txtDownQuit" style="width: 30px;height: 30px;border-radius: 30px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
-                    <span style="height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;font-family: arial;">╳</span>
+                    <span style="height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;font-family: arial;background: initial; float: initial;">╳</span>
                 </div>
                 <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
                     <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 16px;">${getI18n('abort')}</button>
@@ -358,7 +373,11 @@
                 return parseInt(a.href.replace(/[^0-9]/ig,"")) - parseInt(b.href.replace(/[^0-9]/ig,""));
             });
         }
+        if(GM_getValue("reverse")){
+            aEles=aEles.reverse();
+        }
         rCats=[];
+        var customTitle=!!GM_getValue("customTitle");
         var insertSigns=[];
         // var j=0,rCats=[];
         var downIndex=0,downNum=0,downOnce=function(wait){
@@ -415,6 +434,16 @@
                         }
                         if (result.status >= 400) {
                             console.warn("error:", `status: ${result.status} from: ${aTag.href}`);
+                        }
+                        if (customTitle) {
+                            try {
+                                let title = doc.querySelector(customTitle);
+                                if (title && title.innerText) {
+                                    aTag.innerText = title.innerText;
+                                }
+                            } catch(e) {
+                                console.warn(e);
+                            }
                         }
                         processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""));
                         if (wait) {
@@ -766,17 +795,6 @@
         }
     }
 
-    function setDel(){
-        var selValue=GM_getValue("selectors");
-        var selectors=prompt(i18n.del,selValue?selValue:"");
-        GM_setValue("selectors",selectors);
-        selValue=GM_getValue("downThreadNum");
-        var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
-        GM_setValue("downThreadNum",downThreadNum);
-        var sortByUrl=window.confirm(i18n.reSortUrl);
-        GM_setValue("contentSortUrl",sortByUrl);
-        if(!sortByUrl)GM_setValue("contentSort",window.confirm(i18n.reSort));
-    }
     function customDown(){
         processFunc=null;
         var customRules=GM_getValue("DACrules_"+document.domain);
@@ -937,7 +955,7 @@
     const configPage = "https://hoothin.github.io/UserScripts/DownloadAllContent/";
     const copySvg = '<svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" style="transition: all ease 0.5s;top: 5px;right: 5px;position: absolute;cursor: pointer;"><title>Copy</title><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg>';
     function searchRule(){
-        GM_openInTab(configPage + "#" + location.hostname, {active: true});
+        GM_openInTab(configPage + "#@" + location.hostname, {active: true});
     }
     if (location.origin + location.pathname == configPage) {
         let exampleNode = document.getElementById("example");
@@ -990,11 +1008,14 @@
             searchByInput();
         });
         if (location.hash) {
-            setTimeout(() => {
-                exampleNode.scrollIntoView();
-            }, 500);
-            searchInput.value = location.hash.slice(1);
-            searchByInput();
+            let hash = location.hash.slice(1);
+            if (hash.indexOf("@") == 0) {
+                setTimeout(() => {
+                    exampleNode.scrollIntoView();
+                }, 500);
+                searchInput.value = hash.slice(1);
+                searchByInput();
+            }
         }
         [].forEach.call(ruleList.querySelectorAll("div.highlight"), highlight => {
             highlight.style.position = "relative";
@@ -1009,7 +1030,86 @@
             });
         });
         exampleNode.parentNode.insertBefore(searchInput, ruleList);
+
+
+        let donateNode = document.querySelector("[alt='donate']");
+        if (!donateNode) return;
+        let insertPos = donateNode.parentNode.nextElementSibling;
+        let radioIndex = 0;
+        function createOption(_name, _value, _type) {
+            if (!_type) _type = "input";
+            let con = document.createElement("div");
+            let option = document.createElement("input");
+            let cap = document.createElement("b");
+            option.type = _type;
+            option.value = _value;
+            option.checked = _value;
+            cap.style.margin = "10px 10px 10px 0px";
+            if (_type == "radio") {
+                let label = document.createElement("label");
+                label.innerText = _name;
+                radioIndex++;
+                option.id = "radio" + radioIndex;
+                label.setAttribute("for", option.id);
+                cap.appendChild(label);
+            } else {
+                cap.innerText = _name;
+            }
+            con.style.margin = "10px 0";
+            con.appendChild(cap);
+            con.appendChild(option);
+            insertPos.parentNode.insertBefore(con, insertPos);
+            return option;
+        }
+        let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
+        delSelector.setAttribute("placeHolder", ".mask,.ksam");
+        let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20");
+        let customTitle = createOption(i18n.customTitle, GM_getValue("customTitle") || "");
+        customTitle.setAttribute("placeHolder", "title");
+        let contentSortUrlValue = GM_getValue("contentSortUrl") || false;
+        let contentSortValue = GM_getValue("contentSort") || false;
+        let reSortDefault = createOption(i18n.reSortDefault, !contentSortUrlValue && !contentSortValue, "radio");
+        let reSortUrl = createOption(i18n.reSortUrl, contentSortUrlValue || false, "radio");
+        let contentSort = createOption(i18n.reSort, contentSortValue || false, "radio");
+        reSortDefault.name = "sort";
+        reSortUrl.name = "sort";
+        contentSort.name = "sort";
+        let reverse = createOption(i18n.reverse, GM_getValue("reverse") || false, "checkbox");
+        let saveBtn = document.createElement("button");
+        saveBtn.innerText = i18n.saveBtn;
+        insertPos.parentNode.insertBefore(saveBtn, insertPos);
+        saveBtn.onclick = e => {
+            GM_setValue("selectors", delSelector.value || "");
+            GM_setValue("downThreadNum", downThreadNum.value || 20);
+            GM_setValue("customTitle", customTitle.value || "");
+            if (reSortUrl.checked) {
+                GM_setValue("contentSortUrl", true);
+                GM_setValue("contentSort", false);
+            } else if (contentSort.checked) {
+                GM_setValue("contentSortUrl", false);
+                GM_setValue("contentSort", true);
+            } else {
+                GM_setValue("contentSortUrl", false);
+                GM_setValue("contentSort", false);
+            }
+            GM_setValue("reverse", reverse.checked);
+            alert(i18n.saveOk);
+        };
         return;
+    }
+
+    function setDel(){
+        GM_openInTab(configPage + "#操作說明", {active: true});
+        return;
+        /*var selValue=GM_getValue("selectors");
+        var selectors=prompt(i18n.del,selValue?selValue:"");
+        GM_setValue("selectors",selectors);
+        selValue=GM_getValue("downThreadNum");
+        var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
+        GM_setValue("downThreadNum",downThreadNum);
+        var sortByUrl=window.confirm(i18n.reSortUrl);
+        GM_setValue("contentSortUrl",sortByUrl);
+        if(!sortByUrl)GM_setValue("contentSort",window.confirm(i18n.reSort));*/
     }
 
     document.addEventListener("keydown", function(e) {
