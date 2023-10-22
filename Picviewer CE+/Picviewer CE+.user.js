@@ -17946,19 +17946,19 @@ ImgOps | https://imgops.com/#b#`;
                     width:100%;\
                     height:36px;\
                     }\
-                    .pv-gallery-sidebar-controler-pre-h {\
+                    span.pv-gallery-sidebar-controler-pre-h {\
                     left: -40px;\
                     background-image: url("'+prefs.icons.arrowLeft+'");\
                     }\
-                    .pv-gallery-sidebar-controler-next-h {\
+                    span.pv-gallery-sidebar-controler-next-h {\
                     right: -40px;\
                     background-image: url("'+prefs.icons.arrowRight+'");\
                     }\
-                    .pv-gallery-sidebar-controler-pre-v {\
+                    span.pv-gallery-sidebar-controler-pre-v {\
                     top: -40px;\
                     background-image: url("'+prefs.icons.arrowTop+'");\
                     }\
-                    .pv-gallery-sidebar-controler-next-v {\
+                    span.pv-gallery-sidebar-controler-next-v {\
                     bottom: -40px;\
                     background-image: url("'+prefs.icons.arrowBottom+'");\
                     }\
