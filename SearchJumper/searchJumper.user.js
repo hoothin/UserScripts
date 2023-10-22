@@ -233,7 +233,7 @@
                 url: "https://www.google.com/searchbyimage?sbisrc=cr_1_0_0&image_url=%T"
             }, {
                 name: "Google translate image",
-                url: "https://translate.google.com/?op=images#p{input#ucj-11=%i}"
+                url: "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
             }, {
                 name: "SauceNAO",
                 url: "https://saucenao.com/search.php?db=999&url=%t"
