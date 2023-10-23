@@ -34,12 +34,12 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 [
   {
     "name":"beauty",
-    "url":"^https://www\\.jpmn8\\.com/",
+    "url":"^https://www\\.jpmn-demo\\.com/",
     "pageElement":"p>img"
   },
   {
     "name":"Expreview",
-    "url":"^https://www\\.expreview\\.com/",
+    "url":"^https://www\\.expreview-demo\\.com/",
     "loadMore":"span.load"
   }
 ]
