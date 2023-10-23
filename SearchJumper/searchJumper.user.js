@@ -7254,7 +7254,9 @@
                             if (ele.dataset.current && imgSrc.indexOf(location.host) != -1) {
                                 img.dataset.src = imgSrc;
                                 cacheIcon[imgSrc] = '';
-                                if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
+                                if (!isBookmark) {
+                                    cacheAction(img);
+                                }
                             }
                         } else if (cache) {
                             img.dataset.src = cache;
