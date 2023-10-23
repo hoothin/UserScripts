@@ -23270,6 +23270,27 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
+        function createEleFromJson(json) {
+            let collection = document.createDocumentFragment();
+            json.forEach(data => {
+                let ele = document.createElement(data.node);
+                if (data.text) {
+                    ele.innerText = data.text;
+                }
+                if (data.attr) {
+                    Object.keys(data.attr).forEach(key => {
+                        ele.setAttribute(key, data.attr[key]);
+                    });
+                }
+                if (data.children) {
+                    let children = createEleFromJson(data.children);
+                    ele.appendChild(children);
+                }
+                collection.appendChild(ele);
+            });
+            return collection;
+        }
+
         window.addEventListener('message', handleMessage, true);
 
         addPageScript();
@@ -23346,7 +23367,7 @@ ImgOps | https://imgops.com/#b#`;
         for(let key in editSitesFunc){
             editSitesName[key]=key;
         }
-        var newsInited = false, news = "";
+        var newsInited = false, newsNode = null;
 
         initLang();
         var customLangOption={
@@ -23949,7 +23970,7 @@ ImgOps | https://imgops.com/#b#`;
                     let closeBtn=doc.querySelector("#"+this.id+"_closeBtn");
                     let resetLink=doc.querySelector("#"+this.id+"_resetLink");
                     let customInput=doc.querySelector("#"+this.id+"_field_customRules");
-                    customInput.style.height="500px";
+                    customInput.style.height="188px";
                     saveBtn.textContent=i18n("saveBtn");
                     saveBtn.title=i18n("saveBtnTips");
                     closeBtn.textContent=i18n("closeBtn");
@@ -23960,16 +23981,87 @@ ImgOps | https://imgops.com/#b#`;
                     if(searchData && searchData.value==""){
                         searchData.value=defaultSearchData;
                     }
-                    let header=doc.getElementById(this.id+"_header");
-                    if(header && header.children.length==1){
-                        if (!newsInited) {
-                            news = await GM_fetch(`https://www.hoothin.com/news.php?from=pvcep&lang=${lang}`).then(response => response.text()).catch(e => {});
-                            newsInited = true;
+                    let about = doc.getElementById(this.id + "_section_4");
+                    if (about) {
+                        if (!newsNode) {
+                            newsNode = document.createElement("div");
+                            let newsEles = createEleFromJson([
+                                {
+                                    node: "div",
+                                    text: "Made with ❤️ by ",
+                                    attr: {
+                                        style: "width: calc(100% - 8px); text-align: center;"
+                                    },
+                                    children: [
+                                        {
+                                            node: "a",
+                                            text: "Hoothin",
+                                            attr: {
+                                                "href": "mailto:rixixi@gmail.com"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    node: "img",
+                                    attr: {
+                                        src: "https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg",
+                                        style: "width: calc(100% - 8px); margin-top: 5px"
+                                    }
+                                },
+                                {
+                                    node: "div",
+                                    attr: {
+                                        style: "width: calc(100% - 8px); display: flex; align-items: center; justify-content: center; margin-top: 5px;"
+                                    },
+                                    children: [
+                                        {
+                                            node: "img",
+                                            attr: {
+                                                src: "https://ko-fi.com/favicon-32x32.png",
+                                                style: "margin-right: 5px;"
+                                            }
+                                        },
+                                        {
+                                            node: "a",
+                                            text: "Ko-fi",
+                                            attr: {
+                                                href: "https://ko-fi.com/hoothin",
+                                                style: "margin-right: 10px;"
+                                            }
+                                        },
+                                        {
+                                            node: "img",
+                                            attr: {
+                                                src: "https://static.afdiancdn.com/favicon.ico",
+                                                style: "margin-right: 5px; height: 25px;"
+                                            }
+                                        },
+                                        {
+                                            node: "a",
+                                            text: "爱发电",
+                                            attr: {
+                                                href: "https://afdian.net/@hoothin"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]);
+                            newsNode.appendChild(newsEles);
+                            about.appendChild(newsNode);
                         }
-                        if (!news) return;
-                        let newsEle = document.createElement("div");
-                        newsEle.innerHTML = createHTML(news);
-                        header.appendChild(newsEle);
+                        if (!newsInited) {
+                            let news = await GM_fetch(`https://hoothin.com/scripts/pvcep/${lang}`).then(response => response.json()).catch(e => {});
+                            newsInited = true;
+                            if (!news) return;
+                            let newsEles = createEleFromJson(news);
+                            if (newsEles && newsEles.childElementCount) {
+                                if (newsNode) about.removeChild(newsNode);
+                                newsNode = document.createElement("div");
+                                newsNode.appendChild(newsEles);
+                            }
+                        }
+                        about.appendChild(newsNode);
                     }
                 },
                 save: function() {
