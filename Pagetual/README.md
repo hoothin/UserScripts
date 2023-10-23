@@ -13,10 +13,11 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 <table>
     <tr>
-        <th colspan="3">Buy me a coffee if it helps you💞</th>
+        <th colspan="4">Buy me a coffee if it helps you💞</th>
     </tr>
     <tr>
-        <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://ko-fi.com/hoothin">Ko-fi</a></td><td><a href="https://afdian.net/@hoothin">愛發電</a></td>
+        <td><a href="https://paypal.me/hoothin">PayPal</a></td><td><a href="https://ko-fi.com/hoothin">Ko-fi</a></td><td><a href="https://afdian.net/@hoothin">愛發電</a></td>
+        <td rowspan="3"><img src="https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg" alt="donate"></td>
     </tr>
     <tr>
         <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an email for help</a></th>
@@ -26,7 +27,6 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
     </tr>
 </table>
 
-![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
 [Rules example](https://pagetual.hoothin.com/en/rule.html)
 ==
