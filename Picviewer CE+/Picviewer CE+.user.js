@@ -24012,14 +24012,14 @@ ImgOps | https://imgops.com/#b#`;
                                 {
                                     node: "div",
                                     attr: {
-                                        style: "width: calc(100% - 8px); display: flex; align-items: center; justify-content: center; margin-top: 5px;"
+                                        style: "width: calc(100% - 8px); display: flex; align-items: center; justify-content: center; margin-top: 5px;font-size: 14px;"
                                     },
                                     children: [
                                         {
                                             node: "img",
                                             attr: {
                                                 src: "https://ko-fi.com/favicon-32x32.png",
-                                                style: "margin-right: 5px;"
+                                                style: "margin-right: 5px; height: 25px;"
                                             }
                                         },
                                         {
@@ -24034,7 +24034,7 @@ ImgOps | https://imgops.com/#b#`;
                                             node: "img",
                                             attr: {
                                                 src: "https://static.afdiancdn.com/favicon.ico",
-                                                style: "margin-right: 5px; height: 25px;"
+                                                style: "margin-right: 5px; height: 20px;"
                                             }
                                         },
                                         {
