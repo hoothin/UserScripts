@@ -16,11 +16,11 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="4">Buy me a coffee if it helps you💞</th>
     </tr>
     <tr>
-        <td><a href="https://paypal.me/hoothin">PayPal</a></td><td><a href="https://ko-fi.com/hoothin">Ko-fi</a></td><td><a href="https://afdian.net/@hoothin">愛發電</a></td>
+        <td><a href="https://paypal.me/hoothin"><img src="https://www.paypal.me/favicon.ico"><br>PayPal</a></td><td><a href="https://ko-fi.com/hoothin"><img src="https://ko-fi.com/favicon-32x32.png"><br>Ko-fi</a></td><td><a href="https://afdian.net/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></td>
         <td rowspan="3"><img src="https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg" alt="donate"></td>
     </tr>
     <tr>
-        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an email for help</a></th>
+        <th colspan="3">📧<a href="mailto:rixixi@gmail.com">Send me an email for help</a></th>
     </tr>
     <tr>
         <th colspan="3">Made with ♥ by <a href="https://github.com/hoothin">Hoothin</a></th>
