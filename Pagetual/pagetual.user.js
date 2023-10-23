@@ -123,7 +123,7 @@
                 firstUpdate: "Click here to initialize the rules",
                 update: "Update online rules",
                 click2update: "Click to update rules from url now",
-                loadNow: "Load next page automatically",
+                loadNow: "Load next automatically",
                 loadConfirm: "How much pages do you want to load? (0 means infinite)",
                 noNext: "No next link found, please create a new rule",
                 passSec: "Updated #t# seconds ago",
@@ -3890,6 +3890,7 @@
               color: #161616;
               z-index: 2147483646;
               font-size: 16px;
+              overflow: hidden;
               box-shadow: rgb(0 0 0) 0px 0px 10px;
              }
              #pagetual-picker * {
@@ -5872,9 +5873,17 @@
                     });
                 });
                 _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
-                    forceState = (forceState == 1 ? 0 : 1);
+                    if (forceState == 1) {
+                        forceState = 0;
+                        showTips(i18n("enableSiteTips"));
+                        changeStop(false);
+                    } else {
+                        forceState = 1;
+                        showTips(i18n("disableSiteTips"));
+                        changeStop(true);
+                        sideController.remove();
+                    }
                     storage.setItem("forceState_" + location.host, forceState);
-                    showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
                     if (!ruleParser.curSiteRule.url) location.reload();
                 });
                 _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
@@ -6594,8 +6603,16 @@
                 }
                 var key = e.key.toLowerCase();
                 if (rulesData.dbClick2StopKey.toLowerCase() == key) {
-                    forceState = (forceState == 1 ? 0 : 1);
-                    showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+                    if (forceState == 1) {
+                        forceState = 0;
+                        showTips(i18n("enableSiteTips"));
+                        changeStop(false);
+                    } else {
+                        forceState = 1;
+                        showTips(i18n("disableSiteTips"));
+                        changeStop(true);
+                        sideController.remove();
+                    }
                     if (!ruleParser.curSiteRule.url) {
                         storage.setItem("forceState_" + location.host, forceState);
                         location.reload();
