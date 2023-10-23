@@ -23403,7 +23403,9 @@ ImgOps | https://imgops.com/#b#`;
                 "#pv-prefs input.order { width: 250px; }",
                 "#pv-prefs .config_header>a { border-bottom: solid 2px; }",
                 "#pv-prefs .config_header>a:hover { color: #9f9f9f; }",
-                "#pv-prefs .nav-tabs { text-wrap: nowrap; width: 95vw; display: flex; overflow-x: auto; overflow-y: visible; }",
+                "#pv-prefs .section_header_holder { padding-right: 10px; }",
+                "#pv-prefs textarea { width: 100%; }",
+                "#pv-prefs .nav-tabs { text-wrap: nowrap; width: fit-content; max-width: 100%; margin: 20 auto; display: flex; overflow-x: auto; overflow-y: visible; }",
             ].join('\n'),
             fields: {
                 // 浮动工具栏
@@ -24006,13 +24008,13 @@ ImgOps | https://imgops.com/#b#`;
                                     node: "img",
                                     attr: {
                                         src: "https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg",
-                                        style: "width: calc(100% - 8px); margin-top: 5px"
+                                        style: "width: 100%; margin-top: 5px"
                                     }
                                 },
                                 {
                                     node: "div",
                                     attr: {
-                                        style: "width: calc(100% - 8px); display: flex; align-items: center; justify-content: center; margin-top: 5px;font-size: 14px;"
+                                        style: "width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 5px; font-size: 14px;"
                                     },
                                     children: [
                                         {
@@ -24047,6 +24049,7 @@ ImgOps | https://imgops.com/#b#`;
                                     ]
                                 }
                             ]);
+                            newsNode.style.padding = "5px";
                             newsNode.appendChild(newsEles);
                             about.appendChild(newsNode);
                         }
