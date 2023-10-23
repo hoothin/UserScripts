@@ -11,23 +11,6 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 ---
 
-[Rules example](https://pagetual.hoothin.com/en/rule.html)
-==
-``` json
-[
-  {
-    "name":"beauty",
-    "url":"^https://www\\.jpmn8\\.com/",
-    "pageElement":"p>img"
-  },
-  {
-    "name":"Expreview",
-    "url":"^https://www\\.expreview\\.com/",
-    "loadMore":"span.load"
-  }
-]
-```
-
 <table>
     <tr>
         <th colspan="3">Buy me a coffee if it helps you💞</th>
@@ -44,6 +27,23 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 </table>
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
+
+[Rules example](https://pagetual.hoothin.com/en/rule.html)
+==
+``` json
+[
+  {
+    "name":"beauty",
+    "url":"^https://www\\.jpmn8\\.com/",
+    "pageElement":"p>img"
+  },
+  {
+    "name":"Expreview",
+    "url":"^https://www\\.expreview\\.com/",
+    "loadMore":"span.load"
+  }
+]
+```
 
 name
 --
