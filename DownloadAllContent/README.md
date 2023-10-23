@@ -144,7 +144,7 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
   > 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究。後期如若豆瓣更新則不再跟進。首先，豆瓣閲讀的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，豆瓣會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到，解密方法如下：
 ``` javascript
 function decode(t) {
-	const s = (new TextDecoder).decode(new Uint8Array([65, 69, 83, 45, 67, 66, 67]))
+    const s = (new TextDecoder).decode(new Uint8Array([65, 69, 83, 45, 67, 66, 67]))
     	, r = (new TextDecoder).decode(new Uint8Array([99, 114, 121, 112, 116, 111]))
     	, o = (new TextDecoder).decode(new Uint8Array([115, 117, 98, 116, 108, 101]))
         , a = (new TextDecoder).decode(new Uint8Array([100, 105, 103, 101, 115, 116]))
@@ -153,19 +153,19 @@ function decode(t) {
         , c = (new TextDecoder).decode(new Uint8Array([100, 101, 99, 114, 121, 112, 116]))
         , u = (new TextDecoder).decode(new Uint8Array([105, 118]));
     const e = Uint8Array.from(window.atob(t), (t=>t.charCodeAt(0)))
-      , i = e.buffer
-      , d = e.length - 16 - 13
-      , p = new Uint8Array(i,d,16)
-      , f = new Uint8Array(i,0,d)
-      , g = {};
+        , i = e.buffer
+        , d = e.length - 16 - 13
+        , p = new Uint8Array(i,d,16)
+        , f = new Uint8Array(i,0,d)
+        , g = {};
     return g.name = s,
-    g[u] = p,
-    function() {
-        const t = Ark.user
-          , e = t.isAnonymous ? document.cookie.replace(/.*bid=(\w+).*/,"$1") : t.id
-          , i = (new TextEncoder).encode(e);
-        return window[r][o][a](h, i).then((t=>window[r][o][l]("raw", t, s, !0, [c])))
-    }().then((t=>window[r][o][c](g, t, f))).then((t=>JSON.parse((new TextDecoder).decode(t))))
+    	g[u] = p,
+    	function() {
+            const t = Ark.user
+                , e = t.isAnonymous ? document.cookie.replace(/.*bid=(\w+).*/,"$1") : t.id
+                , i = (new TextEncoder).encode(e);
+            return window[r][o][a](h, i).then((t=>window[r][o][l]("raw", t, s, !0, [c])))
+        }().then((t=>window[r][o][c](g, t, f))).then((t=>JSON.parse((new TextDecoder).decode(t))))
 }
 ```
   > 因此規則可按如下步驟編寫，首先調用 https://read.douban.com/j/article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接即可
