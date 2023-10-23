@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.21.1
+// @version              2023.10.23.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11669,7 +11669,7 @@ QRCode decode | https://zxing.org/w/decode?full=true&u=#t#
 QRCode | https://hoothin.com/qrcode/##t#
 ImgOps | https://imgops.com/#b#`;
 
-    var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,GM_fetch;
+    var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,GM_fetch,_GM_addStyle;
     if(typeof GM_openInTab!='undefined'){
         _GM_openInTab=GM_openInTab;
     }else if(typeof GM!='undefined' && typeof GM.openInTab!='undefined'){
@@ -11713,6 +11713,18 @@ ImgOps | https://imgops.com/#b#`;
         GM_fetch = true;
     } else {
         _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data || '', headers: f.headers}).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
+    }
+    if (typeof GM_addStyle != 'undefined') {
+        _GM_addStyle = GM_addStyle;
+    } else if (typeof GM != 'undefined' && typeof GM.addStyle != 'undefined') {
+        _GM_addStyle = GM.addStyle;
+    } else {
+        _GM_addStyle = cssStr => {
+            let styleEle = document.createElement("style");
+            styleEle.innerHTML = cssStr;
+            document.head.appendChild(styleEle);
+            return styleEle;
+        };
     }
     if (GM_fetch) {
         GM_fetch = async (url, option) => {
@@ -16182,6 +16194,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             show:function(reload){
                 this.shown=true;
+                this.addStyle();
                 galleryMode=true;
 
                 if (!reload) {
@@ -16970,9 +16983,14 @@ ImgOps | https://imgops.com/#b#`;
             },
 
             addStyle:function(){
-                var style=document.createElement('style');
-                style.type='text/css';
-                style.textContent='\
+                if (GalleryC.style) {
+                    if (!GalleryC.style.parentNode) {
+                        GalleryC.style = _GM_addStyle(GalleryC.style.innerText);
+                        this.globalSSheet = GalleryC.style.sheet;
+                    }
+                    return;
+                }
+                GalleryC.style=_GM_addStyle('\
                  /*最外层容器*/\
                     .pv-gallery-container {\
                     position: fixed;\
@@ -18080,11 +18098,10 @@ ImgOps | https://imgops.com/#b#`;
                     white-space:nowrap;\
                     background-color:red;\
                     }\
-                    ';
-                var head=document.head;
-                head.appendChild(style);
-                this.globalSSheet=style.sheet;
+                    ');
+                this.globalSSheet=GalleryC.style.sheet;
 
+                var head=document.head;
                 var style2=document.createElement('style');
                 this.thumbVisibleStyle=style2;
                 style2.type='text/css';
@@ -18454,11 +18471,13 @@ ImgOps | https://imgops.com/#b#`;
                 document.addEventListener('mouseup',this._clickOut,true);
             },
             addStyle:function(){
-                if(MagnifierC.style)return;
-                var style=document.createElement('style');
-                style.type='text/css';
-                MagnifierC.style=style;
-                style.textContent='\
+                if (MagnifierC.style) {
+                    if (!MagnifierC.style.parentNode) {
+                        MagnifierC.style = _GM_addStyle(MagnifierC.style.innerText);
+                    }
+                    return;
+                }
+                MagnifierC.style=_GM_addStyle('\
                     .pv-magnifier-container{\
                     position:absolute;\
                     padding:0;\
@@ -18475,8 +18494,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-magnifier-container_pause{\
                     border-color:red;\
                     }\
-                    ';
-                document.head.appendChild(style);
+                    ');
             },
             clickOut:function(e){
                 if(!this.magnifier.classList.contains("pv-magnifier-container_focus")){
@@ -19234,10 +19252,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
             addStyle:function(){
-                if(ImgWindowC.style)return;
-                var style=document.createElement('style');
-                ImgWindowC.style=style;
-                style.textContent='\
+                if (ImgWindowC.style) {
+                    if (!ImgWindowC.style.parentNode) {
+                        ImgWindowC.style = _GM_addStyle(ImgWindowC.style.innerText);
+                    }
+                    return;
+                }
+                ImgWindowC.style=_GM_addStyle('\
                     .pv-pic-window-container {\
                     ' + (prefs.imgWindow.fixed ? 'position: fixed;' : 'position: absolute;') + '\
                     background-color: rgba(40,40,40,0.65);\
@@ -19773,8 +19794,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-window-container::-webkit-scrollbar { width: 0 !important }\
                     .pv-pic-window-container { -ms-overflow-style: none;overflow: -moz-scrollbars-none; }\
-                    ';
-                document.head.appendChild(style);
+                    ');
             },
 
             firstOpen:function(){
@@ -21179,11 +21199,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
             addStyle:function(){
-                if(LoadingAnimC.styleAdded)return;
-                LoadingAnimC.styleAdded=true;
-                var style=document.createElement('style');
-                style.type='text/css';
-                style.textContent='\
+                if (LoadingAnimC.style) {
+                    if (!LoadingAnimC.style.parentNode) {
+                        LoadingAnimC.style = _GM_addStyle(LoadingAnimC.style.innerText);
+                    }
+                    return;
+                }
+                LoadingAnimC.style=_GM_addStyle('\
                 .pv-loading-container {\
                 position: absolute;\
                 z-index:999999997;\
@@ -21240,8 +21262,7 @@ ImgOps | https://imgops.com/#b#`;
                 .pv-loading-container_error .pv-loading-retry{\
                 display:block;\
                 }\
-                ';
-                document.head.appendChild(style);
+                ');
             },
             remove:function(){
                 if(!this.removed){
@@ -21543,9 +21564,13 @@ ImgOps | https://imgops.com/#b#`;
                 this._scrollHandler=this.scrollHandler.bind(this);
             },
             addStyle:function(){
-                var style=document.createElement('style');
-                style.type='text/css';
-                style.textContent='\
+                if (FloatBarC.style) {
+                    if (!FloatBarC.style.parentNode) {
+                        FloatBarC.style = _GM_addStyle(FloatBarC.style.innerText);
+                    }
+                    return;
+                }
+                FloatBarC.style=_GM_addStyle('\
                     #pv-float-bar-container {\
                     position: absolute;\
                     background-image: initial;\
@@ -21621,8 +21646,7 @@ ImgOps | https://imgops.com/#b#`;
                     #pv-float-bar-container .pv-float-bar-button-download {\
                     background-image:url("'+ prefs.icons.download +'");\
                     }\
-                    ';
-                document.head.appendChild(style);
+                    ');
             },
             start:function(data){
 
@@ -21829,6 +21853,7 @@ ImgOps | https://imgops.com/#b#`;
             show:function(){
                 if(this.setPosition())return;
                 this.shown=true;
+                this.addStyle();
                 this.setButton();
                 if(prefs.floatBar.position!=="hide"){
                     this.floatBar.style.transition="";
@@ -22261,11 +22286,8 @@ ImgOps | https://imgops.com/#b#`;
                             if (site.enabled != false && (!site.url || toRE(site.url).test(_URL))) {
                                 if(site.url){
                                     if(site.css){
-                                        var style = document.createElement('style');
-                                        style.type = 'text/css';
+                                        var style = _GM_addStyle(site.css);
                                         style.id = 'gm-picviewer-site-style';
-                                        style.textContent = site.css;
-                                        document.head.appendChild(style);
                                     }
                                     if(site.xhr){
                                         self._xhr=site.xhr;
