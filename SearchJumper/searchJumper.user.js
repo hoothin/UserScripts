@@ -10147,8 +10147,8 @@
                     clearTimeout(sendMessageTimer);
                     if (cachePool.length > 0 && searchData.prefConfig.cacheSwitch) {
                         debug(`Start cache ${cachePool.length} icons!`);
+                        cacheImgManager();
                     }
-                    cacheImgManager();
                 });
 
                 document.addEventListener('downloadCache', e => {
@@ -10244,14 +10244,16 @@
                         });
                         storage.setItem("cacheIcon", newCache);
                         if (searchData.prefConfig.cacheSwitch) {
-                            _GM_notification(i18n('startCache'));
                             searchBar.con.classList.add("in-input");
                             searchBar.con.style.visibility = "hidden";
                             searchBar.appendBar();
                             setTimeout(() => {
                                 cacheFontManager(true);
                             }, 2000);
-                            cacheImgManager(true);
+                            if (cachePool.length > 0) {
+                                _GM_notification(i18n('startCache'));
+                                cacheImgManager(true);
+                            }
                         }
                     }
                     preSwitch = searchData.prefConfig.cacheSwitch;
