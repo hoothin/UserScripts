@@ -1307,8 +1307,8 @@ var siteInfo = [
 {
  name: "煎蛋",
  url: /^https:\/\/jandan\.net\//,
- r: /\/(thumb\d+|mw\d+)\//,
- s: "/large/"
+ r: [/\/(thumb\d+|mw\d+)\//, /!square/],
+ s: ["/large/", ""]
 },
 {
  name:"辉夜白兔",
