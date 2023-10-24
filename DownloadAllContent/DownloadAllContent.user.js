@@ -769,8 +769,10 @@ if (window.top != window.self) {
                 if(childNode.innerHTML){
                     childNode.innerHTML=childNode.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n").replace(/\n+/gi,"\n").replace(/\r+/gi,"\r");
                 }
-                if(childNode.textContent){
-                    cStr+=childNode.textContent.replace(/ +/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
+                let content=childNode.textContent;
+                if(content){
+                    if(!content.trim())continue;
+                    cStr+=content.replace(/ +/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
                 }
                 if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|IMG)$/.test(childNode.nodeName))cStr+="\r\n";
             }
@@ -892,6 +894,7 @@ if (window.top != window.self) {
                     eles=[];
                     var eleTxts=urlsArr[0].split(/(?<=[^\\])[,，]/),exmpEles=[],excludeTxts={};
                     [].forEach.call(document.querySelectorAll("a"),function(item){
+                        if(!item.offsetParent)return;
                         eleTxts.forEach(txt=>{
                             var txtArr=txt.split("!");
                             if(item.innerText.indexOf(txtArr[0])!=-1){
@@ -907,7 +910,9 @@ if (window.top != window.self) {
                             cssSelStr=pa.nodeName+">"+cssSelStr;
                             pa=pa.parentNode;
                         }
+                        cssSelStr="body>"+cssSelStr;;
                         [].forEach.call(document.querySelectorAll(cssSelStr),function(item){
+                            if(!item.offsetParent)return;
                             var isExclude=false;
                             for(var t in excludeTxt){
                                 if(item.innerText.indexOf(excludeTxt[t])!=-1){
