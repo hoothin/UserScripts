@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.24.2
+// @version              2023.10.24.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16027,6 +16027,7 @@ ImgOps | https://imgops.com/#b#`;
                             return;
                         }
                     }
+                    if(!selectSpan && this.imgSpans.length)selectSpan=this.imgSpans[0];
                 }
                 this.select(selectSpan, true);
             },
@@ -21727,8 +21728,9 @@ ImgOps | https://imgops.com/#b#`;
                     return true;
                 };
                 var targetPosi=getContentClientRect(this.data.img);
-                if (this.data.img.parentNode && this.data.img.parentNode.scrollHeight > 20 && this.data.img.parentNode.scrollWidth > 20) {
-                    var paPosi=getContentClientRect(this.data.img.parentNode);
+                var pa=this.data.img.parentNode;
+                if (pa && unsafeWindow.getComputedStyle(pa).overflow=='hidden' && pa.scrollHeight > 20 && pa.scrollWidth > 20) {
+                    var paPosi=getContentClientRect(pa);
                     if (paPosi.width > 20 && paPosi.height > 20) {
                         if (paPosi.width < targetPosi.width) {
                             targetPosi.left = paPosi.left;
