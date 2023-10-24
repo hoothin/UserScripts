@@ -3,7 +3,7 @@
 // @name:zh-CN   怠惰小说下载器 ZIP 扩展
 // @name:zh-TW   怠惰小説下載器 ZIP 擴充
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description  Save content as ZIP for DownloadAllContent
 // @description:zh-CN  下载时分章节保存 TXT 并打包为 ZIP
 // @description:zh-TW  下載時分章節儲存 TXT 並打包為 ZIP
@@ -36,7 +36,7 @@
             let catTitle = cat.match(/.*?\r\n/);
             if (!catTitle) return;
             catTitle = catTitle[0].trim();
-            zip.file(index++ + " - " + catTitle.replace(/[\*\/:<>\?\\\|\r\n]/g, "").slice(0, 50) + ".txt", cat.replace(catTitle, "").trim());
+            zip.file(index++ + " - " + catTitle.replace(/[\*\/:<>\?\\\|\r\n]/g, "").slice(0, 50) + ".txt", cat.replace(catTitle, "").replace(/^[\n\r]+/, ""));
         });
         zip.generateAsync({type: "blob", compression: "DEFLATE"}, meta => {zipTips.innerText = "percent: " + ((meta && meta.percent && meta.percent.toFixed(2)) || "100") + "%"}).then(function(content){
             callback(content);
