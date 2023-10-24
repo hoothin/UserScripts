@@ -400,7 +400,7 @@ if (window.top != window.self) {
             aEles=aEles.reverse();
         }
         rCats=[];
-        var minTxtLength=GM_getValue("minTxtLength");
+        var minTxtLength=GM_getValue("minTxtLength") || 100;
         var customTitle=GM_getValue("customTitle");
         var disableNextPage=!!GM_getValue("disableNextPage");
         var customNextPageReg=GM_getValue("nextPageReg");
