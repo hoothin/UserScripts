@@ -23407,7 +23407,7 @@ ImgOps | https://imgops.com/#b#`;
                 "#pv-prefs .config_header>a:hover { color: #9f9f9f; }",
                 "#pv-prefs .section_header_holder { padding-right: 10px; }",
                 "#pv-prefs textarea { width: 100%; }",
-                "#pv-prefs .nav-tabs { text-wrap: nowrap; width: fit-content; max-width: 100%; margin: 20 auto; display: flex; overflow-x: auto; overflow-y: visible; }",
+                "#pv-prefs .nav-tabs { white-space: nowrap; width: fit-content; max-width: 100%; margin: 20 auto; display: flex; overflow-x: auto; overflow-y: visible; }",
             ].join('\n'),
             fields: {
                 // 浮动工具栏
