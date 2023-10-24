@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.4.2
+// @version      2.7.4.3
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -239,7 +239,8 @@
                 saveBtn:"保存设置",
                 saveOk:"保存成功",
                 nextPage:"嗅探章节内分页",
-                nextPageReg:"自定义分页正则"
+                nextPageReg:"自定义分页正则",
+                retainImage:"保留正文中图片的网址"
             };
             break;
         case "zh-TW":
@@ -267,7 +268,8 @@
                 saveBtn:"儲存設定",
                 saveOk:"儲存成功",
                 nextPage:"嗅探章節內分頁",
-                nextPageReg:"自訂分頁正規"
+                nextPageReg:"自訂分頁正規",
+                retainImage:"保留內文圖片的網址"
             };
             break;
         default:
@@ -294,7 +296,8 @@
                 saveBtn:"Save Setting",
                 saveOk:"Save Over",
                 nextPage:"Check next page in chapter",
-                nextPageReg:"Custom RegExp of next page"
+                nextPageReg:"Custom RegExp of next page",
+                retainImage:"Keep the URL if there are images in the text"
             };
             break;
     }
@@ -408,14 +411,14 @@
                         referer:aTag.href,
                         "Content-Type":"text/html;charset="+document.charset
                     },
-                    timeout:15000,
+                    timeout:10000,
                     overrideMimeType:"text/html;charset="+document.charset,
                     onload: function(result) {
                         downIndex++;
                         downNum++;
                         let doc = getDocEle(result.responseText);
                         let base = doc.querySelector("base");
-                        let nextPage = !disableNextPage && checkNextPage(doc, base ? base.href : aTag.href);
+                        let nextPage = !disableNextPage && !processFunc && checkNextPage(doc, base ? base.href : aTag.href);
                         if(nextPage){
                             var inArr=false;
                             for(var ai=0;ai<aEles.length;ai++){
@@ -449,6 +452,8 @@
                         }
                         if (result.status >= 400) {
                             console.warn("error:", `status: ${result.status} from: ${aTag.href}`);
+                        } else {
+                            console.log(result.status);
                         }
                         if (customTitle) {
                             try {
@@ -569,7 +574,7 @@
             };
             let contentResult=getPageContent(doc, content=>{
                 cbFunc(content);
-            });
+            }, aTag.href);
             if(contentResult!==false){
                 cbFunc(contentResult);
             }
@@ -648,7 +653,7 @@
         return a;
     }
 
-    function getPageContent(doc, cb){
+    function getPageContent(doc, cb, url){
         if(!doc)return i18n.error;
         if(processFunc){
             return processFunc(doc, cb);
@@ -678,12 +683,13 @@
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
         for(i=0;i<contents.length;i++){
             let content=contents[i],hasText=false,allSingle=true,item,curNum=0;
+            if(/footer/.test(content.className))continue;
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
                 if(item.nodeType==3){
-                    if(/^\s*$/.test(item.data))
+                    if(/^\s*$/.test(item.data)){
                         item.innerHTML="";
-                    else hasText=true;
+                    }else hasText=true;
                 }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.nodeName)){
                     hasText=true;
                 }else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].nodeName)){
@@ -692,8 +698,9 @@
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
-                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.nodeName) && /^[\s\-\_\?\>\|]*$/.test(item.innerHTML))
+                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.nodeName) && /^[\s\-\_\?\>\|]*$/.test(item.innerHTML)){
                     item.innerHTML="";
+                }
             }
             if(content.childNodes.length>1){
                 let indexItem=0;
@@ -718,8 +725,9 @@
             if(!allSingle && !hasText){
                 continue;
             }else {
-                if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
+                if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0){
                     continue;
+                }
                 [].forEach.call(content.childNodes,function(item){
                     if(item.nodeType==3)curNum+=item.data.trim().length;
                     else if(endEle(item) || (item.nodeType == 1 && item.children.length == 1 && endEle(item.children[0]))) curNum += (firefox ? item.textContent.trim().length : item.innerText.trim().length);
@@ -731,8 +739,15 @@
             }
         }
         if(!largestContent)return i18n.error+" : NO TEXT CONTENT";
+        var retainImage=!!GM_getValue("retainImage");
         var childlist=pageData.querySelectorAll(largestContent.nodeName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
         function getRightStr(ele, noTextEnable){
+            if(retainImage){
+                [].forEach.call(ele.querySelectorAll("img[src]"), img => {
+                    let imgTxtNode=document.createTextNode(`![img](${canonicalUri(img.getAttribute("src"), url || location.href)})`);
+                    img.parentNode.replaceChild(imgTxtNode, img);
+                });
+            }
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
             [].forEach.call(ele.querySelectorAll("a[href]"), a => {
                 a.parentNode && a.parentNode.removeChild(a);
@@ -746,7 +761,7 @@
                 if(childNode.textContent){
                     cStr+=childNode.textContent.replace(/ +/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
                 }
-                if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT)$/.test(childNode.nodeName))cStr+="\r\n";
+                if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|IMG)$/.test(childNode.nodeName))cStr+="\r\n";
             }
             if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
         }
@@ -940,12 +955,20 @@
                     ele.href=ele.href.replace(new RegExp(urlsArr[1]), urlsArr[2]);
                 });
             }
+            var retainImage=!!GM_getValue("retainImage");
             if(urlsArr[3]){
                 processFunc=(data, cb)=>{
                     let doc=data;
                     if(urlsArr[3].indexOf("return ")==-1){
                         if(urlsArr[3].indexOf("@")==0){
                             let content="";
+                            if(retainImage){
+                                [].forEach.call(data.querySelectorAll("img[src]"), img => {
+                                    let imgTxt=`![img](${canonicalUri(img.getAttribute("src"), location.href)})`;
+                                    let imgTxtNode=document.createTextNode(imgTxt);
+                                    img.parentNode.replaceChild(imgTxtNode, img);
+                                });
+                            }
                             [].forEach.call(data.querySelectorAll(urlsArr[3].slice(1)), ele=>{
                                 [].forEach.call(ele.childNodes, child=>{
                                     if(child.innerHTML){
@@ -1099,6 +1122,7 @@
         reSortUrl.name = "sort";
         contentSort.name = "sort";
         let reverse = createOption(i18n.reverse, !!GM_getValue("reverse"), "checkbox");
+        let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
         let disableNextPage = !!GM_getValue("disableNextPage");
         let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
         let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
@@ -1128,6 +1152,7 @@
                 GM_setValue("contentSort", false);
             }
             GM_setValue("reverse", reverse.checked);
+            GM_setValue("retainImage", retainImage.checked);
             GM_setValue("disableNextPage", !nextPage.checked);
             GM_setValue("nextPageReg", nextPageReg.value || "");
             alert(i18n.saveOk);
