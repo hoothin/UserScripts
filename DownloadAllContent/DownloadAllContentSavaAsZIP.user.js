@@ -36,7 +36,7 @@
             let catTitle = cat.match(/.*?\r\n/);
             if (!catTitle) return;
             catTitle = catTitle[0].trim();
-            zip.file(index++ + " - " + catTitle.replace(/[\*\/:<>\?\\\|\r\n]/g, "").slice(0, 50) + ".txt", cat.replace(catTitle, "").replace(/^[\n\r]+/, ""));
+            zip.file(index++ + " - " + catTitle.replace(/[\*\/:<>\?\\\|\r\n]/g, "_").slice(0, 50) + ".txt", cat.replace(catTitle, "").replace(/^[\n\r]+/, ""));
         });
         zip.generateAsync({type: "blob", compression: "DEFLATE"}, meta => {zipTips.innerText = "percent: " + ((meta && meta.percent && meta.percent.toFixed(2)) || "100") + "%"}).then(function(content){
             callback(content);
