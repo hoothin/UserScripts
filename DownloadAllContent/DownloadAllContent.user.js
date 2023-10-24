@@ -417,9 +417,9 @@ if (window.top != window.self) {
             if(downNum>=aEles.length)return;
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
-            let validTimes=0;
             let request=(aTag, curIndex)=>{
                 let tryTimes=0;
+                let validTimes=0;
                 let requestBody={
                     method: 'GET',
                     url: aTag.href,
