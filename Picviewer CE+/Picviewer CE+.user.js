@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.24.1
+// @version              2023.10.24.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12955,7 +12955,7 @@ ImgOps | https://imgops.com/#b#`;
                 //ready必须在load之前触发。
 
                 if(img.complete){//图片已经加载完成.
-                    if(typeof img.width=='number' && img.width && img.height){//图片
+                    if(/^data/.test(img.src) || (typeof img.width=='number' && img.width && img.height)){//图片
                         setTimeout(function(){
                             if(aborted)return;
                             go('load',{
@@ -14722,9 +14722,9 @@ ImgOps | https://imgops.com/#b#`;
                 this._keyUpListener=this.keyUpListener.bind(this);
 
                 //插入动态生成的css数据。
-                this.globalSSheet.insertRule('.pv-gallery-sidebar-thumb-container{'+
+                _GM_addStyle('.pv-gallery-sidebar-thumb-container{'+
                                              ((isHorizontal ? 'width' : 'height') + ':'  + (isHorizontal ?  unsafeWindow.getComputedStyle(eleMaps['sidebar-thumbnails-container']).height : unsafeWindow.getComputedStyle(eleMaps['sidebar-thumbnails-container']).width)) +
-                                             '}',this.globalSSheet.cssRules.length);
+                                             '}');
 
                 this.forceRepaintTimes=0;
 
