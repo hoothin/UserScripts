@@ -2200,6 +2200,7 @@
                 "[class^=pag] a[rel=next]",
                 "[class^=Pag] [aria-label=next]",
                 "[aria-label='Next page']",
+                "[aria-label='next page']",
                 ".pagination-nav__item--next>a",
                 "a.pageright",
                 ".page-numbers.current+a",
