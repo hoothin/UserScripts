@@ -28,6 +28,17 @@
 // @contributionURL https://ko-fi.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
+
+if (window.top != window.self) {
+    try {
+        if (window.self.innerWidth < 250 || window.self.innerHeight < 250) {
+            return;
+        }
+    } catch(e) {
+        return;
+    }
+}
+
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define([], factory);
