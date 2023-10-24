@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.4.3
+// @version      2.7.4.4
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -251,7 +251,8 @@ if (window.top != window.self) {
                 saveOk:"保存成功",
                 nextPage:"嗅探章节内分页",
                 nextPageReg:"自定义分页正则",
-                retainImage:"保留正文中图片的网址"
+                retainImage:"保留正文中图片的网址",
+                minTxtLength:"当检测到的正文字数小于此数，则尝试重新抓取"
             };
             break;
         case "zh-TW":
@@ -280,7 +281,8 @@ if (window.top != window.self) {
                 saveOk:"儲存成功",
                 nextPage:"嗅探章節內分頁",
                 nextPageReg:"自訂分頁正規",
-                retainImage:"保留內文圖片的網址"
+                retainImage:"保留內文圖片的網址",
+                minTxtLength:"當偵測到的正文字數小於此數，則嘗試重新抓取"
             };
             break;
         default:
@@ -308,7 +310,8 @@ if (window.top != window.self) {
                 saveOk:"Save Over",
                 nextPage:"Check next page in chapter",
                 nextPageReg:"Custom RegExp of next page",
-                retainImage:"Keep the URL of image if there are images in the text"
+                retainImage:"Keep the URL of image if there are images in the text",
+                minTxtLength:"Try to crawl again when the length of content is less than this"
             };
             break;
     }
@@ -397,6 +400,7 @@ if (window.top != window.self) {
             aEles=aEles.reverse();
         }
         rCats=[];
+        var minTxtLength=GM_getValue("minTxtLength");
         var customTitle=GM_getValue("customTitle");
         var disableNextPage=!!GM_getValue("disableNextPage");
         var customNextPageReg=GM_getValue("nextPageReg");
@@ -413,6 +417,7 @@ if (window.top != window.self) {
             if(downNum>=aEles.length)return;
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
+            let validTimes=0;
             let request=(aTag, curIndex)=>{
                 let tryTimes=0;
                 let requestBody={
@@ -476,7 +481,12 @@ if (window.top != window.self) {
                                 console.warn(e);
                             }
                         }
-                        processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""));
+                        let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 3);
+                        if (!validData && validTimes++ < 3) {
+                            downIndex--;
+                            downNum--;
+                            return GM_xmlhttpRequest(requestBody);
+                        }
                         if (wait) {
                             setTimeout(() => {
                                 downOnce(wait);
@@ -566,7 +576,7 @@ if (window.top != window.self) {
             rCats = rCats.filter(function(e){return e!=null});
         }
         var waitForComplete;
-        function processDoc(i, aTag, doc, cause){
+        function processDoc(i, aTag, doc, cause, check){
             let cbFunc=content=>{
                 rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + (cause || '') + content.replace(/\s*$/, ""));
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
@@ -587,8 +597,12 @@ if (window.top != window.self) {
                 cbFunc(content);
             }, aTag.href);
             if(contentResult!==false){
+                if(check && contentResult.length<minTxtLength){
+                    return false;
+                }
                 cbFunc(contentResult);
             }
+            return true;
         }
         var downThreadNum = parseInt(GM_getValue("downThreadNum"));
         downThreadNum = downThreadNum || 20;
@@ -667,7 +681,7 @@ if (window.top != window.self) {
     function getPageContent(doc, cb, url){
         if(!doc)return i18n.error;
         if(processFunc){
-            return processFunc(doc, cb);
+            return processFunc(doc, cb, url);
         }
         [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
             var thisStyle=doc.defaultView?doc.defaultView.getComputedStyle(item):item.style;
@@ -973,7 +987,7 @@ if (window.top != window.self) {
             }
             var retainImage=!!GM_getValue("retainImage");
             if(urlsArr[3]){
-                processFunc=(data, cb)=>{
+                processFunc=(data, cb, url)=>{
                     let doc=data;
                     if(urlsArr[3].indexOf("return ")==-1){
                         if(urlsArr[3].indexOf("@")==0){
@@ -999,7 +1013,7 @@ if (window.top != window.self) {
                             return content;
                         }else return eval(urlsArr[3]);
                     }else{
-                        return Function("data", "doc", "cb",urlsArr[3])(data, doc, cb);
+                        return Function("data", "doc", "cb", "url",urlsArr[3])(data, doc, cb, url);
                     }
                 };
             }else{
@@ -1129,6 +1143,7 @@ if (window.top != window.self) {
         let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
         let customTitle = createOption(i18n.customTitle, GM_getValue("customTitle") || "");
         customTitle.setAttribute("placeHolder", "title");
+        let minTxtLength = createOption(i18n.minTxtLength, GM_getValue("minTxtLength") || "100", "number");
         let contentSortUrlValue = GM_getValue("contentSortUrl") || false;
         let contentSortValue = GM_getValue("contentSort") || false;
         let reSortDefault = createOption(i18n.reSortDefault, !contentSortUrlValue && !contentSortValue, "radio");
@@ -1156,6 +1171,7 @@ if (window.top != window.self) {
         saveBtn.onclick = e => {
             GM_setValue("selectors", delSelector.value || "");
             GM_setValue("downThreadNum", downThreadNum.value || 20);
+            GM_setValue("minTxtLength", minTxtLength.value || 100);
             GM_setValue("customTitle", customTitle.value || "");
             if (reSortUrl.checked) {
                 GM_setValue("contentSortUrl", true);
