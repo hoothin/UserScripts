@@ -297,7 +297,7 @@
                 saveOk:"Save Over",
                 nextPage:"Check next page in chapter",
                 nextPageReg:"Custom RegExp of next page",
-                retainImage:"Keep the URL if there are images in the text"
+                retainImage:"Keep the URL of image if there are images in the text"
             };
             break;
     }
