@@ -17150,7 +17150,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     overflow-x: visible;\
                     overflow-y: auto;\
-                    text-wrap: nowrap;\
+                    white-space: nowrap;\
                     -ms-overflow-style: none;\
                     scrollbar-width: none;\
                     }\
