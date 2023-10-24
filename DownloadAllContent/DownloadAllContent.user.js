@@ -498,8 +498,11 @@ if (window.top != window.self) {
                     },
                     onerror: function(e) {
                         console.warn("error:", e);
-                        if(++tryTimes<3){
-                            return GM_xmlhttpRequest(requestBody);
+                        if(tryTimes++ < 5){
+                            setTimeout(() => {
+                                GM_xmlhttpRequest(requestBody);
+                            }, 500);
+                            return;
                         }
                         downIndex++;
                         downNum++;
@@ -513,8 +516,11 @@ if (window.top != window.self) {
                     ontimeout: function(e) {
                         console.warn("timeout: times="+tryTimes+" url="+aTag.href);
                         //console.log(e);
-                        if(++tryTimes<3){
-                            return GM_xmlhttpRequest(requestBody);
+                        if(tryTimes++ < 5){
+                            setTimeout(() => {
+                                GM_xmlhttpRequest(requestBody);
+                            }, 500);
+                            return;
                         }
                         downIndex++;
                         downNum++;
