@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.10
+// @version      1.6.30.11
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2582,7 +2582,7 @@
                      transition: top 0.25s ease;
                  }
                  #navMarks {
-                     height: 100%;
+                     height: calc(100% - 16px);
                      width: 100%;
                      position: absolute;
                  }
@@ -3988,10 +3988,6 @@
             focusHighlight(ele) {
                 if (!ele) return;
                 if (this.focusMark) this.focusMark.removeAttribute('data-current');
-                setTimeout(() => {
-                    ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-                    ele.dataset.current = true;
-                }, 0);
                 this.focusMark = ele;
                 if (!this.wPosBar) {
                     this.wPosBar = document.createElement("div");
@@ -4013,9 +4009,26 @@
 
                 this.wPosBar.style.animationName = "";
                 this.hPosBar.style.animationName = "";
-                setTimeout(() => {
+                setTimeout(async () => {
+                    ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                    ele.dataset.current = true;
                     this.wPosBar.style.animationName = "fadeit";
                     this.hPosBar.style.animationName = "fadeit";
+                    await new Promise(resolve => {
+                        new IntersectionObserver(
+                            (entries, observer) => {
+                                for (const entry of entries) {
+                                    if (entry.target === ele && entry.intersectionRatio >= 0.90) {
+                                        observer.disconnect();
+                                        resolve();
+                                    }
+                                }
+                            }
+                        ).observe(ele)
+                    });
+                    let rect = ele.getBoundingClientRect();
+                    this.wPosBar.style.top = rect.top + document.documentElement.scrollTop + getBody(document).scrollTop + "px";
+                    this.hPosBar.style.left = rect.left + "px";
                 }, 0);
 
             }
@@ -4245,7 +4258,7 @@
                                     self.focusHighlight(node);
                                     self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
                                     self.navPointer.style.display = "";
-                                    self.navPointer.style.top = navMark.offsetTop + 16 + "px";
+                                    self.navPointer.style.top = navMark.offsetTop + 18 + "px";
                                     return false;
                                 }, true);
                                 self.navMarks.appendChild(navMark);
@@ -4314,7 +4327,7 @@
                                     self.focusHighlight(node);
                                     self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
                                     self.navPointer.style.display = "";
-                                    self.navPointer.style.top = navMark.offsetTop + 16 + "px";
+                                    self.navPointer.style.top = navMark.offsetTop + 18 + "px";
                                     return false;
                                 }, true);
                                 self.navMarks.appendChild(navMark);
@@ -4422,7 +4435,7 @@
                                 self.focusHighlight(spannode);
                                 self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
                                 self.navPointer.style.display = "";
-                                self.navPointer.style.top = navMark.offsetTop + 16 + "px";
+                                self.navPointer.style.top = navMark.offsetTop + 18 + "px";
                                 return false;
                             }, true);
                             self.navMarks.appendChild(navMark);
