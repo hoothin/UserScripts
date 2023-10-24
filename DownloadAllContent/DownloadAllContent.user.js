@@ -481,11 +481,14 @@ if (window.top != window.self) {
                                 console.warn(e);
                             }
                         }
-                        let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 3);
-                        if (!validData && validTimes++ < 3) {
+                        let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 5);
+                        if (!validData && validTimes++ < 5) {
                             downIndex--;
                             downNum--;
-                            return GM_xmlhttpRequest(requestBody);
+                            setTimeout(() => {
+                                GM_xmlhttpRequest(requestBody);
+                            }, 500);
+                            return;
                         }
                         if (wait) {
                             setTimeout(() => {
@@ -597,7 +600,7 @@ if (window.top != window.self) {
                 cbFunc(content);
             }, aTag.href);
             if(contentResult!==false){
-                if(check && contentResult.length<minTxtLength){
+                if(check && contentResult && contentResult.trim().length<minTxtLength){
                     return false;
                 }
                 cbFunc(contentResult);
