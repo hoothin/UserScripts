@@ -606,7 +606,7 @@ if (window.top != window.self) {
                 cbFunc(content);
             }, aTag.href);
             if(contentResult!==false){
-                if(check && contentResult && contentResult.trim().length<minTxtLength){
+                if(check && contentResult && contentResult.replace(/\s/g, "").length<minTxtLength){
                     return false;
                 }
                 cbFunc(contentResult);
