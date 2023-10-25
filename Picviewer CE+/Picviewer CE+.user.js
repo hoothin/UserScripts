@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.24.3
+// @version              2023.10.25.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -21751,7 +21751,7 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 var scrolled=getScrolled();
-                targetPosi.top -= bodyPosi.top + scrolled.y;
+                targetPosi.top -= bodyPosi.top + scrolled.y - (parseInt(unsafeWindow.getComputedStyle(document.documentElement).marginTop) || 0);
                 targetPosi.left -= bodyPosi.left + scrolled.x;
 
                 var fbs = this.floatBar.style;
@@ -24010,7 +24010,8 @@ ImgOps | https://imgops.com/#b#`;
                                     node: "img",
                                     attr: {
                                         src: "https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg",
-                                        style: "width: 100%; margin-top: 5px"
+                                        style: "width: 100%; margin-top: 5px; max-height: 180px; display: none;",
+                                        onload: "this.style.display=''"
                                     }
                                 },
                                 {
@@ -24023,7 +24024,8 @@ ImgOps | https://imgops.com/#b#`;
                                             node: "img",
                                             attr: {
                                                 src: "https://ko-fi.com/favicon-32x32.png",
-                                                style: "margin-right: 5px; height: 25px;"
+                                                style: "margin-right: 5px; height: 25px; display: none;",
+                                                onload: "this.style.display=''"
                                             }
                                         },
                                         {
@@ -24038,7 +24040,8 @@ ImgOps | https://imgops.com/#b#`;
                                             node: "img",
                                             attr: {
                                                 src: "https://static.afdiancdn.com/favicon.ico",
-                                                style: "margin-right: 5px; height: 20px;"
+                                                style: "margin-right: 5px; height: 20px; display: none;",
+                                                onload: "this.style.display=''"
                                             }
                                         },
                                         {
