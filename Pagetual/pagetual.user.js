@@ -6309,7 +6309,7 @@
             });
             if (!isPause) ruleParser.showAddedElements();
             manualPause = isPause;
-            storage.setItem("pauseState_" + location.host, isPause ? true : "");
+            if (sideController.inited || !isPause) storage.setItem("pauseState_" + location.host, isPause ? true : "");
         }, 350);
     }
 
