@@ -1339,6 +1339,7 @@
                 let urlReg = new RegExp(this.possibleRule.url, "i");
                 if (urlReg.test(href) && this.ruleMatch(this.possibleRule)) {
                     this.curSiteRule = this.possibleRule;
+                    debug(this.curSiteRule, 'Match rule');
                     return callback();
                 }
             }
