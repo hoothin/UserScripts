@@ -21410,17 +21410,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/77246",
-  "name": "Vivaldi.net Forum",
-  "created_by": "Wolfram",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-08-20T14:09:41+09:00",
   "data": {
-    "exampleUrl": "https://forum.vivaldi.net/category/82/team-blog\r\nhttps://forum.vivaldi.net/topic/20015/vivaldi-1-11-focus-on-accessibility",
-    "url": "^https://forum\\.vivaldi\\.net/",
     "pageElement": "//ul[@class='topic-list' or @class='posts']/li",
-    "nextLink": "//a[i/@class='fa fa-chevron-right']"
+    "nextLink": "//li[not(contains(@class, 'disabled'))]/a[i/@class='fa fa-chevron-right']",
+    "url": "^https://forum\\.vivaldi\\.net/",
+    "exampleUrl": "https://forum.vivaldi.net/category/82/team-blog\r\nhttps://forum.vivaldi.net/topic/20015/vivaldi-1-11-focus-on-accessibility"
   },
-  "created_at": "2015-05-22T00:07:46+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Wolfram",
+  "name": "Vivaldi.net Forum",
+  "created_at": "2015-05-22T00:07:46+09:00",
+  "updated_at": "2023-10-24T19:21:10+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77245",
@@ -53288,17 +53288,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/510",
-  "name": "CodeZine、EnterpriseZine、MarkeZine、MONEYzine（記事一覧、個別記事）",
   "data": {
-    "url": "^https?://(?:c(?:areer|ode)|enterprise|m(?:arke|oney))zine\\.jp/(?:a(?:rticle|uthor)/|\\w+online/|iti/)",
-    "pageElement": "//ul[@class='catList' or @class='catTopList result cf']/li|//div[@class='article']",
-    "exampleUrl": "http://codezine.jp/article/tag/169\r\nhttp://enterprisezine.jp/article/corner/120\r\nhttp://enterprisezine.jp/article/detail/2221\r\nhttp://markezine.jp/article/\r\nhttp://enterprisezine.jp/article/detail/1991\r\nhttp://codezine.jp/article/corner/210\r\nhttp://codezine.jp/article/detail/2979\r\nhttp://enterprisezine.jp/author/133\r\nhttp://enterprisezine.jp/dbonline/detail/6123\r\nhttp://enterprisezine.jp/iti/detail/5752\r\n",
-    "nextLink": "//a[@rel='next' or ../@class='nextBtn']"
+    "pageElement": "//ul[@class='c-articleindex_list']/ancestor-or-self::*[position()=1 or @class='c-primarysection -level2'][last()]|id('c-article_content')",
+    "nextLink": "//a[@rel='next']|//div[@class='c-pager_next']/a[not(//div[@class='c-article_wall'])]",
+    "url": "^https?://(?:code|enterprise|marke|ec|biz|hr|edtech|product)zine\\.jp/",
+    "exampleUrl": "https://codezine.jp/article/tag/169\r\nhttps://enterprisezine.jp/article/corner/120\r\nhttps://enterprisezine.jp/article/detail/2221\r\nhttps://markezine.jp/article/\r\nhttps://enterprisezine.jp/article/detail/1991\r\nhttps://codezine.jp/article/corner/210\r\nhttps://enterprisezine.jp/author/133\r\nhttps://eczine.jp/article/detail/13259\r\nhttps://bizzine.jp/article/detail/9498\r\nhttps://hrzine.jp/article/detail/5133\r\nhttps://edtechzine.jp/article/detail/9930\r\nhttps://productzine.jp/article/detail/2005"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
+  "name": "CodeZine、EnterpriseZine、MarkeZine、他（記事一覧、個別記事）",
   "created_at": "2008-04-16T12:35:45+09:00",
-  "updated_at": "2020-03-26T04:55:15+09:00"
+  "updated_at": "2023-10-24T20:34:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/503",
