@@ -569,7 +569,7 @@ if (window.top != window.self) {
                 });
             };
             dacStartDownload.onclick = e => {
-                let linkList = [].slice.call(dacLinksCon.querySelectorAll(".dacLink"));
+                let linkList = [].slice.call(dacLinksCon.querySelectorAll("input:checked+.dacLink"));
                 useIframe = !!dacUseIframe.checked;
                 indexDownload(linkList, true);
                 filterListContainer.style.display = "none";
