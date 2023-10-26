@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.4.4
+// @version      2.7.5.1
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -19,6 +19,7 @@
 // @grant        GM_getValue
 // @grant        GM_openInTab
 // @grant        GM_setClipboard
+// @grant        GM_addStyle
 // @grant        unsafeWindow
 // @license      MIT License
 // @compatible        chrome
@@ -252,7 +253,17 @@ if (window.top != window.self) {
                 nextPage:"嗅探章节内分页",
                 nextPageReg:"自定义分页正则",
                 retainImage:"保留正文中图片的网址",
-                minTxtLength:"当检测到的正文字数小于此数，则尝试重新抓取"
+                minTxtLength:"当检测到的正文字数小于此数，则尝试重新抓取",
+                showFilterList:"下载前显示章节筛选排序窗口",
+                ok:"确定",
+                close:"关闭",
+                dacSortByPos:"按页内位置排序",
+                dacSortByUrl:"按网址排序",
+                dacSortByName:"按章节名排序",
+                dacUseIframe:"使用 iframe 后台加载内容（慢速）",
+                dacSetCustomRule:"修改规则",
+                dacAddUrl:"添加章节",
+                dacStartDownload:"下载选中"
             };
             break;
         case "zh-TW":
@@ -282,7 +293,17 @@ if (window.top != window.self) {
                 nextPage:"嗅探章節內分頁",
                 nextPageReg:"自訂分頁正規",
                 retainImage:"保留內文圖片的網址",
-                minTxtLength:"當偵測到的正文字數小於此數，則嘗試重新抓取"
+                minTxtLength:"當偵測到的正文字數小於此數，則嘗試重新抓取",
+                showFilterList:"下載前顯示章節篩選排序視窗",
+                ok:"確定",
+                close:"關閉",
+                dacSortByPos:"依頁內位置排序",
+                dacSortByUrl:"依網址排序",
+                dacSortByName:"依章節名排序",
+                dacUseIframe:"使用 iframe 背景載入內容（慢速）",
+                dacSetCustomRule:"修改規則",
+                dacAddUrl:"新增章節",
+                dacStartDownload:"下載選取"
             };
             break;
         default:
@@ -311,21 +332,350 @@ if (window.top != window.self) {
                 nextPage:"Check next page in chapter",
                 nextPageReg:"Custom RegExp of next page",
                 retainImage:"Keep the URL of image if there are images in the text",
-                minTxtLength:"Try to crawl again when the length of content is less than this"
+                minTxtLength:"Try to crawl again when the length of content is less than this",
+                showFilterList: "Show chapter filtering and sorting window before downloading",
+                ok:"OK",
+                close:"Close",
+                dacSortByPos:"Sort by position",
+                dacSortByUrl:"Sort by URL",
+                dacSortByName:"Sort by name",
+                dacUseIframe: "Use iframe to load content in the background (slow)",
+                dacSetCustomRule:"Modify rules",
+                dacAddUrl:"Add Chapter",
+                dacStartDownload:"Download selected"
             };
             break;
     }
-    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[];
-    var rocketContent,txtDownContent,txtDownWords,txtDownQuit,txtDownDivInited=false;
+    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false;
+    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe;
+
+    const escapeHTMLPolicy = (win.trustedTypes && win.trustedTypes.createPolicy) ? win.trustedTypes.createPolicy('dac_default', {
+        createHTML: (string, sink) => string
+    }) : null;
+
+    function createHTML(html) {
+        return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
+    }
+
+    function str2Num(str) {
+        str = str.replace(/[一①Ⅰ壹]/g, "1").replace(/[二②Ⅱ贰]/g, "2").replace(/[三③Ⅲ叁]/g, "3").replace(/[四④Ⅳ肆]/g, "4").replace(/[五⑤Ⅴ伍]/g, "5").replace(/[六⑥Ⅵ陆]/g, "6").replace(/[七⑦Ⅶ柒]/g, "7").replace(/[八⑧Ⅷ捌]/g, "8").replace(/[九⑨Ⅸ玖]/g, "9").replace(/[十⑩Ⅹ拾]/g, "*10+").replace(/[百佰]/g, "*100+").replace(/[千仟]/g, "*1000+").replace(/[万萬]/g, "*10000+").replace(/\s/g, "").match(/[\d\*\+]+/);
+        if (!str) return 0;
+        str = str[0];
+        let mul = str.match(/(\d*)\*(\d+)/);
+        while(mul) {
+            let result = parseInt(mul[1] || 1) * parseInt(mul[2]);
+            str = str.replace(mul[0], result);
+            mul = str.match(/(\d+)\*(\d+)/);
+        }
+        let plus = str.match(/(\d+)\+(\d+)/);
+        while(plus) {
+            let result = parseInt(plus[1]) + parseInt(plus[2]);
+            str = str.replace(plus[0], result);
+            plus = str.match(/(\d+)\*(\d+)/);
+        }
+        return parseInt(str);
+    }
+
+    var dragOverItem, dragFrom;
+    function createLinkItem(aEle) {
+        let item = document.createElement("div");
+        item.innerHTML = createHTML(`
+                <input type="checkbox" checked>
+                <a class="dacLink" draggable="false" target="_blank" href="${aEle.href}">${aEle.innerText || "📄"}</a>
+                <span>🖱️</span>
+            `);
+        item.title = aEle.innerText;
+        item.setAttribute("draggable", "true");
+        item.addEventListener("dragover", e => {
+            e.preventDefault();
+        });
+        item.addEventListener("dragenter", e => {
+            if (dragOverItem) dragOverItem.style.opacity = "";
+            item.style.opacity = 0.3;
+            dragOverItem = item;
+        });
+        item.addEventListener('dragstart', e => {
+            dragFrom = item;
+        });
+        item.addEventListener('drop', e => {
+            if (!dragFrom) return;
+            if (e.clientX < item.getBoundingClientRect().left + 142) {
+                dacLinksCon.insertBefore(dragFrom, item);
+            } else {
+                if (item.nextElementSibling) {
+                    dacLinksCon.insertBefore(dragFrom, item.nextElementSibling);
+                } else {
+                    dacLinksCon.appendChild(dragFrom);
+                }
+            }
+            e.preventDefault();
+        });
+        dacLinksCon.appendChild(item);
+    }
+
+    function filterList(list) {
+        if (!GM_getValue("showFilterList")) {
+            indexDownload(list);
+            return;
+        }
+        if (filterListContainer) {
+            filterListContainer.style.display = "";
+            filterListContainer.classList.remove("customRule");
+            dacLinksCon.innerHTML = createHTML("");
+        } else {
+            document.addEventListener('dragend', e => {
+                if (dragOverItem) dragOverItem.style.opacity = "";
+            }, true);
+            filterListContainer = document.createElement("div");
+            filterListContainer.id = "filterListContainer";
+            document.body.appendChild(filterListContainer);
+            filterListContainer.innerHTML = createHTML(`
+                <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 99998; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
+                <div style="padding: 5px; box-sizing: border-box; overflow: hidden; width: 600px; height: auto; max-height: 80%; min-height: 200px; position: fixed; left: 50%; top: 10%; margin-left: -300px; z-index: 99998; background-color: #ffffff; border: 1px solid #afb3b6; border-radius: 10px; opacity: 0.95; filter: alpha(opacity=95); box-shadow: 5px 5px 20px 0px #000;">
+                    <div class="dacCustomRule">
+                    ${i18n.custom}
+                        <textarea id="dacCustomInput"></textarea>
+                        <div class="fun">
+                            <input id="dacConfirmRule" value="${i18n.ok}" type="button"/>
+                            <input id="dacCustomClose" value="${i18n.close}" type="button"/>
+                        </div>
+                    </div>
+                    <div class="sort">
+                        <input id="dacSortByPos" value="${i18n.dacSortByPos}" type="button"/>
+                        <input id="dacSortByUrl" value="${i18n.dacSortByUrl}" type="button"/>
+                        <input id="dacSortByName" value="${i18n.dacSortByName}" type="button"/>
+                    </div>
+                    <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
+                    <p style="margin: 5px; text-align: center; font-size: 14px;"><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></p>
+                    <div class="fun">
+                        <input id="dacSetCustomRule" value="${i18n.dacSetCustomRule}" type="button"/>
+                        <input id="dacAddUrl" value="${i18n.dacAddUrl}" type="button"/>
+                        <input id="dacStartDownload" value="${i18n.dacStartDownload}" type="button"/>
+                        <input id="dacLinksClose" value="${i18n.close}" type="button"/>
+                    </div>
+                </div>`);
+            let dacSortByPos = filterListContainer.querySelector("#dacSortByPos");
+            let dacSortByUrl = filterListContainer.querySelector("#dacSortByUrl");
+            let dacSortByName = filterListContainer.querySelector("#dacSortByName");
+            let dacSetCustomRule = filterListContainer.querySelector("#dacSetCustomRule");
+            let dacCustomInput = filterListContainer.querySelector("#dacCustomInput");
+            let dacConfirmRule = filterListContainer.querySelector("#dacConfirmRule");
+            let dacCustomClose = filterListContainer.querySelector("#dacCustomClose");
+            let dacAddUrl = filterListContainer.querySelector("#dacAddUrl");
+            let dacStartDownload = filterListContainer.querySelector("#dacStartDownload");
+            let dacLinksClose = filterListContainer.querySelector("#dacLinksClose");
+            let dacFilterBg = filterListContainer.querySelector("#dacFilterBg");
+            dacUseIframe = filterListContainer.querySelector("#dacUseIframe");
+            dacSortByPos.onclick = e => {
+                let linkList = [].slice.call(dacLinksCon.children);
+                if (linkList[0].children[1].href != list[0].href) {
+                    list.reverse().forEach(a => {
+                        for (let i = 0; i < linkList.length; i++) {
+                            let link = linkList[i];
+                            if (link.children[1].href == a.href) {
+                                dacLinksCon.insertBefore(link, dacLinksCon.children[0]);
+                            }
+                        }
+                    });
+                } else {
+                    list.forEach(a => {
+                        for (let i = 0; i < linkList.length; i++) {
+                            let link = linkList[i];
+                            if (link.children[1].href == a.href) {
+                                dacLinksCon.insertBefore(link, dacLinksCon.children[0]);
+                            }
+                        }
+                    });
+                }
+            };
+            dacSortByUrl.onclick = e => {
+                let linkList = [].slice.call(dacLinksCon.children);
+                linkList.sort((a, b) => {
+                    const nameA = a.children[1].href.toUpperCase();
+                    const nameB = b.children[1].href.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                if (linkList[0] == dacLinksCon.children[0]) {
+                    linkList = linkList.reverse();
+                }
+                linkList.forEach(link => {
+                    dacLinksCon.appendChild(link);
+                });
+            };
+            dacSortByName.onclick = e => {
+                let linkList = [].slice.call(dacLinksCon.children);
+                linkList.sort((a, b) => {
+                    return str2Num(a.innerText) - str2Num(b.innerText);
+                });
+                if (linkList[0] == dacLinksCon.children[0]) {
+                    linkList = linkList.reverse();
+                }
+                linkList.forEach(link => {
+                    dacLinksCon.appendChild(link);
+                });
+            };
+            dacSetCustomRule.onclick = e => {
+                filterListContainer.classList.add("customRule");
+                dacCustomInput.value = GM_getValue("DACrules_" + document.domain) || "";
+            };
+            dacConfirmRule.onclick = e => {
+                if (dacCustomInput.value) {
+                    customDown(dacCustomInput.value);
+                }
+            };
+            dacCustomClose.onclick = e => {
+                filterListContainer.classList.remove("customRule");
+            };
+            dacAddUrl.onclick = e => {
+                let addUrls = window.prompt(i18n.customInfo, "https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+                if (!addUrls || !/^http|^ftp/.test(addUrls)) return;
+                let index = 1;
+                [].forEach.call(addUrls.split(","), function(i) {
+                    var curEle;
+                    var varNum = /\[\d+\-\d+\]/.exec(i);
+                    if (varNum) {
+                        varNum = varNum[0].trim();
+                    } else {
+                        curEle = document.createElement("a");
+                        curEle.href = i;
+                        curEle.innerText = "Added Url";
+                        createLinkItem(curEle);
+                        return;
+                    }
+                    var num1 = /\[(\d+)/.exec(varNum)[1].trim();
+                    var num2 = /(\d+)\]/.exec(varNum)[1].trim();
+                    var num1Int = parseInt(num1);
+                    var num2Int = parseInt(num2);
+                    var numLen = num1.length;
+                    var needAdd = num1.charAt(0) == "0";
+                    if (num1Int >= num2Int) return;
+                    for (var j = num1Int; j <= num2Int; j++) {
+                        var urlIndex = j.toString();
+                        if (needAdd) {
+                            while(urlIndex.length < numLen) urlIndex = "0" + urlIndex;
+                        }
+                        var curUrl = i.replace(/\[\d+\-\d+\]/, urlIndex).trim();
+                        curEle = document.createElement("a");
+                        curEle.href = curUrl;
+                        curEle.innerText = "Added Url " + index++;
+                        createLinkItem(curEle);
+                    }
+                });
+            };
+            dacStartDownload.onclick = e => {
+                let linkList = [].slice.call(dacLinksCon.querySelectorAll(".dacLink"));
+                useIframe = !!dacUseIframe.checked;
+                indexDownload(linkList, true);
+                filterListContainer.style.display = "none";
+            };
+            dacLinksClose.onclick = e => {
+                filterListContainer.style.display = "none";
+            };
+            dacFilterBg.onclick = e => {
+                filterListContainer.style.display = "none";
+            };
+            GM_addStyle(`
+                #filterListContainer * {
+                    font-size: 13px;
+                    float: initial;
+                    background-image: initial;
+                }
+                #filterListContainer.customRule .dacCustomRule {
+                    display: flex;
+                }
+                #filterListContainer .dacCustomRule>textarea {
+                    height: 300px;
+                    width: 100%;
+                    border: 1px #DADADA solid;
+                    background: #ededed70;
+                    margin: 5px;
+                }
+                #filterListContainer.customRule .dacCustomRule~* {
+                    display: none!important;
+                }
+                #dacLinksCon>div {
+                    padding: 5px 0;
+                    display: flex;
+                }
+                #dacLinksCon>div>a {
+                    max-width: 245px;
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+                #dacLinksCon>div>input {
+                    margin-right: 5px;
+                }
+                #filterListContainer .dacCustomRule {
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 16px;
+                    outline: none;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                    white-space: nowrap;
+                    flex-direction: column;
+                    display: none;
+                }
+                #filterListContainer input {
+                    border-width: 2px;
+                    border-style: outset;
+                    border-color: buttonface;
+                    border-image: initial;
+                    border: 1px #DADADA solid;
+                    padding: 5px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 9pt;
+                    outline: none;
+                    cursor: pointer;
+                }
+                #dacLinksCon>div:nth-of-type(odd) {
+                    background: #ffffff;
+                }
+                #dacLinksCon>div:nth-of-type(even) {
+                    background: #f5f5f5;
+                }
+                #filterListContainer .fun,#filterListContainer .sort {
+                    display: flex;
+                    justify-content: space-around;
+                    flex-wrap: nowrap;
+                    width: 100%;
+                }
+                #filterListContainer input[type=button]:hover {
+                    border: 1px #C6C6C6 solid;
+                    box-shadow: 1px 1px 1px #EAEAEA;
+                    color: #333333;
+                    background: #F7F7F7;
+                }
+                #filterListContainer input[type=button]:active {
+                    box-shadow: inset 1px 1px 1px #DFDFDF;
+                }
+            `);
+            dacLinksCon = filterListContainer.querySelector("#dacLinksCon");
+        }
+        list.forEach(a => {
+            createLinkItem(a);
+        });
+        dacUseIframe.checked = useIframe;
+    }
 
     function initTxtDownDiv(){
-        if(txtDownDivInited)return;
-        txtDownDivInited=true;
-        rocketContent=document.createElement("div");
-        document.body.appendChild(rocketContent);
-        rocketContent.outerHTML=`
-        <div id="txtDownContent">
-            <div style="font-size:16px;color:#333333;width:362px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+        if(txtDownContent){
+            txtDownContent.style.display="";
+            return;
+        }
+        txtDownContent=document.createElement("div");
+        txtDownContent.id="txtDownContent";
+        document.body.appendChild(txtDownContent);
+        txtDownContent.innerHTML=createHTML(`
+            <div style="font-size:16px;color:#333333;width:362px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-191px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;width:275px;height: 90px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
                     Analysing......
                 </div>
@@ -337,14 +687,11 @@ if (window.top != window.self) {
                     <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;">${getI18n('save')}</button>
                     <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;overflow: hidden;" title="${getI18n('saveAsMd')}">Markdown</button>
                 </div>
-            </div>
-        </div>`;
-        txtDownContent=document.querySelector("#txtDownContent");
-        txtDownWords=document.querySelector("#txtDownWords");
-        txtDownQuit=document.querySelector("#txtDownQuit");
+            </div>`);
+        txtDownWords=txtDownContent.querySelector("#txtDownWords");
+        txtDownQuit=txtDownContent.querySelector("#txtDownQuit");
         txtDownQuit.onclick=function(){
             txtDownContent.style.display="none";
-            txtDownContent.parentNode.removeChild(txtDownContent);
         };
         initTempSave();
     }
@@ -383,21 +730,31 @@ if (window.top != window.self) {
         }
     }
 
-    function indexDownload(aEles){
+    function indexDownload(aEles, noSort){
         if(aEles.length<1)return;
         initTxtDownDiv();
-        if(GM_getValue("contentSort")){
-            aEles.sort(function(a,b){
-                return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
-            });
-        }
-        if(GM_getValue("contentSortUrl")){
-            aEles.sort(function(a,b){
-                return parseInt(a.href.replace(/[^0-9]/ig,"")) - parseInt(b.href.replace(/[^0-9]/ig,""));
-            });
-        }
-        if(GM_getValue("reverse")){
-            aEles=aEles.reverse();
+        if(!noSort) {
+            if(GM_getValue("contentSort")){
+                aEles.sort((a, b) => {
+                    return str2Num(a.innerText) - str2Num(b.innerText);
+                });
+            }
+            if(GM_getValue("contentSortUrl")){
+                aEles.sort((a, b) => {
+                    const nameA = a.href.toUpperCase();
+                    const nameB = b.href.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            }
+            if(GM_getValue("reverse")){
+                aEles=aEles.reverse();
+            }
         }
         rCats=[];
         var minTxtLength=GM_getValue("minTxtLength") || 100;
@@ -532,7 +889,85 @@ if (window.top != window.self) {
                         } else downOnce();
                     }
                 };
-                return [curIndex, GM_xmlhttpRequest(requestBody), aTag.href];
+                if (useIframe) {
+                    let iframe = document.createElement('iframe');
+                    iframe.name = 'pagetual-iframe';
+                    iframe.width = '100%';
+                    iframe.height = '1000';
+                    iframe.frameBorder = '0';
+                    iframe.sandbox = iframeSandbox || "allow-same-origin allow-scripts allow-popups allow-forms";
+                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
+                    iframe.addEventListener('load', e => {
+                        if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
+                        let tryTimes = 0;
+                        function checkIframe() {
+                            try {
+                                let doc = iframe.contentDocument || iframe.contentWindow.document;
+                                doc.body.scrollTop = 9999999;
+                                doc.documentElement.scrollTop = 9999999;
+                                if (validTimes++ > 10) {
+                                    iframe.src = iframe.src;
+                                    validTimes = 0;
+                                    return;
+                                }
+                                if (customTitle) {
+                                    try {
+                                        let title = doc.querySelector(customTitle);
+                                        if (title && title.innerText) {
+                                            aTag.innerText = title.innerText;
+                                        }
+                                    } catch(e) {
+                                        console.warn(e);
+                                    }
+                                }
+                                downIndex++;
+                                downNum++;
+                                let validData = processDoc(curIndex, aTag, doc, "", true);
+                                if (!validData) {
+                                    downIndex--;
+                                    downNum--;
+                                    setTimeout(() => {
+                                        checkIframe();
+                                    }, 500);
+                                    return;
+                                }
+                                if (wait) {
+                                    setTimeout(() => {
+                                        downOnce(wait);
+                                    }, wait);
+                                } else downOnce();
+                            } catch(e) {
+                                console.debug("Stop as cors");
+                            }
+                            if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                        }
+                        setTimeout(() => {
+                            checkIframe();
+                        }, 500);
+                    }, false);
+                    let checkReady = setInterval(() => {
+                        let doc;
+                        try {
+                            doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+                        } catch(e) {
+                            clearInterval(checkReady);
+                            return;
+                        }
+                        if (doc) {
+                            try {
+                                Function('win', 'iframe', '"use strict";' + (iframeInit || "win.self=win.top;"))(iframe.contentWindow, iframe);
+                                clearInterval(checkReady);
+                            } catch(e) {
+                                console.debug(e);
+                            }
+                        }
+                    }, 50);
+                    iframe.src = aTag.href;
+                    document.body.appendChild(iframe);
+                    return [curIndex, null, aTag.href];
+                } else {
+                    return [curIndex, GM_xmlhttpRequest(requestBody), aTag.href];
+                }
             }
             if(!aTag){
                 let waitAtagReadyInterval=setInterval(function(){
@@ -615,6 +1050,9 @@ if (window.top != window.self) {
         }
         var downThreadNum = parseInt(GM_getValue("downThreadNum"));
         downThreadNum = downThreadNum || 20;
+        if (useIframe && downThreadNum > 5) {
+            downThreadNum = 5;
+        }
         if (downThreadNum > 0) {
             for (var i = 0; i < downThreadNum; i++) {
                 downOnce();
@@ -712,7 +1150,7 @@ if (window.top != window.self) {
         [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript,iframe"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.innerHTML="";});
         var endEle = ele => {
-            return /^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(ele.nodeName) && ele.children.length == 0;
+            return /^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(ele.nodeName) && ele.children.length <= 1;
         };
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
         for(i=0;i<contents.length;i++){
@@ -858,17 +1296,17 @@ if (window.top != window.self) {
             }
         }
         if(list.length>2 && !forceSingle){
-            indexDownload(list);
+            useIframe = false;
+            filterList(list);
         }else{
             var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".txt");
         }
     }
 
-    function customDown(){
-        processFunc=null;
-        var customRules=GM_getValue("DACrules_"+document.domain);
-        var urls=window.prompt(i18n.customInfo,customRules?customRules:"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+    function customDown(urls){
+        processFunc = null;
+        useIframe = false;
         if(urls){
             urls=decodeURIComponent(urls.replace(/%/g,'%25'));
             GM_setValue("DACrules_"+document.domain, urls);
@@ -883,6 +1321,7 @@ if (window.top != window.self) {
                     }else{
                         curEle=document.createElement("a");
                         curEle.href=i;
+                        curEle.innerText="Added Url";
                         processEles.push(curEle);
                         return;
                     }
@@ -901,7 +1340,7 @@ if (window.top != window.self) {
                         var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
                         curEle=document.createElement("a");
                         curEle.href=curUrl;
-                        curEle.innerText=processEles.length.toString();
+                        curEle.innerText="Added Url " + processEles.length.toString();
                         processEles.push(curEle);
                     }
                 });
@@ -995,11 +1434,30 @@ if (window.top != window.self) {
                 });
             }
             var retainImage=!!GM_getValue("retainImage");
-            if(urlsArr[3]){
+            var evalCode = urlsArr[3];
+            if (evalCode && /^iframe:/.test(evalCode.trim())) {
+                evalCode = evalCode.trim().replace("iframe:", "");
+                useIframe = true;
+                iframeSandbox = false;
+                iframeInit = false;
+                while (/^(sandbox|init):/.test(evalCode)) {
+                    iframeSandbox = evalCode.match(/^sandbox:{(.*?)}/);
+                    if (iframeSandbox) {
+                        iframeSandbox = iframeSandbox[1];
+                        evalCode = evalCode.replace(/^sandbox:{(.*?)}/, "");
+                    }
+                    iframeInit = evalCode.match(/^init:{(.*?)}/);
+                    if (iframeInit) {
+                        iframeInit = iframeInit[1];
+                        evalCode = evalCode.replace(/^init:{(.*?)}/, "");
+                    }
+                }
+            }
+            if(evalCode){
                 processFunc=(data, cb, url)=>{
                     let doc=data;
-                    if(urlsArr[3].indexOf("return ")==-1){
-                        if(urlsArr[3].indexOf("@")==0){
+                    if(evalCode.indexOf("return ")==-1){
+                        if(evalCode.indexOf("@")==0){
                             let content="";
                             if(retainImage){
                                 [].forEach.call(data.querySelectorAll("img[src]"), img => {
@@ -1008,7 +1466,7 @@ if (window.top != window.self) {
                                     img.parentNode.replaceChild(imgTxtNode, img);
                                 });
                             }
-                            [].forEach.call(data.querySelectorAll(urlsArr[3].slice(1)), ele=>{
+                            [].forEach.call(data.querySelectorAll(evalCode.slice(1)), ele=>{
                                 [].forEach.call(ele.childNodes, child=>{
                                     if(child.innerHTML){
                                         child.innerHTML=child.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n").replace(/\n+/gi,"\n").replace(/\r+/gi,"\r");
@@ -1020,9 +1478,9 @@ if (window.top != window.self) {
                                 content+="\r\n";
                             });
                             return content;
-                        }else return eval(urlsArr[3]);
+                        }else return eval(evalCode);
                     }else{
-                        return Function("data", "doc", "cb", "url",urlsArr[3])(data, doc, cb, url);
+                        return Function("data", "doc", "cb", "url", evalCode)(data, doc, cb, url);
                     }
                 };
             }else{
@@ -1030,7 +1488,7 @@ if (window.top != window.self) {
                     processFunc=win.dacProcess;
                 }
             }
-            indexDownload(processEles);
+            filterList(processEles);
         }
     }
     const configPage = "https://hoothin.github.io/UserScripts/DownloadAllContent/";
@@ -1163,6 +1621,7 @@ if (window.top != window.self) {
         contentSort.name = "sort";
         let reverse = createOption(i18n.reverse, !!GM_getValue("reverse"), "checkbox");
         let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
+        let showFilterList = createOption(i18n.showFilterList, !!GM_getValue("showFilterList"), "checkbox");
         let disableNextPage = !!GM_getValue("disableNextPage");
         let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
         let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
@@ -1194,6 +1653,7 @@ if (window.top != window.self) {
             }
             GM_setValue("reverse", reverse.checked);
             GM_setValue("retainImage", retainImage.checked);
+            GM_setValue("showFilterList", showFilterList.checked);
             GM_setValue("disableNextPage", !nextPage.checked);
             GM_setValue("nextPageReg", nextPageReg.value || "");
             alert(i18n.saveOk);
@@ -1221,7 +1681,13 @@ if (window.top != window.self) {
         }
     });
     GM_registerMenuCommand(i18n.fetch, fetch);
-    GM_registerMenuCommand(i18n.custom, customDown);
+    GM_registerMenuCommand(i18n.custom, () => {
+        var customRules = GM_getValue("DACrules_" + document.domain);
+        var urls = window.prompt(i18n.customInfo, customRules ? customRules : "https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+        if (urls) {
+            customDown(urls);
+        }
+    });
     GM_registerMenuCommand(i18n.setting, setDel);
     GM_registerMenuCommand(i18n.searchRule, searchRule);
 })();
