@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.10.25.1
+// @version              2023.10.26.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16747,26 +16747,39 @@ ImgOps | https://imgops.com/#b#`;
             },
             getAllValidImgs:function(newer){
                 var validImgs = [];
-                var imgs = getBody(document).getElementsByTagName('img'),
-                    container = document.querySelector('.pv-gallery-container'),
+                var container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
-                imgs = Array.prototype.slice.call(imgs);
-                arrayFn.forEach.call(getBody(document).querySelectorAll("iframe"),function(iframe){
-                    if (iframe.name == "pagetual-iframe") return;
-                    if (!iframe.src || (iframe.src && (iframe.src == "about:blank" || iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname) != -1))) {
-                        try{
-                            arrayFn.forEach.call(iframe.contentWindow.document.getElementsByTagName('img'),function(img){
-                                imgs.push(img);
-                            });
-                        }catch(e){
-                            debug(e.toString());
-                        }
-                    }
-                });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
-                var bgImgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
-                    if(node.nodeName.toUpperCase() != "IMG" && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
+                var imgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
+                    if(/^img$/i.test(node.nodeName)){
+                        total.push(node);
+                    }else if(/^svg$/i.test(node.nodeName)){
+                        if (node.clientHeight != 0 && (!node.classList || !node.classList.contains("pagetual"))) {
+                            try {
+                                const xml = new XMLSerializer().serializeToString(node);
+                                const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(xml)))}`;
+                                node.src = ImgBase64;
+                                total.push(node);
+                            } catch(e) {
+                                debug(e);
+                            }
+                        }
+                    }else if(/^canvas$/i.test(node.nodeName)){
+                        if (node.clientHeight != 0) {
+                            try {
+                                if (!node.src) {
+                                    node.src = node.toDataURL("image/png");
+                                }
+                                total.push(node);
+                            } catch(e) {}
+                        }
+                        if (!node.src && node.dataset.src) {
+                            node.src = node.dataset.src;
+                            delete node.dataset.src;
+                            total.push(node);
+                        }
+                    }else if(!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1){
                         let prop = getComputedStyle(node).backgroundImage;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
@@ -16794,38 +16807,19 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return total;
                 }, []);
-                if(bgImgs)imgs=imgs.concat(bgImgs.reverse());
-                var svgImgs=Array.from(getBody(document).querySelectorAll('svg')).reduceRight((total, svg) => {
-                    if (svg.clientHeight != 0 && (!svg.classList || !svg.classList.contains("pagetual"))) {
-                        try {
-                            const xml = new XMLSerializer().serializeToString(svg);
-                            const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(xml)))}`;
-                            svg.src = ImgBase64;
-                            total.push(svg);
-                        } catch(e) {
-                            debug(e);
+                imgs = imgs.reverse();
+                arrayFn.forEach.call(getBody(document).querySelectorAll("iframe"),function(iframe){
+                    if (iframe.name == "pagetual-iframe") return;
+                    if (!iframe.src || (iframe.src && (iframe.src == "about:blank" || iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname) != -1))) {
+                        try{
+                            arrayFn.forEach.call(iframe.contentWindow.document.getElementsByTagName('img'),function(img){
+                                imgs.push(img);
+                            });
+                        }catch(e){
+                            debug(e.toString());
                         }
                     }
-                    return total;
-                }, []);
-                if(svgImgs)imgs=imgs.concat(svgImgs.reverse());
-                var canvasImgs=Array.from(getBody(document).querySelectorAll('canvas')).reduceRight((total, canvas) => {
-                    if (canvas.clientHeight != 0) {
-                        try {
-                            if (!canvas.src) {
-                                canvas.src = canvas.toDataURL("image/png");
-                            }
-                            total.push(canvas);
-                        } catch(e) {}
-                    }
-                    if (!canvas.src && canvas.dataset.src) {
-                        canvas.src = canvas.dataset.src;
-                        delete canvas.dataset.src;
-                        total.push(canvas);
-                    }
-                    return total;
-                }, []);
-                if(canvasImgs)imgs=imgs.concat(canvasImgs.reverse());
+                });
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
                     if (img.parentNode) {
