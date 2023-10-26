@@ -890,7 +890,7 @@ if (window.top != window.self) {
                     }
                 };
                 if (useIframe) {
-                    let iframe = document.createElement('iframe');
+                    let iframe = document.createElement('iframe'), inited = false;
                     iframe.name = 'pagetual-iframe';
                     iframe.width = '100%';
                     iframe.height = '1000';
@@ -899,10 +899,17 @@ if (window.top != window.self) {
                     iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
                     iframe.addEventListener('load', e => {
                         if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
-                        let tryTimes = 0;
+                        if (inited) return;
+                        inited = true;
                         function checkIframe() {
                             try {
                                 let doc = iframe.contentDocument || iframe.contentWindow.document;
+                                if (!doc || !doc.body) {
+                                    setTimeout(() => {
+                                        checkIframe();
+                                    }, 1000);
+                                    return;
+                                }
                                 doc.body.scrollTop = 9999999;
                                 doc.documentElement.scrollTop = 9999999;
                                 if (validTimes++ > 10) {
