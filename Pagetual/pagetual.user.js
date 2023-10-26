@@ -3965,6 +3965,7 @@
               margin-right: 5px;
               resize: both;
               box-shadow: 0 1px 5px 1px #ddd;
+              overflow-wrap: anywhere;
              }
              #pagetual-picker textarea:focus {
               color: black;
@@ -3983,6 +3984,13 @@
               appearance: auto;
               display: inline-block;
               position: initial;
+             }
+             #pagetual-picker [type=checkbox]:after,
+             #pagetual-picker [type=radio]:after,
+             #pagetual-picker [type=checkbox]:before,
+             #pagetual-picker [type=radio]:before {
+              border: none;
+              background: none;
              }
              #pagetual-picker label {
               font-size: 18px;
