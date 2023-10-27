@@ -211,7 +211,7 @@
                 outOfDate: "The script is outdated, update to the latest version in time!",
                 hideBarTips: "Hide the pagination bar, toggle immersive experience",
                 setConfigPage: "Set current page as the default configuration page",
-                wedata2github: "Change the wedate address to the mirror address in the github repository",
+                wedata2github: "Change the wedata address to the mirror address in the github repository",
                 addOtherProp: "Add rule property",
                 addNextSelector: "Add selector content as nextLink",
                 addPageSelector: "Add selector content as pageElement",
@@ -5396,7 +5396,7 @@
             }, (rule, err) => {
                 if (rule.id == 1) {
                     showTips(`Failed to update wedata rules! Try to switch to wedata mirror!`);
-                    wedata2githubInput.scrollIntoView();
+                    wedata2githubInput.scrollIntoView({ behavior: "smooth" });
                 } else {
                     showTips(`Failed to update ${rule.url} rules!`);
                 }
