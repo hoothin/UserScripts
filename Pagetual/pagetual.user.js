@@ -3142,6 +3142,9 @@
                         img.src = realSrc;
                         img.removeAttribute("srcset");
                         img.removeAttribute(lazyAttr);
+                        if (img.classList && img.classList.contains && img.classList.contains("lazy")) {
+                            img.classList.remove("lazy");
+                        }
                         if (img.style.display == "none") {
                             img.style.display = "";
                         }
