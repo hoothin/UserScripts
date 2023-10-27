@@ -9687,6 +9687,23 @@
     "loadMore": ".explore-more>button"
 },
 {
+    "name": "SoftArchive",
+    "url": "^https?://sanet\\.st/search/",
+    "example": "https://sanet.st/search/?q=too",
+    "nextLink": ".pagination>.active+li>a",
+    "pageElement": "tr.filerow",
+    "pageAction": "eles.forEach(ele=>{if(ele.classList.contains('show_poster_preview')){ele.onmouseenter=e=>{document.querySelector('#pop_poster_preview_box').innerHTML=`<img style='width: 100%; height: auto; display: block;' src='${ele.dataset.poster_url}' border='0'>`;document.getElementById('pop_poster_preview_box').style.display='block'};ele.onmouseleave=e=>{document.getElementById('pop_poster_preview_box').style.display='none'}}})"
+},
+{
+    "name": "观察者网",
+    "url": "^https?://www\\.guancha\\.cn/",
+    "example": "https://www.guancha.cn/economy/2023_10_27_713575_2.shtml",
+    "nextLink": "a.next",
+    "pageElement": ".comment-list > ul.list-body.list-body-all > li.comment-item.cmt-item",
+    "include": "#comments-container",
+    "waitElement": "a.next"
+},
+{
     "name": "威锋",
     "url": "^https?://www\\.feng\\.com/",
     "nextLink": ".next:not(.disable)",
