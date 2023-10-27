@@ -5490,7 +5490,7 @@
                 let pos = e && e.message && e.message.match(/position (\d+)/);
                 if (pos && !editor) {
                     pos = parseInt(pos[1]);
-                    customRulesInput.value = customRulesInput.value.slice(0, pos) + "➡️" + customRulesInput.value[pos] + "⬅️" + customRulesInput.value.slice(pos + 1);
+                    customRulesInput.value = customRulesInput.value.slice(0, pos) + "➡️" + customRulesInput.value.slice(pos);
                 }
                 showTips(i18n("errorJson"));
                 return;
