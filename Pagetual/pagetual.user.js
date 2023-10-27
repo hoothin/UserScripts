@@ -4435,7 +4435,7 @@
                         let pos = e && e.message && e.message.match(/position (\d+)/);
                         if (pos) {
                             pos = parseInt(pos[1]);
-                            this.tempRule.value = this.tempRule.value.slice(0, pos) + "➡️" + this.tempRule.value[pos] + "⬅️" + this.tempRule.value.slice(pos + 1);
+                            this.tempRule.value = this.tempRule.value.slice(0, pos) + "➡️" + this.tempRule.value.slice(pos);
                         }
                         showTips(i18n("errorJson"));
                         return null;
