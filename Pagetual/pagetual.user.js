@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.76
+// @version      1.9.36.77
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1895,7 +1895,7 @@
                         let paStyle = curWin.getComputedStyle(ele.parentNode);
                         let paDisplay = paStyle.display;
                         let paOverflow = paStyle.overflow;
-                        pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
+                        pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || /^UL$/i.test(ele.parentNode.nodeName) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
                     }
                     let curStyle = curWin.getComputedStyle(ele);
                     if (ele.children.length > 1) {
@@ -1946,6 +1946,7 @@
                         debug("Stop as too long between next & page element");
                         isPause = true;
                         pageElement = [];
+                        sideController.remove();
                     } else {
                         if (pageElement.length == 1 && /^IMG$/i.test(pageElement[0].nodeName)) {
                             self.curSiteRule.pageBar = 0;
@@ -7450,11 +7451,12 @@
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                if (/^UL$/i.test(pageEle[0].nodeName)) pageEle = pageEle[0].children;
-                pageEle = pageEle[parseInt((pageEle.length - 1) / 2)];
-                while(pageEle && ((pageEle.scrollHeight && pageEle.scrollHeight < 50) || !pageEle.offsetParent || (!/^IMG$/i.test(pageEle.nodeName) && !pageEle.innerHTML.trim()))) {
-                    if (pageEle.nextElementSibling) pageEle = pageEle.nextElementSibling;
-                    else break;
+                pageEle = [].filter.call(pageEle, ele => {return ele && !/^(style|script|meta)$/i.test(ele.nodeName)});
+                if (/^UL$/i.test(pageEle[0].nodeName) || pageEle.length == 1) pageEle = pageEle[0];
+                else if (pageEle[0].parentNode == pageEle[1].parentNode) {
+                    pageEle = pageEle[0].parentNode;
+                } else {
+                    pageEle = pageEle[0];
                 }
                 if (ruleParser.curSiteRule.singleUrl && orgContent != pageEle.innerHTML) {
                     orgContent = pageEle.innerHTML;
@@ -7503,12 +7505,12 @@
             }
             let eles = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true), checkItem;
             if (eles && eles.length > 0) {
-                checkItem = eles;
-                if (/^UL$/i.test(eles[0].nodeName)) checkItem = eles[0].children;
-                checkItem = checkItem[parseInt((checkItem.length - 1) / 2)];
-                while(checkItem && ((checkItem.scrollHeight && checkItem.scrollHeight < 50) || !checkItem.offsetParent || (!/^IMG$/i.test(checkItem.nodeName) && !checkItem.innerHTML.trim()))) {
-                    if (checkItem.nextElementSibling) checkItem = checkItem.nextElementSibling;
-                    else break;
+                eles = [].filter.call(eles, ele => {return ele && !/^(style|script|meta)$/i.test(ele.nodeName)});
+                if (/^UL$/i.test(eles[0].nodeName) || eles.length == 1) checkItem = eles[0];
+                else if (eles[0].parentNode == eles[1].parentNode) {
+                    checkItem = eles[0].parentNode;
+                } else {
+                    checkItem = eles[0];
                 }
             }
             if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
