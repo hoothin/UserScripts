@@ -18483,17 +18483,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/77846",
-  "name": "All About　News Dig",
-  "created_by": "iwakuma2828",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-08-26T11:08:28+09:00",
   "data": {
-    "exampleUrl": "https://news.allabout.co.jp/articles/d/73598/",
+    "pageElement": "id('sys_gtm_url')/*[not(@class='aa-article-content-related-article' or starts-with(@id, 'logly-lift-') or self::script)]",
+    "nextLink": "//link[@rel=\"next\"]",
     "url": "^https://news\\.allabout\\.co\\.jp/",
-    "pageElement": "id('sys_mtx_url')/*",
-    "nextLink": "//link[@rel=\"next\"]"
+    "exampleUrl": "https://news.allabout.co.jp/articles/d/73598/\r\nhttps://news.allabout.co.jp/articles/o/69926/"
   },
-  "created_at": "2016-02-05T11:29:30+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "iwakuma2828",
+  "name": "All About NEWS",
+  "created_at": "2016-02-05T11:29:30+09:00",
+  "updated_at": "2023-10-26T21:35:03+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77845",
@@ -26121,7 +26121,7 @@
 {
   "resource_url": "http://wedata.net/items/74923",
   "data": {
-    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|descendant::*[div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]",
+    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|//section[@class='pmc-u-margin-tb-1']//*[div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]",
     "nextLink": "descendant::a[contains(@class,'next')][last()]|//div[@class='nav-previous']/a|//div[contains(@class,'more-stories')]/a[contains(@class,'a-icon-right-arrow')]",
     "url": "^https?://.*(?:bollywoodlife|deadline|footwearnews)\\.com",
     "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/ https://www.bollywoodlife.com/ https://footwearnews.com/page/2/"
@@ -26130,7 +26130,7 @@
   "created_by": "Tanookirby",
   "name": "PMC Brands",
   "created_at": "2014-06-26T02:58:29+09:00",
-  "updated_at": "2023-06-10T10:44:45+09:00"
+  "updated_at": "2023-10-27T05:46:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74912",
