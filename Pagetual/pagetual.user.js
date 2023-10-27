@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.75
+// @version      1.9.36.76
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -858,7 +858,7 @@
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u005c\u002d\u005f\u2014\u0020\u005c\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005c\u005b\u3010\u3001\uff08\u005c\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
-    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0;
+    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8";
 
     function getBody(doc) {
         return doc.body || doc.querySelector('body') || doc;
@@ -2946,11 +2946,11 @@
                 url: url,
                 method: postParams ? 'POST' : 'GET',
                 data: postParams,
-                overrideMimeType: 'text/html;charset=' + (document.characterSet || document.charset || document.inputEncoding),
+                overrideMimeType: 'text/html;charset=' + charset,
                 headers: {
                     'Referer': location.href,
                     'User-Agent': navigator.userAgent,
-                    "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
+                    "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset,
                 },
                 timeout: 10000,
                 onload: function(res) {
@@ -5711,6 +5711,7 @@
 
     let pageReady = false;
     function initRules(callback) {
+        charset = (document.characterSet || document.charset || document.inputEncoding);
         storage.getItem("rulesData", data => {
             /*0 wedata格式，1 pagetual格式*/
             ruleUrls = [{
@@ -5925,7 +5926,7 @@
         });
     }
 
-    function requestDoc(url, callback){
+    function requestDoc(url, callback) {
         let postParams = url.match(/#p{(.*)}$/);
         if (postParams) {
             postParams = postParams[1];
@@ -5936,7 +5937,7 @@
             'Referer': location.href,
             'User-Agent': navigator.userAgent,
             'accept': 'text/html,application/xhtml+xml,application/xml',
-            "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
+            "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset,
         };
         if (ruleHeaders) {
             if (ruleHeaders.referer) {
@@ -5959,7 +5960,7 @@
             url: url,
             method: postParams ? 'POST' : 'GET',
             data: postParams,
-            overrideMimeType: 'text/html;charset=' + (document.characterSet || document.charset || document.inputEncoding),
+            overrideMimeType: 'text/html;charset=' + charset,
             headers: headers,
             timeout: 20000,
             onload: async function(res) {
@@ -5984,9 +5985,16 @@
                     doc.documentElement.innerHTML = response;
                     let base = doc.querySelector("base");
                     ruleParser.basePath = base ? base.href : url;
-                }
-                catch (e) {
+                } catch (e) {
                     debug('parse error:' + e.toString());
+                }
+                let equiv = doc.querySelector('[http-equiv="Content-Type"]');
+                if (equiv && equiv.content) {
+                    let innerCharSet = equiv.content.match(/charset\=([^;]+)/);
+                    if (innerCharSet && innerCharSet[1].replace("-", "").toLowerCase() != charset.replace("-", "").toLowerCase()) {
+                        charset = innerCharSet[1];
+                        return requestDoc(url, callback);
+                    }
                 }
                 let pageElement = ruleParser.getPageElement(doc);
                 if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
