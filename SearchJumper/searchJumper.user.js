@@ -7109,6 +7109,7 @@
                 let showTips = false;
                 let tipsData;
                 let pointer = !isBookmark && /^\[/.test(data.url);
+                let description = data.description;
                 if (pointer) {
                     ele.dataset.pointer = true;
                     let siteNames = JSON.parse(data.url);
@@ -7126,6 +7127,7 @@
                                     ele.dataset.oriName = siteData.name;
                                     data = siteData;
                                     if (data.icon && icon !== "0") icon = data.icon;
+                                    if (data.description) description = data.description;
                                     break;
                                 }
                             }
@@ -7144,7 +7146,7 @@
                 let isPage = /^(https?|ftp):/.test(data.url);
                 if (isPage) ele.dataset.isPage = isPage;
                 ele.className = "search-jumper-btn";
-                if (typeof data.description !== 'undefined') ele.title = name + " - " + data.description;
+                if (typeof description !== 'undefined') ele.title = name + " - " + description;
                 ele.dataset.name = name;
                 ele.classList.add("search-jumper-word");
                 ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
