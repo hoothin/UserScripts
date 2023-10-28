@@ -636,10 +636,12 @@ if (window.top != window.self) {
                     outline: none;
                     cursor: pointer;
                 }
-                #dacLinksCon>div:nth-of-type(odd) {
+                #dacLinksCon>div:nth-of-type(4n),
+                #dacLinksCon>div:nth-of-type(4n+1) {
                     background: #ffffff;
                 }
-                #dacLinksCon>div:nth-of-type(even) {
+                #dacLinksCon>div:nth-of-type(4n+2),
+                #dacLinksCon>div:nth-of-type(4n+3) {
                     background: #f5f5f5;
                 }
                 #filterListContainer .fun,#filterListContainer .sort {
