@@ -9744,8 +9744,6 @@
                 };
                 let mouseDownHandler = e => {
                     if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
-                        e.target.nodeName.toUpperCase() === 'CANVAS' ||
-                        e.target.nodeName.toUpperCase() === 'HTML' ||
                         (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
                         searchBar.bar.contains(e.target)) {
                         return;
