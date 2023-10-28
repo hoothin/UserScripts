@@ -453,7 +453,7 @@
         expandType: false,
         rightMouse: true,
         shiftLastUsedType: true,
-        mouseLeaveToHide: true,
+        mouseLeaveToHide: false,
         currentTypeFirst: true,
         switchSitesPreKey: 'ArrowLeft',
         switchSitesNextKey: 'ArrowRight',
