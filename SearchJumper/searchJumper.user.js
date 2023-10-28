@@ -7836,6 +7836,9 @@
                         _unsafeWindow.targetElement = targetElement;
                         _unsafeWindow.keywords = getKeywords();
                         targetUrlData = targetUrlData.replace(/^javascript:/, '');
+                        try {
+                            targetUrlData = decodeURIComponent(targetUrlData);
+                        } catch(e) {}
                         let func = (/^[_a-zA-Z0-9]+$/.test(targetUrlData) && window[targetUrlData]) || new AsyncFunction(targetUrlData);
                         if (func) func();
                         return false;
