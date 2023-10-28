@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.78
+// @version      1.9.36.79
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1779,7 +1779,7 @@
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
-                        if (/^H\d$/i.test(curNode.nodeName)) {
+                        if (/^H\d$/i.test(curNode.nodeName) && curNode.offsetParent) {
                             curMaxEle = null;
                             break;
                         }
@@ -1850,6 +1850,16 @@
                             curMaxEle = curNode;
                             preOffsetTop = curNode.offsetTop;
                         }
+                    }
+                    if (curMaxEle && curHeight / bodyHeight <= 0.2) {
+                        let article = doc.querySelectorAll(mainSel);
+                        if (article && article.length == 1) {
+                            article = article[0];
+                            self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
+                            debug(self.curSiteRule.pageElement, 'Page element');
+                            return article.children;
+                        }
+                        curMaxEle = null;
                     }
                     if (curMaxEle) {
                         let sameClassNum = 0, hasDifferent = false;
@@ -4046,6 +4056,10 @@
               cursor: pointer;
              }
              #pagetual-picker .allpath>span.path:hover {
+              opacity: 0.6;
+             }
+             #pagetual-picker .allpath>span.path:hover,
+             #pagetual-picker .allpath>span.path.checked {
               color: orangered;
              }
              #pagetual-picker .moreConfig {
@@ -4555,6 +4569,11 @@
                 }
                 self.selectorInput.value = selector;
                 self.checkInputSelector();
+                if (self.checkedPath) {
+                    self.checkedPath.classList.remove("checked");
+                }
+                span.classList.add("checked");
+                self.checkedPath = span;
             }, true);
             this.allpath.appendChild(span);
         }
