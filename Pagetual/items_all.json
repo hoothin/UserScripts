@@ -25098,7 +25098,7 @@
   "data": {
     "pageElement": "//div[@class='article-contents']|//li[.//p[@class='txt-update']]",
     "considerationUrl": "https://japan.zdnet.com/article/35148978/",
-    "nextLink": "descendant::a[@rel='next'][1][not(@href='#')]",
+    "nextLink": "descendant::a[@rel='next'][not(@href='#')]",
     "url": "^https://japan\\.zdnet\\.com/",
     "exampleUrl": "https://japan.zdnet.com/article/35011766/ https://japan.zdnet.com/archives/foreign/\r\n\r\n"
   },
@@ -25106,7 +25106,7 @@
   "created_by": "bimi",
   "name": "ZDNet Japan",
   "created_at": "2014-09-09T15:49:10+09:00",
-  "updated_at": "2023-10-04T12:07:23+09:00"
+  "updated_at": "2023-10-29T07:03:15+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76302",
