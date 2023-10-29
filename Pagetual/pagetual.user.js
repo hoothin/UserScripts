@@ -5984,6 +5984,8 @@
             }
             if (ruleHeaders.contentType) {
                 headers.contentType = ruleHeaders.contentType;
+                let ruleCharset = ruleHeaders.contentType.match(/charset\=([^;]+)/);
+                if (ruleCharset) charset = ruleCharset[1];
             }
             if (ruleHeaders.cookie) {
                 headers.cookie = ruleHeaders.cookie;
@@ -6021,7 +6023,7 @@
                 } catch (e) {
                     debug('parse error:' + e.toString());
                 }
-                if (charsetValid) {
+                if (charsetValid && !ruleHeaders) {
                     let equiv = doc.querySelector('[http-equiv="Content-Type"]');
                     if (equiv && equiv.content) {
                         let innerCharSet = equiv.content.match(/charset\=([^;]+)/);
