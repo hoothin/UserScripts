@@ -6633,7 +6633,7 @@
             }
         };
         dblclickHandler = e => {
-            if (forceState == 1 || /^(INPUT|TEXTAREA|SELECT)$/i.test(e.target.nodeName)) return;
+            if (forceState == 1 || /^(INPUT|TEXTAREA|SELECT|A|BUTTON|SVG|USE|IMG|PATH)$/i.test(e.target.nodeName)) return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
