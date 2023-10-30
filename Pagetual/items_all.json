@@ -20647,14 +20647,14 @@
   "data": {
     "pageElement": "descendant::*[./article][1]/article",
     "nextLink": "//a[@class='next']",
-    "url": "^https?://screenrant\\.com/.+",
-    "exampleUrl": "https://screenrant.com/search/?q=masked%20singer&page=2"
+    "url": "^https?://(screen|game)rant\\.com/.+",
+    "exampleUrl": "https://screenrant.com/search/?q=masked%20singer&page=2\r\nhttps://gamerant.com/search/?q=rpg"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
-  "name": "Screen Rant",
+  "name": "Screen Rant, Game Rant",
   "created_at": "2015-08-04T04:56:30+09:00",
-  "updated_at": "2023-02-12T10:11:58+09:00"
+  "updated_at": "2023-10-30T06:35:51+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77437",
