@@ -118,7 +118,27 @@
                 var newHref = href.replace('https://to.redircdn.com/?', '').replace(/______/g, '.').replace(/&z/g, '');
                 $(this).attr('href', newHref);
             });
-            $("#conttpc").prepend($(".t_like").clone());
+
+            $.fn.isInViewport = function() {
+                var elementTop = $(this).offset().top;
+                var elementBottom = elementTop + $(this).outerHeight();
+                var viewportTop = $(window).scrollTop();
+                var viewportBottom = viewportTop + $(window).height();
+                return elementBottom > viewportTop && elementTop < viewportBottom;
+            };
+            var $tLike = $(".t_like");
+            var $tLikeClone = $tLike.clone();
+            if (!$tLike.isInViewport()) {
+                $("#conttpc").prepend($tLikeClone);
+            }
+
+            $(window).on("resize scroll", function() {
+                if ($tLike.isInViewport()) {
+                    if ($tLikeClone.parent().length) $tLikeClone.detach();
+                } else {
+                    if ($tLikeClone.parent().length == 0) $("#conttpc").prepend($tLikeClone);
+                }
+            });
 
 
             // 种子链接转磁力链
