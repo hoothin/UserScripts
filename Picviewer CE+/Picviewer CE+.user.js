@@ -16837,10 +16837,11 @@ ImgOps | https://imgops.com/#b#`;
                 // 已经在图库里面的
                 var self = this;
                 imgs.forEach(function(img) {
-                    if (!/^(SVG|CANVAS)$/i.test(img.nodeName)) {
+                    let isImg = /^IMG$/i.test(img.nodeName);
+                    if (isImg) {
                         pretreatment(img);
                     }
-                    if(!img.src || (img.nodeName=='IMG' && img.getAttribute && !img.getAttribute("src"))) return;
+                    if(!img.src || (isImg && img.getAttribute && !img.getAttribute("src"))) return;
                     if (newer && self._dataCache[img.src]) return;
 
                     var result = findPic(img);
@@ -22168,7 +22169,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(src)type='tpRule';
             }
 
-            if(!/^(SVG|CANVAS)$/i.test(img.nodeName) && !src && iPASrc){//链接可能是一张图片...
+            if(/^IMG$/i.test(img.nodeName) && !src && iPASrc){//链接可能是一张图片...
                 if(iPASrc!=img.src && /\.(jpg|jpeg|png|gif|bmp)(\?[^\?]*)?$/i.test(iPASrc)){
                     src=iPASrc;
                 }
