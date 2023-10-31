@@ -3177,6 +3177,7 @@
                         this.showModifyWindow(word, wordSpan);
                     }, true);
                     wordSpan.addEventListener("mousedown", e => {
+                        if (e.target.nodeName.toUpperCase() !== 'EM') return;
                         if (e.button === 0) {
                             this.focusHighlightByText(word.showWords, true, wordSpan);
                         } else if (e.button === 2){
@@ -3720,7 +3721,7 @@
                              <img width="32px" height="32px" src="${logoBase64}" />${i18n("modifyWord")}
                          </a>
                          <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
-                         <input name="wordContent" placeholder="words" type="text"/>
+                         <input id="searchJumperHighlightWord" name="wordContent" placeholder="words" type="text"/>
                          <div class="searchJumperModify-checkGroup">
                              <input id="searchJumperModify-re" type="checkbox"/>
                              <label for="searchJumperModify-re">${i18n("re")}</label>
@@ -4263,7 +4264,7 @@
                                 skip = 1;
                             }
                         }
-                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/(^wd|^kw|^q$|query)/i.test(node.name) && !/(^wd|^kw|^q$|query)/i.test(node.id)) {
+                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/(^wd|^kw|^q$|query|search|keyword)/i.test(node.name) && !/(^wd|^kw|^q$|query|search)/i.test(node.id)) {
                         let wordMatch = false;
                         if (word.isRe) {
                             let wordMatch = node.value.match(new RegExp(word.content, word.reCase));
