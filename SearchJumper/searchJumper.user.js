@@ -7393,7 +7393,10 @@
                                     for (let i = 0; i < selectEles.childNodes.length; i++) {
                                         let childNode = selectEles.childNodes[i];
                                         if (prop) {
-                                            if (childNode.nodeType == 1) {
+                                            if (childNode.nodeType == 3) {
+                                                value += childNode.nodeValue;
+                                                value += "\n";
+                                            } else if (childNode.nodeType == 1) {
                                                 value += childNode.getAttribute(prop) || childNode[prop];
                                                 value += "\n";
                                             }
@@ -7401,12 +7404,29 @@
                                             if (childNode.nodeType == 3) {
                                                 value += childNode.nodeValue;
                                             } else {
-                                                var nodeHtml = childNode.outerHTML;
-                                                value += childNode.outerHTML;
+                                                [].forEach.call(childNode.querySelectorAll("img"), img => {
+                                                    if (!img.src) return;
+                                                    let textNode = document.createTextNode(`![${img.alt || ""}](${img.src || ""})`);
+                                                    img.parentNode.replaceChild(textNode, img);
+                                                });
+                                                [].forEach.call(childNode.querySelectorAll("a"), a => {
+                                                    if (!a.href) return;
+                                                    let textNode = document.createTextNode(`[${a.innerText || ""}](${a.href || ""})`);
+                                                    a.parentNode.replaceChild(textNode, a);
+                                                });
+                                                if (/^A$/i.test(childNode.nodeName)) {
+                                                    value += `[${childNode.innerText}](${childNode.href})`;
+                                                } else if (/^IMG$/i.test(childNode.nodeName)) {
+                                                    value += `![${childNode.alt || ""}](${childNode.src})`;
+                                                } else {
+                                                    value += childNode.innerText;
+                                                }
                                             }
                                         }
                                     }
-                                } catch(e) {}
+                                } catch(e) {
+                                    console.error(e);
+                                }
                             } else {
                                 let ele = getElement(selector);
                                 if (ele) {
