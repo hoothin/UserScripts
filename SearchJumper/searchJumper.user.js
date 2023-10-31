@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.16
+// @version      1.6.30.17
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -5965,7 +5965,7 @@
                             let typeBtn = this.bar.querySelector(`.search-jumper-type[data-type="${typeData.type}"]>span`);
                             if (typeBtn && !typeBtn.classList.contains("search-jumper-open")) {
                                 this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
-                                if (!searchData.prefConfig.disableAutoOpen) {
+                                if (!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) {
                                     if (typeBtn.onmousedown) {
                                         typeBtn.onmousedown();
                                     } else {
@@ -6465,6 +6465,7 @@
                     img.onload = e => {
                         img.style.display = "";
                         iEle.innerText = '';
+                        iEle.style.display = 'none';
                     };
                     if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
@@ -6772,7 +6773,7 @@
                     } else {
                         self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                     }
-                    if (!searchData.prefConfig.disableAutoOpen) {
+                    if (!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) {
                         ele.classList.add("search-jumper-open");
                         if (sites.length > (searchData.prefConfig.expandTypeLength || 12) && !searchData.prefConfig.expandType) {
                             ele.classList.add("not-expand");
@@ -8463,7 +8464,7 @@
                 }
                 self.setFuncKeyCall(false);
                 if (firstType) {
-                    if (!searchData.prefConfig.disableAutoOpen || _funcKeyCall) {
+                    if ((!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) || _funcKeyCall) {
                         let mouseEvent = new PointerEvent("mousedown");
                         if (firstType.parentNode.classList.contains('search-jumper-open')) {
                             if (firstType.onmousedown) firstType.onmousedown();
@@ -8478,7 +8479,7 @@
                         self.insertHistory(firstType.parentNode);
                     }
                 }
-                if (!_funcKeyCall && searchData.prefConfig.disableAutoOpen) {
+                if (!_funcKeyCall && (searchData.prefConfig.disableAutoOpen || searchData.prefConfig.disableTypeOpen)) {
                     let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                     if (openType) {
                         if (openType.onmousedown) {
@@ -8712,7 +8713,7 @@
                 searchData.prefConfig.position.y = relY;
                 searchData.prefConfig.offset.x = posX;
                 searchData.prefConfig.offset.y = posY;
-                if (searchData.prefConfig.disableAutoOpen) {
+                if (searchData.prefConfig.disableAutoOpen || searchData.prefConfig.disableTypeOpen) {
                     self.checkScroll(false, true);
                 } else {
                     setTimeout(() => {
