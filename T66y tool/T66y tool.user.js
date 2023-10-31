@@ -127,18 +127,20 @@
                 return elementBottom > viewportTop && elementTop < viewportBottom;
             };
             var $tLike = $(".t_like");
-            var $tLikeClone = $tLike.clone();
-            if (!$tLike.isInViewport()) {
-                $("#conttpc").prepend($tLikeClone);
-            }
-
-            $(window).on("resize scroll", function() {
-                if ($tLike.isInViewport()) {
-                    if ($tLikeClone.parent().length) $tLikeClone.detach();
-                } else {
-                    if ($tLikeClone.parent().length == 0) $("#conttpc").prepend($tLikeClone);
+            if ($tLike.length) {
+                var $tLikeClone = $tLike.clone();
+                if (!$tLike.isInViewport()) {
+                    $("#conttpc").prepend($tLikeClone);
                 }
-            });
+
+                $(window).on("resize scroll", function() {
+                    if ($tLike.isInViewport()) {
+                        if ($tLikeClone.parent().length) $tLikeClone.detach();
+                    } else {
+                        if ($tLikeClone.parent().length == 0) $("#conttpc").prepend($tLikeClone);
+                    }
+                });
+            }
 
 
             // 种子链接转磁力链
