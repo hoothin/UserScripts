@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.13
+// @version      1.6.30.14
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -167,11 +167,6 @@
             type: "Search",
             icon: "search",
             sites: [ {
-                name: "🔍 Google",
-                url: "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
-                match: "https://www\\.google\\..*/search",
-                icon: "0"
-            }, {
                 name: "Bing",
                 url: "https://www.bing.com/search?q=%s",
                 match: "^https://(www|cn|global)\\.bing\\.com/search"
@@ -193,8 +188,9 @@
             selectTxt: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google ",
-                url: "[\"Google\"]"
+                name: "Google",
+                url: "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
+                match: "https://www\\.google\\..*/search",
             }, {
                 name: "Wikipedia ",
                 url: "[\"Wikipedia\"]"
@@ -2604,6 +2600,7 @@
                      border-radius: 3px;
                      text-decoration: none;
                      padding: 1px 0;
+                     -webkit-text-fill-color: initial;
                  }
                  mark.searchJumper[data-current=true],
                  a.searchJumper[data-current=true] {
@@ -2756,7 +2753,6 @@
                  }
                  `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
-                mainStyleEle = _GM_addStyle(cssText);
 
                 let logoCon = document.createElement("span");
                 logoCon.className = "search-jumper-logo";
@@ -4811,6 +4807,9 @@
             }
 
             appendBar() {
+                if (!mainStyleEle || !mainStyleEle.parentNode) {
+                    mainStyleEle = _GM_addStyle(cssText);
+                }
                 if (!this.con.parentNode) {
                     document.documentElement.appendChild(this.con);
                     setTimeout(() => {
@@ -7388,12 +7387,34 @@
                             let selector = customMatch[1];
                             let prop = customMatch[3];
                             let value = "";
-                            let ele = getElement(selector);
-                            if (ele) {
-                                if (prop) {
-                                    value = ele.getAttribute(prop) || ele[prop];
-                                } else {
-                                    value = ele.innerText;
+                            if (!selector) {
+                                try {
+                                    let selectEles = window.getSelection().getRangeAt(0).cloneContents();
+                                    for (let i = 0; i < selectEles.childNodes.length; i++) {
+                                        let childNode = selectEles.childNodes[i];
+                                        if (prop) {
+                                            if (childNode.nodeType == 1) {
+                                                value += childNode.getAttribute(prop) || childNode[prop];
+                                                value += "\n";
+                                            }
+                                        } else {
+                                            if (childNode.nodeType == 3) {
+                                                value += childNode.nodeValue;
+                                            } else {
+                                                var nodeHtml = childNode.outerHTML;
+                                                value += childNode.outerHTML;
+                                            }
+                                        }
+                                    }
+                                } catch(e) {}
+                            } else {
+                                let ele = getElement(selector);
+                                if (ele) {
+                                    if (prop) {
+                                        value = ele.getAttribute(prop) || ele[prop];
+                                    } else {
+                                        value = ele.innerText;
+                                    }
                                 }
                             }
                             str = customReplaceSingle(str, customMatch[0], value);
@@ -7508,19 +7529,15 @@
                     }
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
                     if (!keywords) keywords = (currentSite && cacheKeywords);
-                    if (typeof navigator.clipboard.readText !== "undefined") {
-                        if (!keywords && hasWordParam) {
-                            try {
+                    try {
+                        if (typeof navigator.clipboard.readText !== "undefined") {
+                            if (!keywords && hasWordParam) {
                                 keywords = await navigator.clipboard.readText();
                                 if (keywords && !_keyWords) {
                                     inputString = keywords;
                                 }
-                            } catch(e) {
-                                return false;
                             }
-                        }
-                        if (!imgBase64 && /%i\b/.test(data.url)) {
-                            try {
+                            if (!imgBase64 && /%i\b/.test(data.url)) {
                                 const permission = await navigator.permissions.query({
                                     name: "clipboard-read",
                                 });
@@ -7540,10 +7557,10 @@
                                         }
                                     }
                                 }
-                            } catch (error) {
-                                console.error(error.message);
                             }
                         }
+                    } catch(e) {
+                        console.error(e.message);
                     }
                     if (!keywords && hasWordParam) {
                         self.customInput = true;
@@ -8295,7 +8312,9 @@
                         firstType.style.height = "auto";
                     }
                     if (firstType != this.bar.firstElementChild) {
-                        firstType.scrollIntoView(noSmooth ? {} : {behavior: "smooth"});
+                        setTimeout(() => {
+                            firstType.scrollIntoView(noSmooth ? {} : {behavior: "smooth"});
+                        }, 0);
                     }
                 }
             }
@@ -8312,7 +8331,7 @@
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
                 if (!targetElement) targetElement = getBody(document);
-                else if (targetElement != getBody(document) && (targetElement.className != "searchJumper" || !/^MARK$/i.test(targetElement.nodeName))) {
+                else if (!selectStr && targetElement != getBody(document) && (targetElement.className != "searchJumper" || !/^MARK$/i.test(targetElement.nodeName))) {
                     let _targetElement = targetElement, children;
                     while (_targetElement && _targetElement.nodeName) {
                         if (_targetElement.nodeName.toUpperCase() == 'IMG' || _targetElement.nodeName.toUpperCase() == 'AUDIO' || _targetElement.nodeName.toUpperCase() == 'VIDEO' || _targetElement.nodeName.toUpperCase() == 'A') break;
@@ -8673,12 +8692,21 @@
                 self.checkScroll(false, true);
                 setTimeout(() => {
                     if (!searchData.prefConfig.disableAutoOpen) {
-                        if (self.currentType && self.currentType.classList.contains('search-jumper-open')) {
-                            self.currentType.style.width = self.currentType.scrollWidth + "px";
-                            self.currentType.style.height = self.currentType.scrollHeight + "px";
+                        let openType = self.bar.querySelector('.search-jumper-type.search-jumper-open');
+                        if (openType) {
+                            openType.style.transition = "none";
+                            openType.style.width = "auto";
+                            openType.style.height = "auto";
+                            setTimeout(() => {
+                                openType.style.width = openType.scrollWidth + "px";
+                                openType.style.height = openType.scrollHeight + "px";
+                                setTimeout(() => {
+                                    openType.style.transition = "";
+                                }, 1);
+                                self.checkScroll(false, true);
+                            }, 0);
                         }
                     }
-                    self.checkScroll(false, true);
                 }, 251);
             }
         }
@@ -8686,7 +8714,6 @@
         class Picker {
             //static picker;
             constructor() {
-                this.init();
             }
 
             /*static getInstance() {
@@ -8703,6 +8730,8 @@
             }
 
             init() {
+                if (this.inited) return;
+                this.inited = true;
                 let self = this;
                 this.clickedIndex = 0;
                 this.signList = [];//所有标记
@@ -8962,6 +8991,7 @@
             }
 
             toggle() {
+                this.init();
                 if (this.inPicker) {
                     this.close();
                     return;
@@ -11825,7 +11855,7 @@
                     iconShow.src = icons[0];
                 }
             } else {
-                iconShow.style.display = "none";
+                iconShow.src = location.origin + "/favicon.ico";
             }
             iconsCon.innerHTML = createHTML();
             if (icons && icons.length > 1) {
