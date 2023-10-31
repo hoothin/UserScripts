@@ -6071,7 +6071,7 @@
                 } else {
                     debug("Stop as no page element");
                     ruleParser.noValidContent(url);
-                    isPause = true;
+                    changeStop(true);
                     callback(false);
                 }
             },
@@ -7351,7 +7351,7 @@
                         if (failFromIframe++ > 2) {
                             failFromIframe = 0;
                             debug("Stop as failFromIframe");
-                            isPause = true;
+                            changeStop(true);
                             callback(false, false);
                         } else {
                             ruleParser.noValidContent(url);
