@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.14
+// @version      1.6.30.15
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -8734,6 +8734,9 @@
         class Picker {
             //static picker;
             constructor() {
+                this.clickedIndex = 0;
+                this.signList = [];//所有标记
+                this.clickedEles = {};//点击的元素
             }
 
             /*static getInstance() {
@@ -8753,9 +8756,6 @@
                 if (this.inited) return;
                 this.inited = true;
                 let self = this;
-                this.clickedIndex = 0;
-                this.signList = [];//所有标记
-                this.clickedEles = {};//点击的元素
                 let cssText = `
                  body.searchJumper-picker,
                  body.searchJumper-picker *:hover,
@@ -8860,6 +8860,7 @@
             }
 
             close() {
+                if (!this.mainSignDiv) return;
                 this.callback = null;
                 this.clearSigns();
                 this.clickedEles = {};
