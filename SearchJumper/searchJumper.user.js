@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.17
+// @version      1.6.30.18
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -5126,9 +5126,7 @@
                         typeEle.style.width = scrollSize;
                         typeEle.style.height = "";
                     }
-                    self.bar.style.pointerEvents = "none";
                     setTimeout(() => {
-                        self.bar.style.pointerEvents = "";
                         self.checkScroll();
                     }, 251);
                 }, showTimer;
@@ -7409,23 +7407,31 @@
                                             } else {
                                                 [].forEach.call(childNode.querySelectorAll("img"), img => {
                                                     if (!img.src) return;
-                                                    let textNode = document.createTextNode(`![${img.alt || ""}](${img.src || ""})`);
+                                                    let textNode = document.createTextNode(` ![${(img.alt || "").replace(/[\n\r]/g, "").trim()}](${img.src || ""}) `);
                                                     img.parentNode.replaceChild(textNode, img);
                                                 });
                                                 [].forEach.call(childNode.querySelectorAll("a"), a => {
                                                     if (!a.href) return;
-                                                    let textNode = document.createTextNode(`[${a.innerText || ""}](${a.href || ""})`);
+                                                    let innerText = (a.innerText || "").replace(/[\n\r]/g, "").trim();
+                                                    if (!innerText) return;
+                                                    let textNode = document.createTextNode(` [${innerText}](${a.href || ""}) `);
                                                     a.parentNode.replaceChild(textNode, a);
                                                 });
                                                 if (/^A$/i.test(childNode.nodeName)) {
-                                                    value += `[${childNode.innerText}](${childNode.href})`;
+                                                    let innerText = (childNode.innerText || "").replace(/[\n\r]/g, "").trim();
+                                                    if (innerText) {
+                                                        value += ` [${innerText}](${childNode.href}) `;
+                                                    }
                                                 } else if (/^IMG$/i.test(childNode.nodeName)) {
-                                                    value += `![${childNode.alt || ""}](${childNode.src})`;
+                                                    value += ` ![${(childNode.alt || "").replace(/[\n\r]/g, "").trim()}](${childNode.src}) `;
                                                 } else {
                                                     value += childNode.innerText;
                                                 }
                                             }
                                         }
+                                    }
+                                    if (value) {
+                                        value = value.replace(/[\n\r]\s*/g, "\n");
                                     }
                                 } catch(e) {
                                     console.error(e);
@@ -10115,6 +10121,33 @@
             bodyObserver.observe(getBody(document), bodyObserverOptions);
         }
 
+        function canonicalUri(src) {
+            if (!src) {
+                return "";
+            }
+            if (src.charAt(0) == "#") return location.href + src;
+            if (src.charAt(0) == "?") return location.href.replace(/^([^\?#]+).*/, "$1" + src);
+            let origin = location.protocol + '//' + location.host;
+            let base = document.querySelector("base");
+            let basePath = base ? base.href : location.href;
+            let url = basePath || origin;
+            url = url.replace(/(\?|#).*/, "");
+            if (/https?:\/\/[^\/]+$/.test(url)) url = url + '/';
+            if (url.indexOf("http") !== 0) url = origin + url;
+            var root_page = /^[^\?#]*\//.exec(url)[0],
+                root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
+                absolute_regex = /^\w+\:\/\//;
+            while (src.indexOf("../") === 0) {
+                src = src.substr(3);
+                root_page = root_page.replace(/\/[^\/]+\/$/, "/");
+            }
+            src = src.replace(/\.\//, "");
+            if (/^\/\/\/?/.test(src)) {
+                src = location.protocol + src;
+            }
+            return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
+        }
+
         function quickAddByInput(input) {
             let parentForm, url = location.href, showCrawl = false;
             if (input && input.name) {
@@ -10142,7 +10175,7 @@
                 return true;
             }
             if (parentForm) {
-                url = parentForm.action;
+                url = canonicalUri(parentForm.getAttribute("action"));
                 let params = [];
                 let formData = new FormData(parentForm);
                 for (let [key, value] of formData) {
