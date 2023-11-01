@@ -431,7 +431,7 @@ if (window.top != window.self) {
             document.body.appendChild(filterListContainer);
             filterListContainer.innerHTML = createHTML(`
                 <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 99998; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
-                <div style="padding: 5px; box-sizing: border-box; overflow: hidden; width: 600px; height: auto; max-height: 80%; min-height: 200px; position: fixed; left: 50%; top: 10%; margin-left: -300px; z-index: 99998; background-color: #ffffff; border: 1px solid #afb3b6; border-radius: 10px; opacity: 0.95; filter: alpha(opacity=95); box-shadow: 5px 5px 20px 0px #000;">
+                <div style="padding: 5px; box-sizing: border-box; overflow: hidden; width: 600px; height: auto; max-height: 80vh; min-height: 200px; position: fixed; left: 50%; top: 10%; margin-left: -300px; z-index: 99998; background-color: #ffffff; border: 1px solid #afb3b6; border-radius: 10px; opacity: 0.95; filter: alpha(opacity=95); box-shadow: 5px 5px 20px 0px #000;">
                     <div class="dacCustomRule">
                     ${i18n.custom}
                         <textarea id="dacCustomInput"></textarea>
@@ -446,7 +446,7 @@ if (window.top != window.self) {
                         <input id="dacSortByName" value="${i18n.dacSortByName}" type="button"/>
                     </div>
                     <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
-                    <p style="margin: 5px; text-align: center; font-size: 14px;"><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></p>
+                    <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></p>
                     <div class="fun">
                         <input id="dacSetCustomRule" value="${i18n.dacSetCustomRule}" type="button"/>
                         <input id="dacAddUrl" value="${i18n.dacAddUrl}" type="button"/>
@@ -656,6 +656,7 @@ if (window.top != window.self) {
                     justify-content: space-around;
                     flex-wrap: nowrap;
                     width: 100%;
+                    height: 28px;
                 }
                 #filterListContainer input[type=button]:hover {
                     border: 1px #C6C6C6 solid;
