@@ -163,19 +163,19 @@
                 var quickReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="${quickReplyStr}">` );
                 quickReply.insertAfter( "form .btn" );
                 var replyStr = defaultReply;
-                if (document.title.indexOf("打卡签到") !== -1) {
-                    var spaceStr = "";
-                    var spaceLen = Math.floor(Math.random() * 10);
-                    for (var i = 0; i < spaceLen; i++) {
-                        spaceStr += " ";
-                    }
-                    replyStr = "今日签到" + spaceStr;
-                }
 
                 helper.getScript('//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js', e => {
                     var lastReplyTime = $.cookie('lastReplyTime');
                     var customReplyStr = $.cookie('customReplyStr');
                     if (customReplyStr) replyStr = customReplyStr;
+                    if (document.title.indexOf("打卡签到") !== -1) {
+                        var spaceStr = "";
+                        var spaceLen = Math.floor(Math.random() * 10);
+                        for (var i = 0; i < spaceLen; i++) {
+                            spaceStr += " ";
+                        }
+                        replyStr = "今日签到" + spaceStr;
+                    }
                     quickReply.attr('title', replyStr + "（右击修改）");
                     var formTitle = $("form td.h>b").text();
                     function setCountdown() {
