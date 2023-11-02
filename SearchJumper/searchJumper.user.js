@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.18
+// @version      1.6.30.19
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2499,7 +2499,7 @@
                  #searchInPage>.lockWords>span {
                      position: relative;
                      padding: 5px;
-                     cursor: alias;
+                     cursor: pointer;
                      user-select: none;
                      background: yellow;
                      color: black;
@@ -2509,6 +2509,9 @@
                      align-items: center;
                      white-space: nowrap;
                      max-width: 100%;
+                 }
+                 #searchInPage>.lockWords>span>em {
+                     cursor: alias;
                  }
                  #searchInPage>.lockWords .removeWord {
                      position: absolute;
@@ -3177,7 +3180,6 @@
                         this.showModifyWindow(word, wordSpan);
                     }, true);
                     wordSpan.addEventListener("mousedown", e => {
-                        if (e.target.nodeName.toUpperCase() !== 'EM') return;
                         if (e.button === 0) {
                             this.focusHighlightByText(word.showWords, true, wordSpan);
                         } else if (e.button === 2){
@@ -3979,6 +3981,23 @@
                         } else this.focusIndex = curList.length - 1;
                     }
                 }
+                let newIndex = this.focusIndex;
+                if (fw) {
+                    while (!curList[newIndex].offsetParent) {
+                        if (newIndex != curList.length - 1) {
+                            newIndex = newIndex + 1;
+                        } else newIndex = 0;
+                        if (newIndex == this.focusIndex) break;
+                    }
+                } else {
+                    while (!curList[newIndex].offsetParent) {
+                        if (newIndex != 0) {
+                            newIndex = newIndex - 1;
+                        } else newIndex = curList.length - 1;
+                        if (newIndex == this.focusIndex) break;
+                    }
+                }
+                this.focusIndex = newIndex;
                 this.focusHighlight(curList[this.focusIndex]);
                 this.setHighlightSpan(span, this.focusIndex, curList.length);
             }
@@ -4582,13 +4601,15 @@
                 this.touched = false;
                 if (currentSite && !currentSite.hideNotMatch) {
                     this.initPos();
-                    let firstType = this.bar.querySelector('.search-jumper-type:nth-child(1)>span');
-                    if (firstType && !firstType.classList.contains("search-jumper-open")) {
-                        if (firstType.onmousedown) {
-                            firstType.onmousedown();
-                        } else {
-                            let mouseEvent = new PointerEvent("mousedown");
-                            firstType.dispatchEvent(mouseEvent);
+                    if (!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) {
+                        let firstType = this.bar.querySelector('.search-jumper-type:nth-child(1)>span');
+                        if (firstType && !firstType.classList.contains("search-jumper-open")) {
+                            if (firstType.onmousedown) {
+                                firstType.onmousedown();
+                            } else {
+                                let mouseEvent = new PointerEvent("mousedown");
+                                firstType.dispatchEvent(mouseEvent);
+                            }
                         }
                     }
                     this.bar.style.display = ''
@@ -4992,9 +5013,40 @@
                                 let spans = this.submitInPageWords();
                                 if (spans && spans.length > 0) {
                                     let lastSpan = spans.pop();
-                                    var mouseEvent = new PointerEvent("mousedown", {button: 0});
+                                    if (this.currentSearchInPageLockWords) {
+                                        this.currentSearchInPageLockWords.firstChild.style.transform = "";
+                                    }
+                                    this.currentSearchInPageLockWords = lastSpan;
+                                    let mouseEvent = new PointerEvent("mousedown", {button: e.shiftKey ? 2 : 0});
                                     lastSpan.dispatchEvent(mouseEvent);
+                                } else if (this.lockWords) {
+                                    if (!this.currentSearchInPageLockWords) {
+                                        this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
+                                        this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                                    }
+                                    let mouseEvent = new PointerEvent("mousedown", {button: e.shiftKey ? 2 : 0});
+                                    this.currentSearchInPageLockWords.dispatchEvent(mouseEvent);
                                 }
+                            }
+                            break;
+                        case 37://←
+                            if (!this.currentSearchInPageLockWords) {
+                                this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
+                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                            } else if (this.currentSearchInPageLockWords.previousElementSibling){
+                                this.currentSearchInPageLockWords.firstChild.style.transform = "";
+                                this.currentSearchInPageLockWords = this.currentSearchInPageLockWords.previousElementSibling;
+                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                            }
+                            break;
+                        case 39://→
+                            if (!this.currentSearchInPageLockWords) {
+                                this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
+                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                            } else if (this.currentSearchInPageLockWords.nextElementSibling){
+                                this.currentSearchInPageLockWords.firstChild.style.transform = "";
+                                this.currentSearchInPageLockWords = this.currentSearchInPageLockWords.nextElementSibling;
+                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
                             }
                             break;
                         default:
@@ -6569,7 +6621,9 @@
                     }
                     if (!ele.classList.contains("search-jumper-open")) {
                         self.recoveHistory();
-                        ele.classList.add("search-jumper-open");
+                        if (!searchData.prefConfig.disableTypeOpen) {
+                            ele.classList.add("search-jumper-open");
+                        }
                         if (searchData.prefConfig.minSizeMode) {
                             //self.bar.classList.add("minSizeMode");
                             self.bar.classList.remove("minSizeModeClose");
@@ -7393,6 +7447,12 @@
                                     let selectEles = window.getSelection().getRangeAt(0).cloneContents();
                                     for (let i = 0; i < selectEles.childNodes.length; i++) {
                                         let childNode = selectEles.childNodes[i];
+                                        if (childNode.nodeType == 1) {
+                                            [].forEach.call(childNode.querySelectorAll("style,script,svg,canvas"), ele => {
+                                                let textNode = document.createTextNode('');
+                                                ele.parentNode.replaceChild(textNode, ele);
+                                            });
+                                        }
                                         if (prop) {
                                             if (childNode.nodeType == 3) {
                                                 value += childNode.nodeValue;
