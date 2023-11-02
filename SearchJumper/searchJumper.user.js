@@ -6621,9 +6621,7 @@
                     }
                     if (!ele.classList.contains("search-jumper-open")) {
                         self.recoveHistory();
-                        if (!searchData.prefConfig.disableTypeOpen) {
-                            ele.classList.add("search-jumper-open");
-                        }
+                        ele.classList.add("search-jumper-open");
                         if (searchData.prefConfig.minSizeMode) {
                             //self.bar.classList.add("minSizeMode");
                             self.bar.classList.remove("minSizeModeClose");
