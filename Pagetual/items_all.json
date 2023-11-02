@@ -557,18 +557,18 @@
   "updated_at": "2023-09-28T18:34:32+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/86108",
   "data": {
-    "pageElement": "//div[contains(concat(' ', @class, ' '), ' viewableWrapper ')]/ul[li]",
+    "pageElement": "id('comment-main')/ul[.//article]",
     "nextLink": "//a[contains(@href, 'page=') and text()='次へ']",
     "url": "^https://news\\.yahoo\\.co\\.jp/articles/.+?/comments",
     "exampleUrl": "https://news.yahoo.co.jp/articles/009828f57dc6e4b74f4be1505978e2544fcace52/comments"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Griever3",
+  "resource_url": "http://wedata.net/items/86108",
   "name": "コメント一覧 - Yahoo!ニュース",
   "created_at": "2023-04-22T22:14:36+09:00",
-  "updated_at": "2023-07-25T19:37:06+09:00"
+  "updated_at": "2023-11-01T17:36:30+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86107",
@@ -20645,7 +20645,7 @@
 {
   "resource_url": "http://wedata.net/items/77441",
   "data": {
-    "pageElement": "descendant::*[./article][1]/article",
+    "pageElement": "//div[@class='sentinel-search-latestArticles']",
     "nextLink": "//a[@class='next']",
     "url": "^https?://(screen|game)rant\\.com/.+",
     "exampleUrl": "https://screenrant.com/search/?q=masked%20singer&page=2\r\nhttps://gamerant.com/search/?q=rpg"
@@ -20654,7 +20654,7 @@
   "created_by": "Tanookirby",
   "name": "Screen Rant, Game Rant",
   "created_at": "2015-08-04T04:56:30+09:00",
-  "updated_at": "2023-10-30T06:35:51+09:00"
+  "updated_at": "2023-11-01T17:43:50+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77437",
