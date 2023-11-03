@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.5.3
+// @version      2.7.5.4
 // @description  Fetch and download main content on current page, provide special support for novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -428,7 +428,6 @@ if (window.top != window.self) {
             }, true);
             filterListContainer = document.createElement("div");
             filterListContainer.id = "filterListContainer";
-            document.body.appendChild(filterListContainer);
             filterListContainer.innerHTML = createHTML(`
                 <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 99998; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
                 <div style="padding: 5px; box-sizing: border-box; overflow: hidden; width: 600px; height: auto; max-height: 80vh; min-height: 200px; position: fixed; left: 50%; top: 10%; margin-left: -300px; z-index: 99998; background-color: #ffffff; border: 1px solid #afb3b6; border-radius: 10px; opacity: 0.95; filter: alpha(opacity=95); box-shadow: 5px 5px 20px 0px #000;">
@@ -580,7 +579,7 @@ if (window.top != window.self) {
             dacFilterBg.onclick = e => {
                 filterListContainer.style.display = "none";
             };
-            GM_addStyle(`
+            let listStyle = GM_addStyle(`
                 #filterListContainer * {
                     font-size: 13px;
                     float: initial;
@@ -669,6 +668,11 @@ if (window.top != window.self) {
                 }
             `);
             dacLinksCon = filterListContainer.querySelector("#dacLinksCon");
+            let shadowContainer = document.createElement("div");
+            document.body.appendChild(shadowContainer);
+            let shadow = shadowContainer.attachShadow({ mode: "open" });
+            shadow.appendChild(listStyle);
+            shadow.appendChild(filterListContainer);
         }
         list.forEach(a => {
             createLinkItem(a);
@@ -683,7 +687,10 @@ if (window.top != window.self) {
         }
         txtDownContent=document.createElement("div");
         txtDownContent.id="txtDownContent";
-        document.body.appendChild(txtDownContent);
+        let shadowContainer = document.createElement("div");
+        document.body.appendChild(shadowContainer);
+        let shadow = shadowContainer.attachShadow({ mode: "open" });
+        shadow.appendChild(txtDownContent);
         txtDownContent.innerHTML=createHTML(`
             <div style="font-size:16px;color:#333333;width:362px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-191px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;width:275px;height: 90px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
@@ -703,7 +710,7 @@ if (window.top != window.self) {
         txtDownQuit.onclick=function(){
             txtDownContent.style.display="none";
         };
-        initTempSave();
+        initTempSave(txtDownContent);
     }
 
     function saveContent() {
@@ -717,10 +724,10 @@ if (window.top != window.self) {
         }
     }
 
-    function initTempSave(){
-        var tempSavebtn = document.getElementById('tempSaveTxt');
-        var abortbtn = document.getElementById('abortRequest');
-        var saveAsMd = document.getElementById('saveAsMd');
+    function initTempSave(txtDownContent){
+        var tempSavebtn = txtDownContent.querySelector('#tempSaveTxt');
+        var abortbtn = txtDownContent.querySelector('#abortRequest');
+        var saveAsMd = txtDownContent.querySelector('#saveAsMd');
         tempSavebtn.onclick = function(){
             saveContent();
             console.log(curRequests);
