@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.22
+// @version      1.6.30.23
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3023,19 +3023,16 @@
                 }
             }
 
-            anylizeInPageWords(words, add, init) {
+            anylizeInPageWords(words, init) {
                 if (!words) return [];
                 let self = this;
                 let result = [];
-                if (!add) {
+                if (!this.lockWords) {
                     if (words.indexOf("$c") === 0 && words.length > 2) {
-                        this.splitSep = words.substr(2, 1);
                         words = words.substr(3).trim();
                     } else if (words.indexOf("$o") === 0) {
-                        this.splitSep = null;
                         words = words.substr(2).trim();
-                    } else this.splitSep = " ";
-                    this.curWordIndex = 0;
+                    }
                 }
                 if (this.splitSep) {
                     words.split(this.splitSep).forEach(word => {
@@ -3119,7 +3116,7 @@
                     });
                 } else {
                     this.curWordIndex = 0;
-                    let word = (add || "").replace(/^\$o/, "") + words;
+                    let word = (this.lockWords || "").replace(/^\$o/, "") + words;
                     result = [{content: word, isRe: false, reCase: "", title: "", style: ""}];
                 }
                 return result;
@@ -3143,7 +3140,18 @@
                     }
                     return wordSpans;
                 }
-                let targetWords = this.anylizeInPageWords(words, this.lockWords, !!init);
+                if (!this.lockWords) {
+                    if (words.indexOf("$c") === 0 && words.length > 2) {
+                        this.splitSep = words.substr(2, 1);
+                    } else if (words.indexOf("$o") === 0) {
+                        this.splitSep = null;
+                    } else this.splitSep = " ";
+                    this.curWordIndex = 0;
+                }
+                if (this.splitSep && words.indexOf(this.splitSep) == -1) {
+                    words = words.replace(/^\/?(.+?)(\/i?)?$/, "/$1/i");
+                }
+                let targetWords = this.anylizeInPageWords(words, !!init);
                 if (!targetWords || targetWords.length == 0) return wordSpans;
                 if (this.lockWords) {
                     this.lockWords += this.splitSep + words;
@@ -4352,7 +4360,7 @@
                                 skip = 1;
                             }
                         }
-                    } else if (!word.link && node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^BODY$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
+                    } else if (!word.link && node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^(BODY|#document\-fragment)$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
                         if (word.isRe) {
                             let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
                             if (wordMatch) {
@@ -4460,7 +4468,7 @@
                             skip = 1;
                         }
                     } else if ((!root || node === ele) &&
-                               node.nodeType == 1 &&
+                               (node.nodeType == 1 || node.nodeType == 11) &&
                                node.childNodes &&
                                !/^(SCRIPT|STYLE|MARK)$/i.test(node.nodeName) &&
                                node.ariaHidden != 'true' &&
@@ -4471,6 +4479,13 @@
                         } else {
                             for (var child = 0; child < node.childNodes.length; ++child) {
                                 child = child + searchWithinNode(node.childNodes[child], word);
+                            }
+                            try {
+                                if (node.shadowRoot) {
+                                    child = child + searchWithinNode(node.shadowRoot, word);
+                                }
+                            } catch(e) {
+                                debug(e);
                             }
                         }
                     }
