@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.20
+// @version      1.6.30.21
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -7451,6 +7451,7 @@
                                         let textNode = document.createTextNode('');
                                         ele.parentNode.replaceChild(textNode, ele);
                                     });
+                                    document.body.appendChild(container);
                                     if (prop) {
                                         for (let i = 0; i < container.childNodes.length; i++) {
                                             let childNode = container.childNodes[i];
@@ -7465,12 +7466,12 @@
                                     } else {
                                         [].forEach.call(container.querySelectorAll("img"), img => {
                                             if (!img.src) return;
-                                            let textNode = document.createTextNode(` ![${(img.alt || "").replace(/[\n\r]/g, "").trim()}](${img.src || ""}) `);
+                                            let textNode = document.createTextNode(` ![${(img.alt || "").replace(/[\n\r]/g, " ").trim()}](${img.src || ""}) `);
                                             img.parentNode.replaceChild(textNode, img);
                                         });
                                         [].forEach.call(container.querySelectorAll("a"), a => {
                                             if (!a.href) return;
-                                            let innerText = (a.innerText || "").replace(/[\n\r]/g, "").trim();
+                                            let innerText = (a.innerText || "").replace(/[\n\r]/g, " ").trim();
                                             if (!innerText) return;
                                             let textNode = document.createTextNode(` [${innerText}](${a.href || ""}) `);
                                             a.parentNode.replaceChild(textNode, a);
@@ -7480,6 +7481,7 @@
                                     if (value) {
                                         value = value.replace(/[\n\r]\s*/g, "\n");
                                     }
+                                    document.body.removeChild(container);
                                 } catch(e) {
                                     console.error(e);
                                 }
