@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.4
+// @version      0.6.5
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -167,14 +167,15 @@
                 helper.getScript('//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js', e => {
                     var lastReplyTime = $.cookie('lastReplyTime');
                     var customReplyStr = $.cookie('customReplyStr');
+                    var isCheckIn = document.title.indexOf("打卡签到") !== -1;
                     if (customReplyStr) replyStr = customReplyStr;
-                    if (document.title.indexOf("打卡签到") !== -1) {
+                    if (isCheckIn) {
                         var spaceStr = "";
                         var spaceLen = Math.floor(Math.random() * 10);
                         for (var i = 0; i < spaceLen; i++) {
                             spaceStr += " ";
                         }
-                        replyStr = "今日签到" + spaceStr;
+                        replyStr = "今日签到";// + spaceStr;
                     }
                     quickReply.attr('title', replyStr + "（右击修改）");
                     var formTitle = $("form td.h>b").text();
@@ -202,44 +203,114 @@
                         setCountdown();
                     }
                     let form = $('form[name="FORM"]');
+                    function replyFail() {
+                        submitBtn.val("提 交");
+                        quickReply.val("回复失败");
+                        $("form td.h").css("background", "rgb(244, 67, 54)");
+                        setTimeout(() => {
+                            quickReply.val(quickReplyStr);
+                            $("form td.h").css("background", "");
+                        }, 2000);
+                    }
+                    function replySuccess() {
+                        lastReplyTime = Date.now();
+                        $.cookie('lastReplyTime', lastReplyTime, { expires: 7, path: '/' });
+                        submitBtn.val("提 交");
+                        quickReply.val("回复成功");
+                        quickReply.css("background", "yellow");
+                        $("form td.h").css("background", "yellow");
+                        setTimeout(() => {
+                            setCountdown();
+                            $("form td.h").css("background", "");
+                        }, 2000);
+                    }
+                    function isRushTime() {
+                        var date = new Date();
+                        var year = date.getFullYear();
+                        var month = date.getMonth()+1;
+                        var today = date.getDate();
+                        var hour = date.getHours();
+                        if (hour < 20) return false;
+
+                        var newYear = year;
+                        var newMonth = month++;
+                        if (month > 12) {
+                            newMonth = 1;
+                            newYear++;
+                        }
+                        var newDate = new Date(newYear, newMonth, 1);
+                        var monthLast2Day = (new Date(newDate.getTime() - 2 * 1000 * 60 * 60 * 24)).getDate();
+                        return (today == monthLast2Day);
+                    }
+                    function submitReply() {
+                        $.ajax({
+                            type: form.attr('method'),
+                            url: form.attr('action'),
+                            data: form.serialize(),
+                            success: function (res) {
+                                if (res.indexOf("發貼完畢點擊進入主題列表") == -1) {
+                                    replyFail();
+                                } else {
+                                    replySuccess();
+                                }
+                            },
+                            fail: function (e) {
+                                replyFail();
+                                quickReply.removeAttr("disabled");
+                            }
+                        });
+                    }
+                    if (isCheckIn && isRushTime()) {
+                        let reachRushMinute = false;
+                        function checkRush(timeGap) {
+                            setTimeout(() => {
+                                let date = new Date();
+                                if (date.getHours() == 0) {
+                                    textarea.val("今日签到");
+                                    submitReply();
+                                    let rushTimes = 10;
+                                    let rushTimer = setInterval(() => {
+                                        if (--rushTimes > 0) {
+                                            submitReply();
+                                        } else {
+                                            clearInterval(rushTimer);
+                                        }
+                                    }, 1);
+                                } else {
+                                    if (reachRushMinute) {
+                                        if (date.getSeconds() > 57) {
+                                            checkRush(5);
+                                        } else if (date.getSeconds() > 50) {
+                                            checkRush(500);
+                                        } else if (date.getSeconds() > 30) {
+                                            checkRush(1000);
+                                        }
+                                    } else if (date.getHours() == 23 && date.getMinutes() == 59) {
+                                        reachRushMinute = true;
+                                        checkRush(1000);
+                                    } else {
+                                        checkRush(5000);
+                                    }
+                                }
+                            }, timeGap);
+                        }
+                        var rushReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="定時搶簽">` );
+                        rushReply.insertAfter( "form .btn" );
+                        rushReply.click(function() {
+                            checkRush(5000);
+                            rushReply.attr("disabled", true);
+                        });
+                    }
                     document.FORM.onsubmit = function(event) {
                         if (checkpost(document.FORM)) {
-                            $.ajax({
-                                type: form.attr('method'),
-                                url: form.attr('action'),
-                                data: form.serialize(),
-                                success: function () {
-                                    submitBtn.val("提 交");
-                                    quickReply.val("回复成功");
-                                    quickReply.css("background", "yellow");
-                                    $("form td.h").css("background", "yellow");
-                                    setTimeout(() => {
-                                        setCountdown();
-                                        $("form td.h").css("background", "");
-                                    }, 2000);
-                                },
-                                fail: function () {
-                                    submitBtn.val("提 交");
-                                    quickReply.val("回复失败");
-                                    quickReply.css("background", "rgb(244, 67, 54)");
-                                    $("form td.h").css("background", "rgb(244, 67, 54)");
-                                    setTimeout(() => {
-                                        quickReply.val(quickReplyStr);
-                                        quickReply.css("background", "");
-                                        $("form td.h").css("background", "");
-                                    }, 2000);
-                                    quickReply.removeAttr("disabled");
-                                }
-                            });
+                            submitReply();
                         }
                         event.preventDefault();
                         return false;
                     };
                     quickReply.click(function() {
                         textarea.val(replyStr);
-                        submitBtn.click();
-                        lastReplyTime = Date.now();
-                        $.cookie('lastReplyTime', lastReplyTime, { expires: 7, path: '/' });
+                        submitReply();
                         quickReply.attr("disabled", true);
                     });
                     quickReply.on('contextmenu', function(e) {
