@@ -5,7 +5,7 @@
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
 // @version      2.7.5.4
-// @description  Fetch and download main content on current page, provide special support for novel
+// @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
 // @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
