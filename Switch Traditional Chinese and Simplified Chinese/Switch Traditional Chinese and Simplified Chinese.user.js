@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.7.2
+// @version      1.2.7.3
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1639,12 +1639,16 @@
                     }
                 });
             });
+            let buttonCon = document.createElement('div');
             let saveBtn = document.createElement('button');
             saveBtn.innerText = '保存設置';
             saveBtn.style.display = 'block';
-            saveBtn.style.fontSize = 'large';
+            saveBtn.style.fontSize = 'x-large';
+            saveBtn.style.fontWeight = 'bold';
             saveBtn.style.float = 'left';
             saveBtn.style.marginRight = '5px';
+            saveBtn.style.pointerEvents = 'all';
+            saveBtn.style.cursor = 'pointer';
             saveBtn.addEventListener("click", function(e) {
                 auto = autoInput.checked;
                 shortcutKey = shortcutInput.value;
@@ -1662,11 +1666,13 @@
                 isSimple = defaultSimple.value == 'cn';
 
                 if (siteChanged) {
-                    sitesList.forEach(site => {
-                        if (site.indexOf('action_') === 0) {
-                            storage.setItem(site, "");
-                        }
-                    });
+                    if (sitesList) {
+                        sitesList.forEach(site => {
+                            if (site.indexOf('action_') === 0) {
+                                storage.setItem(site, "");
+                            }
+                        });
+                    }
                     sitesDisableInput.value.trim().split('\n').forEach(site => {
                         if (site.trim()) storage.setItem("action_" + site.replace(/\./g,"_"), 1);
                     });
@@ -1709,11 +1715,14 @@
                 alert('保存設置成功！');
                 location.reload();
             });
-            baseCon.appendChild(saveBtn);
+            buttonCon.appendChild(saveBtn);
             let clearBtn = document.createElement('button');
             clearBtn.innerText = '清除預處理緩存';
             clearBtn.style.display = 'block';
-            clearBtn.style.fontSize = 'large';
+            clearBtn.style.fontSize = 'x-large';
+            clearBtn.style.fontWeight = 'bold';
+            clearBtn.style.pointerEvents = "all";
+            clearBtn.style.cursor = "pointer";
             clearBtn.addEventListener("click", function(e) {
                 storage.setItem('stDict', "");
                 storage.setItem('tsDict', "");
@@ -1724,7 +1733,9 @@
                 alert('清除成功！');
                 location.reload();
             });
-            baseCon.appendChild(clearBtn);
+            buttonCon.appendChild(clearBtn);
+            buttonCon.style.cssText = "width: 100%; position: fixed; z-index: 999; bottom: 0px; left: 0px; display: flex; justify-content: center; background: #00000060; padding-bottom: 10px; pointer-events: none;";
+            baseCon.appendChild(buttonCon);
 
             createHR();
 
