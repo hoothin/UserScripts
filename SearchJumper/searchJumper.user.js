@@ -10066,6 +10066,7 @@
                         return;
                     }
                     targetElement = e.target;
+                    if (targetElement.shadowRoot) return;
                     if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                     if (targetElement.parentNode && targetElement.parentNode.getAttribute && targetElement.parentNode.getAttribute("draggable") == "true") return;
                     showDragSearch(e.clientX, e.clientY);
