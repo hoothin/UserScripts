@@ -230,7 +230,7 @@ if (window.top != window.self) {
         case "zh-SG":
             i18n={
                 fetch:"开始下载小说【Ctrl+F9】",
-                info:"本文是使用怠惰小说下载器（DownloadAllContent）下载的",
+                info:"来源：#t#\n本文是使用怠惰小说下载器（DownloadAllContent）下载的",
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
@@ -270,7 +270,7 @@ if (window.top != window.self) {
         case "zh-HK":
             i18n={
                 fetch:"開始下載小說【Ctrl+F9】",
-                info:"本文是使用怠惰小說下載器（DownloadAllContent）下載的",
+                info:"來源：#t#\n本文是使用怠惰小說下載器（DownloadAllContent）下載的",
                 error:"該段內容獲取失敗",
                 downloading:"已下載完成 %s 段，剩餘 %s 段<br>正在下載 %s",
                 complete:"已全部下載完成，共 %s 段",
@@ -309,7 +309,7 @@ if (window.top != window.self) {
         default:
             i18n={
                 fetch:"Download [Ctrl+F9]",
-                info:"The TXT is downloaded by 'DownloadAllContent'",
+                info:"Source: #t#\nThe TXT is downloaded by 'DownloadAllContent'",
                 error:"Failed in downloading current chapter",
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
                 complete:"Completed! Get %s pages in total",
@@ -716,11 +716,11 @@ if (window.top != window.self) {
 
     function saveContent() {
         if (win.downloadAllContentSaveAsZip) {
-            win.downloadAllContentSaveAsZip(rCats, i18n.info, content => {
+            win.downloadAllContentSaveAsZip(rCats, i18n.info.replace("#t#", location.href), content => {
                 saveAs(content, document.title + ".zip");
             });
         } else {
-            var blob = new Blob([i18n.info + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title + ".txt");
         }
     }
@@ -738,7 +738,7 @@ if (window.top != window.self) {
             if(curRequest)curRequest[1].abort();
         }
         saveAsMd.onclick = function(){
-            let txt = i18n.info+"\n\n---\n"+document.title+"\n===\n";
+            let txt = i18n.info.replace("#t#", location.href)+"\n\n---\n"+document.title+"\n===\n";
             rCats.forEach(cat => {
                 cat = cat.replace("\r\n", "\n---").replace(/(\r\n|\n\r)+/g, "\n\n").replace(/[\n\r]\t+/g, "\n");
                 txt += '\n\n'+cat;
@@ -1333,7 +1333,7 @@ if (window.top != window.self) {
             useIframe = false;
             filterList(list);
         }else{
-            var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([i18n.info.replace("#t#", location.href)+"\r\n\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".txt");
         }
     }
