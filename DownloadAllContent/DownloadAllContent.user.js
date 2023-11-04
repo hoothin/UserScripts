@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.5.5
+// @version      2.7.5.6
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -584,6 +584,7 @@ if (window.top != window.self) {
                     font-size: 13px;
                     float: initial;
                     background-image: initial;
+                    height: fit-content;
                 }
                 #filterListContainer.customRule .dacCustomRule {
                     display: flex;
@@ -807,6 +808,14 @@ if (window.top != window.self) {
                         downIndex++;
                         downNum++;
                         let doc = getDocEle(result.responseText);
+                        if (/^{/.test(result.responseText)) {
+                            doc.json = () => {
+                                try {
+                                    return JSON.parse(result.responseText);
+                                } catch(e) {}
+                                return {};
+                            }
+                        }
                         let base = doc.querySelector("base");
                         let nextPage = !disableNextPage && !processFunc && checkNextPage(doc, base ? base.href : aTag.href);
                         if(nextPage){
@@ -929,9 +938,10 @@ if (window.top != window.self) {
                                 }
                                 doc.body.scrollTop = 9999999;
                                 doc.documentElement.scrollTop = 9999999;
-                                if (validTimes++ > 10) {
+                                if (!processFunc && validTimes++ > 5) {
                                     iframe.src = iframe.src;
                                     validTimes = 0;
+                                    inited = false;
                                     return;
                                 }
                                 if (customTitle) {
@@ -952,7 +962,7 @@ if (window.top != window.self) {
                                     downNum--;
                                     setTimeout(() => {
                                         checkIframe();
-                                    }, 500);
+                                    }, 1000);
                                     return;
                                 }
                                 if (wait) {
@@ -1176,7 +1186,7 @@ if (window.top != window.self) {
         var endEle = ele => {
             return /^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(ele.nodeName) && ele.children.length <= 1;
         };
-        var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
+        var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td,pre"),largestNum=0;
         for(i=0;i<contents.length;i++){
             let content=contents[i],hasText=false,allSingle=true,item,curNum=0;
             if(/footer/.test(content.className))continue;
@@ -1703,7 +1713,6 @@ if (window.top != window.self) {
             fetch(e.shiftKey);
         }
     });
-    GM_registerMenuCommand(i18n.fetch, fetch);
     GM_registerMenuCommand(i18n.custom, () => {
         var customRules = GM_getValue("DACrules_" + document.domain);
         var urls = window.prompt(i18n.customInfo, customRules ? customRules : "https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
@@ -1711,6 +1720,7 @@ if (window.top != window.self) {
             customDown(urls);
         }
     });
+    GM_registerMenuCommand(i18n.fetch, fetch);
     GM_registerMenuCommand(i18n.setting, setDel);
     GM_registerMenuCommand(i18n.searchRule, searchRule);
 })();
