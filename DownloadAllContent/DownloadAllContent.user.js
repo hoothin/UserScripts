@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.5.6
+// @version      2.7.5.7
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -748,6 +748,16 @@ if (window.top != window.self) {
         }
     }
 
+    let charset = (document.characterSet || document.charset || document.inputEncoding);
+    let equiv = document.querySelector('[http-equiv="Content-Type"]'), charsetValid = true;
+    if (equiv && equiv.content) {
+        let innerCharSet = equiv.content.match(/charset\=([^;]+)/);
+        if (!innerCharSet) {
+            charsetValid = false;
+        } else if (innerCharSet[1].replace("-", "").toLowerCase() != charset.replace("-", "").toLowerCase()) {
+            charsetValid = false;
+        }
+    } else charsetValid = false;
     function indexDownload(aEles, noSort){
         if(aEles.length<1)return;
         initTxtDownDiv();
@@ -795,125 +805,138 @@ if (window.top != window.self) {
             let request=(aTag, curIndex)=>{
                 let tryTimes=0;
                 let validTimes=0;
-                let requestBody={
-                    method: 'GET',
-                    url: aTag.href,
-                    headers:{
-                        referer:aTag.href,
-                        "Content-Type":"text/html;charset="+document.charset
-                    },
-                    timeout:10000,
-                    overrideMimeType:"text/html;charset="+document.charset,
-                    onload: function(result) {
-                        downIndex++;
-                        downNum++;
-                        let doc = getDocEle(result.responseText);
-                        if (/^{/.test(result.responseText)) {
-                            doc.json = () => {
-                                try {
-                                    return JSON.parse(result.responseText);
-                                } catch(e) {}
-                                return {};
-                            }
-                        }
-                        let base = doc.querySelector("base");
-                        let nextPage = !disableNextPage && !processFunc && checkNextPage(doc, base ? base.href : aTag.href);
-                        if(nextPage){
-                            var inArr=false;
-                            for(var ai=0;ai<aEles.length;ai++){
-                                if(aEles[ai].href==nextPage.href){
-                                    inArr=true;
-                                    break;
+                function requestDoc(_charset) {
+                    if (!_charset) _charset = charset;
+                    return GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: aTag.href,
+                        headers:{
+                            referer:aTag.href,
+                            "Content-Type":"text/html;charset="+_charset
+                        },
+                        timeout:10000,
+                        overrideMimeType:"text/html;charset="+_charset,
+                        onload: function(result) {
+                            let doc = getDocEle(result.responseText);
+                            if (charsetValid) {
+                                let equiv = doc.querySelector('[http-equiv="Content-Type"]');
+                                if (equiv && equiv.content) {
+                                    let innerCharSet = equiv.content.match(/charset\=([^;]+)/);
+                                    if (innerCharSet && innerCharSet[1].replace("-", "").toLowerCase() != _charset.replace("-", "").toLowerCase()) {
+                                        charset = innerCharSet[1];
+                                        return requestDoc(charset);
+                                    }
                                 }
                             }
-                            if(!inArr){
-                                nextPage.innerText=aTag.innerText+"\t>>";
-                                aEles.push(nextPage);
-                                let targetIndex = curIndex;
-                                for(let a=0;a<insertSigns.length;a++){
-                                    let signs=insertSigns[a],breakSign=false;
-                                    if(signs){
-                                        for(let b=0;b<signs.length;b++){
-                                            let sign=signs[b];
-                                            if(sign==curIndex){
-                                                targetIndex=a;
-                                                breakSign=true;
-                                                break;
+                            downIndex++;
+                            downNum++;
+                            if (/^{/.test(result.responseText)) {
+                                doc.json = () => {
+                                    try {
+                                        return JSON.parse(result.responseText);
+                                    } catch(e) {}
+                                    return {};
+                                }
+                            }
+                            let base = doc.querySelector("base");
+                            let nextPage = !disableNextPage && !processFunc && checkNextPage(doc, base ? base.href : aTag.href);
+                            if(nextPage){
+                                var inArr=false;
+                                for(var ai=0;ai<aEles.length;ai++){
+                                    if(aEles[ai].href==nextPage.href){
+                                        inArr=true;
+                                        break;
+                                    }
+                                }
+                                if(!inArr){
+                                    nextPage.innerText=aTag.innerText+"\t>>";
+                                    aEles.push(nextPage);
+                                    let targetIndex = curIndex;
+                                    for(let a=0;a<insertSigns.length;a++){
+                                        let signs=insertSigns[a],breakSign=false;
+                                        if(signs){
+                                            for(let b=0;b<signs.length;b++){
+                                                let sign=signs[b];
+                                                if(sign==curIndex){
+                                                    targetIndex=a;
+                                                    breakSign=true;
+                                                    break;
+                                                }
                                             }
                                         }
+                                        if(breakSign)break;
                                     }
-                                    if(breakSign)break;
+                                    let insertSign = insertSigns[targetIndex];
+                                    if(!insertSign)insertSigns[targetIndex] = [];
+                                    insertSigns[targetIndex].push(aEles.length-1);
                                 }
-                                let insertSign = insertSigns[targetIndex];
-                                if(!insertSign)insertSigns[targetIndex] = [];
-                                insertSigns[targetIndex].push(aEles.length-1);
                             }
-                        }
-                        if (result.status >= 400) {
-                            console.warn("error:", `status: ${result.status} from: ${aTag.href}`);
-                        } else {
-                            console.log(result.status);
-                        }
-                        if (customTitle) {
-                            try {
-                                let title = doc.querySelector(customTitle);
-                                if (title && title.innerText) {
-                                    aTag.innerText = title.innerText;
+                            if (result.status >= 400) {
+                                console.warn("error:", `status: ${result.status} from: ${aTag.href}`);
+                            } else {
+                                console.log(result.status);
+                            }
+                            if (customTitle) {
+                                try {
+                                    let title = doc.querySelector(customTitle);
+                                    if (title && title.innerText) {
+                                        aTag.innerText = title.innerText;
+                                    }
+                                } catch(e) {
+                                    console.warn(e);
                                 }
-                            } catch(e) {
-                                console.warn(e);
                             }
+                            let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 5);
+                            if (!validData && validTimes++ < 5) {
+                                downIndex--;
+                                downNum--;
+                                setTimeout(() => {
+                                    requestDoc();
+                                }, 500);
+                                return;
+                            }
+                            if (wait) {
+                                setTimeout(() => {
+                                    downOnce(wait);
+                                }, wait);
+                            } else downOnce();
+                        },
+                        onerror: function(e) {
+                            console.warn("error:", e);
+                            if(tryTimes++ < 5){
+                                setTimeout(() => {
+                                    requestDoc();
+                                }, 500);
+                                return;
+                            }
+                            downIndex++;
+                            downNum++;
+                            processDoc(curIndex, aTag, null, ` NETWORK ERROR: ${(e.response||e.responseText)} from: ${aTag.href} `);
+                            if (wait) {
+                                setTimeout(() => {
+                                    downOnce(wait);
+                                }, wait);
+                            } else downOnce();
+                        },
+                        ontimeout: function(e) {
+                            console.warn("timeout: times="+tryTimes+" url="+aTag.href);
+                            //console.log(e);
+                            if(tryTimes++ < 5){
+                                setTimeout(() => {
+                                    requestDoc();
+                                }, 500);
+                                return;
+                            }
+                            downIndex++;
+                            downNum++;
+                            processDoc(curIndex, aTag, null, ` TIMEOUT: ${aTag.href} `);
+                            if (wait) {
+                                setTimeout(() => {
+                                    downOnce(wait);
+                                }, wait);
+                            } else downOnce();
                         }
-                        let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 5);
-                        if (!validData && validTimes++ < 5) {
-                            downIndex--;
-                            downNum--;
-                            setTimeout(() => {
-                                GM_xmlhttpRequest(requestBody);
-                            }, 500);
-                            return;
-                        }
-                        if (wait) {
-                            setTimeout(() => {
-                                downOnce(wait);
-                            }, wait);
-                        } else downOnce();
-                    },
-                    onerror: function(e) {
-                        console.warn("error:", e);
-                        if(tryTimes++ < 5){
-                            setTimeout(() => {
-                                GM_xmlhttpRequest(requestBody);
-                            }, 500);
-                            return;
-                        }
-                        downIndex++;
-                        downNum++;
-                        processDoc(curIndex, aTag, null, ` NETWORK ERROR: ${(e.response||e.responseText)} from: ${aTag.href} `);
-                        if (wait) {
-                            setTimeout(() => {
-                                downOnce(wait);
-                            }, wait);
-                        } else downOnce();
-                    },
-                    ontimeout: function(e) {
-                        console.warn("timeout: times="+tryTimes+" url="+aTag.href);
-                        //console.log(e);
-                        if(tryTimes++ < 5){
-                            setTimeout(() => {
-                                GM_xmlhttpRequest(requestBody);
-                            }, 500);
-                            return;
-                        }
-                        downIndex++;
-                        downNum++;
-                        processDoc(curIndex, aTag, null, ` TIMEOUT: ${aTag.href} `);
-                        if (wait) {
-                            setTimeout(() => {
-                                downOnce(wait);
-                            }, wait);
-                        } else downOnce();
-                    }
+                    });
                 };
                 if (useIframe) {
                     let iframe = document.createElement('iframe'), inited = false;
@@ -1000,7 +1023,7 @@ if (window.top != window.self) {
                     document.body.appendChild(iframe);
                     return [curIndex, null, aTag.href];
                 } else {
-                    return [curIndex, GM_xmlhttpRequest(requestBody), aTag.href];
+                    return [curIndex, requestDoc(), aTag.href];
                 }
             }
             if(!aTag){
