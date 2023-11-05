@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.24
+// @version      1.6.30.25
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3117,13 +3117,13 @@
                             link = reMatch[2].indexOf("l") != -1;
                         }
                         if (!showWords) showWords = word;
-                        result.push({content: word, showWords: showWords, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup});
+                        result.push({content: word, showWords: showWords, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup, init: init});
                         self.curWordIndex++;
                     });
                 } else {
                     this.curWordIndex = 0;
                     let word = (this.lockWords || "").replace(/^\$o/, "") + words;
-                    result = [{content: word, isRe: false, reCase: "", title: "", style: ""}];
+                    result = [{content: word, isRe: false, reCase: "", title: "", style: "", init: init}];
                 }
                 return result;
             }
@@ -3153,9 +3153,6 @@
                         this.splitSep = null;
                     } else this.splitSep = " ";
                     this.curWordIndex = 0;
-                }
-                if (this.splitSep && words.indexOf(this.splitSep) == -1) {
-                    words = words.replace(/^\/?(.+?)(\/i?)?$/, "/$1/i");
                 }
                 let targetWords = this.anylizeInPageWords(words, !!init);
                 if (!targetWords || targetWords.length == 0) return wordSpans;
@@ -4221,43 +4218,238 @@
                     skip = 0;
                     let pa = node.parentNode;
                     if (node.nodeType == 1 && node.classList && node.classList.contains("searchJumper")) return 0;
-                    if (word.link && node.nodeType == 1 && node.href && node.href.match) {
-                        let wordMatch = node.href.match(new RegExp(word.content, word.reCase));
-                        if (wordMatch) {
-                            if (typeof word.hideParent !== 'undefined') {
-                                let parentDepth = word.hideParent;
-                                let parent = node;
-                                while(parentDepth-- > 0 && parent) {
-                                    parent = parent.parentElement;
+                    let checkChildren = true;
+                    if (word.link) {
+                        if (node.nodeType == 1 && node.href && node.href.match) {
+                            checkChildren = false;
+                            let wordMatch = node.href.match(new RegExp(word.content, word.reCase));
+                            if (wordMatch) {
+                                if (typeof word.hideParent !== 'undefined') {
+                                    let parentDepth = word.hideParent;
+                                    let parent = node;
+                                    while(parentDepth-- > 0 && parent) {
+                                        parent = parent.parentElement;
+                                    }
+                                    if (parent) {
+                                        parent.innerHTML = createHTML("");
+                                        parent.dataset.content = word.showWords;
+                                        parent.classList.add("searchJumper-hide");
+                                        return 0;
+                                    }
+                                } else {
+                                    let curList = self.marks[word.showWords];
+                                    let index = curList.length;
+                                    node.classList.add("searchJumper");
+                                    if (word.title) node.title = JSON.parse('"' + word.title + '"');
+                                    if (word.popup) {
+                                        node.addEventListener("mouseenter", e => {
+                                            if (targetElement != node || !searchBar.funcKeyCall) {
+                                                targetElement = node;
+                                                searchBar.showInPage(true, e);
+                                            }
+                                        });
+                                    }
+                                    if (word.style) node.style.cssText = word.style;
+                                    node.addEventListener("click", e => {
+                                        if (!e.altKey) return;
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        return false;
+                                    });
+                                    node.dataset.content = word.showWords;
+                                    node.addEventListener("mousedown", e => {
+                                        if (!e.altKey) return;
+                                        let target;
+                                        if (e.button === 0) {
+                                            if (index != curList.length - 1) {
+                                                self.focusIndex = index + 1;
+                                            } else self.focusIndex = 0;
+                                        } else if (e.button === 2){
+                                            if (index != 0) {
+                                                self.focusIndex = index - 1;
+                                            } else self.focusIndex = curList.length - 1;
+                                        }
+                                        target = curList[self.focusIndex];
+                                        self.focusHighlight(target);
+                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
+                                        self.focusText = word.showWords;
+                                    });
+                                    self.marks[word.showWords].push(node);
+
+                                    let navMark = document.createElement("span");
+                                    let top = getElementTop(node);
+                                    navMark.dataset.top = top;
+                                    navMark.dataset.content = word.showWords;
+                                    navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                                    navMark.style.background = node.style.background || "yellow";
+                                    navMark.addEventListener("click", e => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        self.focusIndex = index;
+                                        self.focusHighlight(node);
+                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                                        self.navPointer.style.display = "";
+                                        self.navPointer.style.top = navMark.offsetTop + 18 + "px";
+                                        return false;
+                                    }, true);
+                                    self.navMarks.appendChild(navMark);
+
+                                    skip = 1;
                                 }
-                                if (parent) {
-                                    parent.innerHTML = createHTML("");
-                                    parent.dataset.content = word.showWords;
-                                    parent.classList.add("searchJumper-hide");
-                                    return 0;
+                            }
+                        }
+                    } else {
+                        let blockValue = "";
+                        if (node.nodeType == 1) {
+                            if (node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/^(hidden|file|password|radio|range|checkbox|)$/i.test(node.type) && !/(^wd|^kw|^q$|query|search|keyword)/i.test(node.name) && !/(^wd|^kw|^q$|query|search)/i.test(node.id) && node.scrollHeight < 200) {
+                                blockValue = node.value;
+                            } else if (node.offsetParent && !node.innerText) {
+                                let before = getComputedStyle(node, ':before').getPropertyValue('content');
+                                let after = getComputedStyle(node, ':after').getPropertyValue('content');
+                                if (before && before !== "none" && before !== '""') {
+                                    blockValue = before;
+                                }
+                                if (after && after !== "none" && after !== '""') {
+                                    blockValue += after;
+                                }
+                            }
+                        }
+                        if (blockValue) {
+                            checkChildren = false;
+                            let wordMatch = false;
+                            if (word.isRe) {
+                                wordMatch = blockValue.match(new RegExp(word.content, word.reCase));
+                            } else {
+                                if (_unsafeWindow.searchJumperPinyin) {
+                                    let pinyin = _unsafeWindow.searchJumperPinyin(blockValue, word.content);
+                                    if (pinyin.matched) {
+                                        len = pinyin.len;
+                                        pos = pinyin.pos;
+                                    } else pos = -1;
+                                } else {
+                                    len = word.content.length;
+                                    pos = blockValue.toUpperCase().indexOf(word.content.toUpperCase());
+                                }
+                                if (word.init && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
+                                    if (pos !== 0 && /[a-z]/i.test(blockValue[pos - 1])) {
+                                        pos = -1;
+                                    }
+                                    if (pos + word.content.length !== blockValue.length && /[a-z]/i.test(blockValue[pos + word.content.length])) {
+                                        pos = -1;
+                                    }
+                                }
+                                wordMatch = (pos >= 0);
+                            }
+                            if (wordMatch) {
+                                if (typeof word.hideParent !== 'undefined') {
+                                    let parentDepth = word.hideParent;
+                                    let parent = node.parentElement;
+                                    while(parentDepth-- > 0 && parent) {
+                                        parent = parent.parentElement;
+                                    }
+                                    if (parent) {
+                                        parent.innerHTML = createHTML("");
+                                        parent.dataset.content = word.showWords;
+                                        parent.classList.add("searchJumper-hide");
+                                        return 0;
+                                    }
+                                } else {
+                                    let curList = self.marks[word.showWords];
+                                    let index = curList.length;
+                                    node.classList.add("searchJumper");
+                                    if (word.title) node.title = JSON.parse('"' + word.title + '"');
+                                    if (word.style) node.style.cssText = word.style.replace("background:", "border:solid 1px ");
+                                    node.style.color = "";
+                                    node.dataset.content = word.showWords;
+
+                                    self.marks[word.showWords].push(node);
+
+                                    let navMark = document.createElement("span");
+                                    let top = getElementTop(node);
+                                    navMark.dataset.top = top;
+                                    navMark.dataset.content = word.showWords;
+                                    navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                                    navMark.style.background = node.style.background || "yellow";
+                                    navMark.addEventListener("click", e => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        self.focusIndex = index;
+                                        self.focusHighlight(node);
+                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                                        self.navPointer.style.display = "";
+                                        self.navPointer.style.top = navMark.offsetTop + 18 + "px";
+                                        return false;
+                                    }, true);
+                                    self.navMarks.appendChild(navMark);
+
+                                    skip = 1;
+                                }
+                            }
+                        } else if (node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^(BODY|#document\-fragment)$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
+                            checkChildren = false;
+                            if (word.isRe) {
+                                let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
+                                if (wordMatch) {
+                                    let content = wordMatch[0] || wordMatch;
+                                    len = content.length;
+                                    pos = node.data.indexOf(content);
                                 }
                             } else {
+                                if (_unsafeWindow.searchJumperPinyin) {
+                                    let pinyin = _unsafeWindow.searchJumperPinyin(node.data, word.content);
+                                    if (pinyin.matched) {
+                                        len = pinyin.len;
+                                        pos = pinyin.pos;
+                                    } else pos = -1;
+                                } else {
+                                    len = word.content.length;
+                                    pos = node.data.toUpperCase().indexOf(word.content.toUpperCase());
+                                }
+                                if (word.init && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
+                                    if (pos !== 0 && /[a-z]/i.test(node.data[pos - 1])) {
+                                        pos = -1;
+                                    }
+                                    if (pos + word.content.length !== node.data.length && /[a-z]/i.test(node.data[pos + word.content.length])) {
+                                        pos = -1;
+                                    }
+                                }
+                            }
+                            if (pos >= 0) {
+                                if (typeof word.hideParent !== 'undefined') {
+                                    let parentDepth = word.hideParent;
+                                    let parent = node.parentElement;
+                                    while(parentDepth-- > 0 && parent) {
+                                        parent = parent.parentElement;
+                                    }
+                                    if (parent) {
+                                        parent.innerHTML = createHTML("");
+                                        parent.dataset.content = word.showWords;
+                                        parent.classList.add("searchJumper-hide");
+                                        return 0;
+                                    }
+                                }
                                 let curList = self.marks[word.showWords];
                                 let index = curList.length;
-                                node.classList.add("searchJumper");
-                                if (word.title) node.title = JSON.parse('"' + word.title + '"');
+                                spannode = document.createElement("mark");
+                                spannode.className = "searchJumper";
+                                if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
                                 if (word.popup) {
-                                    node.addEventListener("mouseenter", e => {
-                                        if (targetElement != node || !searchBar.funcKeyCall) {
-                                            targetElement = node;
+                                    spannode.addEventListener("mouseenter", e => {
+                                        if (targetElement != spannode || !searchBar.funcKeyCall) {
+                                            targetElement = spannode;
                                             searchBar.showInPage(true, e);
                                         }
                                     });
                                 }
-                                if (word.style) node.style.cssText = word.style;
-                                node.addEventListener("click", e => {
+                                spannode.style.cssText = word.style;
+                                spannode.addEventListener("click", e => {
                                     if (!e.altKey) return;
                                     e.stopPropagation();
                                     e.preventDefault();
                                     return false;
                                 });
-                                node.dataset.content = word.showWords;
-                                node.addEventListener("mousedown", e => {
+                                spannode.dataset.content = word.showWords;
+                                spannode.addEventListener("mousedown", e => {
                                     if (!e.altKey) return;
                                     let target;
                                     if (e.button === 0) {
@@ -4274,19 +4466,24 @@
                                     self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
                                     self.focusText = word.showWords;
                                 });
-                                self.marks[word.showWords].push(node);
+                                middlebit = node.splitText(pos);
+                                middlebit.splitText(len);
+                                middleclone = middlebit.cloneNode(true);
+                                spannode.appendChild(middleclone);
+                                middlebit.parentNode.replaceChild(spannode, middlebit);
+                                self.marks[word.showWords].push(spannode);
 
                                 let navMark = document.createElement("span");
-                                let top = getElementTop(node);
+                                let top = getElementTop(spannode);
                                 navMark.dataset.top = top;
                                 navMark.dataset.content = word.showWords;
                                 navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                                navMark.style.background = node.style.background || "yellow";
+                                navMark.style.background = spannode.style.background || "yellow";
                                 navMark.addEventListener("click", e => {
                                     e.stopPropagation();
                                     e.preventDefault();
                                     self.focusIndex = index;
-                                    self.focusHighlight(node);
+                                    self.focusHighlight(spannode);
                                     self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
                                     self.navPointer.style.display = "";
                                     self.navPointer.style.top = navMark.offsetTop + 18 + "px";
@@ -4297,189 +4494,25 @@
                                 skip = 1;
                             }
                         }
-                    } else if (!word.link && !node.innerText && node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/(^wd|^kw|^q$|query|search|keyword)/i.test(node.name) && !/(^wd|^kw|^q$|query|search)/i.test(node.id)) {
-                        let wordMatch = false;
-                        if (word.isRe) {
-                            let wordMatch = node.value.match(new RegExp(word.content, word.reCase));
-                        } else {
-                            if (_unsafeWindow.searchJumperPinyin) {
-                                let pinyin = _unsafeWindow.searchJumperPinyin(node.value, word.content);
-                                if (pinyin.matched) {
-                                    len = pinyin.len;
-                                    pos = pinyin.pos;
-                                } else pos = -1;
-                            } else {
-                                len = word.content.length;
-                                pos = node.value.toUpperCase().indexOf(word.content.toUpperCase());
-                            }
-                            if (pos >= 0 && /^[a-z]+$/i.test(word.content)) {
-                                if (pos !== 0 && /[a-z]/i.test(node.value[pos - 1])) {
-                                    pos = -1;
-                                }
-                                if (pos + word.content.length !== node.value.length && /[a-z]/i.test(node.value[pos + word.content.length])) {
-                                    pos = -1;
-                                }
-                            }
-                            wordMatch = (pos >= 0);
-                        }
-                        if (wordMatch) {
-                            if (typeof word.hideParent !== 'undefined') {
-                                let parentDepth = word.hideParent;
-                                let parent = node.parentElement;
-                                while(parentDepth-- > 0 && parent) {
-                                    parent = parent.parentElement;
-                                }
-                                if (parent) {
-                                    parent.innerHTML = createHTML("");
-                                    parent.dataset.content = word.showWords;
-                                    parent.classList.add("searchJumper-hide");
-                                    return 0;
-                                }
-                            } else {
-                                let curList = self.marks[word.showWords];
-                                let index = curList.length;
-                                node.classList.add("searchJumper");
-                                if (word.title) node.title = JSON.parse('"' + word.title + '"');
-                                if (word.style) node.style.cssText = word.style;
-                                node.dataset.content = word.showWords;
-
-                                self.marks[word.showWords].push(node);
-
-                                let navMark = document.createElement("span");
-                                let top = getElementTop(node);
-                                navMark.dataset.top = top;
-                                navMark.dataset.content = word.showWords;
-                                navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                                navMark.style.background = node.style.background || "yellow";
-                                navMark.addEventListener("click", e => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    self.focusIndex = index;
-                                    self.focusHighlight(node);
-                                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
-                                    self.navPointer.style.display = "";
-                                    self.navPointer.style.top = navMark.offsetTop + 18 + "px";
-                                    return false;
-                                }, true);
-                                self.navMarks.appendChild(navMark);
-
-                                skip = 1;
-                            }
-                        }
-                    } else if (!word.link && node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^(BODY|#document\-fragment)$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
-                        if (word.isRe) {
-                            let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
-                            if (wordMatch) {
-                                let content = wordMatch[0] || wordMatch;
-                                len = content.length;
-                                pos = node.data.indexOf(content);
-                            }
-                        } else {
-                            if (_unsafeWindow.searchJumperPinyin) {
-                                let pinyin = _unsafeWindow.searchJumperPinyin(node.data, word.content);
-                                if (pinyin.matched) {
-                                    len = pinyin.len;
-                                    pos = pinyin.pos;
-                                } else pos = -1;
-                            } else {
-                                len = word.content.length;
-                                pos = node.data.toUpperCase().indexOf(word.content.toUpperCase());
-                            }
-                            if (pos >= 0 && /^[a-z]+$/i.test(word.content)) {
-                                if (pos !== 0 && /[a-z]/i.test(node.data[pos - 1])) {
-                                    pos = -1;
-                                }
-                                if (pos + word.content.length !== node.data.length && /[a-z]/i.test(node.data[pos + word.content.length])) {
-                                    pos = -1;
-                                }
-                            }
-                        }
-                        if (pos >= 0) {
-                            if (typeof word.hideParent !== 'undefined') {
-                                let parentDepth = word.hideParent;
-                                let parent = node.parentElement;
-                                while(parentDepth-- > 0 && parent) {
-                                    parent = parent.parentElement;
-                                }
-                                if (parent) {
-                                    parent.innerHTML = createHTML("");
-                                    parent.dataset.content = word.showWords;
-                                    parent.classList.add("searchJumper-hide");
-                                    return 0;
-                                }
-                            }
-                            let curList = self.marks[word.showWords];
-                            let index = curList.length;
-                            spannode = document.createElement("mark");
-                            spannode.className = "searchJumper";
-                            if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
-                            if (word.popup) {
-                                spannode.addEventListener("mouseenter", e => {
-                                    if (targetElement != spannode || !searchBar.funcKeyCall) {
-                                        targetElement = spannode;
-                                        searchBar.showInPage(true, e);
-                                    }
-                                });
-                            }
-                            spannode.style.cssText = word.style;
-                            spannode.addEventListener("click", e => {
-                                if (!e.altKey) return;
-                                e.stopPropagation();
-                                e.preventDefault();
-                                return false;
-                            });
-                            spannode.dataset.content = word.showWords;
-                            spannode.addEventListener("mousedown", e => {
-                                if (!e.altKey) return;
-                                let target;
-                                if (e.button === 0) {
-                                    if (index != curList.length - 1) {
-                                        self.focusIndex = index + 1;
-                                    } else self.focusIndex = 0;
-                                } else if (e.button === 2){
-                                    if (index != 0) {
-                                        self.focusIndex = index - 1;
-                                    } else self.focusIndex = curList.length - 1;
-                                }
-                                target = curList[self.focusIndex];
-                                self.focusHighlight(target);
-                                self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
-                                self.focusText = word.showWords;
-                            });
-                            middlebit = node.splitText(pos);
-                            middlebit.splitText(len);
-                            middleclone = middlebit.cloneNode(true);
-                            spannode.appendChild(middleclone);
-                            middlebit.parentNode.replaceChild(spannode, middlebit);
-                            self.marks[word.showWords].push(spannode);
-
-                            let navMark = document.createElement("span");
-                            let top = getElementTop(spannode);
-                            navMark.dataset.top = top;
-                            navMark.dataset.content = word.showWords;
-                            navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                            navMark.style.background = spannode.style.background || "yellow";
-                            navMark.addEventListener("click", e => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                self.focusIndex = index;
-                                self.focusHighlight(spannode);
-                                self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
-                                self.navPointer.style.display = "";
-                                self.navPointer.style.top = navMark.offsetTop + 18 + "px";
-                                return false;
-                            }, true);
-                            self.navMarks.appendChild(navMark);
-
-                            skip = 1;
-                        }
-                    } else if ((!root || node === ele) &&
-                               (node.nodeType == 1 || node.nodeType == 11) &&
-                               node.childNodes &&
-                               !/^(SCRIPT|STYLE|MARK)$/i.test(node.nodeName) &&
-                               node.ariaHidden != 'true' &&
-                               node.role != "search" &&
-                               (!node.hasAttribute || node.hasAttribute('jsname') == false)) {
+                    }
+                    if (checkChildren &&
+                        (!root ||
+                         node === ele
+                        ) &&
+                        (node.nodeType == 1 ||
+                         node.nodeType == 11
+                        ) &&
+                        node.childNodes &&
+                        !/^(SCRIPT|STYLE|MARK|SVG)$/i.test(node.nodeName) &&
+                        (!word.init ||
+                         (node.ariaHidden != 'true' &&
+                          node.role != "search" &&
+                          (!node.hasAttribute ||
+                           node.hasAttribute('jsname') == false
+                          )
+                         )
+                        )
+                       ) {
                         if (!searchingPre && (node.nodeName.toUpperCase() === "PRE" || node.nodeName.toUpperCase() === "CODE")) {
                             preEles.push(node);
                         } else {
