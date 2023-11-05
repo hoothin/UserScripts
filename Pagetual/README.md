@@ -13,7 +13,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 <table>
     <tr>
-        <th colspan="4">Buy me a coffee if it helps you💞</th>
+        <th colspan="4">Buy me a coffee if you get help💞</th>
     </tr>
     <tr>
         <td><a href="https://paypal.me/hoothin"><img src="https://www.paypal.me/favicon.ico"><br>PayPal</a></td><td><a href="https://ko-fi.com/hoothin"><img src="https://ko-fi.com/favicon-32x32.png"><br>Ko-fi</a></td><td><a href="https://afdian.net/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></td>
