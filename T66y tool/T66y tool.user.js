@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.5
+// @version      0.6.6
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -262,6 +262,7 @@
                     }
                     if (isCheckIn && isRushTime()) {
                         let reachRushMinute = false;
+                        var rushReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="定時搶簽">` );
                         function checkRush(timeGap) {
                             setTimeout(() => {
                                 let date = new Date();
@@ -274,6 +275,7 @@
                                             submitReply();
                                         } else {
                                             clearInterval(rushTimer);
+                                            rushReply.val("搶簽結束");
                                         }
                                     }, 1);
                                 } else {
@@ -294,11 +296,11 @@
                                 }
                             }, timeGap);
                         }
-                        var rushReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="定時搶簽">` );
                         rushReply.insertAfter( "form .btn" );
                         rushReply.click(function() {
                             checkRush(5000);
                             rushReply.attr("disabled", true);
+                            rushReply.val("搶簽中……");
                         });
                     }
                     document.FORM.onsubmit = function(event) {
@@ -310,7 +312,7 @@
                     };
                     quickReply.click(function() {
                         textarea.val(replyStr);
-                        submitReply();
+                        submitBtn.click();
                         quickReply.attr("disabled", true);
                     });
                     quickReply.on('contextmenu', function(e) {
