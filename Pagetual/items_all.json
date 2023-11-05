@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86181",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article[contains(concat(' ', @class, ' '), ' mod-job-index-item ')]",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://type\\.jp/job-",
+    "exampleUrl": "https://type.jp/job-1/1001/?pathway=4"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "type.jp 転職・求人情報",
+  "created_at": "2023-11-04T20:09:37+09:00",
+  "updated_at": "2023-11-04T20:09:37+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86178",
   "data": {
     "insertBefore": "",
@@ -35073,16 +35088,16 @@
 {
   "resource_url": "http://wedata.net/items/55808",
   "data": {
-    "pageElement": "id('category')//article[@class='card']|id('single_post')/header/following-sibling::*[./following-sibling::ol]",
+    "pageElement": "id('category')/div[@class='cardArea']|id('single_post')/header/following-sibling::*[./following-sibling::ol]",
     "nextLink": "//link[@rel='next']",
     "url": "^https://type\\.jp/",
-    "exampleUrl": "https://type.jp/et/feature/1047 https://type.jp/et/feature/posts"
+    "exampleUrl": "https://type.jp/et/feature/1047 https://type.jp/et/feature/posts\r\nhttps://type.jp/et/feature/category/skill/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "エンジニアtype",
   "created_at": "2011-11-09T15:40:31+09:00",
-  "updated_at": "2022-02-19T17:08:20+09:00"
+  "updated_at": "2023-11-04T19:54:53+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/55794",
@@ -38337,16 +38352,16 @@
 {
   "resource_url": "http://wedata.net/items/41272",
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2011-01-10T13:18:29+09:00",
   "data": {
-    "pageElement": "//table[@class='table']//tr[not(td/@bgcolor='#99CCFF')]",
-    "exampleUrl": "https://www.atsoho.com/jobinfo/index/type-all.html",
-    "url": "^https://(www\\.)?atsoho\\.com/(?:job|soho)info/index/type-",
-    "nextLink": "id('center_contents')/div[contains(concat(' ', @class, ' '), ' table_sentence ')][last()]/text()[contains(.,'1') or contains(.,'2') or contains(.,'3') or contains(.,'4') or contains(.,'5') or contains(.,'6') or contains(.,'7') or contains(.,'8') or contains(.,'9')]/following-sibling::a[1]"
+    "pageElement": "//div[@class='et_pb_code_inner' or @class='et_pb_text_inner']/div[contains(concat(' ', @class, ' '), ' et_pb_section ')]",
+    "nextLink": "//strong/following-sibling::a[1][contains(@href, 'pg=')]",
+    "url": "^https://atsoho\\.com/",
+    "exampleUrl": "https://atsoho.com/job/\r\nhttps://atsoho.com/work/category?type=all"
   },
-  "updated_at": "2020-05-14T11:35:04+09:00",
-  "name": "@SOHO　 お仕事を探す・SOHOを探す",
-  "created_by": "itouhiro"
+  "created_by": "itouhiro",
+  "name": "@SOHO",
+  "created_at": "2011-01-10T13:18:29+09:00",
+  "updated_at": "2023-11-04T20:25:26+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/41269",
