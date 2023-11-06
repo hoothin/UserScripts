@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.25
+// @version      1.6.30.26
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1101,8 +1101,12 @@
         function inputActive(doc) {
             let activeEl = getActiveElement(doc);
             if (activeEl &&
-                (/INPUT|TEXTAREA/i.test(activeEl.nodeName) ||
-                 activeEl.contentEditable == 'true')) {
+                ((/INPUT|TEXTAREA/i.test(activeEl.nodeName) &&
+                  activeEl.getAttribute("aria-readonly") != "true"
+                 ) ||
+                 activeEl.contentEditable == 'true'
+                )
+               ) {
                 return true;
             } else {
                 while (activeEl && activeEl.nodeName) {
@@ -3004,6 +3008,7 @@
                 this.rightSizeChange = searchInputDiv.querySelector("#rightSizeChange");
                 this.filterGlob = searchInputDiv.querySelector("#filterGlob");
                 this.suggestDatalist = searchInputDiv.querySelector("#suggest");
+                this.fakeTextareas = {};
             }
 
             showInPageSearch() {
@@ -3815,13 +3820,13 @@
                     });
                 }
                 let wordContent = this.modifyFrame.querySelector("[name='wordContent']"),
-                wordStyle = this.modifyFrame.querySelector("[name='wordStyle']"),
-                wordTitle = this.modifyFrame.querySelector("[name='wordTitle']"),
-                wordRange = this.modifyFrame.querySelector("[name='wordRange']"),
-                wordHide = this.modifyFrame.querySelector("[name='wordHide']"),
-                wordIsRe = this.modifyFrame.querySelector("#searchJumperModify-re"),
-                wordReCase = this.modifyFrame.querySelector("#searchJumperModify-case"),
-                wordLink = this.modifyFrame.querySelector("#searchJumperModify-link");
+                    wordStyle = this.modifyFrame.querySelector("[name='wordStyle']"),
+                    wordTitle = this.modifyFrame.querySelector("[name='wordTitle']"),
+                    wordRange = this.modifyFrame.querySelector("[name='wordRange']"),
+                    wordHide = this.modifyFrame.querySelector("[name='wordHide']"),
+                    wordIsRe = this.modifyFrame.querySelector("#searchJumperModify-re"),
+                    wordReCase = this.modifyFrame.querySelector("#searchJumperModify-case"),
+                    wordLink = this.modifyFrame.querySelector("#searchJumperModify-link");
 
                 if (this.addNew) {
                     wordContent.value = "";
@@ -3954,9 +3959,12 @@
 
                 this.marks[word.showWords].forEach(mark => {
                     if (mark.parentNode) {
-                        if (!/^MARK$/i.test(mark.nodeName)) {
+                        if (mark.dataset.block) {
+                            mark.parentNode && mark.parentNode.removeChild(mark);
+                        } else if (!/^MARK$/i.test(mark.nodeName)) {
                             mark.classList.remove("searchJumper");
-                            mark.style.cssText = "";
+                            mark.style.cssText = mark.dataset.css || "";
+                            delete mark.dataset.css;
                         } else {
                             let newNode = document.createTextNode(mark.innerText);
                             mark.parentNode.replaceChild(newNode, mark);
@@ -4048,12 +4056,15 @@
                                 for (const entry of entries) {
                                     if (entry.target === ele && entry.intersectionRatio >= 0.90) {
                                         observer.disconnect();
-                                        resolve();
+                                        setTimeout(() => {
+                                            resolve();
+                                        }, 300);
                                     }
                                 }
                             }
                         ).observe(ele)
                     });
+                    if (this.focusMark != ele) return;
                     let rect = ele.getBoundingClientRect();
                     this.wPosBar.style.top = rect.top + document.documentElement.scrollTop + getBody(document).scrollTop + "px";
                     this.hPosBar.style.left = rect.left + "px";
@@ -4187,9 +4198,12 @@
                         if (!markList) return;
                         markList.forEach(mark => {
                             if (!mark.parentNode) return;
-                            if (!/^MARK$/i.test(mark.nodeName)) {
+                            if (mark.dataset.block) {
+                                mark.parentNode && mark.parentNode.removeChild(mark);
+                            } else if (!/^MARK$/i.test(mark.nodeName)) {
                                 mark.classList.remove("searchJumper");
-                                mark.style.cssText = "";
+                                mark.style.cssText = mark.dataset.css || "";
+                                delete mark.dataset.css;
                             } else {
                                 let newNode = document.createTextNode(mark.innerText);
                                 mark.parentNode.replaceChild(newNode, mark);
@@ -4249,7 +4263,10 @@
                                             }
                                         });
                                     }
-                                    if (word.style) node.style.cssText = word.style;
+                                    if (!node.dataset.css) node.dataset.css = node.style.cssText;
+                                    if (word.style) {
+                                        node.style.cssText += word.style;
+                                    }
                                     node.addEventListener("click", e => {
                                         if (!e.altKey) return;
                                         e.stopPropagation();
@@ -4293,99 +4310,150 @@
                                         return false;
                                     }, true);
                                     self.navMarks.appendChild(navMark);
-
-                                    skip = 1;
                                 }
                             }
                         }
                     } else {
                         let blockValue = "";
-                        if (node.nodeType == 1) {
-                            if (node.value && /^(INPUT|TEXTAREA)$/i.test(node.nodeName) && !/^(hidden|file|password|radio|range|checkbox|)$/i.test(node.type) && !/(^wd|^kw|^q$|query|search|keyword)/i.test(node.name) && !/(^wd|^kw|^q$|query|search)/i.test(node.id) && node.scrollHeight < 200) {
-                                blockValue = node.value;
-                            } else if (node.offsetParent && !node.innerText) {
-                                let before = getComputedStyle(node, ':before').getPropertyValue('content');
-                                let after = getComputedStyle(node, ':after').getPropertyValue('content');
-                                if (before && before !== "none" && before !== '""') {
-                                    blockValue = before;
-                                }
-                                if (after && after !== "none" && after !== '""') {
-                                    blockValue += after;
-                                }
-                            }
+                        if (node.nodeType == 1 && node.value && node.offsetParent && !/^(hidden|file|password|radio|range|checkbox|)$/i.test(node.type) && (!word.init || (!/(^wd|^kw|^q$|query|search|keyword)/i.test(node.name) && !/(^wd|^kw|^q$|query|search)/i.test(node.id)))) {
+                            blockValue = node.value;
                         }
                         if (blockValue) {
                             checkChildren = false;
                             let wordMatch = false;
-                            if (word.isRe) {
-                                wordMatch = blockValue.match(new RegExp(word.content, word.reCase));
-                            } else {
-                                if (_unsafeWindow.searchJumperPinyin) {
-                                    let pinyin = _unsafeWindow.searchJumperPinyin(blockValue, word.content);
-                                    if (pinyin.matched) {
-                                        len = pinyin.len;
-                                        pos = pinyin.pos;
-                                    } else pos = -1;
-                                } else {
-                                    len = word.content.length;
-                                    pos = blockValue.toUpperCase().indexOf(word.content.toUpperCase());
-                                }
-                                if (word.init && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
-                                    if (pos !== 0 && /[a-z]/i.test(blockValue[pos - 1])) {
-                                        pos = -1;
-                                    }
-                                    if (pos + word.content.length !== blockValue.length && /[a-z]/i.test(blockValue[pos + word.content.length])) {
-                                        pos = -1;
-                                    }
-                                }
-                                wordMatch = (pos >= 0);
-                            }
-                            if (wordMatch) {
-                                if (typeof word.hideParent !== 'undefined') {
-                                    let parentDepth = word.hideParent;
-                                    let parent = node.parentElement;
-                                    while(parentDepth-- > 0 && parent) {
-                                        parent = parent.parentElement;
-                                    }
-                                    if (parent) {
-                                        parent.innerHTML = createHTML("");
-                                        parent.dataset.content = word.showWords;
-                                        parent.classList.add("searchJumper-hide");
-                                        return 0;
+                            let lastIndex = 0;
+                            let fakeTextarea = self.fakeTextareas[node];
+                            while (true) {
+                                if (word.isRe) {
+                                    wordMatch = blockValue.match(new RegExp(word.content, word.reCase));
+                                    if (wordMatch) {
+                                        pos = wordMatch.index;
+                                        wordMatch = wordMatch[0];
                                     }
                                 } else {
-                                    let curList = self.marks[word.showWords];
-                                    let index = curList.length;
-                                    node.classList.add("searchJumper");
-                                    if (word.title) node.title = JSON.parse('"' + word.title + '"');
-                                    if (word.style) node.style.cssText = word.style.replace("background:", "border:solid 1px ");
-                                    node.style.color = "";
-                                    node.dataset.content = word.showWords;
+                                    if (_unsafeWindow.searchJumperPinyin) {
+                                        let pinyin = _unsafeWindow.searchJumperPinyin(blockValue, word.content);
+                                        if (pinyin.matched) {
+                                            len = pinyin.len;
+                                            pos = pinyin.pos;
+                                        } else pos = -1;
+                                    } else {
+                                        len = word.content.length;
+                                        pos = blockValue.toUpperCase().indexOf(word.content.toUpperCase());
+                                    }
+                                    if (word.init && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
+                                        if (pos !== 0 && /[a-z]/i.test(blockValue[pos - 1])) {
+                                            pos = -1;
+                                        }
+                                        if (pos + word.content.length !== blockValue.length && /[a-z]/i.test(blockValue[pos + len])) {
+                                            pos = -1;
+                                        }
+                                    }
+                                    wordMatch = (pos >= 0 ? blockValue.slice(pos, pos + len) : false);
+                                }
+                                if (wordMatch) {
+                                    findTextInBlock(wordMatch, lastIndex + pos);
+                                    lastIndex += (pos + wordMatch.length);
+                                    blockValue = blockValue.slice(pos + wordMatch.length);
+                                } else break;
+                            }
+                            function findTextInBlock(curWord, pos) {
+                                if (curWord) {
+                                    if (!fakeTextarea) {
+                                        fakeTextarea = document.createElement("pre");
+                                        fakeTextarea.className = "searchJumper";
+                                        let textNode = document.createTextNode(blockValue);
+                                        fakeTextarea.appendChild(textNode);
 
-                                    self.marks[word.showWords].push(node);
+                                        let name, rstyle =/^(number|string)$/;
+                                        let cssText = [], sStyle = node.style;
 
-                                    let navMark = document.createElement("span");
-                                    let top = getElementTop(node);
-                                    navMark.dataset.top = top;
-                                    navMark.dataset.content = word.showWords;
-                                    navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                                    navMark.style.background = node.style.background || "yellow";
-                                    navMark.addEventListener("click", e => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        self.focusIndex = index;
-                                        self.focusHighlight(node);
-                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
-                                        self.navPointer.style.display = "";
-                                        self.navPointer.style.top = navMark.offsetTop + 18 + "px";
-                                        return false;
-                                    }, true);
-                                    self.navMarks.appendChild(navMark);
+                                        for (name in sStyle) {
+                                            if (!/^(content|outline|outlineWidth)$/.test(name)) {
+                                                let val = getComputedStyle(node)[name];
+                                                if (val !=='' && rstyle.test(typeof val)) {
+                                                    name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+                                                    cssText.push(name);
+                                                    cssText.push(':');
+                                                    cssText.push(val);
+                                                    cssText.push(';');
+                                                };
+                                            };
+                                        };
+                                        cssText = cssText.join('');
+                                        fakeTextarea.style.cssText = cssText;
+                                        fakeTextarea.style.position = "fixed";
+                                        fakeTextarea.style.left = "0px";
+                                        fakeTextarea.style.top = "0px";
+                                        self.fakeTextareas[node] = fakeTextarea;
+                                    }
+                                    document.body.appendChild(fakeTextarea);
+                                    let range = document.createRange();
+                                    range.setStart(fakeTextarea.firstChild, pos);
+                                    range.setEnd(fakeTextarea.firstChild, pos + curWord.length);
+                                    let rect = range.getBoundingClientRect();
+                                    document.body.removeChild(fakeTextarea);
 
-                                    skip = 1;
+
+
+                                    if (typeof word.hideParent !== 'undefined') {
+                                        let parentDepth = word.hideParent;
+                                        let parent = node.parentElement;
+                                        while(parentDepth-- > 0 && parent) {
+                                            parent = parent.parentElement;
+                                        }
+                                        if (parent) {
+                                            parent.innerHTML = createHTML("");
+                                            parent.dataset.content = word.showWords;
+                                            parent.classList.add("searchJumper-hide");
+                                            return 0;
+                                        }
+                                    } else {
+                                        let curList = self.marks[word.showWords];
+                                        let index = curList.length;
+
+                                        let spannode = document.createElement("mark");
+                                        spannode.className = "searchJumper";
+                                        spannode.dataset.block = true;
+                                        if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
+                                        spannode.style.cssText = word.style;
+                                        spannode.dataset.content = word.showWords;
+                                        spannode.innerText = curWord;
+                                        document.body.appendChild(spannode);
+                                        spannode.style.fontSize = fakeTextarea.style.fontSize;
+                                        spannode.style.fontFamily = fakeTextarea.style.fontFamily;
+                                        spannode.style.lineHeight = fakeTextarea.style.lineHeight;
+                                        spannode.style.position = "absolute";
+                                        spannode.style.zIndex = "9";
+                                        spannode.style.pointerEvents = "none";
+                                        let textareaLoc = node.getBoundingClientRect();
+                                        spannode.style.left = rect.left + textareaLoc.left + "px";
+                                        spannode.style.top = rect.top + textareaLoc.top + "px";
+
+
+                                        self.marks[word.showWords].push(spannode);
+
+                                        let navMark = document.createElement("span");
+                                        let top = getElementTop(spannode);
+                                        navMark.dataset.top = top;
+                                        navMark.dataset.content = word.showWords;
+                                        navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                                        navMark.style.background = spannode.style.background || "yellow";
+                                        navMark.addEventListener("click", e => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            self.focusIndex = index;
+                                            self.focusHighlight(spannode);
+                                            self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                                            self.navPointer.style.display = "";
+                                            self.navPointer.style.top = navMark.offsetTop + 18 + "px";
+                                            return false;
+                                        }, true);
+                                        self.navMarks.appendChild(navMark);
+                                    }
                                 }
                             }
-                        } else if (node.nodeType == 3 && node.data && (typeof word.hideParent !== 'undefined' || /^(BODY|#document\-fragment)$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
+                        } else if (node.nodeType == 3 && node.data && (pa.offsetParent || (pa.scrollHeight && pa.scrollWidth) || word.hideParent || word.hideParent === 0 || !pa.parentNode)) {
                             checkChildren = false;
                             if (word.isRe) {
                                 let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
@@ -4409,7 +4477,7 @@
                                     if (pos !== 0 && /[a-z]/i.test(node.data[pos - 1])) {
                                         pos = -1;
                                     }
-                                    if (pos + word.content.length !== node.data.length && /[a-z]/i.test(node.data[pos + word.content.length])) {
+                                    if (pos + word.content.length !== node.data.length && /[a-z]/i.test(node.data[pos + len])) {
                                         pos = -1;
                                     }
                                 }
@@ -4503,7 +4571,7 @@
                          node.nodeType == 11
                         ) &&
                         node.childNodes &&
-                        !/^(SCRIPT|STYLE|MARK|SVG)$/i.test(node.nodeName) &&
+                        !/^(SCRIPT|STYLE|MARK|SVG|TEXTAREA)$/i.test(node.nodeName) &&
                         (!word.init ||
                          (node.ariaHidden != 'true' &&
                           node.role != "search" &&
@@ -4513,7 +4581,7 @@
                          )
                         )
                        ) {
-                        if (!searchingPre && (node.nodeName.toUpperCase() === "PRE" || node.nodeName.toUpperCase() === "CODE")) {
+                        if (!searchingPre && /^(PRE|CODE)$/i.test(node.nodeName)) {
                             preEles.push(node);
                         } else {
                             for (var child = 0; child < node.childNodes.length; ++child) {
@@ -4585,7 +4653,7 @@
                         m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "%";
                     });
                     this.navMarks.style.display = "";
-                }, 500);
+                }, 1000);
             }
 
             checkCharacterData(target) {
@@ -6348,7 +6416,7 @@
 
             listPos(ele, list) {
                 //if (this.preList) {
-                    //this.preList.style.visibility = "hidden";
+                //this.preList.style.visibility = "hidden";
                 //}
                 this.initList(list);
                 list.style = "";
@@ -6414,7 +6482,7 @@
 
             clingPos(clingEle, target, close) {
                 //if (this.preList) {
-                    //this.preList.style.visibility = "hidden";
+                //this.preList.style.visibility = "hidden";
                 //}
                 let ew = clingEle.clientWidth;
                 let eh = clingEle.clientHeight;
@@ -9815,7 +9883,7 @@
 
             searchBar.bar.addEventListener(getSupportWheelEventName(), e => {
                 if (e.target.parentNode && (e.target.parentNode.className == "sitelistCon" ||
-                    (e.target.parentNode.parentNode && e.target.parentNode.parentNode.className == "sitelistCon"))) return;
+                                            (e.target.parentNode.parentNode && e.target.parentNode.parentNode.className == "sitelistCon"))) return;
                 let targetClassList = searchBar.con.classList;
                 if (!targetClassList.contains('search-jumper-scroll')) return;
                 if (targetClassList.contains('search-jumper-left') ||
@@ -9864,9 +9932,9 @@
                 }
             });
             if (searchData.prefConfig.switchSitesPreKey ||
-               searchData.prefConfig.switchSitesNextKey ||
-               searchData.prefConfig.shortcutKey ||
-               searchData.prefConfig.showAllShortcutKey) {
+                searchData.prefConfig.switchSitesNextKey ||
+                searchData.prefConfig.shortcutKey ||
+                searchData.prefConfig.showAllShortcutKey) {
                 let inputing = -1, key = false;
                 let checkShortcutEnable = (e, _alt, _ctrl, _shift, _meta, _key) => {
                     if ((_alt && !e.altKey) ||
