@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86182",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[ul[@class='pagination']]/preceding-sibling::*[@class='view-content' or self::ol[contains(concat(' ', @class, ' '), ' search-results ')]]/*",
+    "nextLink": "//li[contains(concat(' ', @class, ' '), ' next ')]/a",
+    "url": "^https://netshop\\.impress\\.co\\.jp/",
+    "exampleUrl": "https://netshop.impress.co.jp/taxonomy/term/2896\r\nhttps://netshop.impress.co.jp/search/site/AI"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "ネットショップ担当者フォーラム",
+  "created_at": "2023-11-05T16:15:24+09:00",
+  "updated_at": "2023-11-05T16:15:24+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86181",
   "data": {
     "insertBefore": "",
