@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.6
+// @version      0.6.7
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -126,21 +126,6 @@
                 var viewportBottom = viewportTop + $(window).height();
                 return elementBottom > viewportTop && elementTop < viewportBottom;
             };
-            var $tLike = $(".t_like");
-            if ($tLike.length) {
-                var $tLikeClone = $tLike.clone();
-                if (!$tLike.isInViewport()) {
-                    $("#conttpc").prepend($tLikeClone);
-                }
-
-                $(window).on("resize scroll", function() {
-                    if ($tLike.isInViewport()) {
-                        if ($tLikeClone.parent().length) $tLikeClone.detach();
-                    } else {
-                        if ($tLikeClone.parent().length == 0) $("#conttpc").prepend($tLikeClone);
-                    }
-                });
-            }
 
 
             // 种子链接转磁力链
@@ -165,6 +150,21 @@
                 var replyStr = defaultReply;
 
                 helper.getScript('//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js', e => {
+                    var $tLike = $(".t_like");
+                    if ($tLike.length) {
+                        var $tLikeClone = $tLike.clone();
+                        if (!$tLike.isInViewport()) {
+                            $("#conttpc").prepend($tLikeClone);
+                        }
+
+                        $(window).on("resize scroll", function() {
+                            if ($tLike.isInViewport()) {
+                                if ($tLikeClone.parent().length) $tLikeClone.detach();
+                            } else {
+                                if ($tLikeClone.parent().length == 0) $("#conttpc").prepend($tLikeClone);
+                            }
+                        });
+                    }
                     var lastReplyTime = $.cookie('lastReplyTime');
                     var customReplyStr = $.cookie('customReplyStr');
                     var isCheckIn = document.title.indexOf("打卡签到") !== -1;
