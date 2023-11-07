@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.28
+// @version      1.6.30.29
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2453,7 +2453,8 @@
                  }
                  .search-jumper-input svg:hover,
                  .searchJumperNavBar svg:hover,
-                 .search-jumper-input>.closeBtn:hover {
+                 .search-jumper-input>.closeBtn:hover,
+                 .searchJumperNavBar>div.minNavBtn:hover {
                      -webkit-transform:scale(1.2);
                      -moz-transform:scale(1.2);
                      transform:scale(1.2);
@@ -2558,6 +2559,10 @@
                      pointer-events: none;
                      font-size: 0px;
                      opacity: 0;
+                     transition: width 0.3s;
+                 }
+                 .searchJumperNavBar:hover {
+                     width: 25px;
                  }
                  .searchJumperNavBar.sjNavShow {
                      pointer-events: all;
@@ -2571,6 +2576,41 @@
                      height: 16px;
                      fill: white;
                      cursor: pointer;
+                 }
+                 .searchJumperNavBar>.minNavBtn {
+                     font-size: 12px;
+                     opacity: 0.1;
+                     background: white;
+                     border-radius: 10px;
+                     width: 16px;
+                     height: 16px;
+                     font-weight: bold;
+                     display: inline-block;
+                     cursor: pointer;
+                     transition: 0.25s opacity ease, 0.25s transform ease;
+                     pointer-events: all;
+                 }
+                 .searchJumperNavBar:hover>.minNavBtn {
+                     opacity: 0.8;
+                 }
+                 #search-jumper>.searchJumperNavBar.minimize {
+                     background: transparent;
+                     pointer-events: none;
+                 }
+                 .searchJumperNavBar.minimize>.closeNavBtn,
+                 .searchJumperNavBar.minimize>.navPointer,
+                 .searchJumperNavBar.minimize>#navMarks {
+                     display: none;
+                 }
+                 .searchJumperNavBar.minimize>.minNavBtn {
+                     opacity: 1;
+                     box-shadow: 0px 0px 3px 1px #000;
+                     margin-left: -50px;
+                     margin-top: 5px;
+                 }
+                 .search-jumper-right>.searchJumperNavBar.minimize>.minNavBtn {
+                     margin-left: unset;
+                     margin-right: -50px;
                  }
                  #navMarks+.navPointer {
                      pointer-events: none;
@@ -2586,7 +2626,7 @@
                      transition: top 0.25s ease;
                  }
                  #navMarks {
-                     height: calc(100% - 16px);
+                     height: calc(100% - 32px);
                      width: 100%;
                      position: absolute;
                  }
@@ -2595,10 +2635,11 @@
                      width: 100%;
                      position: absolute;
                      border: 1px solid #999999;
-                     min-height: 3px;
+                     min-height: 5px;
                      box-sizing: border-box;
                      left: 0;
                      border-radius: 0px!important;
+                     cursor: alias;
                  }
                  mark.searchJumper,
                  a.searchJumper {
@@ -2921,6 +2962,7 @@
                 searchJumperNavBar.style.display = "none";
                 searchJumperNavBar.innerHTML = createHTML(`
                   <svg class="closeNavBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close navigation</title>${closePath}</svg>
+                  <div class="minNavBtn" title="Minimize navigation">-</div>
                   <div id="navMarks"></div>
                   <div class="navPointer">></div>
                 `);
@@ -2936,6 +2978,7 @@
 
                 this.navMarks = searchJumperNavBar.querySelector("#navMarks");
                 this.closeNavBtn = searchJumperNavBar.querySelector(".closeNavBtn");
+                this.minNavBtn = searchJumperNavBar.querySelector(".minNavBtn");
                 this.searchJumperNavBar = searchJumperNavBar;
                 this.navPointer = searchJumperNavBar.querySelector(".navPointer");
                 this.navPointer.style.display = "none";
@@ -4170,6 +4213,27 @@
                 return `${background}${addCssText}`;
             }
 
+            createNavMark(node, word, index, curList) {
+                let self = this;
+                let navMark = document.createElement("span");
+                let top = getElementTop(node);
+                navMark.dataset.top = top;
+                navMark.dataset.content = word.showWords;
+                navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                navMark.style.background = node.style.background || "yellow";
+                navMark.addEventListener("click", e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    self.focusIndex = index;
+                    self.focusHighlight(node);
+                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                    self.navPointer.style.display = "";
+                    self.navPointer.style.top = navMark.offsetTop + 33 + "px";
+                    return false;
+                }, true);
+                self.navMarks.appendChild(navMark);
+            }
+
             highlight(words, ele, root) {
                 if (!words && (!this.curHighlightWords || this.curHighlightWords.length === 0)) return;
                 if (!ele) {
@@ -4294,23 +4358,7 @@
                                     });
                                     self.marks[word.showWords].push(node);
 
-                                    let navMark = document.createElement("span");
-                                    let top = getElementTop(node);
-                                    navMark.dataset.top = top;
-                                    navMark.dataset.content = word.showWords;
-                                    navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                                    navMark.style.background = node.style.background || "yellow";
-                                    navMark.addEventListener("click", e => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        self.focusIndex = index;
-                                        self.focusHighlight(node);
-                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
-                                        self.navPointer.style.display = "";
-                                        self.navPointer.style.top = navMark.offsetTop + 18 + "px";
-                                        return false;
-                                    }, true);
-                                    self.navMarks.appendChild(navMark);
+                                    self.createNavMark(node, word, index, curList);
                                 }
                             }
                         }
@@ -4438,23 +4486,7 @@
 
                                         self.marks[word.showWords].push(spannode);
 
-                                        let navMark = document.createElement("span");
-                                        let top = getElementTop(spannode);
-                                        navMark.dataset.top = top;
-                                        navMark.dataset.content = word.showWords;
-                                        navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                                        navMark.style.background = spannode.style.background || "yellow";
-                                        navMark.addEventListener("click", e => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                            self.focusIndex = index;
-                                            self.focusHighlight(spannode);
-                                            self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
-                                            self.navPointer.style.display = "";
-                                            self.navPointer.style.top = navMark.offsetTop + 18 + "px";
-                                            return false;
-                                        }, true);
-                                        self.navMarks.appendChild(navMark);
+                                        self.createNavMark(spannode, word, index, curList);
                                     }
                                 }
                             }
@@ -4546,23 +4578,7 @@
                                 middlebit.parentNode.replaceChild(spannode, middlebit);
                                 self.marks[word.showWords].push(spannode);
 
-                                let navMark = document.createElement("span");
-                                let top = getElementTop(spannode);
-                                navMark.dataset.top = top;
-                                navMark.dataset.content = word.showWords;
-                                navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
-                                navMark.style.background = spannode.style.background || "yellow";
-                                navMark.addEventListener("click", e => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    self.focusIndex = index;
-                                    self.focusHighlight(spannode);
-                                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
-                                    self.navPointer.style.display = "";
-                                    self.navPointer.style.top = navMark.offsetTop + 18 + "px";
-                                    return false;
-                                }, true);
-                                self.navMarks.appendChild(navMark);
+                                self.createNavMark(spannode, word, index, curList);
 
                                 skip = 1;
                             }
@@ -5259,6 +5275,9 @@
                     } else {
                         this.setNav(false);
                     }
+                });
+                this.minNavBtn.addEventListener("click", e => {
+                    this.searchJumperNavBar.classList.toggle("minimize");
                 });
                 this.navMarks.addEventListener("click", e => {
                     let topPercent = e.offsetY / this.navMarks.clientHeight * 100;
