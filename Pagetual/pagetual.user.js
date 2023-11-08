@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.84
+// @version      1.9.36.85
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -858,7 +858,7 @@
     const allOfBody = "body>*";
     const mainSel = "article,.article,[role=main],main,.main,#main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
-    const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u005c\u002d\u005f\u2014\u0020\u005c\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005c\u005b\u3010\u3001\uff08\u005c\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
+    const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u005c\u002d\u005f\u2014\u0020\u005c\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005c\u005b\u3010\u3001\uff08\u005c\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
@@ -935,6 +935,15 @@
         return getElementByXpath(sel, doc, contextNode);
     }
 
+    function compareNodeName(node, names) {
+        if (!node || !node.nodeName || !node.nodeName.toLowerCase) return false;
+        let nodeName = node.nodeName.toLowerCase();
+        for (let i = 0; i < names.length; i++) {
+            if (names[i] === nodeName) return true;
+        }
+        return false;
+    }
+
     function geneSelector(ele, addID) {
         let selector = ele.nodeName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
@@ -960,7 +969,7 @@
                 }
                 let parent = ele.parentElement;
                 if (parent) {
-                    if (!className && !hasId && parent.children.length > 1 && !/^HTML$/i.test(parent.nodeName)) {
+                    if (!className && !hasId && parent.children.length > 1 && !compareNodeName(parent, ["html"])) {
                         let prevE = ele.previousElementSibling;
                         if (prevE && prevE.className) {
                             let classList = prevE.classList, i = 0;
@@ -998,7 +1007,7 @@
     function createXPathFromElement(elm) {
         let allNodes = document.getElementsByTagName('*'), segs;
         for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
-            if (/^(BODY|HTML)$/i.test(elm.nodeName)) {
+            if (compareNodeName(elm, ["body", "html"])) {
                 segs.unshift(elm.localName.toLowerCase());
                 continue;
             }
@@ -1692,16 +1701,16 @@
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
             }
-            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && /^TR$/i.test(pageElement[0].nodeName)) {
+            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && compareNodeName(pageElement[0], ["tr"])) {
                 let mainTr = this.insert.parentNode.querySelectorAll('tr'), mainTdNum = 0, newTdNum = 0;
                 mainTr = mainTr[mainTr.length - 1];
                 [].forEach.call(mainTr.children, el => {
-                    if (/^(TD|TH)$/i.test(el.nodeName)) {
+                    if (compareNodeName(el, ["td", "th"])) {
                         mainTdNum += el.colSpan || 1;
                     }
                 });
                 [].forEach.call(pageElement[0].children, el => {
-                    if (/^(TD|TH)$/i.test(el.nodeName)) {
+                    if (compareNodeName(el, ["td", "th"])) {
                         newTdNum += el.colSpan || 1;
                     }
                 });
@@ -1721,7 +1730,7 @@
                     nextLeftPos = this.initNext.getBoundingClientRect().left;
                 }
                 function checkElement(ele) {
-                    if (/^(PRE|CODE)$/i.test(ele.nodeName)) {
+                    if (compareNodeName(ele, ["pre", "code"])) {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode);
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
@@ -1742,7 +1751,7 @@
                             curWidth = validSize.w;
                         }
                     }
-                    if (/^PICTURE$/i.test(ele.nodeName) || !ele.innerText || ele.innerText.trim() == '') {
+                    if (compareNodeName(ele, ["picture"]) || !ele.innerText || ele.innerText.trim() == '') {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         let eles = [];
@@ -1754,13 +1763,13 @@
                         }
                         return eles;
                     }
-                    if (/^FORM$/i.test(ele.nodeName) && ele.parentNode != getBody(document)) {
+                    if (compareNodeName(ele, ["form"]) && ele.parentNode != getBody(document)) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
                     if (ele.children.length == 0 && !self.curSiteRule.pageElement) {
-                        if (/^P$/i.test(ele.parentNode.nodeName)) ele = ele.parentNode;
+                        if (compareNodeName(ele.parentNode, ["p"])) ele = ele.parentNode;
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
@@ -1774,16 +1783,16 @@
                             curMaxEle = null;
                             break;
                         }
-                        if (/^(CANVAS|NAV)$/i.test(curNode.nodeName)) continue;
+                        if (compareNodeName(curNode, ["canvas", "nav"])) continue;
                         let curStyle = curWin.getComputedStyle(curNode);
                         if (!curNode.offsetParent && (curStyle.position != "fixed" || curStyle.opacity == 0)) {
                             continue;
                         }
-                        if (!/^IMG$/i.test(curNode.nodeName) && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
+                        if (!compareNodeName(curNode, ["img"]) && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
                         if (needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode) > windowHeight) {
                             continue;
                         }
-                        if (/^ARTICLE$/i.test(curNode.nodeName)) articleNum++;
+                        if (compareNodeName(curNode, ["article"])) articleNum++;
                         let validSize = self.getValidSize(curNode, curWin);
                         let h = validSize.h;
                         let w = validSize.w;
@@ -1831,7 +1840,7 @@
                                 }
                             }
                             if (h < minHeight) {
-                                if (!needCheckNext || h < (windowHeight>>2) || !ele.contains(self.initNext)) {
+                                if (!needCheckNext || h < (windowHeight>>1) || !ele.contains(self.initNext)) {
                                     continue;
                                 }
                             }
@@ -1874,8 +1883,8 @@
                         return null;
                     }
                     if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none') ele = ele.parentNode;
-                    else if (/^(P|BR|TD)$/i.test(ele.nodeName)) ele = ele.parentNode;
-                    else if (/^TBODY$/i.test(ele.nodeName)) {
+                    else if (compareNodeName(ele, ["p", "br", "td"])) ele = ele.parentNode;
+                    else if (compareNodeName(ele, ["tbody"])) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         if (ele.children.length > 0 && ele.children[0].querySelector("th")) {
                             self.curSiteRule.pageElement += ":not(:first-child)";
@@ -1896,7 +1905,7 @@
                         let paStyle = curWin.getComputedStyle(ele.parentNode);
                         let paDisplay = paStyle.display;
                         let paOverflow = paStyle.overflow;
-                        pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || /^UL$/i.test(ele.parentNode.nodeName) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
+                        pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
                     }
                     let curStyle = curWin.getComputedStyle(ele);
                     if (ele.children.length > 1) {
@@ -1922,7 +1931,7 @@
                                     let middleChild = ele.children[parseInt(ele.children.length / 2)];
                                     if ((curStyle.display === 'flex' && curStyle.flexDirection == "row") || (rulesData.opacity != 0 && !pf)) {
                                         ele = [ele];
-                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || /^UL$/i.test(ele.nodeName) || curHeight == 0) {
+                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight == 0) {
                                         ele = [ele];
                                     } else {
                                         self.curSiteRule.pageElement += ">*";
@@ -1949,7 +1958,7 @@
                         pageElement = [];
                         sideController.remove();
                     } else {
-                        if (pageElement.length == 1 && /^IMG$/i.test(pageElement[0].nodeName)) {
+                        if (pageElement.length == 1 && compareNodeName(pageElement[0], ["img"])) {
                             self.curSiteRule.pageBar = 0;
                         }
                     }
@@ -2106,7 +2115,7 @@
                 let contentVisibility = this.curSiteRule.contentVisibility || rulesData.contentVisibility;
                 if (!contentVisibility && !pageElementCss) return;
                 [].forEach.call(pageElement, (ele, i) => {
-                    if (!/LINK|META|STYLE|SCRIPT/i.test(ele.nodeName)) {
+                    if (!compareNodeName(ele, ["link", "meta", "style", "script"])) {
                         if (pageElementCss) {
                             if (pageElementCss !== '0' && !ele.dataset.pagetualPageElement) {
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
@@ -2342,24 +2351,29 @@
                         innerText = innerText.trim();
                         if (innerText.length > 80) continue;
                     }
-                    let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
-                    if (availableHref && /next\-?(page)?$/i.test(aTag.href)) continue;
                     if (aTag.className) {
-                        if (/slick|slide|gallery/i.test(aTag.className)) continue;
                         if (aTag.classList && aTag.classList.contains('disabled')) continue;
+                        if (/slick|slide|gallery/i.test(aTag.className)) continue;
                     }
                     if (aTag.dataset && aTag.dataset.preview) continue;
                     let ariaLabel = aTag.getAttribute("aria-label");
                     if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
 
-                    if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
+                    let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
+                    if (availableHref && /next\-?(page)?$/i.test(aTag.href)) continue;
+
+                    if (aTag.parentNode.className) {
+                        if (/slick|slide|gallery/i.test(aTag.parentNode.className)) {
+                            continue;
+                        }
+                        if (aTag.parentNode.classList.contains('disabled')) continue;
+                        if (aTag.parentNode.classList.contains('active')) continue;
+                    }
                     if (aTag.parentNode.parentNode) {
                         if (/slick|slide|gallery/i.test(aTag.parentNode.parentNode.className)) continue;
                         if (aTag.parentNode.parentNode.parentNode && /slick|slide|gallery/i.test(aTag.parentNode.parentNode.parentNode.className)) continue;
                     }
-                    if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
-                    if (aTag.parentNode.classList && aTag.parentNode.classList.contains('active')) continue;
-                    if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
+                    if (compareNodeName(aTag.parentNode, ["blockquote"])) continue;
 
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
@@ -2403,7 +2417,7 @@
                     if (isJs) continue;
                     if (!next4) {
                         let prevEle = aTag.previousElementSibling;
-                        if (prevEle && (/^(B|SPAN|STRONG)$/i.test(prevEle.nodeName))) {
+                        if (prevEle && compareNodeName(prevEle, ["b", "span", "strong"])) {
                             if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
                                 next4 = aTag;
                             }
@@ -2479,7 +2493,7 @@
 
         verifyNext(next, doc) {
             if (!next) return null;
-            if (next.previousElementSibling && /^BR$/i.test(next.previousElementSibling.nodeName)) return null;
+            if (next.previousElementSibling && compareNodeName(next.previousElementSibling, ["br"])) return null;
             let eles = [];
             if (next.innerText && next.innerText.indexOf("\n") == -1) {
                 eles = getAllElements(`//${next.nodeName}[text()='${next.innerText}']`, doc);
@@ -2681,10 +2695,10 @@
                         if (/^\d+$/.test(nextLink.innerText)) {
                             nextLink.href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
-                    } else if (/^INPUT$/i.test(nextLink.nodeName) || nextLink.type == "submit") {
+                    } else if (compareNodeName(nextLink, ["input"]) || nextLink.type == "submit") {
                         form = nextLink.parentNode;
                         while (form) {
-                            if (/^FORM$/i.test(form.nodeName)) break;
+                            if (compareNodeName(form, ["form"])) break;
                             else form = form.parentNode;
                         }
                         if (form) {
@@ -2699,11 +2713,11 @@
                 page = await this.getPage(doc, exist);
                 nextLink = page.next;
                 if (nextLink) {
-                    if (/^INPUT$/i.test(nextLink.nodeName) || nextLink.type == "submit") {
+                    if (compareNodeName(nextLink, ["input"]) || nextLink.type == "submit") {
                         if (!/next/i.test(nextLink.getAttribute("onclick"))) {
                             let form = nextLink.parentNode;
                             while (form) {
-                                if (/^FORM$/i.test(form.nodeName)) break;
+                                if (compareNodeName(form, ["form"])) break;
                                 else form = form.parentNode;
                             }
                             if (form) {
@@ -2712,7 +2726,7 @@
                         }
                     }
                     let parent = nextLink;
-                    while (parent && !/^BODY$/i.test(parent.nodeName)) {
+                    while (parent && !compareNodeName(parent, ["body"])) {
                         if (parent.hasAttribute && parent.hasAttribute("disabled")) {
                             this.nextLinkHref = false;
                             return null;
@@ -2740,7 +2754,7 @@
                                 if (video.offsetParent && video.name != 'pagetual-iframe') {
                                     let scrollWidth = video.scrollWidth || video.offsetWidth;
                                     let scrollHeight = video.scrollHeight || video.offsetHeight;
-                                    if (/IFRAME/i.test(video.nodeName)) {
+                                    if (compareNodeName(video, ["iframe"])) {
                                     } else if (scrollWidth > 100 && scrollHeight > 100) {
                                         let winWidth = window.innerWidth || document.documentElement.clientWidth;
                                         let winHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -2864,7 +2878,7 @@
                     }
                     if (filter.link) {
                         let linkRegExp = new RegExp(filter.link, "i");
-                        if (/^A$/i.test(ele.nodeName) && linkRegExp.test(ele.href)) return false;
+                        if (compareNodeName(ele, ["a"]) && linkRegExp.test(ele.href)) return false;
                         let aChildren = ele.querySelectorAll("a");
                         for (let i = 0; i < aChildren.length; i++) {
                             let child = aChildren[i];
@@ -3102,7 +3116,7 @@
         openInNewTab(eles) {
             if (openInNewTab) {
                 [].forEach.call(eles, ele => {
-                    if (/^A$/i.test(ele.nodeName) && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
+                    if (compareNodeName(ele, ["a"]) && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
                         ele.setAttribute('target', openInNewTab == 1 ? '_blank' : '_self');
                     } else {
                         [].forEach.call(ele.querySelectorAll('a[href]:not([href^="mailto:"]):not([href^="javascript:"]):not([href^="#"])'), a => {
@@ -3187,7 +3201,7 @@
                 }
             };
             [].forEach.call(eles, ele => {
-                if (/^IMG$/i.test(ele.nodeName)) {
+                if (compareNodeName(ele, ["img"])) {
                     setLazyImg(ele);
                 } else {
                     [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
@@ -3197,7 +3211,7 @@
                         div.style.setProperty("background-image", "url(" + (div.dataset.src || div.dataset.bg) + ")", "important");
                     });
                 }
-                if (/^A$/i.test(ele.nodeName) && ele.classList.contains("lazyload")) {
+                if (compareNodeName(ele, ["a"]) && ele.classList.contains("lazyload")) {
                     if (ele.dataset.original) {
                         ele.style.backgroundImage = 'url("' + ele.dataset.original + '")';
                     }
@@ -3337,10 +3351,10 @@
                 getBody(document).appendChild(loadingDiv);
             } else {
                 let parent = loadingDiv.parentNode;
-                if (/^TBODY$/i.test(parent.nodeName)) {
+                if (compareNodeName(parent, ["tbody"])) {
                     parent = parent.parentNode;
                 }
-                if (/^TABLE$/i.test(parent.nodeName)) {
+                if (compareNodeName(parent, ["table"])) {
                     parent.parentNode.appendChild(loadingDiv);
                 }
             }
@@ -3426,7 +3440,7 @@
                         let newCanvas = newCanvass[i];
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
-                    if (!/^(STYLE|SCRIPT)$/.test(newEle.nodeName)) self.visibilityItems.push(newEle);
+                    if (!compareNodeName(newEle, ["style", "script"])) self.visibilityItems.push(newEle);
                     collection.appendChild(newEle)
                     newEles.push(newEle);
                 });
@@ -4907,7 +4921,7 @@
                 let importBtn = createImportBtn(pre);
             });
             document.addEventListener("mouseover", e => {
-                if (/^PRE$/i.test(e.target.nodeName)) {
+                if (compareNodeName(e.target, ["pre"])) {
                     let nameAttr = e.target.getAttribute("name");
                     if (nameAttr == "pagetual" || nameAttr == "user-content-pagetual") {
                         if (e.target.querySelector('#pagetualImport')) return;
@@ -5083,14 +5097,14 @@
             }
             moveUp() {
                 let preE = this.item.previousElementSibling;
-                if (/^P$/i.test(preE.nodeName) && preE.children.length > 1) {
+                if (compareNodeName(preE, ["p"]) && preE.children.length > 1) {
                     this.item.parentNode.insertBefore(this.item, preE);
                     this.saveSort();
                 }
             }
             moveDown() {
                 let nextE = this.item.nextElementSibling;
-                if (/^P$/i.test(nextE.nodeName) && nextE.children.length > 1) {
+                if (compareNodeName(nextE, ["p"]) && nextE.children.length > 1) {
                     this.item.parentNode.insertBefore(nextE, this.item);
                     this.saveSort();
                 }
@@ -5679,7 +5693,7 @@
         while(loopable && visible) {
             el = el.parentNode;
 
-            if(el && !/^BODY$/i.test(el.nodeName)) {
+            if(el && !compareNodeName(el, ["body"])) {
                 visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
             }else {
                 loopable = false;
@@ -6071,7 +6085,7 @@
                     ruleParser.getInsert(true);
                 }
                 //只有1的話怕不是圖片哦
-                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && !/^IMG$/i.test(pageElement[0].nodeName)))) {
+                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && !compareNodeName(pageElement[0], ["img"])))) {
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if (ruleParser.curSiteRule.action == 1) {
                         isLoading = true;
@@ -6507,7 +6521,7 @@
             if (forceState == 1) return;
             if (checkClickedEle) {
                 if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
-                    if (/^(A|BUTTON)$/i.test(checkClickedEle.nodeName)) {
+                    if (compareNodeName(checkClickedEle, ["a", "button"])) {
                         clickedSth = true;
                     } else {
                         let targetStyle = _unsafeWindow.getComputedStyle(checkClickedEle);
@@ -6653,7 +6667,7 @@
             }
         };
         dblclickHandler = e => {
-            if (forceState == 1 || /^(INPUT|TEXTAREA|SELECT|A|BUTTON|SVG|USE|IMG|PATH)$/i.test(e.target.nodeName)) return;
+            if (forceState == 1 || compareNodeName(e.target, ["input", "textarea", "select", "a", "button", "svg", "use", "img", "path"])) return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
@@ -6662,14 +6676,14 @@
                     return;
                 }
             }
-            if (!/^BODY$/i.test(e.target.nodeName) && !e.target.classList.contains('pagetual_pageBar')) {
+            if (!compareNodeName(e.target, ["body"]) && !e.target.classList.contains('pagetual_pageBar')) {
                 try {
                     let selection = window.getSelection();
                     let selStr = selection.toString().trim();
                     if (!selStr) {
                         selection = selection.getRangeAt(0);
                         selStr = selection && selection.cloneContents().children[0];
-                        if (selStr && !/^IMG$/i.test(selStr.nodeName)) selStr = false;
+                        if (selStr && !compareNodeName(selStr, ["img"])) selStr = false;
                     }
                     if (selStr) {
                         return;
@@ -6705,7 +6719,7 @@
                     return;
                 }
                 if (document.activeElement &&
-                    (/^(INPUT|TEXTAREA)$/i.test(document.activeElement.nodeName) ||
+                    (compareNodeName(document.activeElement, ["input", "textarea"]) ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -6741,7 +6755,7 @@
         if (manualMode) {
             manualModeKeyHandler = e => {
                 if (document.activeElement &&
-                    (/^(INPUT|TEXTAREA)$/i.test(document.activeElement.nodeName) ||
+                    (compareNodeName(document.activeElement, ["input", "textarea"]) ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -6761,7 +6775,7 @@
         if (rulesData.arrowToScroll) {
             keyupHandler = e => {
                 if (document.activeElement &&
-                    (/^(INPUT|TEXTAREA)$/i.test(document.activeElement.nodeName) ||
+                    (compareNodeName(document.activeElement, ["input", "textarea"]) ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -6887,7 +6901,7 @@
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         url = url.replace(/#p{.*/, "");
         let example = (ruleParser.curSiteRule.insertPos == 2 || ruleParser.curSiteRule.insertPos == "in") ? insert.children[0] : (insert.parentNode.children[0] || insert);
-        while (example && (/^(SCRIPT|STYLE)$/i.test(example.nodeName) || example.className == "pagetual_pageBar")) {
+        while (example && (compareNodeName(example, ["script", "style"]) || example.className == "pagetual_pageBar")) {
             example = example.nextElementSibling;
         }
         if (!example || !example.parentNode) example = insert;
@@ -6900,11 +6914,11 @@
         if (forceState == 2) {
             inTable = inLi = false;
         } else {
-            inTable = /^(TABLE|TBODY)$/i.test(example.parentNode.nodeName) ||
-            /^(TR|TBODY)$/i.test(example.nodeName) ||
+            inTable = compareNodeName(example.parentNode, ["table", "tbody"]) ||
+            compareNodeName(example, ["tr", "tbody"]) ||
             exampleStyle.display == "table-row" ||
-            (example.nextElementSibling && /^(TR|TBODY)$/i.test(example.nextElementSibling.nodeName));
-            inLi = /^LI$/i.test(example.nodeName) || (example.nextElementSibling && /^LI$/i.test(example.nextElementSibling.nodeName));
+            (example.nextElementSibling && compareNodeName(example.nextElementSibling, ["tr", "tbody"]));
+            inLi = compareNodeName(example, ["li"]) || (example.nextElementSibling && compareNodeName(example.nextElementSibling, ["li"]));
         }
         let pageBar = document.createElement(inTable ? "tr" : (inLi ? "li" : "div"));
         let upSpan = document.createElement("span");
@@ -7058,8 +7072,8 @@
                 pageBar.style.gridColumn = "1/-1";
             }
             if (inTable) {
-                example = (/^(TR|TBODY)$/i.test(example.nodeName)) ? example : example.nextElementSibling || example;
-                if (/^TBODY$/i.test(example.nodeName)) example = example.querySelector("tr");
+                example = compareNodeName(example, ["tr", "tbody"]) ? example : example.nextElementSibling || example;
+                if (compareNodeName(example, ["tbody"])) example = example.querySelector("tr");
                 let nextTr = example;
                 while (nextTr && nextTr.children.length == 0) nextTr = nextTr.nextElementSibling;
                 if (nextTr) example = nextTr;
@@ -7070,7 +7084,7 @@
                     });
                 } else {
                     [].forEach.call(example.children, el => {
-                        if (/^(TD|TH)$/i.test(el.nodeName)) {
+                        if (compareNodeName(el, ["td", "th"])) {
                             tdNum += el.colSpan || 1;
                         }
                     });
@@ -7094,7 +7108,7 @@
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
             } else if (inLi) {
-                example = /^LI$/i.test(example.nodeName) ? example : example.nextElementSibling || example;
+                example = compareNodeName(example, ["li"]) ? example : example.nextElementSibling || example;
                 pageBar.style.opacity = 1;
                 pageBar.style.display = getComputedStyle(example).display;
                 pageBar.style.backgroundColor = "unset";
@@ -7508,8 +7522,8 @@
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                pageEle = [].filter.call(pageEle, ele => {return ele && !/^(style|script|meta)$/i.test(ele.nodeName)});
-                if (/^UL$/i.test(pageEle[0].nodeName) || pageEle.length == 1) pageEle = pageEle[0];
+                pageEle = [].filter.call(pageEle, ele => {return ele && !compareNodeName(ele, ["style", "script", "meta"])});
+                if (compareNodeName(pageEle[0], ["ul"]) || pageEle.length == 1) pageEle = pageEle[0];
                 else if (pageEle[0].parentNode == pageEle[1].parentNode) {
                     pageEle = pageEle[0].parentNode;
                 } else {
@@ -7526,7 +7540,7 @@
                 }
                 orgPage = pageEle;
                 if (nextLink) {
-                    if (/^IMG$/i.test(orgPage.nodeName)) {
+                    if (compareNodeName(orgPage, ["img"])) {
                         if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
                         if (orgPage.src) {
                             orgContent = orgPage.src;
@@ -7562,8 +7576,8 @@
             }
             let eles = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true), checkItem;
             if (eles && eles.length > 0) {
-                eles = [].filter.call(eles, ele => {return ele && !/^(style|script|meta)$/i.test(ele.nodeName)});
-                if (/^UL$/i.test(eles[0].nodeName) || eles.length == 1) checkItem = eles[0];
+                eles = [].filter.call(eles, ele => {return ele && !compareNodeName(ele, ["style", "script", "meta"])});
+                if (compareNodeName(eles[0], ["ul"]) || eles.length == 1) checkItem = eles[0];
                 else if (eles[0].parentNode == eles[1].parentNode) {
                     checkItem = eles[0].parentNode;
                 } else {
@@ -7577,7 +7591,7 @@
                 }, waitTime);
             } else {
                 let checkInner;
-                if (/^IMG$/i.test(checkItem.nodeName)) {
+                if (compareNodeName(checkItem, ["img"])) {
                     if (checkItem.src) {
                         checkInner = checkItem.src;
                     } else {
