@@ -3255,6 +3255,11 @@
                             this.focusHighlightByText(word.showWords, false, wordSpan);
                         }
                     });
+                    wordSpan.addEventListener("editword", e => {
+                        wordSpan.parentNode.removeChild(wordSpan);
+                        this.removeHighlightWord(word);
+                        this.searchJumperInPageInput.value = word.content;
+                    });
                     let removeBtn = document.createElement("div");
                     removeBtn.addEventListener("mousedown", e => {
                         wordSpan.parentNode.removeChild(wordSpan);
@@ -3914,7 +3919,7 @@
                     }
                 }
                 if (!this.modifyCssEle || !this.modifyCssEle.parentNode) this.modifyCssEle = _GM_addStyle(this.modifyCssText);
-                getBody(document).appendChild(this.modifyFrame);
+                document.documentElement.appendChild(this.modifyFrame);
             }
 
             replaceWord(word, newWord, modifySpan, contentChange) {
@@ -4384,7 +4389,7 @@
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     let pa = node.parentNode;
-                    if (node.nodeType == 1 && node.classList && node.classList.contains("searchJumper")) return 0;
+                    if (node.nodeType == 1 && node.classList && node.className.indexOf("searchJumper") != -1) return 0;
                     if (start && node.nodeType == 1) {
                         let domTextResult = self.anylizeDomWithTextPos(node);
                         let textRes = domTextResult.text;
@@ -5286,7 +5291,12 @@
                     switch(e.keyCode) {
                         case 8://退格
                             if (!this.searchJumperInPageInput.value) {
-                                editFunc();
+                                let lastWordSpan = this.searchInPageLockWords.lastChild;
+                                if (lastWordSpan) {
+                                    lastWordSpan.dispatchEvent(new CustomEvent("editword"));
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                }
                             }
                             break;
                         case 9://tab
