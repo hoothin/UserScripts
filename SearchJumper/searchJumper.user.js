@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.30.30
+// @version      1.7.1
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -498,6 +498,7 @@
                         editBtn: '编辑查找文字',
                         emptyBtn: '清空查找文字',
                         copyInPageBtn: '复制查找文字',
+                        wordModeBtn: '单词模式',
                         copyEleBtn: '复制选中元素',
                         maxEleBtn: '展开选中元素',
                         minEleBtn: '收起选中元素',
@@ -601,6 +602,7 @@
                         editBtn: '編輯查找文字',
                         emptyBtn: '清空查找文字',
                         copyInPageBtn: '複製查找文字',
+                        wordModeBtn: '單詞模式',
                         copyEleBtn: '複製選中元素',
                         maxEleBtn: '展開選中元素',
                         minEleBtn: '收起選中元素',
@@ -703,6 +705,7 @@
                         editBtn: 'Edit search text',
                         emptyBtn: 'Empty search text',
                         copyInPageBtn: 'Copy search text',
+                        wordModeBtn: 'Word mode',
                         copyEleBtn: 'Copy selected elements',
                         maxEleBtn: 'Expand selected elements',
                         minEleBtn: 'Collapse selected elements',
@@ -1639,7 +1642,7 @@
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type {
                      height: ${searchData.prefConfig.minPopup ? '24px' : 'auto'}!important;
-                     width: ${searchData.prefConfig.minPopup ? 24 : (280 * this.scale)}px!important;
+                     width: ${searchData.prefConfig.minPopup ? 24 : (40 * (searchData.prefConfig.numPerLine || 7) * this.scale)}px!important;
                      max-width: unset;
                      max-height: ${108 * this.scale + 10}px;
                      flex-wrap: wrap!important;
@@ -1673,7 +1676,7 @@
                  }
                  #search-jumper.funcKeyCall:not(.targetInput)>.search-jumper-searchBar>.search-jumper-type {
                      height: auto!important;
-                     width: ${280 * this.scale}px!important;
+                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.scale}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
                      visibility: visible;
@@ -1687,7 +1690,7 @@
                  ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
                      height: auto!important;
-                     width: ${280 * this.scale}px!important;
+                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.scale}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
@@ -2581,6 +2584,7 @@
                      font-size: 12px;
                      opacity: 0.1;
                      background: white;
+                     color: black;
                      border-radius: 10px;
                      width: 16px;
                      height: 16px;
@@ -3015,6 +3019,7 @@
                       <svg id="addWord" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("addWord")}</title><path d="M821.364 962h-618.75C123.864 962 62 900.114 62 821.364v-618.75c0-78.75 61.864-140.635 140.614-140.635h618.75c78.75 0 140.636 61.885 140.636 140.635v618.75C962 900.114 900.114 962 821.364 962z m79.265-756.814c0-46.586-35.25-81.815-81.815-81.815H205.186c-46.843-0.214-84.557 34.758-83.165 82.393-0.128 14.4 1.35 613.05 1.35 613.05 0 46.565 35.25 81.815 81.815 81.815h613.628c46.565 0 81.815-35.25 81.815-81.815V205.186z m-173.55 347.657H552.843v174.236c0 16.95-13.736 30.685-30.686 30.685h-0.236a30.686 30.686 0 0 1-30.685-30.685V552.843H296.92a30.686 30.686 0 0 1-30.685-30.686v-0.236c0-16.95 13.735-30.685 30.685-30.685h194.315V296.92c0-16.95 13.735-30.685 30.685-30.685h0.236c16.95 0 30.686 13.735 30.686 30.685v194.315h174.236c16.95 0 30.685 13.735 30.685 30.685v0.236c0 16.95-13.735 30.686-30.685 30.686z"></path></svg>
                       <svg id="emptyBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("emptyBtn")}</title><path d="m159.45829,231.40004l-48.83334,0a36.625,34.1375 0 0 1 0,-68.275l805.75004,0a36.625,34.1375 0 0 1 0,68.275l-683.6667,0l0,603.09581a61.04167,56.89583 0 0 0 61.04167,56.89584l439.50002,0a61.04167,56.89583 0 0 0 61.04167,-56.89584l0,-500.68332a36.625,34.1375 0 0 1 73.25,0l0,500.68332c0,69.12844 -60.12604,125.17084 -134.29167,125.17084l-439.50002,0c-74.16563,0 -134.29167,-56.0424 -134.29167,-125.17084l0,-603.09581zm256.37501,-113.79167a36.625,34.1375 0 0 1 0,-68.275l195.33334,0a36.625,34.1375 0 0 1 0,68.275l-195.33334,0zm-36.625,307.23749a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999zm195.33334,0a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999z"/></svg>
                       <svg id="copyInPageBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyInPageBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
+                      <svg id="wordModeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("wordModeBtn")}</title><path d="M832 128c38.4 0 64 25.6 64 64v640c0 38.4-25.6 64-64 64H192c-38.4 0-64-25.6-64-64V192c0-38.4 25.6-64 64-64h640m0-64H192c-70.4 0-128 57.6-128 128v640c0 70.4 57.6 128 128 128h640c70.4 0 128-57.6 128-128V192c0-70.4-57.6-128-128-128z"></path><path d="M736 812.8h-448c-19.2 0-32-12.8-32-32s12.8-32 32-32h448c19.2 0 32 12.8 32 32 0 12.8-12.8 32-32 32zM320 704c-19.2-6.4-25.6-25.6-19.2-44.8l185.6-454.4c6.4-12.8 25.6-19.2 38.4-12.8 19.2 6.4 25.6 25.6 19.2 44.8l-185.6 454.4c-6.4 12.8-25.6 19.2-38.4 12.8z"></path><path d="M704 691.2c19.2-6.4 25.6-25.6 19.2-44.8L544 211.2c-6.4-19.2-25.6-25.6-38.4-19.2-19.2 6.4-25.6 25.6-19.2 38.4l179.2 441.6c6.4 19.2 25.6 25.6 38.4 19.2z"></path><path d="M371.2 492.8h256v64h-256z"></path></svg>
                       <svg id="recoverBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("recoverBtn")}</title><path d="M502.26 289.06c-0.02 16.95 13.26 30.94 30.18 31.8 123.47 8.79 236.97 70.94 310.89 170.21 73.92 99.28 100.91 225.84 73.93 346.65-41.65-181.74-195.38-316.12-381.05-333.08-8.89-0.6-17.63 2.55-24.09 8.7a31.798 31.798 0 0 0-9.86 23.64v85.15a32.343 32.343 0 0 1-50.67 26.41L114.21 413.02a32.341 32.341 0 0 1-14.46-26.95c0-10.84 5.43-20.96 14.46-26.95L451.6 124.68a32.358 32.358 0 0 1 33.28-2.03 32.355 32.355 0 0 1 17.39 28.44v137.97h-0.01z"></path></svg>
                       <svg id="saveRuleBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("saveRuleBtn")}</title><path d="M579.7 291.4c18.8 0 34.1-15.3 34.1-34.1v-34.1c0-18.8-15.4-34.1-34.1-34.1-18.8 0-34.1 15.3-34.1 34.1v34.1c0 18.7 15.4 34.1 34.1 34.1zM944.7 216.3L808.2 79.9c-6.8-6.8-15.3-10.2-23.9-10.2H170.4c-56.3 0-102.3 46-102.3 102.3v682.1c0 56.3 46 102.3 102.3 102.3H852.5c56.3 0 102.3-46 102.3-102.3V240.2c0.1-8.5-3.3-17-10.1-23.9zM358 137.9h307v182.5c0 11.9-10.2 22.2-22.2 22.2H380.2c-11.9 0-22.2-10.2-22.2-22.2V137.9z m358.1 750.3H306.9V652.9c0-20.5 17.1-37.5 37.5-37.5h334.2c20.5 0 37.5 17 37.5 37.5v235.3z m170.6-34.1c0 18.8-15.3 34.1-34.1 34.1h-66.5V652.9c0-58-47.7-105.7-105.7-105.7h-336c-58 0-105.7 47.7-105.7 105.7v235.3h-68.2c-18.8 0-34.1-15.3-34.1-34.1V172c0-18.8 15.3-34.1 34.1-34.1h119.4v182.5c0 49.5 40.9 90.4 90.4 90.4h262.6c49.5 0 90.4-40.9 90.4-90.4V137.9h37.5l116 116v600.2z"></path></svg>
                       <svg id="pinBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pinBtn")}</title><path d="m674.8822,92.83803a81.61801,81.04246 0 0 1 25.30158,17.09996l213.75757,212.46631a81.61801,81.04246 0 0 1 -24.70304,131.36982l-75.74151,33.30845l-142.09696,141.257l-11.26329,155.3854a81.61801,81.04246 0 0 1 -139.13151,51.46196l-137.98885,-137.15085l-235.14149,234.56388l-57.83996,-57.18896l235.27751,-234.69896l-142.7499,-141.85131a81.61801,81.04246 0 0 1 51.6642,-138.09635l160.95072,-11.94025l139.5668,-138.74469l32.78324,-75.09935a81.61801,81.04246 0 0 1 107.35489,-42.14208zm-32.45675,74.36997l-38.95901,89.22775l-171.94193,170.99958l-191.25821,14.1284l338.46989,336.3262l13.43977,-185.47917l174.33607,-173.32279l89.69819,-39.44067l-213.78477,-212.43929z"></path></svg>
@@ -3037,6 +3042,7 @@
                 this.editBtn = searchInputDiv.querySelector("#editBtn");
                 this.addWord = searchInputDiv.querySelector("#addWord");
                 this.recoverBtn = searchInputDiv.querySelector("#recoverBtn");
+                this.wordModeBtn = searchInputDiv.querySelector("#wordModeBtn");
                 this.saveRuleBtn = searchInputDiv.querySelector("#saveRuleBtn");
                 this.pinBtn = searchInputDiv.querySelector("#pinBtn");
                 this.locBtn = searchInputDiv.querySelector("#locBtn");
@@ -3089,7 +3095,11 @@
                     }
                 }
                 if (this.splitSep) {
-                    words.split(this.splitSep).forEach(word => {
+                    let splitSep = this.splitSep;
+                    if (this.wordModeBtn.classList.contains("checked")) {
+                        splitSep = new RegExp(`[\\${this.splitSep} \.]`);
+                    }
+                    words.split(splitSep).forEach(word => {
                         let oriWord = word;
                         word = word.trim();
                         if (!word) return;
@@ -3171,7 +3181,7 @@
                 } else {
                     this.curWordIndex = 0;
                     let word = (this.lockWords || "").replace(/^\$o/, "") + words;
-                    result = [{content: word, isRe: false, reCase: "", title: "", style: "", init: init}];
+                    result = [{content: word, showWords: word, isRe: false, reCase: "", title: "", style: self.getHighlightStyle(self.curWordIndex, "", ""), init: init}];
                 }
                 return result;
             }
@@ -3189,7 +3199,7 @@
                         for (let i in this.highlightSpans) {
                             let span = this.highlightSpans[i];
                             let curList = this.marks[i];
-                            this.setHighlightSpan(span, 0, curList ? curList.length : 1);
+                            this.setHighlightSpan(span, 0, curList);
                         }
                     }
                     return wordSpans;
@@ -3199,7 +3209,7 @@
                         this.splitSep = words.substr(2, 1);
                     } else if (words.indexOf("$o") === 0) {
                         this.splitSep = null;
-                    } else this.splitSep = " ";
+                    } else this.splitSep = init ? " " : "◎";
                     this.curWordIndex = 0;
                 }
                 let targetWords = this.anylizeInPageWords(words, !!init);
@@ -3257,7 +3267,7 @@
                     wordSpan.appendChild(removeBtn);
 
                     let curList = this.marks[word.showWords];
-                    this.setHighlightSpan(wordSpan, -1, curList ? curList.length : 1);
+                    this.setHighlightSpan(wordSpan, -1, curList);
                     this.highlightSpans[word.showWords] = wordSpan;
 
                     this.searchInPageLockWords.appendChild(wordSpan);
@@ -4045,14 +4055,14 @@
                 }
                 let newIndex = this.focusIndex;
                 if (fw) {
-                    while (!curList[newIndex].offsetParent) {
+                    while (!curList[newIndex].offsetParent || curList[newIndex].dataset.type) {
                         if (newIndex != curList.length - 1) {
                             newIndex = newIndex + 1;
                         } else newIndex = 0;
                         if (newIndex == this.focusIndex) break;
                     }
                 } else {
-                    while (!curList[newIndex].offsetParent) {
+                    while (!curList[newIndex].offsetParent || curList[newIndex].dataset.type) {
                         if (newIndex != 0) {
                             newIndex = newIndex - 1;
                         } else newIndex = curList.length - 1;
@@ -4061,7 +4071,7 @@
                 }
                 this.focusIndex = newIndex;
                 this.focusHighlight(curList[this.focusIndex]);
-                this.setHighlightSpan(span, this.focusIndex, curList.length);
+                this.setHighlightSpan(span, this.focusIndex, curList);
             }
 
             focusHighlight(ele) {
@@ -4094,35 +4104,17 @@
                     ele.dataset.current = true;
                     this.wPosBar.style.animationName = "fadeit";
                     this.hPosBar.style.animationName = "fadeit";
-                    await new Promise(resolve => {
-                        new IntersectionObserver(
-                            (entries, observer) => {
-                                for (const entry of entries) {
-                                    if (entry.target === ele && entry.intersectionRatio >= 0.90) {
-                                        observer.disconnect();
-                                        resolve();
-                                    }
-                                }
-                            }
-                        ).observe(ele)
-                    });
+                    let fixTimes = 0;
                     function fixPosBar() {
-                        if (self.focusMark != ele) return true;
+                        if (self.focusMark != ele || ++fixTimes > 10) return;
                         let rect = ele.getBoundingClientRect();
                         self.wPosBar.style.top = rect.top + document.documentElement.scrollTop + getBody(document).scrollTop + "px";
                         self.hPosBar.style.left = rect.left + "px";
-                        return false;
-                    }
-                    if (fixPosBar()) return;
-                    setTimeout(() => {
-                        if (fixPosBar()) return;
                         setTimeout(() => {
-                            if (fixPosBar()) return;
-                            setTimeout(() => {
-                                fixPosBar();
-                            }, 300);
-                        }, 200);
-                    }, 100);
+                            fixPosBar();
+                        }, 150);
+                    }
+                    fixPosBar();
                 }, 0);
 
             }
@@ -4131,7 +4123,7 @@
                 return this.highlightSpans[text];
             }
 
-            setHighlightSpan(span, index, len) {
+            setHighlightSpan(span, index, list) {
                 if (!span) return;
                 let numEle = span.querySelector("em");
                 if (!numEle) {
@@ -4139,6 +4131,13 @@
                     span.insertBefore(numEle, span.firstChild);
                 }
                 index++;
+                let len = 0;
+                if (list && list.length) {
+                    len = 0;
+                    list.forEach(e => {
+                        if (!e.dataset.type) len++;
+                    });
+                }
                 numEle.innerHTML = createHTML("[" + index + "/" + len + "]");
             }
 
@@ -4238,12 +4237,87 @@
                     e.preventDefault();
                     self.focusIndex = index;
                     self.focusHighlight(node);
-                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList.length);
+                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), index, curList);
                     self.navPointer.style.display = "";
                     self.navPointer.style.top = navMark.offsetTop + 33 + "px";
                     return false;
                 }, true);
                 self.navMarks.appendChild(navMark);
+            }
+
+            anylizeDomWithTextPos(dom, result) {
+                if (!result) result = {text: "", data:{}};
+                if (!dom || !dom.childNodes || !dom.childNodes.length) {
+                    return result;
+                }
+                dom.childNodes.forEach(ele => {
+                    if (ele.classList && ele.classList.contains("searchJumper")) {
+                        const start = result.text.length;
+                        result.text += "\n";
+                        result.data[start + 1] = {node: ele, text: "\n"};
+                    } else if (ele.offsetParent) {
+                        result = this.anylizeDomWithTextPos(ele, result);
+                    } else if (ele.nodeType === 3) {
+                        let textData;
+                        if (ele.parentNode.childNodes.length == 1) {
+                            textData = ele.parentNode.innerText;
+                        } else {
+                            textData = ele.data.trim();
+                        }
+                        if (!textData) return;
+                        const start = result.text.length;
+                        result.text += textData;
+                        result.data[result.text.length - 1] = {node: ele, text: textData};
+                    }
+                });
+                return result;
+            }
+
+            createHighlightMark(word, index, curList) {
+                let self = this;
+                let spannode = document.createElement("mark");
+                spannode.className = "searchJumper";
+                if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
+                if (word.popup) {
+                    spannode.addEventListener("mouseenter", e => {
+                        if (targetElement != spannode || !searchBar.funcKeyCall) {
+                            targetElement = spannode;
+                            searchBar.showInPage(true, e);
+                        }
+                    });
+                }
+                spannode.style.cssText = word.style;
+                spannode.addEventListener("click", e => {
+                    if (!e.altKey) return;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
+                });
+                spannode.dataset.content = word.showWords;
+                spannode.addEventListener("mousedown", e => {
+                    if (!e.altKey) return;
+                    let target;
+                    let newIndex = index;
+                    while (!target || target.dataset.type) {
+                        if (e.button === 0) {
+                            if (newIndex != curList.length - 1) {
+                                newIndex++;
+                                self.focusIndex = newIndex;
+                            } else self.focusIndex = 0;
+                        } else if (e.button === 2){
+                            if (newIndex != 0) {
+                                newIndex--;
+                                self.focusIndex = newIndex;
+                            } else self.focusIndex = curList.length - 1;
+                        }
+                        target = curList[self.focusIndex];
+                        if (newIndex == index) break;
+                    }
+                    self.focusHighlight(target);
+                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList);
+                    self.focusText = word.showWords;
+                });
+                return spannode;
             }
 
             highlight(words, ele, root) {
@@ -4265,7 +4339,9 @@
                     });
                     return;
                 }
+                if (ele.id == "searchJumperModifyWord") return;
                 ele = ele || getBody(document);
+                let inWordMode = this.wordModeBtn.classList.contains("checked");
                 let preEles = [];
                 let searchingPre = false;
                 let self = this;
@@ -4304,11 +4380,161 @@
                 } else {
                     this.curHighlightWords = (this.curHighlightWords || []).concat(words);
                 }
-                function searchWithinNode(node, word) {
+                function searchWithinNode(node, word, start) {
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     let pa = node.parentNode;
                     if (node.nodeType == 1 && node.classList && node.classList.contains("searchJumper")) return 0;
+                    if (start && node.nodeType == 1) {
+                        let domTextResult = self.anylizeDomWithTextPos(node);
+                        let textRes = domTextResult.text;
+                        let dataRes = domTextResult.data;
+                        let index = 0;
+                        let nodeAndPos = [];
+                        let validWord = (word.init || inWordMode) && /^[a-z]+$/i.test(word.content);
+                        function getNodePos(pos, len) {
+                            let keys = Object.keys(domTextResult.data);
+                            let findNodes = [], leftLen = len;
+                            let pre = "", after = "";
+                            for (let i = 0; i < keys.length; i++) {
+                                let end = keys[i];
+                                let curnode = domTextResult.data[end];
+                                if (pos > end || !curnode.text.trim()) continue;
+                                let curpos = pos - (end - curnode.text.length) - 1;
+                                let type = "full";
+                                if (curpos < 0) {
+                                    if (curnode.text.length < leftLen) {
+                                        type = "middle";
+                                    } else {
+                                        type = "end";
+                                    }
+                                } else {
+                                    if (curnode.text.length - curpos < leftLen) {
+                                        type = "start";
+                                    }
+                                }
+
+                                if (validWord) {
+                                    if (type == "full") {
+                                        pre = curpos == 0 ? "\n" : curnode.text[curpos - 1];
+                                        after = (curpos + leftLen) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen];
+                                    } else if (type == "start" && !pre) {
+                                        pre = curpos == 0 ? "\n" : curnode.text[curpos - 1];
+                                    } else if ((type == "end" || type == "full") && !after) {
+                                        after = (curpos + leftLen) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen];
+                                    }
+                                    if (pre && after) {
+                                        if (/[a-z]/i.test(pre) || /[a-z]/i.test(after)) {
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (curpos < 0) curpos = 0;
+                                let curlen = Math.min(leftLen, curnode.text.length - curpos);
+                                let nodeInfo;
+                                for (let j = 0; j < nodeAndPos.length; j++) {
+                                    if (nodeAndPos[j].node == curnode.node) {
+                                        nodeInfo = nodeAndPos[j];
+                                        break;
+                                    }
+                                }
+                                if (!nodeInfo) nodeAndPos.push({node: curnode.node, text: curnode.text, match:[{pos: curpos, len: curlen, type: type}]});
+                                else nodeInfo.match.push({pos: curpos, len: curlen, type: type});
+                                leftLen -= curlen;
+                                if (leftLen <= 0) break;
+                            }
+                        }
+                        function getIndex() {
+                            pos = -1;
+                            if (word.isRe) {
+                                let wordMatch = textRes.match(new RegExp(word.content, word.reCase));
+                                if (wordMatch) {
+                                    let content = wordMatch[0];
+                                    len = content.length;
+                                    pos = wordMatch.index;
+                                }
+                            } else {
+                                if (_unsafeWindow.searchJumperPinyin) {
+                                    let pinyin = _unsafeWindow.searchJumperPinyin(textRes, word.content);
+                                    if (pinyin.matched) {
+                                        len = pinyin.len;
+                                        pos = pinyin.pos;
+                                    } else pos = -1;
+                                } else {
+                                    len = word.content.length;
+                                    pos = textRes.toUpperCase().indexOf(word.content.toUpperCase());
+                                }
+                            }
+                            if (pos > -1) {
+                                textRes = textRes.slice(pos + len);
+                                pos += index;
+                                index = pos + len;
+                                getNodePos(pos, len);
+                                getIndex();
+                            }
+                        }
+                        getIndex();
+                        if (nodeAndPos.length) {
+                            nodeAndPos.forEach(data => {
+                                if (typeof word.hideParent !== 'undefined') {
+                                    let parentDepth = word.hideParent;
+                                    let parent = data.node.parentElement;
+                                    while(parentDepth-- > 0 && parent) {
+                                        parent = parent.parentElement;
+                                    }
+                                    if (parent && parent.classList && !parent.classList.contains("searchJumper-hide")) {
+                                        parent.innerHTML = createHTML("");
+                                        parent.dataset.content = word.showWords;
+                                        parent.classList.add("searchJumper-hide");
+                                    }
+                                } else {
+                                    let curList = self.marks[word.showWords];
+                                    let index = curList.length;
+                                    let spannode;
+                                    let newTextNodeCon = document.createDocumentFragment();
+                                    let newTextNode = document.createTextNode(data.text);
+                                    newTextNodeCon.appendChild(newTextNode);
+                                    let matches = data.match.reverse();
+                                    let spannodes = [];
+                                    matches.forEach(d => {
+                                        spannode = self.createHighlightMark(word, index, curList);
+                                        switch (d.type) {
+                                            case "start":
+                                                spannode.style.borderTopRightRadius = 0;
+                                                spannode.style.borderBottomRightRadius = 0;
+                                                break;
+                                            case "middle":
+                                                spannode.style.borderRadius = 0;
+                                                break;
+                                            case "end":
+                                                spannode.style.borderTopLeftRadius = 0;
+                                                spannode.style.borderBottomLeftRadius = 0;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        middlebit = newTextNode.splitText(d.pos);
+                                        middlebit.splitText(d.len);
+                                        middleclone = middlebit.cloneNode(true);
+                                        spannode.appendChild(middleclone);
+                                        if (d.type != "full" && d.type != "start") {
+                                            spannode.dataset.type = d.type;
+                                        }
+                                        newTextNodeCon.replaceChild(spannode, middlebit);
+                                        spannodes.unshift(spannode);
+                                    });
+                                    data.node.parentNode.replaceChild(newTextNodeCon, data.node);
+                                    spannodes.forEach(n => {
+                                        self.marks[word.showWords].push(n);
+                                        if (!n.dataset.type) {
+                                            self.createNavMark(n, word, index, curList);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
                     let checkChildren = true;
                     if (word.link) {
                         if (node.nodeType == 1 && node.href && node.href.match) {
@@ -4365,7 +4591,7 @@
                                         }
                                         target = curList[self.focusIndex];
                                         self.focusHighlight(target);
-                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
+                                        self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList);
                                         self.focusText = word.showWords;
                                     });
                                     self.marks[word.showWords].push(node);
@@ -4388,7 +4614,7 @@
                             let nodeStyle = getComputedStyle(node);
                             let textareaLoc = node.getBoundingClientRect();
                             let baseLeft = document.documentElement.scrollLeft + getBody(document).scrollLeft + textareaLoc.left + parseInt(nodeStyle.marginLeft);
-                            let baseTop = document.documentElement.scrollTop + getBody(document).scrollTop + textareaLoc.top + parseInt(nodeStyle.marginTop);
+                            let baseTop = document.documentElement.scrollTop + getBody(document).scrollTop + textareaLoc.top + parseInt(nodeStyle.marginTop) - parseInt(nodeStyle.borderTopWidth);
                             while (true) {
                                 if (word.isRe) {
                                     wordMatch = blockValue.match(new RegExp(word.content, word.reCase));
@@ -4407,7 +4633,7 @@
                                         len = word.content.length;
                                         pos = blockValue.toUpperCase().indexOf(word.content.toUpperCase());
                                     }
-                                    if (word.init && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
+                                    if ((word.init || inWordMode) && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
                                         if (pos !== 0 && /[a-z]/i.test(blockValue[pos - 1])) {
                                             pos = -1;
                                         }
@@ -4494,105 +4720,10 @@
                                         spannode.style.pointerEvents = "none";
                                         spannode.style.left = rect.left + baseLeft + "px";
                                         spannode.style.top = rect.top + baseTop + "px";
-
-
                                         self.marks[word.showWords].push(spannode);
-
                                         self.createNavMark(spannode, word, index, curList);
                                     }
                                 }
-                            }
-                        } else if (node.nodeType == 3 && node.data && (pa.offsetParent || (pa.scrollHeight && pa.scrollWidth) || word.hideParent || word.hideParent === 0 || !pa.parentNode)) {
-                            checkChildren = false;
-                            if (word.isRe) {
-                                let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
-                                if (wordMatch) {
-                                    let content = wordMatch[0] || wordMatch;
-                                    len = content.length;
-                                    pos = node.data.indexOf(content);
-                                }
-                            } else {
-                                if (_unsafeWindow.searchJumperPinyin) {
-                                    let pinyin = _unsafeWindow.searchJumperPinyin(node.data, word.content);
-                                    if (pinyin.matched) {
-                                        len = pinyin.len;
-                                        pos = pinyin.pos;
-                                    } else pos = -1;
-                                } else {
-                                    len = word.content.length;
-                                    pos = node.data.toUpperCase().indexOf(word.content.toUpperCase());
-                                }
-                                if (word.init && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
-                                    if (pos !== 0 && /[a-z]/i.test(node.data[pos - 1])) {
-                                        pos = -1;
-                                    }
-                                    if (pos + word.content.length !== node.data.length && /[a-z]/i.test(node.data[pos + len])) {
-                                        pos = -1;
-                                    }
-                                }
-                            }
-                            if (pos >= 0) {
-                                if (typeof word.hideParent !== 'undefined') {
-                                    let parentDepth = word.hideParent;
-                                    let parent = node.parentElement;
-                                    while(parentDepth-- > 0 && parent) {
-                                        parent = parent.parentElement;
-                                    }
-                                    if (parent) {
-                                        parent.innerHTML = createHTML("");
-                                        parent.dataset.content = word.showWords;
-                                        parent.classList.add("searchJumper-hide");
-                                        return 0;
-                                    }
-                                }
-                                let curList = self.marks[word.showWords];
-                                let index = curList.length;
-                                spannode = document.createElement("mark");
-                                spannode.className = "searchJumper";
-                                if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
-                                if (word.popup) {
-                                    spannode.addEventListener("mouseenter", e => {
-                                        if (targetElement != spannode || !searchBar.funcKeyCall) {
-                                            targetElement = spannode;
-                                            searchBar.showInPage(true, e);
-                                        }
-                                    });
-                                }
-                                spannode.style.cssText = word.style;
-                                spannode.addEventListener("click", e => {
-                                    if (!e.altKey) return;
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    return false;
-                                });
-                                spannode.dataset.content = word.showWords;
-                                spannode.addEventListener("mousedown", e => {
-                                    if (!e.altKey) return;
-                                    let target;
-                                    if (e.button === 0) {
-                                        if (index != curList.length - 1) {
-                                            self.focusIndex = index + 1;
-                                        } else self.focusIndex = 0;
-                                    } else if (e.button === 2){
-                                        if (index != 0) {
-                                            self.focusIndex = index - 1;
-                                        } else self.focusIndex = curList.length - 1;
-                                    }
-                                    target = curList[self.focusIndex];
-                                    self.focusHighlight(target);
-                                    self.setHighlightSpan(self.getHighlightSpanByText(word.showWords), self.focusIndex, curList.length);
-                                    self.focusText = word.showWords;
-                                });
-                                middlebit = node.splitText(pos);
-                                middlebit.splitText(len);
-                                middleclone = middlebit.cloneNode(true);
-                                spannode.appendChild(middleclone);
-                                middlebit.parentNode.replaceChild(spannode, middlebit);
-                                self.marks[word.showWords].push(spannode);
-
-                                self.createNavMark(spannode, word, index, curList);
-
-                                skip = 1;
                             }
                         }
                     }
@@ -4638,16 +4769,19 @@
                     if (w.inRange && ele.parentNode) {
                         [].forEach.call(ele.parentNode.querySelectorAll(w.inRange), e => {
                             if (e == ele || ele.contains(e)) {
-                                searchWithinNode(e, w);
+                                searchWithinNode(e, w, true);
                             }
                         })
-                    } else searchWithinNode(ele, w);
+                    } else searchWithinNode(ele, w, true);
                 });
                 setTimeout(() => {
                     searchingPre = true;
                     words.forEach(w => {
+                        if (!self.marks[w.showWords]) {
+                            self.marks[w.showWords] = [];
+                        }
                         preEles.forEach(e => {
-                            searchWithinNode(e, w);
+                            searchWithinNode(e, w, true);
                         });
                     });
                 }, 1000);
@@ -4711,7 +4845,6 @@
                 if (!value) return;
                 if (!this.lockWords && value.indexOf("$c") !== 0 && value.indexOf("$o") !== 0 && value.indexOf(" ") !== -1) {
                     this.splitSep = "◎";
-                    value = "$c" + this.splitSep + value;
                 }
                 this.searchJumperInPageInput.value = value;
                 this.submitInPageWords();
@@ -5186,23 +5319,27 @@
                             }
                             break;
                         case 37://←
-                            if (!this.currentSearchInPageLockWords) {
-                                this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
-                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
-                            } else if (this.currentSearchInPageLockWords.previousElementSibling){
-                                this.currentSearchInPageLockWords.firstChild.style.transform = "";
-                                this.currentSearchInPageLockWords = this.currentSearchInPageLockWords.previousElementSibling;
-                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                            if (this.searchJumperInPageInput.value == "" && this.lockWords) {
+                                if (!this.currentSearchInPageLockWords) {
+                                    this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
+                                    this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                                } else if (this.currentSearchInPageLockWords.previousElementSibling){
+                                    this.currentSearchInPageLockWords.firstChild.style.transform = "";
+                                    this.currentSearchInPageLockWords = this.currentSearchInPageLockWords.previousElementSibling;
+                                    this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                                }
                             }
                             break;
                         case 39://→
-                            if (!this.currentSearchInPageLockWords) {
-                                this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
-                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
-                            } else if (this.currentSearchInPageLockWords.nextElementSibling){
-                                this.currentSearchInPageLockWords.firstChild.style.transform = "";
-                                this.currentSearchInPageLockWords = this.currentSearchInPageLockWords.nextElementSibling;
-                                this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                            if (this.searchJumperInPageInput.value == "" && this.lockWords) {
+                                if (!this.currentSearchInPageLockWords) {
+                                    this.currentSearchInPageLockWords = this.searchInPageLockWords.lastChild;
+                                    this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                                } else if (this.currentSearchInPageLockWords.nextElementSibling){
+                                    this.currentSearchInPageLockWords.firstChild.style.transform = "";
+                                    this.currentSearchInPageLockWords = this.currentSearchInPageLockWords.nextElementSibling;
+                                    this.currentSearchInPageLockWords.firstChild.style.transform = "scale(1.1)";
+                                }
                             }
                             break;
                         default:
@@ -5247,6 +5384,17 @@
                         this.pinBtn.classList.add("checked");
                     }
                     storage.setItem("globalInPageWords", globalInPageWords);
+                });
+                this.wordModeBtn.addEventListener("click", e => {
+                    let inWordMode = this.wordModeBtn.classList.contains("checked");
+                    if (inWordMode) {
+                        this.wordModeBtn.classList.remove("checked");
+                    } else {
+                        this.wordModeBtn.classList.add("checked");
+                    }
+                    if (this.lockWords && this.lockWords.indexOf(" ") != -1) {
+                        this.refreshPageWords(this.lockWords);
+                    }
                 });
                 this.saveRuleBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
@@ -5826,6 +5974,12 @@
                 if (inPageWords) {
                     this.appendBar();
                     this.setInPageWords(inPageWords);
+                } else if (!this.searchJumperInPageInput.value && document.referrer.indexOf(referrer) != -1) {
+                    inPageWords = cacheKeywords;
+                    try {
+                        inPageWords = decodeURIComponent(inPageWords);
+                    } catch (e) {}
+                    this.searchJumperInPageInput.value = inPageWords;
                 }
             }
 
@@ -11128,13 +11282,14 @@
                 draging = false;
                 clearTimeout(openAllTimer);
             };
+            let zoomDrag = (searchData.prefConfig.zoomDrag || 100) / 100;
             if (!dragRoundFrame) {
                 dragCssText = `
                     #dragCon {
                       position: fixed;
                       top: 0;
                       left: 0;
-                      transform: scale(${searchBar.scale});
+                      transform: scale(${zoomDrag});
                       z-index: 2147483647;
                     }
                     #searchJumperWrapper * {
@@ -11458,8 +11613,8 @@
                     if (src) img.src = src;
                 }
             });
-            let scaleWidth = searchBar.scale * 190;
-            let scaleHeight = searchBar.scale * 190;
+            let scaleWidth = zoomDrag * 190;
+            let scaleHeight = zoomDrag * 190;
 
             if (left - scaleWidth < 0) {
                 left = scaleWidth;
