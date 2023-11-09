@@ -6625,7 +6625,6 @@
                     self.bindSite(a, siteEle);
                     li.appendChild(a);
                     self.allListBtns.push(li);
-                    con.appendChild(li);
                     if (icon && !searchData.prefConfig.noIcons) {
                         let iconSrc = icon.src || icon.dataset.src;
                         let img = document.createElement("img");
@@ -6660,6 +6659,7 @@
                     li.title = siteEle.title;
                     li.dataset.name = siteEle.dataset.name;
                     a.appendChild(p);
+                    con.appendChild(li);
                 }
                 try {
                     for (let [index, siteEle] of sites.entries()) {
@@ -7655,7 +7655,7 @@
 
                 let word = document.createElement("span");
                 if (!isBookmark && name.length >= 3) {
-                    word.innerText = name.trim();
+                    word.innerText = name;
                     if (!/^[\w \-]+$/.test(word.innerText.substr(0, 3))) word.innerText = word.innerText.substr(0, 2);
                 } else word.innerText = name;
                 ele.appendChild(word);
