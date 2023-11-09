@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.85
+// @version      1.9.36.86
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1649,6 +1649,48 @@
             return {h: h, w: parseInt(ele.offsetWidth || ele.scrollWidth)};
         }
 
+        checkTargetChildren(ele, curWin, articleNum, curHeight) {
+            let pf = false;
+            if (ele.parentNode) {
+                let paStyle = curWin.getComputedStyle(ele.parentNode);
+                let paDisplay = paStyle.display;
+                let paOverflow = paStyle.overflow;
+                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
+            }
+            let curStyle = curWin.getComputedStyle(ele);
+            if (ele.children.length > 1) {
+                if (articleNum > 1) {
+                    return ">article";
+                } else {
+                    let hasText = false;
+                    for (let i in ele.childNodes) {
+                        let child = ele.childNodes[i];
+                        if (child.nodeType == 3 && child.nodeValue.trim() !== '') {
+                            return "";
+                        }
+                    }
+                    if (!hasText) {
+                        let gridArea = curStyle.gridArea;
+                        if (gridArea && gridArea != "auto / auto / auto / auto") {
+                            return ">*";
+                        } else {
+                            let middleChild = ele.children[parseInt(ele.children.length / 2)];
+                            if ((curStyle.display === 'flex' && curStyle.flexDirection == "row") || (rulesData.opacity != 0 && !pf)) {
+                                return "";
+                            } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight == 0) {
+                                return "";
+                            } else {
+                                return ">*";
+                            }
+                        }
+                    }
+                }
+            } else if (pf || curStyle.position === "absolute") {
+                return ">*";
+            }
+            return "";
+        }
+
         getPageElement(doc, curWin, dontFind) {
             if (doc == document && this.docPageElement && document.documentElement.contains(this.docPageElement[0])) {
                 return this.docPageElement;
@@ -1855,9 +1897,10 @@
                         let article = doc.querySelectorAll(mainSel);
                         if (article && article.length == 1) {
                             article = article[0];
-                            self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
+                            let childrenEnd = self.checkTargetChildren(article, curWin, articleNum, curHeight);
+                            self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + childrenEnd;
                             debug(self.curSiteRule.pageElement, 'Page element');
-                            return article.children;
+                            return childrenEnd ? article.children : article;
                         }
                         curMaxEle = null;
                     }
@@ -1900,48 +1943,9 @@
                         }
                     }
                     self.curSiteRule.pageElement = geneSelector(ele);
-                    let pf = false;
-                    if (ele.parentNode) {
-                        let paStyle = curWin.getComputedStyle(ele.parentNode);
-                        let paDisplay = paStyle.display;
-                        let paOverflow = paStyle.overflow;
-                        pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
-                    }
-                    let curStyle = curWin.getComputedStyle(ele);
-                    if (ele.children.length > 1) {
-                        if (articleNum > 1) {
-                            self.curSiteRule.pageElement += ">article";
-                            ele = ele.children;
-                        } else {
-                            let hasText = false;
-                            for (let i in ele.childNodes) {
-                                let child = ele.childNodes[i];
-                                if (child.nodeType == 3 && child.nodeValue.trim() !== '') {
-                                    hasText = true;
-                                    ele = [ele];
-                                    break;
-                                }
-                            }
-                            if (!hasText) {
-                                let gridArea = curStyle.gridArea;
-                                if (gridArea && gridArea != "auto / auto / auto / auto") {
-                                    self.curSiteRule.pageElement += ">*";
-                                    ele = ele.children;
-                                } else {
-                                    let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                                    if ((curStyle.display === 'flex' && curStyle.flexDirection == "row") || (rulesData.opacity != 0 && !pf)) {
-                                        ele = [ele];
-                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight == 0) {
-                                        ele = [ele];
-                                    } else {
-                                        self.curSiteRule.pageElement += ">*";
-                                        ele = ele.children;
-                                    }
-                                }
-                            }
-                        }
-                    } else if (pf || curStyle.position === "absolute") {
-                        self.curSiteRule.pageElement += ">*";
+                    let childrenEnd = self.checkTargetChildren(ele, curWin, articleNum, curHeight);
+                    if (childrenEnd) {
+                        self.curSiteRule.pageElement += childrenEnd;
                         ele = ele.children;
                     } else {
                         ele = [ele];
@@ -2484,7 +2488,7 @@
             if (!next) next = next1 || next4 || next3 || next2;
             if (!next) {
                 next = jsNext || nextJs1 || nextJs3 || nextJs2;
-                if (next && next.parentNode.className.indexOf('tab') != -1) next = null;
+                if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') != -1) next = null;
             }
             if (next && next.classList && (next.classList.contains("results-more") || next.classList.contains("no"))) next = null;
             if (next && next.hasAttribute && next.hasAttribute("disabled")) next = null;
