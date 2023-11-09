@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.4.1
+// @version              2023.11.9.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -53,6 +53,7 @@
 // @exclude              *://mega.*/*
 // @exclude              *://*.mega.*/*
 // @exclude              *://onedrive.live.com/*
+// @run-at               document-body
 // @created              2011-6-15
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
@@ -159,6 +160,9 @@ if (window.top != window.self) {
 
 
   var isMacOSWebView = _global.navigator && /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
+  var URL = _global.URL || _global.webkitURL;
+  var revokeObjectURL = URL.revokeObjectURL;
+  var createObjectURL = URL.createObjectURL;
   var saveAs = _global.saveAs || ( // probably in some web worker
   typeof window !== 'object' || window !== _global ? function saveAs() {}
   /* noop */
@@ -183,9 +187,9 @@ if (window.top != window.self) {
       }
     } else {
       // Support blobs
-      a.href = URL.createObjectURL(blob);
+      a.href = createObjectURL(blob);
       setTimeout(function () {
-        URL.revokeObjectURL(a.href);
+        revokeObjectURL(a.href);
       }, 4E4); // 40s
 
       setTimeout(function () {
@@ -240,13 +244,12 @@ if (window.top != window.self) {
 
       reader.readAsDataURL(blob);
     } else {
-      var URL = _global.URL || _global.webkitURL;
-      var url = URL.createObjectURL(blob);
+      var url = createObjectURL(blob);
       if (popup) popup.location = url;else location.href = url;
       popup = null; // reverse-tabnabbing #460
 
       setTimeout(function () {
-        URL.revokeObjectURL(url);
+        revokeObjectURL(url);
       }, 4E4); // 40s
     }
   });
@@ -11778,6 +11781,7 @@ ImgOps | https://imgops.com/#b#`;
         */
         type = parseInt(type || 0);
         if (name) name = name.split("\n")[0];
+        if (!url.replace) url = "";
         url = url.replace(/.*?\/\/[^\/]+\//, "");
         let nameFromUrl = "";
         let ext;
@@ -11824,7 +11828,10 @@ ImgOps | https://imgops.com/#b#`;
         saveAs(url, name);
     } : (url, name, type) => {
         name = document.title + " - " + getRightSaveName(url, name, type);
-        let urlSplit = url.split("/");
+        let urlSplit = ["", ""];
+        if (url.split) {
+            urlSplit = url.split("/");
+        }
         GM_download({
             url: url,
             name: name,
@@ -11903,7 +11910,12 @@ ImgOps | https://imgops.com/#b#`;
     function downloadImg(url, name, type, errCb) {
         urlToBlob(url, (blob, ext) => {
             if(blob){
-                saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
+                try {
+                    saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
+                } catch(e) {
+                    _GM_download(url, name, type);
+                    if (errCb) errCb();
+                }
             }else{
                 _GM_download(url, name, type);
                 if (errCb) errCb();
