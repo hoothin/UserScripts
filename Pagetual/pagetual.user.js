@@ -1671,7 +1671,7 @@
                     }
                     if (!hasText) {
                         let gridArea = curStyle.gridArea;
-                        if (gridArea && gridArea != "auto / auto / auto / auto") {
+                        if (gridArea && gridArea != "auto" && gridArea != "auto / auto / auto / auto") {
                             return ">*";
                         } else {
                             let middleChild = ele.children[parseInt(ele.children.length / 2)];
