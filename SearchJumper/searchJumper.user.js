@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.1
+// @version      1.7.2
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -404,6 +404,8 @@
         initShow: false,
         alwaysShow: false,
         customSize: 100,
+        tilesZoom: 100,
+        tipsZoom: 100,
         typeOpenTime: 250,
         longPressTime: 500,
         noIcons: false,
@@ -1325,6 +1327,8 @@
         class SearchBar {
             constructor() {
                 this.scale = searchData.prefConfig.customSize / 100;
+                this.tilesZoom = searchData.prefConfig.tilesZoom / 100;
+                this.tipsZoom = searchData.prefConfig.tipsZoom / 100;
                 cssText = `
                  #search-jumper {
                      font-size: 16px;
@@ -1642,9 +1646,10 @@
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type {
                      height: ${searchData.prefConfig.minPopup ? '24px' : 'auto'}!important;
-                     width: ${searchData.prefConfig.minPopup ? 24 : (40 * (searchData.prefConfig.numPerLine || 7) * this.scale)}px!important;
-                     max-width: unset;
-                     max-height: ${108 * this.scale + 10}px;
+                     max-width: ${searchData.prefConfig.minPopup ? 24 : (40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom)}px!important;
+                     width: auto!important;
+                     width: max-content!important;
+                     max-height: ${108 * this.tilesZoom + 10}px;
                      flex-wrap: wrap!important;
                      flex-direction: row;
                      padding: 5px;
@@ -1676,7 +1681,7 @@
                  }
                  #search-jumper.funcKeyCall:not(.targetInput)>.search-jumper-searchBar>.search-jumper-type {
                      height: auto!important;
-                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.scale}px!important;
+                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
                      visibility: visible;
@@ -1690,7 +1695,7 @@
                  ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
                      height: auto!important;
-                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.scale}px!important;
+                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
@@ -1815,6 +1820,14 @@
                      text-align: center;
                      background-image: initial;
                  }
+                 #search-jumper.funcKeyCall .search-jumper-btn {
+                     padding: ${1 * this.tilesZoom}px!important;
+                     margin: ${3 * this.tilesZoom}px!important;
+                     width: ${32 * this.tilesZoom}px;
+                     height: ${32 * this.tilesZoom}px;
+                     min-width: ${32 * this.tilesZoom}px;
+                     min-height: ${32 * this.tilesZoom}px;
+                 }
                  a.search-jumper-btn:not(.search-jumper-word)>span {
                      position: absolute;
                      text-align: center;
@@ -1827,6 +1840,9 @@
                      font-weight: normal;
                      opacity: 0.8;
                  }
+                 #search-jumper.funcKeyCall a.search-jumper-btn:not(.search-jumper-word)>span {
+                     font-size: ${12 * this.tilesZoom}px;
+                 }
                  .search-jumper-type>a.search-jumper-btn.historySite {
                      box-shadow: 0px 0px 8px 0px #00000080;
                  }
@@ -1835,6 +1851,10 @@
                      height: ${32 * this.scale}px;
                      border: unset;
                  }
+                 #search-jumper.funcKeyCall .search-jumper-btn>img {
+                     width: ${32 * this.tilesZoom}px;
+                     height: ${32 * this.tilesZoom}px;
+                 }
                  .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
                      font-size: ${14 * this.scale}px;
@@ -1842,6 +1862,10 @@
                      color: white;
                      opacity: 0.9;
                      text-shadow: 0 0 1px #d9d9d9cc;
+                 }
+                 #search-jumper.funcKeyCall .search-jumper-btn>b {
+                     line-height: ${32 * this.tilesZoom}px;
+                     font-size: ${14 * this.tilesZoom}px;
                  }
                  .search-jumper-btn:hover>b {
                      opacity: 1;
@@ -1856,6 +1880,11 @@
                      font-size: ${30 * this.scale}px;
                      color: wheat;
                      display: none;
+                 }
+                 #search-jumper.funcKeyCall .search-jumper-btn>div {
+                     line-height: ${32 * this.tilesZoom}px;
+                     border-radius: ${20 * this.tilesZoom}px;
+                     font-size: ${30 * this.tilesZoom}px;
                  }
                  .search-jumper-isInPage .search-jumper-btn>div,
                  .search-jumper-isTargetImg .search-jumper-btn>div,
@@ -1905,6 +1934,10 @@
                      overflow: hidden;
                      vertical-align: top;
                      cursor: grab;
+                 }
+                 #search-jumper.funcKeyCall .search-jumper-logoBtnSvg {
+                     height: ${32 * this.tilesZoom}px;
+                     width: ${32 * this.tilesZoom}px;
                  }
                  .search-jumper-type.search-jumper-needInPage,
                  .search-jumper-type.search-jumper-targetImg,
@@ -1986,6 +2019,15 @@
                      min-height: ${this.scale * 40}px;
                      min-width: ${this.scale * 40}px;
                      ${searchData.prefConfig.noAni ? "" : `transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;`}
+                 }
+                 #search-jumper.funcKeyCall .search-jumper-type,
+                 #search-jumper.funcKeyCall .search-jumper-logo {
+                     border-radius: ${20 * this.tilesZoom}px!important;
+                     height: ${40 * this.tilesZoom}px;
+                     width: ${40 * this.tilesZoom}px;
+                     max-height: ${this.tilesZoom * 40}px;
+                     min-height: ${this.tilesZoom * 40}px;
+                     min-width: ${this.tilesZoom * 40}px;
                  }
                  .search-jumper-right>.searchJumperNavBar {
                      right: unset;
@@ -2122,6 +2164,15 @@
                      letter-spacing: 0px;
                      text-shadow: unset;
                  }
+                 #search-jumper.funcKeyCall .search-jumper-word {
+                     border-radius: ${20 * this.tilesZoom}px!important;
+                     font-size: ${14 * this.tilesZoom}px;
+                     line-height: ${32 * this.tilesZoom}px;
+                     width: ${32 * this.tilesZoom}px;
+                     height: ${32 * this.tilesZoom}px;
+                     min-width: ${32 * this.tilesZoom}px;
+                     min-height: ${32 * this.tilesZoom}px;
+                 }
                  .search-jumper-word:hover {
                      font-weight: bold;
                      text-shadow: 0px 0px 5px #d0d0d0;
@@ -2148,6 +2199,10 @@
                      height: ${32 * this.scale}px;
                      margin-top: unset;
                  }
+                 #search-jumper.funcKeyCall .search-jumper-type img {
+                     width: ${32 * this.tilesZoom}px;
+                     height: ${32 * this.tilesZoom}px;
+                 }
                  .funcKeyCall>.search-jumper-tips {
                      position: absolute;
                  }
@@ -2155,9 +2210,9 @@
                      z-index: 2147483647;
                      pointer-events: none;
                      position: fixed;
-                     font-size: xx-large;
+                     font-size: ${35 * this.tipsZoom}px;
                      background: #f5f5f5e0;
-                     border-radius: 10px!important;
+                     border-radius: ${10 * this.tipsZoom}px!important;
                      padding: 5px;
                      box-shadow: 0px 0px 10px 0px #000;
                      font-weight: bold;
@@ -2166,7 +2221,7 @@
                      white-space: normal;
                      max-width: 640px;
                      width: max-content;
-                     line-height: 35px;
+                     line-height: ${35 * this.tipsZoom}px;
                      word-break: break-all;
                      text-align: center;
                      box-sizing: content-box;
@@ -2191,12 +2246,16 @@
                  }
                  .funcKeyCall>.search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      display: none;
-                     border-radius: ${20 * this.scale}px!important;
+                     border-radius: ${20 * this.tilesZoom}px!important;
                  }
                  span.search-jumper-word>img {
                      width: ${20 * this.scale}px;
                      height: ${20 * this.scale}px;
                      margin: auto;
+                 }
+                 #search-jumper.funcKeyCall span.search-jumper-word>img {
+                     width: ${20 * this.tilesZoom}px;
+                     height: ${20 * this.tilesZoom}px;
                  }
                  .search-jumper-searchBar .search-jumper-btn.search-jumper-word:hover {
                      background: black;
@@ -4498,7 +4557,15 @@
                                     let curList = self.marks[word.showWords];
                                     let index = curList.length;
                                     let spannode;
-                                    let newTextNodeCon = document.createDocumentFragment();
+                                    let newTextNodeCon;
+                                    let parentStyle = getComputedStyle(data.node.parentNode);
+                                    let parentDisplay = parentStyle.display;
+                                    if (parentDisplay.indexOf("flex") != -1 || parentDisplay.indexOf("grid") != -1 || parentDisplay.indexOf("layer") != -1) {
+                                        newTextNodeCon = document.createElement("span");
+                                        newTextNodeCon.style.all = "unset";
+                                    } else {
+                                        newTextNodeCon = document.createDocumentFragment();
+                                    }
                                     let newTextNode = document.createTextNode(data.text);
                                     newTextNodeCon.appendChild(newTextNode);
                                     let matches = data.match.reverse();
@@ -4619,8 +4686,8 @@
                             if (insert && fakeTextarea) return 0;
                             let nodeStyle = getComputedStyle(node);
                             let textareaLoc = node.getBoundingClientRect();
-                            let baseLeft = document.documentElement.scrollLeft + getBody(document).scrollLeft + textareaLoc.left + parseInt(nodeStyle.marginLeft);
-                            let baseTop = document.documentElement.scrollTop + getBody(document).scrollTop + textareaLoc.top + parseInt(nodeStyle.marginTop) - parseInt(nodeStyle.borderTopWidth);
+                            let baseLeft = document.documentElement.scrollLeft + getBody(document).scrollLeft + textareaLoc.left;
+                            let baseTop = document.documentElement.scrollTop + getBody(document).scrollTop + textareaLoc.top;
                             while (true) {
                                 if (word.isRe) {
                                     wordMatch = blockValue.match(new RegExp(word.content, word.reCase));
@@ -4683,12 +4750,16 @@
                                         fakeTextarea.style.position = "fixed";
                                         fakeTextarea.style.left = "0px";
                                         fakeTextarea.style.top = "0px";
+                                        fakeTextarea.style.margin = "0";
+                                        if (node.nodeName && node.nodeName.toLowerCase && node.nodeName.toLowerCase() !== "textarea") {
+                                            fakeTextarea.style.display = "inline-grid";
+                                        }
                                         self.fakeTextareas[node] = fakeTextarea;
                                     }
                                     document.body.appendChild(fakeTextarea);
                                     let range = document.createRange();
                                     range.setStart(fakeTextarea.firstChild, pos);
-                                    range.setEnd(fakeTextarea.firstChild, pos + curWord.length);
+                                    range.setEnd(fakeTextarea.firstChild, pos + 1);
                                     let rect = range.getBoundingClientRect();
                                     document.body.removeChild(fakeTextarea);
 
@@ -4720,7 +4791,8 @@
                                         document.body.appendChild(spannode);
                                         spannode.style.fontSize = fakeTextarea.style.fontSize;
                                         spannode.style.fontFamily = fakeTextarea.style.fontFamily;
-                                        spannode.style.lineHeight = fakeTextarea.style.lineHeight;
+                                        spannode.style.lineHeight = "1";
+                                        spannode.style.padding = "0";
                                         spannode.style.position = "absolute";
                                         spannode.style.zIndex = "9";
                                         spannode.style.pointerEvents = "none";
@@ -6901,7 +6973,7 @@
                             (!data.meta == e.metaKey)) {
                             return;
                         }
-                        if (!searchData.prefConfig.enableInInput) {
+                        if (!searchData.prefConfig.enableInInput && !data.ctrl && !data.alt && !data.shift && !data.meta) {
                             if (inputActive(document)) return;
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
@@ -7606,7 +7678,7 @@
                                 return;
                             }
                         }
-                        if (!searchData.prefConfig.enableInInput) {
+                        if (!searchData.prefConfig.enableInInput && !data.ctrl && !data.alt && !data.shift && !data.meta) {
                             if (inputActive(document)) return;
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
@@ -10151,7 +10223,7 @@
                     }
                     if (!searchData.prefConfig.enableInInput && inputing == -1) {
                         inputing = 1;
-                        if (inputActive(document)) return false;
+                        if (!_ctrl && !_alt && !_shift && !_meta && inputActive(document)) return false;
                     }
                     inputing = 0;
                     e.preventDefault();
@@ -10189,7 +10261,7 @@
                             searchBar.switchSite(true);
                         }
                     }
-                });
+                }, true);
             }
             let clickHandler;
             if (searchData.prefConfig.enableInPage) {
@@ -12627,6 +12699,12 @@
             //旧版兼容
             if (typeof searchData.prefConfig.customSize === "undefined") {
                 searchData.prefConfig.customSize = 100;
+            }
+            if (typeof searchData.prefConfig.tilesZoom === "undefined") {
+                searchData.prefConfig.tilesZoom = 100;
+            }
+            if (typeof searchData.prefConfig.tipsZoom === "undefined") {
+                searchData.prefConfig.tipsZoom = 100;
             }
             if (typeof searchData.prefConfig.typeOpenTime === "undefined") {
                 searchData.prefConfig.typeOpenTime = 250;
