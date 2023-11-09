@@ -1900,7 +1900,7 @@
                             let childrenEnd = self.checkTargetChildren(article, curWin, articleNum, curHeight);
                             self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + childrenEnd;
                             debug(self.curSiteRule.pageElement, 'Page element');
-                            return childrenEnd ? article.children : article;
+                            return childrenEnd ? article.children : [article];
                         }
                         curMaxEle = null;
                     }
