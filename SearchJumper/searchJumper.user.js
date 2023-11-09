@@ -2579,6 +2579,7 @@
                      height: 16px;
                      fill: white;
                      cursor: pointer;
+                     display: inline-block;
                  }
                  .searchJumperNavBar>.minNavBtn {
                      font-size: 12px;
@@ -4389,7 +4390,7 @@
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     let pa = node.parentNode;
-                    if (node.nodeType == 1 && node.classList && node.className.indexOf("searchJumper") != -1) return 0;
+                    if (node.nodeType == 1 && node.className && node.className.indexOf && node.className.indexOf("searchJumper") != -1) return 0;
                     if (start && node.nodeType == 1) {
                         let domTextResult = self.anylizeDomWithTextPos(node);
                         let textRes = domTextResult.text;
