@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86183",
+  "data": {
+    "pageElement": "//div[@class='CtgryLink']|//div[@class='CtgryLink']/following-sibling::*[1]",
+    "comment": "If you do not specify the block element specified by CSS after the CtgryLink class in pageElement, the Design will be affected.",
+    "nextLink": "//span[@class='TargetPage']/following-sibling::a[1][number()>0]",
+    "url": "^https://[^/]+\\.weblio\\.jp/.",
+    "exampleUrl": "https://www.weblio.jp/category/\r\nhttps://kobun.weblio.jp/category/aa\r\nhttps://www.weblio.jp/category/people/tltdb/ha/10"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "Weblio 索引",
+  "created_at": "2023-11-08T19:30:31+09:00",
+  "updated_at": "2023-11-09T07:10:50+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86182",
   "data": {
     "insertBefore": "",
