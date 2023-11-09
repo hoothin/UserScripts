@@ -1972,7 +1972,7 @@
 
             if (doc !== document) {
                 this.setPageElementCss(pageElement);
-                this.lazyImgAction(pageElement);
+                this.lazyImgAction(pageElement, doc);
                 this.filterEles(doc, pageElement);
             } else if (!this.docPageElement) {
                 this.setPageElementCss(pageElement, true);
@@ -3008,7 +3008,7 @@
                         doc.documentElement.innerHTML = createHTML(res.response);
                         var body = getBody(doc);
                         if (body && body.firstChild) {
-                            self.lazyImgAction(body.children);
+                            self.lazyImgAction(body.children, doc);
                         }
                         if (!self.preloadDiv) {
                             self.preloadDiv = document.createElement('div');
@@ -3136,25 +3136,25 @@
             }
         }
 
-        lazyImgAction(eles) {
+        lazyImgAction(eles, doc) {
             if (!eles || eles.length == 0) return;
             let lazyImgSrc = this.curSiteRule.lazyImgSrc;
             if (lazyImgSrc === 0 || lazyImgSrc === '0') return;
+            let imgLazyAttrs = [];
+            let lazyAttrs = ["div[data-thumb]|data-src", "div.img|data-src", "div.lazy|data-src", "div.lazy|data-original", "a.lazy|data-bg", "a.lazyload|data-original"];
+            let removeProps = [];
             let setLazyImg = img => {
                 let realSrc;
-                if (lazyImgSrc) {
-                    if (!Array.isArray(lazyImgSrc)) {
-                        lazyImgSrc = [lazyImgSrc];
-                    }
+                imgLazyAttrs.forEach(attr => {
                     realSrc = img.getAttribute(lazyImgSrc[0]);
-                    if (lazyImgSrc.length == 2) {
-                        let removeProps = lazyImgSrc[1].split(",");
+                    if (realSrc) {
                         removeProps.forEach(prop => {
                             img.removeAttribute(prop.trim());
                         });
+                        img.src = realSrc;
+                        return;
                     }
-                    if (realSrc) img.src = realSrc;
-                }
+                })
                 if (!realSrc) {
                     let lazyAttr = "";
                     if (img.getAttribute("_src") && !img.src) {
@@ -3204,34 +3204,36 @@
                     }
                 }
             };
-            [].forEach.call(eles, ele => {
-                if (compareNodeName(ele, ["img"])) {
-                    setLazyImg(ele);
+            if (lazyImgSrc) {
+                if (!Array.isArray(lazyImgSrc)) {
+                    lazyAttrs = [lazyImgSrc];
                 } else {
-                    [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
-                        setLazyImg(img);
-                    });
-                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb],div.img[data-src],div.lazy[data-src]"), div => {
-                        div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
-                    });
-                    [].forEach.call(ele.querySelectorAll("div.lazy[data-original]"), div => {
-                        div.style.setProperty("background-image", "url(" + div.dataset.original + ")", "important");
-                    });
-                    [].forEach.call(ele.querySelectorAll("a.lazy[data-bg]"), a => {
-                        a.style.setProperty("background-image", "url(" + a.dataset.bg + ")", "important");
-                    });
+                    lazyAttrs = lazyImgSrc[0].split(",");
+                    removeProps = lazyImgSrc[1].split(",");
                 }
-                if (compareNodeName(ele, ["a"]) && ele.classList.contains("lazyload")) {
-                    if (ele.dataset.original) {
-                        ele.style.backgroundImage = 'url("' + ele.dataset.original + '")';
+            }
+            lazyAttrs.forEach(attr => {
+                let attrArr = attr.split("|");
+                if (attrArr.length !== 2) {
+                    imgLazyAttrs.push(attr.trim());
+                } else {
+                    let selector = attrArr[0].trim();
+                    let lazyAttr = attrArr[1].trim();
+                    if (selector == "img") {
+                        imgLazyAttrs.push(lazyAttr);
+                    } else {
+                        selector += "[" + lazyAttr + "]";
+                        [].forEach.call(doc.querySelectorAll(selector), ele => {
+                            ele.style.setProperty("background-image", "url(" + ele.getAttribute(lazyAttr) + ")", "important");
+                            removeProps.forEach(prop => {
+                                ele.removeAttribute(prop.trim());
+                            });
+                        });
                     }
-                } else {
-                    [].forEach.call(ele.querySelectorAll("a.lazyload"), a => {
-                        if (a.dataset.original) {
-                            a.style.backgroundImage = 'url("' + a.dataset.original + '")';
-                        }
-                    });
                 }
+            });
+            [].forEach.call(doc.querySelectorAll("img,picture>source"), img => {
+                setLazyImg(img);
             });
         }
 
