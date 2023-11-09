@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.86
+// @version      1.9.36.87
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3211,8 +3211,14 @@
                     [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
                         setLazyImg(img);
                     });
-                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb],div.img[data-src],div.lazy[data-src],a.lazy[data-bg]"), div => {
-                        div.style.setProperty("background-image", "url(" + (div.dataset.src || div.dataset.bg) + ")", "important");
+                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb],div.img[data-src],div.lazy[data-src]"), div => {
+                        div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
+                    });
+                    [].forEach.call(ele.querySelectorAll("div.lazy[data-original]"), div => {
+                        div.style.setProperty("background-image", "url(" + div.dataset.original + ")", "important");
+                    });
+                    [].forEach.call(ele.querySelectorAll("a.lazy[data-bg]"), a => {
+                        a.style.setProperty("background-image", "url(" + a.dataset.bg + ")", "important");
                     });
                 }
                 if (compareNodeName(ele, ["a"]) && ele.classList.contains("lazyload")) {
@@ -3652,7 +3658,7 @@
                 } else {
                     if (pageBarObj.preBar) {
                         let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
-                        window.scrollTo({ top: (scrollH || 9999999), behavior: 'smooth'});
+                        window.scrollTo({ top: (scrollH || 9999999), behavior: 'instant'});
                     } else {
                         let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
                         window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
@@ -6789,7 +6795,7 @@
                         scrollToPageBar(nextPageBar);
                     } else {
                         let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
-                        window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                        window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'instant'});
                     }
                 } else if (e.keyCode == 37) {
                     let prePageBar = getPageBar().preBar;
@@ -6797,7 +6803,7 @@
                         scrollToPageBar(prePageBar);
                     } else {
                         let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
-                        window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                        window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'instant'});
                     }
                 }
             };
@@ -6869,13 +6875,14 @@
         return loadmoreBtn;
     }
 
+    var lastPageBar;
     function scrollToPageBar(bar){
         let yOffset = -20;
         if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
             yOffset = -ruleParser.curSiteRule.pageBarTop;
         }
         const y = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth'});
+        window.scrollTo({ top: y, behavior: lastPageBar == bar ? 'instant' : 'smooth'});
     }
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
@@ -7030,7 +7037,7 @@
                 scrollToPageBar(nextPageBar);
             } else {
                 scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
-                window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
+                window.scrollTo({ top: scrollH || 9999999, behavior: 'instant'});
             }
         });
         if (!rulesData.hideBarArrow) {
@@ -7172,6 +7179,7 @@
         ruleParser.insertElement(pageBar);
         ruleParser.runPageBar(pageBar);
 
+        lastPageBar = pageBar;
         return pageBar;
     }
 
