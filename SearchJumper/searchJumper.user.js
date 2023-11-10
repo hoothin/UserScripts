@@ -5475,7 +5475,7 @@
                     } else {
                         this.wordModeBtn.classList.add("checked");
                     }
-                    if (this.lockWords && this.lockWords.indexOf(" ") != -1) {
+                    if (this.lockWords) {
                         this.refreshPageWords(this.lockWords);
                     }
                 });
