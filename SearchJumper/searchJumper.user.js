@@ -6522,7 +6522,8 @@
                         } else {
                             if (self.searchJumperExpand.parentNode == typeEle && !searchData.prefConfig.expandType) {
                                 let siteBtns = typeEle.querySelectorAll("a.search-jumper-btn");
-                                let maxSiteNum = searchData.prefConfig.historyLength < 6 ? (6 + 6 - searchData.prefConfig.historyLength) : 6;
+                                let maxSiteNum = (searchData.prefConfig.numPerLine || 7) - 1;
+                                maxSiteNum = searchData.prefConfig.historyLength < maxSiteNum ? (maxSiteNum + maxSiteNum - searchData.prefConfig.historyLength) : maxSiteNum;
                                 if (siteBtns.length > maxSiteNum) {
                                     typeEle.insertBefore(btn, siteBtns[maxSiteNum]);
                                 } else typeEle.insertBefore(btn, self.searchJumperExpand);
