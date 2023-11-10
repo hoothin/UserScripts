@@ -8053,9 +8053,13 @@
                 nextLink = ruleParser.nextLinkHref;
             }
             if (!nextLink) {
-                if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ < 3)) {
-                    setTimeout(() => {isLoading = false}, 500);
-                } else if (curPage > 1 && rulesData.lastPageTips && !showedLastPageTips) {
+                if (curPage == 1) {
+                    if (ruleParser.curSiteRule.pinUrl) {
+                        setTimeout(() => {isLoading = false}, 500);
+                    } else if (tryTimes++ < 3) {
+                        setTimeout(() => {isLoading = false}, 1000);
+                    }
+                } else if (rulesData.lastPageTips && !showedLastPageTips) {
                     showTips(i18n("lastPage"));
                     showedLastPageTips = true;
                 }
