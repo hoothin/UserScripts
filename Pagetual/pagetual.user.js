@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.87
+// @version      1.9.36.88
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3206,7 +3206,7 @@
             };
             if (lazyImgSrc) {
                 if (!Array.isArray(lazyImgSrc)) {
-                    lazyAttrs = [lazyImgSrc];
+                    lazyAttrs = lazyImgSrc.split(",");
                 } else {
                     lazyAttrs = lazyImgSrc[0].split(",");
                     removeProps = lazyImgSrc[1].split(",");
@@ -3256,6 +3256,7 @@
             this.oldUrl = "";
             this.initUrl = location.href;
             this.historyUrl = "";
+            this.possibleCheck = 0;
             let base = document.querySelector("base");
             this.basePath = base ? base.href : location.href;
             this.getRule(async () => {
@@ -3332,9 +3333,20 @@
                     }
                 }
                 if (self.curSiteRule.singleUrl && self.nextLinkHref == false && self.possibleRule) {
-                    setTimeout(() => {
-                        self.initPage(() => {});
-                    }, 3000);
+                    let urlReg = new RegExp(self.possibleRule.url, "i");
+                    function checkPossible () {
+                        if (self.possibleCheck++ < 3) {
+                            setTimeout(() => {
+                                if (self.curSiteRule.singleUrl) {
+                                    var href = location.href.slice(0, 500);
+                                    if (urlReg.test(href) && self.ruleMatch(self.possibleRule)) {
+                                        self.initPage(() => {});
+                                    } else checkPossible();
+                                }
+                            }, 3000);
+                        }
+                    }
+                    checkPossible();
                 }
                 self.refreshByClick();
 
@@ -6576,16 +6588,18 @@
         let scrolly = window.scrollY;
         let windowHeight = window.innerHeight || document.documentElement.clientHeight;
         if (!scrollContainer || !document.documentElement.contains(scrollContainer)) {
-            let pageEle = ruleParser.getPageElement(document);
-            if (pageEle && pageEle.length) {
-                let parent = pageEle[0].parentNode, pageScrollY = parent.scrollTop;;
-                while (parent && pageScrollY == 0) {
-                    parent = parent.parentNode;
-                    pageScrollY = parent.scrollTop;
-                }
-                if (pageScrollY) {
-                    scrollContainer = parent;
-                    return scrollContainer.scrollHeight - pageScrollY - windowHeight;
+            if (curPage > 1 || ruleParser.nextLinkHref) {
+                let pageEle = ruleParser.getPageElement(document);
+                if (pageEle && pageEle.length) {
+                    let parent = pageEle[0].parentNode, pageScrollY = parent.scrollTop;;
+                    while (parent && pageScrollY == 0) {
+                        parent = parent.parentNode;
+                        pageScrollY = parent.scrollTop;
+                    }
+                    if (pageScrollY) {
+                        scrollContainer = parent;
+                        return scrollContainer.scrollHeight - pageScrollY - windowHeight;
+                    }
                 }
             }
         }
@@ -8039,7 +8053,7 @@
                 nextLink = ruleParser.nextLinkHref;
             }
             if (!nextLink) {
-                if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 3)) {
+                if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ < 3)) {
                     setTimeout(() => {isLoading = false}, 500);
                 } else if (curPage > 1 && rulesData.lastPageTips && !showedLastPageTips) {
                     showTips(i18n("lastPage"));
