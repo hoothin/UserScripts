@@ -3899,6 +3899,7 @@
                     this.modifyBtn = modifyBtn;
                     modifyBtn.addEventListener("click", e => {
                         let newWord = wordContent.value;
+                        if (this.splitSep) newWord = newWord.replaceAll(this.splitSep, "");
                         if (!newWord) return;
                         let contentChange = newWord !== this.modifyWord.showWords || wordReCase.checked !== this.modifyWord.isRe || wordLink.checked !== this.modifyWord.link;
                         if (wordIsRe.checked && newWord.indexOf("@") !== 0) {
@@ -5330,7 +5331,7 @@
                 };
 
                 //Search in page
-                this.splitSep = " ";
+                this.splitSep = "◎";
                 this.lockWords = "";
                 this.marks = {};
                 this.initInPageWords = [];
