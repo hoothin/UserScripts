@@ -9761,7 +9761,11 @@
                 canvas.height = img.naturalHeight || img.height || parseInt(imgStyle.height);
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0);
-                return (canvas.toDataURL("image/png"));
+                try {
+                    return (canvas.toDataURL("image/png"));
+                } catch (e) {
+                    return await imageSrc2Base64(img.src);
+                }
             } else {
                 return await imageSrc2Base64(img.src);
             }
