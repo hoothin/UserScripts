@@ -1695,7 +1695,9 @@
                  ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
                      height: auto!important;
-                     width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom}px!important;
+                     width: auto!important;
+                     width: max-content!important;
+                     max-width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
