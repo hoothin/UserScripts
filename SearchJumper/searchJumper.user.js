@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.2
+// @version      1.7.3
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -4448,6 +4448,7 @@
                 } else {
                     this.curHighlightWords = (this.curHighlightWords || []).concat(words);
                 }
+                this.fakeTextareas = {};
                 function searchWithinNode(node, word, start) {
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
@@ -4689,8 +4690,9 @@
                             if (insert && fakeTextarea) return 0;
                             let nodeStyle = getComputedStyle(node);
                             let textareaLoc = node.getBoundingClientRect();
-                            let baseLeft = document.documentElement.scrollLeft + getBody(document).scrollLeft + textareaLoc.left;
-                            let baseTop = document.documentElement.scrollTop + getBody(document).scrollTop + textareaLoc.top;
+                            let textareaParentLoc = (node.offsetParent || getBody(document)).getBoundingClientRect();
+                            let baseLeft = textareaLoc.left - textareaParentLoc.left;
+                            let baseTop = textareaLoc.top - textareaParentLoc.top;
                             while (true) {
                                 if (word.isRe) {
                                     wordMatch = blockValue.match(new RegExp(word.content, word.reCase));
@@ -4791,7 +4793,7 @@
                                         spannode.style.cssText = word.style;
                                         spannode.dataset.content = word.showWords;
                                         spannode.innerText = curWord;
-                                        document.body.appendChild(spannode);
+                                        node.parentNode.appendChild(spannode);
                                         spannode.style.fontSize = fakeTextarea.style.fontSize;
                                         spannode.style.fontFamily = fakeTextarea.style.fontFamily;
                                         spannode.style.lineHeight = "1";
@@ -4799,10 +4801,22 @@
                                         spannode.style.position = "absolute";
                                         spannode.style.zIndex = "9";
                                         spannode.style.pointerEvents = "none";
-                                        spannode.style.left = rect.left + baseLeft + "px";
-                                        spannode.style.top = rect.top + baseTop + "px";
+                                        let _baseLeft = rect.left + baseLeft;
+                                        let _baseTop = rect.top + baseTop;
+                                        spannode.style.left = _baseLeft + "px";
+                                        spannode.style.top = _baseTop + "px";
                                         self.marks[word.showWords].push(spannode);
                                         self.createNavMark(spannode, word, index, curList);
+                                        let nodeScrollHandler = e => {
+                                            if (!spannode.parentNode) {
+                                                spannode.parentNode.removeChild(spannode);
+                                                node.removeEventListener("scroll", nodeScrollHandler);
+                                            } else {
+                                                spannode.style.left = _baseLeft - node.scrollLeft + "px";
+                                                spannode.style.top = _baseTop - node.scrollTop + "px";
+                                            }
+                                        }
+                                        node.addEventListener("scroll", nodeScrollHandler);
                                     }
                                 }
                             }
