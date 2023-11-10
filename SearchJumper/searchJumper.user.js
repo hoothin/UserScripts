@@ -4807,16 +4807,18 @@
                                         spannode.style.top = _baseTop + "px";
                                         self.marks[word.showWords].push(spannode);
                                         self.createNavMark(spannode, word, index, curList);
-                                        let nodeScrollHandler = e => {
-                                            if (!spannode.parentNode) {
-                                                spannode.parentNode.removeChild(spannode);
-                                                node.removeEventListener("scroll", nodeScrollHandler);
-                                            } else {
-                                                spannode.style.left = _baseLeft - node.scrollLeft + "px";
-                                                spannode.style.top = _baseTop - node.scrollTop + "px";
+                                        if (node.nodeName && node.nodeName.toLowerCase && node.nodeName.toLowerCase() == "textarea") {
+                                            let nodeScrollHandler = e => {
+                                                if (!spannode.parentNode) {
+                                                    spannode.parentNode.removeChild(spannode);
+                                                    node.removeEventListener("scroll", nodeScrollHandler);
+                                                } else {
+                                                    spannode.style.left = _baseLeft - node.scrollLeft + "px";
+                                                    spannode.style.top = _baseTop - node.scrollTop + "px";
+                                                }
                                             }
+                                            node.addEventListener("scroll", nodeScrollHandler);
                                         }
-                                        node.addEventListener("scroll", nodeScrollHandler);
                                     }
                                 }
                             }
