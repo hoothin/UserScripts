@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.4
+// @version      1.7.5
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3271,7 +3271,7 @@
                         this.splitSep = words.substr(2, 1);
                     } else if (words.indexOf("$o") === 0) {
                         this.splitSep = null;
-                    } else this.splitSep = init ? " " : "◎";
+                    } else this.splitSep = "◎";
                     this.curWordIndex = 0;
                 }
                 let targetWords = this.anylizeInPageWords(words, !!init);
@@ -4330,9 +4330,9 @@
                         if (ele.parentNode.childNodes.length == 1) {
                             textData = ele.parentNode.innerText;
                         } else {
-                            textData = ele.data.trim();
+                            textData = ele.data;
                         }
-                        if (!textData) return;
+                        if (!textData.trim()) return;
                         const start = result.text.length;
                         result.text += textData;
                         result.data[result.text.length - 1] = {node: ele, text: textData};
@@ -4464,7 +4464,7 @@
                         function getNodePos(pos, len) {
                             let keys = Object.keys(domTextResult.data);
                             let findNodes = [], leftLen = len;
-                            let pre = "", after = "";
+                            let pre = "", after = "", after2 = "";
                             for (let i = 0; i < keys.length; i++) {
                                 let end = keys[i];
                                 let curnode = domTextResult.data[end];
@@ -4487,13 +4487,19 @@
                                     if (type == "full") {
                                         pre = curpos == 0 ? "\n" : curnode.text[curpos - 1];
                                         after = (curpos + leftLen) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen];
+                                        if (after !== "\n") {
+                                            after2 = (curpos + leftLen + 1) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen + 1];
+                                        }
                                     } else if (type == "start" && !pre) {
                                         pre = curpos == 0 ? "\n" : curnode.text[curpos - 1];
                                     } else if ((type == "end" || type == "full") && !after) {
                                         after = (curpos + leftLen) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen];
+                                        if (after !== "\n") {
+                                            after2 = (curpos + leftLen + 1) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen + 1];
+                                        }
                                     }
                                     if (pre && after) {
-                                        if (/[a-z]/i.test(pre) || /[a-z]/i.test(after)) {
+                                        if (/[a-z]/i.test(pre) || /[a-rt-z]/i.test(after) || (after.toLowerCase() == 's' && /[a-z]/i.test(after2))) {
                                             break;
                                         }
                                     }
@@ -5172,6 +5178,7 @@
                 this.inInput = true;
                 this.clearInputHide();
                 if (this.lockWords) this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+                else this.searchJumperInPageInput.style.paddingLeft = "";
                 if (searchData.prefConfig.altToHighlight) {
                     document.removeEventListener("mouseup", this.checkSelHandler);
                     document.addEventListener("mouseup", this.checkSelHandler);
@@ -6073,6 +6080,9 @@
                 let inPageWords;
                 if (searchData.prefConfig.showInSearchJumpPage && referrer && !disableHighlight) {
                     if (document.referrer.indexOf(referrer) != -1) {
+                        if (cacheKeywords) {
+                            this.wordModeBtn.classList.add("checked");
+                        }
                         inPageWords = cacheKeywords;
                         try {
                             inPageWords = decodeURIComponent(inPageWords);
@@ -6115,6 +6125,7 @@
                     }
                 }
                 this.insertHistory(this.currentType, true);
+                this.wordModeBtn.classList.add("checked");
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? localKeywords : globalInPageWords;
                 if (inPageWords) {
                     this.setInPageWords(inPageWords.replace(/['";]/g, ' '));
