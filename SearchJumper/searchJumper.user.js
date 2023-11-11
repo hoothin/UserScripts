@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.5
+// @version      1.7.6
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -4460,7 +4460,7 @@
                         let dataRes = domTextResult.data;
                         let index = 0;
                         let nodeAndPos = [];
-                        let validWord = (word.init || inWordMode) && /^[a-z]+$/i.test(word.content);
+                        //let validWord = (word.init || inWordMode) && /^[a-z]+$/i.test(word.content);
                         function getNodePos(pos, len) {
                             let keys = Object.keys(domTextResult.data);
                             let findNodes = [], leftLen = len;
@@ -4483,7 +4483,7 @@
                                     }
                                 }
 
-                                if (validWord) {
+                                /*if (validWord) {
                                     if (type == "full") {
                                         pre = curpos == 0 ? "\n" : curnode.text[curpos - 1];
                                         after = (curpos + leftLen) == curnode.text.length ? "\n" : curnode.text[curpos + leftLen];
@@ -4503,7 +4503,7 @@
                                             break;
                                         }
                                     }
-                                }
+                                }*/
 
                                 if (curpos < 0) curpos = 0;
                                 let curlen = Math.min(leftLen, curnode.text.length - curpos);
@@ -5549,7 +5549,21 @@
                     }
                 });
                 this.minNavBtn.addEventListener("click", e => {
-                    this.searchJumperNavBar.classList.toggle("minimize");
+                    if (this.searchJumperNavBar.classList.contains("minimize")) {
+                        this.searchJumperNavBar.classList.remove("minimize");
+                        if (this.lockWords.trim()) return;
+                        this.submitInPageWords();
+                    } else {
+                        this.searchJumperNavBar.classList.add("minimize");
+                        this.highlight("");
+                        let words = this.lockWords.trim();
+                        if (!words) return;
+                        if (this.searchJumperInPageInput.value) words += this.splitSep + this.searchJumperInPageInput.value;
+                        this.lockWords = "";
+                        this.searchJumperInPageInput.value = words;
+                        this.searchInPageLockWords.innerHTML = createHTML();
+                        this.searchJumperInPageInput.style.paddingLeft = "";
+                    }
                 });
                 this.navMarks.addEventListener("click", e => {
                     let topPercent = e.offsetY / this.navMarks.clientHeight * 100;
