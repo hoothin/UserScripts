@@ -10545,7 +10545,7 @@
                     searchBar.bar.style.display = 'none';
                 }
             })
-            document.addEventListener("click", e => {
+            getBody(document).addEventListener("click", e => {
                 if (e.target) {
                     if (e.target.nodeName && e.target.nodeName.toLowerCase && e.target.nodeName.toLowerCase() == 'a') {
                         searchBar.updateCacheKeywords();
