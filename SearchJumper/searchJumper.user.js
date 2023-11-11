@@ -10546,7 +10546,7 @@
                 }
             })
             getBody(document).addEventListener("click", e => {
-                if (e.target) {
+                if (currentSite && e.target) {
                     if (e.target.nodeName && e.target.nodeName.toLowerCase && e.target.nodeName.toLowerCase() == 'a') {
                         searchBar.updateCacheKeywords();
                     } else if (e.target.parentNode && e.target.parentNode.nodeName && e.target.parentNode.nodeName.toLowerCase && e.target.parentNode.nodeName.toLowerCase() == 'a') {
