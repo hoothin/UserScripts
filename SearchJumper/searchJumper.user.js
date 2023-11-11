@@ -9806,19 +9806,19 @@
                 _GM_xmlhttpRequest({
                     method: 'GET',
                     url: src,
-                    responseType:'arraybuffer',
+                    responseType:'blob',
                     headers: {
                         origin: urlSplit[0] + "//" + urlSplit[2],
                         referer: src,
                         accept: "*/*"
                     },
                     onload: function(d) {
-                        var binary = '';
-                        var bytes = new Uint8Array(d.response);
-                        for (var len = bytes.byteLength, i = 0; i < len; i++) {
-                            binary += String.fromCharCode(bytes[i]);
-                        }
-                        resolve(`data:image/jpeg;base64,${window.btoa(binary)}`);
+                        var blob = d.response;
+                        var fr = new FileReader();
+                        fr.readAsDataURL(blob);
+                        fr.onload = function (e) {
+                            resolve(e.target.result);
+                        };
                     },
                     onerror: function(){
                         resolve(null);
