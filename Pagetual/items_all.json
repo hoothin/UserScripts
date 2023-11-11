@@ -51720,17 +51720,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/1567",
-  "name": "ニコニコ大百科",
-  "created_by": "gifnksm",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2019-03-09T12:41:46+09:00",
   "data": {
-    "exampleUrl": "http://dic.nicovideo.jp/m/u/a/",
+    "pageElement": "id(\"main\")//div[contains(@class,\"st-box_contents\")]/table[@class]//tr[td]|\r\n//dd[starts-with(@id, 'search_table_contents_')]",
+    "nextLink": "id(\"main\")//div[contains(@class,\"st-box_contents\")]//div[@class=\"st-pg_contents\"]/span[@class=\"current\"]/following-sibling::a",
     "url": "^https://dic\\.nicovideo\\.jp/(?:m/[nu]|s)/(?:[aciluv]|all|al|oekaki|mml)/",
-    "pageElement": "id(\"main\")//div[contains(@class,\"st-box_contents\")]/table[@class=\"st-table\"]//tr[td]",
-    "nextLink": "id(\"main\")//div[contains(@class,\"st-box_contents\")]//div[@class=\"st-pg_contents\"]/span[@class=\"current\"]/following-sibling::a"
+    "exampleUrl": "https://dic.nicovideo.jp/m/u/a/\r\nhttps://dic.nicovideo.jp/s/oekaki/a/A/rev_created/desc/1-?query_type=a\r\nhttps://dic.nicovideo.jp/s/mml/a/A/rev_created/desc/1-?query_type=a\r\nhttps://dic.nicovideo.jp/s/al/t/A/rev_created/desc/1-?query_type=t"
   },
-  "created_at": "2008-05-24T05:16:36+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "gifnksm",
+  "name": "ニコニコ大百科",
+  "created_at": "2008-05-24T05:16:36+09:00",
+  "updated_at": "2023-11-10T18:23:48+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/1563",
