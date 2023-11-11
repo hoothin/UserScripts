@@ -6388,12 +6388,16 @@
                 siteEle.classList.add('current');
                 localKeywords = "";
                 if (!/#p{|^(showTips|find)/.test(data.url) && /%s[lurest]?\b/.test(data.url)) {
-                    let keywords = getKeywords();
-                    if (keywords && keywords != cacheKeywords) {
-                        cacheKeywords = keywords;
-                        storage.setItem("cacheKeywords", keywords);
-                    }
+                    this.updateCacheKeywords();
                     storage.setItem("referrer", location.hostname);
+                }
+            }
+
+            updateCacheKeywords() {
+                let keywords = getKeywords();
+                if (keywords && keywords != cacheKeywords) {
+                    cacheKeywords = keywords;
+                    storage.setItem("cacheKeywords", keywords);
                 }
             }
 
@@ -10541,6 +10545,15 @@
                     searchBar.bar.style.display = 'none';
                 }
             })
+            document.addEventListener("click", e => {
+                if (e.target) {
+                    if (e.target.nodeName && e.target.nodeName.toLowerCase && e.target.nodeName.toLowerCase() == 'a') {
+                        searchBar.updateCacheKeywords();
+                    } else if (e.target.parentNode && e.target.parentNode.nodeName && e.target.parentNode.nodeName.toLowerCase && e.target.parentNode.nodeName.toLowerCase() == 'a') {
+                        searchBar.updateCacheKeywords();
+                    }
+                }
+            }, true);
             let href = location.href;
             let _wr = function(type) {
                 var orig = history[type];
