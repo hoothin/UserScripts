@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.7.3
+// @version      1.2.7.4
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1171,12 +1171,13 @@
         }
     };
 
+    var keyCallNotSave = true;
     var curInput = null;
     var curLang;
     var currentAction = "action_" + location.hostname.toString().replace(/\./g,"_");
-    function setLanguage(){
+    function setLanguage(keyCall){
         enable = true;
-        storage.setItem(currentAction, action);
+        if (!keyCall || !keyCallNotSave) storage.setItem(currentAction, action);
         switch(action){
             case 1:
               if ( notification ) _GM_notification("已於該網域禁用簡繁切換");
@@ -1206,7 +1207,7 @@
         location.reload();
     }
 
-    function translateAction(activeEle){
+    function translateAction(activeEle, keyCall){
         if(!activeEle)activeEle=document.activeElement;
         if("TEXTAREA"==activeEle.nodeName.toUpperCase()||activeEle.contentEditable=="true"){
             if (curInput != activeEle) {
@@ -1237,7 +1238,7 @@
                 rang.insertNode(document.createTextNode(curLang?traditionalized(selectStr):simplized(selectStr)));
             }else{
                 action=action==2?3:2;
-                setLanguage();
+                setLanguage(keyCall);
             }
         }
         curInput = document.activeElement;
@@ -1317,7 +1318,7 @@
         curLang = isSimple;
         document.addEventListener("keydown", function(e) {
             if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
-                translateAction();
+                translateAction(null, true);
             } else if(e.key == pinyinShortcutKey && e.ctrlKey == pinyinCtrlKey && e.altKey == pinyinAltKey && e.shiftKey == pinyinShiftKey && e.metaKey == pinyinMetaKey) {
                 showPinyinInit();
             }
@@ -1347,6 +1348,7 @@
             let autoInput = createCheckbox('總是自動切換', auto);
             let notificationInput = createCheckbox('切換成功通知', notification);
             let enablePinyinInput = createCheckbox('啟用拼音顯示', !disablePinyin);
+            let keyCallNotSaveInput = createCheckbox('用快捷鍵切換時不記錄選擇', keyCallNotSave);
 
             let defaultSimple = document.createElement('select');
             let cnOption = document.createElement('option');
@@ -1663,6 +1665,7 @@
                 pinyinMetaKey = pinyinMetaKeyInput.checked;
                 notification = notificationInput.checked;
                 disablePinyin = !enablePinyinInput.checked;
+                keyCallNotSave = keyCallNotSaveInput.checked;
                 isSimple = defaultSimple.value == 'cn';
 
                 if (siteChanged) {
@@ -1697,6 +1700,7 @@
                 storage.setItem('notification', notification);
                 storage.setItem('isSimple', isSimple);
                 storage.setItem('disablePinyin', disablePinyin);
+                storage.setItem('keyCallNotSave', keyCallNotSave);
                 try {
                     sc2tcCombConfig = customTermInput.value ? JSON.parse(customTermInput.value) : "";
                     storage.setItem('sc2tcCombConfig', sc2tcCombConfig);
@@ -1814,7 +1818,7 @@
         return false;
     }
 
-    getMulValue(["version", "auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "disablePinyin", "pinyinShortcutKey", "pinyinCtrlKey", "pinyinAltKey", "pinyinShiftKey", "pinyinMetaKey", "sc2tcCombConfig", "illiteracyConfig", "notification", "isSimple", "sc2tcCombTree", "tc2scCombTree", "fuckIlliteracyTree", "stDict", "tsDict", currentAction], async values => {
+    getMulValue(["version", "auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "disablePinyin", "keyCallNotSave", "pinyinShortcutKey", "pinyinCtrlKey", "pinyinAltKey", "pinyinShiftKey", "pinyinMetaKey", "sc2tcCombConfig", "illiteracyConfig", "notification", "isSimple", "sc2tcCombTree", "tc2scCombTree", "fuckIlliteracyTree", "stDict", "tsDict", currentAction], async values => {
         if (_GM_info.script && _GM_info.script.version && _GM_info.script.version !== '1.0.0' && values.version != _GM_info.script.version) {
             storage.setItem('version', _GM_info.script.version);
             storage.setItem('stDict', "");
@@ -1837,6 +1841,7 @@
             shiftKey = values.shiftKey;
             metaKey = values.metaKey;
             disablePinyin = !!values.disablePinyin;
+            keyCallNotSave = !!values.keyCallNotSave;
             if (values.pinyinShortcutKey) {
                 pinyinShortcutKey = values.pinyinShortcutKey;
                 pinyinCtrlKey = values.pinyinCtrlKey;
