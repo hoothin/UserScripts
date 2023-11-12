@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.6
+// @version      1.7.7
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -889,6 +889,8 @@
         var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
         if (_unsafeWindow.searchJumperInited) return;
         _unsafeWindow.searchJumperInited = true;
+        if (!_unsafeWindow.searchJumperAddons) _unsafeWindow.searchJumperAddons = [];
+
         var storage = {
             supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
             supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a','b') != 'undefined',
@@ -1645,8 +1647,8 @@
                      flex-direction: column;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type {
-                     height: ${searchData.prefConfig.minPopup ? '24px' : 'auto'}!important;
-                     max-width: ${searchData.prefConfig.minPopup ? 24 : (40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom)}px!important;
+                     height: ${searchData.prefConfig.minPopup ? (24 * this.tilesZoom + 'px') : 'auto'}!important;
+                     max-width: ${searchData.prefConfig.minPopup ? (24 * this.tilesZoom) : ((40 * this.tilesZoom) * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom)}px!important;
                      width: auto!important;
                      width: max-content!important;
                      max-height: ${108 * this.tilesZoom + 10}px;
@@ -4388,6 +4390,26 @@
                 return spannode;
             }
 
+            findPosInStr(content, kw) {
+                if (!self.findInpageAddons) self.findInpageAddons = _unsafeWindow.searchJumperAddons.filter(data => data.type == "findInPage").sort((a, b) => (a.sort || 0) - (b.sort || 0));
+                let len = 0, pos = -1;
+                for (let i = 0; i < self.findInpageAddons.length; i++) {
+                    let curAddon = self.findInpageAddons[i];
+                    if (!curAddon || !curAddon.run) continue;
+                    let curData = curAddon.run(content, kw);
+                    if (curData && curData.matched) {
+                        len = curData.len;
+                        pos = curData.pos;
+                        break;
+                    }
+                }
+                if (pos == -1) {
+                    len = kw.length;
+                    pos = content.toUpperCase().indexOf(kw.toUpperCase());
+                }
+                return {len: len, pos: pos};
+            }
+
             highlight(words, ele, root) {
                 if (!words && (!this.curHighlightWords || this.curHighlightWords.length === 0)) return;
                 if (!ele) {
@@ -4530,16 +4552,9 @@
                                     pos = wordMatch.index;
                                 }
                             } else {
-                                if (_unsafeWindow.searchJumperPinyin) {
-                                    let pinyin = _unsafeWindow.searchJumperPinyin(textRes, word.content);
-                                    if (pinyin.matched) {
-                                        len = pinyin.len;
-                                        pos = pinyin.pos;
-                                    } else pos = -1;
-                                } else {
-                                    len = word.content.length;
-                                    pos = textRes.toUpperCase().indexOf(word.content.toUpperCase());
-                                }
+                                let result = self.findPosInStr(textRes, word.content);
+                                len = result.len;
+                                pos = result.pos;
                             }
                             if (pos > -1) {
                                 textRes = textRes.slice(pos + len);
@@ -4707,16 +4722,9 @@
                                         wordMatch = wordMatch[0];
                                     }
                                 } else {
-                                    if (_unsafeWindow.searchJumperPinyin) {
-                                        let pinyin = _unsafeWindow.searchJumperPinyin(blockValue, word.content);
-                                        if (pinyin.matched) {
-                                            len = pinyin.len;
-                                            pos = pinyin.pos;
-                                        } else pos = -1;
-                                    } else {
-                                        len = word.content.length;
-                                        pos = blockValue.toUpperCase().indexOf(word.content.toUpperCase());
-                                    }
+                                    let result = self.findPosInStr(blockValue, word.content);
+                                    len = result.len;
+                                    pos = result.pos;
                                     if ((word.init || inWordMode) && pos >= 0 && /^[a-z]+$/i.test(word.content)) {
                                         if (pos !== 0 && /[a-z]/i.test(blockValue[pos - 1])) {
                                             pos = -1;
