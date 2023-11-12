@@ -27,6 +27,7 @@
     }
     _unsafeWindow.searchJumperPinyin = pinyinSearch;
     _unsafeWindow.searchJumperAddons.push({
+        sort: 1,
         type: "findInPage",
         data: pinyinSearch
     });
