@@ -29,6 +29,6 @@
     _unsafeWindow.searchJumperAddons.push({
         sort: 1,
         type: "findInPage",
-        data: pinyinSearch
+        run: pinyinSearch
     });
 })();
