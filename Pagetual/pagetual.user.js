@@ -2799,7 +2799,7 @@
             }
             if (nextLink) {
                 if (!this.checkStopSign(nextLink, doc)) {
-                    if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"));
+                    if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
                     return null;
                 }
                 if (this.curSiteRule.action == 3) {
@@ -7475,7 +7475,7 @@
     function emuPage(callback) {
         let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
-            if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"));
+            if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
             debug(log);
             isPause = true;
             callback(false, false);
@@ -8060,7 +8060,7 @@
                         setTimeout(() => {isLoading = false}, 1000);
                     }
                 } else if (rulesData.lastPageTips && !showedLastPageTips) {
-                    showTips(i18n("lastPage"));
+                    showTips(i18n("lastPage"), "", 800);
                     showedLastPageTips = true;
                 }
                 return;
