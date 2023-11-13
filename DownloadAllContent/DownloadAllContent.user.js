@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.5.8
+// @version      2.7.5.9
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -218,7 +218,7 @@ if (window.top != window.self) {
 
 (function() {
     'use strict';
-    var indexReg=/PART\b|^Prologue|Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*[·言章]|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]+$|^(\d|\s|\.)*[第（]?\s*[\d〇零一二三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
+    var indexReg=/^(\w.*)?PART\b|^Prologue|^(\w.*)?Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*[·言章]|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]+$|^(\d|\s|\.)*[第（]?\s*[\d〇零一二两三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/^\s*(下一[页頁张張]|next\s*page|次のページ)/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
@@ -260,6 +260,7 @@ if (window.top != window.self) {
                 dacSortByPos:"按页内位置排序",
                 dacSortByUrl:"按网址排序",
                 dacSortByName:"按章节名排序",
+                reverse:"反选",
                 dacUseIframe:"使用 iframe 后台加载内容（慢速）",
                 dacSetCustomRule:"修改规则",
                 dacAddUrl:"添加章节",
@@ -300,6 +301,7 @@ if (window.top != window.self) {
                 dacSortByPos:"依頁內位置排序",
                 dacSortByUrl:"依網址排序",
                 dacSortByName:"依章節名排序",
+                reverse:"反選",
                 dacUseIframe:"使用 iframe 背景載入內容（慢速）",
                 dacSetCustomRule:"修改規則",
                 dacAddUrl:"新增章節",
@@ -339,6 +341,7 @@ if (window.top != window.self) {
                 dacSortByPos:"Sort by position",
                 dacSortByUrl:"Sort by URL",
                 dacSortByName:"Sort by name",
+                reverse:"Reverse selection",
                 dacUseIframe: "Use iframe to load content in the background (slow)",
                 dacSetCustomRule:"Modify rules",
                 dacAddUrl:"Add Chapter",
@@ -347,7 +350,7 @@ if (window.top != window.self) {
             break;
     }
     var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false;
-    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe;
+    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer;
 
     const escapeHTMLPolicy = (win.trustedTypes && win.trustedTypes.createPolicy) ? win.trustedTypes.createPolicy('dac_default', {
         createHTML: (string, sink) => string
@@ -443,6 +446,7 @@ if (window.top != window.self) {
                         <input id="dacSortByPos" value="${i18n.dacSortByPos}" type="button"/>
                         <input id="dacSortByUrl" value="${i18n.dacSortByUrl}" type="button"/>
                         <input id="dacSortByName" value="${i18n.dacSortByName}" type="button"/>
+                        <input id="reverse" value="${i18n.reverse}" type="button"/>
                     </div>
                     <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
                     <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></p>
@@ -456,6 +460,7 @@ if (window.top != window.self) {
             let dacSortByPos = filterListContainer.querySelector("#dacSortByPos");
             let dacSortByUrl = filterListContainer.querySelector("#dacSortByUrl");
             let dacSortByName = filterListContainer.querySelector("#dacSortByName");
+            let reverse = filterListContainer.querySelector("#reverse");
             let dacSetCustomRule = filterListContainer.querySelector("#dacSetCustomRule");
             let dacCustomInput = filterListContainer.querySelector("#dacCustomInput");
             let dacConfirmRule = filterListContainer.querySelector("#dacConfirmRule");
@@ -517,6 +522,12 @@ if (window.top != window.self) {
                 }
                 linkList.forEach(link => {
                     dacLinksCon.appendChild(link);
+                });
+            };
+            reverse.onclick = e => {
+                let linkList = [].slice.call(dacLinksCon.children);
+                linkList.forEach(link => {
+                    link.children[0].checked=!link.children[0].checked;
                 });
             };
             dacSetCustomRule.onclick = e => {
@@ -669,16 +680,18 @@ if (window.top != window.self) {
                 }
             `);
             dacLinksCon = filterListContainer.querySelector("#dacLinksCon");
-            let shadowContainer = document.createElement("div");
+            shadowContainer = document.createElement("div");
             document.body.appendChild(shadowContainer);
             let shadow = shadowContainer.attachShadow({ mode: "open" });
             shadow.appendChild(listStyle);
             shadow.appendChild(filterListContainer);
         }
+        if (shadowContainer.parentNode) shadowContainer.parentNode.removeChild(shadowContainer);
         list.forEach(a => {
             createLinkItem(a);
         });
         dacUseIframe.checked = useIframe;
+        document.body.appendChild(shadowContainer);
     }
 
     function initTxtDownDiv(){
@@ -1290,23 +1303,30 @@ if (window.top != window.self) {
                 let content=childNode.textContent;
                 if(content){
                     if(!content.trim())continue;
-                    cStr+=content.replace(/ +/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
+                    cStr+=content.replace(/[\uFEFF\xA0 ]+/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
                 }
                 if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|IMG)$/.test(childNode.nodeName))cStr+="\r\n";
             }
             if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
         }
+        var sameDepthChildren=[];
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(getDepth(child)==getDepth(largestContent)){
                 if(largestContent.className != child.className)continue;
-                if((largestContent.className && largestContent.className == child.className) || largestContent.parentNode == child.parentNode){
-                    getRightStr(child, true);
-                }else {
-                    getRightStr(child, false);
-                }
+                sameDepthChildren.push(child);
             }
         }
+        var minLength = largestNum>>2;
+        var tooShort = sameDepthChildren.length <= 3;
+        sameDepthChildren.forEach(child => {
+            if(tooShort && child.innerText.length < minLength) return;
+            if((largestContent.className && largestContent.className == child.className) || largestContent.parentNode == child.parentNode){
+                getRightStr(child, true);
+            }else {
+                getRightStr(child, false);
+            }
+        });
         return rStr.replace(/[\n\r]+/g,"\n\r");
     }
 
@@ -1329,13 +1349,28 @@ if (window.top != window.self) {
         return i;
     }
 
-    function fetch(forceSingle){
+    async function sleep(time) {
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, time);
+        })
+    }
+
+    async function fetch(forceSingle){
         forceSingle=forceSingle===true;
         processFunc=null;
+        initTxtDownDiv();
         var aEles=document.body.querySelectorAll("a"),list=[];
+        txtDownWords.innerHTML=`Analysing ( 1/${aEles.length} )......`;
+        txtDownContent.style.pointerEvents="none";
         for(var i=0;i<aEles.length;i++){
+            if (i % 100 == 0) {
+                await sleep(1);
+            }
+            txtDownWords.innerHTML=`Analysing ( ${i + 1}/${aEles.length} )......`;
             var aEle=aEles[i],has=false;
-            if((!aEle.href || aEle.href.indexOf("javascript")!=-1) && aEle.dataset.href){
+            if(aEle.dataset.href && (!aEle.href || aEle.href.indexOf("javascript")!=-1)){
                 aEle.href=aEle.dataset.href;
             }
             if(aEle.href==location.href)continue;
@@ -1352,6 +1387,9 @@ if (window.top != window.self) {
                 list.push(aEle);
             }
         }
+        txtDownContent.style.display="none";
+        txtDownContent.style.pointerEvents="";
+        txtDownWords.innerHTML="Analysing......";
         if(list.length>2 && !forceSingle){
             useIframe = false;
             filterList(list);
