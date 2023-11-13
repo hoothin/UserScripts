@@ -3369,6 +3369,10 @@
 
         beginLoading() {
             isLoading = true;
+            if (targetY >= 0) {
+                window.scrollTo({ top: targetY, behavior: 'instant'});
+                targetY = -1;
+            }
             let lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
             ruleParser.insertElement(loadingDiv);
             if (forceState == 2) {
@@ -3435,6 +3439,11 @@
                 this.curUrl = location.href;
                 isLoading = false;
                 return false;
+            }
+
+            if (targetY >= 0) {
+                window.scrollTo({ top: targetY, behavior: 'instant'});
+                targetY = -1;
             }
             let lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
             this.getInsert();
@@ -3660,7 +3669,8 @@
                     scrollToPageBar(prePageBar);
                 } else {
                     let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
-                    window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                    targetY = scrollTop - (window.innerHeight || document.documentElement.clientHeight);
+                    window.scrollTo({ top: targetY, behavior: 'smooth'});
                 }
             }, true);
 
@@ -3672,10 +3682,12 @@
                 } else {
                     if (pageBarObj.preBar) {
                         let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
-                        window.scrollTo({ top: (scrollH || 9999999), behavior: 'instant'});
+                        targetY = scrollH || 9999999;
+                        window.scrollTo({ top: targetY, behavior: 'smooth'});
                     } else {
                         let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
-                        window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                        targetY = scrollTop + (window.innerHeight || document.documentElement.clientHeight);
+                        window.scrollTo({ top: targetY, behavior: 'smooth'});
                     }
                 }
             }, true);
@@ -6682,13 +6694,18 @@
                 checkScrollReach();
             }
             ruleParser.changeVisibility();
+            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             if (ruleParser.curSiteRule.lockScroll) {
-                let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
                 if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
                     getBody(document).scrollTop = lastScroll;
                     document.documentElement.scrollTop = lastScroll;
                 } else {
                     lastScroll = curScroll;
+                }
+            }
+            if (targetY >= 0) {
+                if (Math.abs(targetY - curScroll) < 100) {
+                    targetY = -1;
                 }
             }
         };
@@ -6891,14 +6908,14 @@
         return loadmoreBtn;
     }
 
-    var lastPageBar;
+    var targetY = -1;
     function scrollToPageBar(bar){
         let yOffset = -20;
         if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
             yOffset = -ruleParser.curSiteRule.pageBarTop;
         }
-        const y = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: lastPageBar == bar ? 'instant' : 'smooth'});
+        targetY = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: targetY, behavior: 'smooth'});
     }
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
@@ -7042,7 +7059,8 @@
                 scrollToPageBar(prePageBar);
             } else {
                 let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
-                window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                targetY = scrollTop - (window.innerHeight || document.documentElement.clientHeight);
+                window.scrollTo({ top: targetY, behavior: 'smooth'});
             }
         });
         nextBtn.addEventListener("click", e => {
@@ -7053,7 +7071,8 @@
                 scrollToPageBar(nextPageBar);
             } else {
                 scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
-                window.scrollTo({ top: scrollH || 9999999, behavior: 'instant'});
+                targetY = scrollH || 9999999;
+                window.scrollTo({ top: targetY, behavior: 'smooth'});
             }
         });
         if (!rulesData.hideBarArrow) {
@@ -7195,7 +7214,6 @@
         ruleParser.insertElement(pageBar);
         ruleParser.runPageBar(pageBar);
 
-        lastPageBar = pageBar;
         return pageBar;
     }
 
@@ -7757,6 +7775,10 @@
     }
 
     function resizeIframe(iframe, frameDoc, pageEle) {
+        if (targetY >= 0) {
+            window.scrollTo({ top: targetY, behavior: 'instant'});
+            targetY = -1;
+        }
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
             let height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500);
