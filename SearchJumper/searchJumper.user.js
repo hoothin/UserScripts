@@ -11475,7 +11475,7 @@
                       border-radius: 50%;
                       z-index: 2147483647;
                       box-sizing: content-box;
-                      opacity: 0;
+                      opacity: 0.1;
                       transform: scale(.5);
                       -moz-transition:opacity 0.3s ease, transform 0.3s;
                       -webkit-transition:opacity 0.3s ease, transform 0.3s;
@@ -11618,10 +11618,12 @@
                 let sector2Start = -sector2Gap / 2;
                 let dragSector;
                 let dragLogo = dragRoundFrame.querySelector(".dragLogo");
+                let removeTimer;
                 dragLogo.addEventListener("dragover", e => {
                     e.preventDefault();
                 }, true);
                 dragLogo.addEventListener("dragenter", e => {
+                    clearTimeout(removeTimer);
                     if (dragSector) {
                         dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
                         dragSector.classList.remove("over");
@@ -11653,13 +11655,14 @@
                         e.preventDefault();
                     }, true);
                     sectorSpan.addEventListener("dragenter", e => {
+                        clearTimeout(removeTimer);
                         if (!sectorSpan.innerText) return;
                         if (dragSector) {
                             dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
                             dragSector.classList.remove("over");
                         }
                         dragLogo.style.transform = "";
-                        sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.6' : '1.35'}) ${transform}`;
+                        sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.6' : '1.25'}) ${transform}`;
                         sector.classList.add("over");
                         dragSector = sector;
                         clearTimeout(openAllTimer);
@@ -11694,9 +11697,11 @@
                 });
                 let minClientX, maxClientX, minClientY, maxClientY;
                 dragenterHandler = e => {
-                    if (!dragRoundFrame.contains(e.target)){
-                        removeFrame();
-                        return;
+                    clearTimeout(removeTimer);
+                    if (!dragRoundFrame.contains(e.target)) {
+                        removeTimer = setTimeout(() => {
+                            removeFrame();
+                        }, 300);
                     }
                 };
                 dragCon = document.createElement("div");
