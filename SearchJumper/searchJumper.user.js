@@ -11478,7 +11478,7 @@
                       border-radius: 50%;
                       z-index: 2147483647;
                       box-sizing: content-box;
-                      opacity: 0.1;
+                      opacity: 0;
                       transform: scale(.5);
                       -moz-transition:opacity 0.3s ease, transform 0.15s;
                       -webkit-transition:opacity 0.3s ease, transform 0.15s;
