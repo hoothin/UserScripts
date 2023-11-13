@@ -10521,6 +10521,9 @@
                         (searchData.prefConfig.dragMeta && !e.metaKey)) {
                         return;
                     }
+                    if (!searchData.prefConfig.enableInInput && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey && inputActive(document)) {
+                        return;
+                    }
                     targetElement = e.target;
                     if (targetElement.shadowRoot) return;
                     if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
@@ -11477,9 +11480,9 @@
                       box-sizing: content-box;
                       opacity: 0.1;
                       transform: scale(.5);
-                      -moz-transition:opacity 0.3s ease, transform 0.3s;
-                      -webkit-transition:opacity 0.3s ease, transform 0.3s;
-                      transition:opacity 0.3s ease, transform 0.3s;
+                      -moz-transition:opacity 0.3s ease, transform 0.15s;
+                      -webkit-transition:opacity 0.3s ease, transform 0.15s;
+                      transition:opacity 0.3s ease, transform 0.15s;
                     }
                     #searchJumperWrapper>.panel {
                       position: relative;
