@@ -5226,6 +5226,10 @@
                 return true;
             }
 
+            contains(ele) {
+                return ele == this.shadowContainer || this.bar.contains(ele);
+            }
+
             appendBar() {
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
                     mainStyleEle = _GM_addStyle(cssText);
@@ -5914,7 +5918,7 @@
 
                 let dragSiteBtn;
                 let dragOpenDropHandler = e => {
-                    if (!this.bar.contains(e.target)){
+                    if (!this.contains(e.target)){
                         let isPage = /^(https?|ftp):/.test(dragSiteBtn.href);
                         if (isPage) {
                             dragSiteBtn.setAttribute("target", "_blank");
@@ -8868,7 +8872,7 @@
             }
 
             showInPage(_funcKeyCall, e) {
-                if (this.bar.contains(targetElement) || this.inInput || (!_funcKeyCall && this.funcKeyCall)) {
+                if (this.contains(targetElement) || this.inInput || (!_funcKeyCall && this.funcKeyCall)) {
                     return;
                 }
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
@@ -10362,7 +10366,7 @@
                 let mouseDownHandler = e => {
                     if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
                         (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
-                        searchBar.bar.contains(e.target)) {
+                        searchBar.contains(e.target)) {
                         return;
                     }
                     if (searchBar.bar.classList.contains("grabbing")) return;
@@ -10434,7 +10438,7 @@
                     };
                     let inpageMouseUpHandler = e => {
                         draging = false;
-                        if (searchBar.bar.contains(e.target) || shown) {
+                        if (searchBar.contains(e.target) || shown) {
                             e.preventDefault();
                         } else {
                             setTimeout(() => {
