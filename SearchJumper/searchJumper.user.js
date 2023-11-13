@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.7
+// @version      1.7.8
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1910,28 +1910,6 @@
                      80%  {opacity: 0;}
                      100% {opacity: 0;}
                  }
-                 .searchJumper-loading {
-                     animation-name: changeScale;
-                     animation-duration: 2.5s;
-                     animation-iteration-count: infinite;
-                 }
-                 @keyframes changeScale {
-                     0% {
-                         -webkit-transform:rotate(0deg) scale(1);
-                         -moz-transform:rotate(0deg) scale(1);
-                         transform:rotate(0deg) scale(1);
-                     }
-                     50% {
-                         -webkit-transform:rotate(180deg) scale(1.5);
-                         -moz-transform:rotate(180deg) scale(1.5);
-                         transform:rotate(180deg) scale(1.5);
-                     }
-                     100% {
-                         -webkit-transform:rotate(360deg) scale(1);
-                         -moz-transform:rotate(360deg) scale(1);
-                         transform:rotate(360deg) scale(1);
-                     }
-                 }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -2709,23 +2687,6 @@
                      border-radius: 0px!important;
                      cursor: alias;
                  }
-                 mark.searchJumper,
-                 a.searchJumper {
-                     visibility: inherit;
-                     font-style: normal;
-                     box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px;
-                     border-radius: 3px;
-                     text-decoration: none;
-                     padding: 1px 0;
-                     -webkit-text-fill-color: initial;
-                 }
-                 mark.searchJumper[data-current=true],
-                 a.searchJumper[data-current=true] {
-                     border-bottom: 0.2em solid;
-                     border-bottom-left-radius: 0;
-                     border-bottom-right-radius: 0;
-                     animation: 0.5s linear 0s 5 normal none running currentMark;
-                 }
                  .searchJumperPosBar {
                      background: rgba(29, 93, 163, 0.3);
                      position: absolute;
@@ -2750,10 +2711,6 @@
                  @keyframes fadeit {
                      from {opacity: 1;}
                      to {opacity: 0;}
-                 }
-                 @keyframes currentMark {
-                     from {border-color: unset}
-                     to {border-color: transparent;}
                  }
                  #rightSizeChange {
                      top: 0;
@@ -2875,6 +2832,29 @@
                      }
                  }
                  `;
+                this.inPageCss = `
+                 mark.searchJumper,
+                 a.searchJumper {
+                     visibility: inherit;
+                     font-style: normal;
+                     box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px;
+                     border-radius: 3px;
+                     text-decoration: none;
+                     padding: 1px 0;
+                     -webkit-text-fill-color: initial;
+                 }
+                 mark.searchJumper[data-current=true],
+                 a.searchJumper[data-current=true] {
+                     border-bottom: 0.2em solid;
+                     border-bottom-left-radius: 0;
+                     border-bottom-right-radius: 0;
+                     animation: 0.5s linear 0s 5 normal none running currentMark;
+                 }
+                 @keyframes currentMark {
+                     from {border-color: unset}
+                     to {border-color: transparent;}
+                 }
+                `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
 
                 let logoCon = document.createElement("span");
@@ -3702,7 +3682,7 @@
                     this.finalSearch.dataset.url = tempUrl;
                     this.finalSearch.value = tempUrl.replace(/◎/g, '');
                     if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
-                    document.documentElement.appendChild(this.customInputFrame);
+                    this.addToShadow(this.customInputFrame);
                     let frameBody = this.customInputFrame.children[0];
                     frameBody.style.marginTop = -frameBody.offsetHeight / 2 + "px";
                 });
@@ -3719,7 +3699,7 @@
                     this.modifySpan = wordSpan;
                 }
                 if (!this.modifyFrame) {
-                    this.modifyCssText = `
+                    let modifyCssText = `
                     .searchJumperModify-body {
                         width: 300px;
                         min-height: 200px;
@@ -3851,7 +3831,7 @@
                       }
                     }
                     `;
-                    this.modifyCssEle = _GM_addStyle(this.modifyCssText);
+                    let modifyCssEle = _GM_addStyle(modifyCssText);
                     let modifyFrame = document.createElement("div");
                     this.modifyFrame = modifyFrame;
                     modifyFrame.id = "searchJumperModifyWord";
@@ -3885,6 +3865,7 @@
                          </div>
                      </div>
                     `);
+                    modifyFrame.appendChild(modifyCssEle);
                     let cancelBtn = modifyFrame.querySelector("#cancel");
                     cancelBtn.addEventListener("click", e => {
                         if (modifyFrame.parentNode) {
@@ -3983,8 +3964,7 @@
                         debug(e);
                     }
                 }
-                if (!this.modifyCssEle || !this.modifyCssEle.parentNode) this.modifyCssEle = _GM_addStyle(this.modifyCssText);
-                document.documentElement.appendChild(this.modifyFrame);
+                this.addToShadow(this.modifyFrame);
             }
 
             replaceWord(word, newWord, modifySpan, contentChange) {
@@ -4155,8 +4135,8 @@
                     this.hPosBar.className = "searchJumperPosBar searchJumperPosH";
                 }
                 if (!this.wPosBar.parentNode) {
-                    getBody(document).appendChild(this.wPosBar);
-                    getBody(document).appendChild(this.hPosBar);
+                    this.addToShadow(this.wPosBar);
+                    this.addToShadow(this.hPosBar);
                 }
 
                 let rect = ele.getBoundingClientRect();
@@ -4462,6 +4442,12 @@
                     this.marks = {};
                     this.curHighlightWords = [];
                     return;
+                }
+                if (!this.inPageStyle) {
+                    this.inPageStyle = _GM_addStyle(this.inPageCss);
+                }
+                if (!this.inPageStyle.parentNode) {
+                    document.head.appendChild(this.inPageStyle);
                 }
                 let insert = (words === "insert");
                 if (insert) {
@@ -5084,7 +5070,7 @@
                             }
                         };
                     }
-                    document.addEventListener("mousedown", self.showAllMouseHandler);
+                    self.con.addEventListener("mousedown", self.showAllMouseHandler);
 
                     if (!self.showAllKeydownHandler) {
                         self.showAllKeydownHandler = e => {
@@ -5228,12 +5214,24 @@
                 }
             }
 
+            addToShadow(ele) {
+                if (!this.shadowContainer) {
+                    this.shadowContainer = document.createElement("div");
+                }
+                if (!this.shadowContainer.parentNode) {
+                    document.documentElement.appendChild(this.shadowContainer);
+                }
+                let shadow = this.shadowContainer.shadowRoot || this.shadowContainer.attachShadow({ mode: "open" });
+                shadow.appendChild(ele);
+                return true;
+            }
+
             appendBar() {
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
                     mainStyleEle = _GM_addStyle(cssText);
+                    this.addToShadow(mainStyleEle);
                 }
-                if (!this.con.parentNode) {
-                    document.documentElement.appendChild(this.con);
+                if (this.addToShadow(this.con)) {
                     setTimeout(() => {
                         if (this.con.parentNode) {
                             if (getComputedStyle(this.con).zIndex != "2147483647") {
@@ -5682,6 +5680,7 @@
                     linkEle.rel="stylesheet";
                     linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.1.2/css/all.css";
                     document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
+                    this.addToShadow(linkEle.cloneNode());
                     waitForFontAwesome(() => {
                         let hasFont = false;
                         this.fontPool.forEach(font => {
@@ -8874,6 +8873,7 @@
                 }
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
                     mainStyleEle = _GM_addStyle(cssText);
+                    this.addToShadow(mainStyleEle);
                 }
                 let selectStr = getSelectStr();
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
@@ -10538,15 +10538,7 @@
             let changeHandler = e => {
                 setTimeout(() => {
                     searchBar.refresh();
-                    if (!mainStyleEle || !mainStyleEle.parentNode) {
-                        mainStyleEle = _GM_addStyle(cssText);
-                    }
                 }, 100);
-                setTimeout(() => {
-                    if (!mainStyleEle || !mainStyleEle.parentNode) {
-                        mainStyleEle = _GM_addStyle(cssText);
-                    }
-                }, 1000);
             }
             document.addEventListener("fullscreenchange", e => {
                 if (document.fullscreenElement) {
@@ -10587,7 +10579,7 @@
                 }
             });
 
-            let headObserverOptions = {
+            /*let headObserverOptions = {
                 childList: true
             };
             let checkCssEle = ele => {
@@ -10604,7 +10596,7 @@
                     }
                 }
             });
-            headObserver.observe(document.head, headObserverOptions);
+            headObserver.observe(document.head, headObserverOptions);*/
 
             let removeMark = node => searchBar.removeMark(node);
             let highlight = (words, node) => searchBar.highlight(words, node);
@@ -11431,7 +11423,7 @@
             }
         }
 
-        var dragRoundFrame, dragCon, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, dragCssEle, dragCssText, openAllTimer;
+        var dragRoundFrame, dragCon, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, openAllTimer;
         function showDragSearch(left, top) {
             if (!searchBar || !searchBar.bar) return;
             let removeFrame = () => {
@@ -11447,7 +11439,7 @@
             };
             let zoomDrag = (searchData.prefConfig.zoomDrag || 100) / 100;
             if (!dragRoundFrame) {
-                dragCssText = `
+                let dragCssText = `
                     #dragCon {
                       position: fixed;
                       top: 0;
@@ -11603,7 +11595,7 @@
                       pointer-events: none;
                     }
                 `;
-                dragCssEle = _GM_addStyle(dragCssText);
+                let dragCssEle = _GM_addStyle(dragCssText);
                 dragSiteCurSpans = [];
                 dragSiteHistorySpans = [];
                 dragRoundFrame = document.createElement("div");
@@ -11612,6 +11604,7 @@
                 <div class="panel"></div>
                 <div class="dragLogo">${logoBtnSvg}</div>
                 `);
+                dragRoundFrame.appendChild(dragCssEle);
                 const sector1Num = 6;
                 const sector2Num = 10;
                 let sectorCon = dragRoundFrame.querySelector(".panel");
@@ -11706,7 +11699,6 @@
                 dragCon.id = "dragCon";
                 dragCon.appendChild(dragRoundFrame);
             }
-            if (!dragCssEle || !dragCssEle.parentNode) dragCssEle = _GM_addStyle(dragCssText);
             searchBar.recoveHistory();
             let firstType = searchBar.autoGetFirstType();
             let siteBtns = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)");
@@ -11795,7 +11787,7 @@
             dragRoundFrame.style.transform = '';
             setTimeout(() => {
                 document.addEventListener('dragend', dragEndHandler, true);
-                document.documentElement.appendChild(dragCon);
+                searchBar.addToShadow(dragCon);
                 setTimeout(() => {
                     dragRoundFrame.style.opacity = 1;
                     dragRoundFrame.style.transform = 'scale(1)';
@@ -11810,10 +11802,10 @@
             }, 0);
         }
 
-        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle, siteKeywords, siteMatch, openSelect, crawlBtn;
+        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, siteKeywords, siteMatch, openSelect, crawlBtn;
         function showSiteAdd(name, description, url, icons, charset, kwFilter, showCrawl) {
             if (!addFrame) {
-                addFrameCssText = `
+                let addFrameCssText = `
                     .searchJumperFrame-body,
                     .searchJumperFrame-crawlBody {
                         width: 300px;
@@ -12071,7 +12063,7 @@
                       }
                     }
                 `;
-                addFrameCssEle = _GM_addStyle(addFrameCssText);
+                let addFrameCssEle = _GM_addStyle(addFrameCssText);
                 addFrame = document.createElement("div");
                 addFrame.innerHTML = createHTML(`
                 <div class="searchJumperFrame-body">
@@ -12132,6 +12124,7 @@
                     </div>
                 </div>
                 `);
+                addFrame.appendChild(addFrameCssEle);
                 nameInput = addFrame.querySelector("[name='siteName']");
                 descInput = addFrame.querySelector("[name='description']");
                 urlInput = addFrame.querySelector("[name='url']");
@@ -12426,9 +12419,8 @@
                     addFrame.classList.remove("crawling");
                 });
             }
-            if (!addFrameCssEle || !addFrameCssEle.parentNode) addFrameCssEle = _GM_addStyle(addFrameCssText);
             crawlBtn.style.display = showCrawl ? '' : 'none';
-            getBody(document).appendChild(addFrame);
+            searchBar.addToShadow(addFrame);
             siteKeywords.value = "";
             siteMatch.value = "";
             nameInput.value = name;
@@ -12543,8 +12535,32 @@
 
         function initMycroft() {
             if (location.hostname !== "mycroftproject.com") return;
+            _GM_addStyle(`
+                 .searchJumper-loading {
+                     animation-name: changeScale;
+                     animation-duration: 2.5s;
+                     animation-iteration-count: infinite;
+                 }
+                 @keyframes changeScale {
+                     0% {
+                         -webkit-transform:rotate(0deg) scale(1);
+                         -moz-transform:rotate(0deg) scale(1);
+                         transform:rotate(0deg) scale(1);
+                     }
+                     50% {
+                         -webkit-transform:rotate(180deg) scale(1.5);
+                         -moz-transform:rotate(180deg) scale(1.5);
+                         transform:rotate(180deg) scale(1.5);
+                     }
+                     100% {
+                         -webkit-transform:rotate(360deg) scale(1);
+                         -moz-transform:rotate(360deg) scale(1);
+                         transform:rotate(360deg) scale(1);
+                     }
+                 }
+            `);
             let checkLinks = () => {
-                let installLinks = document.querySelectorAll("img.icon+a");
+                let installLinks = document.querySelectorAll("img.icon~a[href^='/install']");
                 if (installLinks.length <= 0) return;
                 let isLoading = false;
                 [].forEach.call(installLinks, installLink => {
