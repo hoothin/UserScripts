@@ -168,7 +168,10 @@
                     var lastReplyTime = $.cookie('lastReplyTime');
                     var customReplyStr = $.cookie('customReplyStr');
                     var isCheckIn = document.title.indexOf("打卡签到") !== -1;
-                    if (customReplyStr) replyStr = customReplyStr;
+                    if (customReplyStr) {
+                        replyStr = customReplyStr;
+                        $.cookie('customReplyStr', replyStr, { expires: 365, path: '/' });
+                    }
                     if (isCheckIn) {
                         var spaceStr = "";
                         var spaceLen = Math.floor(Math.random() * 10);
