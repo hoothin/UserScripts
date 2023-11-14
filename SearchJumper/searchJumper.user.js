@@ -2559,6 +2559,7 @@
                      align-items: center;
                      white-space: nowrap;
                      max-width: 100%;
+                     line-height: initial;
                  }
                  #searchInPage>.lockWords>span>em {
                      cursor: alias;
