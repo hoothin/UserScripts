@@ -8887,7 +8887,7 @@
             }
 
             showInPage(_funcKeyCall, e) {
-                if (this.contains(targetElement) || this.inInput || (!_funcKeyCall && this.funcKeyCall)) {
+                if (this.contains(targetElement) || (this.inInput && mainStyleEle) || (!_funcKeyCall && this.funcKeyCall)) {
                     return;
                 }
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
