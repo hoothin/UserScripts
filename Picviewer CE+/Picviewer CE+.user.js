@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.13.1
+// @version              2023.11.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16762,7 +16762,7 @@ ImgOps | https://imgops.com/#b#`;
                 var container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
-                var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
+                var bgReg=/.*?url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
                 var imgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
                     if(/^img$/i.test(node.nodeName)){
                         total.push(node);
@@ -16796,7 +16796,7 @@ ImgOps | https://imgops.com/#b#`;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
                             if (match) {
-                                node.src=match[1];
+                                node.src=match[1].replace(/\\"/g, '"');
                                 total.push(node);
                             }
                         }
@@ -16804,7 +16804,7 @@ ImgOps | https://imgops.com/#b#`;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
                             if (match) {
-                                node.src=match[1];
+                                node.src=match[1].replace(/\\"/g, '"');
                                 total.push(node);
                             }
                         }
@@ -16812,7 +16812,7 @@ ImgOps | https://imgops.com/#b#`;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
                             if (match) {
-                                node.src=match[1];
+                                node.src=match[1].replace(/\\"/g, '"');
                                 total.push(node);
                             }
                         }
@@ -22769,7 +22769,7 @@ ImgOps | https://imgops.com/#b#`;
                 } else if (target.nodeName.toUpperCase() != 'IMG') {
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
-                    var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
+                    var bgReg = /.*?url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
                     var broEle = target.previousElementSibling, broImg;
                     while (broEle) {
                         if (broEle.nodeName == "IMG") broImg = broEle;
@@ -22789,7 +22789,7 @@ ImgOps | https://imgops.com/#b#`;
                         if (broEle == target) broEle = null;
                     }
                     if (prefs.floatBar.listenBg && hasBg(target)) {
-                        targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                        targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
@@ -22803,7 +22803,7 @@ ImgOps | https://imgops.com/#b#`;
                     } else if (target.children.length == 1 && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
-                        targetBg = unsafeWindow.getComputedStyle(broEle).backgroundImage.replace(bgReg, "$1");
+                        targetBg = unsafeWindow.getComputedStyle(broEle).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
@@ -22823,7 +22823,7 @@ ImgOps | https://imgops.com/#b#`;
                             target = target.parentNode;
                         } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
                             target = target.parentNode;
-                            targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                            targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                             let src = targetBg, nsrc = src, noActual = true, type = "scale";
                             result = {
                                 src: nsrc,
@@ -22875,7 +22875,7 @@ ImgOps | https://imgops.com/#b#`;
                                 break;
                             } else if (prefs.floatBar.listenBg && hasBg(ele)) {
                                 target = ele;
-                                targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                                targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                                 let src = targetBg, nsrc = src, noActual = true, type = "scale";
                                 result = {
                                     src: nsrc,
