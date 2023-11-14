@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.8
+// @version      1.7.9
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -890,6 +890,7 @@
         if (_unsafeWindow.searchJumperInited) return;
         _unsafeWindow.searchJumperInited = true;
         if (!_unsafeWindow.searchJumperAddons) _unsafeWindow.searchJumperAddons = [];
+        const curRef = document.referrer;
 
         var storage = {
             supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
@@ -3290,6 +3291,9 @@
                         e.preventDefault();
                         if (e.target.nodeName.toUpperCase() === 'EM') return;
                         if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+                        if (this.wordModeBtn.classList.contains("checked")) {
+                            return;
+                        }
                         this.showModifyWindow(word, wordSpan);
                     }, true);
                     wordSpan.addEventListener("mousedown", e => {
@@ -3306,10 +3310,17 @@
                     });
                     let removeBtn = document.createElement("div");
                     removeBtn.addEventListener("mousedown", e => {
-                        wordSpan.parentNode.removeChild(wordSpan);
-                        this.removeHighlightWord(word);
                         e.stopPropagation();
                         e.preventDefault();
+                        if (this.wordModeBtn.classList.contains("checked")) {
+                            this.wordModeBtn.classList.remove("checked");
+                            if (this.lockWords) {
+                                this.refreshPageWords(this.lockWords);
+                            }
+                            return;
+                        }
+                        wordSpan.parentNode.removeChild(wordSpan);
+                        this.removeHighlightWord(word);
                     });
                     removeBtn.className = "removeWord";
                     removeBtn.innerHTML = createHTML(`<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("removeBtn")}</title>${closePath}</svg>`);
@@ -5159,12 +5170,14 @@
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.con.classList.add("in-find");
+                    let selStr = getSelectStr();
+                    if (selStr) this.searchJumperInPageInput.value = "";
                     if (this.searchJumperInPageInput.value) {
                         this.submitInPageWords();
                     } else if (!this.navMarks.innerHTML) {
-                        this.submitIgnoreSpace(getSelectStr());
+                        this.submitIgnoreSpace(selStr);
                     } else {
-                        this.searchJumperInPageInput.value = getSelectStr();
+                        this.searchJumperInPageInput.value = selStr;
                         this.submitInPageWords();
                     }
                     this.searchJumperInPageInput.focus();
@@ -5222,7 +5235,7 @@
                     document.documentElement.appendChild(this.shadowContainer);
                 }
                 let shadow = this.shadowContainer.shadowRoot || this.shadowContainer.attachShadow({ mode: "open" });
-                shadow.appendChild(ele);
+                if (ele.parentNode != shadow) shadow.appendChild(ele);
                 return true;
             }
 
@@ -5400,19 +5413,18 @@
                     }
                 });
                 this.searchJumperInPageInput.addEventListener("keydown", e => {
+                    e.stopPropagation();
                     switch(e.keyCode) {
                         case 8://退格
                             if (!this.searchJumperInPageInput.value) {
                                 let lastWordSpan = this.searchInPageLockWords.lastChild;
                                 if (lastWordSpan) {
                                     lastWordSpan.dispatchEvent(new CustomEvent("editword"));
-                                    e.stopPropagation();
                                     e.preventDefault();
                                 }
                             }
                             break;
                         case 9://tab
-                            e.stopPropagation();
                             e.preventDefault();
                             this.filterSitesTab.checked = true;
                             this.con.classList.remove("in-find");
@@ -5728,10 +5740,10 @@
                     }, 500);
                 });
                 this.searchInput.addEventListener("keydown", e => {
+                    e.stopPropagation();
                     switch(e.keyCode) {
                         case 9:
                             if (e.shiftKey) {
-                                e.stopPropagation();
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
                                 this.con.classList.add("in-find");
@@ -5781,14 +5793,13 @@
                     }, 500);
                 });
                 this.searchJumperInputKeyWords.addEventListener("keydown", e => {
+                    e.stopPropagation();
                     switch(e.keyCode) {
                         case 9:
                             if (!this.inInput) {
-                                e.stopPropagation();
                                 e.preventDefault();
                                 this.searchInput.focus();
                             } else if (!e.shiftKey) {
-                                e.stopPropagation();
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
                                 this.con.classList.add("in-find");
@@ -5802,7 +5813,7 @@
                         default:
                             break;
                     }
-                });
+                }, true);
                 this.closeBtn.addEventListener("mousedown", e => {
                     self.hideSearchInput();
                     if (searchData.prefConfig.emptyAfterCloseInput) {
@@ -6104,7 +6115,7 @@
             checkSearchJump() {
                 let inPageWords;
                 if (searchData.prefConfig.showInSearchJumpPage && referrer && !disableHighlight) {
-                    if (document.referrer.indexOf(referrer) != -1) {
+                    if (curRef.indexOf(referrer) != -1) {
                         if (cacheKeywords) {
                             this.wordModeBtn.classList.add("checked");
                         }
@@ -6117,11 +6128,14 @@
                         //storage.setItem("referrer", "");
                     }
                 }
+                if (cacheKeywords && !this.searchJumperInPageInput.value) {
+                    this.searchJumperInPageInput.value = cacheKeywords;
+                }
                 inPageWords = inPageWords || globalInPageWords;
                 if (inPageWords) {
                     this.appendBar();
                     this.setInPageWords(inPageWords);
-                } else if (!this.searchJumperInPageInput.value && document.referrer.indexOf(referrer) != -1) {
+                } else if (!this.searchJumperInPageInput.value && curRef.indexOf(referrer) != -1) {
                     inPageWords = cacheKeywords;
                     try {
                         inPageWords = decodeURIComponent(inPageWords);
