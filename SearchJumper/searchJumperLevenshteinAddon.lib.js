@@ -53,7 +53,7 @@
                 matched = true;
                 matchedStr = [];
                 for (let j = 0; j < kwArr.length; j++) {
-                    if (!wordArr[i + j] || levenshteinDistance(kwArr[j], wordArr[i + j]) > (kwArr[j].length>>2 || 1)) {
+                    if (!wordArr[i + j] || levenshteinDistance(kwArr[j], wordArr[i + j]) > kwArr[j].length>>2) {
                         matched = false;
                         break;
                     } else matchedStr.push(wordArr[i + j]);
