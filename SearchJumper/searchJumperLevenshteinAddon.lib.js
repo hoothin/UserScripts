@@ -3,7 +3,7 @@
 // @name:zh-CN   搜索酱单词模式扩展
 // @name:zh-TW   搜尋醬單詞模式擴展
 // @namespace    hoothin
-// @version      0.1.1
+// @version      0.1.2
 // @description  Add similarity search based on Levenshtein distance to the highlight feature of SearchJumper.
 // @description:zh-CN  为搜索酱的页内高亮添加基于莱文斯坦距离的相似度查找
 // @description:zh-TW  為搜尋醬的頁内高亮添加基於萊文斯坦距離的相似度查找
@@ -46,8 +46,8 @@
             if (!text || !keywords || keywords.length < 6) return {matched: false};
             text = text.toLowerCase();
             keywords = keywords.toLowerCase();
-            let wordArr = text.replace(/[,.!\?，。！？… ]+/g, " ").split(" ");
-            let kwArr = keywords.replace(/[,.!\?，。！？… ]+/g, " ").split(" ");
+            let wordArr = text.replace(/[\n,.!\?，。！？… ]+/g, " ").split(" ");
+            let kwArr = keywords.replace(/[\n,.!\?，。！？… ]+/g, " ").split(" ");
             let matched = false, pos = -1, len = 0, matchedStr = [];
             for (let i = 0; i < wordArr.length; i++) {
                 matched = true;
@@ -61,7 +61,7 @@
                 if (matched) break;
             }
             if (matched) {
-                let wordMatch = text.match(new RegExp(matchedStr.join("[,.!\?，。！？… ]+"), "i"));
+                let wordMatch = text.match(new RegExp(matchedStr.join("[\n,.!\?，。！？… ]+"), "i"));
                 if (wordMatch) {
                     let content = wordMatch[0];
                     len = content.length;
