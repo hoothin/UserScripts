@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.11
+// @version      1.7.12
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3239,7 +3239,6 @@
                 if (!words) {
                     if (!this.lockWords) {
                         this.highlight("");
-                        this.highlightSpans = {};
                     } else {
                         this.highlight("insert");
                         for (let i in this.highlightSpans) {
@@ -4428,6 +4427,7 @@
                 let searchingPre = false;
                 let self = this;
                 if (words === "") {
+                    this.highlightSpans = {};
                     Object.values(this.marks).forEach(markList => {
                         if (!markList) return;
                         markList.forEach(mark => {
@@ -5172,13 +5172,15 @@
                 } else if (this.searchInPageTab.checked) {
                     this.con.classList.add("in-find");
                     let selStr = getSelectStr();
-                    if (selStr) this.searchJumperInPageInput.value = "";
-                    if (this.searchJumperInPageInput.value) {
-                        this.submitInPageWords();
-                    } else if (!this.navMarks.innerHTML) {
-                        this.submitIgnoreSpace(selStr);
-                    } else {
-                        this.searchJumperInPageInput.value = selStr;
+                    if (selStr) {
+                        this.searchJumperInPageInput.value = "";
+                        if (!this.navMarks.innerHTML) {
+                            this.submitIgnoreSpace(selStr);
+                        } else {
+                            this.searchJumperInPageInput.value = selStr;
+                            this.submitInPageWords();
+                        }
+                    } else if (this.searchJumperInPageInput.value) {
                         this.submitInPageWords();
                     }
                     this.searchJumperInPageInput.focus();
@@ -5563,7 +5565,7 @@
                         this.lockWords = "";
                         this.searchInPageLockWords.innerHTML = createHTML();
                         this.searchJumperInPageInput.style.paddingLeft = "";
-                        this.submitInPageWords();
+                        this.highlight("");
                         this.searchJumperInPageInput.focus();
                         this.setNav(false, true);
                         storage.setItem("disableHighlight", location.hostname);
