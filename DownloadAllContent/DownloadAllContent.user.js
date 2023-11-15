@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.5.9
+// @version      2.7.6
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -379,7 +379,7 @@ if (window.top != window.self) {
         return parseInt(str);
     }
 
-    var dragOverItem, dragFrom;
+    var dragOverItem, dragFrom, linkDict;
     function createLinkItem(aEle) {
         let item = document.createElement("div");
         item.innerHTML = createHTML(`
@@ -413,6 +413,7 @@ if (window.top != window.self) {
             }
             e.preventDefault();
         });
+        linkDict[aEle.href] = item;
         dacLinksCon.appendChild(item);
     }
 
@@ -474,21 +475,15 @@ if (window.top != window.self) {
                 let linkList = [].slice.call(dacLinksCon.children);
                 if (linkList[0].children[1].href != list[0].href) {
                     list.reverse().forEach(a => {
-                        for (let i = 0; i < linkList.length; i++) {
-                            let link = linkList[i];
-                            if (link.children[1].href == a.href) {
-                                dacLinksCon.insertBefore(link, dacLinksCon.children[0]);
-                            }
-                        }
+                        let link = linkDict[a.href];
+                        if (!link) return;
+                        dacLinksCon.insertBefore(link, dacLinksCon.children[0]);
                     });
                 } else {
                     list.forEach(a => {
-                        for (let i = 0; i < linkList.length; i++) {
-                            let link = linkList[i];
-                            if (link.children[1].href == a.href) {
-                                dacLinksCon.insertBefore(link, dacLinksCon.children[0]);
-                            }
-                        }
+                        let link = linkDict[a.href];
+                        if (!link) return;
+                        dacLinksCon.insertBefore(link, dacLinksCon.children[0]);
                     });
                 }
             };
@@ -687,6 +682,7 @@ if (window.top != window.self) {
             shadow.appendChild(filterListContainer);
         }
         if (shadowContainer.parentNode) shadowContainer.parentNode.removeChild(shadowContainer);
+        linkDict = {};
         list.forEach(a => {
             createLinkItem(a);
         });
