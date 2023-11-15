@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.89
+// @version      1.9.36.90
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1587,23 +1587,27 @@
             let refreshByClickSel = this.curSiteRule.refreshByClick;
             if (refreshByClickSel) {
                 let self = this;
-                document.addEventListener("click", e => {
-                    if (!self.refreshing) {
-                        self.refreshing = true;
-                        setTimeout(() => {
-                            self.refreshing = false;
-                            let checkEles = getAllElements(refreshByClickSel, document);
-                            for (let i = 0; i < checkEles.length; i++) {
-                                if (checkEles[i] === e.target) {
-                                    urlChanged = true;
-                                    isPause = true;
-                                    if (!ruleParser.nextLinkHref) isLoading = false;
-                                    break;
+                if (!this.refreshByClickHandler) {
+                    this.refreshByClickHandler = e => {
+                        if (!self.refreshing) {
+                            self.refreshing = true;
+                            setTimeout(() => {
+                                self.refreshing = false;
+                                let checkEles = getAllElements(refreshByClickSel, document);
+                                for (let i = 0; i < checkEles.length; i++) {
+                                    if (checkEles[i] === e.target) {
+                                        urlChanged = true;
+                                        isPause = true;
+                                        if (!ruleParser.nextLinkHref) isLoading = false;
+                                        break;
+                                    }
                                 }
-                            }
-                        }, 300);
+                            }, 300);
+                        }
                     }
-                });
+                }
+                document.removeEventListener("click", this.refreshByClickHandler);
+                document.addEventListener("click", this.refreshByClickHandler);
             }
         }
 
@@ -3053,7 +3057,7 @@
             if (refresh) {
                 this.insert = null;
             }
-            if (this.insert && document.documentElement.contains(this.insert)) {
+            if (this.insert && this.insert.parentNode && document.documentElement.contains(this.insert)) {
                 return this.insert;
             }
             if (this.curSiteRule.insert) {
@@ -3319,7 +3323,7 @@
                 let code = self.curSiteRule.init;
                 if (code) {
                     try {
-                        ((typeof code == 'function') ? code : new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', '"use strict";' + code))(null, null, null, sel => {clickAction(sel, document)}, sel => {enterAction(sel, document)}, (sel, v) =>{inputAction(sel, v, document)});
+                        await ((typeof code == 'function') ? code : new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', 'sleep', '"use strict";' + code))(null, null, null, async sel => {await clickAction(sel, document)}, async sel => {await enterAction(sel, document)}, async (sel, v) =>{await inputAction(sel, v, document)}, async time => {await sleep(time)});
                     } catch(e) {
                         debug(e);
                     }
@@ -3349,6 +3353,10 @@
                     checkPossible();
                 }
                 self.refreshByClick();
+                if (emuIframe && emuIframe.parentNode) {
+                    emuIframe.parentNode.removeChild(emuIframe);
+                    emuIframe = null;
+                }
 
                 let pageElementCss = self.curSiteRule.pageElementCss || rulesData.pageElementCss;
                 if (pageElementCss && pageElementCss !== '0') {
@@ -3394,7 +3402,7 @@
             if (!this.insert || !this.insert.parentNode) {
                 this.getInsert();
             }
-            if (this.insert) {
+            if (this.insert && this.insert.parentNode) {
                 let self = this;
                 if (ele.nodeName == "#document-fragment") {
                     [].forEach.call(ele.children, el => {
@@ -7694,7 +7702,7 @@
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
             emuIframe.addEventListener("load", e => {
-                setTimeout(() => {
+                setTimeout(async () => {
                     try {
                         iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
                     } catch(e) {
@@ -7711,7 +7719,7 @@
                     let code = ruleParser.curSiteRule.init;
                     if (code) {
                         try {
-                            new AsyncFunction('doc','win','iframe','click', 'enter', 'input', '"use strict";' + code)(iframeDoc, emuIframe.contentWindow, emuIframe, sel => {clickAction(sel, iframeDoc)}, sel => {enterAction(sel, iframeDoc)}, (sel, v) =>{inputAction(sel, v, iframeDoc)});
+                            await new AsyncFunction('doc','win','iframe','click', 'enter', 'input', 'sleep', '"use strict";' + code)(iframeDoc, emuIframe.contentWindow, emuIframe, async sel => {await clickAction(sel, iframeDoc)}, async sel => {await enterAction(sel, iframeDoc)}, async (sel, v) =>{await inputAction(sel, v, iframeDoc)}, async time => {await sleep(time)});
                         } catch(e) {
                             debug(e);
                         }
@@ -7937,7 +7945,7 @@
         curIframe.frameBorder = '0';
         curIframe.scrolling = "no";
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;';
-        curIframe.addEventListener("load", e => {
+        curIframe.addEventListener("load", async e => {
             clearInterval(checkIframeTimer);
             if (isPause) return callback(false);
             try {
@@ -7961,7 +7969,7 @@
             let code = ruleParser.curSiteRule.init;
             if (code) {
                 try {
-                    new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', '"use strict";' + code)(iframeDoc, curIframe.contentWindow, curIframe, sel => {clickAction(sel, iframeDoc)}, sel => {enterAction(sel, iframeDoc)}, (sel, v) =>{inputAction(sel, v, iframeDoc)});
+                    await new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', 'sleep', '"use strict";' + code)(iframeDoc, curIframe.contentWindow, curIframe, async sel => {await clickAction(sel, iframeDoc)}, async sel => {await enterAction(sel, iframeDoc)}, async (sel, v) =>{await inputAction(sel, v, iframeDoc)}, async time => {await sleep(time)});
                 } catch(e) {
                     debug(e);
                 }
