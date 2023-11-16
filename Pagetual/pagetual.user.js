@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.90
+// @version      1.9.36.91
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3373,6 +3373,46 @@
                     }
                 }
             });
+        }
+
+        async hookUrlSetEle(ele, doc) {
+            let self = this;
+            return new Promise((resolve) => {
+                let catchUrl = e => {
+                    ele.dataset.url = self.catchedUrl;
+                    ele.setAttribute('onclick', 'window.open(this.dataset.url)');
+                    window.removeEventListener('pagetual_openUrl', catchUrl);
+                    resolve();
+                };
+                window.addEventListener('pagetual_openUrl', catchUrl);
+                emuClick(ele, doc);
+            });
+        }
+
+        async hookUrl(doc) {
+            let sel = this.curSiteRule.hookUrl;
+            if (!sel) return;
+            let self = this;
+            if (!this.initHook) {
+                this.initHook = true;
+                Object.defineProperty(doc.defaultView, 'open', {
+                    get: function () {
+                        return (s) => {
+                            self.catchedUrl = s;
+                            var e = new CustomEvent('pagetual_openUrl');
+                            window.dispatchEvent(e);
+                        }
+                    }
+                });
+            }
+            let eles = getAllElements(sel, doc);
+            for (let i = 0; i < eles.length; i++) {
+                await sleep(1);
+                let ele = eles[i];
+                if (!ele.dataset.url) {
+                    await this.hookUrlSetEle(ele, doc);
+                }
+            }
         }
 
         beginLoading() {
@@ -7240,7 +7280,7 @@
 
     async function clickAction(sel, doc) {
         let btn = await waitForElement(sel, doc);
-        emuClick(btn);
+        emuClick(btn, doc);
     }
 
     async function enterAction(sel, doc) {
@@ -7279,14 +7319,15 @@
         debug(input, `input ${sel}`);
     }
 
-    function emuClick(btn) {
-        let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+    function emuClick(btn, doc) {
+        if (!doc) doc = document;
+        let curScroll = getBody(doc).scrollTop || doc.documentElement.scrollTop;
         let orgHref = btn.getAttribute('href');
         if (orgHref && orgHref.replace(location.origin + location.pathname, "").indexOf("#") === 0) {
             let hashAction = e => {
                 e.preventDefault();
-                getBody(document).scrollTop = curScroll;
-                document.documentElement.scrollTop = curScroll;
+                getBody(doc).scrollTop = curScroll;
+                doc.documentElement.scrollTop = curScroll;
                 btn.removeEventListener('click', hashAction, false);
             };
             btn.addEventListener('click', hashAction, false);
@@ -7406,13 +7447,24 @@
                 loadPageOver();
             }
         }, 500);
-        let loadedHandler = e => {
+        let loadedHandler = async e => {
             if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
             clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
+            try {
+                let doc = iframe.contentDocument || iframe.contentWindow.document;
+                let code = ruleParser.curSiteRule.init;
+                if (code) {
+                    try {
+                        await new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', 'sleep', '"use strict";' + code)(doc, iframe.contentWindow, iframe, async sel => {await clickAction(sel, doc)}, async sel => {await enterAction(sel, doc)}, async (sel, v) =>{await inputAction(sel, v, doc)}, async time => {await sleep(time)});
+                    } catch(e) {
+                        debug(e);
+                    }
+                }
+            } catch(e) {}
             let tryTimes = 0;
-            function checkIframe() {
+            async function checkIframe() {
                 if (urlChanged || isPause) {
                     return callback(false, false);
                 }
@@ -7427,6 +7479,7 @@
                         }, waitTime);
                         return;
                     } else if (eles && eles.length > 0) {
+                        await ruleParser.hookUrl(doc);
                         callback(doc, eles);
                     } else if (tryTimes++ < 100) {
                         getBody(doc).scrollTop = 9999999;
@@ -7534,7 +7587,7 @@
                 if (!loadmoreEnd) {
                     loadmoreBtn = getLoadMore(iframeDoc);
                     if (loadmoreBtn && isVisible(loadmoreBtn, emuIframe.contentWindow)) {
-                        emuClick(loadmoreBtn);
+                        emuClick(loadmoreBtn, iframeDoc);
                         let intv = setInterval(() => {
                             loadmoreBtn = getLoadMore(iframeDoc);
                             if (!loadmoreBtn || !getBody(document).contains(loadmoreBtn) || !isVisible(loadmoreBtn, emuIframe.contentWindow)) {
@@ -7544,7 +7597,7 @@
                                     checkPage();
                                 }, 500);
                             } else if (isInViewPort(loadmoreBtn)) {
-                                emuClick(loadmoreBtn);
+                                emuClick(loadmoreBtn, iframeDoc);
                             }
                         }, 200);
                         return;
@@ -7611,7 +7664,7 @@
                     if (!isVisible(nextLink, emuIframe.contentWindow)) {
                         returnFalse("Stop as next hide when emu");
                     } else {
-                        emuClick(nextLink);
+                        emuClick(nextLink, iframeDoc);
                         setTimeout(() => {
                             checkPage();
                         }, 500);
@@ -7670,6 +7723,7 @@
                         returnFalse("Stop as same content");
                     } else {
                         orgContent = preContent;
+                        await ruleParser.hookUrl(iframeDoc);
                         callback(iframeDoc, eles);
                     }
                 } else {
@@ -7678,7 +7732,7 @@
                             nextLink = await ruleParser.getNextLink(iframeDoc, true);
                         }
                         if (nextLink) {
-                            emuClick(nextLink);
+                            emuClick(nextLink, iframeDoc);
                         }
                     }
                     setTimeout(() => {
