@@ -144,7 +144,7 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
  ``` css
  a.chapter-item
  ```
-  > 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究。後期如若豆瓣更新則不再跟進。首先，豆瓣閲讀的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，豆瓣會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到，解密方法如下：
+  > 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請不要來問我要現成規則。後期如若豆瓣更新則不再跟進。首先，豆瓣閲讀的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，豆瓣會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到，解密方法如下：
  ``` javascript
 function decode(t) {
     const s = (new TextDecoder).decode(new Uint8Array([65, 69, 83, 45, 67, 66, 67]))
@@ -177,7 +177,7 @@ function decode(t) {
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
-+ http://www.jhshe.cn/thread-1837-1-1.html
++ http://www.jhshe.com/thread-1837-1-1.html
 + http://tieba.baidu.com/p/4871634479
 
 ### FAQ
