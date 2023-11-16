@@ -4060,8 +4060,13 @@
                 if (this.lockWords.indexOf(word.oriWord) === -1) return;
                 let preStr = this.lockWords.match(/^\$(c.|o)/), findIndex, findNum = 0;
                 preStr = preStr ? preStr[0] : "";
+                let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
+                findIndex = targetArr.indexOf(word.oriWord);
                 if (this.wordModeBtn.classList.contains("checked")) {
-                    let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
+                    if (findIndex != -1) {
+                        targetArr.splice(findIndex, 1);
+                        findNum = 1;
+                    }
                     for (let i = 0; i < targetArr.length; i++) {
                         let wordArr = targetArr[i].split(/[ \.]/);
                         findIndex = wordArr.indexOf(word.oriWord);
@@ -4077,8 +4082,6 @@
                     }
                     this.lockWords = preStr + targetArr.join(this.splitSep);
                 } else {
-                    let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
-                    findIndex = targetArr.indexOf(word.oriWord);
                     if (findIndex < 0) return;
                     targetArr.splice(findIndex, 1);
                     findNum = targetArr.indexOf(word.oriWord) != -1 ? 2 : 1;
