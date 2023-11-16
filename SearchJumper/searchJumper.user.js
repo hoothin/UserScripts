@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.13
+// @version      1.7.14
 // @description  Assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3141,10 +3141,9 @@
                     }
                 }
                 if (this.splitSep) {
-                    let splitSep = this.splitSep;
-                    if (this.wordModeBtn.classList.contains("checked")) {
-                        splitSep = new RegExp(`[\\${this.splitSep} \.]`);
-                    }
+                    let inWordMode = this.wordModeBtn.classList.contains("checked");
+                    let splitSep = inWordMode ? new RegExp(`[\\${this.splitSep} \.]`) : this.splitSep;
+
                     words.split(splitSep).forEach(word => {
                         let oriWord = word;
                         word = word.trim();
@@ -3312,13 +3311,13 @@
                     removeBtn.addEventListener("mousedown", e => {
                         e.stopPropagation();
                         e.preventDefault();
-                        if (this.wordModeBtn.classList.contains("checked")) {
+                        /*if (this.wordModeBtn.classList.contains("checked")) {
                             this.wordModeBtn.classList.remove("checked");
                             if (this.lockWords) {
                                 this.refreshPageWords(this.lockWords);
                             }
                             return;
-                        }
+                        }*/
                         wordSpan.parentNode.removeChild(wordSpan);
                         this.removeHighlightWord(word);
                     });
@@ -4059,18 +4058,39 @@
                 if (!this.splitSep) this.emptyInPageWords();
                 if (!word.oriWord) return;
                 if (this.lockWords.indexOf(word.oriWord) === -1) return;
-                let preStr = this.lockWords.match(/^\$(c.|o)/);
+                let preStr = this.lockWords.match(/^\$(c.|o)/), findIndex, findNum = 0;
                 preStr = preStr ? preStr[0] : "";
-                let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
-                let findIndex = targetArr.indexOf(word.oriWord);
-                if (findIndex < 0) return;
-                targetArr.splice(findIndex, 1);
-                this.lockWords = preStr + targetArr.join(this.splitSep);
+                if (this.wordModeBtn.classList.contains("checked")) {
+                    let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
+                    for (let i = 0; i < targetArr.length; i++) {
+                        let wordArr = targetArr[i].split(/[ \.]/);
+                        findIndex = wordArr.indexOf(word.oriWord);
+                        if (findIndex != -1) {
+                            findNum++;
+                            if (findNum == 1) {
+                                wordArr.splice(findIndex, 1);
+                                targetArr[i] = wordArr.join(" ");
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    this.lockWords = preStr + targetArr.join(this.splitSep);
+                } else {
+                    let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
+                    findIndex = targetArr.indexOf(word.oriWord);
+                    if (findIndex < 0) return;
+                    targetArr.splice(findIndex, 1);
+                    findNum = targetArr.indexOf(word.oriWord) != -1 ? 2 : 1;
+                    this.lockWords = preStr + targetArr.join(this.splitSep);
+                }
                 delete this.highlightSpans[word.showWords];
                 findIndex = this.curHighlightWords.indexOf(word);
                 if (findIndex < 0) return;
                 this.curHighlightWords.splice(findIndex, 1);
 
+                this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+                if (findNum > 1) return;
                 this.marks[word.showWords].forEach(mark => {
                     if (mark.parentNode) {
                         if (mark.dataset.block) {
@@ -4089,7 +4109,6 @@
                 delete this.marks[word.showWords];
                 let targetNav = this.navMarks.querySelector(`[data-content="${word.showWords}"]`);
                 if (targetNav) targetNav.parentNode.removeChild(targetNav);
-                this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
             }
 
             emptyInPageWords() {
@@ -5406,9 +5425,9 @@
                     if (e.keyCode === 27) {
                         if (this.inInput) {
                             this.hideSearchInput();
-                        } else {
+                        } else if (this.lockWords) {
                             this.highlight("");
-                            this.searchJumperInPageInput.value = this.lockWords || "";
+                            this.searchJumperInPageInput.value = this.lockWords;
                             this.lockWords = "";
                             this.searchInPageLockWords.innerHTML = createHTML();
                             this.setNav(false, true);
@@ -6068,11 +6087,15 @@
                 let beginHandler = () => {
                     setTimeout(() => {
                         if (getBody(document).style.display === "none") getBody(document).style.display = "";
-                        let word = this.initInPageWords.shift();
-                        while (word) {
-                            this.searchJumperInPageInput.value = word;
-                            this.submitInPageWords(true);
-                            word = this.initInPageWords.shift();
+                        if (this.lockWords) {
+                            this.initInPageWords = [];
+                        } else {
+                            let word = this.initInPageWords.shift();
+                            while (word) {
+                                this.searchJumperInPageInput.value = word;
+                                this.submitInPageWords(true);
+                                word = this.initInPageWords.shift();
+                            }
                         }
                     }, 600);
                 };
