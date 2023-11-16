@@ -1633,6 +1633,7 @@
                  .in-input.in-find>.search-jumper-searchBar {
                      opacity: 0!important;
                      pointer-events: none;
+                     transition: none;
                  }
                  .in-input.in-find>.search-jumper-searchBar:hover {
                      opacity: 1!important;
@@ -5229,6 +5230,7 @@
                 this.con.classList.remove("in-find");
                 this.con.classList.remove("in-input");
                 this.con.classList.remove("lock-input");
+                this.bar.classList.remove("initShow");
                 this.searchInput.value = "";
                 this.searchJumperInputKeyWords.value = "";
                 this.pickerBtn.classList.remove("checked");
@@ -5434,6 +5436,8 @@
                             this.lockWords = "";
                             this.searchInPageLockWords.innerHTML = createHTML();
                             this.setNav(false, true);
+                        } else {
+                            this.removeBar();
                         }
                     }
                 });
