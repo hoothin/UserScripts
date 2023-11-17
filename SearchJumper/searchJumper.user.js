@@ -2629,13 +2629,15 @@
                  }
                  .searchJumperNavBar>.minNavBtn {
                      font-size: 12px;
+                     font-weight: bold;
+                     font-family: system-ui;
+                     line-height: 16px;
                      opacity: 0.1;
                      background: white;
                      color: black;
                      border-radius: 10px;
                      width: 16px;
                      height: 16px;
-                     font-weight: bold;
                      display: inline-block;
                      cursor: pointer;
                      transition: 0.25s opacity ease, 0.25s transform ease;
@@ -2669,12 +2671,23 @@
                      right: 20px;
                      text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
                      font-size: 30px;
+                     font-family: system-ui;
                      line-height: 0px;
                      border: 0;
-                     margin-top: 2px;
+                     margin-top: 0;
                      opacity: 0.8;
                      color: black;
                      transition: top 0.25s ease;
+                     animation-name: changeHor;
+                     animation-duration: 1s;
+                     animation-iteration-count: infinite;
+                     animation-timing-function: ease-in-out;
+                 }
+                 @keyframes changeHor {
+                     0%   {right: 20px;}
+                     10%  {right: 18px}
+                     80%  {right: 25px}
+                     100% {right: 20px}
                  }
                  #navMarks {
                      height: calc(100% - 32px);
