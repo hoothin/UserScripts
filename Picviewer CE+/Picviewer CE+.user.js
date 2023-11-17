@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.15.1
+// @version              2023.11.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14954,14 +14954,16 @@ ImgOps | https://imgops.com/#b#`;
                             item.parentNode.style.display="";
                             if(spanMark)spanMark.style.display="";
                         }
-                        if(item.naturalHeight>maxSizeH)
-                            maxSizeH=item.naturalHeight;
-                        if(item.naturalHeight<minSizeH || minSizeH==0)
-                            minSizeH=item.naturalHeight;
-                        if(item.naturalWidth>maxSizeW)
-                            maxSizeW=item.naturalWidth;
-                        if(item.naturalWidth<minSizeW || minSizeW==0)
-                            minSizeW=item.naturalWidth;
+                        if (item.naturalHeight && item.naturalWidth) {
+                            if(item.naturalHeight>maxSizeH)
+                                maxSizeH=item.naturalHeight;
+                            if(item.naturalHeight<minSizeH || minSizeH==0)
+                                minSizeH=item.naturalHeight;
+                            if(item.naturalWidth>maxSizeW)
+                                maxSizeW=item.naturalWidth;
+                            if(item.naturalWidth<minSizeW || minSizeW==0)
+                                minSizeW=item.naturalWidth;
+                        }
                     });
                     sizeInputH.max=maxSizeH;
                     sizeInputH.min=minSizeH;
@@ -15017,11 +15019,11 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if(itemH>maxSizeH)
                         maxSizeH=itemH;
-                    if(itemH<minSizeH || minSizeH==0)
+                    if((itemH > 0 && itemH < minSizeH) || minSizeH==0)
                         minSizeH=itemH;
                     if(itemW>maxSizeW)
                         maxSizeW=itemW;
-                    if(itemW<minSizeW || minSizeW==0)
+                    if((itemW > 0 && itemW < minSizeW) || minSizeW==0)
                         minSizeW=itemW;
                 });
                 sizeInputH.max=maxSizeH;
@@ -16791,28 +16793,44 @@ ImgOps | https://imgops.com/#b#`;
                             delete node.dataset.src;
                             total.push(node);
                         }
-                    }else if(!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1){
+                    }
+                    if(!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1){
                         let prop = getComputedStyle(node).backgroundImage;
+                        let hasSrc = /^(audio|embed|iframe|img|input|script|source|track|video|svg|canvas)$/i.test(node.nodeName);
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
                             if (match) {
-                                node.src=match[1].replace(/\\"/g, '"');
+                                let src = match[1].replace(/\\"/g, '"');
+                                if (hasSrc) {
+                                    node = document.createElement("img");
+                                }
+                                node.src = src;
                                 total.push(node);
+                                hasSrc = true;
                             }
                         }
                         prop = getComputedStyle(node, '::before').backgroundImage;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
                             if (match) {
-                                node.src=match[1].replace(/\\"/g, '"');
+                                let src = match[1].replace(/\\"/g, '"');
+                                if (hasSrc) {
+                                    node = document.createElement("img");
+                                }
+                                node.src = src;
                                 total.push(node);
+                                hasSrc = true;
                             }
                         }
                         prop = getComputedStyle(node, '::after').backgroundImage;
                         if (prop != "none") {
                             let match = bgReg.exec(prop);
                             if (match) {
-                                node.src=match[1].replace(/\\"/g, '"');
+                                let src = match[1].replace(/\\"/g, '"');
+                                if (hasSrc) {
+                                    node = document.createElement("img");
+                                }
+                                node.src = src;
                                 total.push(node);
                             }
                         }
