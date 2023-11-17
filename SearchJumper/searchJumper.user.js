@@ -2685,9 +2685,9 @@
                  }
                  @keyframes changeHor {
                      0%   {right: 20px;}
-                     10%  {right: 18px}
-                     80%  {right: 25px}
-                     100% {right: 20px}
+                     10%  {right: 18px;}
+                     80%  {right: 25px;}
+                     100% {right: 20px;}
                  }
                  #navMarks {
                      height: calc(100% - 32px);
