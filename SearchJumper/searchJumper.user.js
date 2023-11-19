@@ -4357,11 +4357,16 @@
                         result.data[start + 1] = {node: ele, text: "\n"};
                     } else if (ele.offsetParent) {
                         if (/^(li|p)$/i.test(ele.nodeName)) {
-                            const start = result.text.length;
+                            let start = result.text.length;
                             result.text += "\n";
                             result.data[start + 1] = {node: ele, text: "\n"};
+                            result = this.anylizeDomWithTextPos(ele, result);
+                            start = result.text.length;
+                            result.text += "\n";
+                            result.data[start + 1] = {node: ele, text: "\n"};
+                        } else {
+                            result = this.anylizeDomWithTextPos(ele, result);
                         }
-                        result = this.anylizeDomWithTextPos(ele, result);
                     } else if (ele.nodeType === 3) {
                         let textData;
                         if (ele.parentNode.childNodes.length == 1) {
