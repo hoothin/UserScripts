@@ -23203,7 +23203,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function isKeyDownEffectiveTarget(target) {
-            var localName = (target.shadowRoot ? target.shadowRoot.activeElement : target).localName;
+            var localName = (target.shadowRoot ? (target.shadowRoot.activeElement || target) : target).localName;
 
             // 确保光标不是定位在文字输入框或选择框
             if (localName == 'textarea' || localName == 'input' || localName == 'select'){
