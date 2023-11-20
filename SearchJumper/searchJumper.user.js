@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.24
+// @version      1.7.25
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2306,7 +2306,7 @@
                      font-family: Arial, sans-serif;
                      text-align: left;
                      box-shadow: 0px 2px 10px rgb(0 0 0 / 80%);
-                     border: 1px solid rgb(179 179 179 / 70%);
+                     border: 1px solid rgb(179 179 179 / 10%);
                      border-radius: 28px;
                      background-color: rgb(51 56 59 / 90%);
                      padding: 10px;
@@ -2528,7 +2528,7 @@
                      transition: 0.25s all ease;
                      font-size: 26px;
                      box-shadow: 0px 0px 2px rgb(0 0 0 / 80%);
-                     border: 1px solid rgb(179 179 179 / 70%);
+                     border: 1px solid rgb(179 179 179 / 20%);
                      cursor: pointer;
                      user-select: none;
                  }
@@ -4360,7 +4360,7 @@
                         result.text += "\n";
                         result.data[start + 1] = {node: ele, text: "\n"};
                     } else if (ele.offsetParent) {
-                        if (/^(li|p)$/i.test(ele.nodeName)) {
+                        if (/^(li|p|a)$/i.test(ele.nodeName)) {
                             let start = result.text.length;
                             result.text += "\n";
                             result.data[start + 1] = {node: ele, text: "\n"};
@@ -4667,7 +4667,9 @@
                                                 break;
                                         }
                                         middlebit = newTextNode.splitText(d.pos);
-                                        middlebit.splitText(d.len);
+                                        if (d.type != 'start' && d.type != 'middle' && middlebit.data.length) {
+                                            middlebit.splitText(d.len);
+                                        }
                                         middleclone = middlebit.cloneNode(true);
                                         spannode.appendChild(middleclone);
                                         if (d.type != "full" && d.type != "start") {
@@ -10866,7 +10868,7 @@
         }
 
         function isInConfigPage() {
-            if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && (location.hostname === "localhost" || location.href.indexOf("searchjumper") != -1))) {
+            if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && document.querySelector('[name="author"][content="Hoothin"]'))) {
                 isAllPage = /all\.html$/.test(location.pathname);
                 return true;
             }
