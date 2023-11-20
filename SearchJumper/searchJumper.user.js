@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.23
+// @version      1.7.24
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -67,8 +67,8 @@
     }
     const configPage = 'https://hoothin.github.io/SearchJumper';
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
-    const isAllPage = /^https:\/\/hoothin\.github\.io\/SearchJumper\/all\.html/.test(location.href);
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
+    let isAllPage = false;
 
     var searchData = {};
     searchData.sitesConfig = [
@@ -10866,10 +10866,8 @@
         }
 
         function isInConfigPage() {
-            if (location.href.indexOf(configPage) === 0) {
-                return true;
-            }
-            if ((location.hostname === "localhost" || location.href.indexOf("SearchJumper") != -1) && document.title === "SearchJumper Settings") {
+            if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && (location.hostname === "localhost" || location.href.indexOf("searchjumper") != -1))) {
+                isAllPage = /all\.html$/.test(location.pathname);
                 return true;
             }
             return false;
@@ -12751,6 +12749,7 @@
                     background-size: cover;
                     -webkit-background-size: cover;
                     -o-background-size: cover;
+                    overflow: hidden;
                 `;
             storage.getItem("allPageBg", allPageBg => {
                 if (allPageBg) {
