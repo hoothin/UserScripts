@@ -4512,11 +4512,12 @@
             }
 
             findPosInStr(content, kw) {
-                let len = 0, pos = -1;
+                let len = 0, pos = -1, hasAddon = false;
                 if (this.findInpageAddons.length) {
                     for (let i = 0; i < this.findInpageAddons.length; i++) {
                         let curAddon = this.findInpageAddons[i];
                         if (!curAddon || !curAddon.run || curAddon.disable) continue;
+                        hasAddon = true;
                         let curData = curAddon.run(content, kw);
                         if (curData && curData.matched) {
                             len = curData.len;
@@ -4525,7 +4526,7 @@
                         }
                     }
                 }
-                if (pos == -1) {
+                if (pos == -1 && !hasAddon) {
                     len = kw.length;
                     pos = content.toUpperCase().indexOf(kw.toUpperCase());
                 }
