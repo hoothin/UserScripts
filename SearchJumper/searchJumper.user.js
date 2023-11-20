@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.25
+// @version      1.7.26
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -65,9 +65,9 @@
             return;
         }
     }
-    const configPage = 'https://hoothin.github.io/SearchJumper';
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
+    let configPage = 'https://hoothin.github.io/SearchJumper';
     let isAllPage = false;
 
     var searchData = {};
@@ -2445,6 +2445,46 @@
                      display: flex;
                      align-items: center;
                  }
+                 .inputGroup>#addons {
+                     position: absolute;
+                     bottom: 50px;
+                     right: 100px;
+                     display: none;
+                     flex-direction: column;
+                     background: white;
+                     border-radius: 10px;
+                     opacity: 0;
+                     transition: 0.5s opacity ease;
+                 }
+                 .inputGroup>#addons>div {
+                     padding: 10px;
+                 }
+                 .inputGroup>#addons>div>input {
+                     float: left;
+                     width: 20px;
+                     height: 20px;
+                     margin: 0 10px 0 0;
+                     cursor: pointer;
+                 }
+                 .inputGroup:hover>#addons {
+                     display: flex;
+                 }
+                 .inputGroup>#addons:hover {
+                     opacity: 1;
+                 }
+                 .inputGroup>.svgBtns:hover+#addons {
+                     opacity: 1;
+                 }
+                 .inputGroup>#addons>div>label {
+                     color: unset;
+                     display: inline;
+                     background: none;
+                     top: unset;
+                     left: unset;
+                     font-size: unset;
+                     line-height: unset;
+                     max-width: unset;
+                 }
                  .inputGroup>.svgBtns:hover {
                      width: auto;
                  }
@@ -3087,6 +3127,7 @@
                       <svg id="pinBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pinBtn")}</title><path d="m674.8822,92.83803a81.61801,81.04246 0 0 1 25.30158,17.09996l213.75757,212.46631a81.61801,81.04246 0 0 1 -24.70304,131.36982l-75.74151,33.30845l-142.09696,141.257l-11.26329,155.3854a81.61801,81.04246 0 0 1 -139.13151,51.46196l-137.98885,-137.15085l-235.14149,234.56388l-57.83996,-57.18896l235.27751,-234.69896l-142.7499,-141.85131a81.61801,81.04246 0 0 1 51.6642,-138.09635l160.95072,-11.94025l139.5668,-138.74469l32.78324,-75.09935a81.61801,81.04246 0 0 1 107.35489,-42.14208zm-32.45675,74.36997l-38.95901,89.22775l-171.94193,170.99958l-191.25821,14.1284l338.46989,336.3262l13.43977,-185.47917l174.33607,-173.32279l89.69819,-39.44067l-213.78477,-212.43929z"></path></svg>
                       <svg id="locBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("locBtn")}</title><path d="M357.6 832l-255.2 56c-20 4.8-39.2-10.4-39.2-31.2V569.6c0-15.2 10.4-28 24.8-31.2L243.2 504l53.6 53.6L139.2 592c-7.2 1.6-12.8 8-12.8 16v188c0 10.4 9.6 17.6 19.2 16l192.8-42.4 12.8-3.2 12.8 2.4 306.4 60.8 210.4-47.2c7.2-1.6 12.8-8 12.8-16V580c0-10.4-9.6-17.6-19.2-16L688 606.4l-12 2.4L760 524.8l160.8-36c20-4.8 39.2 10.4 39.2 31.2v286.4c0 15.2-10.4 28-24.8 31.2L672.8 896M512 128c-115.2 0-206.4 101.6-190.4 220 5.6 41.6 26.4 80 56 109.6l0.8 0.8L512 591.2l133.6-132.8 0.8-0.8c29.6-29.6 49.6-68 56-109.6C719.2 229.6 627.2 128 512 128m0-64c141.6 0 256 114.4 256 256 0 70.4-28 133.6-74.4 180L512 681.6 330.4 500C284.8 453.6 256 390.4 256 320 256 178.4 371.2 64 512 64z m64.8 193.6c0-35.2-28.8-64-64-64s-64 28.8-64 64 28.8 64 64 64 64-28 64-64z"></path></svg>
                     </span>
+                    <div id="addons"></div>
                   </div>
                 </div>
                 <div id="rightSizeChange"></div>
@@ -3119,7 +3160,9 @@
                 this.rightSizeChange = searchInputDiv.querySelector("#rightSizeChange");
                 this.filterGlob = searchInputDiv.querySelector("#filterGlob");
                 this.suggestDatalist = searchInputDiv.querySelector("#suggest");
+                this.addonsList = searchInputDiv.querySelector("#addons");
                 this.fakeTextareas = {};
+                this.addonCheckboxDict = {};
             }
 
             showInPageSearch() {
@@ -3864,7 +3907,7 @@
                     modifyFrame.innerHTML = createHTML(`
                      <div class="searchJumperModify-body">
                          <a href="${configPage}" class="searchJumperModify-title" target="_blank">
-                             <img width="32px" height="32px" src="${logoBase64}" />${i18n("modifyWord")}
+                             <img onerror="this.style.display='none'" width="32px" height="32px" src="${logoBase64}" />${i18n("modifyWord")}
                          </a>
                          <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
                          <input id="searchJumperHighlightWord" name="wordContent" placeholder="words" type="text"/>
@@ -4358,16 +4401,16 @@
                     if ((ele.classList && ele.classList.contains("searchJumper")) || /^(img|svg|picture)$/i.test(ele.nodeName)) {
                         const start = result.text.length;
                         result.text += "\n";
-                        result.data[start + 1] = {node: ele, text: "\n"};
+                        result.data[start] = {node: ele, text: "\n"};
                     } else if (ele.offsetParent) {
                         if (/^(li|p|a)$/i.test(ele.nodeName)) {
                             let start = result.text.length;
                             result.text += "\n";
-                            result.data[start + 1] = {node: ele, text: "\n"};
+                            result.data[start] = {node: {}, text: "\n"};
                             result = this.anylizeDomWithTextPos(ele, result);
                             start = result.text.length;
                             result.text += "\n";
-                            result.data[start + 1] = {node: ele, text: "\n"};
+                            result.data[start] = {node: {}, text: "\n"};
                         } else {
                             result = this.anylizeDomWithTextPos(ele, result);
                         }
@@ -4434,17 +4477,52 @@
                 return spannode;
             }
 
+            createAddonSpan(name, data) {
+                let index = "addon_" + this.addonsList.children.length, self = this;
+                let con = document.createElement("div");
+                let checkbox = document.createElement("input");
+                checkbox.type = 'checkbox';
+                checkbox.id = index;
+                checkbox.checked = !data.disable;
+                checkbox.addEventListener("change", e => {
+                    searchData.prefConfig.disableAddon[name] = !checkbox.checked;
+                    data.disable = !checkbox.checked;
+                    if (checkbox.checked) {
+                        self.findInpageAddons.forEach(addon => {
+                            if (addon != data && addon.sort == data.sort) {
+                                addon.disable = true;
+                                let _name = addon.name || ("addon" + index++);
+                                self.addonCheckboxDict[_name].checked = false;
+                                searchData.prefConfig.disableAddon[_name] = true;
+                            }
+                        });
+                    }
+                    storage.setItem("searchData", searchData);
+                    if (self.lockWords) {
+                        self.refreshPageWords(self.lockWords);
+                    }
+                });
+                con.appendChild(checkbox);
+                let label = document.createElement("label");
+                label.setAttribute("for", index);
+                label.innerText = name;
+                con.appendChild(label);
+                this.addonCheckboxDict[name] = checkbox;
+                this.addonsList.appendChild(con);
+            }
+
             findPosInStr(content, kw) {
-                if (!self.findInpageAddons) self.findInpageAddons = _unsafeWindow.searchJumperAddons.filter(data => data.type == "findInPage").sort((a, b) => (a.sort || 0) - (b.sort || 0));
                 let len = 0, pos = -1;
-                for (let i = 0; i < self.findInpageAddons.length; i++) {
-                    let curAddon = self.findInpageAddons[i];
-                    if (!curAddon || !curAddon.run) continue;
-                    let curData = curAddon.run(content, kw);
-                    if (curData && curData.matched) {
-                        len = curData.len;
-                        pos = curData.pos;
-                        break;
+                if (this.findInpageAddons.length) {
+                    for (let i = 0; i < this.findInpageAddons.length; i++) {
+                        let curAddon = this.findInpageAddons[i];
+                        if (!curAddon || !curAddon.run || curAddon.disable) continue;
+                        let curData = curAddon.run(content, kw);
+                        if (curData && curData.matched) {
+                            len = curData.len;
+                            pos = curData.pos;
+                            break;
+                        }
                     }
                 }
                 if (pos == -1) {
@@ -4539,9 +4617,9 @@
                             let findNodes = [], leftLen = len;
                             let pre = "", after = "", after2 = "";
                             for (let i = 0; i < keys.length; i++) {
-                                let end = keys[i];
+                                let end = parseInt(keys[i]);
                                 let curnode = domTextResult.data[end];
-                                if (pos > end || !curnode.text.trim()) continue;
+                                if (pos > end) continue;
                                 let curpos = pos - (end - curnode.text.length) - 1;
                                 let type = "full";
                                 if (curpos < 0) {
@@ -4580,6 +4658,10 @@
 
                                 if (curpos < 0) curpos = 0;
                                 let curlen = Math.min(leftLen, curnode.text.length - curpos);
+                                leftLen -= curlen;
+                                if (!curnode.text.trim()) {
+                                    continue;
+                                }
                                 let nodeInfo;
                                 for (let j = 0; j < nodeAndPos.length; j++) {
                                     if (nodeAndPos[j].node == curnode.node) {
@@ -4589,7 +4671,6 @@
                                 }
                                 if (!nodeInfo) nodeAndPos.push({node: curnode.node, text: curnode.text, match:[{pos: curpos, len: curlen, type: type}]});
                                 else nodeInfo.match.push({pos: curpos, len: curlen, type: type});
-                                leftLen -= curlen;
                                 if (leftLen <= 0) break;
                             }
                         }
@@ -5232,22 +5313,23 @@
                     this.con.classList.add("in-find");
                     let selStr = getSelectStr();
                     this.searchJumperInPageInput.focus();
-                    if (selStr) {
-                        this.searchJumperInPageInput.value = "";
-                        if (!this.navMarks.innerHTML) {
-                            this.submitIgnoreSpace(selStr);
-                        } else {
-                            this.searchJumperInPageInput.value = selStr;
+                    setTimeout(() => {
+                        if (selStr) {
+                            this.searchJumperInPageInput.value = "";
+                            if (!this.navMarks.innerHTML) {
+                                this.submitIgnoreSpace(selStr);
+                            } else {
+                                this.searchJumperInPageInput.value = selStr;
+                                this.submitInPageWords();
+                            }
+                        } else if (this.searchJumperInPageInput.value) {
                             this.submitInPageWords();
+                        } else if (!this.initShowSearchInput && cacheKeywords) {
+                            this.searchJumperInPageInput.value = cacheKeywords;
+                            this.initShowSearchInput = true;
+                            this.searchJumperInPageInput.select();
                         }
-                    } else if (this.searchJumperInPageInput.value) {
-                        this.submitInPageWords();
-                    } else if (!this.initShowSearchInput && cacheKeywords) {
-                        this.searchJumperInPageInput.value = cacheKeywords;
-                        this.wordModeBtn.classList.add("checked");
-                        this.initShowSearchInput = true;
-                        this.searchJumperInPageInput.select();
-                    }
+                    }, 10);
                 }
                 this.inInput = true;
                 this.clearInputHide();
@@ -5549,7 +5631,7 @@
                         default:
                             break;
                     }
-                });
+                }, true);
                 this.editBtn.addEventListener("click", e => {
                     editFunc();
                 });
@@ -6051,6 +6133,21 @@
                         await sleep(1);
                         sitesNum = 0;
                     }
+                }
+                if (!this.findInpageAddons) {
+                    this.findInpageAddons = _unsafeWindow.searchJumperAddons.filter(
+                        data => data.type == "findInPage"
+                    ).sort((a, b) => (a.sort || 0) - (b.sort || 0));
+                    let self = this, index = 0, addonDict = {};
+                    this.findInpageAddons.forEach(addon => {
+                        let name = addon.name || ("addon" + index++);
+                        if (addonDict[addon.sort]) addon.disable = true;
+                        else if (searchData.prefConfig.disableAddon[name]) {
+                            addon.disable = true;
+                        }
+                        addonDict[addon.sort] = true;
+                        self.createAddonSpan(name, addon);
+                    });
                 }
                 if (disableHighlight && disableHighlight != location.hostname && window.top == window.self) {
                     storage.setItem("disableHighlight", "");
@@ -11284,7 +11381,7 @@
                 this.filterFrame.innerHTML = createHTML(`
                 <div class="searchJumperFrame-body">
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
-                        <img width="32px" height="32px" src="${logoBase64}" />${i18n("addSearchEngine")}
+                        <img onerror="this.style.display='none'" width="32px" height="32px" src="${logoBase64}" />${i18n("addSearchEngine")}
                     </a>
                     <div class="searchJumperFrame-buttons">
                         <button id="expandAll" type="button">${i18n("expandAll")}</button>
@@ -12946,10 +13043,18 @@
             if (typeof searchData.prefConfig.currentTypeFirst === "undefined") {
                 searchData.prefConfig.currentTypeFirst = true;
             }
+            if (typeof searchData.prefConfig.disableAddon === "undefined") {
+                searchData.prefConfig.disableAddon = {};
+            }
             if (typeof searchData.prefConfig.suggestType === "undefined") {
                 if (lang === "zh-CN") {
                     searchData.prefConfig.suggestType = "baidu";
                 } else searchData.prefConfig.suggestType = "google";
+            }
+            if (searchData.prefConfig.configPage) {
+                configPage = searchData.prefConfig.configPage;
+            } else {
+                searchData.prefConfig.configPage = configPage;
             }
         }
 
