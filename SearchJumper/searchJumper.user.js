@@ -4377,7 +4377,8 @@
                 let top = getElementTop(node);
                 navMark.dataset.top = top;
                 navMark.dataset.content = word.showWords;
-                navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
+                let scrollHeight = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+                navMark.style.top = top / scrollHeight * 100 + "%";
                 navMark.style.background = node.style.background || "yellow";
                 navMark.addEventListener("click", e => {
                     e.stopPropagation();
@@ -5063,10 +5064,11 @@
             refreshNavMarks() {
                 if (this.refreshNavMarksTimer) clearTimeout(this.refreshNavMarksTimer);
                 this.refreshNavMarksTimer = setTimeout(() => {
+                    let scrollHeight = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                     this.navPointer.style.display = "none";
                     this.navMarks.style.display = "none";
                     [].forEach.call(this.navMarks.children, m => {
-                        m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "%";
+                        m.style.top = m.dataset.top / scrollHeight * 100 + "%";
                     });
                     this.navMarks.style.display = "";
                 }, 1000);
