@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.6
+// @version      2.7.7
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -218,7 +218,7 @@ if (window.top != window.self) {
 
 (function() {
     'use strict';
-    var indexReg=/^(\w.*)?PART\b|^Prologue|^(\w.*)?Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*[·言章]|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]+$|^(\d|\s|\.)*[第（]?\s*[\d〇零一二两三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
+    var indexReg=/^(\w.*)?PART\b|^Prologue|^(\w.*)?Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*[·言章]|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]|^(\d|\s|\.)*[第（]?\s*[\d〇零一二两三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/^\s*(下一[页頁张張]|next\s*page|次のページ)/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
@@ -262,6 +262,7 @@ if (window.top != window.self) {
                 dacSortByName:"按章节名排序",
                 reverse:"反选",
                 dacUseIframe:"使用 iframe 后台加载内容（慢速）",
+                dacSaveAsZip:"下载为 zip",
                 dacSetCustomRule:"修改规则",
                 dacAddUrl:"添加章节",
                 dacStartDownload:"下载选中"
@@ -303,6 +304,7 @@ if (window.top != window.self) {
                 dacSortByName:"依章節名排序",
                 reverse:"反選",
                 dacUseIframe:"使用 iframe 背景載入內容（慢速）",
+                dacSaveAsZip:"下載為 zip",
                 dacSetCustomRule:"修改規則",
                 dacAddUrl:"新增章節",
                 dacStartDownload:"下載選取"
@@ -342,7 +344,8 @@ if (window.top != window.self) {
                 dacSortByUrl:"Sort by URL",
                 dacSortByName:"Sort by name",
                 reverse:"Reverse selection",
-                dacUseIframe: "Use iframe to load content in the background (slow)",
+                dacUseIframe: "Use iframe to load content (slow)",
+                dacSaveAsZip: "Save as zip",
                 dacSetCustomRule:"Modify rules",
                 dacAddUrl:"Add Chapter",
                 dacStartDownload:"Download selected"
@@ -417,10 +420,14 @@ if (window.top != window.self) {
         dacLinksCon.appendChild(item);
     }
 
+    var saveAsZip = true;
     function filterList(list) {
         if (!GM_getValue("showFilterList")) {
             indexDownload(list);
             return;
+        }
+        if (txtDownContent) {
+            txtDownContent.style.display = "none";
         }
         if (filterListContainer) {
             filterListContainer.style.display = "";
@@ -450,7 +457,7 @@ if (window.top != window.self) {
                         <input id="reverse" value="${i18n.reverse}" type="button"/>
                     </div>
                     <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
-                    <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></p>
+                    <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><span><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></span> <span style="display:${win.downloadAllContentSaveAsZip ? "inline" : "none"}"><input id="dacSaveAsZip" type="checkbox" checked="checked"/><label for="dacSaveAsZip"> ${i18n.dacSaveAsZip}</label></span></p>
                     <div class="fun">
                         <input id="dacSetCustomRule" value="${i18n.dacSetCustomRule}" type="button"/>
                         <input id="dacAddUrl" value="${i18n.dacAddUrl}" type="button"/>
@@ -470,7 +477,11 @@ if (window.top != window.self) {
             let dacStartDownload = filterListContainer.querySelector("#dacStartDownload");
             let dacLinksClose = filterListContainer.querySelector("#dacLinksClose");
             let dacFilterBg = filterListContainer.querySelector("#dacFilterBg");
+            let dacSaveAsZip = filterListContainer.querySelector("#dacSaveAsZip");
             dacUseIframe = filterListContainer.querySelector("#dacUseIframe");
+            dacSaveAsZip.onchange = e => {
+                saveAsZip = dacSaveAsZip.checked;
+            };
             dacSortByPos.onclick = e => {
                 let linkList = [].slice.call(dacLinksCon.children);
                 if (linkList[0].children[1].href != list[0].href) {
@@ -577,7 +588,6 @@ if (window.top != window.self) {
                 let linkList = [].slice.call(dacLinksCon.querySelectorAll("input:checked+.dacLink"));
                 useIframe = !!dacUseIframe.checked;
                 indexDownload(linkList, true);
-                filterListContainer.style.display = "none";
             };
             dacLinksClose.onclick = e => {
                 filterListContainer.style.display = "none";
@@ -690,13 +700,13 @@ if (window.top != window.self) {
         document.body.appendChild(shadowContainer);
     }
 
-    function initTxtDownDiv(){
-        if(txtDownContent){
-            txtDownContent.style.display="";
+    function initTxtDownDiv() {
+        if (txtDownContent) {
+            txtDownContent.style.display = "";
             return;
         }
-        txtDownContent=document.createElement("div");
-        txtDownContent.id="txtDownContent";
+        txtDownContent = document.createElement("div");
+        txtDownContent.id = "txtDownContent";
         let shadowContainer = document.createElement("div");
         document.body.appendChild(shadowContainer);
         let shadow = shadowContainer.attachShadow({ mode: "open" });
@@ -724,7 +734,7 @@ if (window.top != window.self) {
     }
 
     function saveContent() {
-        if (win.downloadAllContentSaveAsZip) {
+        if (win.downloadAllContentSaveAsZip && saveAsZip) {
             win.downloadAllContentSaveAsZip(rCats, i18n.info.replace("#t#", location.href), content => {
                 saveAs(content, document.title + ".zip");
             });
