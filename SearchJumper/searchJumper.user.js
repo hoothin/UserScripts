@@ -10529,8 +10529,8 @@
                 let showToolbarTimer;
 
                 let clientRect;
-                if (searchData.prefConfig.leftMouse) {
-                    document.addEventListener('selectionchange', (e) => {
+                document.addEventListener('selectionchange', (e) => {
+                    if (searchData.prefConfig.leftMouse) {
                         if (window.getSelection().toString()) {
                             const selection = window.getSelection();
                             const range = selection.getRangeAt(0);
@@ -10538,8 +10538,8 @@
                         } else {
                             clientRect = null;
                         }
-                    });
-                }
+                    }
+                });
                 let waitForMouse = false;
                 clickHandler = e => {
                     if (shown) {
