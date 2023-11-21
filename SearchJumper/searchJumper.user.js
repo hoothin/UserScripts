@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.28
+// @version      1.7.29
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -10530,7 +10530,7 @@
 
                 let clientRect;
                 document.addEventListener('selectionchange', (e) => {
-                    if (searchData.prefConfig.leftMouse) {
+                    if (searchData.prefConfig.leftMouse || searchData.prefConfig.middleMouse) {
                         if (window.getSelection().toString()) {
                             const selection = window.getSelection();
                             const range = selection.getRangeAt(0);
@@ -10601,11 +10601,11 @@
                           (searchData.prefConfig.metaKey && !e.metaKey))) {
                         matchKey = true;
                     }
-                    if (!searchData.prefConfig.selectToShow &&
-                        !searchData.prefConfig.leftMouse &&
-                        e.button === 0) {
-                        searchBar.waitForHide(1);
-                        return;
+                    if (!searchData.prefConfig.selectToShow) {
+                        if ((e.button === 0 && !searchData.prefConfig.leftMouse) || (e.button === 1 && !searchData.prefConfig.middleMouse)) {
+                            searchBar.waitForHide(1);
+                            return;
+                        }
                     }
                     let startX = e.clientX;
                     let startY = e.clientY;
@@ -10631,7 +10631,7 @@
                             setTimeout(() => {
                                 if (shown) return;
                                 if (!inputSign && (
-                                    (matchKey && e.button !== 0) ||
+                                    (matchKey && e.button === 2) ||
                                     (moved && e.button === 0 && searchData.prefConfig.selectToShow && getSelectStr())
                                 )) {
                                     searchBar.showInPage(true, e);
@@ -10660,10 +10660,22 @@
                         }
                         return;
                     }
+                    if (showToolbarTimer) clearTimeout(showToolbarTimer);
+                    showToolbarTimer = setTimeout(() => {
+                        if (draging) return;
+                        if (targetElement != e.target) return;
+                        if (e.button === 1 && !searchData.prefConfig.middleMouse) return;
+                        if (e.button === 2 && !searchData.prefConfig.rightMouse) return;
+                        if (e.button === 0 && !searchData.prefConfig.leftMouse) return;
+                        //if (e.button === 0 && getSelectStr() !== '') return;
+                        searchBar.setFuncKeyCall(false);
+                        searchBar.showInPage();
+                        shown = true;
+                    }, parseInt(searchData.prefConfig.longPressTime));
                     if ((e.button !== 2 && clientRect && !inputSign &&
                          e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
                          e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
-                        (matchKey && e.button !== 0)) {
+                        (matchKey && e.button === 2)) {
                         setTimeout(() => {
                             if (!draging) {
                                 searchBar.showInPage(true, e);
@@ -10672,22 +10684,10 @@
                             e.target.removeEventListener('scroll', scrollHandler);
                         }, 200);
                         shown = true;
-                        clearTimeout(showToolbarTimer);
                         document.addEventListener('mouseup', inpageMouseUpHandler, true);
                         document.addEventListener('click', clickHandler, true);
                         return false;
                     }
-                    if (showToolbarTimer) clearTimeout(showToolbarTimer);
-                    showToolbarTimer = setTimeout(() => {
-                        if (draging) return;
-                        if (targetElement != e.target) return;
-                        if (e.button !== 0 && !searchData.prefConfig.rightMouse) return;
-                        if (e.button === 0 && !searchData.prefConfig.leftMouse) return;
-                        if (e.button === 0 && getSelectStr() !== '') return;
-                        searchBar.setFuncKeyCall(false);
-                        searchBar.showInPage();
-                        shown = true;
-                    }, parseInt(searchData.prefConfig.longPressTime));
                     document.addEventListener('mousemove', inpageMouseMoveHandler, true);
                     document.addEventListener('mouseup', inpageMouseUpHandler, true);
                     e.target.addEventListener('scroll', scrollHandler);
