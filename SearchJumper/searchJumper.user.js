@@ -7319,8 +7319,12 @@
                             if (data.match && data.hideNotMatch) {
                                 if (new RegExp(data.match).test(href)) {
                                     se.style.display = '';
+                                    if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
                                     se.style.display = 'none';
+                                    if (self.searchJumperExpand.parentNode == ele) {
+                                        ele.insertBefore(se, self.searchJumperExpand);
+                                    } else ele.appendChild(se);
                                 }
                             }
                             if (keyWords && data.kwFilter) {
@@ -7904,8 +7908,8 @@
                             }, 10000);
                         }
                     } else if (data.hideNotMatch) {
-                        ele = null;
-                        return null;
+                        ele.style.display = 'none';
+                        ele.classList.add("notmatch");
                     }
                 }
 
