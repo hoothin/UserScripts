@@ -22892,6 +22892,7 @@ ImgOps | https://imgops.com/#b#`;
                         let elements = document.elementsFromPoint(clientX, clientY);
                         for (let i = 0; i < 3; i++) {
                             let ele = elements[i];
+                            if (!ele) continue;
                             if (/img/i.test(ele.nodeName)) {
                                 target = ele;
                                 break;
