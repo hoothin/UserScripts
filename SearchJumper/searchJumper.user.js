@@ -1644,7 +1644,8 @@
                      opacity: 0.6;
                      transition:opacity 0.25s ease;
                  }
-                 .in-input.in-find>.search-jumper-input:hover {
+                 .in-input.in-find>.search-jumper-input:hover,
+                 .in-input.in-find>.search-jumper-input.active {
                      opacity: 1;
                  }
                  .funcKeyCall>.search-jumper-searchBar {
@@ -5569,6 +5570,12 @@
                         }
                     }
                 }, true);
+                this.searchJumperInPageInput.addEventListener("focus", e => {
+                    this.searchInputDiv.classList.add("active");
+                });
+                this.searchJumperInPageInput.addEventListener("blur", e => {
+                    this.searchInputDiv.classList.remove("active");
+                });
                 this.searchJumperInPageInput.addEventListener("keydown", e => {
                     e.stopPropagation();
                     switch(e.keyCode) {
