@@ -3,7 +3,7 @@
 // @name:zh-CN   搜索酱单词模式扩展
 // @name:zh-TW   搜尋醬單詞模式擴展
 // @namespace    hoothin
-// @version      0.1.8
+// @version      0.1.9
 // @description  Add similarity search based on Levenshtein distance to the highlight feature of SearchJumper.
 // @description:zh-CN  为搜索酱的页内高亮添加基于莱文斯坦距离的相似度查找
 // @description:zh-TW  為搜尋醬的頁内高亮添加基於萊文斯坦距離的相似度查找
@@ -40,7 +40,7 @@
         }
         return distanceMatrix[b.length][a.length];
     }
-    const gapStr = "[\n\/\\'\"‘’“”,.!\?，。！？… ]";
+    const gapStr = "[\n\/\\'\"‘’“”,.!\?，。！？…\(\) ]";
     const gapStrs = new RegExp(gapStr + "+", "g");
     _unsafeWindow.searchJumperAddons.push({
         name: "Levenshtein",
@@ -48,6 +48,11 @@
         sort: 0,
         run: (text, keywords) => {
             if (!text || !keywords) return {matched: false};
+            if (keywords.charCodeAt(0) > 255) {
+                let len = keywords.length;
+                let pos = text.toUpperCase().indexOf(keywords.toUpperCase());
+                return {matched: pos != -1, pos: pos, len: len};
+            }
             text = text.toLowerCase();
             keywords = keywords.toLowerCase();
             let wordArr = text.replace(gapStrs, " ").split(" ");
@@ -72,11 +77,11 @@
                 }
             }
             if (matched) {
-                let wordMatch = text.match(new RegExp(`(^|${gapStr})(` + matchedStr.join(gapStr + "+") + `)($|${gapStr})`, "i"));
+                let wordMatch = text.match(new RegExp(`\\b(` + matchedStr.join(gapStr + "+") + `)\\b`, "i"));
                 if (wordMatch) {
-                    let content = wordMatch[2];
+                    let content = wordMatch[1];
                     len = content.length;
-                    pos = wordMatch.index + wordMatch[1].length;
+                    pos = wordMatch.index;
                 }
             }
             return {matched: matched, pos: pos, len: len};
