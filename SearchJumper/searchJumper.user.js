@@ -11317,6 +11317,7 @@
                         color: #6e7070;
                         transition: all 0.25s ease;
                         border: 0;
+                        font-size: initial;
                     }
                     .searchJumperFrame-title {
                         background: #458bd1!important;
@@ -12054,6 +12055,7 @@
                         color: #6e7070;
                         transition:all 0.25s ease;
                         border: 0;
+                        font-size: initial;
                     }
                     .searchJumperFrame-title {
                         background: #458bd1!important;
