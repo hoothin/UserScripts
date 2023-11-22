@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.32
+// @version      1.7.33
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1171,6 +1171,8 @@
         const logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         const noImgBase64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNDI5LjAxMzMzMyA2NDBBMzIgMzIgMCAwIDEgMzg0IDU5NC45ODY2NjdsMzcuNzYtMzcuNzYtMjIuODI2NjY3LTIyLjYxMzMzNC0xMzUuNjggMTM1LjY4IDkwLjQ1MzMzNCA5MC40NTMzMzQgMTM1LjY4LTEzNS42OC0yMi42MTMzMzQtMjIuNjEzMzM0ek01MzQuNjEzMzMzIDM5OC45MzMzMzNsMjIuNjEzMzM0IDIyLjYxMzMzNEw1OTQuOTg2NjY3IDM4NEEzMiAzMiAwIDAgMSA2NDAgNDI5LjAxMzMzM2wtMzcuNzYgMzcuNzYgMjIuNjEzMzMzIDIyLjYxMzMzNCAxMzUuNjgtMTM1LjY4LTkwLjQ1MzMzMy05MC40NTMzMzR6IiBmaWxsPSIjNUU1QzVDIj48L3BhdGg+PHBhdGggZD0iTTUxMiAyMS4zMzMzMzNhNDkwLjY2NjY2NyA0OTAuNjY2NjY3IDAgMSAwIDQ5MC42NjY2NjcgNDkwLjY2NjY2N0E0OTAuNjY2NjY3IDQ5MC42NjY2NjcgMCAwIDAgNTEyIDIxLjMzMzMzM3ogbTMxNi44IDM1NC45ODY2NjdsLTE4MS4xMiAxODEuMTJhMzIgMzIgMCAwIDEtNDUuMjI2NjY3IDBMNTU3LjIyNjY2NyA1MTIgNTEyIDU1Ny4yMjY2NjdsNDUuMjI2NjY3IDQ1LjIyNjY2NmEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N2wtMTgxLjEyIDE4MS4xMmEzMiAzMiAwIDAgMS00NS4yMjY2NjcgMGwtMTM1LjY4LTEzNS42OGEzMiAzMiAwIDAgMSAwLTQ1LjIyNjY2N2wxODEuMTItMTgxLjEyYTMyIDMyIDAgMCAxIDQ1LjIyNjY2NyAwTDQ2Ni43NzMzMzMgNTEyIDUxMiA0NjYuNzczMzMzbC00NS4yMjY2NjctNDUuMjI2NjY2YTMyIDMyIDAgMCAxIDAtNDUuMjI2NjY3bDE4MS4xMi0xODEuMTJhMzIgMzIgMCAwIDEgNDUuMjI2NjY3IDBsMTM1LjY4IDEzNS42OGEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N3oiIGZpbGw9IiM1RTVDNUMiPjwvcGF0aD4KPC9zdmc+";
         const closePath = '<path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path>';
+        const wordParam = "%s[lurest]?\\b";
+        const wordParamReg = new RegExp(wordParam);
         var targetElement, cssText, mainStyleEle;
         var inMinMode = false;
 
@@ -3411,7 +3413,7 @@
                         this.finalSearch.value = finalValue;
                     };
                     if (!this.customInputFrame) {
-                        this.customInputCssText = `
+                        let customInputCssText = `
                          .customInputFrame-body {
                              width: 300px;
                              min-height: 200px;
@@ -3606,7 +3608,7 @@
                            }
                          }
                         `;
-                        this.customInputCssEle = _GM_addStyle(this.customInputCssText);
+                        let customInputCssEle = _GM_addStyle(customInputCssText);
                         let customInputFrame = document.createElement("div");
                         this.customInputFrame = customInputFrame;
                         customInputFrame.innerHTML = createHTML(`
@@ -3624,6 +3626,7 @@
                              </div>
                          </div>
                         `);
+                        customInputFrame.appendChild(customInputCssEle);
                         let cancelBtn = customInputFrame.querySelector("#cancel");
                         cancelBtn.addEventListener("click", e => {
                             if (customInputFrame.parentNode) {
@@ -3750,7 +3753,6 @@
                     }
                     this.finalSearch.dataset.url = tempUrl;
                     this.finalSearch.value = tempUrl.replace(/◎/g, '');
-                    if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
                     this.addToShadow(this.customInputFrame);
                     let frameBody = this.customInputFrame.children[0];
                     frameBody.style.marginTop = -frameBody.offsetHeight / 2 + "px";
@@ -5839,7 +5841,7 @@
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
                 this.searchInPageRule();
-                if (currentSite && /%s[lurest]?\b/.test(currentSite.url)) {
+                if (currentSite && wordParamReg.test(currentSite.url)) {
                     this.inSearchEngine();
                 } else if (searchData.prefConfig.alwaysShow) {
                     this.bar.style.display = "";
@@ -6155,7 +6157,7 @@
                 if (disableHighlight && disableHighlight != location.hostname && window.top == window.self) {
                     storage.setItem("disableHighlight", "");
                 }
-                let foundKeyword = currentSite && /%s[lurest]?\b/.test(currentSite.url);
+                let foundKeyword = currentSite && wordParamReg.test(currentSite.url);
                 if (!hasCurrent && foundKeyword) {
                     this.inSearchEngine();
                 } else if (!foundKeyword && window.top == window.self) {
@@ -6584,7 +6586,7 @@
                 currentSite = data;
                 siteEle.classList.add('current');
                 localKeywords = "";
-                if (!/#p{|^(showTips|find)/.test(data.url) && /%s[lurest]?\b/.test(data.url)) {
+                if (!/#p{|^(showTips|find)/.test(data.url) && wordParamReg.test(data.url)) {
                     this.updateCacheKeywords();
                     storage.setItem("referrer", location.hostname);
                 }
@@ -6651,7 +6653,7 @@
                                 }
                             }
                         }
-                        if (currentSite && /%s[lurest]?\b/.test(currentSite.url) && (!/#p{/.test(currentSite.url) || currentSite.keywords) && !searchData.prefConfig.hideOnSearchEngine) {
+                        if (currentSite && wordParamReg.test(currentSite.url) && (!/#p{/.test(currentSite.url) || currentSite.keywords) && !searchData.prefConfig.hideOnSearchEngine) {
                             if (this.currentType.classList.contains("search-jumper-targetAll") ||
                                 this.currentType.classList.contains("search-jumper-targetImg") ||
                                 this.currentType.classList.contains("search-jumper-targetAudio") ||
@@ -6751,6 +6753,7 @@
                 let toFirst = !init && searchData.prefConfig.historyInsertFirst;
                 for (let i = 0; i < this.historySiteBtns.length; i++) {
                     let btn = this.historySiteBtns[i];
+                    if (btn.style.display == "none") continue;
                     let siteImg = btn.querySelector('img');
                     if (siteImg && siteImg.dataset.src) {
                         siteImg.src = siteImg.dataset.src;
@@ -7311,7 +7314,7 @@
                         let keyWords = getKeywords();
                         siteEles.forEach((se, i) => {
                             let data = sites[i];
-                            if (data.match && data.hideNotMatch) {
+                            /*if (data.match && data.hideNotMatch) {
                                 if (new RegExp(data.match).test(href)) {
                                     se.style.display = '';
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
@@ -7321,9 +7324,11 @@
                                         ele.insertBefore(se, self.searchJumperExpand);
                                     } else ele.appendChild(se);
                                 }
-                            }
-                            if (keyWords && data.kwFilter) {
-                                if (new RegExp(data.kwFilter).test(keyWords)) {
+                            }*/
+                            let hasWordParam = wordParamReg.test(data.url);
+                            let checkKw = hasWordParam ? keyWords : href;
+                            if (checkKw && data.kwFilter) {
+                                if (new RegExp(data.kwFilter).test(checkKw)) {
                                     se.style.display = '';
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
@@ -7998,7 +8003,7 @@
                 let getUrl = async (_keyWords) => {
                     self.customInput = false;
                     inputString = "";
-                    let hasWordParam = /%s[lurest]?\b/.test(data.url);
+                    let hasWordParam = wordParamReg.test(data.url);
                     let keywords = _keyWords || self.searchJumperInputKeyWords.value || getSelectStr();
                     if (!keywords && !draging && !self.bar.classList.contains("search-jumper-isTargetLink")) {
                         keywords = getKeywords();
@@ -8555,7 +8560,7 @@
                     }
                     if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
                         if (inputString &&
-                            /%s[lurest]?\b/.test(ele.dataset.url) &&
+                            wordParamReg.test(ele.dataset.url) &&
                             inputString.indexOf("\n") !== -1) {
                             if (searchData.prefConfig.multiline == 1 ||
                                 confirm(i18n("multiline"))) {
@@ -10188,15 +10193,15 @@
                         keywords = '';
                     }
                 }
-            } else if (isUtf8 && /%s[lurest]?\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
+            } else if (isUtf8 && wordParamReg.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
-                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s[lurest]?\b.*/);
+                    keywordsMatch = currentSite.url.match(new RegExp(`[\\?&]([^&]*?)=${wordParam}.*`));
                     if (keywordsMatch) {
                         keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
                     }
                 }
                 if (!keywords) {
-                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s[lurest]?\b/);
+                    keywordsMatch = currentSite.url.match(new RegExp(`https?://[^/]*/(.*)${wordParam}`));
                     if (keywordsMatch) {
                         keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
@@ -10764,6 +10769,7 @@
                 }
             })
             getBody(document).addEventListener("click", e => {
+                targetElement = e.target;
                 if (currentSite && e.target) {
                     if (e.target.nodeName && e.target.nodeName.toLowerCase && e.target.nodeName.toLowerCase() == 'a') {
                         searchBar.updateCacheKeywords();
