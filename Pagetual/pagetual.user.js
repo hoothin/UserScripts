@@ -1777,6 +1777,7 @@
                 let bodyHeight = parseInt(body.offsetHeight || body.scrollHeight);
                 let curHeight = bodyHeight, curWidth = 0;
                 let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                let windowWidth = window.innerWidth || document.documentElement.clientWidth;
                 let needCheckNext = (doc == document && this.initNext), nextLeftPos = 0;
                 if (needCheckNext && this.initNext.getBoundingClientRect) {
                     nextLeftPos = this.initNext.getBoundingClientRect().left;
@@ -1851,12 +1852,12 @@
                         if (isNaN(h) || isNaN(w)) continue;
                         isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop == -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop);
                         if (isHori && h <= 50) continue;
-                        if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
+                        /*if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
                             let curRect = curNode.getBoundingClientRect();
-                            if (curRect.left <= nextLeftPos && curRect.right > nextLeftPos) {
+                            if (curRect.left > windowWidth>>2 && curRect.left <= nextLeftPos && curRect.right > nextLeftPos) {
                                 continue;
                             }
-                        }
+                        }*/
                         let a = h * w, moreChild = curNode.children[0];
                         while (moreChild) {
                             let validSize = self.getValidSize(moreChild, curWin);
@@ -3801,8 +3802,8 @@
 
             let mouseMoveHandler = e => {
                 if (moving) {
-                    let windowHeight=window.innerHeight || document.documentElement.clientHeight;
-                    let windowWidth=window.innerWidth || document.documentElement.clientWidth;
+                    let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                    let windowWidth = window.innerWidth || document.documentElement.clientWidth;
                     initX = (e.clientX - 10 + 40) / windowWidth * 100;
                     initY = (e.clientY - 83 + 83) / windowHeight * 100;
                     this.frame.style.top = `calc(${initY}% - 83px)`;
