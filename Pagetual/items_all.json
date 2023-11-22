@@ -16236,20 +16236,6 @@
   "created_at": "2016-11-21T00:25:03+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/81082",
-  "data": {
-    "pageElement": "//div[@id='fpMainContent']/div[@class='gridCategory removeHidden']|//div[@class='post clearfix']|//div[@id='comment_list']",
-    "nextLink": "//a[@class='button'][.='Next']|//a[contains(@class, 'icon-arrow-right2')][1]|//a[@class='search_pagenav search_pagenav_text'  and contains(text(),'Next')][1]",
-    "url": "^https?://(?:[^.] \\.)?slickdeals\\.net/",
-    "exampleUrl": "https://slickdeals.net/?page=2 https://slickdeals.net/f/10525332-far-acronis-true-image-2017-1-device-free-after-35-rebate-5-newegg-promo-card"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "qazplm",
-  "name": "Slickdeals",
-  "created_at": "2016-11-19T09:08:29+09:00",
-  "updated_at": "2020-09-13T02:48:12+09:00"
-},
-{
   "resource_url": "http://wedata.net/items/81081",
   "name": "businessnetwork.jp",
   "created_by": "tmptmptmp",
@@ -46270,20 +46256,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/29177",
-  "name": "Slickdeals",
-  "created_by": "mark",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-01-31T14:37:50+09:00",
   "data": {
-    "Stylish": "@-moz-document domain(\"slickdeals.net\") {\r\n  .autopagerize_page_separator~.gridCategory .gridHeading{display:none !important;}\r\n}",
-    "exampleUrl": "https://slickdeals.net/deals/ https://slickdeals.net/deals/games/ https://slickdeals.net/f/9374587-samsung-saturday-is-on-sams-club-cctv-security-system-199-00\r\n",
-    "comment": "Check your expression before deleting others' one, or at least leave a comment saying why did you delete it. I've corrected it, btw.\r\nUncaught DOMException: Failed to execute '$x' on 'CommandLineAPI': The string '//div[@class='dealRow' or @class='postReplyContainer']|id('deals')/div[.//@class='itemBottomRow']|' is not a valid XPath expression.\r\n",
-    "bookmarklet": "Array.prototype.forEach.call(document.querySelectorAll('img'), function(img) { var lazySrc = img.hasAttribute('data-src') ? img.getAttribute('data-src') : img.getAttribute('data-original'); if (lazySrc) { img.src = lazySrc;} });",
-    "url": "^https?://(?:[^.]+\\.)?slickdeals\\.net/",
-    "pageElement": "//div[@class='dealRow' or @class='postReplyContainer']|id('deals')/div[contains(@class,'fpGridBox grid')]",
-    "nextLink": "//a[@class='button' and .='Next' or contains(@class,'icon-arrow-right2')]"
+    "pageElement": "//div[@data-module-name]/div[@class='dealRow'] |\r\n//div[@data-module-name]/div[@class='resultRow'] |\r\n//ul[contains(@class,'frontpageGrid')] |\r\n//ul[@class='categoryPageDealGrid'] |\r\n//section[@class='commentsSection']/div[@class='commentsSectionComment']",
+    "comment": "2023 Update: This item now works for all parts of the Slickdeals website, including the Front Page, Deal Pages, Search, and Comments. Note that this item hasn't been updated in nearly 7 years and was no longer working, so the \"bookmarklet\" and \"Stylish\" keys were removed as a precaution (they can be re-added with their new correct values if needed).",
+    "nextLink": "//div[@class='paginationPages']/span/following-sibling::a |\r\n//div[contains(@class,'slickdealsPagination')]/span[@class='slickdealsPagination__pageNumber']/following-sibling::a |\r\n//div[contains(@class,'pagination')]/a[last()]",
+    "url": "^https://(?:[^.]+\\.)?slickdeals\\.net/",
+    "exampleUrl": "https://slickdeals.net/\r\nhttps://slickdeals.net/deals/home/\r\nhttps://slickdeals.net/newsearch.php?q=infinity\r\nhttps://slickdeals.net/f/17077657-pokemon-trading-card-game-scarlet-violet-151-ultra-premium-collection-96-free-shipping"
   },
-  "created_at": "2009-06-22T07:57:28+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "mark",
+  "name": "Slickdeals",
+  "created_at": "2009-06-22T07:57:28+09:00",
+  "updated_at": "2023-11-21T12:14:53+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/29155",
