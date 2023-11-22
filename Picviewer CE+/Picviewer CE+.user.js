@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.22.2
+// @version              2023.11.22.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -22888,7 +22888,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }*/
                     }
-                    if (!result && document.elementsFromPoint) {
+                    if (!result && document.elementsFromPoint && target.nodeName.toUpperCase() != 'A') {
                         let elements = document.elementsFromPoint(clientX, clientY);
                         let checkLen = Math.min(elements.length, 5);
                         for (let i = 0; i < checkLen; i++) {
@@ -22977,17 +22977,19 @@ ImgOps | https://imgops.com/#b#`;
             }
             var checkUniqueImgWin = function() {
                 if (canPreview) {
-                    if (!result.imgAS && !result.imgCS) {
-                        let sizeInfo = {
-                            w: result.img.offsetWidth || result.img.scrollWidth,
-                            h: result.img.offsetHeight || result.img.scrollHeight
+                    if (result.type != "link" && result.src == result.imgSrc) {
+                        if (!result.imgAS && !result.imgCS) {
+                            let sizeInfo = {
+                                w: result.img.offsetWidth || result.img.scrollWidth,
+                                h: result.img.offsetHeight || result.img.scrollHeight
+                            }
+                            result.imgAS = sizeInfo;
+                            result.imgCS = sizeInfo;
                         }
-                        result.imgAS = sizeInfo;
-                        result.imgCS = sizeInfo;
-                    }
-                    if (result.imgAS.w <= result.imgCS.w && result.imgAS.h <= result.imgCS.h) {
-                        var wSize = getWindowSize();
-                        if (result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
+                        if (result.imgAS.w <= result.imgCS.w && result.imgAS.h <= result.imgCS.h) {
+                            var wSize = getWindowSize();
+                            if (result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
+                        }
                     }
                     uniqueImgWinInitX = clientX;
                     uniqueImgWinInitY = clientY;
@@ -23025,13 +23027,11 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     result = {
                         src: target.href,
-                        type: "",
+                        type: "link",
                         imgSrc: target.href,
                         noActual:true,
                         img: target
                     };
-                    result.imgAS = sizeInfo;
-                    result.imgCS = {w: 1, h: 1};
                     checkUniqueImgWin();
                 }
                 return;
