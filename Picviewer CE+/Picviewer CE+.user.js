@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.20.1
+// @version              2023.11.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11993,7 +11993,7 @@ ImgOps | https://imgops.com/#b#`;
                     shift: false,
                     command: false,
                     type: "hold",
-                    closeAfterPreview: false,
+                    closeAfterPreview: true,
                     previewFollowMouse: true
                 }
             },
@@ -18662,13 +18662,14 @@ ImgOps | https://imgops.com/#b#`;
         };
 
         //图片窗口
-        function ImgWindowC(img, data, actual, initPos){
+        function ImgWindowC(img, data, actual, initPos, preview){
             this.loaded = false;
             this.img = img;
             this.actual = !!actual;
             this.src = data?data.src:img.src;
             this.data = data;
             this.initPos = initPos || false;
+            this.preview = !!preview;
 
             this.init();
             if(data){
@@ -18689,13 +18690,15 @@ ImgOps | https://imgops.com/#b#`;
                 if(uniqueImgWin && !uniqueImgWin.removed){
                     uniqueImgWin.remove();
                 }
-                //图片是否已经被打开
-                if(ImgWindowC.all.find(function(iwin){
-                    if(iwin.src==self.src){
-                        iwin.firstOpen();
-                        return true;
-                    };
-                }))return;
+                if (!this.preview) {
+                    //图片是否已经被打开
+                    if(ImgWindowC.all.find(function(iwin){
+                        if(iwin.src==self.src){
+                            iwin.firstOpen();
+                            return true;
+                        };
+                    }))return;
+                }
 
                 this.addStyle();
 
@@ -19082,7 +19085,9 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
 
-                ImgWindowC.all.push(this);
+                if (!this.preview) {
+                    ImgWindowC.all.push(this);
+                }
 
                 this._blur=this.blur.bind(this);
                 this._focusedKeydown=this.focusedKeydown.bind(this);
@@ -19846,7 +19851,7 @@ ImgOps | https://imgops.com/#b#`;
                     w:parseFloat(imgWindowCS.width),
                 };
                 this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 2.5;
-                if(prefs.imgWindow.suitLongImg && this.isLongImg){
+                if(prefs.imgWindow.suitLongImg && this.isLongImg && !this.preview){
                     this.center(rectSize.w <= wSize.w,false);
                     this.imgWindow.classList.add("pv-pic-window-scroll");
                 }else if(prefs.imgWindow.fitToScreen){
@@ -19996,7 +20001,7 @@ ImgOps | https://imgops.com/#b#`;
                         self.zoom(self.getRotatedImgCliSize(size).w / self.imgNaturalSize.w);
                     }
                 }
-                let padding1 = Math.min(180, wSize.h>>2, wSize.w>>2), padding2 = 50;//内外侧间距
+                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2), padding2 = 50;//内外侧间距
                 if (imgWindow.offsetWidth / imgWindow.offsetHeight > wSize.w / wSize.h) {
                     //宽条，上下半屏
                     maxWidth = wSize.w;
@@ -20081,7 +20086,7 @@ ImgOps | https://imgops.com/#b#`;
                 var wSize=getWindowSize();
                 var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                 if(horizontal)imgWindow.style.left = (wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
-                if(vertical)imgWindow.style.top = (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + (prefs.imgWindow.suitLongImg && this.isLongImg ? 13 : 0) +'px';
+                if(vertical)imgWindow.style.top = (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + (prefs.imgWindow.suitLongImg && this.isLongImg && !this.preview ? 13 : 0) +'px';
             },
 
 
@@ -21095,8 +21100,10 @@ ImgOps | https://imgops.com/#b#`;
                     self.imgWindow.parentNode.removeChild(self.imgWindow);
                 },300);
 
-                var index=ImgWindowC.all.indexOf(this);
-                ImgWindowC.all.splice(index,1);
+                if (!this.preview) {
+                    var index=ImgWindowC.all.indexOf(this);
+                    ImgWindowC.all.splice(index,1);
+                }
                 var removeEvent=document.createEvent('CustomEvent');
                 removeEvent.initCustomEvent('pv-removeImgWindow',false,false);
                 this.imgWindow.dispatchEvent(removeEvent);
@@ -21429,7 +21436,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if(!uniqueImgWin || uniqueImgWin.removed){
                             this.data.src=this.img.src;
-                            uniqueImgWin = new ImgWindowC(this.img, this.data);
+                            uniqueImgWin = new ImgWindowC(this.img, this.data, null, null, true);
                             //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
                         }
                         uniqueImgWin.blur({target:this.data.img});
@@ -21681,7 +21688,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 //读取中的图片,不显示浮动栏,调整读取图标的位置.
                 if(LoadingAnimC.all.find(function(item,index,array){
-                    if(data.img==item.data.img){
+                    if(data.src==item.data.src){
                         return true;
                     };
                 }))return false;
@@ -21689,7 +21696,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 //被放大镜盯上的图片,不要显示浮动栏.
                 if(MagnifierC.all.find(function(item,index,array){
-                    if(data.img==item.data.img){
+                    if(data.src==item.data.src){
                         return true;
                     };
                 }))return false;
@@ -21712,9 +21719,11 @@ ImgOps | https://imgops.com/#b#`;
                 },150);
 
                 clearTimeout(this.showTimer);
-                if(prefs.floatBar.position=="hide"){
-                    self.data=data;
-                    self.show();
+                self.data=data;
+                if (data.hide) {
+                    this.show();
+                    this.floatBar.style.display = 'none';
+                    this.floatBar.style.opacity = 0;
                     return false;
                 }
                 if(!this.shown || self.data.img!=data.img){
@@ -21722,7 +21731,6 @@ ImgOps | https://imgops.com/#b#`;
                     this.floatBar.style.opacity=0.01;
                 }
                 this.showTimer=setTimeout(function(){
-                    self.data=data;
                     self.show();
                 },prefs.floatBar.showDelay);
                 return true;
@@ -21889,11 +21897,9 @@ ImgOps | https://imgops.com/#b#`;
                 this.shown=true;
                 this.addStyle();
                 this.setButton();
-                if(prefs.floatBar.position!=="hide"){
-                    this.floatBar.style.transition="";
-                    this.floatBar.style.display='block';
-                    this.floatBar.style.opacity="";
-                }
+                this.floatBar.style.transition="";
+                this.floatBar.style.display='block';
+                this.floatBar.style.opacity="";
                 clearTimeout(this.hideTimer);
                 window.removeEventListener('scroll',this._scrollHandler,true);
                 window.addEventListener('scroll',this._scrollHandler,true);
@@ -21917,7 +21923,11 @@ ImgOps | https://imgops.com/#b#`;
                     downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     return;
                 } else {
-                    let additionEnable = prefs.floatBar.invertAdditionalFeature ? !e.altKey : e.altKey;
+                    let altKey = e.altKey;
+                    if (e.type != "click" && prefs.floatBar.globalkeys.invertInitShow && prefs.floatBar.globalkeys.alt) {
+                        altKey = false;
+                    }
+                    let additionEnable = prefs.floatBar.invertAdditionalFeature ? !altKey : altKey;
                     if (additionEnable) {
                         let src, feature = prefs.floatBar.additionalFeature;
                         if (buttonType == 'actual') {
@@ -22880,7 +22890,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if (!result && document.elementsFromPoint) {
                         let elements = document.elementsFromPoint(clientX, clientY);
-                        for (let i = 0; i < elements.length; i++) {
+                        for (let i = 0; i < 3; i++) {
                             let ele = elements[i];
                             if (/img/i.test(ele.nodeName)) {
                                 target = ele;
@@ -22965,6 +22975,18 @@ ImgOps | https://imgops.com/#b#`;
             }
             var checkUniqueImgWin = function() {
                 if (canPreview) {
+                    if (!result.imgAS && !result.imgCS) {
+                        let sizeInfo = {
+                            w: result.img.offsetWidth || result.img.scrollWidth,
+                            h: result.img.offsetHeight || result.img.scrollHeight
+                        }
+                        result.imgAS = sizeInfo;
+                        result.imgCS = sizeInfo;
+                    }
+                    if (result.imgAS.w <= result.imgCS.w && result.imgAS.h <= result.imgCS.h) {
+                        var wSize = getWindowSize();
+                        if (result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
+                    }
                     uniqueImgWinInitX = clientX;
                     uniqueImgWinInitY = clientY;
                     if (removeUniqueWinTimer) clearTimeout(removeUniqueWinTimer);
@@ -22979,6 +23001,9 @@ ImgOps | https://imgops.com/#b#`;
                 } else {
                     if (uniqueImgWin && uniqueImgWin.imgWindow && !uniqueImgWin.removed) {
                         uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                        uniqueImgWin.imgWindow.classList.remove("pv-pic-window-transition-all");
+                        uniqueImgWin.previewed = true;
+                        uniqueImgWin = null;
                     }
                     return false;
                 }
@@ -22992,6 +23017,10 @@ ImgOps | https://imgops.com/#b#`;
                     target = null;
                 }
                 if (target) {
+                    let sizeInfo = {
+                        w: target.offsetWidth || target.scrollWidth,
+                        h: target.offsetHeight || target.scrollHeight
+                    }
                     result = {
                         src: target.href,
                         type: "",
@@ -22999,6 +23028,8 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:true,
                         img: target
                     };
+                    result.imgAS = sizeInfo;
+                    result.imgCS = {w: 1, h: 1};
                     checkUniqueImgWin();
                 }
                 return;
@@ -23009,7 +23040,7 @@ ImgOps | https://imgops.com/#b#`;
                 result = findPic(target);
                 if (!result) return;
                 if (prefs.floatBar.showWithRules && result.type == "rule") {
-                } else if (!(result.imgAS.w==result.imgCS.w && result.imgAS.h == result.imgCS.h)) {//如果不是两者完全相等,那么被缩放了.
+                } else if (!(result.imgAS.w == result.imgCS.w && result.imgAS.h == result.imgCS.h)) {//如果不是两者完全相等,那么被缩放了.
                     if (prefs.floatBar.sizeLimitOr) {
                         if (result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w) {//最小限定判断.
                             return;
@@ -23053,20 +23084,14 @@ ImgOps | https://imgops.com/#b#`;
                     canclePreCTO = clickToOpen(result);
                 }
 
-                if (!checkUniqueImgWin()) {
-                    let canShow = floatBar.start(result);
-                    if (canShow) {
-                        var keyHide = prefs.floatBar.position == "hide" ? !altKey : altKey;
-                        if (keyHide) {
-                            floatBar.floatBar.style.opacity = 0;
-                            floatBar.floatBar.style.display = "none";
-                        } else {
-                            if (floatBar.floatBar.style.opacity == 0) {
-                                floatBar.floatBar.style.opacity = "";
-                            }
-                            floatBar.floatBar.style.display = "initial";
-                        }
+                let hide = prefs.floatBar.position == "hide" ? !altKey : altKey;
+                result.hide = hide;
+                let canShow = floatBar.start(result);
+                if (!checkUniqueImgWin() && canShow) {
+                    if (floatBar.floatBar.style.opacity == 0) {
+                        floatBar.floatBar.style.opacity = "";
                     }
+                    floatBar.floatBar.style.display = "initial";
                 }
             }
         }
@@ -23265,7 +23290,7 @@ ImgOps | https://imgops.com/#b#`;
                 return false;
             }
             if (key == 'c' && event && (event.ctrlKey || event.metaKey)) return false;
-            if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
+            if (floatBar && isKeyDownEffectiveTarget(event.target)) {
                 Object.keys(prefs.floatBar.keys).some(function(action) {
                     if (action == 'enable') return;
                     if (key == prefs.floatBar.keys[action]) {
