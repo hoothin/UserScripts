@@ -9146,6 +9146,9 @@
                         }
                     }
                 } else {
+                    if (targetElement.children.length == 1 && targetElement.children[0].nodeName.toUpperCase() === 'A') {
+                        targetElement = targetElement.children[0];
+                    }
                     switch (targetElement.nodeName.toUpperCase()) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
