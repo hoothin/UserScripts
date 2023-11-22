@@ -1991,6 +1991,7 @@
                  .search-jumper-searchBar.search-jumper-isTargetAudio:hover>.search-jumper-type.search-jumper-targetAudio,
                  .search-jumper-searchBar.search-jumper-isTargetVideo:hover>.search-jumper-type.search-jumper-targetVideo,
                  .search-jumper-searchBar.search-jumper-isTargetLink:hover>.search-jumper-type.search-jumper-targetLink,
+                 .search-jumper-searchBar.search-jumper-isTargetPage:hover>.search-jumper-type.search-jumper-targetPage,
                  .search-jumper-searchBar.search-jumper-isTargetPage:hover>.search-jumper-type {
                      display: inline-flex;
                  }
@@ -7427,12 +7428,14 @@
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
                     if (!site.nobatch) batchSiteNames.push(site.name);
-                    if (!currentSite && (siteEle.dataset.current || match) && !ele.classList.contains("notmatch")) {
+                    if (!isCurrent && !currentSite && (siteEle.dataset.current || match) && !ele.classList.contains("notmatch")) {
                         isCurrent = true;
-                        if (!searchData.prefConfig.showCurrent) {
-                            siteEle.style.display = 'none';
+                        if (siteEle.dataset.current) {
+                            if (!searchData.prefConfig.showCurrent) {
+                                siteEle.style.display = 'none';
+                            }
+                            self.setCurrentSite(site, siteEle);
                         }
-                        self.setCurrentSite(site, siteEle);
                         self.currentType = ele;
                     }
                 }
