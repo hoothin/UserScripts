@@ -6228,6 +6228,7 @@
                     //self.bar.classList.remove("search-jumper-isTargetPage");
                     self.bar.classList.remove("initShow");
                     self.tips.style.opacity = 0;
+                    self.tips.style.display = "none";
                     //self.recoveHistory();
                     if (self.funcKeyCall) {
                         self.setFuncKeyCall(false);
@@ -7165,6 +7166,7 @@
 
             tipsPos(ele, type) {
                 this.tips.innerHTML = createHTML(type);
+                this.tips.style.display = "";
                 this.tips.style.opacity = 1;
                 this.clingPos(ele, this.tips);
                 if (this.tips.style.transition) {
