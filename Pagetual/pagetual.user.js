@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.94
+// @version      1.9.36.95
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -7079,7 +7079,7 @@
             pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page"));
             pageNum = document.createElement("span");
             let num = ruleParser.getPageNumFromUrl(url, curPage);
-            pageNum.innerHTML = createHTML(num);
+            pageNum.innerHTML = createHTML(num + "<i style='font-size: 0;'>&nbsp;</i>");
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
             pageNum.style.cssText = pageTextStyle;
@@ -7104,7 +7104,7 @@
             });
             pageBar.appendChild(pageNum);
         } else {
-            pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page") + curPage);
+            pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page") + curPage + "<i style='font-size: 0;'>&nbsp;</i>");
         }
         let preBtn = document.createElement("span");
         preBtn.innerHTML = createHTML("∧");
@@ -7572,13 +7572,16 @@
     function emuPage(callback) {
         let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
-            if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
+            if (curPage > 1) {
+                if (rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
+            } else {
+                sideController.remove();
+            }
             debug(log);
             isPause = true;
             callback(false, false);
             if (emuIframe && emuIframe.parentNode) {
                 emuIframe.parentNode.removeChild(emuIframe);
-                sideController.remove();
                 emuIframe = null;
             }
         }
