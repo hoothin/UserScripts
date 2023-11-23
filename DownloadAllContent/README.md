@@ -174,6 +174,10 @@ function decode(t) {
   > 因此規則可按如下步驟編寫，首先調用 https://read.douban.com/j/article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接即可
  19. [📕愛發電](https://afdian.net/album/afee5ce2462d11ee897e52540025c377)
   > 礙於我也是愛發電用戶，拿人手短，就不欺負它了。只給個思路，用第四層心法取 album_id 與 章節 id 去 https://afdian.net/api/post 請求數據即可。
+ 20. [📕頭文字小説](https://m.touwz.net/dushi/yinhezhuiluo/) 簡單的分頁，沒啥難點。惟一需要注意的是，分頁鏈接藏在 js 代碼裏，用正則取出完事
+``` javascript
+.chapter>li>a@@@@@@let content="\n";let checkContent=(doc,over)=>{word=doc.querySelector('.content-div');if(!word)content+='\n'+doc.body.innerText;else {let ps=[];[].forEach.call(word.children, p=>{if(p.className!='moreinfo')ps.push(p.innerText)});content+=ps.join('\n');}let next=doc.querySelector("#pt_next");if(next){fetch(location.href+ doc.body.innerHTML.match(/'([^\|']+)\|[^']+'\.split/)[1]+".html").then(r => r.text()).then(d => {let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = d;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content.replace(/\s*「如章节缺失请退#出#阅#读#模#式」\s*|\s*本章未完，点下一页继续阅读。>>>\s*/g,''))});return false;
+```
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
