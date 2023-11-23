@@ -6296,9 +6296,13 @@
                 };
                 if (document.readyState != "complete") {
                     let loadHandler = e => {
-                        window.removeEventListener('load', loadHandler);
-                        beginHandler();
+                        if (document.readyState == "complete") {
+                            document.removeEventListener("readystatechange", loadHandler);
+                            window.removeEventListener('load', loadHandler);
+                            beginHandler();
+                        }
                     };
+                    document.addEventListener("readystatechange", loadHandler);
                     window.addEventListener('load', loadHandler);
                 } else {
                     beginHandler();
@@ -7162,6 +7166,11 @@
                 this.tips.innerHTML = createHTML(type);
                 this.tips.style.opacity = 1;
                 this.clingPos(ele, this.tips);
+                if (this.tips.style.transition) {
+                    setTimeout(() => {
+                        this.tips.style.transition = "";
+                    }, 1);
+                }
             }
 
             async createType(data) {
@@ -8854,6 +8863,7 @@
                                         if (tipsResult != "null" && tipsResult != "No result") {
                                             tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal;">${tipsResult}</div>`;
                                         }
+                                        self.tips.style.transition = "none";
                                         self.tipsPos(target, tipsResult);
                                     }
                                 } catch(e) {debug(e)}
