@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.35
+// @version      1.7.36
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -8848,34 +8848,50 @@
                 if (data.shortcut) {
                     tipsStr += ` (${data.ctrl ? "Ctrl + " : ""}${data.shift ? "Shift + " : ""}${data.alt ? "Alt + " : ""}${data.meta ? "Meta + " : ""}${data.shortcut.replace("Key", "")})`;
                 }
+                let lastUrl, anylizing = false;
+                let setTips = async (target, url, again) => {
+                    self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
+                    if (url) {
+                        try {
+                            url = url.replace(/^showTips:/, '');
+                            anylizing = true;
+                            let tipsResult = await self.anylizeShowTips(url, ele.dataset.name);
+                            anylizing = false;
+                            if (self.tips.style.opacity == 0 || self.tips.innerHTML.indexOf(ele.dataset.name) !== 0) return;
+                            if (Array && Array.isArray && Array.isArray(tipsResult)) {
+                                tipsData = tipsResult[1];
+                                tipsResult = tipsResult[0];
+                            }
+                            if (tipsResult) {
+                                if (tipsResult != "null" && tipsResult != "No result") {
+                                    tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal;">${tipsResult}</div>`;
+                                }
+                                self.tips.style.transition = "none";
+                                self.tipsPos(target, tipsResult);
+                            }
+                        } catch(e) {debug(e)}
+                    }
+                };
                 let showTipsHandler = async target => {
                     tipsData = null;
                     clearTimeout(self.requestShowTipsTimer);
                     self.tipsPos(target, tipsStr);
                     if (showTips) {
-                        self.requestShowTipsTimer = setTimeout(async() => {
-                            let url = await getUrl();
-                            targetElement = null;
-                            self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
-                            if (url) {
-                                try {
-                                    url = url.replace(/^showTips:/, '');
-                                    let tipsResult = await self.anylizeShowTips(url, ele.dataset.name);
-                                    if (self.tips.style.opacity == 0 || self.tips.innerHTML.indexOf(ele.dataset.name) !== 0) return;
-                                    if (Array && Array.isArray && Array.isArray(tipsResult)) {
-                                        tipsData = tipsResult[1];
-                                        tipsResult = tipsResult[0];
-                                    }
-                                    if (tipsResult) {
-                                        if (tipsResult != "null" && tipsResult != "No result") {
-                                            tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal;">${tipsResult}</div>`;
-                                        }
-                                        self.tips.style.transition = "none";
-                                        self.tipsPos(target, tipsResult);
-                                    }
-                                } catch(e) {debug(e)}
+                        let url = await getUrl();
+                        if (!url) return;
+                        targetElement = null;
+                        if (lastUrl === url) {
+                            if (anylizing) {
+                                self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
+                            } else {
+                                setTips(target, url);
                             }
-                        }, 300);
+                        } else {
+                            self.requestShowTipsTimer = setTimeout(() => {
+                                lastUrl = url;
+                                setTips(target, url);
+                            }, 300);
+                        }
                     }
                 }
                 ele.addEventListener('mouseenter', e => {
