@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.33
+// @version      1.7.34
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2939,6 +2939,7 @@
 
                 let searchBarCon = document.createElement("div");
                 searchBarCon.id = "search-jumper";
+                searchBarCon.style.display = "none";
                 searchBarCon.className = "search-jumper-searchBarCon";
                 searchBarCon.appendChild(bar);
                 searchBarCon.setAttribute("translate", "no");
@@ -3225,19 +3226,20 @@
                         let reCase = "";
                         let titleReg = /\$t{(.*?)}($|\$)/;
                         let titleMatch = word.match(titleReg);
+                        let showTips = 0;
                         if (titleMatch) {
                             title = titleMatch[1];
                             word = word.replace(titleReg, "$2");
-                            switch(title) {
-                                case "$popup":
+                            if (title == "\\$popup") title = "$popup";
+                            else {
+                                let popupMatch = title.match(/^\$popup(\((.*)\))?$/);
+                                if (popupMatch) {
                                     title = "";
                                     popup = true;
-                                    break;
-                                case "\\$popup":
-                                    title = "$popup";
-                                    break;
-                                default:
-                                    break;
+                                    if (popupMatch[1]) {
+                                        showTips = popupMatch[2] || 1;
+                                    }
+                                }
                             }
                         }
                         let hideParentReg = /\$p{(.*?)}($|\$)/;
@@ -3283,7 +3285,7 @@
                             link = reMatch[2].indexOf("l") != -1;
                         }
                         if (!showWords) showWords = word;
-                        result.push({content: word, showWords: showWords, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup, init: init});
+                        result.push({content: word, showWords: showWords, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup, showTips: showTips, init: init});
                         self.curWordIndex++;
                     });
                 } else {
@@ -3397,6 +3399,7 @@
                 });
                 if (this.searchInPageLockWords.scrollTop <= 0) this.searchInPageLockWords.scrollTop = this.searchInPageLockWords.scrollHeight;
                 this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+                if (this.navMarks.innerHTML && this.con.style.display === "none") this.con.style.display = "";
                 return wordSpans;
             }
 
@@ -3931,7 +3934,7 @@
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
                          <input name="wordStyle" placeholder="orange or #333333;color:red;" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
-                         <textarea name="wordTitle" type="text" placeholder="$popup to popup"></textarea>
+                         <textarea name="wordTitle" type="text" placeholder="$popup to popup, $pop(1) to popup first showTips"></textarea>
                          <div class="searchJumperModify-buttons">
                              <button id="cancel" type="button">${i18n("cancel")}</button>
                              <button id="modify" type="button">${i18n("modify")}</button>
@@ -4032,7 +4035,14 @@
                     wordLink.checked = !!word.link;
                     if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
                     try {
-                        wordTitle.value = word.title !== word.showWords ? JSON.parse('"' + word.title + '"') : "";
+                        if (word.popup) {
+                            wordTitle.value = "$popup";
+                            if (word.showTips) {
+                                wordTitle.value = `$popup(${word.showTips})`;
+                            }
+                        } else {
+                            wordTitle.value = word.title !== word.showWords ? JSON.parse('"' + word.title + '"') : "";
+                        }
                     } catch (e) {
                         debug(e);
                     }
@@ -4435,18 +4445,35 @@
                 return result;
             }
 
+            highlightPopup(spannode, word) {
+                let self = this;
+                spannode.addEventListener("mouseenter", e => {
+                    if (targetElement != spannode || !searchBar.funcKeyCall) {
+                        targetElement = spannode;
+                        let targetShowTipsSite;
+                        if (word.showTips) {
+                            let firstType = self.autoGetFirstType();
+                            let targetSites = firstType.querySelectorAll('a.search-jumper-btn[data-show-tips]:not(.notmatch)');
+                            let index = parseInt(word.showTips) - 1;
+                            targetShowTipsSite = targetSites[index];
+                        }
+                        self.setFuncKeyCall(true);
+                        if (targetShowTipsSite) {
+                            targetShowTipsSite.dispatchEvent(new CustomEvent('showTips'));
+                        } else {
+                            self.showInPage(true, e);
+                        }
+                    }
+                });
+            }
+
             createHighlightMark(word, index, curList) {
                 let self = this;
                 let spannode = document.createElement("mark");
                 spannode.className = "searchJumper";
                 if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
                 if (word.popup) {
-                    spannode.addEventListener("mouseenter", e => {
-                        if (targetElement != spannode || !searchBar.funcKeyCall) {
-                            targetElement = spannode;
-                            searchBar.showInPage(true, e);
-                        }
-                    });
+                    this.highlightPopup(spannode, word);
                 }
                 spannode.style.cssText = word.style;
                 spannode.addEventListener("click", e => {
@@ -4800,12 +4827,7 @@
                                     node.classList.add("searchJumper");
                                     if (word.title) node.title = JSON.parse('"' + word.title + '"');
                                     if (word.popup) {
-                                        node.addEventListener("mouseenter", e => {
-                                            if (targetElement != node || !searchBar.funcKeyCall) {
-                                                targetElement = node;
-                                                searchBar.showInPage(true, e);
-                                            }
-                                        });
+                                        self.highlightPopup(node, word);
                                     }
                                     if (!node.dataset.css) node.dataset.css = node.style.cssText;
                                     if (word.style) {
@@ -5478,6 +5500,20 @@
                         break;
                 }
                 if (!firstType) firstType = this.bar.querySelector('.search-jumper-targetAll:not(.notmatch)') || this.bar.querySelector('.search-jumper-type');
+                if (firstType) {
+                    this.setFuncKeyCall(false);
+                    let mouseEvent = new PointerEvent("mousedown");
+                    if (firstType.parentNode.classList.contains('search-jumper-open')) {
+                        if (firstType.onmousedown) firstType.onmousedown();
+                        else {
+                            firstType.dispatchEvent(mouseEvent);
+                        }
+                    }
+                    if (firstType.onmousedown) firstType.onmousedown();
+                    else {
+                        firstType.dispatchEvent(mouseEvent);
+                    }
+                }
                 return firstType;
             }
 
@@ -6238,7 +6274,7 @@
                 }
             }
 
-            setInPageWords(inPageWords) {
+            setInPageWords(inPageWords, cb) {
                 this.initInPageWords.push(inPageWords);
                 this.searchInPageTab.checked = true;
                 this.con.classList.add("in-find");
@@ -6255,15 +6291,15 @@
                                 word = this.initInPageWords.shift();
                             }
                         }
+                        if (cb) cb();
                     }, 600);
                 };
                 if (document.readyState != "complete") {
                     let loadHandler = e => {
-                        if (document.readyState != "complete") return;
-                        document.removeEventListener("readystatechange", loadHandler);
+                        window.removeEventListener('load', loadHandler);
                         beginHandler();
                     };
-                    document.addEventListener("readystatechange", loadHandler);
+                    window.addEventListener('load', loadHandler);
                 } else {
                     beginHandler();
                 }
@@ -6315,7 +6351,10 @@
                 inPageWords = inPageWords || globalInPageWords;
                 if (inPageWords) {
                     this.appendBar();
-                    this.setInPageWords(inPageWords);
+                    let self = this;
+                    this.setInPageWords(inPageWords, () => {
+                        if (!self.navMarks.innerHTML && self.bar.style.display === "none") self.removeBar();
+                    });
                 } else if (!this.searchJumperInPageInput.value && curRef.indexOf(referrer) != -1 && cacheKeywords) {
                     inPageWords = cacheKeywords;
                     this.wordModeBtn.classList.add("checked");
@@ -7025,8 +7064,8 @@
                 //if (this.preList) {
                 //this.preList.style.visibility = "hidden";
                 //}
-                let ew = clingEle.clientWidth;
-                let eh = clingEle.clientHeight;
+                let ew = clingEle.clientWidth || clingEle.offsetWidth;
+                let eh = clingEle.clientHeight || clingEle.offsetHeight;
                 let clientX = clingEle.offsetLeft + ew / 2 - this.con.scrollLeft;
                 let clientY = clingEle.offsetTop + eh / 2 - this.con.scrollTop - clingEle.parentNode.scrollTop;
                 let current = clingEle.offsetParent;
@@ -8794,14 +8833,14 @@
                 if (data.shortcut) {
                     tipsStr += ` (${data.ctrl ? "Ctrl + " : ""}${data.shift ? "Shift + " : ""}${data.alt ? "Alt + " : ""}${data.meta ? "Meta + " : ""}${data.shortcut.replace("Key", "")})`;
                 }
-                ele.addEventListener('mouseenter', async e => {
+                let showTipsHandler = async target => {
                     tipsData = null;
                     clearTimeout(self.requestShowTipsTimer);
-                    self.tipsPos(ele, tipsStr);
+                    self.tipsPos(target, tipsStr);
                     if (showTips) {
                         self.requestShowTipsTimer = setTimeout(async() => {
                             let url = await getUrl();
-                            self.tipsPos(ele, ele.dataset.name + "<br/>Loading...");
+                            self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
                             if (url) {
                                 try {
                                     url = url.replace(/^showTips:/, '');
@@ -8815,12 +8854,18 @@
                                         if (tipsResult != "null" && tipsResult != "No result") {
                                             tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal;">${tipsResult}</div>`;
                                         }
-                                        self.tipsPos(ele, tipsResult);
+                                        self.tipsPos(target, tipsResult);
                                     }
                                 } catch(e) {debug(e)}
                             }
                         }, 300);
                     }
+                }
+                ele.addEventListener('mouseenter', e => {
+                    showTipsHandler(ele);
+                }, false);
+                ele.addEventListener('showTips', e => {
+                    showTipsHandler(targetElement);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     self.tips.style.opacity = 0;
@@ -10777,17 +10822,29 @@
                 if (document.fullscreenElement) {
                     searchBar.bar.style.display = 'none';
                 }
-            })
-            getBody(document).addEventListener("click", e => {
-                targetElement = e.target;
-                if (currentSite && e.target) {
-                    if (e.target.nodeName && e.target.nodeName.toLowerCase && e.target.nodeName.toLowerCase() == 'a') {
+            });
+            let waitForClick = false;
+            let clickAHandler = e => {
+                if (waitForClick) return;
+                waitForClick = true;
+                setTimeout(() => {
+                    waitForClick = false;
+                }, 300);
+                let _t = e.target;
+                targetElement = _t;
+                if (currentSite && _t) {
+                    if (_t.nodeName && _t.nodeName.toLowerCase && _t.nodeName.toLowerCase() == 'a') {
                         searchBar.updateCacheKeywords();
-                    } else if (e.target.parentNode && e.target.parentNode.nodeName && e.target.parentNode.nodeName.toLowerCase && e.target.parentNode.nodeName.toLowerCase() == 'a') {
-                        searchBar.updateCacheKeywords();
+                    } else {
+                        let _tp = _t.parentNode;
+                        if (_tp && _tp.nodeName && _tp.nodeName.toLowerCase && _tp.nodeName.toLowerCase() == 'a') {
+                            searchBar.updateCacheKeywords();
+                        }
                     }
                 }
-            }, true);
+            };
+            getBody(document).addEventListener("auxclick", clickAHandler, true);
+            getBody(document).addEventListener("click", clickAHandler, true);
             let href = location.href;
             let _wr = function(type) {
                 var orig = history[type];
