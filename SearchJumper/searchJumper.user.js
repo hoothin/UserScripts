@@ -2743,7 +2743,7 @@
                      height: 0.5vh;
                      width: 100%;
                      position: absolute;
-                     border: 1px solid #999999;
+                     border: 1px solid #cccccc;
                      min-height: 5px;
                      box-sizing: border-box;
                      left: 0;
@@ -8855,6 +8855,7 @@
                     if (showTips) {
                         self.requestShowTipsTimer = setTimeout(async() => {
                             let url = await getUrl();
+                            targetElement = null;
                             self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
                             if (url) {
                                 try {
