@@ -5768,6 +5768,9 @@
                         this.searchJumperInPageInput.focus();
                         this.setNav(false, true);
                         storage.setItem("disableHighlight", location.hostname);
+                        if (this.bar.style.display === "none") {
+                            this.removeBar();
+                        }
                     } else {
                         this.setNav(false);
                     }
