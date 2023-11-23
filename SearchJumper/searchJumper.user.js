@@ -2215,6 +2215,7 @@
                      word-break: break-all;
                      text-align: center;
                      box-sizing: content-box;
+                     overflow: hidden;
                  }
                  .search-jumper-tips * {
                      max-width: 640px;
