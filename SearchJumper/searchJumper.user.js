@@ -941,6 +941,27 @@
                 };
                 if(cb) cb(value);
                 return value;
+            },
+            getListItem: async function(list, key) {
+                var listData = await this.getItem(list);
+                if (!listData) return null;
+                for(var i = 0; i < listData.length; i++) {
+                    let data = listData[i];
+                    if (data.k == key) {
+                        return data.v;
+                    }
+                }
+                return null;
+            },
+            setListItem: async function(list, key, value) {
+                var listData = await this.getItem(list);
+                if (!listData) listData = [];
+                listData = listData.filter(data => data && data.k != key);
+                if (value) {
+                    listData.unshift({k: key, v: value});
+                    if (listData.length > 50) listData.pop();
+                }
+                this.setItem(list, listData);
             }
         };
         var escapeHTMLPolicy;
@@ -7845,7 +7866,7 @@
                             if (customInputStr) {
                                 inputStr = customInputStr;
                             } else {
-                                storage.setItem("inPagePostParams_" + location.hostname, "");
+                                storage.setListItem("inPagePostParams", location.hostname, "");
                                 return;
                             }
                         }
@@ -7856,7 +7877,7 @@
                     }
                     if (inPagePostParams) {
                         inPagePostParams.shift();
-                        storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
+                        storage.setListItem("inPagePostParams", location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
                         if (param[0] === '@reload') {
                             location.reload(!!param[1]);
                             return;
@@ -7976,7 +7997,7 @@
                         if (!currentSite && inPagePostParams) {
                             await this.submitAction(inPagePostParams);
                             setTimeout(() => {
-                                storage.setItem("inPagePostParams_" + location.hostname, "");
+                                storage.setListItem("inPagePostParams", location.hostname, "");
                             }, 10000);
                         }
                     } else if (data.hideNotMatch) {
@@ -8493,7 +8514,7 @@
                             this.submitAction(postParams);
                             return false;
                         } else {
-                            storage.setItem("inPagePostParams_" + resultUrl.replace(/^https?:\/\/([^\/:]+).*/, "$1"), postParams);
+                            storage.setListItem("inPagePostParams", resultUrl.replace(/^https?:\/\/([^\/:]+).*/, "$1"), postParams);
                         }
                     }
                     resultUrl = customReplaceKeywords(resultUrl.replace(/%U\b/g, encodeURIComponent(href)).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
@@ -13064,11 +13085,7 @@
                 });
             });
             storage.setItem("lastSign", false);
-            inPagePostParams = await new Promise((resolve) => {
-                storage.getItem("inPagePostParams_" + location.hostname, data => {
-                    resolve(data || false);
-                });
-            });
+            inPagePostParams = await storage.getListItem("inPagePostParams", location.hostname);
             cacheIcon = await new Promise((resolve) => {
                 storage.getItem("cacheIcon", data => {
                     resolve(data || {});
