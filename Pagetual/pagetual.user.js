@@ -4961,6 +4961,7 @@
                             storage.setItem("customRules", ruleParser.customRules);
                             storage.setItem("hpRules", ruleParser.hpRules);
                             storage.setItem("smartRules", []);
+                            storage.setItem("noMatch", []);
                             showTips(i18n("importSucc"));
                         } else {
                             rules = rules.split("\n");
@@ -5652,6 +5653,7 @@
                         editorChanged = false;
                         storage.setItem("hpRules", []);
                         storage.setItem("smartRules", []);
+                        storage.setItem("noMatch", []);
                     }
                     customRules = editor.get();
                     if (!customRules) {
@@ -5666,6 +5668,7 @@
                     if (customRulesInput.value != preCustom) {
                         storage.setItem("hpRules", []);
                         storage.setItem("smartRules", []);
+                        storage.setItem("noMatch", []);
                     }
                     if (customRulesInput.value == "") {
                         customRules = "";
@@ -5789,6 +5792,7 @@
         if (!keepCache) {
             storage.setItem("hpRules", []);
             storage.setItem("smartRules", []);
+            storage.setItem("noMatch", []);
         }
         let allOk = true;
         function addNextRule() {
