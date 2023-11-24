@@ -8344,7 +8344,7 @@
     "name": "bbsPostlist1",
     "url": ".",
     "nextLink": [
-        "a.nxt",
+        "a.nxt,a.next",
         "a.prev"
     ],
     "pageNum": "\\-\\d+\\-{$p}\\-\\d+\\.html",
@@ -8362,7 +8362,7 @@
     "name": "bbsThreadlist1",
     "url": "/f",
     "nextLink": [
-        "a.nxt",
+        "a.nxt,a.next",
         "a.prev"
     ],
     "pageNum": "\\-\\d+\\-{$p}\\.html",

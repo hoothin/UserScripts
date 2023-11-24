@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.97
+// @version      1.9.36.98
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1503,12 +1503,10 @@
                     let singleUrl = location.origin + location.pathname;
                     if (singleUrl == rule.url) {
                         setRule(rule);
-                        if (rule.checked) return;
                         callback = () => {
                             if (self.curSiteRule) {
                                 self.smartRules = self.smartRules.filter(item => {return item && item.url != singleUrl});
                                 if (self.curSiteRule.singleUrl) {
-                                    self.curSiteRule.checked = true;
                                     self.smartRules.unshift(self.curSiteRule);
                                 } else {
                                     if (self.curSiteRule.url.length > 13) {
@@ -3276,16 +3274,6 @@
             [].forEach.call(doc.querySelectorAll("img,picture>source"), img => {
                 setLazyImg(img);
             });
-        }
-
-        findNoNext() {
-            if (!this.curSiteRule || !this.curSiteRule.singleUrl || this.curSiteRule.nextLink === 0) return;
-            delete this.curSiteRule.pageElement;
-            this.curSiteRule.nextLink = 0;
-            let self = this;
-            self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
-            self.smartRules.unshift(self.curSiteRule);
-            storage.setItem("smartRules", self.smartRules);
         }
 
         initPage(callback) {
@@ -6049,7 +6037,7 @@
 
                 let _nextSwitch = await getListData("nextSwitch", location.host);
                 if (typeof(_nextSwitch) !== "undefined") {
-                    nextIndex = _nextSwitch;
+                    nextIndex = _nextSwitch || 0;
                 }
 
                 let _forceState = await getListData("forceState", location.host);
@@ -8192,8 +8180,6 @@
                         setTimeout(() => {isLoading = false}, 500);
                     } else if (tryTimes++ < 3) {
                         setTimeout(() => {isLoading = false}, 1000);
-                    } else {
-                        ruleParser.findNoNext();
                     }
                 } else if (rulesData.lastPageTips && !showedLastPageTips) {
                     showTips(i18n("lastPage"), "", 800);
