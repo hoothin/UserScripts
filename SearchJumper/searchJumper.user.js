@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.36
+// @version      1.7.37
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -4866,7 +4866,7 @@
                         }
                     } else {
                         let blockValue = "";
-                        if (node.nodeType == 1 && node.value && node.offsetParent && /^(button|select|input|textarea)$/i.test(node.nodeName) && !/^(hidden|file|password|radio|range|checkbox|)$/i.test(node.type) && (!word.init || (!/(^wd|^kw|^q$|query|search|keyword)/i.test(node.name) && !/(^wd|^kw|^q$|query|search)/i.test(node.id)))) {
+                        if (node.nodeType == 1 && node.value && node.offsetParent && !word.init && /^(button|select|input|textarea)$/i.test(node.nodeName) && !/^(hidden|file|password|radio|range|checkbox|image)$/i.test(node.type)) {
                             blockValue = node.value;
                         }
                         if (blockValue) {
@@ -5186,6 +5186,7 @@
 
             showAllSites() {
                 if (!this.con || !this.con.parentNode || this.con.classList.contains("search-jumper-showall")) return;
+                this.con.style.display = "";
                 this.clearInputHide();
                 this.alllist.appendChild(this.filterSites);
                 this.filterGlob.innerHTML = createHTML();
