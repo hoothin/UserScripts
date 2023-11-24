@@ -56,7 +56,8 @@
 (function() {
     'use strict';
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) return;
-    if (window.top != window.self) {
+    const inIframe = window.top != window.self;
+    if (inIframe) {
         try {
             if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
                 return;
@@ -5918,7 +5919,7 @@
                 this.searchInPageRule();
                 if (currentSite && wordParamReg.test(currentSite.url)) {
                     this.inSearchEngine();
-                } else if (searchData.prefConfig.alwaysShow) {
+                } else if (searchData.prefConfig.alwaysShow && !inIframe) {
                     this.bar.style.display = "";
                     this.initPos();
                     this.appendBar();
@@ -6402,7 +6403,7 @@
             }
 
             inSearchEngine() {
-                if (!this.currentType || !currentSite) return;
+                if (!this.currentType || !currentSite || inIframe) return;
                 if (!/#p{/.test(currentSite.url) || currentSite.keywords) {
                     this.appendBar();
                     if (this.currentType.classList.contains("search-jumper-needInPage")) {
