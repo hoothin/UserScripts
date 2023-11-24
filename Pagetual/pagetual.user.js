@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.95
+// @version      1.9.36.96
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2255,7 +2255,8 @@
                 ".btn_next:not([disabled])",
                 ".btn-next:not([disabled])",
                 "a#linkNext",
-                "a[class*=page__next]"
+                "a[class*=page__next]",
+                "[class*=pagination-next]>a"
             ];
             let next = await this.querySelectorList(body, selectorList);
             if (!next) {
@@ -2335,7 +2336,7 @@
                 await sleep(1);
                 let pageDivs = body.querySelectorAll("[class*=pagination],[class*=Pagination]");
                 if (pageDivs && pageDivs.length) {
-                    for (let i = 0; i < pageDivs.length; i++) {
+                    for (let i = pageDivs.length - 1; i >= 0; i--) {
                         let p = pageDivs[i];
                         if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(p.title || p.value || '')) {
                             next = p.querySelector('a') || p;
