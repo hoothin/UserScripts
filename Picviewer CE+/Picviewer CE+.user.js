@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.23.1
+// @version              2023.11.24.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -25,6 +25,7 @@
 // @connect              *
 // @grant                GM_getValue
 // @grant                GM_setValue
+// @grant                GM_deleteValue
 // @grant                GM_addStyle
 // @grant                GM_openInTab
 // @grant                GM_setClipboard
@@ -34,6 +35,7 @@
 // @grant                GM_download
 // @grant                GM.getValue
 // @grant                GM.setValue
+// @grant                GM.deleteValue
 // @grant                GM.addStyle
 // @grant                GM.openInTab
 // @grant                GM.setClipboard
@@ -13395,11 +13397,11 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                     if (self.lockMaxSize) {
-                        storage.setItem("lockMaxSize" + location.hostname, self.lockMaxSize);
-                        storage.setItem("curDefaultSize" + location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                        storage.setItem("maxSize" + location.hostname, self.lockMaxSize);
+                        storage.setItem("minSize" + location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
                     } else {
-                        storage.setItem("lockMaxSize" + location.hostname, "");
-                        storage.setItem("curDefaultSize" + location.hostname, "");
+                        storage.setItem("maxSize" + location.hostname, "");
+                        storage.setItem("minSize" + location.hostname, "");
                     }
                 };
 
@@ -13898,7 +13900,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.urlFilter = "";
                 this.lockMaxSize = false;
                 var urlFilter = storage.getItem("urlFilter" + location.hostname) || false;
-                var lockMaxSize = storage.getItem("lockMaxSize" + location.hostname) || false;
+                var lockMaxSize = storage.getItem("maxSize" + location.hostname) || false;
                 if (urlFilter) {
                     self.urlFilter = urlFilter;
                     urlFilterHeadItem.title = self.urlFilter;
@@ -13909,7 +13911,7 @@ ImgOps | https://imgops.com/#b#`;
                     headMaxLock.style.filter="brightness(5)";
                     headMaxLock.title=lockMaxSize.w+" x "+lockMaxSize.h;
                 }
-                self.curDefaultSize = storage.getItem("curDefaultSize" + location.hostname) || false;
+                self.curDefaultSize = storage.getItem("minSize" + location.hostname) || false;
 
                 //幻灯片播放下拉列表change事件的处理
                 eleMaps['head-command-drop-list-slide-show'].addEventListener('change',function(e){
@@ -14937,6 +14939,10 @@ ImgOps | https://imgops.com/#b#`;
                 sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
                 sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
+                clearTimeout(this.saveDefaultSize);
+                this.saveDefaultSize = setTimeout(() => {
+                    storage.setItem("minSize" + location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                }, 1000);
 
                 var self=this;
                 var viewmoreShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
@@ -24348,24 +24354,27 @@ ImgOps | https://imgops.com/#b#`;
             };
         })(),
         setItem:function(key,value){
-            if(this.operaUJSStorage){
-                this.operaUJSStorage.setItem(key,value);
-            }else if(this.mxAppStorage){
-                this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM){
-                GM_setValue(key,value);
-            }else if(window.localStorage){
-                window.localStorage.setItem(key,value);
-            };
+            if (this.supportGM) {
+                GM_setValue(key, value);
+                if (value === "" && typeof GM_deleteValue != 'undefined') {
+                    GM_deleteValue(key);
+                }
+            } else if (this.operaUJSStorage) {
+                this.operaUJSStorage.setItem(key, value);
+            } else if (this.mxAppStorage) {
+                this.mxAppStorage.setConfig(key, value);
+            } else if (window.localStorage) {
+                window.localStorage.setItem(key, value);
+            }
         },
         getItem:function(key){
             var value;
-            if(this.operaUJSStorage){
+            if(this.supportGM){
+                value=GM_getValue(key);
+            }else if(this.operaUJSStorage){
                 value=this.operaUJSStorage.getItem(key);
             }else if(this.mxAppStorage){
                 value=this.mxAppStorage.getConfig(key);
-            }else if(this.supportGM){
-                value=GM_getValue(key);
             }else if(window.localStorage){
                 value=window.localStorage.getItem(key);
             };
