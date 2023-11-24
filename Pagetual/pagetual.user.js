@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.96
+// @version      1.9.36.97
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -850,6 +850,34 @@
                 resolve(value);
             });
         })
+    }
+    async function getListData(list, key) {
+        return new Promise((resolve) => {
+            storage.getItem(list, listData => {
+                let value = null;
+                if (listData) {
+                    for(var i = 0; i < listData.length; i++) {
+                        let data = listData[i];
+                        if (data.k == key) {
+                            value = data.v;
+                            break;
+                        }
+                    }
+                }
+                resolve(value);
+            });
+        })
+    }
+    function setListData(list, key, value) {
+        storage.getItem(list, listData => {
+            if (!listData) listData = [];
+            listData = listData.filter(data => data && data.k != key);
+            if (value) {
+                listData.unshift({k: key, v: value});
+                if (listData.length > 100) listData.pop();
+            }
+            storage.setItem(list, listData);
+        });
     }
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
@@ -3980,7 +4008,7 @@
                     span.classList.add("current");
                     currentSpan = span;
                     nextIndex = i;
-                    storage.setItem("nextSwitch_" + location.host, nextIndex === 0 ? "" : nextIndex);
+                    setListData("nextSwitch", location.host, nextIndex === 0 ? "" : nextIndex);
                     ruleParser.curUrl += "#pagetual";
                     ruleParser.oldUrl = ruleParser.curUrl;
                     autoLoadNum = -1;
@@ -4354,7 +4382,7 @@
                             return;
                     }
                 }
-                storage.setItem("forceState_" + location.host, forceState);
+                setListData("forceState", location.host, forceState);
                 self.close();
                 location.reload();
             };
@@ -4387,7 +4415,7 @@
                 autoScroll = parseInt(autoScroll) || 0;
                 if (autoScroll < 0) autoScroll = 0;
                 else if (autoScroll > 1000) autoScroll = 1000;
-                storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
+                setListData("autoScroll", location.host + location.pathname, autoScroll);
                 startAutoScroll();
             }, true);
             addOtherProp.addEventListener("click", e => {
@@ -6019,22 +6047,22 @@
                 openInNewTab = rulesData.openInNewTab ? 1 : 0;
                 enableDebug = rulesData.enableDebug;
 
-                let _nextSwitch = await getData("nextSwitch_" + location.host);
+                let _nextSwitch = await getListData("nextSwitch", location.host);
                 if (typeof(_nextSwitch) !== "undefined") {
                     nextIndex = _nextSwitch;
                 }
 
-                let _forceState = await getData("forceState_" + location.host);
+                let _forceState = await getListData("forceState", location.host);
                 if (typeof(_forceState) == "undefined") {
                     _forceState = (rulesData.enableWhiteList ? 1 : 0);
                 }
                 forceState = _forceState;
 
-                autoScroll = await getData("autoScroll_" + location.host + location.pathname) || 0;
+                autoScroll = await getListData("autoScroll", location.host + location.pathname) || 0;
 
                 updateDate = await getData("ruleLastUpdate");
 
-                manualPause = !!await getData("pauseState_" + location.host);
+                manualPause = !!await getListData("pauseState", location.host);
 
                 let href = location.href.slice(0, 100);
                 try {
@@ -6068,7 +6096,7 @@
                         changeStop(true);
                         sideController.remove();
                     }
-                    storage.setItem("forceState_" + location.host, forceState);
+                    setListData("forceState", location.host, forceState);
                     if (!ruleParser.curSiteRule.url) location.reload();
                 });
                 _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
@@ -6076,7 +6104,7 @@
                     autoScroll = parseInt(autoScroll) || 0;
                     if (autoScroll < 0) autoScroll = 0;
                     else if (autoScroll > 1000) autoScroll = 1000;
-                    storage.setItem("autoScroll_" + location.host + location.pathname, autoScroll);
+                    setListData("autoScroll", location.host + location.pathname, autoScroll);
                     startAutoScroll();
                 });
                 startAutoScroll();
@@ -6239,10 +6267,10 @@
                     let inForce = (forceState == 2 || forceState == 3);
                     _GM_registerMenuCommand(i18n(inForce ? "cancelForceIframe" : "forceIframe"), () => {
                         if (inForce) {
-                            storage.setItem("forceState_" + location.host, "");
+                            setListData("forceState", location.host, "");
                         } else {
                             let _state = ruleParser.curSiteRule.action > 0 || confirm(i18n("forceAllBody")) ? 2 : 3;
-                            storage.setItem("forceState_" + location.host, _state);
+                            setListData("forceState", location.host, _state);
                         }
                         location.reload();
                     });
@@ -6499,7 +6527,7 @@
             });
             if (!isPause) ruleParser.showAddedElements();
             manualPause = isPause;
-            if (sideController.inited) storage.setItem("pauseState_" + location.host, isPause ? true : "");
+            if (sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
         }, 350);
     }
 
@@ -6846,7 +6874,7 @@
                         sideController.remove();
                     }
                     if (!ruleParser.curSiteRule.url) {
-                        storage.setItem("forceState_" + location.host, forceState);
+                        setListData("forceState", location.host, forceState);
                         location.reload();
                     }
                 }
