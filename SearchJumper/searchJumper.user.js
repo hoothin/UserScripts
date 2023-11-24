@@ -4960,7 +4960,7 @@
                                         if (node.nodeName && node.nodeName.toLowerCase && node.nodeName.toLowerCase() !== "textarea") {
                                             fakeTextarea.style.display = "inline-grid";
                                             fakeTextarea.style.lineHeight = fakeTextarea.style.height;
-                                            fakeTextarea.style.paddingTop = 0;
+                                            if (fakeTextarea.style.boxSizing == "border-box") fakeTextarea.style.paddingTop = 0;
                                         }
                                         self.fakeTextareas[node] = fakeTextarea;
                                     }
