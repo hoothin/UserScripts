@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.7
+// @version      2.7.8
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -247,7 +247,7 @@ if (window.top != window.self) {
                 downThreadNum:"设置同时下载的线程数",
                 customTitle:"自定义章节标题，输入内页文字对应选择器",
                 reSortDefault:"默认按页面中位置排序章节",
-                reverse:"反转章节排序",
+                reverseOrder:"反转章节排序",
                 saveBtn:"保存设置",
                 saveOk:"保存成功",
                 nextPage:"嗅探章节内分页",
@@ -289,7 +289,7 @@ if (window.top != window.self) {
                 downThreadNum:"設置同時下載的綫程數",
                 customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
                 reSortDefault:"預設依頁面中位置排序章節",
-                reverse:"反轉章節排序",
+                reverseOrder:"反轉章節排序",
                 saveBtn:"儲存設定",
                 saveOk:"儲存成功",
                 nextPage:"嗅探章節內分頁",
@@ -330,7 +330,7 @@ if (window.top != window.self) {
                 downThreadNum:"Set threadNum for download",
                 customTitle: "Customize the chapter title, enter the selector on inner page",
                 reSortDefault: "Default sort by position in the page",
-                reverse:"Reverse chapter ordering",
+                reverseOrder:"Reverse chapter ordering",
                 saveBtn:"Save Setting",
                 saveOk:"Save Over",
                 nextPage:"Check next page in chapter",
@@ -1706,6 +1706,7 @@ if (window.top != window.self) {
             insertPos.parentNode.insertBefore(con, insertPos);
             return option;
         }
+        let showFilterList = createOption(i18n.showFilterList, !!GM_getValue("showFilterList"), "checkbox");
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
         let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
@@ -1720,9 +1721,8 @@ if (window.top != window.self) {
         reSortDefault.name = "sort";
         reSortUrl.name = "sort";
         contentSort.name = "sort";
-        let reverse = createOption(i18n.reverse, !!GM_getValue("reverse"), "checkbox");
+        let reverse = createOption(i18n.reverseOrder, !!GM_getValue("reverse"), "checkbox");
         let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
-        let showFilterList = createOption(i18n.showFilterList, !!GM_getValue("showFilterList"), "checkbox");
         let disableNextPage = !!GM_getValue("disableNextPage");
         let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
         let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
