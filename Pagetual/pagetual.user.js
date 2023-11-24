@@ -5921,6 +5921,12 @@
                     ruleUrls = urls;
                 }
             }
+            if (rulesData.lang) {
+                setLang(rulesData.lang);
+            }
+            _GM_registerMenuCommand(i18n("configure"), () => {
+                _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+            });
             if (rulesData.blacklist && rulesData.blacklist.length > 0) {
                 let href = location.href.slice(0, 500);
                 let commentStart = false;
@@ -5950,12 +5956,6 @@
                     }
                 }
             }
-            if (rulesData.lang) {
-                setLang(rulesData.lang);
-            }
-            _GM_registerMenuCommand(i18n("configure"), () => {
-                _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
-            });
             _GM_registerMenuCommand(i18n("editCurrent"), () => {
                 picker.start();
             });
