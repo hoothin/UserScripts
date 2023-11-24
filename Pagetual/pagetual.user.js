@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.100
+// @version      1.9.36.101
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -868,13 +868,13 @@
             });
         })
     }
-    function setListData(list, key, value) {
+    function setListData(list, key, value, length) {
         storage.getItem(list, listData => {
             if (!listData) listData = [];
             listData = listData.filter(data => data && data.k != key);
             if (value) {
                 listData.unshift({k: key, v: value});
-                if (listData.length > 100) listData.pop();
+                if (listData.length > (length || 100)) listData.pop();
             }
             storage.setItem(list, listData);
         });
@@ -1355,7 +1355,7 @@
             cb(checkEval, waitTime);
         }
 
-        getRule(callback) {
+        async getRule(callback) {
             if(noRuleTest) {
                 this.curSiteRule = {};
                 this.curSiteRule.url = location.origin + location.pathname;
@@ -1489,18 +1489,31 @@
                 return false;
             }
 
+            let singleUrl = location.origin + location.pathname;
+            async function checkNoMatchRules() {
+                let noMatch = await getListData("noMatch", href);
+                if (noMatch == 1) {
+                    setRule({url: singleUrl, singleUrl: true});
+                    debug('No rule matched');
+                    return true;
+                }
+                return false;
+            }
+
             if (rulesData.customFirst) {
                 if (checkCustomRules()) return;
                 if (checkHpRules()) return;
+                if (await checkNoMatchRules()) return;
             } else {
                 if (checkHpRules()) return;
+                if (await checkNoMatchRules()) return;
                 if (checkCustomRules()) return;
             }
+
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
                 if (!rule || !rule.url) continue;
                 if (rule.singleUrl) {
-                    let singleUrl = location.origin + location.pathname;
                     if (singleUrl == rule.url) {
                         setRule(rule);
                         callback = () => {
@@ -1508,6 +1521,7 @@
                                 self.smartRules = self.smartRules.filter(item => {return item && item.url != singleUrl});
                                 if (self.curSiteRule.singleUrl) {
                                     self.smartRules.unshift(self.curSiteRule);
+                                    setListData("noMatch", location.href.slice(0, 500), 1, 50);
                                 } else {
                                     if (self.curSiteRule.url.length > 13) {
                                         self.addToHpRules();
@@ -1540,7 +1554,7 @@
                         if (checkRule(rule)) return;
                     }
                     if (end >= self.rules.length) {
-                        setRule({url: location.origin + location.pathname, singleUrl: true});
+                        setRule({url: singleUrl, singleUrl: true});
                         return;
                     } else {
                         searchByTime();
