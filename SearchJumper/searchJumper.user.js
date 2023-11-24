@@ -5043,8 +5043,10 @@
                     if (!self.marks[w.showWords]) {
                         self.marks[w.showWords] = [];
                     }
-                    if (w.inRange && ele.parentNode) {
-                        [].forEach.call(ele.parentNode.querySelectorAll(w.inRange), e => {
+                    if (w.inRange) {
+                        let searchEle = ele;
+                        if (ele.parentNode) searchEle = ele.parentNode;
+                        [].forEach.call(searchEle.querySelectorAll(w.inRange), e => {
                             if (e == ele || ele.contains(e)) {
                                 searchWithinNode(e, w, true);
                             }
