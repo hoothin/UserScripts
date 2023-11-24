@@ -1521,7 +1521,6 @@
                                 self.smartRules = self.smartRules.filter(item => {return item && item.url != singleUrl});
                                 if (self.curSiteRule.singleUrl) {
                                     self.smartRules.unshift(self.curSiteRule);
-                                    setListData("noMatch", location.href.slice(0, 500), 1, 50);
                                 } else {
                                     if (self.curSiteRule.url.length > 13) {
                                         self.addToHpRules();
@@ -1555,6 +1554,7 @@
                     }
                     if (end >= self.rules.length) {
                         setRule({url: singleUrl, singleUrl: true});
+                        setListData("noMatch", href, 1, 50);
                         return;
                     } else {
                         searchByTime();
