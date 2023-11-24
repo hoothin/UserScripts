@@ -8430,6 +8430,7 @@
     "url": "^https?://www\\.baidu\\.com/(s|baidu)\\b.",
     "pageBarTop": 75,
     "replaceElement": "#page",
+    "exclude": ".AC-style-logo",
     "wait": 500
 },
 {
