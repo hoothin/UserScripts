@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.11.24.1
+// @version              2023.11.24.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13397,11 +13397,11 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                     if (self.lockMaxSize) {
-                        storage.setItem("maxSize" + location.hostname, self.lockMaxSize);
-                        storage.setItem("minSize" + location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                        storage.setListItem("maxSize", location.hostname, self.lockMaxSize);
+                        storage.setListItem("minSize", location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
                     } else {
-                        storage.setItem("maxSize" + location.hostname, "");
-                        storage.setItem("minSize" + location.hostname, "");
+                        storage.setListItem("maxSize", location.hostname, "");
+                        storage.setListItem("minSize", location.hostname, "");
                     }
                 };
 
@@ -13885,7 +13885,7 @@ ImgOps | https://imgops.com/#b#`;
                     let filterStr = prompt(i18n("urlFilterTip"), self.urlFilter || location.hostname) || "";
                     if (filterStr != self.urlFilter) {
                         self.urlFilter = filterStr;
-                        storage.setItem("urlFilter" + location.hostname, filterStr);
+                        storage.setListItem("urlFilter", location.hostname, filterStr);
                         if (self.urlFilter) {
                             urlFilterHeadItem.title = self.urlFilter;
                             urlFilterHeadItem.style.display = "inline-block";
@@ -13899,8 +13899,8 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.urlFilter = "";
                 this.lockMaxSize = false;
-                var urlFilter = storage.getItem("urlFilter" + location.hostname) || false;
-                var lockMaxSize = storage.getItem("maxSize" + location.hostname) || false;
+                var urlFilter = storage.getListItem("urlFilter", location.hostname) || false;
+                var lockMaxSize = storage.getListItem("maxSize", location.hostname) || false;
                 if (urlFilter) {
                     self.urlFilter = urlFilter;
                     urlFilterHeadItem.title = self.urlFilter;
@@ -13911,7 +13911,7 @@ ImgOps | https://imgops.com/#b#`;
                     headMaxLock.style.filter="brightness(5)";
                     headMaxLock.title=lockMaxSize.w+" x "+lockMaxSize.h;
                 }
-                self.curDefaultSize = storage.getItem("minSize" + location.hostname) || false;
+                self.curDefaultSize = storage.getListItem("minSize", location.hostname) || false;
 
                 //幻灯片播放下拉列表change事件的处理
                 eleMaps['head-command-drop-list-slide-show'].addEventListener('change',function(e){
@@ -13942,7 +13942,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.switchThumbVisible();//切换图片类别显隐;
                 },true);
 
-                prefs.gallery.scrollEndAndLoad = !!storage.getItem("scrollEndAndLoad" + location.hostname);
+                prefs.gallery.scrollEndAndLoad = !!storage.getListItem("scrollEndAndLoad", location.hostname);
                 eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
                 var srcSplit,downloading=false;
                 //命令下拉列表的点击处理
@@ -14048,7 +14048,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
 
                             prefs.gallery.scrollEndAndLoad = checkbox.checked;
-                            storage.setItem("scrollEndAndLoad" + location.hostname, checkbox.checked);
+                            storage.setListItem("scrollEndAndLoad", location.hostname, checkbox.checked);
                             break;
                         case 'fullScreen':
                             if (target.classList.contains('fullscreenbtn')) {
@@ -14941,7 +14941,7 @@ ImgOps | https://imgops.com/#b#`;
                 sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
                 clearTimeout(this.saveDefaultSize);
                 this.saveDefaultSize = setTimeout(() => {
-                    storage.setItem("minSize" + location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                    storage.setListItem("minSize", location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
                 }, 1000);
 
                 var self=this;
@@ -24154,7 +24154,7 @@ ImgOps | https://imgops.com/#b#`;
 
         loadPrefs();
 
-        var hideIcon=storage.getItem("hideIcon" + location.hostname) || false;
+        var hideIcon=storage.getListItem("hideIcon", location.hostname) || false;
         var hideIconStyle=document.createElement('style');
         hideIconStyle.textContent=`#pv-float-bar-container{display:none!important}`;
         if(hideIcon){
@@ -24164,7 +24164,7 @@ ImgOps | https://imgops.com/#b#`;
         _GM_registerMenuCommand(i18n("openGallery"), openGallery);
         _GM_registerMenuCommand(i18n("hideIcon") + (hideIcon ? "☑️" : ""), ()=>{
             hideIcon=!hideIcon;
-            storage.setItem("hideIcon" + location.hostname, hideIcon);
+            storage.setListItem("hideIcon", location.hostname, hideIcon);
             if(hideIcon){
                 document.head.appendChild(hideIconStyle);
             }else{
@@ -24380,6 +24380,27 @@ ImgOps | https://imgops.com/#b#`;
             };
             return value;
         },
+        getListItem: function(list, key) {
+            var listData = this.getItem(list);
+            if (!listData) return null;
+            for(var i = 0; i < listData.length; i++) {
+                let data = listData[i];
+                if (data.k == key) {
+                    return data.v;
+                }
+            }
+            return null;
+        },
+        setListItem: function(list, key, value) {
+            var listData = this.getItem(list);
+            if (!listData) listData = [];
+            listData = listData.filter(data => data && data.k != key);
+            if (value) {
+                listData.unshift({k: key, v: value});
+                if (listData.length > 50) listData.pop();
+            }
+            this.setItem(list, listData);
+        }
     };
 
     function getUrl(url, callback, onError){
