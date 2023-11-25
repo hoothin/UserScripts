@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.103
+// @version      1.9.36.104
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2185,8 +2185,8 @@
             sideController.remove();
         }
 
-        linkHasNoHref(link) {
-            return !link.href || !link.href.replace || this.hrefIsJs(link.href);
+        linkHasHref(link) {
+            return link.href && link.href.replace && !this.hrefIsJs(link.href);
         }
 
         hrefIsJs(href) {
@@ -2201,6 +2201,33 @@
                 if (result.length > 0) return result[result.length - 1];
             }
             return null;
+        }
+
+        verifyElement(ele) {
+            let verifyHandler = e => {
+                if (e.style.display == "none" || e.getAttribute("aria-disabled") == "true") {
+                    return false;
+                }
+                if (e.className) {
+                    if (/slick|slide|gallery/i.test(e.className)) {
+                        return false;
+                    } else if (e.classList) {
+                        if (e.classList.contains('disabled') || e.classList.contains('active')) {
+                            return false;
+                        }
+                    }
+                }
+                let ariaLabel = e.getAttribute("aria-label");
+                if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) return false;
+                return true;
+            };
+            if (!ele) return false;
+            let i = 0;
+            while (ele && i++ < 3) {
+                if (!verifyHandler(ele)) return false;
+                ele = ele.parentNode;
+            }
+            return true;
         }
 
         async getPage(doc, exist) {
@@ -2283,17 +2310,16 @@
             if (!next) {
                 await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
+                const prevReg = /^\s*([上前首尾]|previous)/i;
                 for (i = 0; i < nexts.length; i++) {
-                    if (nexts[i].style.display !== "none" &&
-                        nexts[i].parentNode.style.display !== "none" &&
-                        !this.linkHasNoHref(nexts[i]) &&
-                        !/^\s*([上前首尾]|previous)/i.test(nexts[i].innerText.trim())) {
-                        next = nexts[i];
+                    let n = nexts[i];
+                    if (this.verifyElement(n) && this.linkHasHref(n) && !prevReg.test(n.innerText.trim())) {
+                        next = n;
                         break;
                     }
                 }
             }
-            if (next && this.linkHasNoHref(next)) {
+            if (next && !this.linkHasHref(next)) {
                 jsNext = next;
                 next = null;
             }
@@ -2302,7 +2328,7 @@
                 next = body.querySelectorAll("[aria-label='Next page']");
                 if (next && next.length == 1) {
                     next = next[0];
-                    if (this.linkHasNoHref(next)) {
+                    if (!this.linkHasHref(next)) {
                         if (!jsNext) jsNext = next;
                         next = null;
                     }
@@ -2310,15 +2336,8 @@
                     next = null;
                 }
             }
-            if (jsNext) {
-                if (jsNext.className) {
-                    if (/slick|slide|gallery/i.test(jsNext.className)) jsNext = null;
-                    else if (jsNext.classList && jsNext.classList.contains('disabled')) jsNext = null;
-                }
-                if (jsNext) {
-                    let ariaLabel = jsNext.getAttribute("aria-label");
-                    if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) jsNext = null;
-                }
+            if (jsNext && !this.verifyElement(jsNext)) {
+                jsNext = null;
             }
             if (next && nextTextReg2.test(next.innerText.trim())) {
                 next2 = next;
@@ -2367,7 +2386,7 @@
                             break;
                         }
                     }
-                    if (next && this.linkHasNoHref(next)) {
+                    if (next && !this.linkHasHref(next)) {
                         if (!jsNext) jsNext = next;
                         next = null;
                     }
@@ -2381,40 +2400,20 @@
                         await sleep(1);
                     }
                     let aTag = aTags[i];
-                    if (aTag.style.display == "none") continue;
                     let innerText = (aTag.title || aTag.innerText || aTag.value || '');
                     if (innerText) {
                         if (innerText == "§") continue;
                         innerText = innerText.trim();
                         if (innerText.length > 80) continue;
                     }
-                    if (aTag.className) {
-                        if (aTag.classList && aTag.classList.contains('disabled')) continue;
-                        if (/slick|slide|gallery/i.test(aTag.className)) continue;
-                    }
+                    if (!this.verifyElement(aTag)) continue;
                     if (aTag.dataset && aTag.dataset.preview) continue;
-                    let ariaLabel = aTag.getAttribute("aria-label");
-                    if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
-
                     let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
                     if (availableHref && /next\-?(page)?$/i.test(aTag.href)) continue;
-
-                    if (aTag.parentNode.className) {
-                        if (/slick|slide|gallery/i.test(aTag.parentNode.className)) {
-                            continue;
-                        }
-                        if (aTag.parentNode.classList.contains('disabled')) continue;
-                        if (aTag.parentNode.classList.contains('active')) continue;
-                    }
-                    if (aTag.parentNode.parentNode) {
-                        if (/slick|slide|gallery/i.test(aTag.parentNode.parentNode.className)) continue;
-                        if (aTag.parentNode.parentNode.parentNode && /slick|slide|gallery/i.test(aTag.parentNode.parentNode.parentNode.className)) continue;
-                    }
                     if (compareNodeName(aTag.parentNode, ["blockquote"])) continue;
-
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
-                    let isJs = this.linkHasNoHref(aTag);
+                    let isJs = !this.linkHasHref(aTag);
                     if (exist && isJs && !aTag.offsetParent) continue;
                     if (innerText) {
                         innerText = innerText.split(/\n/)[0].replace(/ /g, '');
@@ -2775,7 +2774,7 @@
                         parent = parent.parentNode;
                     }
                     if (doc == document) {
-                        if (this.linkHasNoHref(nextLink)) {
+                        if (!this.linkHasHref(nextLink)) {
                             if (clickedSth || !isVisible(nextLink, _unsafeWindow)) {
                                 this.nextLinkHref = false;
                                 return null;
