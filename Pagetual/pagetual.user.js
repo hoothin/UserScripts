@@ -6187,7 +6187,7 @@
                 }
                 let pageElement = ruleParser.getPageElement(doc);
                 if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
-                    debug(res.status, "Error status");
+                    debug(res.status + " " + url, "Error status");
                     return callback(false);
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
