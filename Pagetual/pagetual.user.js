@@ -890,6 +890,7 @@
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
+    var tryTimes = 0, showedLastPageTips = false;
 
     function getBody(doc) {
         return doc.body || doc.querySelector('body') || doc;
@@ -3279,6 +3280,7 @@
             }, 100);
             curPage = 1;
             urlChanged = false;
+            tryTimes = 0;
             this.clearAddedElements();
             this.insert = null;
             this.visibilityItems = [];
@@ -7497,7 +7499,7 @@
                     }
                 }
             } catch(e) {}
-            let tryTimes = 0;
+            let pageEleTryTimes = 0;
             async function checkIframe() {
                 if (urlChanged || isPause) {
                     return callback(false, false);
@@ -7506,7 +7508,7 @@
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
                     let base = doc.querySelector("base");
                     ruleParser.basePath = base ? base.href : url;
-                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow, tryTimes < 25);
+                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
                     if (checkEval && !checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
@@ -7515,7 +7517,7 @@
                     } else if (eles && eles.length > 0) {
                         await ruleParser.hookUrl(doc);
                         callback(doc, eles);
-                    } else if (tryTimes++ < 100) {
+                    } else if (pageEleTryTimes++ < 100) {
                         getBody(doc).scrollTop = 9999999;
                         doc.documentElement.scrollTop = 9999999;
                         setTimeout(() => {
@@ -8153,7 +8155,6 @@
         }
     }
 
-    var tryTimes = 0, showedLastPageTips = false;
     async function nextPage() {
         if (typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
         if (clickMode) return;
