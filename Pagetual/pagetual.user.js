@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.104
+// @version      1.9.36.106
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -872,7 +872,7 @@
         storage.getItem(list, listData => {
             if (!listData) listData = [];
             listData = listData.filter(data => data && data.k != key);
-            if (value) {
+            if (value !== "") {
                 listData.unshift({k: key, v: value});
                 if (listData.length > (length || 100)) listData.pop();
             }
@@ -4362,7 +4362,9 @@
                 }
                 setListData("forceState", location.host, forceState);
                 self.close();
-                location.reload();
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
             };
             forceStateIframe.parentNode.addEventListener("mousedown", clickRadio);
             forceStateDynamic.parentNode.addEventListener("mousedown", clickRadio);
@@ -6078,7 +6080,11 @@
                         sideController.remove();
                     }
                     setListData("forceState", location.host, forceState);
-                    if (!ruleParser.curSiteRule.url) location.reload();
+                    if (!ruleParser.curSiteRule.url) {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+                    }
                 });
                 _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
                     autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
@@ -6253,7 +6259,9 @@
                             let _state = ruleParser.curSiteRule.action > 0 || confirm(i18n("forceAllBody")) ? 2 : 3;
                             setListData("forceState", location.host, _state);
                         }
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
                     });
                 }
                 _GM_registerMenuCommand(i18n("loadNow"), () => {
@@ -6856,7 +6864,9 @@
                     }
                     if (!ruleParser.curSiteRule.url) {
                         setListData("forceState", location.host, forceState);
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
                     }
                 }
             };
