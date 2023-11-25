@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.102
+// @version      1.9.36.103
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2235,7 +2235,7 @@
                 afterStr = "";
             }
             let curPage = doc, i, cur, jsNext;
-            let next1, next2, next3, next4, nextJs1, nextJs2, nextJs3;
+            let next1, next2, next3, next4, nextJs1, nextJs2;
             let selectorList = [
                 ".page-next>a",
                 "a.next_page",
@@ -2439,13 +2439,9 @@
                                         }
                                     }
                                 }
-                                if (!next3) {
+                                if (!next3 && !isJs) {
                                     if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(aTag.textContent) && aTag.parentNode.hasAttribute && !aTag.parentNode.hasAttribute("jsaction")) {
-                                        if (isJs) {
-                                            if (!nextJs3) nextJs3 = aTag;
-                                        } else {
-                                            next3 = aTag;
-                                        }
+                                        next3 = aTag;
                                     }
                                 }
                             }
@@ -2514,13 +2510,10 @@
                 if (next3) {
                     next3 = this.verifyNext(next3, doc);
                 }
-                if (nextJs3) {
-                    nextJs3 = this.verifyNext(nextJs3, doc);
-                }
             }
             if (!next) next = next1 || next4 || next3 || next2;
             if (!next) {
-                next = jsNext || nextJs1 || nextJs3 || nextJs2;
+                next = jsNext || nextJs1 || nextJs2;
                 if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') != -1) next = null;
             }
             if (next && next.classList && (next.classList.contains("results-more") || next.classList.contains("no"))) next = null;
@@ -7680,7 +7673,7 @@
                     if (waitTimes-- > 0) {
                         setTimeout(() => {
                             checkPage();
-                        }, waitTime);
+                        }, 500);
                         return;
                     }
                 }
@@ -7755,7 +7748,7 @@
                     preContent = checkInner;
                     setTimeout(() => {
                         checkPage();
-                    }, waitTime);
+                    }, 500);
                 } else if (changed) {
                     checkTimes = 0;
                     if (orgContent == preContent && (ruleParser.curSiteRule.smart || ruleParser.curSiteRule.stopSame)) {
