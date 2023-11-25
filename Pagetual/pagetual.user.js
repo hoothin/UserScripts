@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.101
+// @version      1.9.36.102
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1116,7 +1116,7 @@
         }
 
         saveCurSiteRule() {
-            /*if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
+            /*if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.smart || this.curSiteRule.url.length<13)return;
             this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
             if(this.hpRules.length>30){
@@ -1355,11 +1355,21 @@
             cb(checkEval, waitTime);
         }
 
+        findNoNext() {
+            if (!this.curSiteRule || !this.curSiteRule.smart || this.curSiteRule.nextLink == 0 || this.possibleRule) return;
+            let self = this;
+            self.curSiteRule.nextLink = 0;
+            self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
+            self.smartRules.unshift(self.curSiteRule);
+            storage.setItem("smartRules", self.smartRules);
+        }
+
         async getRule(callback) {
+            var href = location.href.slice(0, 500);
             if(noRuleTest) {
                 this.curSiteRule = {};
-                this.curSiteRule.url = location.origin + location.pathname;
-                this.curSiteRule.singleUrl = true;
+                this.curSiteRule.url = href;
+                this.curSiteRule.smart = true;
                 callback();
                 return;
             }
@@ -1368,8 +1378,7 @@
                 if (!this.curSiteRule.url) this.curSiteRule.url = ".";
                 this.curSiteRule.isScript = true;
             }
-            var href = location.href.slice(0, 500);
-            if (this.curSiteRule && this.curSiteRule.url && !this.curSiteRule.singleUrl) {
+            if (this.curSiteRule && this.curSiteRule.url && !this.curSiteRule.smart) {
                 let urlReg = new RegExp(this.curSiteRule.url, "i");
                 if (urlReg.test(href) && this.ruleMatch(this.curSiteRule)) {
                     return callback();
@@ -1379,7 +1388,7 @@
                 let urlReg = new RegExp(this.possibleRule.url, "i");
                 if (urlReg.test(href) && this.ruleMatch(this.possibleRule)) {
                     this.curSiteRule = this.possibleRule;
-                    debug(this.curSiteRule, 'Match rule');
+                    debug(this.curSiteRule, 'Match');
                     return callback();
                 }
             }
@@ -1395,12 +1404,18 @@
                         return callback();
                     }
                 }
-                if (!r.singleUrl) {
+                if (r.from == 2) {
+                    delete r.autoLoadNum;
+                    delete r.history;
+                    delete r.sideController;
+                    if (r.pageBar == 0) delete r.pageBar;
+                }
+                if (!r.smart) {
                     self.insert = null;
                     self.curSiteRule = r;
                     self.preSiteRule = r;
-                    if (r.enable !== 0) debug(r, 'Match rule');
-                } else if (!self.curSiteRule || !self.curSiteRule.singleUrl) self.curSiteRule = r;
+                    if (r.enable !== 0) debug(r, 'Match');
+                } else if (!self.curSiteRule || !self.curSiteRule.smart) self.curSiteRule = r;
                 callback();
             }
 
@@ -1424,7 +1439,7 @@
                             }, parseInt(waitTime));
                         };
                         checkReady();
-                        debug(r, 'Wait for rule');
+                        debug(r, 'Wait for');
                         return true;
                     } else if (r.wait) {
                         let waitTime = 500, checkEval, maxCheckTimes = 50;
@@ -1452,7 +1467,7 @@
                             }, parseInt(waitTime));
                         };
                         checkReady();
-                        debug(r, 'Wait for rule');
+                        debug(r, 'Wait for');
                         return true;
                     }
                     if (r.pinUrl) {
@@ -1471,10 +1486,7 @@
             function checkHpRules() {
                 for (let i in self.hpRules) {
                     let rule = self.hpRules[i];
-                    if (!rule || !rule.url) continue;
-                    if (rule.singleUrl) {
-                        continue;
-                    }
+                    if (!rule || !rule.url || rule.smart) continue;
                     if (checkRule(rule)) return true;
                 }
                 return false;
@@ -1489,49 +1501,20 @@
                 return false;
             }
 
-            let singleUrl = location.origin + location.pathname;
-            async function checkNoMatchRules() {
-                let noMatch = await getListData("noMatch", href);
-                if (noMatch == 1) {
-                    setRule({url: singleUrl, singleUrl: true});
-                    debug('No rule matched');
-                    return true;
-                }
-                return false;
-            }
-
             if (rulesData.customFirst) {
                 if (checkCustomRules()) return;
                 if (checkHpRules()) return;
-                if (await checkNoMatchRules()) return;
             } else {
                 if (checkHpRules()) return;
-                if (await checkNoMatchRules()) return;
                 if (checkCustomRules()) return;
             }
 
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
-                if (!rule || !rule.url) continue;
-                if (rule.singleUrl) {
-                    if (singleUrl == rule.url) {
-                        setRule(rule);
-                        callback = () => {
-                            if (self.curSiteRule) {
-                                self.smartRules = self.smartRules.filter(item => {return item && item.url != singleUrl});
-                                if (self.curSiteRule.singleUrl) {
-                                    self.smartRules.unshift(self.curSiteRule);
-                                } else {
-                                    if (self.curSiteRule.url.length > 13) {
-                                        self.addToHpRules();
-                                    }
-                                }
-                                storage.setItem("smartRules", self.smartRules);
-                            }
-                        };
-                        break;
-                    }
-                    continue;
+                if (!rule || !rule.url || !rule.smart) continue;
+                if (href == rule.url) {
+                    setRule(rule);
+                    return;
                 }
             }
             let r = 0;
@@ -1544,17 +1527,10 @@
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
-                        if (rule.from == 2) {
-                            delete rule.autoLoadNum;
-                            delete rule.history;
-                            delete rule.sideController;
-                            if (rule.pageBar == 0) delete rule.pageBar;
-                        }
                         if (checkRule(rule)) return;
                     }
                     if (end >= self.rules.length) {
-                        setRule({url: singleUrl, singleUrl: true});
-                        setListData("noMatch", href, 1, 50);
+                        setRule({url: href, smart: true});
                         return;
                     } else {
                         searchByTime();
@@ -1757,7 +1733,7 @@
                     pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
                 }
                 pageElement = getAllElements(pageElementSel, doc);
-                if (this.curSiteRule.singleUrl && (!pageElement || pageElement.length == 0)) {
+                if (this.curSiteRule.smart && (!pageElement || pageElement.length == 0)) {
                     const childSelMatch = />\s*\*$/;
                     const targetChild = childSelMatch.test(pageElementSel);
                     if (targetChild) pageElementSel = pageElementSel.replace(childSelMatch, "");
@@ -1785,7 +1761,7 @@
                         }
                     }
                 }
-                if (this.curSiteRule.singleUrl && pageElement && pageElement.length && curWin && curWin != _unsafeWindow) {
+                if (this.curSiteRule.smart && pageElement && pageElement.length && curWin && curWin != _unsafeWindow) {
                     let parent = pageElement[0].parentNode;
                     let loading = parent.querySelector('[class*=loading]');
                     if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
@@ -1796,7 +1772,7 @@
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
             }
-            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && compareNodeName(pageElement[0], ["tr"])) {
+            if (this.curSiteRule.smart && pageElement && pageElement.length > 0 && compareNodeName(pageElement[0], ["tr"])) {
                 let mainTr = this.insert.parentNode.querySelectorAll('tr'), mainTdNum = 0, newTdNum = 0;
                 mainTr = mainTr[mainTr.length - 1];
                 [].forEach.call(mainTr.children, el => {
@@ -1815,7 +1791,7 @@
                     return this.getPageElement(doc, curWin, dontFind);
                 }
             }
-            if ((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length == 0) && curWin && !dontFind) {
+            if ((this.curSiteRule.smart || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length == 0) && curWin && !dontFind) {
                 if (!body) return null;
                 let bodyHeight = parseInt(body.offsetHeight || body.scrollHeight);
                 let curHeight = bodyHeight, curWidth = 0;
@@ -2037,7 +2013,7 @@
                 }
             }
             /*
-            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0) {
+            if (this.curSiteRule.smart && pageElement && pageElement.length > 0) {
                 let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
                 let video = targetEle.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
                 if (video && doc == document) {
@@ -3122,7 +3098,7 @@
             } else {
                 this.docPageElement = null;
                 let pageElement = this.getPageElement(document, _unsafeWindow);
-                if (this.curSiteRule.singleUrl && this.nextLinkHref == "#" && this.curSiteRule.pageElement === 'body') {
+                if (this.curSiteRule.smart && this.nextLinkHref == "#" && this.curSiteRule.pageElement === 'body') {
                     debug("Stop as jsNext & whole body");
                     isPause = true;
                     return null;
@@ -3342,14 +3318,16 @@
                     return;
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
-                if (self.curSiteRule.singleUrl) {
+                if (self.curSiteRule.smart) {
                     delete self.curSiteRule.pageElement;
-                    self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
-                    self.smartRules.unshift(self.curSiteRule);
-                    if (self.smartRules.length > 100) {
-                        self.smartRules.pop();
+                    if (!self.possibleRule) {
+                        self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
+                        self.smartRules.unshift(self.curSiteRule);
+                        if (self.smartRules.length > 100) {
+                            self.smartRules.pop();
+                        }
+                        storage.setItem("smartRules", self.smartRules);
                     }
-                    storage.setItem("smartRules", self.smartRules);
                 } else if (self.curSiteRule && self.curSiteRule.url.length > 13) {
                     self.addToHpRules();
                 }
@@ -3389,12 +3367,12 @@
                         self.curSiteRule.pageNum = null;
                     }
                 }
-                if (self.curSiteRule.singleUrl && self.nextLinkHref == false && self.possibleRule) {
+                if (self.curSiteRule.smart && self.nextLinkHref == false && self.possibleRule) {
                     let urlReg = new RegExp(self.possibleRule.url, "i");
                     function checkPossible () {
                         if (self.possibleCheck++ < 3) {
                             setTimeout(() => {
-                                if (self.curSiteRule.singleUrl) {
+                                if (self.curSiteRule.smart) {
                                     var href = location.href.slice(0, 500);
                                     if (urlReg.test(href) && self.ruleMatch(self.possibleRule)) {
                                         self.initPage(() => {});
@@ -3535,7 +3513,7 @@
                     }
                 }
             }
-            if (curPage == 1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.action != 0) {
+            if (curPage == 1 && !tried && !nextLink && this.curSiteRule.smart && this.curSiteRule.pageElement && this.curSiteRule.action != 0) {
                 this.curSiteRule.action = 1;
                 this.curUrl = location.href;
                 isLoading = false;
@@ -4480,7 +4458,7 @@
                     isPause = true;
                 }
                 storage.setItem("customRules", ruleParser.customRules);
-                if (ruleParser.hpRules && ruleParser.curSiteRule && !ruleParser.curSiteRule.singleUrl) {
+                if (ruleParser.hpRules && ruleParser.curSiteRule && !ruleParser.curSiteRule.smart) {
                     ruleParser.addToHpRules(true);
                 }
                 if (window.confirm(i18n("reloadPage"))) {
@@ -4632,7 +4610,7 @@
                 }
             }
             if (!this.editTemp) {
-                if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
+                if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.smart) {
                     this.editTemp = ruleParser.curSiteRule;
                 } else {
                     this.editTemp = {
@@ -4961,7 +4939,6 @@
                             storage.setItem("customRules", ruleParser.customRules);
                             storage.setItem("hpRules", ruleParser.hpRules);
                             storage.setItem("smartRules", []);
-                            storage.setItem("noMatch", []);
                             showTips(i18n("importSucc"));
                         } else {
                             rules = rules.split("\n");
@@ -5653,7 +5630,6 @@
                         editorChanged = false;
                         storage.setItem("hpRules", []);
                         storage.setItem("smartRules", []);
-                        storage.setItem("noMatch", []);
                     }
                     customRules = editor.get();
                     if (!customRules) {
@@ -5668,7 +5644,6 @@
                     if (customRulesInput.value != preCustom) {
                         storage.setItem("hpRules", []);
                         storage.setItem("smartRules", []);
-                        storage.setItem("noMatch", []);
                     }
                     if (customRulesInput.value == "") {
                         customRules = "";
@@ -5792,7 +5767,6 @@
         if (!keepCache) {
             storage.setItem("hpRules", []);
             storage.setItem("smartRules", []);
-            storage.setItem("noMatch", []);
         }
         let allOk = true;
         function addNextRule() {
@@ -6216,7 +6190,7 @@
                     debug(res.status, "Error status");
                     return callback(false);
                 }
-                if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.singleUrl) {
+                if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
                     let article = doc.querySelectorAll(mainSel);
                     if (article && article.length == 1) {
                         article = article[0];
@@ -6239,7 +6213,7 @@
                             } else isLoading = false;
                         });
                     } else ruleParser.curSiteRule.action = 0;
-                } else if ((ruleParser.curSiteRule.singleUrl || curPage == 1) && !inCors) {
+                } else if ((ruleParser.curSiteRule.smart || curPage == 1) && !inCors) {
                     ruleParser.curSiteRule.action = 1;
                     requestFromIframe(url, (doc, eles) => {
                         if (eles) {
@@ -6742,7 +6716,7 @@
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
         let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
-        if (ruleParser.curSiteRule.singleUrl) {
+        if (ruleParser.curSiteRule.smart) {
             loadingMore = false;
         } else if (ruleParser.curSiteRule.loadMore) {
             loadingMore = false;
@@ -6793,7 +6767,7 @@
                     }
                 } else {
                     loadingMore = true;
-                    if (!ruleParser.curSiteRule.singleUrl || checkLoadMoreTimes++ < 3) {
+                    if (!ruleParser.curSiteRule.smart || checkLoadMoreTimes++ < 3) {
                         setTimeout(() => {loadingMore = false}, 200);
                     }
                 }
@@ -6988,7 +6962,7 @@
     const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
-        if (!ruleParser.curSiteRule.singleUrl && !ruleParser.curSiteRule.loadMore) return null;
+        if (!ruleParser.curSiteRule.smart && !ruleParser.curSiteRule.loadMore) return null;
         if (loadmoreBtn) return loadmoreBtn;
         let btnSel = ruleParser.curSiteRule.loadMore || defaultLoadmoreSel;
         if (btnSel) {
@@ -7699,7 +7673,7 @@
                 } else {
                     pageEle = pageEle[0];
                 }
-                if (ruleParser.curSiteRule.singleUrl && orgContent != pageEle.innerHTML) {
+                if (ruleParser.curSiteRule.smart && orgContent != pageEle.innerHTML) {
                     orgContent = pageEle.innerHTML;
                     if (waitTimes-- > 0) {
                         setTimeout(() => {
@@ -7782,7 +7756,7 @@
                     }, waitTime);
                 } else if (changed) {
                     checkTimes = 0;
-                    if (orgContent == preContent && (ruleParser.curSiteRule.singleUrl || ruleParser.curSiteRule.stopSame)) {
+                    if (orgContent == preContent && (ruleParser.curSiteRule.smart || ruleParser.curSiteRule.stopSame)) {
                         returnFalse("Stop as same content");
                     } else {
                         orgContent = preContent;
@@ -7905,7 +7879,7 @@
             targetY = -1;
         }
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
-        if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
+        if (ruleParser.curSiteRule.smart || forceState === 2) {
             let height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500);
             if (!iframe.style.height || height - parseInt(iframe.style.height) > window.innerHeight) {
                 iframe.style.height = height + "px";
@@ -8003,7 +7977,7 @@
         let curIframe = document.createElement('iframe'), iframeDoc, pageElement = null, inAction = true;
         let loadedHandler = () => {
             let getPageEle = () => {
-                if (ruleParser.curSiteRule.singleUrl) {
+                if (ruleParser.curSiteRule.smart) {
                     return null;
                 } else {
                     if (!pageElement || pageElement.length === 0 || !pageElement[0].offsetParent) {
@@ -8205,6 +8179,8 @@
                         setTimeout(() => {isLoading = false}, 500);
                     } else if (tryTimes++ < 3) {
                         setTimeout(() => {isLoading = false}, 1000);
+                    } else {
+                        ruleParser.findNoNext();
                     }
                 } else if (rulesData.lastPageTips && !showedLastPageTips) {
                     showTips(i18n("lastPage"), "", 800);
@@ -8234,7 +8210,7 @@
                 }
             }
             isLoading = true;
-            if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
+            if (curPage != 1 || !isJs || !ruleParser.curSiteRule.smart) {
                 ruleParser.beginLoading(loadingDiv);
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
