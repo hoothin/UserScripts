@@ -8832,7 +8832,6 @@
 },
 {
     "name": "小说站1",
-    "type": 0,
     "nextLink": "//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
     "pageElement": "//div[@id='content']|//div[@id='chaptercontent']|//div[@id='BookText']",
     "url": "\\d+/[\\d_-]+\\.html?$",
@@ -8840,7 +8839,6 @@
 },
 {
     "name": "小说站2",
-    "type": 0,
     "nextLink": "//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
     "pageElement": "//div[@class='content']|//div[@class='chaptercontent']",
     "url": "\\d+/[\\d_-]+\\.html?$",
