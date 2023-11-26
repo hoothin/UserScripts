@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.106
+// @version      1.9.36.107
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -45,8 +45,8 @@
 // @grant        GM.deleteValue
 // @grant        GM.info
 // @grant        GM.setClipboard
-// @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
-// @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
+// @downloadURL  https://update.greasyfork.org/scripts/438684/Pagetual.user.js
+// @updateURL    https://update.greasyfork.org/scripts/438684/Pagetual.meta.js
 // @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
@@ -3007,8 +3007,22 @@
             return true;
         }
 
+        preloadImageHandler() {
+            if (this.preloadingImage || !this.unCheckedImgs.length) return;
+            this.preloadingImage = true;
+            setTimeout(() => {
+                this.preloadingImage = false;
+                this.preloadImageHandler();
+            }, 10);
+            let iSrc = this.unCheckedImgs.shift();
+            let img = document.createElement('img');
+            img.src = iSrc;
+            this.preloadDiv.appendChild(img);
+        }
+
         preload() {
             if (!rulesData.preload) return;
+            if (this.curSiteRule.preload === 0) return;
             if (!this.nextLinkHref || this.nextLinkHref == "#") return;
             let self = this, url = this.nextLinkHref;
             let postParams = url.match(/#p{(.*)}$/);
@@ -3033,25 +3047,14 @@
                         doc = document.implementation.createHTMLDocument('');
                         doc.documentElement.innerHTML = createHTML(res.response);
                         var body = getBody(doc);
-                        if (body && body.firstChild) {
-                            self.lazyImgAction(body.children, doc);
-                        }
                         if (!self.preloadDiv) {
                             self.preloadDiv = document.createElement('div');
                             self.preloadDiv.id = "pagetual-preload";
                             self.preloadDiv.style.cssText = 'display:none!important;';
                             getBody(document).appendChild(self.preloadDiv);
                             self.checkedImgs = {};
+                            self.unCheckedImgs = [];
                         }
-                        [].forEach.call(doc.images, i => {
-                            let iSrc = i.src;
-                            if (iSrc && !self.checkedImgs[iSrc]) {
-                                self.checkedImgs[iSrc] = true;
-                                let img = document.createElement('img');
-                                img.src = iSrc;
-                                self.preloadDiv.appendChild(img);
-                            }
-                        });
                         let code = self.curSiteRule.preloadImages;
                         if (code) {
                             let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
@@ -3059,12 +3062,23 @@
                                 imgSrcArr.forEach(imgSrc => {
                                     if (imgSrc && !self.checkedImgs[imgSrc]) {
                                         self.checkedImgs[imgSrc] = true;
-                                        let img = document.createElement('img');
-                                        img.src = imgSrc;
-                                        self.preloadDiv.appendChild(img);
+                                        self.unCheckedImgs.push(imgSrc);
                                     }
                                 });
                             }
+                            self.preloadImageHandler();
+                        } else if (code !== 0 && code !== false) {
+                            if (body && body.firstChild) {
+                                self.lazyImgAction(body.children, doc);
+                            }
+                            [].forEach.call(doc.images, i => {
+                                let iSrc = i.src;
+                                if (iSrc && !self.checkedImgs[iSrc]) {
+                                    self.checkedImgs[iSrc] = true;
+                                    self.unCheckedImgs.push(iSrc);
+                                }
+                            });
+                            self.preloadImageHandler();
                         }
                     }
                     catch(e) {
@@ -5433,7 +5447,7 @@
         configTbody.style.display = "inline-table";
         configTable.appendChild(configTbody);
         configCon.insertBefore(configTable, insertPos);
-        function createCheckbox(innerText, val, tag, parentCheck, otherType) {
+        function createCheckbox(innerText, val, tag, parentCheck, otherType, alwaysShow) {
             if (typeof val == 'undefined') val = "";
             let title = document.createElement(tag || "h3");
             title.innerHTML = innerText;
@@ -5454,12 +5468,13 @@
             input.style.width = "30px";
             input.style.height = "20px";
             input.style.float = "left";
-            input.style.margin = "5px";
+            input.style.margin = "0 2px";
             input.value = val;
             input.checked = val;
             let td = document.createElement("td");
             td.appendChild(input);
             if (parentCheck) {
+                title.appendChild(input);
                 title.style.margin = "0";
                 td.appendChild(title);
                 let parent = parentCheck.parentNode.nextElementSibling;
@@ -5469,12 +5484,14 @@
                     parent.appendChild(tr);
                 }
                 tr.appendChild(td);
-                if (!parentCheck.checked) {
-                    td.style.display = "none";
+                if (!alwaysShow) {
+                    if (!parentCheck.checked) {
+                        td.style.display = "none";
+                    }
+                    parentCheck.addEventListener("click", e => {
+                        td.style.display = parentCheck.checked ? "" : "none";
+                    });
                 }
-                parentCheck.addEventListener("click", e => {
-                    td.style.display = parentCheck.checked ? "" : "none";
-                });
             } else {
                 let tr = document.createElement("tr");
                 tr.appendChild(td);
@@ -5506,7 +5523,7 @@
         let initRunInput = createCheckbox(i18n("initRun"), rulesData.initRun != false);
         let autoLoadNumInput = createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
         let preloadInput = createCheckbox(i18n("preload"), rulesData.preload != false);
-        let rateInput = createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number");
+        let rateInput = createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number", true);
         let dbClick2StopInput = createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput = createCheckbox(i18n("manualMode"), rulesData.manualMode);
         let clickModeInput = createCheckbox(i18n("clickMode"), rulesData.clickMode);
