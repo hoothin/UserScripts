@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.42
+// @version      1.7.43
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -11780,7 +11780,7 @@
             }
         }
 
-        var dragRoundFrame, dragCon, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, openAllTimer;
+        var dragRoundFrame, dragCon, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, openAllTimer, dragScaleWidth, dragScaleHeight, zoomDrag;
         function showDragSearch(left, top) {
             if (!searchBar || !searchBar.bar) return;
             let removeFrame = () => {
@@ -11794,7 +11794,11 @@
                 draging = false;
                 clearTimeout(openAllTimer);
             };
-            let zoomDrag = (searchData.prefConfig.zoomDrag || 100) / 100;
+            if (!dragScaleWidth && !dragScaleHeight) {
+                zoomDrag = (searchData.prefConfig.zoomDrag || 100) / 100;
+                dragScaleWidth = zoomDrag * 190;
+                dragScaleHeight = zoomDrag * 190;
+            }
             if (!dragRoundFrame) {
                 let dragCssText = `
                     #dragCon {
@@ -11803,6 +11807,9 @@
                       left: 0;
                       transform: scale(${zoomDrag});
                       z-index: 2147483647;
+                      -moz-transition:left 0.3s ease, top 0.3s;
+                      -webkit-transition:left 0.3s ease, top 0.3s;
+                      transition:left 0.3s ease, top 0.3s;
                     }
                     #searchJumperWrapper * {
                       margin: 0;
@@ -12005,6 +12012,16 @@
                     sector.dataset.deg = deg;
                     sectorCon.appendChild(sector);
                     sectorSpan.addEventListener("dragover", e => {
+                        if (e.clientX < 50) {
+                            dragCon.style.left = "0px";
+                        } else if (e.clientX > document.documentElement.clientWidth - 50) {
+                            dragCon.style.left = document.documentElement.clientWidth - (dragScaleWidth<<1) + "px";
+                        }
+                        if (e.clientY < 50) {
+                            dragCon.style.top = "0px";
+                        } else if (e.clientY > document.documentElement.clientHeight - 50) {
+                            dragCon.style.top = document.documentElement.clientHeight - (dragScaleHeight<<1) + "px";
+                        }
                         e.preventDefault();
                     }, true);
                     sectorSpan.addEventListener("dragenter", e => {
@@ -12065,10 +12082,23 @@
             searchBar.recoveHistory();
             let firstType = searchBar.autoGetFirstType();
             let siteBtns = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)");
+            let targetIndex = 0;
+            let getTargetSiteBtn = () => {
+                let result = null;
+                for (let i = targetIndex; i < siteBtns.length; i++) {
+                    let btn = siteBtns[i];
+                    if (btn.style.display !== 'none' && !btn.dataset.showTips) {
+                        result = btn;
+                        targetIndex = i + 1;
+                        break;
+                    }
+                }
+                return result;
+            };
             dragSiteCurSpans.forEach((span, i) => {
                 span.innerHTML = createHTML();
                 span.parentNode.parentNode.style.filter = 'contrast(0.5)';
-                let targetSite = siteBtns[i];
+                let targetSite = getTargetSiteBtn();
                 if (!targetSite) return;
                 span.parentNode.parentNode.style.filter = '';
                 span.parentNode.dataset.name = targetSite.dataset.name;
@@ -12090,6 +12120,11 @@
             });
             let findIndex = 0;
             let getHistorySiteBtn = () => {
+                if (searchData.prefConfig.reuseDragHistory) {
+                    return getTargetSiteBtn();
+                } else if (searchData.prefConfig.hideDragHistory) {
+                    return false;
+                }
                 let result = null;
                 for (let i = findIndex; i < searchBar.historySiteBtns.length; i++) {
                     let btn = searchBar.historySiteBtns[i];
@@ -12131,21 +12166,9 @@
                     if (src) img.src = src;
                 }
             });
-            let scaleWidth = zoomDrag * 190;
-            let scaleHeight = zoomDrag * 190;
 
-            if (left - scaleWidth < 0) {
-                left = scaleWidth;
-            } else if (document.documentElement.clientWidth - left - scaleWidth < 0) {
-                left = document.documentElement.clientWidth - scaleWidth;
-            }
-            if (top - scaleHeight < 0) {
-                top = scaleHeight;
-            } else if (document.documentElement.clientHeight - top - scaleHeight < 0) {
-                top = document.documentElement.clientHeight - scaleHeight;
-            }
-            dragCon.style.left = left - scaleWidth + "px";
-            dragCon.style.top = top - scaleHeight + "px";
+            dragCon.style.left = left - dragScaleWidth + "px";
+            dragCon.style.top = top - dragScaleHeight + "px";
             dragRoundFrame.style.opacity = "";
             dragRoundFrame.style.transform = '';
             setTimeout(() => {
