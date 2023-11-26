@@ -4103,7 +4103,7 @@
                             bg = styleMatch[1];
                             otherCss = styleMatch[2];
                         }
-                        style = self.getHighlightStyle(this.curWordIndex, bg, otherCss);
+                        style = this.getHighlightStyle(this.curWordIndex, bg, otherCss);
                         word.style = style;
                         modifySpan.style = style;
                     }
