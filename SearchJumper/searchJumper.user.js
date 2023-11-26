@@ -5419,6 +5419,7 @@
                 this.searchJumperInputKeyWords.disabled = false;
                 picker.close();
                 document.removeEventListener("mouseup", this.checkSelHandler);
+                this.setFuncKeyCall(false);
                 let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                 if (openType) {
                     if (openType.onmousedown) {
