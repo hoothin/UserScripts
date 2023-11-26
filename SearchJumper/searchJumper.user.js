@@ -44,7 +44,7 @@
 // @supportURL   https://github.com/hoothin/SearchJumper/issues
 // @homepage     https://github.com/hoothin/SearchJumper
 // @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
-// @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
+// @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.meta.js
 // @connect      global.bing.com
 // @connect      suggestqueries.google.com
 // @connect      api.bing.com
