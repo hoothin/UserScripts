@@ -67,7 +67,7 @@
 <code>某個章節名 / CSS 選擇器【選擇器後可跟 >> 傳入 item 處理】 **@@** 抓取到 URL 的正則匹配 **@@** 正則替換 URL **@@** 根據爬取返回內容 data 處理並返回最終文本</code>
 
 <a id="example"></a>
-### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用
+### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
 + [📕po18](https://www.po18.tw/books/755779/articles)
 > 章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 `.l_chaptname>a@@articles@@articlescontent` 粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  ``` css
@@ -95,8 +95,8 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  ``` javascript 
  .chapter-table>a@@@@@@fetch(data.querySelector("div.box-border>script").innerHTML.match(/\/chapter\/(.*?)"/)[0]) .then(response => response.text()) .then(d => {eval("window.txtObj="+d.match(/_txt_call\((.*)\);/)[1]);for(k in txtObj.replace){txtObj.content=txtObj.content.replaceAll(txtObj.replace[k],k)}cb(unescape(txtObj.content.replace(/&#x(.*?);/g,'%u$1')));});return false;
  ```
-+ [📕知乎鹽選](https://www.zhihu.com/xen/market/remix/paid_column/1465280726219968513)
-> 使用以下規則可獲取章節鏈接，但僅可下載免費可見内容，付費内容請自充會員
++ [📕某乎](https://www.zhihu.com/xen/market/remix/paid_column/1465280726219968513)
+> 使用以下規則可獲取章節鏈接，僅可下載免費可見内容，付費内容請自充會員
  ``` javascript
  [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=`https://www.zhihu.com/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
  ```
@@ -152,12 +152,12 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
  ``` javascript
 .BCsectionTwo-top-chapter>a@@@@@@let content=doc.querySelector("#C0NTENT");let r="\n",ps=content.querySelectorAll("p");for(let i=0;i<ps.length;i++){let p=ps[i];if(p.style.cssText)break;else r+=p.innerText+"\n"};let script=content.nextElementSibling;let other=script.innerText.match(/html\(d\((".*?"), "(.*?)"\)\);/);let a=JSON.parse(other[1]),b=other[2];let cryptojs=document.createElement("script");cryptojs.src="/assets/js/cryptojs.min.js";cryptojs.charset="UTF-8";cryptojs.onload=()=>{function d(a, b) { b = CryptoJS.MD5(b).toString(); var d = CryptoJS.enc.Utf8.parse(b.substring(0, 16)); var e = CryptoJS.enc.Utf8.parse(b.substring(16)); return CryptoJS.AES.decrypt(a, e, { iv: d, padding: CryptoJS.pad.Pkcs7 }).toString(CryptoJS.enc.Utf8) };cb(r+d(a,b).replace(/<p>/g,"").replace(/<\/p>/g,"\n"));};document.head.appendChild(cryptojs);return false;
  ```
-+ [📕豆瓣閲讀](https://read.douban.com/column/64079189/)
++ [📕某瓣閲讀](https://read.douban.com/column/64079189/)
  ``` css
  a.chapter-item
  ```
-> 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請勿來問我要現成規則。後期如若豆瓣更新則不再跟進。
-> 首先，豆瓣閲讀的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，豆瓣會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到，解密方法如下：
+> 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請勿來問我要現成規則。後期如若有變動不再跟進。
+> 首先，某瓣的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，它會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到，解密方法如下：
  ``` javascript
 function decode(t) {
     const s = (new TextDecoder).decode(new Uint8Array([65, 69, 83, 45, 67, 66, 67]))
@@ -184,9 +184,9 @@ function decode(t) {
         }().then((t=>window[r][o][c](g, t, f))).then((t=>JSON.parse((new TextDecoder).decode(t))))
 }
  ```
-> 因此規則可按如下步驟編寫，首先調用 article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接即可
+> 因此步驟如下，首先調用 article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接
 + [📕愛發電](https://afdian.net/album/afee5ce2462d11ee897e52540025c377)
-> 礙於我也是愛發電用戶，拿人手短，就不欺負它了。只給個思路，用第四層心法取 album_id 與 章節 id 去 https://afdian.net/api/post 請求數據即可。
+> 我也是愛發電用戶，拿人手短，就不欺負它了。只給個思路，用第四層心法取 album_id 與 章節 id 去 https://afdian.net/api/post 請求數據即可。
 + [📕頭文字小説](https://m.touwz.net/dushi/yinhezhuiluo/)
 > 簡單的分頁，沒啥難點。惟一需要注意的是，分頁連結藏在 js 代碼裏，用正則取出完事。
 ``` javascript
