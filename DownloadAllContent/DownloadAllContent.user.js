@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.8
+// @version      2.7.9
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -1212,7 +1212,7 @@ if (window.top != window.self) {
                 item.innerHTML="";
             }
         });
-        var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
+        var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true);
         pageData.innerHTML=pageData.innerHTML.replace(/\<\!\-\-((.|[\n|\r|\r\n])*?)\-\-\>/g,"");
         [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
             item.innerHTML="";
@@ -1223,8 +1223,11 @@ if (window.top != window.self) {
                 item.innerHTML="";
             });
         }
-        [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript,iframe"),function(item){delList.push(item);});
-        [].forEach.call(delList,function(item){item.innerHTML="";});
+        [].forEach.call(pageData.querySelectorAll("script,style,link,noscript,iframe"),function(item){
+            if (item && item.parentNode) {
+                item.parentNode.removeChild(item);
+            }
+        });
         var endEle = ele => {
             return /^(I|STRONG|B|FONT|P|DL|DD|H\d)$/.test(ele.nodeName) && ele.children.length <= 1;
         };
