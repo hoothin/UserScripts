@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86191",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//section[contains(concat(' ', @class, ' '), ' entry-content ')]",
+    "nextLink": "//li[contains(concat(' ', @class, ' '), ' next ')]/a",
+    "url": "^https://cancam\\.jp/archives/.",
+    "exampleUrl": "https://cancam.jp/archives/1162153"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "CanCam.jp 分割記事",
+  "created_at": "2023-11-26T21:56:24+09:00",
+  "updated_at": "2023-11-26T21:56:24+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86189",
   "data": {
     "insertBefore": "",
@@ -11693,18 +11708,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/82004",
-  "name": "CanCam.jp",
-  "created_by": "t_f_m",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-10-25T22:23:43+09:00",
   "data": {
-    "exampleUrl": "https://cancam.jp/archives/577651",
+    "pageElement": "id(\"primary\")/*",
+    "nextLink": "//a[@rel=\"prev\"]",
     "url": "^https://cancam\\.jp/archives/",
-    "pageElement": "id(\"primary\")",
-    "insertBefore": "",
-    "nextLink": "//a[@rel=\"prev\"]"
+    "exampleUrl": "https://cancam.jp/archives/577651"
   },
-  "created_at": "2018-10-25T22:23:43+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
+  "name": "CanCam.jp",
+  "created_at": "2018-10-25T22:23:43+09:00",
+  "updated_at": "2023-11-26T21:58:17+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82003",
