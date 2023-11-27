@@ -161,7 +161,7 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
 <details>
 <summary>解密方法如下：</summary>
  
- ``` javascript
+``` javascript
 function decode(t) {
     const s = (new TextDecoder).decode(new Uint8Array([65, 69, 83, 45, 67, 66, 67]))
     	, r = (new TextDecoder).decode(new Uint8Array([99, 114, 121, 112, 116, 111]))
@@ -186,10 +186,11 @@ function decode(t) {
             return window[r][o][a](h, i).then((t=>window[r][o][l]("raw", t, s, !0, [c])))
         }().then((t=>window[r][o][c](g, t, f))).then((t=>JSON.parse((new TextDecoder).decode(t))))
 }
- ```
+```
 </details>
 
 > 因此步驟如下，首先調用 article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接
+
 + [📕愛發電](https://afdian.net/album/afee5ce2462d11ee897e52540025c377)
 > 我也是愛發電用戶，拿人手短，就不欺負它了。只給個思路，用第四層心法取 album_id 與 章節 id 去 https://afdian.net/api/post 請求數據即可。
 + [📕頭文字小説](https://m.touwz.net/dushi/yinhezhuiluo/)
