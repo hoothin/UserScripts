@@ -731,6 +731,7 @@ if (window.top != window.self) {
             txtDownContent.style.display="none";
         };
         initTempSave(txtDownContent);
+        win.txtDownWords = txtDownWords;
     }
 
     function saveContent() {
