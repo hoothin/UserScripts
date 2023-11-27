@@ -188,6 +188,7 @@ function decode(t) {
 }
 </pre>
 </details>
+
 + [📕愛發電](https://afdian.net/album/afee5ce2462d11ee897e52540025c377)
 > 我也是愛發電用戶，拿人手短，就不欺負它了。只給個思路，用第四層心法取 album_id 與 章節 id 去 https://afdian.net/api/post 請求數據即可。
 + [📕頭文字小説](https://m.touwz.net/dushi/yinhezhuiluo/)
