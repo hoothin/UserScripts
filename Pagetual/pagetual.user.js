@@ -7505,17 +7505,6 @@
             clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
-            try {
-                let doc = iframe.contentDocument || iframe.contentWindow.document;
-                let code = ruleParser.curSiteRule.init;
-                if (code) {
-                    try {
-                        await new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', 'sleep', '"use strict";' + code)(doc, iframe.contentWindow, iframe, async sel => {await clickAction(sel, doc)}, async sel => {await enterAction(sel, doc)}, async (sel, v) =>{await inputAction(sel, v, doc)}, async time => {await sleep(time)});
-                    } catch(e) {
-                        debug(e);
-                    }
-                }
-            } catch(e) {}
             let pageEleTryTimes = 0;
             async function checkIframe() {
                 if (urlChanged || isPause) {
@@ -8076,14 +8065,6 @@
                 }
             }
             loadedHandler();
-            let code = ruleParser.curSiteRule.init;
-            if (code) {
-                try {
-                    await new AsyncFunction('doc', 'win', 'iframe', 'click', 'enter', 'input', 'sleep', '"use strict";' + code)(iframeDoc, curIframe.contentWindow, curIframe, async sel => {await clickAction(sel, iframeDoc)}, async sel => {await enterAction(sel, iframeDoc)}, async (sel, v) =>{await inputAction(sel, v, iframeDoc)}, async time => {await sleep(time)});
-                } catch(e) {
-                    debug(e);
-                }
-            }
             iframeDoc.addEventListener('wheel', e => {
                 document.dispatchEvent(new Event('wheel'));
             }, true);
