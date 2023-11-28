@@ -3257,8 +3257,9 @@
                             title = titleMatch[1];
                             word = word.replace(titleReg, "$2");
                             if (title == "\\$popup") title = "$popup";
+                            else if (title == "\\@popup") title = "@popup";
                             else {
-                                let popupMatch = title.match(/^\$popup(\((.*)\))?$/);
+                                let popupMatch = title.match(/^[\$@]popup(\((.*)\))?$/);
                                 if (popupMatch) {
                                     title = "";
                                     popup = true;
@@ -3960,7 +3961,7 @@
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
                          <input name="wordStyle" placeholder="orange or #333333;color:red;" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
-                         <textarea name="wordTitle" type="text" placeholder="$popup to popup, $pop(1) to popup first showTips"></textarea>
+                         <textarea name="wordTitle" type="text" placeholder="@popup to popup, @popup(1) to popup 1st showTips, @popup(name) to popup showTips of target engine"></textarea>
                          <div class="searchJumperModify-buttons">
                              <button id="cancel" type="button">${i18n("cancel")}</button>
                              <button id="modify" type="button">${i18n("modify")}</button>
@@ -4062,9 +4063,9 @@
                     if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
                     try {
                         if (word.popup) {
-                            wordTitle.value = "$popup";
+                            wordTitle.value = "@popup";
                             if (word.showTips) {
-                                wordTitle.value = `$popup(${word.showTips})`;
+                                wordTitle.value = `@popup(${word.showTips})`;
                             }
                         } else {
                             wordTitle.value = word.title !== word.showWords ? JSON.parse('"' + word.title + '"') : "";
