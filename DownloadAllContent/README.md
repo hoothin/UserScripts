@@ -77,7 +77,10 @@
   - 透過選擇器抓取
     `a.links@@@@@@next:{a.next}`
   - 透過程式碼生成
-    ```a.links@@@@@@next:{{ return await getNextElement() }}``` 可以用多層 `{}` 來避免程式碼中出現大括號產生的問題
+    ```js
+    a.links@@@@@@next:{{ return await getNextElement() }}
+    ```
+    可以用多層 `{}` 來避免程式碼中出現大括號產生的問題
 
 <a id="example"></a>
 ### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
