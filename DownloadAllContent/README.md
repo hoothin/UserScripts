@@ -65,6 +65,19 @@
 
 ### 完整格式說明
 <code>某個章節名 / CSS 選擇器【選擇器後可跟 >> 傳入 item 處理】 **@@** 抓取到 URL 的正則匹配 **@@** 正則替換 URL **@@** 根據爬取返回內容 data 處理並返回最終文本</code>
+#### 内頁處理範例
+假設章節元素為 `a.links`
++ 使用 iframe 處理内頁内容
+  `a.links@@@@@@iframe:`
+ - iframe 添加 sandbox
+   `a.links@@@@@@iframe:sandbox:{allow-same-origin}`
+ - iframe 添加初始化程式碼
+   `a.links@@@@@@iframe:init:{win.top=win.self}`
++ 自定義内頁中分頁抓取方式
+  - 透過選擇器抓取
+    `a.links@@@@@@next:{a.next}`
+  - 透過程式碼生成
+    `a.links@@@@@@next:{{return await getNextElement()}}` 可以用多層 `{}` 來避免程式碼中出現大括號產生的問題
 
 <a id="example"></a>
 ### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
@@ -193,6 +206,11 @@ function decode(t) {
 > 簡單的分頁，沒啥難點。惟一需要注意的是，分頁連結藏在 js 代碼裏，用正則取出完事。
 ``` javascript
 .chapter>li>a@@@@@@let content="\n";let checkContent=(doc,over)=>{word=doc.querySelector('.content-div');if(!word)content+='\n'+doc.body.innerText;else {let ps=[];[].forEach.call(word.children, p=>{if(p.className!='moreinfo')ps.push(p.innerText)});content+=ps.join('\n');}let next=doc.querySelector("#pt_next");if(next){fetch(location.href+ doc.body.innerHTML.match(/'([^\|']+)\|[^']+'\.split/)[1]+".html").then(r => r.text()).then(d => {let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = d;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content.replace(/\s*「如章节缺失请退#出#阅#读#模#式」\s*|\s*本章未完，点下一页继续阅读。>>>\s*/g,''))});return false;
+```
++ [📕H圖書館](https://hlib.cc/s/sis-9732262)
+> 簡單的分頁，可以使用簡化規則，傳入内分頁的選擇器，其餘交給脚本自動處理。
+``` javascript
+.list-group-item>div>a.text-decoration-none@@@@@@next:{[aria-label='后一页']+a}
 ```
 
 ### 測試網頁
