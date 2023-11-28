@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.9
+// @version      2.8.0
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -223,7 +223,8 @@ if (window.top != window.self) {
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
-    var processFunc;
+    var processFunc, nextPageFunc;
+    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
     var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
     switch (lang){
         case "zh-CN":
@@ -836,7 +837,7 @@ if (window.top != window.self) {
                         },
                         timeout:10000,
                         overrideMimeType:"text/html;charset="+_charset,
-                        onload: function(result) {
+                        onload: async function(result) {
                             let doc = getDocEle(result.responseText);
                             if (charsetValid) {
                                 let equiv = doc.querySelector('[http-equiv="Content-Type"]');
@@ -859,7 +860,7 @@ if (window.top != window.self) {
                                 }
                             }
                             let base = doc.querySelector("base");
-                            let nextPage = !disableNextPage && !processFunc && checkNextPage(doc, base ? base.href : aTag.href);
+                            let nextPage = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
                             if(nextPage){
                                 var inArr=false;
                                 for(var ai=0;ai<aEles.length;ai++){
@@ -922,7 +923,7 @@ if (window.top != window.self) {
                             } else downOnce();
                         },
                         onerror: function(e) {
-                            console.warn("error:", e);
+                            console.warn("error:", e, aTag.href);
                             if(tryTimes++ < 5){
                                 setTimeout(() => {
                                     requestDoc();
@@ -1180,16 +1181,21 @@ if (window.top != window.self) {
         return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
     }
 
-    function checkNextPage(doc, baseUrl) {
-        let aTags = doc.querySelectorAll("a"), nextPage = null;
-        for (var i = 0; i < aTags.length; i++) {
-            let aTag = aTags[i];
-            if (innerNextPage.test(aTag.innerText) && aTag.href && !/javascript:|#/.test(aTag.href)) {
-                let nextPageHref = canonicalUri(aTag.getAttribute("href"), baseUrl || location.href);
-                if (nextPageHref != location.href) {
-                    nextPage = aTag;
-                    nextPage.href = nextPageHref;
-                    break;
+    async function checkNextPage(doc, baseUrl) {
+        let nextPage = null;
+        if (nextPageFunc) {
+            nextPage = await nextPageFunc(doc, baseUrl);
+        } else {
+            let aTags = doc.querySelectorAll("a");
+            for (var i = 0; i < aTags.length; i++) {
+                let aTag = aTags[i];
+                if (innerNextPage.test(aTag.innerText) && aTag.href && !/javascript:|#/.test(aTag.href)) {
+                    let nextPageHref = canonicalUri(aTag.getAttribute("href"), baseUrl || location.href);
+                    if (nextPageHref != location.href) {
+                        nextPage = aTag;
+                        nextPage.href = nextPageHref;
+                        break;
+                    }
                 }
             }
         }
@@ -1540,21 +1546,47 @@ if (window.top != window.self) {
             }
             var retainImage=!!GM_getValue("retainImage");
             var evalCode = urlsArr[3];
-            if (evalCode && /^iframe:/.test(evalCode.trim())) {
-                evalCode = evalCode.trim().replace("iframe:", "");
-                useIframe = true;
-                iframeSandbox = false;
-                iframeInit = false;
-                while (/^(sandbox|init):/.test(evalCode)) {
-                    iframeSandbox = evalCode.match(/^sandbox:{(.*?)}/);
-                    if (iframeSandbox) {
-                        iframeSandbox = iframeSandbox[1];
-                        evalCode = evalCode.replace(/^sandbox:{(.*?)}/, "");
+            if (evalCode) {
+                evalCode = evalCode.trim();
+                if (/^iframe:/.test(evalCode)) {
+                    evalCode = evalCode.replace("iframe:", "");
+                    useIframe = true;
+                    iframeSandbox = false;
+                    iframeInit = false;
+                    while (/^(sandbox|init):/.test(evalCode)) {
+                        iframeSandbox = evalCode.match(/^sandbox:\{(.*?)\}/);
+                        if (iframeSandbox) {
+                            evalCode = evalCode.replace(iframeSandbox[0], "");
+                            iframeSandbox = iframeSandbox[1];
+                        }
+                        iframeInit = evalCode.match(/^init:\{(.*?)\}/);
+                        if (iframeInit) {
+                            evalCode = evalCode.replace(iframeInit[0], "");
+                            iframeInit = iframeInit[1];
+                        }
                     }
-                    iframeInit = evalCode.match(/^init:{(.*?)}/);
-                    if (iframeInit) {
-                        iframeInit = iframeInit[1];
-                        evalCode = evalCode.replace(/^init:{(.*?)}/, "");
+                }
+                let nextMatch = evalCode.match(/^next:(\{+)/);
+                if (nextMatch) {
+                    let splitLen = nextMatch[1].length;
+                    nextMatch = evalCode.match(new RegExp(`^next:\\{{${splitLen}}(.*?)\\}{${splitLen}}`));
+                    if (nextMatch) {
+                        let nextCode = nextMatch[1];
+                        evalCode = evalCode.replace(nextMatch[0], "");
+                        nextPageFunc = async (doc, url) => {
+                            let result;
+                            if (/\breturn\b/.test(nextCode)) {
+                                result = await new AsyncFunction('doc', 'url', '"use strict";' + nextCode)(doc, url);
+                            } else {
+                                try {
+                                    result = doc.querySelector(nextCode);
+                                    if (result) {
+                                        result.href = canonicalUri(result.getAttribute("href"), url || location.href);
+                                    }
+                                } catch(e) {}
+                            }
+                            return result;
+                        }
                     }
                 }
             }
