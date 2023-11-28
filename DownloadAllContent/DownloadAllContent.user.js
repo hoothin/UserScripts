@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.0
+// @version      2.8.1
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -230,7 +230,7 @@ if (window.top != window.self) {
         case "zh-CN":
         case "zh-SG":
             i18n={
-                fetch:"开始下载小说【Ctrl+F9】",
+                fetch:"开始下载小说",
                 info:"来源：#t#\n本文是使用怠惰小说下载器（DownloadAllContent）下载的",
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
@@ -266,13 +266,16 @@ if (window.top != window.self) {
                 dacSaveAsZip:"下载为 zip",
                 dacSetCustomRule:"修改规则",
                 dacAddUrl:"添加章节",
-                dacStartDownload:"下载选中"
+                dacStartDownload:"下载选中",
+                downloadShortcut:"下载章节",
+                downloadSingleShortcut:"下载单页",
+                downloadCustomShortcut:"自定义下载"
             };
             break;
         case "zh-TW":
         case "zh-HK":
             i18n={
-                fetch:"開始下載小說【Ctrl+F9】",
+                fetch:"開始下載小說",
                 info:"來源：#t#\n本文是使用怠惰小說下載器（DownloadAllContent）下載的",
                 error:"該段內容獲取失敗",
                 downloading:"已下載完成 %s 段，剩餘 %s 段<br>正在下載 %s",
@@ -308,12 +311,15 @@ if (window.top != window.self) {
                 dacSaveAsZip:"下載為 zip",
                 dacSetCustomRule:"修改規則",
                 dacAddUrl:"新增章節",
-                dacStartDownload:"下載選取"
+                dacStartDownload:"下載選取",
+                downloadShortcut:"下載章節",
+                downloadSingleShortcut:"下載單頁",
+                downloadCustomShortcut:"自設下載"
             };
             break;
         default:
             i18n={
-                fetch:"Download [Ctrl+F9]",
+                fetch:"Download",
                 info:"Source: #t#\nThe TXT is downloaded by 'DownloadAllContent'",
                 error:"Failed in downloading current chapter",
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
@@ -349,7 +355,10 @@ if (window.top != window.self) {
                 dacSaveAsZip: "Save as zip",
                 dacSetCustomRule:"Modify rules",
                 dacAddUrl:"Add Chapter",
-                dacStartDownload:"Download selected"
+                dacStartDownload:"Download selected",
+                downloadShortcut:"Download chapter",
+                downloadSingleShortcut:"Download single page",
+                downloadCustomShortcut:"Custom download"
             };
             break;
     }
@@ -860,37 +869,40 @@ if (window.top != window.self) {
                                 }
                             }
                             let base = doc.querySelector("base");
-                            let nextPage = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
-                            if(nextPage){
-                                var inArr=false;
-                                for(var ai=0;ai<aEles.length;ai++){
-                                    if(aEles[ai].href==nextPage.href){
-                                        inArr=true;
-                                        break;
+                            let nextPages = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
+                            if (nextPages) {
+                                if (!nextPages.length) nextPages = [nextPages];
+                                nextPages.forEach(nextPage => {
+                                    var inArr=false;
+                                    for(var ai=0;ai<aEles.length;ai++){
+                                        if(aEles[ai].href==nextPage.href){
+                                            inArr=true;
+                                            break;
+                                        }
                                     }
-                                }
-                                if(!inArr){
-                                    nextPage.innerText=aTag.innerText+"\t>>";
-                                    aEles.push(nextPage);
-                                    let targetIndex = curIndex;
-                                    for(let a=0;a<insertSigns.length;a++){
-                                        let signs=insertSigns[a],breakSign=false;
-                                        if(signs){
-                                            for(let b=0;b<signs.length;b++){
-                                                let sign=signs[b];
-                                                if(sign==curIndex){
-                                                    targetIndex=a;
-                                                    breakSign=true;
-                                                    break;
+                                    if(!inArr){
+                                        nextPage.innerText=aTag.innerText+"\t>>";
+                                        aEles.push(nextPage);
+                                        let targetIndex = curIndex;
+                                        for(let a=0;a<insertSigns.length;a++){
+                                            let signs=insertSigns[a],breakSign=false;
+                                            if(signs){
+                                                for(let b=0;b<signs.length;b++){
+                                                    let sign=signs[b];
+                                                    if(sign==curIndex){
+                                                        targetIndex=a;
+                                                        breakSign=true;
+                                                        break;
+                                                    }
                                                 }
                                             }
+                                            if(breakSign)break;
                                         }
-                                        if(breakSign)break;
+                                        let insertSign = insertSigns[targetIndex];
+                                        if(!insertSign)insertSigns[targetIndex] = [];
+                                        insertSigns[targetIndex].push(aEles.length-1);
                                     }
-                                    let insertSign = insertSigns[targetIndex];
-                                    if(!insertSign)insertSigns[targetIndex] = [];
-                                    insertSigns[targetIndex].push(aEles.length-1);
-                                }
+                                });
                             }
                             if (result.status >= 400) {
                                 console.warn("error:", `status: ${result.status} from: ${aTag.href}`);
@@ -1185,6 +1197,7 @@ if (window.top != window.self) {
         let nextPage = null;
         if (nextPageFunc) {
             nextPage = await nextPageFunc(doc, baseUrl);
+            if (nextPage && nextPage.length === 0) nextPage = null;
         } else {
             let aTags = doc.querySelectorAll("a");
             for (var i = 0; i < aTags.length; i++) {
@@ -1579,10 +1592,12 @@ if (window.top != window.self) {
                                 result = await new AsyncFunction('doc', 'url', '"use strict";' + nextCode)(doc, url);
                             } else {
                                 try {
-                                    result = doc.querySelector(nextCode);
-                                    if (result) {
-                                        result.href = canonicalUri(result.getAttribute("href"), url || location.href);
-                                    }
+                                    result = doc.querySelectorAll(nextCode);
+                                    if (result && result.length) {
+                                        [].forEach.call(result, ele => {
+                                            ele.href = canonicalUri(ele.getAttribute("href"), url || location.href);
+                                        });
+                                    } else result = null;
                                 } catch(e) {}
                             }
                             return result;
@@ -1633,6 +1648,10 @@ if (window.top != window.self) {
     function searchRule(){
         GM_openInTab(configPage + "#@" + location.hostname, {active: true});
     }
+    var downloadShortcut = GM_getValue("downloadShortcut") || {ctrlKey: true, shiftKey: false, altKey: false, metaKey: false, key: 'F9'};
+    var downloadSingleShortcut = GM_getValue("downloadSingleShortcut") || {ctrlKey: true, shiftKey: true, altKey: false, metaKey: false, key: 'F9'};
+    var downloadCustomShortcut = GM_getValue("downloadCustomShortcut") || {ctrlKey: true, shiftKey: false, altKey: true, metaKey: false, key: 'F9'};
+
     if (location.origin + location.pathname == configPage) {
         let exampleNode = document.getElementById("example");
         if (!exampleNode) return;
@@ -1742,7 +1761,69 @@ if (window.top != window.self) {
             insertPos.parentNode.insertBefore(con, insertPos);
             return option;
         }
+        function formatShortcut(e) {
+            let result = [];
+            if (e.ctrlKey) {
+                result.push("Ctrl");
+            }
+            if (e.shiftKey) {
+                result.push("Shift");
+            }
+            if (e.altKey) {
+                result.push("Alt");
+            }
+            if (e.metaKey) {
+                result.push("Meta");
+            }
+            result.push(e.key);
+            return result.join(" + ");
+        }
+        function geneShortcutData(str) {
+            if (!str) return "";
+            let result = {ctrlKey: false, shiftKey: false, altKey: false, metaKey: false, key: ''};
+            str.split(" + ").forEach(item => {
+                switch(item) {
+                    case "Ctrl":
+                        result.ctrlKey = true;
+                        break;
+                    case "Shift":
+                        result.shiftKey = true;
+                        break;
+                    case "Alt":
+                        result.altKey = true;
+                        break;
+                    case "Meta":
+                        result.metaKey = true;
+                        break;
+                    default:
+                        result.key = item;
+                        break;
+                }
+            });
+            return result;
+        }
         let showFilterList = createOption(i18n.showFilterList, !!GM_getValue("showFilterList"), "checkbox");
+        let downloadShortcutInput = createOption(i18n.downloadShortcut, formatShortcut(downloadShortcut) || "");
+        let downloadSingleShortcutInput = createOption(i18n.downloadSingleShortcut, formatShortcut(downloadSingleShortcut) || "");
+        let downloadCustomShortcutInput = createOption(i18n.downloadCustomShortcut, formatShortcut(downloadCustomShortcut) || "");
+        downloadShortcutInput.setAttribute("readonly", "true");
+        downloadSingleShortcutInput.setAttribute("readonly", "true");
+        downloadCustomShortcutInput.setAttribute("readonly", "true");
+        let keydonwHandler = e => {
+            if (e.key) {
+                if (e.key == "Backspace") {
+                    e.target.value = "";
+                } else if (e.key != "Control" && e.key != "Shift" && e.key != "Alt" && e.key != "Meta") {
+                    e.target.value = formatShortcut(e);
+                }
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        };
+        downloadShortcutInput.addEventListener("keydown", keydonwHandler);
+        downloadSingleShortcutInput.addEventListener("keydown", keydonwHandler);
+        downloadCustomShortcutInput.addEventListener("keydown", keydonwHandler);
+
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
         let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
@@ -1793,6 +1874,9 @@ if (window.top != window.self) {
             GM_setValue("showFilterList", showFilterList.checked);
             GM_setValue("disableNextPage", !nextPage.checked);
             GM_setValue("nextPageReg", nextPageReg.value || "");
+            GM_setValue("downloadShortcut", geneShortcutData(downloadShortcutInput.value) || "");
+            GM_setValue("downloadSingleShortcut", geneShortcutData(downloadSingleShortcutInput.value) || "");
+            GM_setValue("downloadCustomShortcut", geneShortcutData(downloadCustomShortcutInput.value) || "");
             alert(i18n.saveOk);
         };
         return;
@@ -1811,17 +1895,29 @@ if (window.top != window.self) {
         if(!sortByUrl)GM_setValue("contentSort",window.confirm(i18n.reSort));*/
     }
 
-    document.addEventListener("keydown", function(e) {
-        if(e.keyCode == 120 && e.ctrlKey) {
-            fetch(e.shiftKey);
-        }
-    });
-    GM_registerMenuCommand(i18n.custom, () => {
+    function checkKey(shortcut1, shortcut2) {
+        return shortcut1.ctrlKey == shortcut2.ctrlKey && shortcut1.shiftKey == shortcut2.shiftKey && shortcut1.altKey == shortcut2.altKey && shortcut1.metaKey == shortcut2.metaKey && shortcut1.key == shortcut2.key;
+    }
+
+    function startCustom() {
         var customRules = GM_getValue("DACrules_" + document.domain);
         var urls = window.prompt(i18n.customInfo, customRules ? customRules : "https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
         if (urls) {
             customDown(urls);
         }
+    }
+
+    document.addEventListener("keydown", function(e) {
+        if (checkKey(downloadCustomShortcut, e)) {
+            startCustom();
+        } else if (checkKey(downloadSingleShortcut, e)) {
+            fetch(true);
+        } else if (checkKey(downloadShortcut, e)) {
+            fetch(false);
+        }
+    });
+    GM_registerMenuCommand(i18n.custom, () => {
+        startCustom();
     });
     GM_registerMenuCommand(i18n.fetch, fetch);
     GM_registerMenuCommand(i18n.setting, setDel);
