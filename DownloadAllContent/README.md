@@ -16,7 +16,7 @@
 
 若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)
 
-*對你有幫助的話，可透過 [愛發電](https://afdian.net/a/hoothin) 或者 [Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶*
+*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.net/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶*
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
