@@ -8,12 +8,14 @@
 },
 {
     "name": "ICONFINDER ",
+    "author": "skofkyo",
     "enable": 0,
     "example": "https://www.iconfinder.com/search?q=Download",
     "url": "^https?://www\\.iconfinder\\.com/"
 },
 {
     "name": "菜鸟工具 - JS/CSS/JSON/HTML 調整為上下欄",
+    "author": "skofkyo",
     "enable": 1,
     "example": "https://c.runoob.com/front-end/51/，https://c.runoob.com/front-end/52/，https://c.runoob.com/front-end/7683/，https://c.runoob.com/front-end/47/",
     "url": "^https?://c\\.runoob\\.com/front-end/(47|51|52|7683)/",
@@ -22,6 +24,7 @@
 },
 {
     "name": "webtoons - 手機版閱讀 (手動翻頁模式，預讀下一話圖片)",
+    "author": "skofkyo",
     "example": "https://m.webtoons.com/zh-hant/time-slip/estatedeveloper/%E7%AC%AC1%E8%A9%B1/viewer?title_no=4354&episode_no=1",
     "url": "^https?://m\\.webtoons\\.com/.+/viewer\\?",
     "manualMode": true,
@@ -33,6 +36,7 @@
 },
 {
     "name": "webtoons - 手機版閱讀 (自動翻頁模式會越來越卡)",
+    "author": "skofkyo",
     "example": "https://m.webtoons.com/zh-hant/time-slip/estatedeveloper/%E7%AC%AC1%E8%A9%B1/viewer?title_no=4354&episode_no=1",
     "enable": 0,
     "url": "^https?://m\\.webtoons\\.com/.+/viewer\\?",
@@ -50,6 +54,7 @@
 },
 {
     "name": "webtoons - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.webtoons.com/zh-hant/time-slip/estatedeveloper/%E7%AC%AC1%E8%A9%B1/viewer?title_no=4354&episode_no=1",
     "url": "^https?://www\\.webtoons\\.com/.+/viewer\\?",
     "pinUrl": true,
@@ -64,6 +69,7 @@
 },
 {
     "name": "webtoons - 目錄",
+    "author": "skofkyo",
     "example": "https://www.webtoons.com/zh-hant/time-slip/estatedeveloper/list?title_no=4354",
     "url": "^https?://www\\.webtoons\\.com/.+/list\\?",
     "pinUrl": true,
@@ -74,6 +80,7 @@
 },
 {
     "name": "webtoons - 首頁禁用",
+    "author": "skofkyo",
     "url": "^https?://www\\.webtoons\\.com/([^/]+/)?$",
     "pinUrl": true,
     "nextLink": "0",
@@ -81,6 +88,7 @@
 },
 {
     "name": "仙漫网 - 手機版目錄",
+    "author": "skofkyo",
     "example": "https://m.xianmanwang.com/wodetianjienvyou/",
     "url": "^https?://m\\.xianmanwang\\.com/\\w+/$",
     "include": "a.mm",
@@ -90,6 +98,7 @@
 },
 {
     "name": "仙漫网 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.xianmanwang.com/kaijujiuwudi/0.html",
     "url": "^https?://m\\.xianmanwang\\.com/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -106,6 +115,7 @@
 },
 {
     "name": "仙漫网 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.xianmanwang.com/kaijujiuwudi/0.html",
     "url": "^https?://www\\.xianmanwang\\.com/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -121,6 +131,7 @@
 },
 {
     "name": "漫画牛 - 閱讀",
+    "author": "skofkyo",
     "example": "http://www.manhua666.com/13_13215/1208996.html#p=1",
     "url": "^https?://www\\.manhua666\\.com/\\w+/\\d+\\.html",
     "init": "let ge=e=>document.querySelector(e);let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;if(!ge('.pageselect')){gx(\"//a[text()='分页阅读']\").click()}let F='';imgs.forEach(e=>{F+=e});let E=ge('#contents');E.innerHTML=F;",
@@ -135,6 +146,7 @@
 },
 {
     "name": "漫画牛 - 分類",
+    "author": "skofkyo",
     "example": "http://www.manhua666.com/sort/1/1.html",
     "url": "^https?://www\\.manhua666\\.com/",
     "include": ".pages",
@@ -146,6 +158,7 @@
 },
 {
     "name": "開車漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://18p.fun/ForInject/Chapter/?id=641992",
     "url": "^https?://(www\\.)?(18p|gohaveababy|imynest|healthway|beforeout)\\.[a-z]{2,5}/(ForInject/|Article/|content/)",
     "pinUrl": true,
@@ -161,6 +174,7 @@
 },
 {
     "name": "開車漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://18p.fun/library/?cid=3&tid=1702",
     "url": "^https?://18p\\.fun/",
     "include": ".loadmore",
@@ -171,6 +185,7 @@
 },
 {
     "name": "大树漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.dashumanhua.com/comic/douluodalu5zhongshengtangsan/read-0.html",
     "url": "^https?://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
     "pinUrl": true,
@@ -188,6 +203,7 @@
 },
 {
     "name": "大树漫画 - 目錄",
+    "author": "skofkyo",
     "example": "https://www.dashumanhua.com/comic/shendijianglinwoyouyiwanshuxingdian/",
     "url": "^https?://www\\.dashumanhua\\.com/",
     "include": "//a[text()='开始阅读']",
@@ -196,6 +212,7 @@
 },
 {
     "name": "大树漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://www.dashumanhua.com/category/all/",
     "url": "^https?://www\\.dashumanhua\\.com/",
     "nextLink": "//a[text()='下页']",
@@ -205,6 +222,7 @@
 },
 {
     "name": "Manga Koma 閱讀",
+    "author": "skofkyo",
     "example": "https://mangakoma01.com/manga/pick-me-up-direa-ying-xiongno-chengri-shanggari/1hua/25650",
     "url": "^https?://mangakoma\\d+\\.com/",
     "action": 1,
@@ -220,6 +238,7 @@
 },
 {
     "name": "K-漫神 閱讀",
+    "author": "skofkyo",
     "example": "https://kmansin09.com/bbs/board.php?bo_table=2001&wr_id=9984280",
     "url": "^https?://kmansin\\d+\\.com/",
     "include": "#ep_box",
@@ -230,6 +249,7 @@
 },
 {
     "name": "K-漫神 目錄",
+    "author": "skofkyo",
     "example": "https://kmansin09.com/bbs/board.php?bo_table=2001&wr_id=9984203&sfl=wr_subject&stx=PICK+ME+UP",
     "url": "^https?://kmansin\\d+\\.com/",
     "exclude": "#ep_box",
@@ -241,24 +261,28 @@
 },
 {
     "name": "嗨皮漫畫 - 給本王顯示全部章節",
+    "author": "skofkyo",
     "example": "https://m.happymh.com/manga/daiwangraoming",
     "url": "^https?://m\\.happymh\\.com/manga/",
     "autoClick": "#expandButton"
 },
 {
     "name": "嗨皮漫畫 - 更新頁",
+    "author": "skofkyo",
     "example": "https://m.happymh.com/latest",
     "url": "^https?://m\\.happymh\\.com/latest$",
     "loadMore": ".more-div-btn"
 },
 {
     "name": "嗨皮漫畫 - 閱讀 - 禁用",
+    "author": "skofkyo",
     "example": "https://m.happymh.com/manga/shishijilingdishejishi",
     "url": "^https?://m\\.happymh\\.com/reads/",
     "enable": "0"
 },
 {
     "name": "包子漫畫分類 - 漫畫在新分頁打開",
+    "author": "skofkyo",
     "example": "https://www.webmota.com/",
     "url": "^https?://[^/]+/",
     "include": [
@@ -274,6 +298,7 @@
 },
 {
     "name": "包子漫畫 - 查看全部章節",
+    "author": "skofkyo",
     "example": "https://www.baozimh.com/comic/dawangraoming-yuedongwenhua",
     "url": "^https?://[^/]+/comic/",
     "include": [
@@ -285,6 +310,7 @@
 },
 {
     "name": "包子漫畫 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.kukuc.co/comic/chapter/dawangraoming-yuedongwenhua/0_0.html",
     "url": "^https?://[^/]+/comic/chapter/[^/]+/\\w+\\.html",
     "include": [
@@ -305,6 +331,7 @@
 },
 {
     "name": "包子漫畫2 - 閱讀",
+    "author": "skofkyo",
     "example": "https://baozimh.org/manga/kaijuyizuoshan-yulemeicuo/0_2/",
     "url": "^https?://baozimh\\.org/manga/[^/]+/\\w+/",
     "history": 2,
@@ -320,6 +347,7 @@
 },
 {
     "name": "包子漫畫2 - 分類/搜索",
+    "author": "skofkyo",
     "example": "https://baozimh.org/",
     "url": "^https?://baozimh\\.org/",
     "nextLink": "span.current+a,a[aria-label='Next page']",
@@ -329,6 +357,7 @@
 },
 {
     "name": "GODA漫画  - 閱讀",
+    "author": "skofkyo",
     "example": "https://chapter.godamanga.com/manga/wozhendebushiqiyunzhizi-vv/0_0/",
     "url": "^https?://([a-z]{2,7}\\.)?godamanga\\.com/manga/[^/]+/\\w+/",
     "history": 2,
@@ -342,6 +371,7 @@
 },
 {
     "name": "GODA漫画 - 分類/搜索",
+    "author": "skofkyo",
     "example": "https://godamanga.com/",
     "url": "^https?://(cn\\.)?godamanga\\.com/",
     "nextLink": "span.current+a,a[aria-label='Next page']",
@@ -351,6 +381,7 @@
 },
 {
     "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
+    "author": "skofkyo",
     "example": "https://www.colamanhua.com/15177/1/2.html",
     "url": "^https?://www\\.colamanhua\\.com/",
     "include": ".mh_comicpic",
@@ -361,6 +392,7 @@
 },
 {
     "name": "COCOMANGA - 分類/搜索",
+    "author": "skofkyo",
     "example": "https://www.colamanhua.com/show?orderBy=update",
     "url": "^https?://www\\.colamanhua\\.com/(show|search)",
     "init": "let w = document.querySelector(`h2 a[href*='weeklyCount']`); if (!location.search) w.click()",
@@ -371,6 +403,7 @@
 },
 {
     "name": "看漫画手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.manhuagui.com/comic/30278/405998.html",
     "url": "^https?://m\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -388,6 +421,7 @@
 },
 {
     "name": "看漫画手機版 - 最新更新/排行榜/書架/搜索/漫画大全 檢視下20條記錄 - 漫畫在新分頁打開",
+    "author": "skofkyo",
     "example": "https://m.manhuagui.com/list/update.html",
     "url": "^https?://m\\.manhuagui\\.com/",
     "exclude": [
@@ -400,6 +434,7 @@
 },
 {
     "name": "看漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.manhuagui.com/comic/30278/405998.html",
     "url": "^https?://(tw|www)\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -417,6 +452,7 @@
 },
 {
     "name": "看漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://www.manhuagui.com/list/lianzai/",
     "url": "^https?://(www|tw)\\.manhuagui\\.com/list/",
     "nextLink": "span.current+a",
@@ -426,6 +462,7 @@
 },
 {
     "name": "漫畫屋 - 閱讀",
+    "author": "skofkyo",
     "example": "https://mh5.tw/series-wunalfy-484928-1-%E4%B8%8D%E5%B9%B8%E8%81%B7%E6%A5%AD%E7%9A%84%E5%B9%B8%E9%81%8B?",
     "url": "^https?://mh5\\.tw/series",
     "pinUrl": true,
@@ -439,6 +476,7 @@
 },
 {
     "name": "漫畫屋 - 分類",
+    "author": "skofkyo",
     "example": "https://mh5.tw/allcartoonlist",
     "url": "^https?://mh5\\.tw/allcartoonlist",
     "nextLink": "a.cur+a",
@@ -448,6 +486,7 @@
 },
 {
     "name": "zero搬运网 - PC版閱讀",
+    "author": "skofkyo",
     "example": "http://www.zerobywgeat.com/plugin.php?id=jameson_manhua&a=read&zjid=346180",
     "url": "^https?://www\\.zerobywgeat\\.com/plugin\\.php",
     "nextLink": "//a[span[contains(@uk-icon,'right')]]",
@@ -458,6 +497,7 @@
 },
 {
     "name": "zero搬运网 - 分類",
+    "author": "skofkyo",
     "example": "http://www.zerobywgeat.com/",
     "url": "^https?://www\\.zerobywgeat\\.com/",
     "nextLink": "a.nxt",
@@ -467,6 +507,7 @@
 },
 {
     "name": "Mangabz / Xmanhua - 漫畫目錄展開章節",
+    "author": "skofkyo",
     "example": "https://xmanhua.com/1904xm/，https://www.mangabz.com/1904bz/",
     "url": "^https?://(www\\.)?(mangabz|xmanhua)\\.com/\\d+(bz|xm)/$",
     "pinUrl": true,
@@ -475,6 +516,7 @@
 },
 {
     "name": "Xmanhua - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://xmanhua.com/m10344/",
     "url": "^https?://(www\\.)?xmanhua\\.com/m\\d+(-p\\d+)?/",
     "include": ".bottom-bar",
@@ -491,6 +533,7 @@
 },
 {
     "name": "Mangabz - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://www.mangabz.com/m38701/",
     "url": "^https?://(www\\.)?mangabz\\.com/m\\d+(-p\\d+)?/",
     "include": ".bottom-bar",
@@ -507,6 +550,7 @@
 },
 {
     "name": "Xmanhua - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://xmanhua.com/m10344/",
     "url": "^https?://(www\\.)?xmanhua\\.com/m\\d+(-p\\d+)?/",
     "include": ".reader-bottom-page-list",
@@ -522,6 +566,7 @@
 },
 {
     "name": "Mangabz - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.mangabz.com/m38701/",
     "url": "^https?://(www\\.)?mangabz\\.com/m\\d+(-p\\d+)?/",
     "include": ".container",
@@ -537,6 +582,7 @@
 },
 {
     "name": "Mangabz / Xmanhua - 分類",
+    "author": "skofkyo",
     "example": "https://www.mangabz.com/manga-list-0-0-0/，https://xmanhua.com/manga-list-0-0-0/",
     "url": "^https?://(www\\.)?(mangabz|xmanhua)\\.com/(manga-list|search)",
     "nextLink": "//div[contains(@class,'page-pagination')]//a[contains(text(), '>')]",
@@ -546,6 +592,7 @@
 },
 {
     "name": "风之动漫 - 閱讀",
+    "author": "skofkyo",
     "example": "https://manhua.fffdm.com/2/1040/，https://www.fffdm.com/manhua/132/222/",
     "url": "^https?://(manhua|www)\\.fffdm\\.com/(manhua/)?\\d+/.+/",
     "pinUrl": true,
@@ -560,6 +607,7 @@
 },
 {
     "name": "動漫狂 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://www.cartoonmad.com/m/comic/618700022010001.html",
     "url": "^https?://www\\.cartoonmad\\.(cc|com)/m/comic/\\d+\\.html",
     "history": 2,
@@ -576,6 +624,7 @@
 },
 {
     "name": "動漫狂 - 閱讀",
+    "author": "skofkyo",
     "url": "^https?://www\\.cartoonmad\\.(cc|com)/comic/\\d+\\.html",
     "example": "https://www.cartoonmad.com/comic/6187.html",
     "history": 2,
@@ -593,6 +642,7 @@
 },
 {
     "name": "動漫狂 - 分類",
+    "author": "skofkyo",
     "example": "https://www.cartoonmad.com/hotrank.html",
     "url": "^https?://www\\.cartoonmad\\.(cc|com)/(hotrank|topcm|newcm|comic\\d+)(\\.\\d+)?\\.html",
     "nextLink": "a.onpage+a",
@@ -602,6 +652,7 @@
 },
 {
     "name": "漫画人 / dm5 動漫屋 / 極速漫畫 - 手機版 - 漫畫在新分頁打開",
+    "author": "skofkyo",
     "example": "https://m.dm5.com/",
     "url": "^https?://(www\\.manhuaren|m\\.dm5|m\\.1kkk)\\.com/",
     "exclude": [
@@ -612,6 +663,7 @@
 },
 {
     "name": "漫画人 / dm5 動漫屋 / 極速漫畫 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://www.manhuaren.com/manhua-list-s2/，https://www.manhuaren.com/m198122/，https://m.dm5.com/m1331307/，https://m.1kkk.com/ch1063-1331307/，https://m.1kkk.com/vol1-4761/",
     "url": "^https?://(www|m)\\.(manhuaren|1kkk|dm5)\\.(com|cn)/(m|ch|vol|other)[-_0-9]+/$",
     "exclude": ".view-paging",
@@ -629,6 +681,7 @@
 },
 {
     "name": "極速漫畫 - PC版單行本閱讀",
+    "author": "skofkyo",
     "example": "https://www.1kkk.com/vol1-4761/",
     "url": "^https?://(www|hk)\\.1kkk\\.com/vol[-_0-9]+/$",
     "include": "#chapterpager",
@@ -640,6 +693,7 @@
 },
 {
     "name": "dm5 動漫屋 / 極速漫畫 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.dm5.com/m1331307/，https://www.1kkk.com/ch1063-1331307/",
     "url": "^https?://(www|tel|en|cnc)?\\.?(dm5|1kkk)\\.(com|cn)/(m|ch)[-_0-9]+/$",
     "include": "#chapterpager",
@@ -655,6 +709,7 @@
 },
 {
     "name": "dm5 動漫屋 / 極速漫畫 - 分類",
+    "author": "skofkyo",
     "example": "https://www.dm5.com/manhua-list/，https://www.1kkk.com/manhua-list/",
     "url": "^https?://(www|tel|en|cnc|hk)?\\.?(dm5|1kkk)\\.(com|cn)/manhua-([a-z]+/|list-area|list-tag|list-char)",
     "init": "document.querySelectorAll('.cat-filter a').forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 1000)')})",
@@ -665,6 +720,7 @@
 },
 {
     "name": "無限動漫手機版 - 漫畫閱讀 - 雙擊下一集，鍵盤左右鍵上下集",
+    "author": "skofkyo",
     "example": "https://8.twobili.com/comic/insurance_15059.html?ch=1",
     "url": "^https?://8\\.twobili\\.com/comic/insurance",
     "pinUrl": true,
@@ -674,6 +730,7 @@
 },
 {
     "name": "無限動漫手機版 - 分類",
+    "author": "skofkyo",
     "example": "https://m.comicbus.com/category/update_comic-1.html",
     "url": "^https?://m\\.comicbus\\.com/category/",
     "nextLink": "//a[span/@class='mdi mdi-skip-next mdi-next-btn']",
@@ -683,6 +740,7 @@
 },
 {
     "name": "無限動漫 - 漫畫閱讀2 - 鍵盤左右鍵上下集",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/online/new-18722.html?ch=26",
     "url": "^https?://www\\.comicabc\\.com/online/new-\\d+\\.html(\\?ch=\\d+(-\\d+)?)?$",
     "init": "if(location.href.indexOf('ch=')==-1)location.href=location.href+'?ch=1';function ge(e){return document.querySelector(e)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=ge('#nextvol:not([style])');if(n){n.click()}else{alert('沒有下一集了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=ge('#prevvol');if(location.href.match(/ch=(\\d+)/)[1]==1){alert('沒有上一集了！')}else{p.click()}}};document.addEventListener('keydown',prev);",
@@ -709,6 +767,7 @@
 },
 {
     "name": "無限動漫 - 漫畫閱讀 - 鍵盤左右鍵上下集",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/ReadComic/103/1/1_FU4_LD9_7.html",
     "url": "^https?://www\\.comicabc\\.com/ReadComic/\\d+/\\d+/\\w+\\.html",
     "init": "function ge(e){return document.querySelector(e)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=ge('#nextvol:not([style])');if(n){n.click()}else{alert('沒有下一集了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=ge('#prevvol');if(location.pathname.split('/')[3]==1){alert('沒有上一集了！')}else{p.click()}}};document.addEventListener('keydown',prev);",
@@ -735,6 +794,7 @@
 },
 {
     "name": "無限動漫 - 動漫大全",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/list/all_all_all/",
     "url": "^https?://www\\.comicabc\\.com/list/",
     "nextLink": "//a[span/@class='mdi mdi-skip-next']",
@@ -744,6 +804,7 @@
 },
 {
     "name": "無限動漫 - 分類",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/comic/6-1.html",
     "url": "^https?://www\\.comicabc\\.com/comic/[a-z0-9-]+\\.html",
     "nextLink": "//a[span/@class='mdi mdi-skip-next']",
@@ -753,6 +814,7 @@
 },
 {
     "name": "無限動漫 - 圖庫原圖瀏覽",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/photo/p6038.html?n=1",
     "url": "^https?://www\\.comicabc\\.com/photo/p\\d+\\.html\\?n=\\d+$",
     "nextLinkByUrl": [
@@ -769,6 +831,7 @@
 },
 {
     "name": "無限動漫 - 圖庫清單載入大圖",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/photo/6041.html",
     "url": "^https?://www\\.comicabc\\.com/photo/\\d+\\.html$",
     "init": "document.querySelectorAll('#dl img').forEach(img=>{let f=img.src.replace('.jpe','.jpg');img.src=f})",
@@ -776,6 +839,7 @@
 },
 {
     "name": "無限動漫 - 圖庫",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/photo/1-1.html",
     "url": "^https?://www\\.comicabc\\.com/photo/[0-9-]+\\.html$",
     "nextLink": "//a[span/@class='mdi mdi-skip-next']",
@@ -784,12 +848,14 @@
 },
 {
     "name": "無限動漫 - 類別停止自動匹配",
+    "author": "skofkyo",
     "example": "https://www.comicabc.com/html/1/",
     "url": "^https?://www\\.comicabc\\.com/html/\\d+/$",
     "nextLink": "0"
 },
 {
     "name": "砂之船动漫家 / 361中文漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://www.szcdmj.com/szcchapter/736400，https://www.361zw.com/361zwchapter/318949",
     "url": "^https?://www\\.(szcdmj|361zw)\\.com/\\w{3,5}chapter/\\d+(\\?page=\\d+)?",
     "include": ".view-bottom-bar",
@@ -804,6 +870,7 @@
 },
 {
     "name": "砂之船动漫家 / 361中文漫画 / 土豪漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.szcdmj.com/szcchapter/736400，https://www.361zw.com/361zwchapter/318168，https://7hxy.com/chapter/968191?page=8&id=968191",
     "url": "^https?://(www\\.)?(szcdmj|361zw|7hxy)\\.com/\\w{0,5}chapter/\\d+",
     "include": ".read-section",
@@ -818,6 +885,7 @@
 },
 {
     "name": "砂之船动漫家 / 361中文漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://www.szcdmj.com/szcbolist",
     "url": "^https?://www\\.(szcdmj|361zw)\\.com/(szcbolist|booklist)",
     "nextLink": "#nextPage,a[title='下一页'],li.active+li>a",
@@ -828,6 +896,7 @@
 },
 {
     "name": "生辰漫画网 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.chashengchen.com/manhua/xianziniyoudaxiongzhizhao/2867318.html",
     "url": "^https?://m\\.chashengchen\\.com/manhua/\\w+/\\d+\\.html",
     "action": 1,
@@ -842,6 +911,7 @@
 },
 {
     "name": "漫画连 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.100mhl.com/manhua/yuanlaiwoshixianjiezhizun/1268523.html",
     "url": "^https?://www\\.100mhl\\.com/manhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -857,6 +927,7 @@
 },
 {
     "name": "生辰漫画网 / 奇妙漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.chashengchen.com/manhua/xianziniyoudaxiongzhizhao/2867318.html",
     "url": "^https?://www\\.(chashengchen|qmiaomh)\\.com/manhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -873,6 +944,7 @@
 },
 {
     "name": "来漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.laimanhua.net/kanmanhua/kaijujiangliyiyitiaoming/1684241122.html",
     "url": "^https?://m\\.laimanhua\\.net/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -889,6 +961,7 @@
 },
 {
     "name": "来漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.laimanhua.net/kanmanhua/kaijujiangliyiyitiaoming/1684241122.html",
     "url": "^https?://www\\.laimanhua\\.net/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -905,6 +978,7 @@
 },
 {
     "name": "漫画吧 / 漫画连 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.dmhua8.com/manhua/shengnvyintaiguowanmeibugoukeaierbeifeichuhunyuebingmaidaolinguo/966591.html",
     "url": "^https?://m\\.(d?mhua8|100mhl)\\.com/manhua/[a-z]+/\\d+\\.html",
     "init": "let gae=e=>document.querySelectorAll(e);let Imgs=gae('#images')[0];let Img=gae('img[alt]');let _img='';for(let i=0;i<Img.length;i++){_img+=Img[i].outerHTML}Imgs.innerHTML=_img;",
@@ -920,6 +994,7 @@
 },
 {
     "name": "漫画吧 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.dmhua8.com/manhua/shengnvyintaiguowanmeibugoukeaierbeifeichuhunyuebingmaidaolinguo/966404.html",
     "url": "^https?://www\\.d?mhua8\\.com/manhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -936,6 +1011,7 @@
 },
 {
     "name": "85漫画网手機版 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://m.85iu.com/manhua/mofaxueyuandeweizhuangjiaoshi/2740936.html",
     "url": "^https?://m\\.85iu\\.com/manhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -950,6 +1026,7 @@
 },
 {
     "name": "xlsmh下拉式漫画 / 奇妙漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.xlsmh.com/manhua/wodetexingnengwuxianchengzhang/1308826.html",
     "url": "^https?://m\\.(xlsmh|qmiaomh)\\.com/manhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -966,6 +1043,7 @@
 },
 {
     "name": "xlsmh下拉式漫画 / 85漫画网 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.xlsmh.com/manhua/wodetexingnengwuxianchengzhang/1308826.html，https://www.85iu.com/manhua/mofaxueyuandeweizhuangjiaoshi/2740936.html",
     "url": "^https?://www\\.(xlsmh|85iu)\\.com/manhua/\\w+/\\d+\\.?\\.html",
     "pinUrl": true,
@@ -982,6 +1060,7 @@
 },
 {
     "name": "爱米推漫画 / 蔷薇漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.imitui.com/manhua/yuanzun/3683.html，https://m.qwmanhua.com/manhua/woshenmeshihouwudile/1239188.html",
     "url": "^https?://m\\.(imitui|qwmanhua)\\.com/manhua/\\w+/\\d+\\.html",
     "action": 1,
@@ -996,6 +1075,7 @@
 },
 {
     "name": "漫画芯 / 最漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.mhxin.com/manhua/douluodalu/631505.html，https://m.zuimh.com/manhua/douluodalu/314222.html",
     "url": "^https?://m\\.(mhxin|zuimh)\\.com/manhua/[a-z]+/\\d+\\.html",
     "init": "let a=document.querySelector('#images a');a.outerHTML=a.innerHTML;",
@@ -1010,6 +1090,7 @@
 },
 {
     "name": "最漫画 / 爱米推漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.zuimh.com/manhua/maoshendoumaocao/1755415.html，https://www.imitui.com/manhua/yuanzun/3683.html",
     "url": "^https?://www\\.(zuimh|imitui)\\.com/manhua/[a-z]+/\\d+\\.html",
     "pinUrl": true,
@@ -1027,6 +1108,7 @@
 },
 {
     "name": "前未漫画 / 漫画芯 / 蔷薇漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.mhxin.com/manhua/taixugongyu/2345840.html，https://www.qianmh.com/manhua/dianjuren/253973.html，https://www.qwmanhua.com/manhua/woshenmeshihouwudile/1239187.html",
     "url": "^https?://www\\.(qianmh|mhxin|qwmanhua)\\.com/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
@@ -1043,6 +1125,7 @@
 },
 {
     "name": "古风漫画网 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.gufengmh.com/manhua/wokeyiwuxianzhaohuan/2042963.html",
     "url": "^https?://m\\.gufengmh\\.com/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
@@ -1058,6 +1141,7 @@
 },
 {
     "name": "古风漫画网 - 手機版分類",
+    "author": "skofkyo",
     "example": "https://m.gufengmh.com/update/",
     "url": "^https?://m\\.gufengmh\\.com/",
     "nextLink": ".pagination li.active+li>a",
@@ -1067,6 +1151,7 @@
 },
 {
     "name": "古风漫画网 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.gufengmh.com/manhua/yuanlaiwoshixianjiezhizun/2053294.html",
     "url": "^https?://www\\.gufengmh\\.com/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
@@ -1084,6 +1169,7 @@
 },
 {
     "name": "优酷漫画手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "http://wap.ykmh.com/manhua/yiquanchaoren/346.html",
     "url": "^https?://wap\\.ykmh\\.com/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
@@ -1100,6 +1186,7 @@
 },
 {
     "name": "优酷漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "http://www.ykmh.com/manhua/yiquanchaoren/346.html",
     "url": "^https?://www\\.ykmh\\.com/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
@@ -1117,6 +1204,7 @@
 },
 {
     "name": "90漫畫網手機版 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "http://wap.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html",
     "url": "^https?://wap\\.90mh\\.com/manhua/",
     "init": "let Imgs=document.querySelector('#chapter-image');let Img=document.querySelector('#chapter-image img');Imgs.innerHTML=Img.outerHTML;",
@@ -1130,6 +1218,7 @@
 },
 {
     "name": "90漫畫網 / 生辰漫画网 - 手機版分類",
+    "author": "skofkyo",
     "example": "http://wap.90mh.com/update/，https://m.chashengchen.com/list/update/",
     "url": "^https?://(wap|m)\\.(90mh|chashengchen)\\.com/(update|list)/",
     "nextLink": "#update_list li.next>a,#w0 li.next>a",
@@ -1139,6 +1228,7 @@
 },
 {
     "name": "90漫畫網 - PC版閱讀",
+    "author": "skofkyo",
     "example": "http://www.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html",
     "url": "^https?://www\\.90mh\\.com/manhua/\\w+/\\d+\\.html",
     "history": 2,
@@ -1156,6 +1246,7 @@
 },
 {
     "name": "90漫畫網 - 分類",
+    "author": "skofkyo",
     "example": "http://www.90mh.com/update/",
     "url": "^https?://www\\.90mh\\.com/(update|list)/",
     "nextLink": "li.next>a",
@@ -1165,6 +1256,7 @@
 },
 {
     "name": "古漫画 / 360 漫画 - 手機版分類",
+    "author": "skofkyo",
     "example": "https://m.izhegu.com/update/，https://m.100fanwo.com/update/",
     "url": "^https?://(m)\\.(100fanwo|izhegu)\\.com/",
     "nextLink": "li.next>a",
@@ -1174,6 +1266,7 @@
 },
 {
     "name": "古漫画 / 360 漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.izhegu.com/manhua/banbenDAYS/2011818.html，https://www.100fanwo.com/manhua/banbenDAYS/3434626.html",
     "url": "^https?://www\\.(izhegu|100fanwo)\\.com/manhua/[a-z]+/\\d+\\.html",
     "pinUrl": true,
@@ -1189,6 +1282,7 @@
 },
 {
     "name": "漫画456 - 手機版章節全部展開",
+    "author": "skofkyo",
     "example": "https://m.manhua456.com/manhua/zhongniannandeyishijiewanggoushenghuo/",
     "url": "^https?://m\\.manhua456\\.com/manhua/\\w+/$",
     "pinUrl": true,
@@ -1196,6 +1290,7 @@
 },
 {
     "name": "漫画456 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.manhua456.com/manhua/moliwuxiandezuiqiangmonvyongchuangzaomofazaiyishijieyouzaishenghuo/537951.html",
     "url": "^https?://m\\.manhua456\\.com/manhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -1210,6 +1305,7 @@
 },
 {
     "name": "漫画456 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.manhua456.com/manhua/wodeshifumeidaodaxiancaitupo/766673.html",
     "url": "^https?://www\\.manhua456\\.com/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
@@ -1226,6 +1322,7 @@
 },
 {
     "name": "亲亲漫画 - 手機版漫畫在新分頁打開",
+    "author": "skofkyo",
     "example": "https://m.acgqd.com/update/",
     "url": "^https?://m\\.acg(u|q)d\\.com/(update|list|list/wanjie)?/?$",
     "pinUrl": true,
@@ -1233,6 +1330,7 @@
 },
 {
     "name": "亲亲漫画 - 手機版章節全部展開",
+    "author": "skofkyo",
     "example": "https://m.acgqd.com/manhua/38496/",
     "url": "^https?://m\\.acg(u|q)d\\.com/manhua/\\d+/$",
     "pinUrl": true,
@@ -1241,6 +1339,7 @@
 },
 {
     "name": "亲亲漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.acgqd.com/manhua/39305/1277010.html",
     "url": "^https?://m\\.acg(u|q)d\\.com/manhua/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1259,6 +1358,7 @@
 },
 {
     "name": "亲亲漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "http://www.acgud.com/manhua/39305/1277010.html",
     "url": "^https?://www\\.acg(u|q)d\\.com/manhua/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1277,6 +1377,7 @@
 },
 {
     "name": "古风漫画网 / 优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 / 漫画456 / 爱米推漫画 / 蔷薇漫画 - 分類",
+    "author": "skofkyo",
     "example": "www.gufengmh.com，www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgud.com，www.manhua456.com，www.imitui.com，www.qwmanhua.com",
     "url": "^https?://www\\.(gufengmh|ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acg(u|q)d|manhua456|imitui|qwmanhua)\\.com/",
     "nextLink": "li.next>a",
@@ -1286,6 +1387,7 @@
 },
 {
     "name": "动漫啦 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.dongman.la/manhua/chapter/5985/54979/",
     "url": "^https?://m\\.dongman\\.la/manhua/chapter/\\d+/\\d+/",
     "history": 2,
@@ -1303,6 +1405,7 @@
 },
 {
     "name": "动漫啦 - PC版閱讀 - 单页滚动模式 - 雙擊下一章，鍵盤左右鍵上下章",
+    "author": "skofkyo",
     "example": "https://www.dongman.la/manhua/chapter/5985/54979/1.html",
     "url": "^https?://www\\.dongman\\.la/manhua/chapter/\\d+/\\d+/",
     "include": "//a[text()='分页查看模式 ']",
@@ -1314,6 +1417,7 @@
 },
 {
     "name": "动漫啦 - PC版閱讀 - 分页查看模式 - 雙擊下一章，鍵盤左右鍵上下章",
+    "author": "skofkyo",
     "example": "https://www.dongman.la/manhua/chapter/5985/54979/1.html",
     "url": "^https?://www\\.dongman\\.la/manhua/chapter/\\d+/\\d+/",
     "include": "//a[text()='单页滚动模式 ']",
@@ -1328,6 +1432,7 @@
 },
 {
     "name": "动漫啦 / 免追漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://www.dongman.la/manhua/oumei/2.html，https://www.mianzhui.com/category/list/1",
     "url": "^https?://www\\.(dongman|mianzhui)\\.(la|com)/",
     "include": ".NewPages",
@@ -1339,6 +1444,7 @@
 },
 {
     "name": "七夕漫画",
+    "author": "skofkyo",
     "example": "http://www.qiximh2.com/21429/999975.html，http://m.qiximh2.com/22914/1235326.html",
     "url": "^https?://(www|m)\\.qiximh\\d\\.com/\\d+/\\d+\\.html",
     "history": 2,
@@ -1358,6 +1464,7 @@
 },
 {
     "name": "漫画星球手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "http://m.mhxqiu2.com/22914/1235326.html",
     "url": "^https?://m\\.mhxqiu\\d\\.com/\\d+/\\d+\\.html",
     "history": 2,
@@ -1374,6 +1481,7 @@
 },
 {
     "name": "七夕漫画手機版 / 漫画星球手機版 - 点击加载更多",
+    "author": "skofkyo",
     "example": "http://m.qiximh2.com/sort/1-1.html，http://m.mhxqiu2.com/sort/1.html",
     "url": "^https?://m\\.(qiximh\\d|mhxqiu\\d)\\.com/",
     "include": ".list_notdone>button",
@@ -1382,6 +1490,7 @@
 },
 {
     "name": "七夕漫画 / 漫画星球 - 分類",
+    "author": "skofkyo",
     "example": "http://www.qiximh2.com/sort/1-1.html，http://www.mhxqiu2.com/sort/1-1.html",
     "url": "^https?://www\\.(qiximh\\d|mhxqiu\\d)\\.com/",
     "nextLink": "//a[text()='下一页']",
@@ -1391,6 +1500,7 @@
 },
 {
     "name": "6 漫画手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "http://m.6mh66.com/25528/1411234.html",
     "url": "^https?://m\\.6mh66\\.com/\\d+/\\d+\\.html",
     "history": 2,
@@ -1408,6 +1518,7 @@
 },
 {
     "name": "奇漫屋手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "http://qiman59.com/21429/999975.html",
     "url": "^https?://(m\\.)?qiman\\d{2}\\.com/\\d+/\\d+\\.html",
     "include": ".bottom-tool-bar",
@@ -1425,6 +1536,7 @@
 },
 {
     "name": "奇漫屋 / 漫画星球 / 6 漫画 - PC閱讀",
+    "author": "skofkyo",
     "example": "http://www.qiman58.com/21429/1416724.html，http://www.mhxqiu2.com/22914/1235326.html，http://www.6mh66.com/22914/1235327.html",
     "url": "^https?://(www\\.qiman5\\d\\.com|www\\.mhxqiu\\d\\.com|www\\.6mh66\\.com)/\\d+/\\d+\\.html",
     "history": 2,
@@ -1441,6 +1553,7 @@
 },
 {
     "name": "漫画星球 / 6 漫画 / 奇漫屋 - 手機版分類",
+    "author": "skofkyo",
     "example": "m.mhxqiu1.com，m.sixmh7.com，m.qiman57.com",
     "url": "^https?://(m\\.)?((six|6)mh\\d+|mhxqiu\\d|qiman\\d+)\\.com/(sort|rank)/",
     "loadMore": ".getmore,.getmore1",
@@ -1448,6 +1561,7 @@
 },
 {
     "name": "57漫画网 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "http://www.wuqimh.com/45107/01.html",
     "url": "^https?://(www|m)\\.wuqimh\\.com/\\d+/\\d+(\\.html|/)$",
     "include": "//script[contains(text(),'images') and contains(text(),'tingliu')]",
@@ -1464,6 +1578,7 @@
 },
 {
     "name": "x18漫画网 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://www.x18mh.com/manhua/60497/996071.html，https://m.x18mh.com/manhua/60497/996071.html",
     "url": "^https?://(www|m)\\.x18mh\\.com/manhua/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1479,6 +1594,7 @@
 },
 {
     "name": "爱漫之家 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "http://www.17fuman.com/rszimukaitou/34599/171775.html，http://m.17fuman.com/rszimukaitou/34669/172185.html，http://m.fumanhua44.com/rszimukaitou/34761/172779.html",
     "url": "^https?://(www|m\\d?)\\.(17fuman|fumanhua-?\\d+)\\.com/[a-z]+/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1495,6 +1611,7 @@
 },
 {
     "name": "73漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "http://www.73mh.net/mh/63788_1633109/1",
     "url": "^https?://www\\.73mh\\.net/mh/\\w+/\\d+",
     "pinUrl": true,
@@ -1510,6 +1627,7 @@
 },
 {
     "name": "漫画160 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.mh160.cc/kanmanhua/yuanlaiwoshixianjiezhizun/1689580801.html",
     "url": "^https?://m\\.mh160\\.cc/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -1526,6 +1644,7 @@
 },
 {
     "name": "733 动漫 - 手機版漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://m.733.so/mh/54709/1353912/1.html",
     "url": "^https?://m\\.733\\.so/mh/\\d+/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1542,6 +1661,7 @@
 },
 {
     "name": "733 动漫 / 73漫画 - 手機版分類",
+    "author": "skofkyo",
     "example": "https://m.733.so/all/all/all/all/0/1.html，http://www.73mh.net/neidi/",
     "url": "^https?://(m\\.733\\.so|www\\.73mh\\.net)/",
     "exclude": [
@@ -1555,6 +1675,7 @@
 },
 {
     "name": "733 动漫 / 漫画160 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.733.so/mh/33671/614269.html，https://www.mh160.cc/kanmanhua/tianqiyubao/1668716868.html",
     "url": "^https?://www\\.(733|mh160)\\.(so|cc)/(mh|kanmanhua)/\\w+/\\d+\\.html",
     "pinUrl": true,
@@ -1571,6 +1692,7 @@
 },
 {
     "name": "漫画星球 / 6 漫画 / 733 动漫 /  爱漫之家 / x18漫画网 / 57漫画网 / 奇漫屋 / 漫画160 - 分類",
+    "author": "skofkyo",
     "example": "www.mhxqiu1.com，www.sixmh7.com，www.733.so，www.17fuman.com，https://www.x18mh.com/，http://www.wuqimh.com/list/，http://www.qiman58.com/，www.mh160.cc",
     "url": "^https?://(www|m)\\.((six|6)mh\\d+|mhxqiu\\d|733|17fuman|x18mh|wuqimh|qiman58|mh160)\\.(com|so|cc)/",
     "nextLink": "//a[text()='下一页'] | //li[a[@class='active']]/following-sibling::li[1]/a",
@@ -1580,6 +1702,7 @@
 },
 {
     "name": "木马漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.omyschool.com/article_detail/19057/672194/%E7%A5%9E%E6%98%8E%E5%AD%B8%E6%A0%A1%E7%9A%84%E5%B7%AE%E7%AD%89%E7%94%9F/01%E8%A9%B1/",
     "url": "^https?://www\\.omyschool\\.com/article_detail/\\d+/\\d+/",
     "history": 2,
@@ -1592,6 +1715,7 @@
 },
 {
     "name": "木马漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://www.omyschool.com/rank/update/",
     "url": "^https?://www\\.omyschool\\.com/",
     "nextLink": "a.next",
@@ -1601,6 +1725,7 @@
 },
 {
     "name": "动漫之家 - 手機版 - 漫畫在新分頁打開",
+    "author": "skofkyo",
     "example": "https://m.idmzj.com/",
     "url": "^https?://m\\.i?dmzj\\.com/",
     "exclude": [
@@ -1611,6 +1736,7 @@
 },
 {
     "name": "动漫之家手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.idmzj.com/view/60351/119828.html",
     "url": "^https?://m\\.i?dmzj\\.com/view/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1627,6 +1753,7 @@
 },
 {
     "name": "动漫之家2 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.idmzj.com/view/siwangleyuan/75382.html",
     "url": "^https?://www\\.i?dmzj\\.com/view/",
     "pinUrl": true,
@@ -1647,6 +1774,7 @@
 },
 {
     "name": "动漫之家2 - 分類",
+    "author": "skofkyo",
     "example": "https://www.idmzj.com/update/",
     "url": "^https?://www\\.i?dmzj\\.com/(update|category|rank)",
     "nextLink": "//a[text()='下一页']",
@@ -1656,6 +1784,7 @@
 },
 {
     "name": "动漫之家 - 閱讀",
+    "author": "skofkyo",
     "example": "https://manhua.idmzj.com/shenghuomosgushimentiaozhanmigong/118093.shtml",
     "url": "^https?://manhua\\.i?dmzj\\.com/[a-z]+/\\d+\\.shtml",
     "pinUrl": true,
@@ -1674,6 +1803,7 @@
 },
 {
     "name": "动漫之家 - 分類",
+    "author": "skofkyo",
     "example": "https://manhua.idmzj.com/update_1.shtml",
     "url": "^https?://manhua\\.i?dmzj\\.com/",
     "action": 1,
@@ -1685,6 +1815,7 @@
 },
 {
     "name": "漫画猫 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.maofly.com/manga/39027/515484.html",
     "url": "^https?://www\\.maofly\\.com/manga/",
     "pinUrl": true,
@@ -1700,6 +1831,7 @@
 },
 {
     "name": "漫画猫 - 分類",
+    "author": "skofkyo",
     "example": "https://www.maofly.com/update.html",
     "url": "^https?://www\\.maofly\\.com/(update|list)",
     "nextLink": "//a[text()=' 下一页']",
@@ -1709,6 +1841,7 @@
 },
 {
     "name": "漫画DB - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.manhuadb.com/manhua/1167/1315_13028.html",
     "url": "^https?://www\\.manhuadb\\.com/manhua/\\d+/\\w+\\.html",
     "pinUrl": true,
@@ -1725,6 +1858,7 @@
 },
 {
     "name": "漫画DB - 分類",
+    "author": "skofkyo",
     "example": "https://www.manhuadb.com/manhua/list-r-4-a-4-c-12.html",
     "url": "^https?://www\\.manhuadb\\.com/manhua/list",
     "nextLink": "a[title='下一页']",
@@ -1734,6 +1868,7 @@
 },
 {
     "name": "快岸漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.kanbook.net/comic/1661/1/1",
     "url": "^https?://(www\\.)?kanbook\\.net/",
     "include": "nav+.container-fluid+.container-fluid",
@@ -1754,6 +1889,7 @@
 },
 {
     "name": "快岸漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://www.kanbook.net/list-r-1",
     "url": "^https?://www\\.kanbook\\.net/(update|list|rank|news)",
     "nextLink": "//a[@title='下一页' or @title='下一頁']",
@@ -1763,6 +1899,7 @@
 },
 {
     "name": "動漫戲說 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://comic.acgn.cc/view-202.htm",
     "url": "^https?://comic\\.acgn\\.cc/view-",
     "history": 2,
@@ -1780,6 +1917,7 @@
 },
 {
     "name": "動漫戲說 - 分類",
+    "author": "skofkyo",
     "example": "https://comic.acgn.cc/cate-1.htm",
     "url": "^https?://comic\\.acgn\\.cc/",
     "nextLink": "a[rel='next']",
@@ -1789,6 +1927,7 @@
 },
 {
     "name": "新新漫画 - 閱讀 - 沒有顯示圖片時需要換服務器",
+    "author": "skofkyo",
     "example": "https://www.77mh.xyz/202102/481169.html，http://m.77mh.xyz/202102/481169.html",
     "url": "^https?://(www|m)\\.77mh\\.[a-z]{2,3}/\\d+/\\d+\\.html",
     "history": 2,
@@ -1807,6 +1946,7 @@
 },
 {
     "name": "新新漫画手機版 - 分類",
+    "author": "skofkyo",
     "example": "http://m.77mh.xyz/lianzai/index.html",
     "url": "^https?://(m|so)\\.77mh\\.[a-z]{2,3}/",
     "include": ".lpagelist",
@@ -1816,6 +1956,7 @@
 },
 {
     "name": "新新漫画 - 分類",
+    "author": "skofkyo",
     "example": "http://www.77mh.xyz/lianzai/index.html",
     "url": "^https?://(www|so)\\.77mh\\.[a-z]{2,3}/",
     "include": ".pages_s",
@@ -1826,6 +1967,7 @@
 },
 {
     "name": "漫漫聚 / KuKu动漫 - 閱讀",
+    "author": "skofkyo",
     "example": "http://www.manmanju.com/comiclist/3658/97532/1.htm，http://manhua.ikukudm.com/comiclist/3756/102656/1.htm，http://m.manmanju.com/comiclist/3658/97532/1.htm，",
     "url": "^https?://(m|a|b|www|manhua)\\.(manmanju|ikukudm)\\.com/comiclist/\\d+/\\d+/\\d+\\.htm$",
     "action": 1,
@@ -1839,6 +1981,7 @@
 },
 {
     "name": "漫漫聚 / KuKu动漫 - 分類",
+    "author": "skofkyo",
     "example": "http://www.manmanju.com/comictype/3_1.htm，http://manhua.ikukudm.com/comictype/3_1.htm",
     "url": "^https?://(m|www|manhua)\\.(manmanju|ikukudm)\\.com/comictype/",
     "nextLink": "//a[text()='下一页'] | //a[span[text()='下一页']]",
@@ -1848,6 +1991,7 @@
 },
 {
     "name": "鬼罗丽漫画",
+    "author": "skofkyo",
     "example": "http://www.gllmh.com/",
     "url": "^https?://www\\.gllmh\\.com/",
     "pinUrl": true,
@@ -1858,6 +2002,7 @@
 },
 {
     "name": "漫画屋 / 免追漫画 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://www.mhua5.com/chapter-1582203.html，https://www.mh5.org/index.php/chapter/233329",
     "url": "^https?://(www|m)\\.(mh5|mhua5|mianzhui)\\.(org|com)/(chapter-\\d+\\.html|index\\.php/chapter/\\d+|[0-9-]+\\.html)",
     "include": ".bottom-tool-bar",
@@ -1875,6 +2020,7 @@
 },
 {
     "name": "漫画屋 / 免追漫画 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.mhua5.com/chapter-1612038.html，https://mh5.org/index.php/chapter/741258",
     "url": "^https?://(www\\.)?(mh5|mhua5|mianzhui)\\.(org|com)/(chapter-\\d+\\.html|index\\.php/chapter/\\d+|[0-9-]+\\.html)",
     "exclude": ".bottom-tool-bar",
@@ -1893,6 +2039,7 @@
 },
 {
     "name": "漫客栈手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.mkzhan.com/216512/1006597.html",
     "url": "^https?://m\\.mkzhan\\.com/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -1910,6 +2057,7 @@
 },
 {
     "name": "漫客栈 - 卷軸模式",
+    "author": "skofkyo",
     "example": "https://www.mkzhan.com/216512/1007019.html",
     "url": "^https?://www\\.mkzhan\\.com/\\d+/\\d+\\.html",
     "history": 2,
@@ -1928,6 +2076,7 @@
 },
 {
     "name": "好漫 6手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.haoman6.com/chapter/520621",
     "url": "^https?://www\\.haoman6\\.com/chapter/\\d+",
     "include": ".bottom-tool-bar",
@@ -1945,6 +2094,7 @@
 },
 {
     "name": "好漫 6 - 閱讀 - 修正PC版漫畫下架",
+    "author": "skofkyo",
     "example": "https://www.haoman6.com/chapter/1630368",
     "url": "^https?://www\\.haoman6\\.com/chapter/\\d+",
     "exclude": ".bottom-tool-bar",
@@ -1963,6 +2113,7 @@
 },
 {
     "name": "好漫 6 / 漫客栈 / 漫画屋 - 分類",
+    "author": "skofkyo",
     "example": "https://www.haoman6.com/category/，https://www.mkzhan.com/category/，https://www.mhua5.com/category/，https://mh5.org/index.php/category/",
     "url": "^https?://(www\\.)?(haoman6|g-lens|mkzhan|mhua5|mh5)\\.(com|org)/((category|search)|index\\.php/(category|search))",
     "nextLink": "a.next",
@@ -1972,6 +2123,7 @@
 },
 {
     "name": "好漫 6 手機版 - 加載更多",
+    "author": "skofkyo",
     "example": "https://www.haoman6.com/，http://www.g-lens.com/",
     "url": "^https?://www\\.(haoman6|g-lens)\\.com/category/(tags|finish|pay|list)/",
     "include": ".getmore",
@@ -1979,6 +2131,7 @@
 },
 {
     "name": "漫本 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "http://www.manben.com/m1149741/",
     "url": "^https?://www\\.manben\\.com/m\\d+(#page_\\d+)?",
     "exclude": "id('mainControlNext')",
@@ -1995,6 +2148,7 @@
 },
 {
     "name": "漫本 - PC版閱讀",
+    "author": "skofkyo",
     "example": "http://www.manben.com/m1149741/",
     "url": "^https?://www\\.manben\\.com/m\\d+(#page_\\d+)?",
     "include": "//script[contains(text(),'eval') and contains(text(),'newImgs')]",
@@ -2012,6 +2166,7 @@
 },
 {
     "name": "漫本 - PC/手機版查看更多",
+    "author": "skofkyo",
     "example": "http://www.manben.com/mh-updated/",
     "url": "^https?://www\\.manben\\.com/(mh-updated|mh-list)/",
     "loadMore": "#moreDiv",
@@ -2019,6 +2174,7 @@
 },
 {
     "name": "好漫8手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "http://haoman8.com/comic/222/746937",
     "url": "^https?://(www\\.)?haoman8\\.com/comic/\\d+/\\d+",
     "include": ".bottom-tool-bar",
@@ -2041,6 +2197,7 @@
 },
 {
     "name": "好漫8 - 閱讀 - 修正PC版漫畫下架",
+    "author": "skofkyo",
     "example": "http://haoman8.com/comic/222/718631",
     "url": "^https?://(www\\.)?haoman8\\.com/comic/\\d+/\\d+",
     "exclude": ".bottom-tool-bar",
@@ -2051,6 +2208,7 @@
 },
 {
     "name": "好漫8 - 分類",
+    "author": "skofkyo",
     "example": "http://haoman8.com/category/",
     "url": "^https?://haoman8\\.com/category/",
     "nextLink": "a.on+a",
@@ -2060,6 +2218,7 @@
 },
 {
     "name": "拷貝漫畫 - 分類頁",
+    "author": "skofkyo",
     "example": "https://copymanga.site/comics",
     "url": "^https?://copymanga\\.site/comics",
     "action": 1,
@@ -2069,6 +2228,7 @@
 },
 {
     "name": "拷貝漫畫 - 推薦頁",
+    "author": "skofkyo",
     "example": "https://copymanga.site/recommend",
     "url": "^https?://copymanga\\.site/recommend",
     "nextLink": "li.next>a",
@@ -2078,6 +2238,7 @@
 },
 {
     "name": "二次元動漫 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.2animx.com/index-look-name-%E5%A6%96%E7%A5%9E%E8%A8%98-cid-22592-id-235546",
     "url": "^https?://www\\.2animx\\.com/index-look-name",
     "init": "document.querySelectorAll('#img_ad_img>img[style*=none]').forEach(e=>{e.remove()});document.querySelectorAll('#ComicPic').forEach(e=>{e.outerHTML=`<img src='${e.src}'>`});",
@@ -2091,6 +2252,7 @@
 },
 {
     "name": "二次元動漫 - 分類",
+    "author": "skofkyo",
     "example": "https://www.2animx.com/index-html-status-1",
     "url": "^https?://www\\.2animx\\.com/index-html-status",
     "nextLink": "//a[text()='下一頁']",
@@ -2099,6 +2261,7 @@
 },
 {
     "name": "酷漫屋 - 閱讀",
+    "author": "skofkyo",
     "example": "http://www.kumw7.com/24186/1259138.html",
     "url": "^https?://www\\.(kumw|kuman)\\d+\\.com/\\d+/\\d+\\.html$",
     "history": 2,
@@ -2112,6 +2275,7 @@
 },
 {
     "name": "酷漫屋 - 分類",
+    "author": "skofkyo",
     "example": "http://www.kumw7.com/sort/13-1.html",
     "url": "^https?://www\\.(kumw|kuman)\\d+\\.com/(sort|rank)/",
     "nextLink": "//a[text()=' > ']",
@@ -2121,6 +2285,7 @@
 },
 {
     "name": "酷漫屋手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "http://kumw7.com/25387/1391494.html",
     "url": "^https?://(m\\.)?(kumw|kuman)\\d+\\.com/\\d+/\\d+\\.html",
     "history": 2,
@@ -2140,6 +2305,7 @@
 },
 {
     "name": "酷漫屋手機版 - 分類",
+    "author": "skofkyo",
     "example": "http://kumw7.com/rank/5-1.html",
     "url": "^https?://(m\\.)?(kumw|kuman)\\d+\\.com/(sort|rank)/",
     "nextLink": "//a[text()=' > ']",
@@ -2149,6 +2315,7 @@
 },
 {
     "name": "快看 - 分類",
+    "author": "skofkyo",
     "example": "https://www.kuaikanmanhua.com/tag/0",
     "url": "^https?://www\\.kuaikanmanhua\\.com/tag/\\d+",
     "init": "let ge=e=>document.querySelector(e);let link=ge('.headerContent>div>ul>li:nth-child(2)>a');link.href='/tag/0\\?region=1&pays=0&state=0&sort=1&page=1';link.removeAttribute('target');if(!location.search){ge('.selList.fl.cls>a:first-child').click()}",
@@ -2165,6 +2332,7 @@
 },
 {
     "name": "快看 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.kuaikanmanhua.com/web/comic/190217/",
     "url": "^https?://www\\.kuaikanmanhua\\.com/web/comic/\\d+",
     "history": 2,
@@ -2180,6 +2348,7 @@
 },
 {
     "name": "comic.bh3.com",
+    "author": "skofkyo",
     "example": "https://comic.bh3.com/book/1001/1",
     "url": "^https?://comic\\.bh3\\.com/book/\\d+/\\d+",
     "nextLinkByJs": "let n=doc.querySelector('.comic-wrapper>a:last-child');if(n){return location.origin+n.href.split('\\'')[3]}",
@@ -2189,6 +2358,7 @@
 },
 {
     "name": "kantv.io",
+    "author": "skofkyo",
     "example": "http://kantv.io/home/",
     "url": "^https?://kantv\\.io/",
     "nextLink": "li.active+li>a",
@@ -2198,6 +2368,7 @@
 },
 {
     "name": "R3SUB - 搜索",
+    "author": "skofkyo",
     "example": "https://r3sub.com/search.php?s=king",
     "url": "^https?://r3sub\\.com/search\\.php",
     "nextLink": "li.active+li>a",
@@ -2207,6 +2378,7 @@
 },
 {
     "name": "SubHD",
+    "author": "skofkyo",
     "example": "https://subhd.tv/sub/movie",
     "url": "^https?://subhd(tw)?\\.(tv|com|la|cc|me)/(zu|sub|search)/",
     "include": "nav.clearfix",
@@ -2221,6 +2393,7 @@
 },
 {
     "name": "伪射手网",
+    "author": "skofkyo",
     "example": "http://assrt.net/xml/list/sub/",
     "url": "^https?://assrt\\.net/",
     "nextLinkByJs": "let next = doc.querySelector('#pl-current+a'); if (next) return location.origin + location.pathname + '?page=' + next.innerText",
@@ -2232,6 +2405,7 @@
 },
 {
     "name": "A4k 字幕網",
+    "author": "skofkyo",
     "example": "https://www.a4k.net/",
     "url": "^https?://www\\.a4k\\.net/",
     "nextLink": "a.pager__item--next",
@@ -2241,6 +2415,7 @@
 },
 {
     "name": "字幕库 zmk",
+    "author": "skofkyo",
     "example": "https://zimuku.org/",
     "url": "^https?://zimuku\\.org/",
     "nextLink": "a.next",
@@ -2249,6 +2424,7 @@
 },
 {
     "name": "中文字幕网 zimuzimu",
+    "author": "skofkyo",
     "example": "http://cn.zimuzimu.com/so_zimu.htm?q=2020",
     "url": "^https?://cn\\.zimuzimu\\.com/",
     "nextLink": "li.page-item.active+li>a",
@@ -2258,6 +2434,7 @@
 },
 {
     "name": "點點字幕",
+    "author": "skofkyo",
     "example": "http://www.ddzimu.com/download/xslist.php?key=king",
     "url": "^https?://www\\.ddzimu\\.com/\\w+/xslist\\.php",
     "nextLink": "li.disabled+li>a",
@@ -2266,6 +2443,7 @@
 },
 {
     "name": "SkrBT / BT1207",
+    "author": "skofkyo",
     "example": "http://ibt120701.xyz/search?keyword=king",
     "url": "^https?://.*(bt1207|skrbt)[^/]+/",
     "include": "#search-form",
@@ -2276,6 +2454,7 @@
 },
 {
     "name": "RARBG",
+    "author": "skofkyo",
     "example": "https://rarbg.to/torrents.php?category=movies",
     "url": "^https?://(proxy|unblocked)?rarbg([a-z0-9]+)?\\.(to|org|com)/",
     "pinUrl": true,
@@ -2290,6 +2469,7 @@
 },
 {
     "name": "limetorrents.cc",
+    "author": "skofkyo",
     "example": "https://www.limetorrents.lol/browse-torrents/Movies/",
     "url": "^https?://www\\.limetorrents\\.lol/(browse-torrents|search)/",
     "nextLink": "#next",
@@ -2298,6 +2478,7 @@
 },
 {
     "name": "BT 之家",
+    "author": "skofkyo",
     "example": "https://www.btbtt15.com/forum-index-fid-950.htm",
     "url": "^https?://www\\.btbtt\\d+\\.com/",
     "pinUrl": true,
@@ -2309,6 +2490,7 @@
 },
 {
     "name": "蜜柑计划",
+    "author": "skofkyo",
     "example": "https://mikanani.me/Home/Classic",
     "url": "^https?://mikanani\\.me/Home/Classic",
     "action": 1,
@@ -2319,6 +2501,7 @@
 },
 {
     "name": "動漫花園",
+    "author": "skofkyo",
     "example": "http://share.dmhy.org/topics/list/sort_id/2",
     "url": "^https?://(www|share|dmhy)?(\\.)?(dmhy|anoneko)\\.(org|com)",
     "action": 1,
@@ -2330,6 +2513,7 @@
 },
 {
     "name": "愛戀動漫&MioBT",
+    "author": "skofkyo",
     "example": "http://www.kisssub.org/，http://miobt.com/",
     "url": "^https?://(www\\.|m|share\\.)?(kisssub|miobt|comicat|acgnx|anix|36dm)\\.(org|com|se|moe|club)",
     "action": 1,
@@ -2341,6 +2525,7 @@
 },
 {
     "name": "言耽社 - 閱讀",
+    "author": "skofkyo",
     "example": "https://yandanshe.com/",
     "url": "^https?://yandanshe\\.com/\\d+",
     "nextLink": "span.current+a",
@@ -2350,6 +2535,7 @@
 },
 {
     "name": "言耽社 - 分类页",
+    "author": "skofkyo",
     "example": "https://yandanshe.com/",
     "url": "^https?://yandanshe\\.com/b",
     "nextLink": ".next-page>a",
@@ -2358,6 +2544,7 @@
 },
 {
     "name": "MINI4K",
+    "author": "skofkyo",
     "example": "https://www.mini4k.com/movies",
     "url": "^https?://www\\.mini4k\\.com/movies",
     "nextLink": "a.pager__item--next",
@@ -2367,6 +2554,7 @@
 },
 {
     "name": "WebHD - 搜索页",
+    "author": "skofkyo",
     "example": "http://webhd.cc/search/king",
     "url": "^https?://webhd\\.cc/search/",
     "nextLink": "//a[@class='page-link'][contains(text(), '下一页')]",
@@ -2378,6 +2566,7 @@
 },
 {
     "name": "WebHD",
+    "author": "skofkyo",
     "example": "http://webhd.cc/",
     "url": "^https?://webhd\\.cc/",
     "nextLink": "//a[@class='page-link'][contains(text(), '下一页')]",
@@ -2387,6 +2576,7 @@
 },
 {
     "name": "limetorrents",
+    "author": "skofkyo",
     "example": "https://ww1.limetorrents.icu/movies",
     "url": "^https?://(\\w{1,3}\\.)?limetorrents\\.icu/",
     "nextLink": "a[rel='next']",
@@ -2396,6 +2586,7 @@
 },
 {
     "name": "TorrentGalaxy",
+    "author": "skofkyo",
     "example": "https://torrentgalaxy.to/torrents.php",
     "url": "^https?://torrentgalaxy\\.to/",
     "nextLink": "li.page-item.active+li.page-item>a",
@@ -2405,6 +2596,7 @@
 },
 {
     "name": "kickasss",
+    "author": "skofkyo",
     "example": "https://kickasss.to/",
     "url": "^https?://(kickasss|katcr)\\.",
     "nextLink": "a.active+a",
@@ -2414,6 +2606,7 @@
 },
 {
     "name": "1337x",
+    "author": "skofkyo",
     "example": "https://www.1377x.to/",
     "url": "^https?://www\\.1377x\\.",
     "nextLink": ".pagination li.active+li>a",
@@ -2423,6 +2616,7 @@
 },
 {
     "name": "YTS",
+    "author": "skofkyo",
     "example": "https://yts.mx/browse-movies",
     "url": "^https?://yts\\.mx/browse-movies",
     "nextLink": "//ul[contains(@class, 'tsc_pagination')]/li[a/@class='current']/following-sibling::li[1]/a",
@@ -2432,6 +2626,7 @@
 },
 {
     "name": "萌番组 lite",
+    "author": "skofkyo",
     "example": "https://bangumi.moe/lite/",
     "url": "^https?://bangumi\\.moe/lite/",
     "nextLink": "//section/a[span[contains(@class, 'next')]]",
@@ -2442,12 +2637,14 @@
 },
 {
     "name": "萌番组",
+    "author": "skofkyo",
     "example": "https://bangumi.moe/",
     "url": "^https?://bangumi\\.moe/",
     "loadMore": "[torrent-list='lattorrents'] button[ng-click='loadMore()'] ,[torrent-list='torrents'] button[ng-click='loadMore()']"
 },
 {
     "name": "AniRena",
+    "author": "skofkyo",
     "example": "https://www.anirena.com/",
     "url": "^https?://www\\.anirena\\.com/",
     "nextLink": "a.disabled+a:not(.disabled)",
@@ -2457,6 +2654,7 @@
 },
 {
     "name": "ACG.RIP",
+    "author": "skofkyo",
     "example": "https://acg.rip/",
     "url": "^https?://acg\\.rip/",
     "nextLink": "li.next>a",
@@ -2465,6 +2663,7 @@
 },
 {
     "name": "anime1.me",
+    "author": "skofkyo",
     "example": "https://anime1.me/",
     "url": "^https?://anime1\\.me/",
     "nextLink": "a.next",
@@ -2472,6 +2671,7 @@
 },
 {
     "name": "233 动漫 - 排行榜",
+    "author": "skofkyo",
     "example": "https://www.dm233.cc/rank/",
     "url": "^https?://www\\.dm233\\.cc/rank/",
     "nextLink": "//div[@class='pagelist']//a[contains(text(), '下一页') or contains(text(), '下一頁')]",
@@ -2480,6 +2680,7 @@
 },
 {
     "name": "233 动漫",
+    "author": "skofkyo",
     "example": "https://www.dm233.cc/catalog/",
     "url": "^https?://www\\.dm233\\.cc/",
     "nextLink": "//div[@class='pagelist']//a[contains(text(), '下一页') or contains(text(), '下一頁')]",
@@ -2488,6 +2689,7 @@
 },
 {
     "name": "AGE 动漫 - 排行榜",
+    "author": "skofkyo",
     "example": "https://www.agemys.cc/rank",
     "url": "^https?://www\\.agemys\\.cc/rank",
     "nextLink": "id('container')/ul[@style][not(@class)]/li/a[contains(text(), '下一页')]",
@@ -2497,6 +2699,7 @@
 },
 {
     "name": "AGE 动漫",
+    "author": "skofkyo",
     "example": "https://www.agemys.net/catalog/all-all-all-all-all-time-1",
     "url": "^https?://www\\.agemys\\.[^/]+/",
     "nextLink": "id('container')//div[@class='blockcontent']/div[@style][not(@class)]/li/a[contains(text(), '下一页')]",
@@ -2505,6 +2708,7 @@
 },
 {
     "name": "漫岛动漫",
+    "author": "skofkyo",
     "example": "https://www.mandao.tv/list/lm1.html",
     "url": "^https?://www\\.mandao\\.tv/",
     "nextLink": "//div[contains(@class, 'page')]/a[text()='>']",
@@ -2514,6 +2718,7 @@
 },
 {
     "name": "妮可动漫",
+    "author": "skofkyo",
     "example": "http://www.nicotv.me/video/type3/-----4-addtime.html",
     "url": "^https?://www\\.nicotv\\.me/",
     "nextLink": "//ul[contains(@class, 'pagination ')]//a[text()='»']",
@@ -2522,6 +2727,7 @@
 },
 {
     "name": "怡萱动漫",
+    "author": "skofkyo",
     "example": "https://www.yxdmlove.com/resource/",
     "url": "^https?://www\\.yxdmlove\\.com/",
     "nextLink": "//a[@class='nextPage' or text()='下一页']",
@@ -2530,6 +2736,7 @@
 },
 {
     "name": "LIBVIO",
+    "author": "skofkyo",
     "example": "https://libvio.me/type/1.html",
     "url": "^https?://libvio\\.me/",
     "action": 1,
@@ -2542,6 +2749,7 @@
 },
 {
     "name": "筆趣影視",
+    "author": "skofkyo",
     "example": "http://biquys.com/acg/y2022/",
     "url": "^https?://(www\\.)?biquys.com/(acg|zongyi|mov|tv)/",
     "action": 1,
@@ -2553,6 +2761,7 @@
 },
 {
     "name": "libgen.rs",
+    "author": "skofkyo",
     "example": "http://libgen.rs/search.php?&req=The+Way+Out&phrase=1&view=simple&column=def&sort=def&sortmode=ASC&page=1",
     "url": "^https?://libgen\\.rs/",
     "action": 1,
@@ -2565,6 +2774,7 @@
 },
 {
     "name": "99images",
+    "author": "skofkyo",
     "example": "https://www.99images.com/celebrities/aisha-sharma",
     "url": "^https?://www.99images.com/",
     "action": 1,
@@ -2575,6 +2785,7 @@
 },
 {
     "name": "steamcommunity.com",
+    "author": "skofkyo",
     "url": "^https?://steamcommunity\\.com/",
     "include": ".workshopBrowsePaging",
     "nextLink": "a.pagebtn:last-child",
@@ -2585,6 +2796,7 @@
 },
 {
     "name": "游研社",
+    "author": "skofkyo",
     "example": "https://www.yystv.cn/docs",
     "url": "^https?://www\\.yystv\\.cn/",
     "action": 1,
@@ -2596,6 +2808,7 @@
 },
 {
     "name": "Vilipix",
+    "author": "skofkyo",
     "example": "https://www.vilipix.com/new",
     "url": "^https?://www\\.vilipix\\.com/",
     "action": 2,
@@ -2606,6 +2819,7 @@
 },
 {
     "name": "吐槽弹幕网 - 搜索页",
+    "author": "skofkyo",
     "example": "https://www.tucao.lol/index.php?m=content&c=search&a=init&catid=24&dosubmit=1&orderby=a.id+DESC&info%5Btitle%5D=%E8%BD%AC%E7%94%9F&page=3",
     "action": 1,
     "url": "^https?://www\\.tucao\\.[a-z]{3}/index\\.php\\?",
@@ -2616,6 +2830,7 @@
 },
 {
     "name": "吐槽弹幕网",
+    "author": "skofkyo",
     "example": "https://www.tucao.lol/list/7/",
     "url": "^https?://www\\.tucao\\.[a-z]{3}/",
     "nextLink": ".pagego a",
@@ -2624,6 +2839,7 @@
 },
 {
     "name": "ZzzFun 动漫",
+    "author": "skofkyo",
     "example": "http://www.zzzfun.com/vod_type_id_1.html",
     "url": "^https?://www\\.zzzfun\\.com/",
     "nextLink": "//a[text()='下一页']",
@@ -2633,6 +2849,7 @@
 },
 {
     "name": "91 美剧网",
+    "author": "skofkyo",
     "example": "https://91mjw.vip/category/dianying",
     "url": "^https?://(91mjw|91mj)\\.vip/",
     "nextLink": ".next-page>a",
@@ -2642,6 +2859,7 @@
 },
 {
     "name": "核桃影院",
+    "author": "skofkyo",
     "example": "http://kkkk.plus/vodshow/1-----------.html",
     "url": "^https?://kkkk\\.plus/",
     "nextLink": ".page-next",
@@ -2651,6 +2869,7 @@
 },
 {
     "name": "低端影视",
+    "author": "skofkyo",
     "example": "https://ddys.tv/category/movie/",
     "url": "^https?://ddys\\d?\\.[a-z]{2,3}/",
     "nextLink": "a.next",
@@ -2660,6 +2879,7 @@
 },
 {
     "name": "马克喵",
+    "author": "skofkyo",
     "example": "https://www.macat.vip/%e5%ad%97%e4%bd%93",
     "url": "^https?://www\\.macat\\.vip/",
     "include": ".posts-wrapper.row",
@@ -2670,6 +2890,7 @@
 },
 {
     "name": "电影狗",
+    "author": "skofkyo",
     "example": "https://www.dianyinggou.com/yingku/",
     "url": "^https?://www\\.dianyinggou\\.com/",
     "nextLink": ".mainPage li.selected+li>a",
@@ -2680,6 +2901,7 @@
 },
 {
     "name": "厂长资源",
+    "author": "skofkyo",
     "example": "https://czzy01.com/",
     "url": "^https?://[^/]+/",
     "include": "//title[contains(text(),'厂长资源')]",
@@ -2690,6 +2912,7 @@
 },
 {
     "name": "NO视频",
+    "author": "skofkyo",
     "example": "https://www.novipnoad.com/movie/",
     "url": "^https?://www\\.novipnoad\\.com/",
     "nextLink": "a.nextpostslink",
@@ -2699,6 +2922,7 @@
 },
 {
     "name": "115看劇 - 分類",
+    "author": "skofkyo",
     "example": "https://115kanju.com/center",
     "url": "^https?://115kanju\\.com/",
     "nextLink": "li[title='下一页']",
@@ -2708,6 +2932,7 @@
 },
 {
     "name": "飛極速線上",
+    "author": "skofkyo",
     "example": "http://www.fjisu2.com/acg/japan/",
     "url": "^https?://(www\\.|m\\.)?(fjisu|feijisu)\\d+\\.com/\\w+/\\w+/",
     "action": 1,
@@ -2718,6 +2943,7 @@
 },
 {
     "name": "淘豆网 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.taodocs.com/p-118668992.html",
     "url": "^https?://m\\.taodocs\\.com/",
     "autoClick": ".view",
@@ -2725,6 +2951,7 @@
 },
 {
     "name": "200btsow.vip",
+    "author": "skofkyo",
     "example": "https://200btsow.vip/",
     "url": "^https?://200btsow\\.vip/",
     "nextLink": "//a[text()='下一页']",
@@ -2734,6 +2961,7 @@
 },
 {
     "name": "onehu.xyz",
+    "author": "skofkyo",
     "example": "https://onehu.xyz/",
     "url": "^https?://onehu\\.xyz/",
     "nextLink": "span.current+a",
@@ -2743,6 +2971,7 @@
 },
 {
     "name": "www.thingiverse.com",
+    "author": "skofkyo",
     "example": "https://www.thingiverse.com/",
     "url": "^https?://www\\.thingiverse\\.com/",
     "action": 1,
@@ -2756,6 +2985,7 @@
 },
 {
     "name": "https://www.orcy.net.cn/",
+    "author": "skofkyo",
     "example": "https://www.orcy.net.cn/",
     "url": "^https?://www\\.orcy\\.net\\.cn/",
     "nextLink": ".nextpostslink",
@@ -2764,6 +2994,7 @@
 },
 {
     "name": "小众软件",
+    "author": "skofkyo",
     "example": "https://www.appinn.com/abouttime/amp/",
     "url": "^https?://www\\.appinn\\.com/",
     "nextLink": "a.next,.next>a",
@@ -2773,6 +3004,7 @@
 },
 {
     "name": "ijtsrd.com",
+    "author": "skofkyo",
     "example": "https://www.ijtsrd.com/archive/21/volume-3/issue-4",
     "url": "^https?://www\\.ijtsrd\\.com/",
     "include": "//ul[li[@class='active'] and @class='pagination']/following-sibling::ul[1]//a[@href]",
@@ -2782,12 +3014,14 @@
 },
 {
     "name": "scloud.ws",
+    "author": "skofkyo",
     "url": "^https?://scloud\\.ws/",
     "nextLink": ".js-ls-pagination-next",
     "pageElement": ".topic-card-wrapper"
 },
 {
     "name": "Winaero",
+    "author": "skofkyo",
     "example": "https://winaero.com/category/windows-10/",
     "url": "^https?://winaero\\.com/",
     "nextLink": "a.next",
@@ -2798,6 +3032,7 @@
 },
 {
     "name": "cahdroid",
+    "author": "skofkyo",
     "example": "https://cahdroid.com/",
     "url": "^https?://cahdroid\\.com/",
     "include": ".pagination",
@@ -2808,6 +3043,7 @@
 },
 {
     "name": "4download",
+    "author": "skofkyo",
     "example": "https://4download.net/software/",
     "url": "^https?://4download\\.net/",
     "include": ".pagi-nav.clearfix.ignore-select",
@@ -2819,6 +3055,7 @@
 },
 {
     "name": "docs.oracle.com",
+    "author": "skofkyo",
     "example": "https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html",
     "url": "^https?://docs\\.oracle\\.com/",
     "action": 2,
@@ -2827,6 +3064,7 @@
 },
 {
     "name": "w3school.com.cn",
+    "author": "skofkyo",
     "example": "https://www.w3school.com.cn/js/index.asp",
     "url": "^https?://www\\.w3school\\.com\\.cn/",
     "action": 1,
@@ -2841,6 +3079,7 @@
 },
 {
     "name": "菜鸟教程 - 分类页",
+    "author": "skofkyo",
     "example": "https://www.runoob.com/w3cnote",
     "url": "^https?://www\\.runoob\\.com/w3cnote",
     "nextLink": "li.next-page>a",
@@ -2849,6 +3088,7 @@
 },
 {
     "name": "菜鸟教程 - 文章页",
+    "author": "skofkyo",
     "example": "https://www.runoob.com/js/js-tutorial.html",
     "url": "^https?://www\\.runoob\\.com/[a-z/-]+\\.html",
     "action": 1,
@@ -2861,6 +3101,7 @@
 },
 {
     "name": "奔跑中的奶酪",
+    "author": "skofkyo",
     "example": "http://www.runningcheese.com/",
     "url": "^https?://www\\.runningcheese\\.com/",
     "nextLink": "a.next",
@@ -2870,6 +3111,7 @@
 },
 {
     "name": "423down",
+    "author": "skofkyo",
     "example": "https://www.423down.com/",
     "url": "^https?://www\\.423down\\.com/",
     "nextLink": "//a[text()='下一页']",
@@ -2879,6 +3121,7 @@
 },
 {
     "name": "大眼仔旭",
+    "author": "skofkyo",
     "example": "http://www.dayanzai.me/",
     "url": "^https?://www\\.dayanzai\\.me/",
     "nextLink": ".page>span+a",
@@ -2888,6 +3131,7 @@
 },
 {
     "name": "果核剥壳",
+    "author": "skofkyo",
     "example": "https://www.ghxi.com/category/all/pcsoft",
     "url": "^https?://www\\.ghxi\\.com/",
     "nextLink": "a.next",
@@ -2897,6 +3141,7 @@
 },
 {
     "name": "億破姐&電腦系統吧",
+    "author": "skofkyo",
     "example": "http://www.dnxitong.com/soft/",
     "url": "^https?://www\\.(ypojie|dnxitong)\\.com/",
     "nextLink": ".next-page>a",
@@ -2907,6 +3152,7 @@
 },
 {
     "name": "FC Portables",
+    "author": "skofkyo",
     "example": "https://www.fcportables.com/",
     "url": "^https?://www\\.fcportables\\.com/",
     "nextLink": "a.next",
@@ -2917,6 +3163,7 @@
 },
 {
     "name": "KaranPc",
+    "author": "skofkyo",
     "example": "https://karanpc.com/windows/download-managers/",
     "url": "^https?://karanpc\\.com/",
     "include": "#nav-below",
@@ -2927,6 +3174,7 @@
 },
 {
     "name": "阿榮福利味",
+    "author": "skofkyo",
     "example": "https://www.azofreeware.com/",
     "url": "^https?://www\\.azofreeware\\.com/",
     "action": 1,
@@ -2936,6 +3184,7 @@
 },
 {
     "name": "Apkpure",
+    "author": "skofkyo",
     "example": "https://apkpure.com/tw/game",
     "url": "^https?://apkpure\\.com/",
     "nextLink": "a.loadmore",
@@ -2945,6 +3194,7 @@
 },
 {
     "name": "軟體部落",
+    "author": "skofkyo",
     "example": "https://softblog.tw/green-portable",
     "url": "^https?://softblog\\.tw/",
     "include": ".page-numbers",
@@ -2955,6 +3205,7 @@
 },
 {
     "name": "Gdaily",
+    "author": "skofkyo",
     "example": "https://www.gdaily.org/software",
     "url": "^https?://www\\.gdaily\\.org/(search|software|app|online|teaching)",
     "init": "document.querySelectorAll('.adsbygoogle').forEach(e=>{e.parentNode.parentNode.remove()})",
@@ -2966,12 +3217,14 @@
 },
 {
     "name": "94i.in - 自動簽到",
+    "author": "skofkyo",
     "example": "https://94i.in/",
     "url": "^https?://94i\\.in/",
     "autoClick": "#pper_a:not([style='display: none;'])"
 },
 {
     "name": "Mobile01 - 手機版內文",
+    "author": "skofkyo",
     "example": "https://m.mobile01.com/topicdetail.php?f=300&t=6660682",
     "url": "^https?://m\\.mobile01\\.com/topicdetail",
     "nextLink": ".c-pagination--next",
@@ -2983,6 +3236,7 @@
 },
 {
     "name": "Mobile01 - 內文",
+    "author": "skofkyo",
     "example": "https://www.mobile01.com/topicdetail.php?f=300&t=6660682",
     "url": "^https?://www\\.mobile01\\.com/topicdetail",
     "nextLink": "li.l-pagination__page.is-active+li>a",
@@ -2994,6 +3248,7 @@
 },
 {
     "name": "Mobile01 - 文章列表",
+    "author": "skofkyo",
     "example": "https://www.mobile01.com/topiclist.php?f=300",
     "url": "^https?://(www|m)\\.mobile01\\.com/(forumtopic|topiclist)",
     "nextLink": "li.l-pagination__page.is-active+li>a,.c-pagination--next",
@@ -3004,6 +3259,7 @@
 },
 {
     "name": "巴哈姆特 - 內文",
+    "author": "skofkyo",
     "example": "https://forum.gamer.com.tw/C.php?bsn=23805&snA=610529&tnum=14858",
     "url": "^https?://forum\\.gamer\\.com.tw/C\\.php",
     "nextLink": "a.next:not(.no)",
@@ -3016,6 +3272,7 @@
 },
 {
     "name": "巴哈姆特 - 文章列表",
+    "author": "skofkyo",
     "example": "https://forum.gamer.com.tw/B.php?bsn=23805",
     "url": "^https?://forum\\.gamer\\.com.tw/B\\.php",
     "nextLink": "a.next:not(.no)",
@@ -3029,6 +3286,7 @@
 },
 {
     "name": "Erowall.com",
+    "author": "skofkyo",
     "example": "https://erowall.com/",
     "url": "^https?://erowall\\.com/",
     "nextLink": "//a[contains(text(),'Next')]",
@@ -3038,6 +3296,7 @@
 },
 {
     "name": "ftopx.com",
+    "author": "skofkyo",
     "example": "https://ftopx.com/",
     "url": "^https?://ftopx\\.com/",
     "nextLink": "li.active+li>a",
@@ -3047,6 +3306,7 @@
 },
 {
     "name": "448人体艺术",
+    "author": "skofkyo",
     "example": "https://488xm.com/666rentiyishu/",
     "url": "^https?://488xm\\.com/\\w+/",
     "pageElement": "#container>.grid",
@@ -3054,6 +3314,7 @@
 },
 {
     "name": "gogo人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "https://gogortrt.com/gmgqdd/1305/",
     "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/\\d+/",
     "init": "let a=document.querySelector('.main>div:not(.atc_new_head)>a');a.outerHTML=a.innerHTML;",
@@ -3066,6 +3327,7 @@
 },
 {
     "name": "gogo人体艺术",
+    "author": "skofkyo",
     "example": "https://gogortrt.com/gmgqdd/",
     "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/",
     "include": ".index_list",
@@ -3077,6 +3339,7 @@
 },
 {
     "name": "956体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "https://956n.com/rbddszysz/1398/",
     "url": "^https?://956[a-z]{1,2}\\.[a-z]{2,3}/[a-z]+/\\d+/(\\d+\\.html$)?",
     "init": "document.querySelectorAll('.content>a').forEach(a=>{a.outerHTML=a.innerHTML})",
@@ -3089,6 +3352,7 @@
 },
 {
     "name": "956人体艺术",
+    "author": "skofkyo",
     "example": "https://956n.com/rbddszysz/",
     "url": "^https?://956[a-z]{1,2}\\.[a-z]{2,3}/",
     "exclude": ".title",
@@ -3099,6 +3363,7 @@
 },
 {
     "name": "666人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "https://6666rt.com/ArtZG/2152/1.html",
     "url": "^https?://[6]{3,4}[a-z]{2}\\.[a-z]{2,3}/[a-zA-Z]+/\\d+/\\d+\\.html",
     "init": "document.querySelectorAll('.imgbox>a').forEach(a=>{a.outerHTML=a.innerHTML})",
@@ -3112,6 +3377,7 @@
 },
 {
     "name": "666人体艺术",
+    "author": "skofkyo",
     "example": "https://6666rt.com/ArtZG/",
     "url": "^https?://[6]{3,4}[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3120,6 +3386,7 @@
 },
 {
     "name": "64体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.64ay.com/xxrtddbkxb/313.html",
     "url": "^https?://www\\.64[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "init": "document.querySelectorAll('.tu>a').forEach(a=>{a.outerHTML=a.innerHTML})",
@@ -3133,6 +3400,7 @@
 },
 {
     "name": "64人体艺术",
+    "author": "skofkyo",
     "example": "http://www.64ay.com/xxrtddbkxb/",
     "url": "^https?://www\\.64[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3142,6 +3410,7 @@
 },
 {
     "name": "98体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.98ah.com/GOGOqqddgqrt/415.html",
     "url": "^https?://www\\.98[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "init": "let a=document.querySelector('.content-pic>a');a.outerHTML=a.innerHTML;",
@@ -3155,6 +3424,7 @@
 },
 {
     "name": "98人体艺术",
+    "author": "skofkyo",
     "example": "http://www.98ah.com/gogoltmnysxz/",
     "url": "^https?://www\\.98[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3163,6 +3433,7 @@
 },
 {
     "name": "54体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.54aj.com/gogogmbspqq/432.html",
     "url": "^https?://www\\.54[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "init": "let a=document.querySelector('.content>a:not([href*=tags])');a.outerHTML=a.innerHTML;",
@@ -3175,6 +3446,7 @@
 },
 {
     "name": "54人体艺术",
+    "author": "skofkyo",
     "example": "http://www.54aj.com/gogogmbspqq/",
     "url": "^https?://www\\.54[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3183,6 +3455,7 @@
 },
 {
     "name": "48人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.48gd.com/yyrtdd/448.html",
     "url": "^https?://www\\.48[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "init": "let a=document.querySelector('#content>a');a.outerHTML=a.innerHTML;",
@@ -3195,6 +3468,7 @@
 },
 {
     "name": "48人体艺术",
+    "author": "skofkyo",
     "example": "http://www.48gd.com/qltysz/",
     "url": "^https?://www\\.48[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3203,6 +3477,7 @@
 },
 {
     "name": "42人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.42jd.com/ddrGOGOtysgq/417.html",
     "url": "^https?://www\\.42[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "action": 1,
@@ -3216,6 +3491,7 @@
 },
 {
     "name": "42人体艺术 - 搜索",
+    "author": "skofkyo",
     "example": "http://www.42jd.com/plus/search.php?keyword=%E7%BE%8E%E5%A5%B3&searchtype=titlekeyword&channeltype=0&orderby=&kwtype=0&pagesize=24&typeid=0&TotalResult=50&PageNo=1",
     "url": "^https?://www\\.[0-9]{2}[a-z]{2}\\.[a-z]{2,3}/plus/search\\.php",
     "action": 1,
@@ -3225,6 +3501,7 @@
 },
 {
     "name": "42人体艺术",
+    "author": "skofkyo",
     "example": "http://www.42jd.com/ddxxltmnrt/",
     "url": "^https?://www\\.42[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3233,6 +3510,7 @@
 },
 {
     "name": "36人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "www.36ut.com，xixirt.org",
     "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.[a-z]{2,3}/[a-z]+/(\\d+/|\\d+(_\\d+)?\\.html)",
     "action": 1,
@@ -3247,6 +3525,7 @@
 },
 {
     "name": "36人体艺术",
+    "author": "skofkyo",
     "example": "www.36ut.com，xixirt.org",
     "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3256,6 +3535,7 @@
 },
 {
     "name": "23人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.23fe.com/gogoddppys/435.html",
     "url": "^https?://www\\.23[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "action": 1,
@@ -3270,6 +3550,7 @@
 },
 {
     "name": "23人体艺术",
+    "author": "skofkyo",
     "example": "http://www.23fe.com/gogoddppys/",
     "url": "^https?://www\\.23[a-z]{2}\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3278,6 +3559,7 @@
 },
 {
     "name": "AJ人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.02aj.com/yzrt/8674.html",
     "url": "^https?://www\\.02aj\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
     "action": 1,
@@ -3292,6 +3574,7 @@
 },
 {
     "name": "AJ人体艺术",
+    "author": "skofkyo",
     "example": "https://www.02aj.com/yzrt/",
     "url": "^https?://www\\.\\d+aj\\.[a-z]{2,3}/",
     "nextLink": "//a[text()='下一页']",
@@ -3301,6 +3584,7 @@
 },
 {
     "name": "139人体艺术手機版 - 圖片",
+    "author": "skofkyo",
     "example": "https://m.139tu.com/rtysyz/20200710/7479.html",
     "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.[a-z]{2,3}/[a-zA-Z]+/(\\d+/(\\d+\\.html$)?|\\d+(_\\d+)?\\.html$|\\d+/\\d+(_\\d+)?\\.html$)",
     "init": "document.querySelectorAll('.tal>a').forEach(a=>{a.outerHTML=a.innerHTML})",
@@ -3314,6 +3598,7 @@
 },
 {
     "name": "139人体艺术手機版",
+    "author": "skofkyo",
     "example": "88rtys.com，https://m.139tu.com/rtysyz/",
     "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.[a-z]{2,3}/",
     "include": ".page-show",
@@ -3325,6 +3610,7 @@
 },
 {
     "name": "139人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.139tu.com/rtysyz/20210829/8674.html",
     "url": "^https?://www\\.139tu\\.[a-z]{2,3}/[a-z]+/\\d+/\\d+(_\\d+)?\\.html",
     "action": 1,
@@ -3338,6 +3624,7 @@
 },
 {
     "name": "139人体艺术",
+    "author": "skofkyo",
     "example": "88rtys.com，https://www.139tu.com/rtysyz/",
     "url": "^https?://www\\.139tu\\.[a-z]{2,3}/",
     "include": ".list_tags",
@@ -3349,6 +3636,7 @@
 },
 {
     "name": "GOGO人体艺术 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.gogort2.com/html/yazhou/9988.html",
     "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/html/\\w+/\\d+(_\\d+)?\\.html$",
     "action": 1,
@@ -3363,6 +3651,7 @@
 },
 {
     "name": "GOGO人体艺术 - 標籤",
+    "author": "skofkyo",
     "example": "http://www.gogort2.net/index.php?m=content&c=tag&a=lists&tag=%B3%AC%B4%F3%B3%DF%B6%C8",
     "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/index\\.php\\?m=content&c=tag",
     "nextLink": "span+a:not(.a1)",
@@ -3374,6 +3663,7 @@
 },
 {
     "name": "GOGO人体艺术 - 搜索",
+    "author": "skofkyo",
     "example": "http://www.gogort2.com/index.php?m=search&c=index&a=init&typeid=&siteid=1&q=%B4%F3%B5%A8",
     "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/index\\.php\\?m=search",
     "nextLink": "span+a:not(.a1)",
@@ -3383,6 +3673,7 @@
 },
 {
     "name": "GOGO人体艺术",
+    "author": "skofkyo",
     "example": "http://www.gogort2.com/html/yazhou/index_2.html",
     "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/html/[a-z]+/(index_\\d+\\.html)?",
     "include": ".index_list",
@@ -3394,6 +3685,7 @@
 },
 {
     "name": "图集岛",
+    "author": "skofkyo",
     "example": "https://www.tujidao03.com/u/?action=gengxin",
     "url": "^https?://www\\.tujidao\\d+\\.com/",
     "nextLink": ".num+.next",
@@ -3402,6 +3694,7 @@
 },
 {
     "name": "Kemono - post",
+    "author": "skofkyo",
     "example": "https://kemono.party/fantia/user/17148/post/1528173",
     "url": "^https?://kemono\\.party/fantia/user/\\d+/post/\\d+$",
     "nextLink": ".post__nav-item>a.next",
@@ -3409,6 +3702,7 @@
 },
 {
     "name": "Kemono - user",
+    "author": "skofkyo",
     "example": "https://kemono.party/fantia/user/17148?o=0",
     "url": "^https?://kemono\\.party/fantia/user/\\d+\\?o=",
     "nextLink": "a.pagination-button-after-current",
@@ -3421,6 +3715,7 @@
 },
 {
     "name": "Kemono - posts",
+    "author": "skofkyo",
     "example": "https://kemono.party/posts",
     "url": "^https?://kemono\\.party/posts",
     "nextLink": "a.pagination-button-after-current",
@@ -3432,6 +3727,7 @@
 },
 {
     "name": "全图网 - 圖片 - 直接載入全部圖片",
+    "author": "skofkyo",
     "example": "http://qq.quantuwang1.com/m/fb9deaa66efefa21.html，http://m.54mn.cc/m/29491/1.html",
     "url": "^https?://(qq?|t|w|m)\\.(quantuwang\\d?|54mn)\\.(com|cc)/m/",
     "include": [
@@ -3445,6 +3741,7 @@
 },
 {
     "name": "全图网 - 分類",
+    "author": "skofkyo",
     "example": "http://qq.quantuwang1.com/meinv/taotu/，http://m.54mn.cc/meinv/taotu/",
     "url": "^https?://(qq?|t|w|m)\\.(quantuwang\\d?|54mn)\\.(com|cc)/",
     "exclude": ".index_c_img img[alt]",
@@ -3455,6 +3752,7 @@
 },
 {
     "name": "套图之家 - 圖片",
+    "author": "skofkyo",
     "example": "https://taotuhome.com/19377.html",
     "url": "^https?://taotuhome\\.com/",
     "nextLink": "span.current+a",
@@ -3466,6 +3764,7 @@
 },
 {
     "name": "套图之家 - 分類",
+    "author": "skofkyo",
     "example": "https://taotuhome.com/category/xgyw/",
     "url": "^https?://taotuhome\\.com/",
     "nextLink": "span.current+a",
@@ -3475,6 +3774,7 @@
 },
 {
     "name": "俊美图 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.meijuntu.com/beauty/wanghongnenmo_abbyliya_wanmeishencainvshen_mistar_vol_144.html",
     "url": "^https?://www\\.meijuntu\\.com/",
     "include": ".next_picture",
@@ -3488,6 +3788,7 @@
 },
 {
     "name": "看妹图",
+    "author": "skofkyo",
     "example": "https://kanmeitu1.cc/p/",
     "url": "^https?://kanmeitu\\d\\.cc/p/(index_\\d+.html)?",
     "pageElement": ".sou-con-list>ul",
@@ -3495,6 +3796,7 @@
 },
 {
     "name": "俊美图 - 分類",
+    "author": "skofkyo",
     "example": "https://www.meijuntu.com/beauty/",
     "url": "^https?://www\\.meijuntu\\.com/",
     "exclude": ".next_picture",
@@ -3504,6 +3806,7 @@
 },
 {
     "name": "美女图片网 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.mevtu.com/xingganmm/15275.html",
     "url": "^https?://www\\.mevtu\\.com/",
     "include": ".page_imges",
@@ -3518,6 +3821,7 @@
 },
 {
     "name": "美女图片网 - 分類",
+    "author": "skofkyo",
     "example": "https://www.mevtu.com/",
     "url": "^https?://www\\.mevtu\\.com/",
     "include": ".nav-links",
@@ -3528,6 +3832,7 @@
 },
 {
     "name": "Pic Yailay - 圖片",
+    "author": "skofkyo",
     "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html，https://nungvl.net/gallerys/87379.cg?page=1",
     "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/(articles|gallerys)",
     "pinUrl": true,
@@ -3541,6 +3846,7 @@
 },
 {
     "name": "Pic Yailay",
+    "author": "skofkyo",
     "example": "https://pic.yailay.com/?page=1",
     "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/",
     "nextLink": ".pagination-next",
@@ -3551,6 +3857,7 @@
 },
 {
     "name": "imhentai.xxx - 圖片",
+    "author": "skofkyo",
     "example": "https://imhentai.xxx/view/932112/1/",
     "url": "^https?://imhentai\\.xxx/view/\\d+/\\d+/",
     "nextLink": ".nav_next",
@@ -3563,6 +3870,7 @@
 },
 {
     "name": "imhentai.xxx - 圖片清單檢視全部",
+    "author": "skofkyo",
     "example": "https://imhentai.xxx/gallery/928466/",
     "url": "^https?://imhentai\\.xxx/gallery/\\d+/$",
     "pinUrl": true,
@@ -3571,6 +3879,7 @@
 },
 {
     "name": "imhentai.xxx",
+    "author": "skofkyo",
     "example": "https://imhentai.xxx/?page=1",
     "url": "^https?://imhentai\\.xxx/(\\?page=\\d+|search)?",
     "nextLink": ".page-item.active+li:not(.disabled)>a",
@@ -3579,6 +3888,7 @@
 },
 {
     "name": "nhentai - 閱讀",
+    "author": "skofkyo",
     "example": "https://nhentai.net/g/422938/1/",
     "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/g/\\d+/\\d+/?",
     "init": "let a = document.querySelector('#image-container>a');a.outerHTML=a.innerHTML;",
@@ -3604,6 +3914,7 @@
 },
 {
     "name": "nhentai",
+    "author": "skofkyo",
     "example": "https://nhentai.net/",
     "url": "^https?://(n(ya)?hentai|cathentai)\\.(net|to|xxx|red)/(search|\\?page=|tags|artists|characters|parodies|groups)?",
     "nextLink": "a.next,a.current+a,a.last,span.next>a",
@@ -3613,6 +3924,7 @@
 },
 {
     "name": "Simply Hentai",
+    "author": "skofkyo",
     "example": "https://www.simply-hentai.com/",
     "url": "^https?://www\\.simply-hentai\\.com/",
     "pageElement": "//div[div[article[a[div[@class='image-wrapper']/img[@data-src]]]]]",
@@ -3623,6 +3935,7 @@
 },
 {
     "name": "西图阁",
+    "author": "skofkyo",
     "example": "https://www.xtg123.cc/xrall",
     "url": "^https?://www\\.xtg123\\.cc/([a-z]+|\\?s=)",
     "nextLink": "a.next",
@@ -3632,6 +3945,7 @@
 },
 {
     "name": "妹妹图",
+    "author": "skofkyo",
     "example": "https://mm.tvv.tw/",
     "url": "^https?://mm\\.tvv\\.tw/",
     "action": 1,
@@ -3642,6 +3956,7 @@
 },
 {
     "name": "留园酷18",
+    "author": "skofkyo",
     "example": "https://www.cool18.com/bbs/index.php?app=forum&act=cachepage&cp=tree1",
     "url": "^https?://www\\.cool18\\.com/bbs",
     "nextLink": "//a[text()='下一页']",
@@ -3650,6 +3965,7 @@
 },
 {
     "name": "24tupian - 圖片原圖",
+    "author": "skofkyo",
     "example": "https://www.24tupian.org/2022/10-12/tuimo52612_1.html",
     "url": "^https?://www\\.24tupian\\.org/\\d+/[0-9-]+/\\w+\\.html",
     "init": "let a=document.querySelector('#imgshow>a');a.outerHTML=a.innerHTML;",
@@ -3662,6 +3978,7 @@
 },
 {
     "name": "24tupian - 圖片清單",
+    "author": "skofkyo",
     "example": "https://www.24tupian.org/hd2/tuimo52612.html",
     "url": "^https?://www\\.24tupian\\.org/hd\\d+/\\w+\\.html",
     "nextLink": "a.on+a[href$=html]",
@@ -3671,6 +3988,7 @@
 },
 {
     "name": "24tupian",
+    "author": "skofkyo",
     "example": "https://www.24tupian.org/",
     "url": "^https?://www\\.24tupian\\.org/(meinv|nvyou|tuimo|gaoqing|model|class|Serch)",
     "nextLink": "a.on+a[href$='html']",
@@ -3679,6 +3997,7 @@
 },
 {
     "name": "新老友图社 - 看圖",
+    "author": "skofkyo",
     "example": "https://m.xtushe.com/photo/10377.html",
     "url": "^https?://m\\.xtushe\\.com/photo/\\w+\\.html",
     "nextLink": "li.next>a[title='下一张']",
@@ -3690,6 +4009,7 @@
 },
 {
     "name": "新老友图社",
+    "author": "skofkyo",
     "example": "https://m.xtushe.com/catalog/xinggan.html",
     "url": "^https?://m\\.xtushe\\.com/",
     "nextLink": "li.next>a[title='下一页']",
@@ -3699,6 +4019,7 @@
 },
 {
     "name": "爱看图吧 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.9iktb.com/gallery/46215",
     "url": "^https?://www\\.9iktb\\.com/gallery/",
     "nextLink": "li.active+li>a",
@@ -3710,6 +4031,7 @@
 },
 {
     "name": "爱看图吧",
+    "author": "skofkyo",
     "example": "https://www.9iktb.com/galleryList/",
     "url": "^https?://www\\.9iktb\\.com/(galleryList|search)",
     "nextLink": "a[aria-label='Next']",
@@ -3719,6 +4041,7 @@
 },
 {
     "name": "美女目录网 - 圖片列表模式載入原圖",
+    "author": "skofkyo",
     "example": "https://www.girldir.com/photos/aozhongmaqin_list/",
     "url": "^https?://[^/]+/photos/",
     "include": [
@@ -3735,6 +4058,7 @@
 },
 {
     "name": "美女目录网 - 圖片",
+    "author": "skofkyo",
     "example": "http://www.girldir.com/photos/lichengmin_1156859/",
     "url": "^https?://[^/]+/photos/",
     "include": "//title[contains(text(), '美女目录网')]",
@@ -3749,6 +4073,7 @@
 },
 {
     "name": "美女目录网 - 分類停止自動匹配",
+    "author": "skofkyo",
     "example": "http://www.girldir.com/star/v_siwa/",
     "url": "^https?://[^/]+/star/",
     "include": "//title[contains(text(), '美女目录网')]",
@@ -3756,6 +4081,7 @@
 },
 {
     "name": "3G 壁纸 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.3gbizhi.com/meinv/mn1869.html",
     "url": "^https?://www\\.3gbizhi\\.com/meinv/\\w+\\.html",
     "init": "function ge(e){return document.querySelector(e)}ge('#showimg').appendChild(ge('#showpicnow'));document.querySelectorAll('#showimg>a').forEach(e=>{e.remove()})",
@@ -3784,6 +4110,7 @@
 },
 {
     "name": "3G 壁纸",
+    "author": "skofkyo",
     "example": "https://www.3gbizhi.com/meinv/",
     "url": "^https?://www\\.3gbizhi\\.com/",
     "init": "document.querySelectorAll('img[alt][lazysrc]').forEach(img=>{img.src=img.getAttribute('lazysrc');img.removeAttribute('lazysrc');img.setAttribute('srcset',img.getAttribute('lazysrc2x'));img.removeAttribute('lazysrc2x');img.style='width: 100%; display: inline;'})",
@@ -3796,6 +4123,7 @@
 },
 {
     "name": "nvsheng - 圖片",
+    "author": "skofkyo",
     "example": "www.nvsheng.cc，m.nvsheng.cc",
     "url": "^https?://(www|m)\\.nvsheng\\.cc/.+\\.html",
     "nextLink": ".now-page+a",
@@ -3808,6 +4136,7 @@
 },
 {
     "name": "nvsheng",
+    "author": "skofkyo",
     "example": "www.nvsheng.cc，m.nvsheng.cc",
     "url": "^https?://(www|m)\\.nvsheng\\.cc/(meizi|weibo|mx|cos|search)/",
     "nextLink": "a[title='›']",
@@ -3817,6 +4146,7 @@
 },
 {
     "name": "遛无写真 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.6evu.com/30131.html",
     "url": "^https?://www\\.6evu\\.com/\\d+\\.html",
     "nextLink": ".pagelist>span+a",
@@ -3829,6 +4159,7 @@
 },
 {
     "name": "遛无写真",
+    "author": "skofkyo",
     "example": "https://www.6evu.com/jgmntp",
     "url": "^https?://www\\.6evu\\.com/",
     "include": ".pagination",
@@ -3839,6 +4170,7 @@
 },
 {
     "name": "爱美女 - 看圖",
+    "author": "skofkyo",
     "example": "www.2meinv.com，wap.2meinv.com",
     "url": "^https?://(www|wap)\\.2meinv\\.com/article",
     "init": "function ge(e){return document.querySelector(e)}let a=ge('.hh+.pp > a');let a2=ge('.clearfix.arcmain a');if(a){a.outerHTML=a.innerHTML}else{a2.outerHTML=a2.innerHTML}",
@@ -3852,6 +4184,7 @@
 },
 {
     "name": "爱美女",
+    "author": "skofkyo",
     "example": "www.2meinv.com，wap.2meinv.com",
     "url": "^https?://(www|wap)\\.2meinv\\.com/(search|tags|index)?",
     "exclude": ".title,h1>span",
@@ -3861,6 +4194,7 @@
 },
 {
     "name": "娱乐吧 - 圖片",
+    "author": "skofkyo",
     "example": "www.yuleba.org，m.yuleba.org",
     "url": "^https?://(www|m)\\.yuleba\\.org/a/",
     "nextLink": "//div[@class='paging']/a[text()='下一页']",
@@ -3872,6 +4206,7 @@
 },
 {
     "name": "娱乐吧",
+    "author": "skofkyo",
     "example": "www.yuleba.org，m.yuleba.org",
     "url": "^https?://(www|m)\\.yuleba\\.org/b/",
     "nextLink": "//div[@class='paging']/a[text()='下一页']",
@@ -3880,6 +4215,7 @@
 },
 {
     "name": "新闻吧 - xinwenba.net",
+    "author": "skofkyo",
     "example": "www.xinwenba.net，m.xinwenba.net",
     "url": "^https?://(www|m)\\.xinwenba\\.net/plus/view",
     "nextLink": "//a[text()='下一页']",
@@ -3891,6 +4227,7 @@
 },
 {
     "name": "新闻吧 - xinwenba.net",
+    "author": "skofkyo",
     "example": "www.xinwenba.net，m.xinwenba.net",
     "url": "^https?://(www|m)\\.xinwenba\\.net/plus/list",
     "nextLink": "//a[text()='下一页']",
@@ -3899,6 +4236,7 @@
 },
 {
     "name": "凸凹吧/撸女吧/女优吧/撸哥吧/欲女吧 - 圖片",
+    "author": "skofkyo",
     "example": "www.tuao.one，www.63mm.cc，www.97mm.cc，www.luge8.co，luge8.co",
     "url": "^https?://(www\\.)?(tuao8?|tumm|\\d+mm|luge8?)\\.[a-z]{2,3}/(post|web)/",
     "init": "let a=document.querySelector('img[title][original]').parentNode;a.outerHTML=a.innerHTML;",
@@ -3912,6 +4250,7 @@
 },
 {
     "name": "凸凹吧/撸女吧/女优吧/撸哥吧/欲女吧 - 手機版分類",
+    "author": "skofkyo",
     "example": "www.tuao.one，www.63mm.cc，www.97mm.cc，www.luge8.co，luge8.co",
     "url": "^https?://(www\\.)?(tuao\\d?|tumm|\\d+mm|luge8?)\\.[a-z]{2,3}/",
     "include": ".pagination",
@@ -3922,6 +4261,7 @@
 },
 {
     "name": "凸凹吧/撸女吧/女优吧/撸哥吧/欲女吧 - 分類",
+    "author": "skofkyo",
     "example": "www.tuao.one，www.63mm.cc，www.97mm.cc，www.luge8.co，luge8.co",
     "url": "^https?://(www\\.)?(tuao\\d?|tumm|\\d+mm|luge8?)\\.[a-z]{2,3}/",
     "include": ".pagenavi",
@@ -3932,6 +4272,7 @@
 },
 {
     "name": "美图录 - 看圖",
+    "author": "skofkyo",
     "example": "https://meitulu.me/item/3242.html",
     "url": "^https?://meitulu\\.me/item/\\d+\\.html",
     "nextLink": "//a[text()='下一页']",
@@ -3943,6 +4284,7 @@
 },
 {
     "name": "美图录 - 分類",
+    "author": "skofkyo",
     "example": "https://meitulu.me/t/nvshen/",
     "url": "^https?://meitulu\\.me/(t|xihuan|rihan|gangtai|guochan|search)",
     "nextLink": "//a[text()='下一页']",
@@ -3951,6 +4293,7 @@
 },
 {
     "name": "胴体的诱惑",
+    "author": "skofkyo",
     "example": "https://dongti.blog.2nt.com/",
     "url": "^https?://dongti\\.blog\\.2nt\\.com/",
     "action": 1,
@@ -3960,6 +4303,7 @@
 },
 {
     "name": "胴体的秘密 - 看圖",
+    "author": "skofkyo",
     "example": "https://dongti2022.com/751999.html",
     "url": "^https?://dongti[^/]+/",
     "include": [
@@ -3971,6 +4315,7 @@
 },
 {
     "name": "胴体的秘密 - 標籤",
+    "author": "skofkyo",
     "example": "https://dongti2022.com/tag/%e6%a1%9c%e4%ba%95%e5%ae%81%e5%ae%81",
     "url": "^https?://dongti[^/]+/tag/",
     "nextLink": "li.active+li>a",
@@ -3980,6 +4325,7 @@
 },
 {
     "name": "胴体的秘密",
+    "author": "skofkyo",
     "example": "https://dongtidemimi.org/",
     "url": "^https?://dongti[^/]+/(category|\\?s=)",
     "nextLink": "a.next",
@@ -3989,6 +4335,7 @@
 },
 {
     "name": "MEITU131 - 手機版看圖",
+    "author": "skofkyo",
     "example": "https://m.meitu131.com/meinv/8140/",
     "url": "^https?://m\\.meitu131\\.com/",
     "include": ".uk-article",
@@ -4002,6 +4349,7 @@
 },
 {
     "name": "MEITU131 手機版",
+    "author": "skofkyo",
     "example": "https://m.meitu131.com/meinv/",
     "url": "^https?://m\\.meitu131\\.com/",
     "exclude": ".uk-article",
@@ -4012,6 +4360,7 @@
 },
 {
     "name": "MEITU131 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.meitu131.net/meinv/7672/",
     "url": "^https?://www\\.meitu131\\.net/meinv/\\d+",
     "init": "document.querySelectorAll('p>a').forEach(e=>{e.outerHTML=e.innerHTML})",
@@ -4024,6 +4373,7 @@
 },
 {
     "name": "MEITU131",
+    "author": "skofkyo",
     "example": "https://www.meitu131.net/rank/dalu/",
     "url": "^https?://www\\.meitu131\\.net/(e/search|rank|meinv|shouji|sucai|nvshen|hot)/([a-z]+)?",
     "exclude": "h1",
@@ -4035,6 +4385,7 @@
 },
 {
     "name": "亿图全景图库 - 手機版看圖",
+    "author": "skofkyo",
     "example": "https://m.yeitu.com/meinv/xinggan/20221205_32251.html",
     "url": "^https?://m\\.yeitu\\.com/",
     "include": ".uk-article",
@@ -4048,6 +4399,7 @@
 },
 {
     "name": "亿图全景图库手機版",
+    "author": "skofkyo",
     "example": "https://m.yeitu.com/meinv/xinggan/",
     "url": "^https?://m.yeitu.com/",
     "include": ".uk-pagination",
@@ -4058,6 +4410,7 @@
 },
 {
     "name": "亿图全景图库 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.yeitu.com/meinv/xinggan/20220725_31887.html",
     "url": "^https?://www\\.yeitu\\.com/",
     "include": ".img_content",
@@ -4071,6 +4424,7 @@
 },
 {
     "name": "亿图全景图库",
+    "author": "skofkyo",
     "example": "https://www.yeitu.com/meinv/xinggan/",
     "url": "^https?://www\\.yeitu\\.com/",
     "include": "#pages",
@@ -4082,6 +4436,7 @@
 },
 {
     "name": "Make Girls",
+    "author": "skofkyo",
     "example": "https://asdcosplay.com/category/collections/djawa/",
     "url": "^https?://asdcosplay\\.com/(\\?s=|category)?",
     "nextLink": "a.next",
@@ -4091,6 +4446,7 @@
 },
 {
     "name": "Asian Girls",
+    "author": "skofkyo",
     "example": "https://allasiangirls.net/category/free-content/",
     "url": "^https?://allasiangirls\\.net/(category|\\?s=)",
     "nextLink": "a.next",
@@ -4102,6 +4458,7 @@
 },
 {
     "name": "Yellow Fever",
+    "author": "skofkyo",
     "example": "https://yellowfever18.com/chinese/",
     "url": "^https?://yellowfever18\\.com/(tag|chinese|korean|japanese|\\?s=)",
     "nextLink": "a.next",
@@ -4112,6 +4469,7 @@
 },
 {
     "name": "ASD ASFD CN",
+    "author": "skofkyo",
     "example": "https://asdasfd.net/",
     "url": "^https?://asdasfd\\.net/(category|\\?s=)",
     "nextLink": "//a[text()='Older posts']",
@@ -4121,6 +4479,7 @@
 },
 {
     "name": "NudeBird",
+    "author": "skofkyo",
     "example": "https://nudebird.biz/",
     "url": "^https?://nudebird\\.biz/(tag|category|\\?s=)?",
     "nextLink": "li.current+li>a",
@@ -4130,6 +4489,7 @@
 },
 {
     "name": "NUDECOSPLAY - 圖片",
+    "author": "skofkyo",
     "example": "https://nudecosplaygirls.com/%e4%b9%a0%e5%91%86%e5%91%86-%e5%88%bb%e6%99%b4/",
     "url": "^https?://nudecosplaygirls\\.com/",
     "include": [
@@ -4141,6 +4501,7 @@
 },
 {
     "name": "NUDECOSPLAY - 圖片",
+    "author": "skofkyo",
     "example": "https://nudecosplaygirls.com/haneame-summer/",
     "url": "^https?://nudecosplaygirls\\.com/",
     "include": [
@@ -4153,6 +4514,7 @@
 },
 {
     "name": "NUDECOSPLAY",
+    "author": "skofkyo",
     "example": "https://nudecosplaygirls.com/",
     "url": "^https?://nudecosplaygirls\\.com/(category)?",
     "nextLink": "a.next",
@@ -4162,6 +4524,7 @@
 },
 {
     "name": "Nlegs - 預覽圖清單",
+    "author": "skofkyo",
     "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
     "url": "^https?://www\\.nlegs\\.com/girls/[^.]+\\.html",
     "nextLink": "li.active+li>a",
@@ -4174,6 +4537,7 @@
 },
 {
     "name": "Nlegs",
+    "author": "skofkyo",
     "example": "https://www.nlegs.com/",
     "url": "^https?://www\\.nlegs\\.com/",
     "nextLink": "li.active+li>a",
@@ -4183,6 +4547,7 @@
 },
 {
     "name": "Mitaku - 看圖",
+    "author": "skofkyo",
     "enable": 0,
     "example": "https://mitaku.net/ero-cosplay/byoru-riamu-yumemi-nekomini/",
     "url": "^https?://mitaku\\.net/",
@@ -4191,6 +4556,7 @@
 },
 {
     "name": "Mitaku",
+    "author": "skofkyo",
     "example": "https://mitaku.net/",
     "url": "^https?://mitaku\\.net/",
     "nextLink": ".current+a",
@@ -4201,6 +4567,7 @@
 },
 {
     "name": "idol.gravureprincess.date",
+    "author": "skofkyo",
     "example": "http://idol.gravureprincess.date/",
     "url": "^https?://idol\\.gravureprincess\\.date/",
     "pinUrl": true,
@@ -4212,6 +4579,7 @@
 },
 {
     "name": "NongMo.Zone",
+    "author": "skofkyo",
     "example": "http://www.ilovexs.com/",
     "url": "^https?://www\\.ilovexs\\.com/(category)?",
     "nextLink": ".nav-next>a",
@@ -4224,6 +4592,7 @@
 },
 {
     "name": "CoserBOX - 分類",
+    "author": "skofkyo",
     "example": "https://coserbox.org/rootcategory/62b6e84d412f63180e09d1a0，https://picacg.org/rootcategory/62fd110a5a40959e2fed9352",
     "url": "^https?://[^/]+/(rootcategory|category|search)",
     "include": "//img[contains(@alt,'CoserBOX')]",
@@ -4234,6 +4603,7 @@
 },
 {
     "name": "CoserBOX - 首頁",
+    "author": "skofkyo",
     "enable": 0,
     "example": "https://acg.coserbox.net/，https://coserbox.org/，https://picacg.org/，https://loli.pub/",
     "url": "^https?://[^/]+/$",
@@ -4242,6 +4612,7 @@
 },
 {
     "name": "Cosplaytele - 分類",
+    "author": "skofkyo",
     "example": "https://cosplaytele.com/",
     "url": "^https?://cosplaytele\\.com/",
     "action": 1,
@@ -4252,6 +4623,7 @@
 },
 {
     "name": "4KHD - 圖片",
+    "author": "skofkyo",
     "example": "https://www.4khd.com/2023/01/15/puremedia-vol210-seer.html",
     "url": "^https?://www\\.4khd\\.com/[^.]+\\.html",
     "action": 1,
@@ -4266,6 +4638,7 @@
 },
 {
     "name": "4KHD - 分類",
+    "author": "skofkyo",
     "example": "https://www.4khd.com/",
     "url": "^https?://www\\.4khd\\.com/",
     "nextLink": "span.current+a",
@@ -4275,6 +4648,7 @@
 },
 {
     "name": "4KUP - 分類",
+    "author": "skofkyo",
     "example": "https://www.4kup.net/",
     "url": "^https?://www\\.4kup\\.net/",
     "include": "#pagination",
@@ -4285,6 +4659,7 @@
 },
 {
     "name": "Goddess247",
+    "author": "skofkyo",
     "example": "https://goddess247.com/",
     "url": "^https?://goddess247\\.com/",
     "nextLink": "a.next",
@@ -4294,6 +4669,7 @@
 },
 {
     "name": "Popular JAV",
+    "author": "skofkyo",
     "example": "https://javme.net/",
     "url": "^https?://javme\\.net/",
     "nextLink": ".pagination-next",
@@ -4303,6 +4679,7 @@
 },
 {
     "name": "Buon Dua - 看圖",
+    "author": "skofkyo",
     "example": "https://buondua.com/saint-photolife-%E2%80%93-zzyuri-%EC%AE%B8%EB%A6%AC-blueming-part-2-57-photos-27769",
     "url": "^https?://buondua\\.com/",
     "init": "document.querySelectorAll('.article-fulltext>*:not(p)').forEach(e=>{e.remove()});",
@@ -4316,6 +4693,7 @@
 },
 {
     "name": "Buon Dua - 分類",
+    "author": "skofkyo",
     "example": "https://buondua.com/",
     "url": "^https?://buondua\\.com/",
     "nextLink": ".pagination-next",
@@ -4328,6 +4706,7 @@
 },
 {
     "name": "BAOBUA.COM - 看圖",
+    "author": "skofkyo",
     "example": "https://www.baobua.com/post/d00yYmh4WFNoZERNdFd5Q1QwNHhrNmZPZlMzUUI5UUo3OFVDRm5jWG11OFZ6aDJaeXpHdGh0Sm5sU0s4WjF5aXVIR0pLTTJvb0h3SDdlM1NSR0JxSHc9PQ==",
     "url": "^https?://www\\.baobua\\.com/post/",
     "nextLink": ".current+a,.current+.dots+a",
@@ -4341,6 +4720,7 @@
 },
 {
     "name": "BAOBUA.COM - 搜索",
+    "author": "skofkyo",
     "example": "https://www.baobua.com/?cat=Tm1ydGlaZ1A2YWM3a3BvYWh6L3dIdz09",
     "url": "^https?://www\\.baobua\\.com/\\?cat=",
     "action": 1,
@@ -4357,6 +4737,7 @@
 },
 {
     "name": "BAOBUA.COM - 影片分類",
+    "author": "skofkyo",
     "example": "https://www.baobua.com/video/index.html",
     "url": "^https?://www\\.baobua\\.com/video/index\\.html",
     "action": 1,
@@ -4373,6 +4754,7 @@
 },
 {
     "name": "BAOBUA.COM - 圖片分類",
+    "author": "skofkyo",
     "example": "https://www.baobua.com/?page=1",
     "url": "^https?://www\\.baobua\\.com/\\?page=",
     "action": 1,
@@ -4388,6 +4770,7 @@
 },
 {
     "name": "BaoBua.Com - 看圖",
+    "author": "skofkyo",
     "example": "https://blog.baobua.com/mlem/6350798069264574102~rogle-song-hana-%EC%86%A1%ED%95%98%EB%82%98-leggings",
     "url": "^https?://(blog|fb)\\.baobua\\.com/",
     "include": "img[data-original]",
@@ -4396,6 +4779,7 @@
 },
 {
     "name": "BaoBua.Com - 搜索",
+    "author": "skofkyo",
     "example": "https://blog.baobua.com/mlem?cat=korean",
     "url": "^https?://blog\\.baobua\\.com/mlem\\?cat=",
     "include": ".pagination-custom",
@@ -4413,6 +4797,7 @@
 },
 {
     "name": "BaoBua.Com - 分類",
+    "author": "skofkyo",
     "example": "https://blog.baobua.com/mlem",
     "url": "^https?://blog\\.baobua\\.com/mlem(\\?&page=(\\d+))?$",
     "include": ".pagination-custom",
@@ -4430,6 +4815,7 @@
 },
 {
     "name": "HOTGIRLchina - 看圖",
+    "author": "skofkyo",
     "example": "https://hotgirlchina.com/xiuren-no-5261-zhu-ke-er-%e6%9c%b1%e5%8f%af%e5%84%bfflora-115-photos/",
     "url": "^https?://hotgirlchina\\.com/.+photos/",
     "nextLink": ".nextpostslink",
@@ -4442,6 +4828,7 @@
 },
 {
     "name": "HOTGIRLchina - 搜索 - 修正頁碼錯誤",
+    "author": "skofkyo",
     "example": "https://hotgirlchina.com/?s=XIUREN",
     "url": "^https?://hotgirlchina\\.com/(page/(\\d+)/)?\\?s=",
     "init": "setTimeout(()=>{document.querySelectorAll('.wp-pagenavi a').forEach(a=>{a.href=a.href.replace(/\\/$/,'')})},1000)",
@@ -4458,6 +4845,7 @@
 },
 {
     "name": "HOTGIRLchina - 分類",
+    "author": "skofkyo",
     "example": "https://hotgirlchina.com/tag/xiuren/",
     "url": "^https?://hotgirlchina\\.com/tag/",
     "nextLink": ".nextpostslink",
@@ -4468,6 +4856,7 @@
 },
 {
     "name": "BeautyLeg - 圖片",
+    "author": "skofkyo",
     "example": "http://www.beautyleg6.com/xingganmeinv/201406/133.html",
     "url": "^https?://www.beautyleg\\d+\\.com/.+\\.html",
     "init": "function gae(e){return document.querySelectorAll(e)}let imgs=gae('.contents img');let _img='';for(let i=0;i<imgs.length;i++){_img+=imgs[i].outerHTML};gae('.contents')[0].innerHTML=_img;",
@@ -4480,6 +4869,7 @@
 },
 {
     "name": "BeautyLeg - 分類",
+    "author": "skofkyo",
     "example": "https://www.beautyleg6.com/weimeixiezhen/",
     "url": "^https?://www.beautyleg\\d+\\.com/",
     "nextLink": "//a[text()='下一页']",
@@ -4489,6 +4879,7 @@
 },
 {
     "name": "艾薇福利社 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.aiweifulishe.net/dress/silkstocking/whitesilkstocking/68742.html",
     "url": "^https?://www\\.aiweifulishe\\.net/.+\\.html",
     "action": 1,
@@ -4501,6 +4892,7 @@
 },
 {
     "name": "艾薇福利社 - 分類",
+    "author": "skofkyo",
     "example": "https://www.aiweifulishe.net/heji",
     "url": "^https?://www\\.aiweifulishe\\.net/",
     "nextLink": "a.next",
@@ -4510,6 +4902,7 @@
 },
 {
     "name": "色情圖片網 - 分類",
+    "author": "skofkyo",
     "example": "https://www.photos18.com/cat/5",
     "url": "^https?://www\\.photos18\\.com/",
     "nextLink": ".next>a",
@@ -4518,6 +4911,7 @@
 },
 {
     "name": "MM131美女图片手機版 - 看圖",
+    "author": "skofkyo",
     "example": "https://m.mmm131.com/xinggan/5761.html",
     "url": "^https?://m\\.mmm131\\.com/.+\\html$",
     "init": "let a=document.querySelector('.post-content>a');a.outerHTML=a.innerHTML;",
@@ -4531,6 +4925,7 @@
 },
 {
     "name": "MM131美女图片手機版 - 分類",
+    "author": "skofkyo",
     "example": "https://m.mmm131.com/xinggan/",
     "url": "^https?://m\\.mmm131\\.com/",
     "include": "#listm",
@@ -4544,6 +4939,7 @@
 },
 {
     "name": "MM131美女图片手機版 - 首頁",
+    "author": "skofkyo",
     "example": "https://m.mmm131.com/",
     "url": "^https?://m\\.mmm131\\.com/$",
     "css": ".bannert_ios,.bannerb_ios,.tips{display:none!important}",
@@ -4551,6 +4947,7 @@
 },
 {
     "name": "MM131美女图片 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.mmm131.com/xinggan/5774.html",
     "url": "^https?://www\\.mmm131\\.com/.+\\html$",
     "init": "let a=document.querySelector('.content-pic>a');a.outerHTML=a.innerHTML;",
@@ -4564,6 +4961,7 @@
 },
 {
     "name": "MM131美女图片 - 列表",
+    "author": "skofkyo",
     "example": "https://www.mmm131.com/xinggan/",
     "url": "^https?://www\\.mmm131\\.com/",
     "nextLink": "//a[text()='下一页']",
@@ -4573,6 +4971,7 @@
 },
 {
     "name": "Nsfwp",
+    "author": "skofkyo",
     "example": "https://nsfwx.pics/",
     "url": "^https?://nsfwx\\.pics/",
     "nextLink": "a.next",
@@ -4583,6 +4982,7 @@
 },
 {
     "name": "推图网 - 展開全圖",
+    "author": "skofkyo",
     "example": "https://m.tuiimg.com/meinv/2653/",
     "url": "^https?://(www|m)\\.tuiimg\\.com/meinv/\\d+/",
     "init": "goshowall()",
@@ -4590,12 +4990,14 @@
 },
 {
     "name": "推图网 - 手機版 - 查看更多",
+    "author": "skofkyo",
     "example": "https://m.tuiimg.com/",
     "url": "^https?://m\\.tuiimg\\.com/$",
     "nextLinkByJs": "showmore()"
 },
 {
     "name": "推图网 - 手機版",
+    "author": "skofkyo",
     "example": "https://m.tuiimg.com/meinv/",
     "url": "^https?://m\\.tuiimg\\.com/",
     "nextLink": ".now+a",
@@ -4606,6 +5008,7 @@
 },
 {
     "name": "推图网",
+    "author": "skofkyo",
     "example": "https://www.tuiimg.com/meinv/",
     "url": "^https?://www\\.tuiimg\\.com/",
     "nextLink": "em+a",
@@ -4615,6 +5018,7 @@
 },
 {
     "name": "Mrcong - 看圖",
+    "author": "skofkyo",
     "enable": 0,
     "example": "https://mrcong.com/xiaoyu-vol-831-yang-chen-chen-yome-74-anh/",
     "url": "^https?://mrcong\\.com/",
@@ -4628,6 +5032,7 @@
 },
 {
     "name": "Mrcong",
+    "author": "skofkyo",
     "example": "https://mrcong.com/",
     "url": "^https?://mrcong\\.com/(page/\\d+/)?",
     "nextLink": ".current+a",
@@ -4638,6 +5043,7 @@
 },
 {
     "name": "宅男女神 - 看圖",
+    "author": "skofkyo",
     "example": "www.gnvshen.com，www.fnvshen.com",
     "url": "^https?://www\\.(gnvshen|fnvshen|)\\.com/g/",
     "nextLink": "#pages>span +a:not(.a1), a.cur+a",
@@ -4650,6 +5056,7 @@
 },
 {
     "name": "宅男女神",
+    "author": "skofkyo",
     "example": "www.gnvshen.com，www.fnvshen.com",
     "url": "^https?://www\\.(gnvshen|fnvshen)\\.com/(gallery|tag)/",
     "nextLink": "a.cur+a",
@@ -4659,6 +5066,7 @@
 },
 {
     "name": "爱女神 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.99nvshen.com/gallery/15123",
     "url": "^https?://www\\.99nvshen\\.com/(gallery|galleryImg)/\\d+",
     "nextLink": ".pagination-box li.active+li>a",
@@ -4672,6 +5080,7 @@
 },
 {
     "name": "爱女神",
+    "author": "skofkyo",
     "example": "https://www.99nvshen.com/galleryList/",
     "url": "^https?://www\\.99nvshen\\.com/(articles|galleryList|modelList|paihang)",
     "nextLink": ".pagination-box li.active+li>a",
@@ -4681,6 +5090,7 @@
 },
 {
     "name": "Sexyxbody - 看圖",
+    "author": "skofkyo",
     "example": "https://cn.sexyxbody.com/sexy_article/i103swym3j/",
     "url": "^https?://cn\\.sexyxbody\\.com/sexy_article",
     "nextLink": "//a[text()='下一页»']",
@@ -4692,6 +5102,7 @@
 },
 {
     "name": "Sexyxbody",
+    "author": "skofkyo",
     "example": "https://cn.sexyxbody.com/zone_detail/ouz5i1j",
     "url": "^https?://cn\\.sexyxbody\\.com/(zone_detail|tag_list|tag_detail)",
     "nextLink": "a.next",
@@ -4703,6 +5114,7 @@
 },
 {
     "name": "爱看 INS",
+    "author": "skofkyo",
     "example": "https://www.ikanins.com/",
     "url": "^https?://www\\.ikanins\\.com/",
     "nextLink": "a[rel='next']",
@@ -4711,6 +5123,7 @@
 },
 {
     "name": "Dmmtu 美女图 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.dmmtu.com/xiezhen/25837.html",
     "url": "^https?://www\\.dmmtu\\.com/",
     "include": ".link_pages",
@@ -4723,6 +5136,7 @@
 },
 {
     "name": "Dmmtu 美女图 - 分類",
+    "author": "skofkyo",
     "example": "https://www.dmmtu.com/new/",
     "url": "^https?://www\\.dmmtu\\.com/",
     "include": "#pagenavi",
@@ -4733,6 +5147,7 @@
 },
 {
     "name": "jpmnb 精品美女吧 - 搜索",
+    "author": "skofkyo",
     "example": "https://www.jpmnb.net/plus/search/index.asp?keyword=XiuRen",
     "url": "^https?://www\\.jpmnb\\.net/plus/search/",
     "nextLink": "a.current+a",
@@ -4742,6 +5157,7 @@
 },
 {
     "name": "jpmnb 精品美女吧 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.jpmnb.net/Xrqj/XiuRen/19379.html",
     "url": "^https?://www\\.jpmnb\\.net/",
     "init": "document.querySelectorAll('p br').forEach(br=>{br.remove()})",
@@ -4754,6 +5170,7 @@
 },
 {
     "name": "jpmnb 精品美女吧 - 分類",
+    "author": "skofkyo",
     "example": "https://www.jpmnb.net/Xrqj/XiuRen/",
     "url": "^https?://www\\.jpmnb\\.net/",
     "nextLink": "//a[text()='下一页']",
@@ -4763,6 +5180,7 @@
 },
 {
     "name": "MM 范 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.95mm.tv/65309.html",
     "url": "^https?://www\\.95mm\\.\\w+/\\w+\\.html",
     "init": "let a=document.querySelector('.post a');a.outerHTML=a.innerHTML;",
@@ -4791,6 +5209,7 @@
 },
 {
     "name": "MM 范",
+    "author": "skofkyo",
     "example": "https://www.95mm.org/qingchun",
     "url": "^https?://www\\.95mm\\.org/(qingchun|sifang|xinggan|tag)?",
     "include": ".dposts-ajax-load",
@@ -4798,6 +5217,7 @@
 },
 {
     "name": "Everia.club",
+    "author": "skofkyo",
     "example": "https://everia.club/category/gravure/",
     "url": "^https?://everia\\.club/category",
     "nextLink": ".next",
@@ -4807,6 +5227,7 @@
 },
 {
     "name": "Xiuren 秀人网",
+    "author": "skofkyo",
     "example": "http://www.xiuren.org/category/TuiGirl.html",
     "url": "^https?://www\\.xiuren\\.org/",
     "include": "#page",
@@ -4818,6 +5239,7 @@
 },
 {
     "name": "套圖吧手機版",
+    "author": "skofkyo",
     "example": "https://m.taotu8.xyz/",
     "url": "^https?://m\\.taotu8\\.(top|com|xyz)/",
     "include": "#morepic",
@@ -4826,6 +5248,7 @@
 },
 {
     "name": "套圖吧 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.taotu8.xyz/gq/meinv/xiaoyu847.html",
     "url": "^https?://(www|m)\\.(192[a-z+]|taotu8)\\.(top|com|xyz)/",
     "include": ".picmainer>h1",
@@ -4847,6 +5270,7 @@
 },
 {
     "name": "套圖吧",
+    "author": "skofkyo",
     "example": "https://www.taotu8.xyz/",
     "url": "^https?://(www|m)\\.(192[a-z+]|taotu8)\\.(top|com|xyz)/",
     "include": ".page",
@@ -4861,6 +5285,7 @@
 },
 {
     "name": "蕾丝猫 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.lesmao.site/thread-31035-1-1.html",
     "url": "^https?://www\\.(lsm|lesmao|lsmpx)\\.(site|me|pro|co|com|org)/thread",
     "nextLink": "strong+a,a.r",
@@ -4873,6 +5298,7 @@
 },
 {
     "name": "蕾丝猫",
+    "author": "skofkyo",
     "example": "https://www.lesmao.site/",
     "url": "^https?://www\\.(lsm|lesmao|lsmpx)\\.(site|me|pro|co|com|org)/",
     "nextLink": ".current+a,strong+a",
@@ -4882,6 +5308,7 @@
 },
 {
     "name": "Wndfx 妹子图 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.wndfx.com/gogort/zg/8364.html",
     "url": "^https?://www\\.wndfx\\.com/gogort/",
     "include": ".nav-links.page_imges",
@@ -4894,6 +5321,7 @@
 },
 {
     "name": "Wndfx 妹子图",
+    "author": "skofkyo",
     "example": "https://www.wndfx.com/",
     "url": "^https?://www.\\wndfx\\.com/",
     "include": "nav.pagination",
@@ -4904,6 +5332,7 @@
 },
 {
     "name": "优美图库 - 圖片",
+    "author": "skofkyo",
     "example": "https://www.umei.cc/meinvtupian/xingganmeinv/255974.htm",
     "url": "^https?://(www\\.)?(umeitu|umei)\\.(com|fun|cc)/",
     "include": ".pages",
@@ -4916,6 +5345,7 @@
 },
 {
     "name": "优美图库 - 分類",
+    "author": "skofkyo",
     "example": "https://www.umei.cc/meinvtupian/xingganmeinv/",
     "url": "^https?://(www\\.)?(umeitu|umei)\\.(com|fun|cc)/",
     "include": "#pageNum",
@@ -4926,6 +5356,7 @@
 },
 {
     "name": "Hentai Image - 圖片",
+    "author": "skofkyo",
     "example": "hentai-img.com，hentai-cosplays.com，porn-images-xxx.com",
     "url": "^https?://(.+)?(porn-images-xxx|hentai-cosplays|hentai-img)\\.com/image/",
     "nextLink": "//a[contains(text(),'>') or contains(text(),'next')]",
@@ -4938,6 +5369,7 @@
 },
 {
     "name": "Hentai Image - 分類",
+    "author": "skofkyo",
     "example": "https://ja.porn-images-xxx.com/search/",
     "url": "^https?://(.+)?(porn-images-xxx|hentai-cosplays|hentai-img)\\.com/(search|recently|ranking|search-video|ranking-video)/",
     "nextLink": "span+a",
@@ -4950,6 +5382,7 @@
 },
 {
     "name": "24fa",
+    "author": "skofkyo",
     "example": "https://www.24fa.com/n93763c49.aspx",
     "url": "^https?://(www\\.)?\\d{2,3}(m|w|faw|fa|aa)?\\.[a-z]{2,4}/m?n\\w+\\.aspx$",
     "include": "//title[contains(text(),'24FA')]",
@@ -4964,6 +5397,7 @@
 },
 {
     "name": "無名網",
+    "author": "skofkyo",
     "example": "https://9wm9.info/viewforum/38",
     "url": "^https?://9wm9\\.info/",
     "nextLink": "//a[text()='Next page']",
@@ -4972,6 +5406,7 @@
 },
 {
     "name": "小丑擼 輕便版",
+    "author": "skofkyo",
     "example": "https://www.jokerlutxt.top/index.php/vodtype/131.html",
     "url": "^https?://www\\.jokerlutxt\\.top/index\\.php/vodtype/.+\\.html",
     "nextLink": "//a[text()='下一页']",
@@ -4980,6 +5415,7 @@
 },
 {
     "name": "小丑擼",
+    "author": "skofkyo",
     "example": "https://www.jokerlu357.cc/index.php/vodtype/121.html",
     "url": "^https?://www\\.jokerlu\\d+\\.cc/index\\.php/vodtype/.+\\.html",
     "nextLink": "//a[text()='下一页']",
@@ -4989,6 +5425,7 @@
 },
 {
     "name": "亞色影庫",
+    "author": "skofkyo",
     "example": "https://www.yasetube.com/video/category/javhd",
     "url": "^https?://www\\.yasetube\\.com/",
     "action": 1,
@@ -5004,6 +5441,7 @@
 },
 {
     "name": "黃色倉庫",
+    "author": "skofkyo",
     "example": "http://2364ck.cc/vodtype/15.html",
     "url": "^https?://[^/]+/",
     "include": "//title[contains(text(),'黄色仓库')]",
@@ -5015,6 +5453,7 @@
 },
 {
     "name": "r18.clickme.net",
+    "author": "skofkyo",
     "example": "https://r18.clickme.net/c/new",
     "url": "^https?://r18\\.clickme\\.net/",
     "nextLink": "li.active+li>a",
@@ -5023,6 +5462,7 @@
 },
 {
     "name": "fc2cm 去模糊",
+    "author": "skofkyo",
     "example": "https://fc2cm.com/?c=sensen321&nc=0",
     "url": "^https?://fc2cm\\.com/",
     "pinUrl": true,
@@ -5034,6 +5474,7 @@
 },
 {
     "name": "fc2hub",
+    "author": "skofkyo",
     "example": "https://fc2hub.com/",
     "url": "^https?://fc2hub\\.com/",
     "action": 1,
@@ -5043,6 +5484,7 @@
 },
 {
     "name": "PPP.Porn",
+    "author": "skofkyo",
     "example": "https://ppp.porn/",
     "url": "^https?://ppp\\.porn/",
     "nextLink": "//li[a/@class='pagination__item  pagination__item--selected']/following-sibling::li[1]/a",
@@ -5053,12 +5495,14 @@
 },
 {
     "name": "PPP.Porn - 首頁(載入更多 …)",
+    "author": "skofkyo",
     "example": "https://ppp.porn/",
     "url": "^https?://ppp\\.porn/$",
     "loadMore": ".btn.btn--sm"
 },
 {
     "name": "YavTube",
+    "author": "skofkyo",
     "example": "https://yavtube.com/，https://r18hub.com/",
     "url": "^https?://(yavtube|r18hub)\\.com/",
     "exclude": ".model-wrapper",
@@ -5069,6 +5513,7 @@
 },
 {
     "name": "magnetdl.com",
+    "author": "skofkyo",
     "example": "www.magnetdl.com",
     "url": "^https?://www\\.magnetdl\\.com/",
     "nextLink": "id('pages')/a[contains(string(),'>')]",
@@ -5077,6 +5522,7 @@
 },
 {
     "name": "tokyomotion",
+    "author": "skofkyo",
     "example": "https://www.tokyomotion.net/videos",
     "url": "^https?://www\\.tokyomotion\\.net/(videos|albums)",
     "nextLink": "ul.pagination:not(.pagination-lg) li.active+li>a",
@@ -5086,6 +5532,7 @@
 },
 {
     "name": "tokyomotion - 相簿原圖",
+    "author": "skofkyo",
     "example": "https://www.tokyomotion.net/photo/884869/",
     "url": "^https?://www\\.tokyomotion\\.net/photo",
     "nextLink": "//a[text()='下一步' or text()='Next']",
@@ -5097,6 +5544,7 @@
 },
 {
     "name": "tokyomotion - 相簿",
+    "author": "skofkyo",
     "example": "https://www.tokyomotion.net/album/67719",
     "url": "^https?://www\\.tokyomotion\\.net/album/\\d+",
     "nextLink": "ul.pagination:not(.pagination-lg) li.active+li>a",
@@ -5108,6 +5556,7 @@
 },
 {
     "name": "tokyomotion",
+    "author": "skofkyo",
     "example": "https://www.tokyomotion.net/",
     "url": "^https?://www\\.tokyomotion\\.net/(page=\\d+)?$",
     "action": 1,
@@ -5119,6 +5568,7 @@
 },
 {
     "name": "7mmtv - 分類",
+    "author": "skofkyo",
     "example": "https://7mmtv.sx/zh/uncensored_random/all/index.html",
     "url": "^https?://7mmtv\\.sx/(zh|en|ja|ko)/[a-z]+_(random|list)/",
     "nextLink": "li.page-item.current+li.page-item>a",
@@ -5129,6 +5579,7 @@
 },
 {
     "name": "tktube",
+    "author": "skofkyo",
     "example": "https://www.tktube.com/categories/fc2/",
     "url": "^https?://(www\\.)?tktube\\.com/",
     "nextLink": ".next>a",
@@ -5138,6 +5589,7 @@
 },
 {
     "name": "RIRI TV / playav",
+    "author": "skofkyo",
     "example": "https://ri1.site/?filter=random，https://playav.tv/category/chinese-model",
     "url": "^https?://(ri1\\.site|playav\\.tv)/",
     "pinUrl": true,
@@ -5152,6 +5604,7 @@
 },
 {
     "name": "JAVCT",
+    "author": "skofkyo",
     "example": "https://javct.net/uncensored",
     "url": "^https?://javct\\.net/",
     "nextLink": "li.paginator__item.paginator__item--next>a",
@@ -5163,6 +5616,7 @@
 },
 {
     "name": "Jable",
+    "author": "skofkyo",
     "example": "https://jable.tv/new-release/",
     "url": "^https?://(jable|fs1)\\.(tv|app)/",
     "init": "document.querySelectorAll('#list_videos_common_videos_list_sort_list a').forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 800)')})",
@@ -5174,6 +5628,7 @@
 },
 {
     "name": "javpark.net",
+    "author": "skofkyo",
     "example": "https://javpark.net/category/movie/",
     "url": "^https?://javpark\\.net/category/",
     "action": 1,
@@ -5185,6 +5640,7 @@
 },
 {
     "name": "壹纳网 - 內文",
+    "author": "skofkyo",
     "example": "https://yinaw.com/23035.html",
     "url": "^https?://yinaw\\.com/\\d+\\.html",
     "nextLink": ".fenye span+a",
@@ -5194,6 +5650,7 @@
 },
 {
     "name": "壹纳网 - 文章",
+    "author": "skofkyo",
     "example": "https://yinaw.com/",
     "url": "^https?://yinaw\\.com/",
     "nextLink": ".next-page>a",
@@ -5203,6 +5660,7 @@
 },
 {
     "name": "mangabtt - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://mangabtt.com/manga/transmigrating-to-the-otherworld-once-more/chapter-30-eng-li/291628",
     "url": "^https?://mangabtt\\.com/",
     "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
@@ -5213,6 +5671,7 @@
 },
 {
     "name": "klmanga - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://klmanga.net/bsaq-i-became-a-magical-cheat-loli-witch-my-different-world-life-with-my-reincarnation-privilege-creation-magic-and-the-seed-of-magic-manga-chapter-5.html",
     "url": "^https?://klmanga\\.net/",
     "include": "option[selected]",
@@ -5225,6 +5684,7 @@
 },
 {
     "name": "Rawkuma - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://rawkuma.com/mikata-ga-yowa-sugite-hojo-mahou-ni-toushite-ita-kyuutei-mahou-shi-tsuihou-sarete-saikyou-wo-mezasu-chapter-1/",
     "url": "^https?://rawkuma\\.com/",
     "pinUrl": true,
@@ -5236,6 +5696,7 @@
 },
 {
     "name": "manga1001 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "manga1001.in，manga1001.su，mangaraw.vip",
     "url": "^https?://(manga1001|mangaraw)\\.(in|su|vip)/chapters/",
     "pinUrl": true,
@@ -5245,6 +5706,7 @@
 },
 {
     "name": "MANGAROW - 漫畫閱讀",
+    "author": "skofkyo",
     "url": "^https?://mangarow\\.org/chapters/",
     "pinUrl": true,
     "history": 2,
@@ -5255,6 +5717,7 @@
 },
 {
     "name": "MANGA1000 - 漫畫閱讀",
+    "author": "skofkyo",
     "example": "https://manga1000.top/197/8175/",
     "url": "^https?://manga1000\\.top/\\d+/\\d+/",
     "pinUrl": true,
@@ -5268,6 +5731,7 @@
 },
 {
     "name": "MANGA1000 - 分类/搜索页",
+    "author": "skofkyo",
     "example": "https://manga1000.top/",
     "url": "^https?://manga1000\\.top/",
     "include": ".pagination",
@@ -5278,6 +5742,7 @@
 },
 {
     "name": "鹹濕仔日報",
+    "author": "skofkyo",
     "example": "https://jdaily18.com/view1/category/%e5%af%ab%e7%9c%9f/",
     "url": "^https?://jdaily18\\.com/",
     "nextLink": "a.next",
@@ -5288,6 +5753,7 @@
 },
 {
     "name": "ACG漫画网 - 阅读",
+    "author": "skofkyo",
     "example": "https://www.acgxmh.com/h/314618.html",
     "url": "^https?://www\\.acgxmh\\.com/",
     "nextLink": "#pages span+a",
@@ -5298,6 +5764,7 @@
 },
 {
     "name": "ACG漫画网 - 分类页",
+    "author": "skofkyo",
     "example": "https://www.acgxmh.com/hentai/",
     "url": "^https?://www\\.acgxmh\\.com/",
     "nextLink": ".page.bigpage span+a",
@@ -5306,6 +5773,7 @@
 },
 {
     "name": "ACGN小鎮/皮皮动漫社",
+    "author": "skofkyo",
     "example": "https://www.bbsacgn.com/，https://pipidm.top/，https://www.pipidm.top/",
     "url": "^https?://(www\\.bbsacgn\\.com|pipidm\\.top|www\\.pipidm\\.top)/",
     "pageElement": ".posts-wrapper.scroll>*",
@@ -5313,6 +5781,7 @@
 },
 {
     "name": "18x78",
+    "author": "skofkyo",
     "example": "https://18x78.com/",
     "url": "^https?://18x78\\.com/",
     "nextLink": "a.next",
@@ -5323,6 +5792,7 @@
 },
 {
     "name": "绅士漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://wnacg.org/photos-view-id-15403544.html",
     "url": "^https?://(www\\.)?(wnacg|htcomic|ssmh\\d+)\\.[^/]+/photos-view",
     "include": "span.newpagelabel",
@@ -5337,6 +5807,7 @@
 },
 {
     "name": "绅士漫画",
+    "author": "skofkyo",
     "example": "https://wnacg.org/albums-index-cate-9.html",
     "url": "^https?://(www\\.)?(wnacg|htcomic|ssmh\\d+)\\.[^/]+/(albums|search|photos-index)",
     "nextLink": "span.thispage+a",
@@ -5346,6 +5817,7 @@
 },
 {
     "name": "松鼠症倉庫 - 閱讀",
+    "author": "skofkyo",
     "example": "https://ahri8.top/readOnline2.php?ID=97432&host_id=0",
     "url": "^https?://[^/]+/readOnline2\\.php",
     "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
@@ -5357,6 +5829,7 @@
 },
 {
     "name": "松鼠症倉庫",
+    "author": "skofkyo",
     "example": "https://ahri8.top/dnew.php?t=1669824000",
     "url": "^https?://[^/]+/dnew\\.php",
     "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
@@ -5368,6 +5841,7 @@
 },
 {
     "name": "绅士会所",
+    "author": "skofkyo",
     "example": "www.hentaiclub.net，www.sshs.club",
     "url": "^https?://www\\.(hentaiclub|sshs)\\.(net|club)/",
     "nextLink": "li.next-page>a",
@@ -5378,12 +5852,14 @@
 },
 {
     "name": "绅士仓库 - 排行/作者墙",
+    "author": "skofkyo",
     "example": "https://cangku.icu/",
     "url": "^https?://cangku\\.[^/]+/(rank|author)",
     "loadMore": ".container .el-button:not(.is-loading)"
 },
 {
     "name": "绅士仓库",
+    "author": "skofkyo",
     "example": "https://cangku.icu/",
     "url": "^https?://cangku\\.",
     "action": 1,
@@ -5397,6 +5873,7 @@
 },
 {
     "name": "LoLHentai",
+    "author": "skofkyo",
     "example": "https://www.lolhentai.net/",
     "url": "^https?://www\\.lolhentai\\.net/",
     "action": 1,
@@ -5408,6 +5885,7 @@
 },
 {
     "name": "The Hentai World",
+    "author": "skofkyo",
     "example": "https://thehentaiworld.com/?new",
     "url": "^https?://thehentaiworld\\.com/",
     "nextLink": "a.next, .current+.minithumb>a",
@@ -5416,6 +5894,7 @@
 },
 {
     "name": "Danbooru",
+    "author": "skofkyo",
     "example": "danbooru.donmai.us，e621.net",
     "url": "^https?://(danbooru\\.)?(donmai|e621)\\.(us|net)/",
     "nextLink": "a[rel='next']",
@@ -5424,6 +5903,7 @@
 },
 {
     "name": "Rule34",
+    "author": "skofkyo",
     "example": "rule34hentai.net，rule34.paheal.net",
     "url": "^https?://rule34(hentai|\\.paheal)\\.net/",
     "nextLink": "//a[text()='Next']",
@@ -5432,6 +5912,7 @@
 },
 {
     "name": "Gelbooru",
+    "author": "skofkyo",
     "example": "gelbooru.com，tbib.org，safebooru.org，illusioncards.booru.org，rule34.xxx，hypnohub.net，xbooru.com",
     "url": "^https?://(illusioncards\\.)?(gelbooru|tbib|safebooru|booru|rule34|hypnohub|xbooru)\\.(com|org|xxx|net)/.+s=list",
     "nextLink": "a[alt='next']",
@@ -5441,6 +5922,7 @@
 },
 {
     "name": "yande",
+    "author": "skofkyo",
     "example": "konachan.net，konachan.com，yande.re，www.sakugabooru.com",
     "url": "^https?://(konachan\\.net|konachan\\.com|yande\\.re|www\\.sakugabooru\\.com)/(post|comment)($|\\?|#|/search\\?)",
     "pageElement": "//li[contains(@class, 'creator-id-')]|//div[@id='comment-list']/div[@class='post']|//table[@class='highlightable']",
@@ -5451,6 +5933,7 @@
 },
 {
     "name": "hitomi - Gallery Info",
+    "author": "skofkyo",
     "example": "https://hitomi.la/doujinshi/akisame-mabara-ni-natte-%E4%B8%AD%E6%96%87-2431684.html#1",
     "url": "^https?://hitomi\\.la/(cg|manga|doujinshi|gamecg)/.+\\.html#1$",
     "pinUrl": true,
@@ -5458,6 +5941,7 @@
 },
 {
     "name": "hitomi - 分類",
+    "author": "skofkyo",
     "example": "https://hitomi.la/?page=2",
     "url": "^https?://hitomi\\.la/",
     "include": ".page-container",
@@ -5477,6 +5961,7 @@
 },
 {
     "name": "Orzqwq",
+    "author": "skofkyo",
     "example": "https://orzqwq.com/manga-genre/big-breasts/",
     "url": "^https?://orzqwq\\.com/",
     "action": 1,
@@ -5490,6 +5975,7 @@
 },
 {
     "name": "E-Hentai",
+    "author": "skofkyo",
     "example": "http://e-hentai.org/，https://exhentai.org/",
     "url": "^https?://(e-hentai|exhentai)\\.org/",
     "nextLink": "//table[@class='ptt']//a[string()='>'] | id('next') | id('unext')",
@@ -5499,6 +5985,7 @@
 },
 {
     "name": "177 漫画/xxiav - 圖片",
+    "author": "skofkyo",
     "example": "www.177picyy.com，www.xxiav.com",
     "url": "^https?://www.(177picyy|177pica|xxiav).com/",
     "init": "let _img='';document.querySelectorAll('img[data-lazy-src]').forEach(e=>{_img+=`<img src='${e.getAttribute('data-lazy-src')}'>`});document.querySelector('.single-content').innerHTML=_img;",
@@ -5513,6 +6000,7 @@
 },
 {
     "name": "177 漫画/xxiav - 分類",
+    "author": "skofkyo",
     "example": "www.177picyy.com，www.xxiav.com",
     "url": "^https?://www.(177picyy|177pica|xxiav)\\.com/",
     "include": ".nav-links",
@@ -5523,6 +6011,7 @@
 },
 {
     "name": "18 禁漫 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.18mh.cc/index-look-name-%E8%AB%8B%E6%BB%91%E5%85%A5%E8%A7%A3%E9%8E%96-cid-NaTcMaxcMjYO0O0O-id-619923",
     "url": "^https?://www\\.18mh\\.cc/index-look",
     "nextLink": "//div[@class='c']/a[text()='下一頁'][not(@class='n fanye')]",
@@ -5536,6 +6025,7 @@
 },
 {
     "name": "18 禁漫 - 分類",
+    "author": "skofkyo",
     "example": "https://www.18mh.cc/index-html-status-2",
     "url": "^https?://www\\.18mh\\.cc/",
     "nextLink": "//a[text()='下一頁']",
@@ -5546,6 +6036,7 @@
 },
 {
     "name": "禁漫天堂 - 分类页",
+    "author": "skofkyo",
     "example": "https://18comic.vip/，https://18comic.org/",
     "url": "^https?://18comic\\.(vip|org)/(album|search|blogs|videos|movies|promotes)",
     "pinUrl": true,
@@ -5558,6 +6049,7 @@
 },
 {
     "name": "Hanime1 - 漫画",
+    "author": "skofkyo",
     "example": "https://hanime1.me/comic/80357/1",
     "url": "^https?://hanime1\\.me/comic\\/\\d+\\/\\d",
     "nextLink": "a.comic-show-content-nav-item-wrapper.arrow-right",
@@ -5570,6 +6062,7 @@
 },
 {
     "name": "Hanime1 - 圖片清單檢視全部",
+    "author": "skofkyo",
     "example": "https://hanime1.me/comic/65225",
     "url": "^https?://hanime1\\.me/comic/\\d+$",
     "pinUrl": true,
@@ -5578,6 +6071,7 @@
 },
 {
     "name": "Hanime1",
+    "author": "skofkyo",
     "example": "https://hanime1.me/search?genre=%E8%A3%8F%E7%95%AA&duration=&sort=&query=&year=&month=",
     "url": "^https?://hanime1\\.me/(search|comics)",
     "nextLink": "a[rel='next']",
@@ -5588,6 +6082,7 @@
 },
 {
     "name": "Models Vibe",
+    "author": "skofkyo",
     "example": "https://www.modelsvibe.com/albums/china/",
     "url": "^https?://www\\.modelsvibe\\.com/albums/\\w+/",
     "nextLinkByUrl": [
@@ -5599,6 +6094,7 @@
 },
 {
     "name": "尤美图库",
+    "author": "skofkyo",
     "example": "https://www.umeitu.com/i/",
     "url": "^https?://www\\.umeitu\\.com/",
     "nextLink": "a.current+a",
@@ -5608,6 +6104,7 @@
 },
 {
     "name": "劍心回憶",
+    "author": "skofkyo",
     "example": "https://kenshin.hk/category/jnews/photoalbum/",
     "url": "^https?://kenshin\\.hk/",
     "nextLink": "span.current+a",
@@ -5616,6 +6113,7 @@
 },
 {
     "name": "芸能アイドルモデル女優水着画像集",
+    "author": "skofkyo",
     "example": "https://www.mizugigurabia.com/",
     "url": "^https?://www\\.mizugigurabia\\.com/",
     "action": 1,
@@ -5627,6 +6125,7 @@
 },
 {
     "name": "免费私房图 - 看圖",
+    "author": "skofkyo",
     "example": "http://www.mfsft.com/gaoqing/photo/20221021/139363.html，http://www.ywmtw.com/yao/kantu/20240223/160249.html",
     "url": "^https?://[^/]+/",
     "include": "#ztlui3",
@@ -5642,6 +6141,7 @@
 },
 {
     "name": "免费私房图 - 分類",
+    "author": "skofkyo",
     "example": "http://www.mfsft.com/gaoqing/tulie/1_1.html，http://www.ywmtw.com/yao/kantum/1_1.html",
     "url": "^https?://[^/]+/",
     "include": ".pagelist a[title='尾页']",
@@ -5655,6 +6155,7 @@
 },
 {
     "name": "秀人集 / 秀人美女網 / 爱美女网 - 搜索",
+    "author": "skofkyo",
     "example": "https://www.xiurenba.cc/plus/search/index.asp?keyword=XiuRen，https://www.xrmn01.cc/plus/search/index.asp?keyword=XiuRen，http://www.imn5.net/plus/search/index.asp?keyword=XiuRen",
     "url": "^https?://www\\.(xiuren|xrmn|imn5)(\\w{1,2})?\\.[a-z]{2,3}/plus/search/",
     "nextLink": "a.current+a",
@@ -5665,6 +6166,7 @@
 },
 {
     "name": "秀人集 / 秀人美女網 / 爱美女网 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.xiurenba.cc/XiuRen/11496.html，https://www.xrmn01.cc/XiuRen/2022/202212158.html，http://www.imn5.net/XiuRen/XiuRen/11535.html",
     "url": "^https?://www\\.(xiuren|xrmn|imn5)(\\w{1,2})?\\.[a-z]{2,3}/",
     "init": "document.querySelectorAll('br').forEach(br=>{br.remove()})",
@@ -5678,6 +6180,7 @@
 },
 {
     "name": "秀人集 / 秀人美女網 / 爱美女网 - 分類",
+    "author": "skofkyo",
     "example": "https://www.xiurenba.cc/XiuRen/，https://www.xrmn01.cc/XiuRen/，http://www.imn5.net/XiuRen/XiuRen/",
     "url": "^https?://www\\.(xiuren|xrmn|imn5)(\\w{1,2})?\\.[a-z]{2,3}/",
     "exclude": [
@@ -5691,6 +6194,7 @@
 },
 {
     "name": "秀人图集 - 分類",
+    "author": "skofkyo",
     "example": "http://xiuren0.com/",
     "url": "^https?://xiuren0\\.com/",
     "init": "let gax=x=>{let nodes=[];let results=document.evaluate(x,document,null,XPathResult.ANY_TYPE,null);let node;while(node=results.iterateNext()){nodes.push(node)}return nodes};gax(\"//div[div[a[img[contains(@data-src,'igusoft')]]]]\").forEach(e=>{e.remove()})",
@@ -5699,6 +6203,7 @@
 },
 {
     "name": "Xiutaku - 分類",
+    "author": "skofkyo",
     "example": "https://xiutaku.com/brand/1",
     "url": "^https?://xiutaku\\.com/(\\w+/\\d+|\\w+)?$",
     "init": "document.querySelectorAll('.search-form~*,.blog~*:not([class]),.pagination~*').forEach(e=>{e.remove()});",
@@ -5707,6 +6212,7 @@
 },
 {
     "name": "萝丝派 - 分類",
+    "author": "skofkyo",
     "example": "https://www.yylsp.com/",
     "url": "^https?://www\\.yylsp\\.com/",
     "pageElement": ".posts-item.card",
@@ -5716,6 +6222,7 @@
 },
 {
     "name": "绅士猫 - 分類",
+    "author": "skofkyo",
     "example": "https://www.cos6.net/",
     "url": "^https?://www\\.cos6\\.net/",
     "pageElement": "posts.posts-item",
@@ -5725,6 +6232,7 @@
 },
 {
     "name": "COSPLAY ZIP - 分類",
+    "author": "skofkyo",
     "example": "https://www.coszip.com/",
     "url": "^https?://www\\.coszip\\.com/",
     "pageElement": ".jeg_inner_content .jeg_block_container",
@@ -5734,6 +6242,7 @@
 },
 {
     "name": "Chinese Beauties - 分類",
+    "author": "skofkyo",
     "example": "https://sxchinesegirlz.one/",
     "url": "^https?://sxchinesegirlz\\.one/",
     "nextLinkByJs": "let next=doc.querySelector('span.current+a');if(next)return next.href.replace(/\\?fbclid=\\w+/i,'');",
@@ -5744,6 +6253,7 @@
 },
 {
     "name": "图宅网 - 分類",
+    "author": "skofkyo",
     "example": "https://www.tuzac.com/",
     "url": "^https?://www\\.tuzac\\.com/",
     "pageElement": ".node-teaser",
@@ -5755,6 +6265,7 @@
 },
 {
     "name": "Fuskator- 分類",
+    "author": "skofkyo",
     "example": "https://fuskator.com/",
     "url": "^https?://fuskator\\.com/",
     "pageElement": ".thumblinks",
@@ -5762,6 +6273,7 @@
 },
 {
     "name": "Asianude4u - 分類",
+    "author": "skofkyo",
     "example": "https://www.asianude4u.net/",
     "url": "^https?://www\\.asianude4u\\.net/",
     "action": 1,
@@ -5771,6 +6283,7 @@
 },
 {
     "name": "美人图 - 看圖",
+    "author": "skofkyo",
     "example": "https://meirentu.cc/pic/147617207297.html",
     "url": "^https?://meirentu\\.cc/pic/",
     "include": ".item_info",
@@ -5784,6 +6297,7 @@
 },
 {
     "name": "美人图 - 分類",
+    "author": "skofkyo",
     "example": "https://meirentu.cc/group/xiuren.html",
     "url": "^https?://meirentu\\.cc/",
     "include": ".fl_title",
@@ -5797,6 +6311,7 @@
 },
 {
     "name": "NEXE channels/models",
+    "author": "skofkyo",
     "example": "https://nehen.xyz/models",
     "url": "^https?://[^/]+/(models|channels)",
     "pinUrl": true,
@@ -5809,6 +6324,7 @@
 },
 {
     "name": "NEXE",
+    "author": "skofkyo",
     "example": "https://nehen.xyz/",
     "url": "^https?://[^/]+/(\\?forwarding.+|best.+|search.+|index.+|amateur.+|danmaku.*|keywords.*)?$",
     "pinUrl": true,
@@ -5822,6 +6338,7 @@
 },
 {
     "name": "JieAV",
+    "author": "skofkyo",
     "example": "www.jieav.com，www.qinav.com，www.qinimg.com，www.yinmh.com，www.txtxi.com，www.dnaav.com，www.jiedm.com，www.tasexy.com，www.feiav.com，www.liliav.com，www.keaiav.com，www.miliav.com，www.huiav.com，www.heihd.com，www.pornff.com，www.comfff.com",
     "url": "^https?://(www|cn|jp|kr|ru)\\.(jieav|qinav|qinimg|yinmh|txtxi|dnaav|jiedm|tasexy|feiav|liliav|keaiav|miliav|huiav|heihd|pornff|comfff)\\.(com|xyz|top)/",
     "nextLink": "a.active+a",
@@ -5836,6 +6353,7 @@
 },
 {
     "name": "成人色情分享論壇",
+    "author": "skofkyo",
     "example": "https://www.rouav.com/magnet/index.html",
     "url": "^https?://www\\.rouav\\.com/magnet",
     "nextLink": ".active+a",
@@ -5845,6 +6363,7 @@
 },
 {
     "name": "成人色情分享論壇",
+    "author": "skofkyo",
     "example": "https://www.rouav.com/",
     "url": "^https?://www\\.rouav\\.com/(home)?",
     "nextLink": ".active+a",
@@ -5855,6 +6374,7 @@
 },
 {
     "name": "CartoonPornVideos",
+    "author": "skofkyo",
     "example": "https://www.cartoonpornvideos.com/popular",
     "url": "^https?://www\\.cartoonpornvideos\\.com/",
     "nextLink": ".next",
@@ -5863,6 +6383,7 @@
 },
 {
     "name": "hentai.tv",
+    "author": "skofkyo",
     "example": "https://hentai.tv/",
     "url": "^https?://hentai\\.tv/(trending|genre)",
     "nextLink": "button[data-next]",
@@ -5871,6 +6392,7 @@
 },
 {
     "name": "FC2 电子市场",
+    "author": "skofkyo",
     "example": "https://adult.contents.fc2.com/search/?q=&genre=30&type=1",
     "url": "^https?://adult\\.contents\\.fc2\\.com/search",
     "nextLink": "span.items+a[data-link-name='pager']",
@@ -5880,6 +6402,7 @@
 },
 {
     "name": "俺の3Dエロ動画",
+    "author": "skofkyo",
     "example": "https://oreno3d.com/",
     "url": "^https?://oreno3d\\.com/",
     "nextLink": "a[rel='next']",
@@ -5889,6 +6412,7 @@
 },
 {
     "name": "Sex Nori",
+    "author": "skofkyo",
     "example": "https://www.sexnori26.me/bbs/board.php?bo_table=av_korea",
     "url": "^https?://www\\.sexnori(\\d+)?\\.me/",
     "nextLink": "a.next",
@@ -5898,6 +6422,7 @@
 },
 {
     "name": "UraakaList",
+    "author": "skofkyo",
     "example": "https://uraakalist.com/",
     "url": "^https?://uraakalist\\.com/",
     "action": 1,
@@ -5908,6 +6433,7 @@
 },
 {
     "name": "JavTorrent",
+    "author": "skofkyo",
     "example": "ijavtorrent.com，projectjav.com",
     "url": "^https?://(ijavtorrent|projectjav)\\.com/",
     "nextLink": "a.btn-secondary+a",
@@ -5917,6 +6443,7 @@
 },
 {
     "name": "JAV Library",
+    "author": "skofkyo",
     "example": "https://www.javlibrary.com/",
     "url": "^https?://www\\.javlibrary\\.com/",
     "nextLink": "a.next",
@@ -5925,6 +6452,7 @@
 },
 {
     "name": "JavBooks",
+    "author": "skofkyo",
     "example": "https://javbooks.com/，https://jmvbt.com/",
     "url": "^https?://(javbooks|jmvbt)\\.com/",
     "nextLink": "span.pageback>a",
@@ -5934,6 +6462,7 @@
 },
 {
     "name": "141 JAV",
+    "author": "skofkyo",
     "example": "https://www.141jav.com/new",
     "url": "^https?://www\\.(141jav|141ppv)\\.com/",
     "nextLink": "a.pagination-next",
@@ -5943,6 +6472,7 @@
 },
 {
     "name": "AV6K",
+    "author": "skofkyo",
     "example": "https://av6k.com/rihanwuma/",
     "url": "^https?://av6k\\.com/(rihanwuma|rihanyouma|jxny|chinese-av-porn|surenzipai|oumeiwuma|chengrendongman|plus)",
     "nextLink": ".thisclass+li>a,td[width='50']>a",
@@ -5951,6 +6481,7 @@
 },
 {
     "name": "AV皇8影城",
+    "author": "skofkyo",
     "example": "https://www.royal888.xyz/news",
     "url": "^https?://www\\.royal888\\.xyz/",
     "nextLink": "a[rel='next']",
@@ -5959,6 +6490,7 @@
 },
 {
     "name": "85TUBE",
+    "author": "skofkyo",
     "example": "https://85tube.com/latest-updates/",
     "url": "^https?://85tube\\.com/",
     "nextLink": ".next>a",
@@ -5969,6 +6501,7 @@
 },
 {
     "name": "JavDove 番号鸽",
+    "author": "skofkyo",
     "example": "https://www.javdove.com/videos/uncensored",
     "url": "^https?://www\\.javdove\\.com/",
     "nextLink": ".prevnext[rel='next']",
@@ -5978,6 +6511,7 @@
 },
 {
     "name": "BuzzAV - photo",
+    "author": "skofkyo",
     "example": "https://www.buzzav.com/photo/3972/",
     "url": "^https?://www\\.buzzav\\.com/photo/\\d+",
     "init": "document.querySelector('.thumb-overlay>a').removeAttribute('href');",
@@ -5990,6 +6524,7 @@
 },
 {
     "name": "BuzzAV - album",
+    "author": "skofkyo",
     "example": "https://www.buzzav.com/album/260/jk",
     "url": "^https?://www\\.buzzav\\.com/album/\\d+",
     "nextLink": ".page-item.active+li>a",
@@ -5999,6 +6534,7 @@
 },
 {
     "name": "BuzzAV",
+    "author": "skofkyo",
     "example": "https://www.buzzav.com/videos",
     "url": "^https?://www\\.buzzav\\.com/(videos|albums)",
     "nextLink": ".page-item.active+li>a",
@@ -6008,6 +6544,7 @@
 },
 {
     "name": "JAVMOST",
+    "author": "skofkyo",
     "example": "https://www.javmost.cx/category/uncensor/",
     "url": "^https?://\\w+\\.javmost\\.[a-z]{2,3}/",
     "nextLink": ".pagination>li.active+li>a",
@@ -6017,6 +6554,7 @@
 },
 {
     "name": "爱漫福利社",
+    "author": "skofkyo",
     "example": "https://jav889.xyz/",
     "url": "^https?://jav889\\.[^/]+/",
     "nextLink": "//li[span/@class='page-numbers current']/following-sibling::li[1]/a",
@@ -6026,6 +6564,7 @@
 },
 {
     "name": "MOVIEFFM",
+    "author": "skofkyo",
     "example": "https://www.movieffm.net/category/hd-uncensored/",
     "url": "^https?://www\\.movieffm\\.net/",
     "nextLink": "span.current+a",
@@ -6036,6 +6575,7 @@
 },
 {
     "name": "258PORN",
+    "author": "skofkyo",
     "example": "http://www.258porn.com/list/%E6%97%A5%E9%9F%93%E7%84%A1%E7%A2%BC/0.html",
     "url": "^https?://www\\.258porn\\.com/",
     "nextLink": ".next-page>a",
@@ -6045,6 +6585,7 @@
 },
 {
     "name": "CCAVB",
+    "author": "skofkyo",
     "example": "https://ccavb.tv/category/%E6%9C%80%E6%96%B0%E4%B8%8A%E5%82%B3",
     "url": "^https?://ccavb\\.tv/",
     "init": "document.querySelectorAll('div.__mantine-ref-control').forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 200)')})",
@@ -6059,6 +6600,7 @@
 },
 {
     "name": "Jav223",
+    "author": "skofkyo",
     "example": "https://www.jav223.com/?m=video_list*5*1",
     "url": "^https?://www\\.jav223\\.com/",
     "action": 1,
@@ -6073,6 +6615,7 @@
 },
 {
     "name": "Avgle & AV01",
+    "author": "skofkyo",
     "example": "avgle.com，www.av01.tv",
     "url": "^https?://(www\\.)?(avgle|av01)\\.(com|tv)/",
     "nextLink": ".prevnext",
@@ -6082,6 +6625,7 @@
 },
 {
     "name": "GGJAV",
+    "author": "skofkyo",
     "example": "https://ggjav.com/main/uncensored",
     "url": "^https?://ggjav\\.com/",
     "nextLink": ".pager>a:last-child[href]",
@@ -6090,6 +6634,7 @@
 },
 {
     "name": "Porn87",
+    "author": "skofkyo",
     "example": "https://porn87.com/",
     "url": "^https?://porn87\\.com/",
     "nextLink": ".pagination-next:not(.mobile_pagination)>a",
@@ -6098,6 +6643,7 @@
 },
 {
     "name": "porn78.info",
+    "author": "skofkyo",
     "example": "https://porn78.info/，https://nyaa.porn78.info/",
     "url": "^https?://(nyaa\\.)?porn78.info/",
     "action": 1,
@@ -6107,6 +6653,7 @@
 },
 {
     "name": "JavDisk",
+    "author": "skofkyo",
     "example": "https://javdoe.to/，https://javfinder.li/",
     "url": "^https?://(javdoe|javfinder)\\.[a-z]{2,3}/",
     "action": 1,
@@ -6116,6 +6663,7 @@
 },
 {
     "name": "Javhd.today",
+    "author": "skofkyo",
     "example": "https://javhd.today/",
     "url": "^https?://javhd\\.today/",
     "nextLink": ".pagination>li.active+li>a",
@@ -6125,6 +6673,7 @@
 },
 {
     "name": "JavBus / AVMOO",
+    "author": "skofkyo",
     "example": "https://www.javbus.com/，https://avmoo.click/tw",
     "url": "^https?://(www\\.)?(javbus|avmoo)\\.(com|click)/",
     "nextLink": "#next, .pagination>.active+li>a",
@@ -6135,6 +6684,7 @@
 },
 {
     "name": "JavDB",
+    "author": "skofkyo",
     "example": "https://javdb.com/",
     "url": "^https?://javdb\\.com/",
     "nextLink": "a.pagination-next",
@@ -6144,6 +6694,7 @@
 },
 {
     "name": "H 次元",
+    "author": "skofkyo",
     "example": "https://h-ciyuan.com/",
     "url": "^https?://h-ciyuan\\.com/",
     "nextLink": ".next",
@@ -6152,6 +6703,7 @@
 },
 {
     "name": "Avbebe",
+    "author": "skofkyo",
     "example": "https://avbebe.com/",
     "url": "^https?://avbebe\\.com/",
     "nextLink": ".next",
@@ -6161,6 +6713,7 @@
 },
 {
     "name": "Hentai Anime Zone / HentaiDLs / Hentai-Hot",
+    "author": "skofkyo",
     "example": "https://hentaianimezone.com/，https://hentaidls.com/，https://hentai-hot.com/",
     "url": "^https?://(hentaianimezone|hentaidls|hentai-hot)\\.com/",
     "nextLink": ".navigation>span+a,.nav-links>span.current+a,.pagi-nav span.pnext>a",
@@ -6170,6 +6723,7 @@
 },
 {
     "name": "Latino Hentai",
+    "author": "skofkyo",
     "example": "https://latinohentai.com/",
     "url": "^https?://latinohentai\\.com/",
     "nextLink": ".current+a",
@@ -6178,6 +6732,7 @@
 },
 {
     "name": "ACG RW",
+    "author": "skofkyo",
     "example": "https://www.acgrw.net/category/lifan/",
     "url": "^https?://www\\.acgrw\\.net/",
     "nextLink": "a.next",
@@ -6187,6 +6742,7 @@
 },
 {
     "name": "DaftSex - other",
+    "author": "skofkyo",
     "example": "https://daftsex.com/browse",
     "url": "^https?://daftsex\\.com/",
     "nextLink": "li.active+li>a",
@@ -6197,12 +6753,14 @@
 },
 {
     "name": "DaftSex - 首頁",
+    "author": "skofkyo",
     "example": "https://daftsex.com/",
     "url": "^https?://daftsex\\.com/$",
     "loadMore": ".more"
 },
 {
     "name": "YouJizz",
+    "author": "skofkyo",
     "example": "https://www.youjizz.com/",
     "url": "^https?://www\\.youjizz\\.com/",
     "action": 1,
@@ -6214,6 +6772,7 @@
 },
 {
     "name": "EPORNER Photo",
+    "author": "skofkyo",
     "example": "https://www.eporner.com/photo/02USX1vSH4e/8/",
     "url": "^https?://[a-z]{2,3}\\.eporner\\.com/photo/",
     "init": "let img = document.querySelector('.photohref>img[alt]');img.src = img.parentNode.href;",
@@ -6229,6 +6788,7 @@
 },
 {
     "name": "EPORNER",
+    "author": "skofkyo",
     "example": "https://www.eporner.com/",
     "url": "^https?://[a-z]{2,3}\\.eporner\\.com/",
     "nextLink": ".nmnext",
@@ -6239,6 +6799,7 @@
 },
 {
     "name": "xHamster gallery2",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/photos/gallery/15979608/513740284",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos/gallery/",
     "exclude": ".gallery-list",
@@ -6262,6 +6823,7 @@
 },
 {
     "name": "xHamster gallery1 在清單頁面載入大圖",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/photos/gallery/selfie-porn-pic-134-15984561，https://zh.xhamster.com/photos/gallery/selfie-porn-pic-122-15979608",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos/gallery/",
     "include": ".gallery-list",
@@ -6283,6 +6845,7 @@
 },
 {
     "name": "xHamster photos",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/photos",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos",
     "nextLink": "li.next>a",
@@ -6292,6 +6855,7 @@
 },
 {
     "name": "xHamster channels",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/channels",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/channels",
     "nextLink": "li.next>a",
@@ -6302,6 +6866,7 @@
 },
 {
     "name": "xHamster creators",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/creators",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/creators",
     "nextLink": "li.next>a",
@@ -6312,6 +6877,7 @@
 },
 {
     "name": "xHamster pornstars",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/pornstars",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/pornstars",
     "nextLink": "li.next>a",
@@ -6322,6 +6888,7 @@
 },
 {
     "name": "xHamster",
+    "author": "skofkyo",
     "example": "https://zh.xhamster.com/newest",
     "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/",
     "exclude": ".fotorama__img",
@@ -6332,6 +6899,7 @@
 },
 {
     "name": "色色啦",
+    "author": "skofkyo",
     "example": "https://www.seselah.com/",
     "url": "^https?://www\\.seselah\\.com/",
     "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.classList.add('loaded');e.previousElementSibling.setAttribute('srcset',e.previousElementSibling.getAttribute('data-srcset'))})",
@@ -6343,6 +6911,7 @@
 },
 {
     "name": "91Porn",
+    "author": "skofkyo",
     "example": "http://91porn.com/index.php",
     "url": "^https?://(0118\\.)?(91porn|workarea7)\\.(com|live)/",
     "nextLink": "//a[text()='»']",
@@ -6352,6 +6921,7 @@
 },
 {
     "name": "Thumbzilla",
+    "author": "skofkyo",
     "example": "https://www.thumbzilla.com/newest",
     "url": "^https?://www\\.thumbzilla\\.com/",
     "nextLink": ".page_next>a",
@@ -6361,6 +6931,7 @@
 },
 {
     "name": "Tube8",
+    "author": "skofkyo",
     "example": "https://www.tube8.com/newest.html",
     "url": "^https?://[a-z]{2,3}\\.tube8\\.com/",
     "nextLink": "#pagination_next",
@@ -6372,6 +6943,7 @@
 },
 {
     "name": "RedTube",
+    "author": "skofkyo",
     "example": "https://www.redtube.com/hot?cc=us",
     "url": "^https?://www\\.redtube\\.com/",
     "exclude": "#trending_country_section",
@@ -6383,6 +6955,7 @@
 },
 {
     "name": "YouPorn",
+    "author": "skofkyo",
     "example": "https://www.youporn.com/recommended/",
     "url": "^https?://www\\.youporn\\.com/",
     "pinUrl": true,
@@ -6393,6 +6966,7 @@
 },
 {
     "name": "Porned Up",
+    "author": "skofkyo",
     "example": "https://pornedup.com/",
     "url": "^https?://pornedup.com/pics/\\d+/[^/]+/",
     "nextLink": "a.control.next",
@@ -6400,12 +6974,14 @@
 },
 {
     "name": "PicHunter",
+    "author": "skofkyo",
     "example": "https://www.pichunter.com/",
     "url": "^https?://www\\.pichunter\\.com/",
     "enable": 0
 },
 {
     "name": "PornHub photo",
+    "author": "skofkyo",
     "example": "https://cn.pornhub.com/photo/825175581",
     "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/photo/\\d+",
     "init": "let a=document.querySelector('.centerImage img[alt]').parentNode;a.outerHTML=a.innerHTML;",
@@ -6427,6 +7003,7 @@
 },
 {
     "name": "PornHub album",
+    "author": "skofkyo",
     "example": "https://cn.pornhub.com/albums，https://cn.pornhub.com/album/10042641",
     "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/album",
     "pinUrl": true,
@@ -6439,6 +7016,7 @@
 },
 {
     "name": "Pornhub",
+    "author": "skofkyo",
     "example": "https://cn.pornhub.com/",
     "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/",
     "exclude": [
@@ -6456,6 +7034,7 @@
 },
 {
     "name": "XVIDEOS",
+    "author": "skofkyo",
     "example": "https://www.xvideos.com/",
     "url": "^https?://www\\.(xvideos|xnxx)\\.com/",
     "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
@@ -6466,6 +7045,7 @@
 },
 {
     "name": "麻豆村",
+    "author": "skofkyo",
     "example": "https://madoucun.com/",
     "url": "^https?://madoucun\\.com/",
     "include": ".hl-page-wrap",
@@ -6475,12 +7055,14 @@
 },
 {
     "name": "麻豆社,草麻豆",
+    "author": "skofkyo",
     "example": "https://madou.club/，https://xxxmadou.com/",
     "url": "^https?://(madou|xxxmadou|)\\.(club|com)/",
     "loadMore": ".ias_trigger>a"
 },
 {
     "name": "牛C網 - 列表",
+    "author": "skofkyo",
     "example": "https://niuc.icu/sex",
     "url": "^https?://niuc[^/]+/(blog|sex|pornhub|apps)",
     "init": "document.querySelectorAll('a[data-src]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`})",
@@ -6492,6 +7074,7 @@
 },
 {
     "name": "牛C網 - 看圖",
+    "author": "skofkyo",
     "example": "https://niuc.icu/78111.html",
     "url": "^https?://niuc[^/]+/\\d+\\.html",
     "init": "document.querySelectorAll('a.js').forEach(e=>{e.outerHTML=e.innerHTML})",
@@ -6505,6 +7088,7 @@
 },
 {
     "name": "牛C網 - 正文",
+    "author": "skofkyo",
     "example": "https://niuc.icu/67307.html",
     "url": "^https?://niuc[^/]+/\\d+\\.html",
     "exclude": ".page-nav",
@@ -6516,6 +7100,7 @@
 },
 {
     "name": "HPJAV",
+    "author": "skofkyo",
     "example": "https://hpav.tv/ja/category/uncensored",
     "url": "^https?://(hpav|hpjav)\\.tv/",
     "init": "document.querySelectorAll('img[data-original]').forEach(img=>{img.src=img.getAttribute('data-original')})",
@@ -6526,6 +7111,7 @@
 },
 {
     "name": "CableAV",
+    "author": "skofkyo",
     "example": "https://cableav.tv/playlist/lk4cv1f3j1v/",
     "url": "^https?://cableav\\.tv/",
     "nextLink": "span.current+a",
@@ -6535,6 +7121,7 @@
 },
 {
     "name": "肉漫屋 - 閱讀",
+    "author": "skofkyo",
     "example": "https://rouman5.com/books/354b56da-1ab9-4909-9330-743842c5a5bf/0",
     "url": "^https?://rouman[0-9]{1,2}\\.[a-z]{3}/books/[^/]+/",
     "history": 2,
@@ -6549,6 +7136,7 @@
 },
 {
     "name": "肉漫屋",
+    "author": "skofkyo",
     "example": "https://rouman5.com/books，https://rouman01.xyz/books",
     "url": "^https?://rouman\\d{1,2}\\.[a-z]{3}/",
     "include": "div[class^='pagination']",
@@ -6559,6 +7147,7 @@
 },
 {
     "name": "肉視頻",
+    "author": "skofkyo",
     "example": "https://rouv01.xyz/t/%E6%8E%A2%E8%8A%B1",
     "url": "^https?://(rouv\\d+|rou)\\.(xyz|video)/(t|v|search)",
     "pinUrl": true,
@@ -6570,6 +7159,7 @@
 },
 {
     "name": "jav9999",
+    "author": "skofkyo",
     "example": "https://jav9999.com/uded/1",
     "url": "^https?://jav9999\\.com/(1|uded|amateur|chinese|actress|wuman|search)?",
     "nextLink": "//a[text()='下一頁']",
@@ -6579,6 +7169,7 @@
 },
 {
     "name": "onejav.com",
+    "author": "skofkyo",
     "example": "https://onejav.com/new",
     "url": "^https?://onejav\\.com/(new|popular|tag|actress|search)",
     "nextLink": "//a[text()='Next']",
@@ -6588,12 +7179,14 @@
 },
 {
     "name": "onejav.com - 首頁",
+    "author": "skofkyo",
     "example": "https://onejav.com/",
     "url": "^https?://onejav\\.com/$",
     "loadMore": "#button-load-more"
 },
 {
     "name": "女神社",
+    "author": "skofkyo",
     "example": "https://nshens.com/，https://inewgirl.com/",
     "url": "^https?://(nshens\\.com|inewgirl\\.com)/",
     "include": ".v-pagination",
@@ -6601,6 +7194,7 @@
 },
 {
     "name": "微圖坊 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.v2ph.com/album/SSA-392",
     "url": "^https?://(www\\.)?v2ph\\.(com|net|ovh)/album/",
     "nextLink": ".active.page-item+li>a",
@@ -6611,6 +7205,7 @@
 },
 {
     "name": "微圖坊 - 分類",
+    "author": "skofkyo",
     "example": "https://www.v2ph.com/country/taiwan",
     "url": "^https?://(www\\.)?v2ph\\.(com|net|ovh)/",
     "nextLink": ".active.page-item+li>a",
@@ -6620,6 +7215,7 @@
 },
 {
     "name": "美图乐 - 分類",
+    "author": "skofkyo",
     "example": "https://www.meitule.cc/i/",
     "url": "^https?://www\\.meitule\\.cc/",
     "pageElement": ".list-item",
@@ -6628,6 +7224,7 @@
 },
 {
     "name": "極品性感美女 - 搜索",
+    "author": "skofkyo",
     "example": "https://www.xgmn01.com/plus/search/index.asp?keyword=XiuRen",
     "url": "^https?://[^/]+/plus/search/index\\.asp\\?keyword=",
     "include": "body>.container>.container+font>font>font>.list>.list>.node+.pagination",
@@ -6638,6 +7235,7 @@
 },
 {
     "name": "極品性感美女 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.xgmn01.com/Xiuren/Xiuren23112.html",
     "url": "^https?://[^/]+/\\w+/\\w+\\.html",
     "include": [
@@ -6657,6 +7255,7 @@
 },
 {
     "name": "極品性感美女 - 分類",
+    "author": "skofkyo",
     "example": "https://www.xgmn01.com/Xiuren/",
     "url": "^https?://[^/]+/\\w+/",
     "include": [
@@ -6671,6 +7270,7 @@
 },
 {
     "name": "Nyaa",
+    "author": "skofkyo",
     "example": "https://sukebei.nyaa.si/",
     "url": "^https?://(sukebei\\.)?nyaa\\.si/",
     "nextLink": "a[rel='next'], li.next>a",
@@ -6679,6 +7279,7 @@
 },
 {
     "name": "U9A9",
+    "author": "skofkyo",
     "example": "https://u9a9.net/",
     "url": "^https?://u9a9\\.[a-z]{2,3}",
     "nextLink": "li.active+li>a",
@@ -6687,6 +7288,7 @@
 },
 {
     "name": "Jerk-Off Instruction",
+    "author": "skofkyo",
     "example": "https://joi-me.com/lastnews/",
     "url": "^https?://joi-me\\.com",
     "action": "1",
@@ -6700,6 +7302,7 @@
 },
 {
     "name": "Mixfemdomcc",
+    "author": "skofkyo",
     "example": "https://mixfemdomcc.com/lastnews/",
     "url": "^https?://mixfemdomcc.com/",
     "nextLink": ".nnext>a",
@@ -6710,6 +7313,7 @@
 },
 {
     "name": "Femdom",
+    "author": "skofkyo",
     "example": "https://femdomup.net/lastnews/",
     "url": "^https?://femdomup\\.net/",
     "nextLink": "//a[text()='Next']",
@@ -6720,6 +7324,7 @@
 },
 {
     "name": "xstarshub",
+    "author": "skofkyo",
     "example": "https://xstarshub.com/",
     "url": "^https?://xstarshub.com/",
     "nextLink": "a.next",
@@ -6729,6 +7334,7 @@
 },
 {
     "name": "New Videos",
+    "author": "skofkyo",
     "example": "https://watchporn.to/latest-updates/",
     "url": "^https?://watchporn\\.to/",
     "nextLink": "//a[text()='Next']",
@@ -6738,6 +7344,7 @@
 },
 {
     "name": "SpankBang",
+    "author": "skofkyo",
     "example": "https://jp.spankbang.com/trending_videos/",
     "url": "^https?://([a-z]{2}\\.)?spankbang\\.com/",
     "pinUrl": true,
@@ -6749,6 +7356,7 @@
 },
 {
     "name": "MISSAV",
+    "author": "skofkyo",
     "example": "https://missav.com/fc2",
     "url": "^https?://missav.com/",
     "nextLink": "a[rel='next']",
@@ -6758,6 +7366,7 @@
 },
 {
     "name": "愛污傳媒",
+    "author": "skofkyo",
     "example": "https://aiwucm.com/",
     "url": "aiw",
     "include": [
@@ -6771,6 +7380,7 @@
 },
 {
     "name": "3xchina.net",
+    "author": "skofkyo",
     "example": "https://3xchina.net/category/chinese-av/",
     "url": "^https?://3xchina\\.net/",
     "nextLink": "//a[text()='Next']",
@@ -6780,6 +7390,7 @@
 },
 {
     "name": "fanxxx.net",
+    "author": "skofkyo",
     "example": "https://fanxxx.net/",
     "url": "^https?://fanxxx\\.net/",
     "nextLink": "a[rel='next']",
@@ -6789,6 +7400,7 @@
 },
 {
     "name": "JAVDAY",
+    "author": "skofkyo",
     "example": "https://javday.tv/category/uncensored-leaked/",
     "url": "^https?://javday\\.tv/(category|search)/",
     "nextLink": ".layui-laypage-next",
@@ -6798,6 +7410,7 @@
 },
 {
     "name": "AV RBO",
+    "author": "skofkyo",
     "example": "https://avbro.top/index.php/vod/type/id/12.html",
     "url": "^https?://avbro\\.top/index\\.php/vod/",
     "nextLink": ".page>li.active+li>a",
@@ -6808,6 +7421,7 @@
 },
 {
     "name": "AVPRO - 搜索",
+    "author": "skofkyo",
     "example": "https://avpro.cc/search?keyword=%E7%BE%8E%E5%A5%B3&page_id=1",
     "url": "^https?://avpro\\.cc/search",
     "nextLinkByUrl": [
@@ -6822,6 +7436,7 @@
 },
 {
     "name": "AVPRO",
+    "author": "skofkyo",
     "example": "https://avpro.cc/videos/category/847?page_id=1",
     "url": "^https?://avpro\\.cc/",
     "nextLink": "a[title='Next Page']",
@@ -6831,6 +7446,7 @@
 },
 {
     "name": "AV時間",
+    "author": "skofkyo",
     "example": "https://avtime.tv/category/28/",
     "url": "^https?://avtime\\.tv/",
     "nextLink": "//li[(span) and @class='page-item']/following-sibling::li[1]/a",
@@ -6840,6 +7456,7 @@
 },
 {
     "name": "癡漢隊長",
+    "author": "skofkyo",
     "example": "https://javcaptain.com/uncensored",
     "url": "^https?://javcaptain\\.com/(en/|ja/|zh/|ko/)?(rank/|series/)?(censored|uncensored|western|fc2|hanime|search)",
     "nextLink": "a.page-link[rel='next']",
@@ -6849,6 +7466,7 @@
 },
 {
     "name": "Supjav",
+    "author": "skofkyo",
     "example": "https://supjav.com/ja/category/uncensored-jav",
     "url": "^https?://supjav\\.com/(zh/|ja/)?(\\?s=|popular|category)",
     "nextLink": "li.active+li>a",
@@ -6858,6 +7476,7 @@
 },
 {
     "name": "加勒逼A片網",
+    "author": "skofkyo",
     "example": "https://159i.com/video/",
     "url": "^https?://159i\\.com/video/((category|search)/.+/)?$",
     "nextLink": ".next>a",
@@ -6867,6 +7486,7 @@
 },
 {
     "name": "NETFLAV3",
+    "author": "skofkyo",
     "example": "https://netflav.com/all?genre=%E6%80%A7%E6%84%9F%E7%9A%84&page=2",
     "url": "^https?://(www\\.)?netflav\\.com/all\\?(genre|actress)=.+(&page=\\d+)?$",
     "init": "let gae=e=>document.querySelectorAll(e);let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=document.querySelectorAll('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
@@ -6884,6 +7504,7 @@
 },
 {
     "name": "NETFLAV2",
+    "author": "skofkyo",
     "example": "https://netflav.com/uncensored?genre=FC2PPV",
     "url": "^https?://(www\\.)?netflav\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
     "init": "let gae=e=>document.querySelectorAll(e);let ds=gae(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=gae('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
@@ -6901,6 +7522,7 @@
 },
 {
     "name": "NETFLAV1",
+    "author": "skofkyo",
     "example": "https://netflav.com/uncensored",
     "url": "^https?://(www\\.)?netflav\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
     "init": "let gae=e=>document.querySelectorAll(e);let ds=gae(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=gae('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
@@ -6918,6 +7540,7 @@
 },
 {
     "name": "avple.tv - 類別",
+    "author": "skofkyo",
     "example": "https://avple.tv/tags/135/1/date",
     "url": "^https?://avple\\.tv/tags/\\d+/\\d+/\\w+$",
     "action": 1,
@@ -6938,6 +7561,7 @@
 },
 {
     "name": "avple.tv - 搜索",
+    "author": "skofkyo",
     "example": "https://avple.tv/search?key=FC2PPV&page=1&sort=date",
     "action": 1,
     "url": "^https?://avple\\.tv/search\\?key=",
@@ -6958,6 +7582,7 @@
 },
 {
     "name": "X5AV",
+    "author": "skofkyo",
     "example": "https://x5av.com/e/action/ListInfo/?classid=2",
     "url": "^https?://x5av\\.com/(e|popular)/((action|search)/)?",
     "pageElement": ".videos-container>*",
@@ -6966,6 +7591,7 @@
 },
 {
     "name": "javbangers.com",
+    "author": "skofkyo",
     "example": "https://www.javbangers.com/latest-updates/",
     "url": "^https?://www\\.javbangers\\.com/",
     "include": ".pagination",
@@ -6976,6 +7602,7 @@
 },
 {
     "name": "HOTGIRL.asia - 清單",
+    "author": "skofkyo",
     "example": "https://hotgirl.asia/genre/china/",
     "url": "^https?://hotgirl\\.asia/(\\?s=|genre|tag|photos|livestream|china|korea|videos)(\\/)?",
     "nextLink": "li.active+li>a",
@@ -6984,6 +7611,7 @@
 },
 {
     "name": "HOTGIRL.asia - 寫真",
+    "author": "skofkyo",
     "example": "https://hotgirl.asia/imiss%e7%88%b1%e8%9c%9c%e7%a4%be-vol-693-lavinia%e8%82%89%e8%82%89/",
     "url": "^https?://hotgirl\\.asia/[^/]+/",
     "include": ".mx-auto",
@@ -6997,6 +7625,7 @@
 },
 {
     "name": "imgasd",
+    "author": "skofkyo",
     "example": "https://imgasd.com/",
     "url": "^https?://imgasd\\.com",
     "nextLink": "a.active+a",
@@ -7006,6 +7635,7 @@
 },
 {
     "name": "Taotuxp.com - 看圖",
+    "author": "skofkyo",
     "example": "https://www.taotucc.com/252555.html",
     "url": "^https?://www\\.taotucc\\.com/\\d+\\.html",
     "nextLink": ".pagelist>span+a",
@@ -7018,6 +7648,7 @@
 },
 {
     "name": "Taotuxp.com - 分類",
+    "author": "skofkyo",
     "example": "https://www.taotucc.com/",
     "url": "^https?://www\\.taotucc\\.com/",
     "nextLink": "a.current+a",
@@ -7027,6 +7658,7 @@
 },
 {
     "name": "超级美女图库 - 手機版看圖",
+    "author": "skofkyo",
     "example": "https://m.2avtt.com/xiuren/56166.html",
     "url": "^https?://m\\.[^/]+/",
     "include": "//title[contains(text(),'超级美女图库')]",
@@ -7055,6 +7687,7 @@
 },
 {
     "name": "超级美女图库 - 手機版分類",
+    "author": "skofkyo",
     "example": "https://m.2avtt.com/xingan/",
     "url": "^https?://m\\.[^/]+/",
     "include": "//title[contains(text(),'超级美女图库')]",
@@ -7065,6 +7698,7 @@
 },
 {
     "name": "超级美女图库 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.2avtt.com/xingan/54985.html",
     "url": "^https?://[^/]+/",
     "include": "//title[contains(text(),'超级美女图库')]",
@@ -7080,6 +7714,7 @@
 },
 {
     "name": "超级美女图库 - 分類",
+    "author": "skofkyo",
     "example": "https://www.2avtt.com/xingan/",
     "url": "^https?://[^/]+/",
     "include": "//title[contains(text(),'超级美女图库')]",
@@ -7090,6 +7725,7 @@
 },
 {
     "name": "Xgirls - 看圖",
+    "author": "skofkyo",
     "example": "https://xgirlscollection.com/collection/2015",
     "url": "^https?://xgirlscollection\\.com/",
     "nextLink": "//a[i[@class='fa fa-angle-right']]",
@@ -7101,6 +7737,7 @@
 },
 {
     "name": "Xgirls - 分類",
+    "author": "skofkyo",
     "example": "https://xgirlscollection.com/collections",
     "url": "^https?://xgirlscollection\\.com/",
     "nextLink": "//a[i[@class='fa fa-angle-right']]",
@@ -7110,6 +7747,7 @@
 },
 {
     "name": "Porn Pics - 圖片清單載入大圖",
+    "author": "skofkyo",
     "example": "https://www.pornpics.com/galleries/brunette-asian-girl-yui-uehara-gives-a-blowjob-and-gets-fucked-by-two-knobs-29982680/",
     "url": "^https?://www\\.pornpics\\.com/galleries/[^/]+/",
     "include": "a[data-tid]",
@@ -7118,6 +7756,7 @@
 },
 {
     "name": "优丝库HD - 分類",
+    "author": "skofkyo",
     "example": "https://yskhd.com/archives/category/xiuren/xiuren%e7%a7%80%e4%ba%ba%e7%bd%91?t",
     "url": "^https?://yskhd\\.com/",
     "include": ".pagination",
@@ -7129,6 +7768,7 @@
 },
 {
     "name": "心动美图 - 看圖",
+    "author": "skofkyo",
     "example": "https://www.wai77.com/xiuren%e7%a7%80%e4%ba%ba%e7%bd%91-no-5566-manuela%e7%8e%9b%e9%b2%81%e5%a8%9c-%e6%b7%a1%e7%bb%bf%e7%81%b0%e8%89%b2%e4%b8%8a%e8%a1%a3%e6%90%ad%e9%85%8d%e7%99%bd%e8%89%b2%e7%9f%ad%e8%a3%99/",
     "url": "^https?://www\\.wai77\\.com/[^/]+/",
     "init": "let fimgs=document.querySelectorAll('div[data-src]');let alts=document.querySelectorAll('#lightgallery img[alt]');let _img='';for(let i=0;i<fimgs.length;i++){_img+=`<img src='${fimgs[i].dataset.src}'alt='${alts[i].getAttribute('alt')}'>`};document.querySelector('#lightgallery').innerHTML=_img;",
@@ -7143,6 +7783,7 @@
 },
 {
     "name": "心动美图 - 分類",
+    "author": "skofkyo",
     "example": "https://www.wai77.com/tag/%E7%A7%80%E4%BA%BA%E7%BD%91/",
     "url": "^https?://www\\.wai77\\.com/(tag|category|\\?s=)",
     "nextLink": "span.current+a",
@@ -7152,6 +7793,7 @@
 },
 {
     "name": "秀色女神 - 手機版看圖",
+    "author": "skofkyo",
     "example": "https://m.xsnvshen.co/album/39844?p=1",
     "url": "^https?://m\\.xsnvshen\\.[a-z]{2,3}/album/\\d+(\\?p=\\d+)?",
     "pinUrl": true,
@@ -7169,6 +7811,7 @@
 },
 {
     "name": "秀色女神 - 分類",
+    "author": "skofkyo",
     "example": "https://www.xsnvshen.co/girl/",
     "url": "^https?://www\\.xsnvshen\\.[a-z]{2,3}/",
     "include": "#pageNum",
@@ -7179,6 +7822,7 @@
 },
 {
     "name": "X成人论坛 帖子內",
+    "author": "skofkyo",
     "example": "https://xbbs.me/thread/id-620bd15362b3d.html",
     "url": "^https?://(tw\\.)?xbbs\\.me/thread/[^.]+\\.html",
     "pinUrl": true,
@@ -7191,6 +7835,7 @@
 },
 {
     "name": "X成人论坛 帖子",
+    "author": "skofkyo",
     "example": "https://xbbs.me/forum/id-61fe70f2b9631.html",
     "url": "^https?://(tw\\.)?xbbs\\.me/forum/[^.]+\\.html",
     "nextLink": "a.next",
@@ -7203,6 +7848,7 @@
 },
 {
     "name": "丽图·污漫画 - 閱讀",
+    "author": "skofkyo",
     "example": "https://litu100.xyz/comic/id-624428abcf548/1.html",
     "url": "^https?://litu100\\.xyz/comic/id-\\w+/\\d+\\.html",
     "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
@@ -7215,6 +7861,7 @@
 },
 {
     "name": "丽图·污漫画 - 分類",
+    "author": "skofkyo",
     "example": "https://litu100.xyz/comics.html",
     "url": "^https?://litu100\\.xyz/",
     "nextLink": "a.next",
@@ -7224,6 +7871,7 @@
 },
 {
     "name": "海棠小说网 - 手机阅读",
+    "author": "skofkyo",
     "example": "https://m.haitangtxt.net/19/19363/1736943.html",
     "url": "^https?://m\\.haitangtxt\\.net/",
     "nextLink": "//a[contains(text(),'下一页') or contains(text(),'下一章')]",
@@ -7233,6 +7881,7 @@
 },
 {
     "name": "海棠小说网 - 分类页",
+    "author": "skofkyo",
     "example": "https://m.haitangtxt.net/top/",
     "url": "^https?://m\\.haitangtxt\\.net/",
     "nextLink": "//a[text()='下一页' or text()='下页']",
@@ -7242,6 +7891,7 @@
 },
 {
     "name": "小黃書 - 成人小說閱讀",
+    "author": "skofkyo",
     "example": "https://tw.xchina.co/fiction/id-64036d06046a5/1.html",
     "url": "^https?://(tw\\.)?xchina\\.co/fiction/id-\\w+/\\d+\\.html",
     "nextLink": "a.next",
@@ -7251,6 +7901,7 @@
 },
 {
     "name": "小黃書 - 模特、小說目錄",
+    "author": "skofkyo",
     "example": "https://tw.xchina.co/fiction/id-64036d06046a5.html，https://tw.xchina.co/model/id-605849cd980ad.html",
     "url": "^https?://(tw\\.)?xchina\\.co/(fiction|model)/id-\\w+\\.html",
     "pinUrl": true,
@@ -7259,6 +7910,7 @@
 },
 {
     "name": "小黃書 - 搜索",
+    "author": "skofkyo",
     "example": "https://tw.xchina.co/search/keyword-%E4%B8%9D%E8%A2%9C/mode-photo.html",
     "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/search/",
     "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
@@ -7273,6 +7925,7 @@
 },
 {
     "name": "小黃書 - 原圖瀏覽",
+    "author": "skofkyo",
     "example": "https://tw.xchina.co/photoShow.php?server=1&id=6311c6080f9a5&index=0&pageSize=19&title=%E3%80%90%E6%9C%AA%E5%88%86%E9%A1%9E%E4%BA%BA%E9%AB%94%E6%94%9D%E5%BD%B1%E3%80%91%E9%87%91%E9%AD%9Akinngyo%E3%80%8A%E5%A4%8F%E6%97%A5%E5%8D%88%E5%BE%8C%E3%80%8B",
     "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/photoShow\\.php",
     "action": 1,
@@ -7286,6 +7939,7 @@
 },
 {
     "name": "小黃書 - 圖片清單",
+    "author": "skofkyo",
     "example": "https://tw.xchina.co/photo/id-63d02a8cdaf75.html，https://8se.me/photo/id-63938c1972fde.html",
     "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/photo/",
     "include": "img.cr_only",
@@ -7307,6 +7961,7 @@
 },
 {
     "name": "小黃書 - 分類",
+    "author": "skofkyo",
     "example": "https://tw.xchina.co/photos/kind-2.html，https://8se.me/photos/model-61be1af337a19.html",
     "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/(photos|videos|models|fictions|torrents)",
     "exclude": "body>.image",
@@ -7323,6 +7978,7 @@
 },
 {
     "name": "hitxhot - 寫真",
+    "author": "skofkyo",
     "example": "https://www.hitxhot.org/gallerys/TUNPcCtCSVhEMXNPZU52TWI2ZnB2Zz09.html",
     "url": "^https?://www\\.hitxhot\\.org/gallerys/",
     "action": 1,
@@ -7336,6 +7992,7 @@
 },
 {
     "name": "hitxhot - 清單",
+    "author": "skofkyo",
     "example": "https://www.hitxhot.org/",
     "url": "^https?://www\\.hitxhot\\.org/(\\?page=\\d+)?$",
     "include": ".pag>.pagination-site",
@@ -7346,6 +8003,7 @@
 },
 {
     "name": "女神研究所",
+    "author": "skofkyo",
     "example": "https://www.simracingzone.net/",
     "url": "^https?://www\\.simracingzone\\.net/",
     "nextLink": "span.current+a",
@@ -7355,6 +8013,7 @@
 },
 {
     "name": "秘图社",
+    "author": "skofkyo",
     "example": "https://www.sssins.com/，https://www.nicesss.com/",
     "url": "^https?://www\\.(sssins|nicesss)\\.com/",
     "nextLink": "//li[span[@aria-current='page']]/following-sibling::li[1]/a",
@@ -7364,6 +8023,7 @@
 },
 {
     "name": "YINGPIAN影片社",
+    "author": "skofkyo",
     "example": "https://yingpian89.com/",
     "url": "^https?://(yingpian89|69avfilm).com/",
     "nextLink": "a[rel='next'],.nav-previous>a",
@@ -7375,6 +8035,7 @@
 },
 {
     "name": "國模網",
+    "author": "skofkyo",
     "example": "https://gm23.xyz/",
     "url": "^https?://gm\\d+\\.xyz/",
     "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.dataset.src})",
@@ -7385,6 +8046,7 @@
 },
 {
     "name": "性趣套圖 - 搜索",
+    "author": "skofkyo",
     "example": "https://myjkwd.com/e/search/result/?searchid=7898",
     "url": "^https?://myjkwd\\.com/e/search/",
     "nextLink": "//a[text()='下一页']",
@@ -7395,6 +8057,7 @@
 },
 {
     "name": "性趣套圖 - 看圖",
+    "author": "skofkyo",
     "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=23726",
     "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
     "pinUrl": true,
@@ -7408,6 +8071,7 @@
 },
 {
     "name": "性趣套圖 - 列表",
+    "author": "skofkyo",
     "example": "https://myjkwd.com/e/action/ListInfo/?classid=1",
     "url": "^https?://myjkwd.com/e/action/ListInfo",
     "nextLink": "//a[text()='下一页']",
@@ -7419,6 +8083,7 @@
 },
 {
     "name": "雅拉伊",
+    "author": "skofkyo",
     "example": "https://www.yalayi.com/gallery/",
     "url": "^https?://www\\.yalayi\\.com/",
     "action": 1,
@@ -7429,6 +8094,7 @@
 },
 {
     "name": "Bookshop.tw",
+    "author": "skofkyo",
     "example": "https://www.bookshop.tw/",
     "url": "^https?://www\\.bookshop\\.tw",
     "action": 1,
@@ -7442,6 +8108,7 @@
 },
 {
     "name": "Mox.moe",
+    "author": "skofkyo",
     "example": "https://mox.moe/",
     "url": "^https?://mox\\.moe",
     "action": 1,
@@ -7452,6 +8119,7 @@
 },
 {
     "name": "BOOK☆WALKER TW 更多",
+    "author": "skofkyo",
     "example": "https://www.bookwalker.com.tw/block/1",
     "url": "^https?://www\\.bookwalker\\.com\\.tw/",
     "nextLink": "//li[span/@class='active']/following-sibling::li[1]/a",
@@ -7463,6 +8131,7 @@
 },
 {
     "name": "BOOK☆WALKER TW",
+    "author": "skofkyo",
     "example": "https://www.bookwalker.com.tw/search?m=2&series_display=1&vertical=0&order=sell_desc&s=19",
     "url": "^https?://www\\.bookwalker\\.com\\.tw/search",
     "nextLink": "//li[span/@class='active']/following-sibling::li[1]/a",
@@ -7474,6 +8143,7 @@
 },
 {
     "name": "BOOK☆WALKER JP - 手機版",
+    "author": "skofkyo",
     "example": "https://bookwalker.jp/new/?qsto=st2",
     "url": "^https?://bookwalker\\.jp/(category|search|new)/",
     "include": ".o-pager-box",
@@ -7485,6 +8155,7 @@
 },
 {
     "name": "BOOK☆WALKER JP",
+    "author": "skofkyo",
     "example": "https://bookwalker.jp/new/?qsto=st2",
     "url": "^https?://bookwalker\\.jp/(category|search|new)/",
     "include": ".o-list--menu,.o-list--footer",
@@ -7498,6 +8169,7 @@
 },
 {
     "name": "优书网 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.yousuu.com/booklists/?type=man",
     "url": "^https?://www\\.yousuu\\.com/(bookstore|booklists)/",
     "action": 1,
@@ -7514,6 +8186,7 @@
 },
 {
     "name": "www.shoujixs.net_手机小说 - 阅读",
+    "author": "skofkyo",
     "example": "https://www.shoujixs.net/shoujixs_161450_40736191.html",
     "url": "^https?://www\\.shoujixs\\.net/\\w+\\.html$",
     "history": 2,
@@ -7525,6 +8198,7 @@
 },
 {
     "name": "www.shoujixs.net_手机小说 - 分类页",
+    "author": "skofkyo",
     "example": "https://www.shoujixs.net/xhqh/",
     "url": "^https?://www\\.shoujixs\\.net/",
     "nextLink": "#pagelink strong+a:not([class])",
@@ -7533,6 +8207,7 @@
 },
 {
     "name": "博仕書屋手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.77z5.com/boshi/28_28437/14990400.html",
     "url": "^https?://m\\.(boshisw|77z5)\\.com/boshi/\\w+/[0-9_]+\\.html",
     "history": 2,
@@ -7546,6 +8221,7 @@
 },
 {
     "name": "博仕書屋手機版 - 小說章節",
+    "author": "skofkyo",
     "example": "https://m.77z5.com/boshi/28_28437/all.html",
     "url": "^https?://m\\.(boshisw|77z5)\\.com/boshi/\\w+/(all|p\\d+)\\.html",
     "init": "let b = document.querySelector('body');b.innerHTML = b.innerHTML.replace(/<br>\\n<b>\\w+<\\/b>[^<]+<b>[^<]+<\\/b>[^<]+<b>\\d+<\\/b><br>/,'');",
@@ -7557,6 +8233,7 @@
 },
 {
     "name": "博仕書屋手機版 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://m.77z5.com/boshi/quanben.html",
     "url": "^https?://m\\.(boshisw|77z5)\\.com/boshi/\\w+\\.html",
     "nextLink": "//a[text()='下一页']",
@@ -7566,6 +8243,7 @@
 },
 {
     "name": "博仕書屋 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.77z5.com/boshi/28_28437/14990400.html",
     "url": "^https?://www\\.(boshisw|77z5)\\.com/boshi/\\w+/\\d+\\.html",
     "history": 2,
@@ -7578,6 +8256,7 @@
 },
 {
     "name": "博仕書屋 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.77z5.com/boshi/xuanhuanqihuan/",
     "url": "^https?://www\\.(boshisw|77z5)\\.com/(boshi|modules)/(xuanhuanqihuan|wuxiaxianxia|dushiyanqing|lishijunshi|kehuanlingyi|wangyoudongman|wanben|article)/",
     "nextLink": "a.next",
@@ -7586,6 +8265,7 @@
 },
 {
     "name": "歡喜冤家小說網 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.huanxiyuanjia.com/12_12849/5258090.html",
     "url": "^https?://www.huanxiyuanjia.com/[0-9_]+/\\d+\\.html",
     "init": "let gae=e=>document.querySelectorAll(e);gae('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});gae('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t=gae('#TextContent')[0];t.innerHTML=t.innerHTML.replace('huanxiyuanjia.com 欢喜冤家','');",
@@ -7601,6 +8281,7 @@
 },
 {
     "name": "歡喜冤家小說網 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.huanxiyuanjia.com/fenlei/xuanhuan/1/",
     "url": "^https?://www.huanxiyuanjia.com/fenlei/",
     "nextLink": "//a[text()='>>']",
@@ -7610,6 +8291,7 @@
 },
 {
     "name": "筆趣閣bqg9527 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://m.bqg9527.com/zh_hant/book/265472/194745565.html",
     "url": "^https?://m\\.bqg9527\\.com/(zh_hant/)?book/\\d+/\\d+\\.html",
     "action": 1,
@@ -7622,6 +8304,7 @@
 },
 {
     "name": "筆趣閣bqg9527 - PC版閱讀",
+    "author": "skofkyo",
     "example": "https://www.bqg9527.com/zh_hant/book/265472/194745565.html",
     "url": "^https?://www\\.bqg9527\\.com/(zh_hant/)?book/\\d+/\\d+\\.html",
     "action": 1,
@@ -7635,6 +8318,7 @@
 },
 {
     "name": "筆趣閣bqg9527 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.bqg9527.com/sort/1/",
     "url": "^https?://www\\.bqg9527\\.com/",
     "include": "#newscontent",
@@ -7642,6 +8326,7 @@
 },
 {
     "name": "筆趣閣biqu86 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.biqu86.com/xiuzhen/3211/1.html",
     "url": "^https?://(www|m)\\.biqu86\\.com/[a-z]+/\\d+/\\d+\\.html",
     "action": 1,
@@ -7655,6 +8340,7 @@
 },
 {
     "name": "筆趣閣biqu86 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.biqu86.com/xuanhuan/",
     "url": "^https?://(www|m)\\.biqu86\\.com/(xuanhuan|xiuzhen|chuanyue|dushi|lishi|wangyou|kehuan|xiaoshuodaquan)",
     "action": 1,
@@ -7665,6 +8351,7 @@
 },
 {
     "name": "和圖書手機版 - 目錄",
+    "author": "skofkyo",
     "example": "https://m.hetubook.com/book/5849/catalog-1.html",
     "url": "^https?://m\\.(hetubook|hetushu)\\.com/book/\\d+/catalog-\\d+\\.html",
     "nextLink": "//a[text()='下一頁']",
@@ -7675,6 +8362,7 @@
 },
 {
     "name": "和圖書手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.hetubook.com/book/5849/4387851.html",
     "url": "^https?://m\\.(hetubook|hetushu)\\.com/book2?/\\d+/\\d+\\.html",
     "action": 1,
@@ -7692,6 +8380,7 @@
 },
 {
     "name": "和圖書 -閱讀",
+    "author": "skofkyo",
     "example": "https://www.hetubook.com/book/5849/4387851.html",
     "url": "^https?://www\\.(hetubook|hetushu)\\.com/book2?/\\d+/\\d+\\.html",
     "action": 1,
@@ -7709,6 +8398,7 @@
 },
 {
     "name": "和圖書 -分類",
+    "author": "skofkyo",
     "example": "https://www.hetubook.com/book/index.php",
     "url": "^https?://www\\.(hetubook|hetushu)\\.com/book2?/index\\.php",
     "nextLink": "span.current+a",
@@ -7718,6 +8408,7 @@
 },
 {
     "name": "同人圈 -閱讀",
+    "author": "skofkyo",
     "example": "http://tongrenquan.org/tongren/7070/1.html",
     "url": "^https?://tongrenquan\\.org/tongren/\\d+/\\d+\\.html",
     "pinUrl": true,
@@ -7732,6 +8423,7 @@
 },
 {
     "name": "同人圈 -分類",
+    "author": "skofkyo",
     "example": "http://tongrenquan.org/",
     "url": "^https?://tongrenquan\\.org/",
     "pinUrl": true,
@@ -7742,6 +8434,7 @@
 },
 {
     "name": "69書吧 -閱讀",
+    "author": "skofkyo",
     "example": "https://www.69shu.com/txt/38161/26369110",
     "url": "^https?://www\\.69shu\\.com/txt/\\d+/\\d+",
     "history": 2,
@@ -7754,6 +8447,7 @@
 },
 {
     "name": "乐文小说网 -閱讀",
+    "author": "skofkyo",
     "example": "http://www.lewenlou.org/132/132683/41065575.html",
     "url": "^https?://www\\.lewenlou\\.org/\\d+/\\d+/\\d+\\.html",
     "history": 2,
@@ -7766,6 +8460,7 @@
 },
 {
     "name": "乐文小说网 - 分類",
+    "author": "skofkyo",
     "example": "http://www.lewenlou.org/list/1-1.html",
     "url": "^https?://www\\.lewenlou\\.org/list/",
     "nextLink": "li.active+li>a",
@@ -7776,12 +8471,14 @@
 },
 {
     "name": "69書吧 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.69shu.com/top/0.htm",
     "url": "^https?://www\\.69shu\\.com/top/",
     "nextLink": "0"
 },
 {
     "name": "次元姬小说 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.ciyuanji.com/chapter/5077_2227754.html",
     "url": "^https?://www\\.ciyuanji\\.com/chapter/\\w+\\.htm",
     "history": 2,
@@ -7794,6 +8491,7 @@
 },
 {
     "name": "轻小说文库 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.wenku8.net/novel/1/1973/69567.htm",
     "url": "^https?://www\\.wenku8\\.net/novel/\\d+/\\d+/\\d+\\.htm",
     "pinUrl": true,
@@ -7808,6 +8506,7 @@
 },
 {
     "name": "稷下書院 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.novel543.com/1004298677/8001_1.html",
     "url": "^https?://www\\.novel543\\.com/\\d+/\\w+\\.html",
     "history": 2,
@@ -7822,6 +8521,7 @@
 },
 {
     "name": "稷下書院 - 分類",
+    "author": "skofkyo",
     "example": "https://www.novel543.com/bookstack/",
     "url": "^https?://www\\.novel543\\.com/",
     "nextLink": ".next>a",
@@ -7831,6 +8531,7 @@
 },
 {
     "name": "天天看小說 - 顯示全部目錄",
+    "author": "skofkyo",
     "example": "https://tw.ttkan.co/novel/chapters/yedemingmingshu-huishuohuadezhouzi",
     "url": "^https?://[^/]+/novel/chapters/",
     "include": [
@@ -7842,6 +8543,7 @@
 },
 {
     "name": "天天看小說 - 閱讀",
+    "author": "skofkyo",
     "example": "https://tw.bg3.co/novel/pagea/yedemingmingshu-huishuohuadezhouzi_1.html",
     "url": "^https?://[^/]+/novel/pagea/[^.]+\\.html",
     "include": "//title[contains(text(),'天天看小說') or contains(text(),'天天看小说')]",
@@ -7856,6 +8558,7 @@
 },
 {
     "name": "小說狂人 - 閱讀",
+    "author": "skofkyo",
     "example": "https://czbooks.net/n/ul6pe/ukcme",
     "url": "^https?://czbooks\\.net/n/\\w+/\\w+",
     "action": 1,
@@ -7868,6 +8571,7 @@
 },
 {
     "name": "小說狂人 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://czbooks.net/c/xuanhuan",
     "url": "^https?://czbooks\\.net/c/\\w+",
     "nextLink": ".nav.paginate>li.active+li>a",
@@ -7877,6 +8581,7 @@
 },
 {
     "name": "新笔下文学 - 手機版閱讀",
+    "author": "skofkyo",
     "example": "https://www.bxwx.cc/112/112794/56123570.html",
     "url": "^https?://www\\.bxwx\\.cc/\\d+/\\d+/\\w+\\.html",
     "history": 2,
@@ -7888,6 +8593,7 @@
 },
 {
     "name": "新笔下文学 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.bxwx.cc/112/112794/56123570.html",
     "url": "^https?://www\\.bxwx\\.cc/\\d+/\\d+/\\w+\\.html",
     "history": 2,
@@ -7899,6 +8605,7 @@
 },
 {
     "name": "笔下文学bixia - 閱讀",
+    "author": "skofkyo",
     "example": "http://www.bixia.org/book/3726/9586349.html",
     "url": "^https?://www\\.bixia\\.org/book/\\d+/\\d+\\.html",
     "history": 2,
@@ -7912,6 +8619,7 @@
 },
 {
     "name": "笔下文学bixia - 目錄",
+    "author": "skofkyo",
     "example": "http://www.bixia.org/book/3726/",
     "url": "^https?://www\\.bixia\\.org/book/\\d+/",
     "nextLink": "//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]",
@@ -7921,6 +8629,7 @@
 },
 {
     "name": "起點小說 - 閱讀",
+    "author": "skofkyo",
     "example": "https://read.qidian.com/chapter/9r9u8W1evJUCpOPIBxLXdQ2/EKq5eZhajBtMs5iq0oQwLQ2/",
     "url": "^https?://read\\.qidian\\.com/chapter/",
     "history": 2,
@@ -7933,6 +8642,7 @@
 },
 {
     "name": "起點小說 - 分類",
+    "author": "skofkyo",
     "example": "https://www.qidian.com/finish/size5-update1/",
     "url": "^https?://www\\.qidian\\.com/(all|finish|rank|free)/(chanId|size|vip|sign|update|tag)?",
     "nextLink": "//li[a/@class='lbf-pagination-page  lbf-pagination-current']/following-sibling::li[1]/a[not(starts-with(@href,'javascript'))]",
@@ -7943,6 +8653,7 @@
 },
 {
     "name": "無限小說 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.8book.com/read/125687/?312407",
     "url": "^https?://(www\\.)?8book\\.com/read/",
     "action": 1,
@@ -7960,6 +8671,7 @@
 },
 {
     "name": "無限小說 - 書籍分類",
+    "author": "skofkyo",
     "example": "https://www.8book.com/booklists/update/",
     "url": "^https?://(www\\.)?8book\\.com/booklists/(update|newrelease|finish|list|\\d+)/",
     "nextLink": "li[onclick]+li>a",
@@ -7969,6 +8681,7 @@
 },
 {
     "name": "UU看書 - 手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://t.uukanshu.com/read.aspx?tid=47854&sid=32186",
     "url": "^https?://(t|sj)\\.uukanshu\\.com/read\\.aspx",
     "init": "$('.ad_content').remove()",
@@ -7981,12 +8694,14 @@
 },
 {
     "name": "UU看書手機版 - 列表(加載更多小說)",
+    "author": "skofkyo",
     "example": "https://t.uukanshu.com/booklist.aspx?c=1",
     "url": "^https?://(t|sj)\\.uukanshu\\.com/(booklist|quanben|)\\.aspx",
     "loadMore": "#showMore"
 },
 {
     "name": "UU看書 - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.uukanshu.com/b/47854/32175.html",
     "url": "^https?://(www|tw)\\.uukanshu\\.com/b/",
     "action": 1,
@@ -7998,6 +8713,7 @@
 },
 {
     "name": "UU看書 - 書籍列表",
+    "author": "skofkyo",
     "example": "https://www.uukanshu.com/list/xuanhuan-1.html",
     "url": "^https?://(www|tw)\\.uukanshu\\.com/list/",
     "nextLink": "//a[text()='下一頁' or text()='下一页']",
@@ -8007,6 +8723,7 @@
 },
 {
     "name": "UU看書網uuks.org手機版 - 閱讀",
+    "author": "skofkyo",
     "example": "https://m.uuks.org/b/59/731.html",
     "url": "^https?://m\\.uuks\\.org/b/",
     "action": 1,
@@ -8021,6 +8738,7 @@
 },
 {
     "name": "UU看書網uuks.org - 閱讀",
+    "author": "skofkyo",
     "example": "https://www.uuks.org/b/53487/668581.html",
     "url": "^https?://www\\.uuks\\.org/b/",
     "action": 1,
@@ -8035,6 +8753,7 @@
 },
 {
     "name": "愛下電子書 - 閱讀",
+    "author": "skofkyo",
     "example": "https://tw.ixdzs.com/read/38804/p1.html",
     "url": "^https?://tw\\.ixdzs\\.com/read/\\d+/\\w+\\.html",
     "history": 2,
@@ -8046,6 +8765,7 @@
 },
 {
     "name": "愛下電子書 - 書籍列表",
+    "author": "skofkyo",
     "example": "https://tw.ixdzs.com/sort/1/",
     "url": "^https?://tw\\.ixdzs\\.com/(sort|hot|end)/",
     "nextLink": "a.num.current+a",
@@ -8661,7 +9381,8 @@
     "name": "北邮人论坛",
     "url": "bbs\\.byr\\.cn(|/(|#!)default)$",
     "listenHashChange": true,
-    "pinUrl": true
+    "pinUrl": true,
+    "author": "lanvent"
 },
 {
     "name": "北邮人论坛-版块",
@@ -8670,7 +9391,8 @@
     "pageElement": ".b-content> table>tbody",
     "pinUrl": true,
     "history": 0,
-    "action": 1
+    "action": 1,
+    "author": "lanvent"
 },
 {
     "name": "北邮人论坛-帖子内",
@@ -8680,21 +9402,24 @@
     "replaceElement": ".page",
     "pinUrl": true,
     "history": 0,
-    "action": 1
+    "action": 1,
+    "author": "lanvent"
 },
 {
     "name": "北大未名BBS-版块",
     "url": "bbs\\.pku\\.edu\\.cn/v2/thread.php",
     "pageElement": "#list-content",
     "nextLink": "//div[contains(text(),'下一页')]/a",
-    "replaceElement": ".paging"
+    "replaceElement": ".paging",
+    "author": "lanvent"
 },
 {
     "name": "北大未名BBS-帖子内",
     "url": "bbs\\.pku\\.edu\\.cn/v2/post-read.php",
     "pageElement": ".card-list",
     "nextLink": "//div[contains(text(),'下一页')]/a",
-    "replaceElement": ".paging"
+    "replaceElement": ".paging",
+    "author": "lanvent"
 },
 {
     "name": "bilibili search",
