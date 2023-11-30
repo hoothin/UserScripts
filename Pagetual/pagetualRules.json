@@ -5749,6 +5749,7 @@
     "pageElement": ".node-teaser",
     "insert": "#pager",
     "insertPos": 1,
+    "include": ".all-tags-page",
     "replaceElement": "#pager",
     "css": ".content-container .content{margin-right:0px!important}.ad-side-right,.footer{display:none!important}"
 },
