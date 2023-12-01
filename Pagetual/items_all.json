@@ -23832,18 +23832,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/76697",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
-    "exampleUrl": "http://www.webdoku.jp/rensai/sakka/michi155_tsumura/20141217_3.html http://www.webdoku.jp/rensai/sakka/michi84.html http://www.webdoku.jp/rensai/sakka/michi68.html http://www.webdoku.jp/rensai/sakka/michi31.html",
     "pageElement": "//div[@class=\"entry-content\"]|id(\"sakka\")|id(\"sakka-header\")[.//p[contains(@class,\"date\")]]",
+    "comment": "cf.http://wedata.net/items/63656",
     "nextLink": "//p[contains(@class,\"contentNavi\")]/a[1]",
-    "url": "^http://www\\.webdoku\\.jp/rensai/sakka/michi",
-    "comment": "cf.http://wedata.net/items/63656"
+    "url": "^https://www\\.webdoku\\.jp/rensai/sakka/michi",
+    "exampleUrl": "http://www.webdoku.jp/rensai/sakka/michi155_tsumura/20141217_3.html http://www.webdoku.jp/rensai/sakka/michi84.html http://www.webdoku.jp/rensai/sakka/michi68.html http://www.webdoku.jp/rensai/sakka/michi31.html"
   },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "WEB本の雑誌 作家の読書道 個別記事",
   "created_at": "2014-12-18T15:49:28+09:00",
-  "updated_at": "2014-12-18T17:53:34+09:00"
+  "updated_at": "2023-12-01T03:08:58+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76693",
