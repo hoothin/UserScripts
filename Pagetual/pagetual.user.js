@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.110
+// @version      1.9.36.111
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1582,6 +1582,16 @@
                 if (this.hpRules.length > 30) {
                     this.hpRules.pop();
                 }
+                if (!rulesData.sort) rulesData.sort = [1];
+                this.hpRules.sort((a, b) => {
+                    let aSort = -1, bSort = -1;
+                    for (let s = 0; s < rulesData.sort.length; s++) {
+                        if (a.from == rulesData.sort[s]) aSort = s;
+                        if (b.from == rulesData.sort[s]) bSort = s;
+                        if (aSort > -1 && bSort > -1) break;
+                    }
+                    return aSort - bSort;
+                });
                 storage.setItem("hpRules", this.hpRules);
             } catch (e) {
                 debug(e);
@@ -5147,6 +5157,8 @@
                 }
             } else return false;
         } else return false;
+        let ruleBarInsertPos = document.createTextNode(' ');
+        configCon.insertBefore(ruleBarInsertPos, insertPos);
         class Rulebar {
             init(ruleUrl) {
                 let id = ruleUrl.id;
@@ -5192,7 +5204,7 @@
                     this.item.appendChild(idSpan);
                     this.idSpan = idSpan;
                 }
-                configCon.insertBefore(this.item, insertPos);
+                configCon.insertBefore(this.item, ruleBarInsertPos);
             }
             updateNum() {
                 if (ruleParser.rules) {
@@ -5217,6 +5229,7 @@
                 });
                 ruleUrls = urls;
                 storage.setItem("rulesData", rulesData);
+                showTips(i18n("sortTitle"));
             }
             moveUp() {
                 let preE = this.item.previousElementSibling;
@@ -5724,7 +5737,7 @@
             rulesData.dbClick2StopMeta = dbClick2StopMetaInput.checked;
             rulesData.dbClick2StopKey = dbClick2StopKeyInput.value;
             storage.setItem("rulesData", rulesData);
-            let customUrls = customUrlsInput.value.trim();
+            let customUrls = customUrlsInput.value.trim(), urlImported = false;
             if (customUrls) {
                 customUrls = customUrls.split(/\n/);
                 for (let c = 0; c < customUrls.length; c++) {
@@ -5756,9 +5769,14 @@
                     });
                     if (hasUrl) break;
                     if (!rulesData.sort) rulesData.sort = [1];
-                    rulesData.urls.push({id: maxId + 1, url: url});
+                    let newRule = {id: maxId + 1, url: url};
+                    ruleUrls.push(newRule);
+                    rulesData.urls.push(newRule);
                     rulesData.sort.push(maxId + 1);
                     storage.setItem("rulesData", rulesData);
+                    let rulebar = new Rulebar();
+                    rulebar.init(newRule);
+                    rulebarList.push(rulebar);
                 }
             }
             showTips(i18n("settingsSaved"));
@@ -5786,7 +5804,7 @@
                 storage.setItem("ruleLastUpdate", now);
                 storage.setItem("rules", ruleParser.rules);
                 inUpdate = false;
-                if (allOk) {
+                if (rulesData.uninited && allOk && ruleUrls.length > 1) {
                     rulesData.uninited = false;
                     storage.setItem("rulesData", rulesData);
                 }
