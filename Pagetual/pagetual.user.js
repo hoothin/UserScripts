@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.111
+// @version      1.9.36.112
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -138,7 +138,7 @@
                 updateSucc: "Update succeeded",
                 beginUpdate: "Begin update, wait a minute please",
                 customUrls: "Import Pagetual or AutoPagerize rule url, One url per line",
-                customRules: "Input custom rules with [Pagetual] format. <a href='#t#'>Contribute rules</a>",
+                customRules: "Input custom rules with [Pagetual] format. <a href='#t#'>✍️Contribute rules</a>",
                 save: "Save",
                 loadingText: "Shojo Now Loading...",
                 opacity: "Opacity",
@@ -257,7 +257,7 @@
                 updateSucc: "更新成功",
                 beginUpdate: "正在更新，请耐心等待，不要关闭页面",
                 customUrls: "导入 Pagetual 或 AutoPagerize 规则 url，一行一条",
-                customRules: "输入【东方永页机】格式的自定义规则 <a href='#t#'>贡献规则</a>",
+                customRules: "输入【东方永页机】格式的自定义规则 <a href='#t#'>✍️贡献规则</a>",
                 save: "保存设置",
                 loadingText: "少女祈祷中...",
                 opacity: "不透明值",
@@ -275,7 +275,7 @@
                 contentVisibility: "自动切换 contentVisibility，提升渲染性能",
                 initRun: "打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                 preload: "翻页前预读下一页，加速浏览",
-                click2ImportRule: "点击下方添加特殊规则库，并静待更新成功：",
+                click2ImportRule: "点击下方任意一条添加规则库，并静待更新成功，请预先打开链接确认能正常访问再行导入：",
                 forceAllBody: "是否拼接整个页面？",
                 openInNewTab: "使拼接页面的内容在新页面打开",
                 importSucc: "导入成功",
@@ -286,10 +286,10 @@
                 downBtnImg: "前往页尾图标",
                 sideControllerIcon: "侧边栏图标",
                 loadingTextTitle: "加载中文字",
-                dbClick2StopCtrl: "Ctrl 键",
-                dbClick2StopAlt: "Alt 键",
-                dbClick2StopShift: "Shift 键",
-                dbClick2StopMeta: "Meta 键",
+                dbClick2StopCtrl: "Ctrl",
+                dbClick2StopAlt: "Alt",
+                dbClick2StopShift: "Shift",
+                dbClick2StopMeta: "Meta",
                 dbClick2StopKey: "快捷键",
                 pageElementCss: "页面主体框架的样式",
                 customCss: "自定义 css",
@@ -376,7 +376,7 @@
                 updateSucc: "更新成功",
                 beginUpdate: "正在更新，請稍候",
                 customUrls: "導入 Pagetual 或 AutoPagerize 規則 url，一行一條",
-                customRules: "輸入【東方永頁機】格式的自定義規則 <a href='#t#'>貢獻規則</a>",
+                customRules: "輸入【東方永頁機】格式的自定義規則 <a href='#t#'>✍️貢獻規則</a>",
                 save: "存儲設置",
                 loadingText: "少女祈禱中...",
                 opacity: "不透明值",
@@ -405,10 +405,10 @@
                 downBtnImg: "前往頁尾圖標",
                 sideControllerIcon: "側邊欄圖標",
                 loadingTextTitle: "加載中文字",
-                dbClick2StopCtrl: "Ctrl 鍵",
-                dbClick2StopAlt: "Alt 鍵",
-                dbClick2StopShift: "Shift 鍵",
-                dbClick2StopMeta: "Meta 鍵",
+                dbClick2StopCtrl: "Ctrl",
+                dbClick2StopAlt: "Alt",
+                dbClick2StopShift: "Shift",
+                dbClick2StopMeta: "Meta",
                 dbClick2StopKey: "快捷鍵",
                 pageElementCss: "頁面主體框架的樣式",
                 customCss: "自定義 css",
@@ -495,7 +495,7 @@
                 updateSucc: "更新に成功しました",
                 beginUpdate: "更新中、お待ちください",
                 customUrls: "インポートルールのURL、1行に1つ",
-                customRules: "【東方永頁機】の形式でカスタムルールを入力してください <a href='#t#'>寄稿ルール</a>",
+                customRules: "【東方永頁機】の形式でカスタムルールを入力してください <a href='#t#'>✍️寄稿ルール</a>",
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
                 opacity: "不透明値",
@@ -614,7 +614,7 @@
                 updateSucc: "Правила обновлены",
                 beginUpdate: "Обновление. Пожалуйста, немного подождите",
                 customUrls: "Ссылки с правилами для импорта. Одна ссылка на строку",
-                customRules: "Введите пользовательские правила в формате Pagetual. <a href='#t#'>Улучшить встроенные правила</a>",
+                customRules: "Введите пользовательские правила в формате Pagetual. <a href='#t#'>✍️Улучшить встроенные правила</a>",
                 save: "Сохранить настройки",
                 loadingText: "Следующая страница подгружается…",
                 opacity: "Прозрачность",
@@ -879,8 +879,10 @@
             storage.setItem(list, listData);
         });
     }
-    const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
-                      "https://hoothin.github.io/UserScripts/Pagetual/"];
+    const configPage = ["https://pagetual.hoothin.com/rule.html",
+                        "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
+                        "https://hoothin.github.io/UserScripts/Pagetual/"];
+    const firstRunPage = "https://pagetual.hoothin.com/firstRun.html";
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
@@ -888,7 +890,7 @@
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
-    var rulesData = {uninited: true}, ruleUrls, updateDate, clickedSth = false;
+    var rulesData = {uninited: true, firstRun: true}, ruleUrls, updateDate, clickedSth = false;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
     var tryTimes = 0, showedLastPageTips = false;
 
@@ -4874,9 +4876,6 @@
                     }
                 }, 100);
             }
-            [].forEach.call(getBody(document).querySelectorAll('a'), ele => {
-                ele.target = "_blank";
-            });
             return true;
         }
         return false;
@@ -4892,6 +4891,7 @@
     }
 
     var inUpdate = false;
+    var importHandler;
     function initConfig(href) {
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
@@ -4899,7 +4899,7 @@
             if (location.hostname === "pagetual.hoothin.com") return true;
         }
 
-        var configCon, insertPos, click2import, importUrlPre;
+        var configCon, insertPos, click2import, importUrlPres;
 
         let inConfig = isGuidePage;
         if (!inConfig) {
@@ -5053,15 +5053,19 @@
             [].forEach.call(document.querySelectorAll('pre[name=pagetual],pre[name=user-content-pagetual]'), pre => {
                 let importBtn = createImportBtn(pre);
             });
-            document.addEventListener("mouseover", e => {
-                if (compareNodeName(e.target, ["pre"])) {
-                    let nameAttr = e.target.getAttribute("name");
-                    if (nameAttr == "pagetual" || nameAttr == "user-content-pagetual") {
-                        if (e.target.querySelector('#pagetualImport')) return;
-                        let importBtn = createImportBtn(e.target);
+            if (!importHandler) {
+                importHandler = e => {
+                    if (compareNodeName(e.target, ["pre"])) {
+                        let nameAttr = e.target.getAttribute("name");
+                        if (nameAttr == "pagetual" || nameAttr == "user-content-pagetual") {
+                            if (e.target.querySelector('#pagetualImport')) return;
+                            let importBtn = createImportBtn(e.target);
+                        }
                     }
-                }
-            });
+                };
+            }
+            document.removeEventListener("mouseover", importHandler);
+            document.addEventListener("mouseover", importHandler);
 
             if (inConfig) {
                 if (!inUpdate && _GM_info.script && _GM_info.script.version && _GM_info.script.version !== '1.0.0') {
@@ -5110,13 +5114,17 @@
                  }
                  table td>h3 {
                   margin: 16px!important;
+                  padding: 0!important;
+                 }
+                 table td>h4 {
+                  padding: 0!important;
                  }
                  #saveBtn {
-                  width: 100%;
+                  width: 60%;
                   position: fixed;
                   z-index: 999;
                   bottom: 0px;
-                  left: 0px;
+                  left: 20%;
                   font-size: x-large;
                   opacity: 0.8;
                   cursor: pointer;
@@ -5138,10 +5146,15 @@
                     return true;
                 }
                 insertPos = configCon.querySelector("hr,#jsoneditor");
+                configCon = insertPos.parentNode;
 
-                importUrlPre = document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']");
+                importUrlPres = document.querySelectorAll("pre[name='user-content-pagetual'],pre[name='pagetual']");
                 if (!rulesData.uninited) {
-                    if (importUrlPre) importUrlPre.style.display = "none";
+                    if (importUrlPres) {
+                        [].forEach.call(importUrlPres, importUrlPre => {
+                            importUrlPre.style.display = "none";
+                        });
+                    }
                     if (click2import) click2import.style.display = "none";
                 }
                 let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
@@ -5569,7 +5582,7 @@
         let dbClick2StopMetaInput = createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
         let dbClick2StopKeyInput = createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
-        let otherConfigPage = rulesData.configPage ? rulesData.configPage != location.href : configPage[0] != location.href;
+        let otherConfigPage = (rulesData.configPage || configPage[0]) != location.href;
         if (!otherConfigPage) {
             setConfigPageInput.parentNode.parentNode.style.display = "none";
         }
@@ -5581,7 +5594,11 @@
             updateRules(() => {
                 if (!updateFail) {
                     showTips(i18n("updateSucc"));
-                    if (importUrlPre) importUrlPre.style.display = "none";
+                    if (importUrlPres) {
+                        [].forEach.call(importUrlPres, importUrlPre => {
+                            importUrlPre.style.display = "none";
+                        });
+                    }
                     if (click2import) click2import.style.display = "none";
                 }
                 updateP.innerHTML = i18n("passSec", 0);
@@ -5948,6 +5965,11 @@
             }
             if (rulesData.lang) {
                 setLang(rulesData.lang);
+            }
+            if (rulesData.firstRun && rulesData.uninited) {
+                _GM_openInTab(firstRunPage, {active: true});
+                rulesData.firstRun = false;
+                storage.setItem("rulesData", rulesData);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
@@ -6627,7 +6649,7 @@
             if (urlChanging) return;
             urlChanging = true;
             let href = location.href.slice(0, 60);
-            if (href == configPage[0]) {
+            if (href == configPage[1]) {
                 setTimeout(() => {
                     initConfig(href);
                     urlChanging = false;
