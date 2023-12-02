@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.7
+// @version      0.6.8
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -187,7 +187,7 @@
                         quickReply.css("background", "initial");
                         var leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
                         quickReply.val(quickReplyStr + ": " + leftTime + "s");
-                        $("form td.h>b").text(`${formTitle}（${leftTime + "s"}）`);
+                        $("form td.h>b").html(`${formTitle}<font color=red>（${leftTime + "s"}）</font>`);
                         var countTimer = setInterval(() => {
                             leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
                             if (leftTime <= 0) {
@@ -198,7 +198,7 @@
                                 clearInterval(countTimer);
                             } else {
                                 quickReply.val(quickReplyStr + ": " + leftTime + "s");
-                                $("form td.h>b").text(`${formTitle}（${leftTime + "s"}）`);
+                                $("form td.h>b").html(`${formTitle}<font color=red>（${leftTime + "s"}）</font>`);
                             }
                         }, 1000);
                     }
