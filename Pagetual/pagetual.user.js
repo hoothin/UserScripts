@@ -882,7 +882,7 @@
     const configPage = ["https://pagetual.hoothin.com/rule.html",
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
-    const firstRunPage = "https://pagetual.hoothin.com/firstRun.html";
+    const firstRunPage = "https://pagetual.hoothin.com/firstRun";
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
