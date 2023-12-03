@@ -3,7 +3,7 @@
 // @name:zh-CN   搜索酱单词模式扩展
 // @name:zh-TW   搜尋醬單詞模式擴展
 // @namespace    hoothin
-// @version      0.1.9
+// @version      0.2
 // @description  Add similarity search based on Levenshtein distance to the highlight feature of SearchJumper.
 // @description:zh-CN  为搜索酱的页内高亮添加基于莱文斯坦距离的相似度查找
 // @description:zh-TW  為搜尋醬的頁内高亮添加基於萊文斯坦距離的相似度查找
@@ -77,11 +77,11 @@
                 }
             }
             if (matched) {
-                let wordMatch = text.match(new RegExp(`\\b(` + matchedStr.join(gapStr + "+") + `)\\b`, "i"));
+                let wordMatch = text.match(new RegExp(`(\\b|\\s)(` + matchedStr.join(gapStr + "+") + `)(\\b|\\s)`, "i"));
                 if (wordMatch) {
-                    let content = wordMatch[1];
+                    let content = wordMatch[2];
                     len = content.length;
-                    pos = wordMatch.index;
+                    pos = wordMatch.index + wordMatch[1].length;
                 }
             }
             return {matched: matched, pos: pos, len: len};
