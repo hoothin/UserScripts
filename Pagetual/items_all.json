@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('pagingNavi')/preceding-sibling::*",
+    "nextLink": "//span[number()>0]/following-sibling::a[1][number()>0]",
+    "url": "^https://toyotatimes\\.jp/",
+    "exampleUrl": "https://toyotatimes.jp/spotlights/1033.html"
+  },
+  "created_by": "Griever3",
+  "resource_url": "http://wedata.net/items/86192",
+  "name": "トヨタイムズ 記事",
+  "created_at": "2023-12-03T14:53:53+09:00",
+  "updated_at": "2023-12-03T14:53:53+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
+},
+{
   "resource_url": "http://wedata.net/items/86191",
   "data": {
     "insertBefore": "",
