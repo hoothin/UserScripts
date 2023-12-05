@@ -761,7 +761,7 @@
     } else if (typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
         _GM_notification = GM.notification;
     } else {
-        _GM_notification = (s) => {showTips(s)};
+        _GM_notification = (s) => {showTips(String(s))};
     }
     if (typeof GM_openInTab != 'undefined') {
         _GM_openInTab = GM_openInTab;
@@ -3729,7 +3729,7 @@
                 <div id="pagetual-sideController-top" class="pagetual-sideController-btn">⊼</div>
                 <div>
                   <div id="pagetual-sideController-pre" class="pagetual-sideController-btn">∧</div>
-                  <div id="pagetual-sideController-move"><svg width="30" height="30" style="border-radius: 15px;display: initial;position: relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" style="fill: #604b4a;" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" style="fill: #604b4a;" fill="#604b4a"></path></svg><div id="pagetual-sideController-pagenum"></div></div>
+                  <div id="pagetual-sideController-move"><svg width="30" height="30" style="border-radius: 15px;display: initial;position: relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg><div id="pagetual-sideController-pagenum"></div></div>
                   <div id="pagetual-sideController-next" class="pagetual-sideController-btn">∨</div>
                 </div>
                 <div id="pagetual-sideController-bottom" class="pagetual-sideController-btn">⊻</div>
