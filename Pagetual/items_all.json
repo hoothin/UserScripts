@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86193",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('post-list post4-list')[1]",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https?://av-photograph\\.com/",
+    "exampleUrl": "http://av-photograph.com/\r\nhttp://av-photograph.com/blog-category-253.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "エロ画像まとめ 綺麗なお姉さん。",
+  "created_at": "2023-12-04T22:43:00+09:00",
+  "updated_at": "2023-12-04T22:43:00+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "id('pagingNavi')/preceding-sibling::*",
@@ -4166,17 +4181,16 @@
 {
   "resource_url": "http://wedata.net/items/85783",
   "data": {
-    "insertBefore": "",
     "pageElement": "//article[@data-post-id]",
-    "nextLink": "//link[@rel='next']",
+    "nextLink": "//span[contains(@class, 'current')][number()>0]/following-sibling::span[1][number()>0]/a",
     "url": "^https://hollywoodlife\\.com/",
-    "exampleUrl": "https://hollywoodlife.com/"
+    "exampleUrl": "https://hollywoodlife.com/\r\nhttps://hollywoodlife.com/?s=test"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Griever3",
   "name": "Hollywood Life",
   "created_at": "2022-01-05T17:40:34+09:00",
-  "updated_at": "2022-01-05T17:40:34+09:00"
+  "updated_at": "2023-12-04T22:44:16+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85782",
