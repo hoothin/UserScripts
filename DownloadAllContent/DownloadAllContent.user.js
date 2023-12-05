@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.1
+// @version      2.8.2
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -1311,52 +1311,67 @@ if (window.top != window.self) {
         }
         if(!largestContent)return i18n.error+" : NO TEXT CONTENT";
         var retainImage=!!GM_getValue("retainImage");
-        var childlist=pageData.querySelectorAll(largestContent.nodeName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
-        function getRightStr(ele, noTextEnable){
-            if(retainImage){
-                [].forEach.call(ele.querySelectorAll("img[src]"), img => {
-                    let imgTxtNode=document.createTextNode(`![img](${canonicalUri(img.getAttribute("src"), url || location.href)})`);
-                    img.parentNode.replaceChild(imgTxtNode, img);
+        function getContentByLargest() {
+            var childlist=pageData.querySelectorAll(largestContent.nodeName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
+            function getRightStr(ele, noTextEnable){
+                [].forEach.call(ele.querySelectorAll("a[href]"), a => {
+                    a.parentNode && a.parentNode.removeChild(a);
                 });
+                if(retainImage){
+                    [].forEach.call(ele.querySelectorAll("img[src]"), img => {
+                        let imgTxtNode=document.createTextNode(`![img](${canonicalUri(img.getAttribute("src"), url || location.href)})`);
+                        img.parentNode.replaceChild(imgTxtNode, img);
+                    });
+                }
+                let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
+                for(let j=0;j<childNodes.length;j++){
+                    let childNode=childNodes[j];
+                    if(childNode.nodeType==3 && childNode.data && !/^[\s\-\_\?\>\|]*$/.test(childNode.data))hasText=true;
+                    if(childNode.innerHTML){
+                        childNode.innerHTML=childNode.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n").replace(/\n+/gi,"\n").replace(/\r+/gi,"\r");
+                    }
+                    let content=childNode.textContent;
+                    if(content){
+                        if(!content.trim())continue;
+                        cStr+=content.replace(/[\uFEFF\xA0 ]+/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
+                    }
+                    if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|IMG)$/.test(childNode.nodeName))cStr+="\r\n";
+                }
+                if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
             }
-            let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
-            [].forEach.call(ele.querySelectorAll("a[href]"), a => {
-                a.parentNode && a.parentNode.removeChild(a);
+            var sameDepthChildren=[];
+            for(i=0;i<childlist.length;i++){
+                var child=childlist[i];
+                if(getDepth(child)==getDepth(largestContent)){
+                    if(largestContent.className != child.className)continue;
+                    sameDepthChildren.push(child);
+                }
+            }
+            var minLength = largestNum>>2;
+            var tooShort = sameDepthChildren.length <= 3;
+            sameDepthChildren.forEach(child => {
+                if(tooShort && child.innerText.length < minLength) return;
+                if((largestContent.className && largestContent.className == child.className) || largestContent.parentNode == child.parentNode){
+                    getRightStr(child, true);
+                }else {
+                    getRightStr(child, false);
+                }
             });
-            for(let j=0;j<childNodes.length;j++){
-                let childNode=childNodes[j];
-                if(childNode.nodeType==3 && childNode.data && !/^[\s\-\_\?\>\|]*$/.test(childNode.data))hasText=true;
-                if(childNode.innerHTML){
-                    childNode.innerHTML=childNode.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n").replace(/\n+/gi,"\n").replace(/\r+/gi,"\r");
-                }
-                let content=childNode.textContent;
-                if(content){
-                    if(!content.trim())continue;
-                    cStr+=content.replace(/[\uFEFF\xA0 ]+/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
-                }
-                if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|IMG)$/.test(childNode.nodeName))cStr+="\r\n";
-            }
-            if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
+            rStr = rStr.replace(/[\n\r]+/g,"\n\r");
         }
-        var sameDepthChildren=[];
-        for(i=0;i<childlist.length;i++){
-            var child=childlist[i];
-            if(getDepth(child)==getDepth(largestContent)){
-                if(largestContent.className != child.className)continue;
-                sameDepthChildren.push(child);
+        getContentByLargest();
+        if (rStr.length < 100) {
+            let articles = pageData.querySelectorAll("article");
+            if (articles && articles.length == 1) {
+                largestContent = articles[0];
+                largestNum = largestContent.innerText.length;
+                if (largestNum > 100) {
+                    rStr = "";
+                    getContentByLargest();
+                }
             }
         }
-        var minLength = largestNum>>2;
-        var tooShort = sameDepthChildren.length <= 3;
-        sameDepthChildren.forEach(child => {
-            if(tooShort && child.innerText.length < minLength) return;
-            if((largestContent.className && largestContent.className == child.className) || largestContent.parentNode == child.parentNode){
-                getRightStr(child, true);
-            }else {
-                getRightStr(child, false);
-            }
-        });
-        return rStr.replace(/[\n\r]+/g,"\n\r");
+        return rStr;
     }
 
     function getI18n(key, args){
