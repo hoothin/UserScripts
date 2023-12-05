@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.8
+// @version      0.6.9
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -165,6 +165,14 @@
                             }
                         });
                     }
+                    function getCurrentDate() {
+                        var myDate = new Date();
+                        return myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate();
+                    }
+                    var currentDate = getCurrentDate();
+                    if (currentDate == $.cookie('lastSignDate')) {
+                        document.title = "√" + document.title;
+                    }
                     var lastReplyTime = $.cookie('lastReplyTime');
                     var customReplyStr = $.cookie('customReplyStr');
                     var isCheckIn = document.title.indexOf("打卡签到") !== -1;
@@ -218,6 +226,9 @@
                     function replySuccess() {
                         lastReplyTime = Date.now();
                         $.cookie('lastReplyTime', lastReplyTime, { expires: 7, path: '/' });
+                        if (isCheckIn) {
+                            $.cookie('lastSignDate', currentDate, { expires: 7, path: '/' });
+                        }
                         submitBtn.val("提 交");
                         quickReply.val("回复成功");
                         quickReply.css("background", "yellow");
