@@ -29,7 +29,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="3">Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>
     </tr>
     <tr>
-        <th colspan="4"><a href="https://pagetual.hoothin.com/sponsors.svg"><img style="" wmode="transparent" id="sponsors" src="https://pagetual.hoothin.com/sponsors.svg"></a></th>
+        <th colspan="4"><a href="https://pagetual.hoothin.com/sponsors.svg"><img style="" wmode="transparent" id="sponsors" src="https://pagetual.hoothin.com/sponsors.svg?"></a></th>
     </tr>
 </table>
 
