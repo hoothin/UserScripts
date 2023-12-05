@@ -5,7 +5,7 @@
 腳本會自動檢索頁面中的主要內容並下載（<del>省得複製完gal攻略還要手動逐條刪除「某某某13級頭銜水龍王發表於X年X月X日來自XX客戶端」</del>）。
 如果位於小說目錄頁會遍歷所有章節並排序拼接後存為TXT文檔。
 
-[![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts) [【高亮或者格式化網頁中選中的代碼，並統計字數】](https://greasyfork.org/scripts/24150-highlight-every-code)
+[![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts)
 
 ---
 
@@ -16,7 +16,7 @@
 
 若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)
 
-*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.net/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。歡迎加入 [Discord 群組](https://discord.com/invite/keqypXC6wD)。*
+*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.net/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD)。*
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
