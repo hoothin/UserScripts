@@ -1315,5 +1315,11 @@ var siteInfo = [
  url:/47\.101\.137\.235/,
  r:"thumb",
  s:"regular"
+},
+{
+ name: "Civitai",
+ url: /^https:\/\/civitai\.com\//,
+ r: /\/width=\d+\//,
+ s: "/"
 }
 ];
