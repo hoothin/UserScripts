@@ -138,7 +138,7 @@
                 updateSucc: "Update succeeded",
                 beginUpdate: "Begin update, wait a minute please",
                 customUrls: "Import Pagetual or AutoPagerize rule url, One url per line",
-                customRules: "Input custom rules with [Pagetual] format. <a href='#t#'>✍️Contribute rules</a>",
+                customRules: "Input custom rules. <a href='#t#'>✍️Contribute rules</a>",
                 save: "Save",
                 loadingText: "Shojo Now Loading...",
                 opacity: "Opacity",
