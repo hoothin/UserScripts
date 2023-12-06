@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.112
+// @version      1.9.36.113
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5123,9 +5123,9 @@
                   width: 60%;
                   position: fixed;
                   z-index: 999;
-                  bottom: 0px;
+                  bottom: 2%;
                   left: 20%;
-                  font-size: x-large;
+                  font-size: xx-large;
                   opacity: 0.8;
                   cursor: pointer;
                   -moz-transition:opacity 0.3s ease;
@@ -5343,6 +5343,7 @@
         configCon.insertBefore(customUrlsTitle, insertPos);
         let customUrlsInput = document.createElement("textarea");
         customUrlsInput.style.width = "100%";
+        customUrlsInput.style.position = "relative";
         customUrlsInput.placeholder = "http://wedata.net/databases/AutoPagerize/items_all.json \nhttps://hoothin.github.io/UserScripts/Pagetual/pagetualRules.json";
         customUrlsInput.spellcheck = false;
         configCon.insertBefore(customUrlsInput, insertPos);
@@ -5359,6 +5360,7 @@
         upBtnImg.appendChild(upBtnImgTitle);
         let upBtnImgInput = document.createElement("input");
         upBtnImgInput.style.width = "100%";
+        upBtnImgInput.style.position = "relative";
         upBtnImgInput.placeholder = "data:image/png;base64,UpBtn";
         upBtnImgInput.value = rulesData.upBtnImg || '';
         upBtnImgInput.spellcheck = false;
@@ -5374,6 +5376,7 @@
         downBtnImg.appendChild(downBtnImgTitle);
         let downBtnImgInput = document.createElement("input");
         downBtnImgInput.style.width = "100%";
+        downBtnImgInput.style.position = "relative";
         downBtnImgInput.placeholder = "data:image/png;base64,DownBtn";
         downBtnImgInput.value = rulesData.downBtnImg || '';
         downBtnImgInput.spellcheck = false;
@@ -5389,7 +5392,8 @@
         sideControllerIconDiv.appendChild(sideControllerIconTitle);
         let sideControllerIconInput = document.createElement("input");
         sideControllerIconInput.style.width = "100%";
-        sideControllerIconInput.placeholder = "🤍";
+        sideControllerIconInput.style.position = "relative";
+        sideControllerIconInput.placeholder = "📄";
         sideControllerIconInput.value = rulesData.sideControllerIcon || '';
         sideControllerIconInput.spellcheck = false;
         sideControllerIconDiv.appendChild(sideControllerIconInput);
@@ -5409,6 +5413,7 @@
         loadingTextInput.value = rulesData.loadingText || '';
         loadingTextInput.placeholder = i18n("loadingText");
         loadingTextInput.style.width = "100%";
+        loadingTextInput.style.position = "relative";
         loadingTextInput.style.margin = "0";
         loadingTextInput.spellcheck = false;
         loadingText.appendChild(loadingTextInput);
@@ -5426,6 +5431,7 @@
         opacityInput.min = 0;
         opacityInput.max = 100;
         opacityInput.style.width = "110px";
+        opacityInput.style.position = "relative";
         opacityInput.style.margin = "0";
         opacityInput.placeholder = i18n("opacityPlaceholder");
         opacityInput.spellcheck = false;
@@ -5444,6 +5450,7 @@
         let pageElementCssInput = document.createElement("input");
         pageElementCssInput.value = rulesData.pageElementCss || '';
         pageElementCssInput.style.width = "100%";
+        pageElementCssInput.style.position = "relative";
         pageElementCssInput.style.margin = "0";
         pageElementCssInput.placeholder = "font-size: xx-large;";
         pageElementCssInput.spellcheck = false;
@@ -5458,6 +5465,7 @@
         let customCssInput = document.createElement("textarea");
         customCssInput.value = rulesData.customCss || '';
         customCssInput.style.width = "100%";
+        customCssInput.style.position = "relative";
         customCssInput.style.margin = "0";
         customCssInput.placeholder = ".pagetual {\n}";
         customCssInput.spellcheck = false;
