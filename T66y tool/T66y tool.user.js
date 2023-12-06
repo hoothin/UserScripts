@@ -171,7 +171,7 @@
                     }
                     var currentDate = getCurrentDate();
                     if (currentDate == $.cookie('lastSignDate')) {
-                        document.title = "🚩" + document.title;
+                        document.title = "✅" + document.title;
                     }
                     var lastReplyTime = $.cookie('lastReplyTime');
                     var customReplyStr = $.cookie('customReplyStr');
