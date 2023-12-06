@@ -9187,7 +9187,7 @@
             }
 
             checkScroll(noIntoView, noSmooth) {
-                if (this.funcKeyCall) return;
+                if (this.funcKeyCall || this.bar.style.display == "none") return;
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
@@ -11810,12 +11810,16 @@
                 }
                 draging = false;
                 clearTimeout(openAllTimer);
-                if (preOpenType && !preOpenType.classList.contains('search-jumper-open')) {
-                    if (preOpenType.children[0].onmousedown) preOpenType.children[0].onmousedown();
-                    else {
-                        let mouseEvent = new PointerEvent("mousedown");
-                        preOpenType.children[0].dispatchEvent(mouseEvent);
+                if ((currentSite && !currentSite.hideNotMatch && !searchData.prefConfig.hideOnSearchEngine) || searchBar.con.classList.contains("resizePage")) {
+                    if (preOpenType && !preOpenType.classList.contains('search-jumper-open')) {
+                        if (preOpenType.children[0].onmousedown) preOpenType.children[0].onmousedown();
+                        else {
+                            let mouseEvent = new PointerEvent("mousedown");
+                            preOpenType.children[0].dispatchEvent(mouseEvent);
+                        }
                     }
+                } else {
+                    searchBar.bar.style.display = 'none';
                 }
             };
             if (!dragScaleWidth && !dragScaleHeight) {
