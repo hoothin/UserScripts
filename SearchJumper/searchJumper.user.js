@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.48
+// @version      1.7.49
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -5206,23 +5206,19 @@
                     this.siteBtnReturnHome(btn);
                 });*/
                 this.touched = false;
-                if (currentSite && !currentSite.hideNotMatch) {
-                    this.initPos();
-                    if (!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) {
-                        let firstType = this.bar.querySelector('.search-jumper-type:nth-child(1)>span');
-                        if (firstType && !firstType.classList.contains("search-jumper-open")) {
-                            if (firstType.onmousedown) {
-                                firstType.onmousedown();
-                            } else {
-                                let mouseEvent = new PointerEvent("mousedown");
-                                firstType.dispatchEvent(mouseEvent);
-                            }
+                this.initPos();
+                if (!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) {
+                    let firstType = this.bar.querySelector('.search-jumper-type:nth-child(1)>span');
+                    if (firstType && !firstType.classList.contains("search-jumper-open")) {
+                        if (firstType.onmousedown) {
+                            firstType.onmousedown();
+                        } else {
+                            let mouseEvent = new PointerEvent("mousedown");
+                            firstType.dispatchEvent(mouseEvent);
                         }
                     }
-                    this.bar.style.display = ''
-                } else {
-                    this.bar.style.display = 'none';
                 }
+                this.bar.style.display = ''
             }
 
             showAllSites() {
@@ -6844,7 +6840,6 @@
             }
 
             insertHistory(typeEle, init) {
-                //if (searchData.prefConfig.disableAutoOpen) return;
                 if (!searchData.prefConfig.historyLength) return;
                 typeEle.style.width = "auto";
                 typeEle.style.height = "auto";
@@ -9386,12 +9381,13 @@
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                    let tileOffset = searchData.prefConfig.tileOffset || 0;
                     let clientX = e.pageX - self.bar.clientWidth / 2 - document.documentElement.offsetLeft;
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth + scrollLeft) clientX = viewWidth + scrollLeft - self.bar.clientWidth - 20;
                     let clientY = e.pageY;
-                    if (e.clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
-                    else clientY += 20;
+                    if (e.clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20 + tileOffset);
+                    else clientY += (20 + tileOffset);
                     if (e.pageX < viewWidth / 2) {
                         self.bar.style.left = clientX + scrollLeft + "px";
                         self.bar.style.transformOrigin = '0 0';
@@ -11296,16 +11292,60 @@
                     _GM_notification('Configuration copied successfully!');
                 });
             } else if (importPageReg.test(location.href)) {
+                let importCss = _GM_addStyle(`
+                    #import-btns-con {
+                        position: absolute;
+                        display: block;
+                        font-size: 20px;
+                        left: 0px;
+                        opacity: 0.9;
+                        top: 0px;
+                        width: 100%;
+                        height: 100%;
+                    }
+                    #import-btns-con.hide {
+                        pointer-events: none;
+                    }
+                    #import-btn {
+                        position: absolute;
+                        display: block;
+                        font-size: 20px;
+                        right: 45px;
+                        opacity: 0.8;
+                        top: 45px;
+                        pointer-events: all;
+                    }
+                    #filter-btn {
+                        position: absolute;
+                        display: none;
+                        font-size: 20px;
+                        right: 115px;
+                        opacity: 0.8;
+                        top: 45px;
+                        pointer-events: all;
+                    }
+                    .filter>#filter-btn {
+                        display: block;
+                    }
+                `);
                 let targetPre, ruleType = 0;
                 let importBtn = document.createElement("button");
+                importBtn.id = "import-btn";
+                importBtn.className = "btn Button--secondary Button";
                 let filterBtn = document.createElement("button");
+                filterBtn.id = "filter-btn";
+                filterBtn.className = "btn Button--secondary Button";
+                let btnsCon = document.createElement("div");
+                btnsCon.id = "import-btns-con";
+                btnsCon.appendChild(importCss);
+                btnsCon.appendChild(importBtn);
+                btnsCon.appendChild(filterBtn);
+                btnsCon.addEventListener("click", e => {
+                    if (targetPre) targetPre.style.filter = "";
+                    btnsCon.classList.add("hide");
+                });
                 const importFilter = new ImportFilter();
                 importBtn.innerText = i18n("import");
-                importBtn.style.position = "absolute";
-                importBtn.style.display = "block";
-                importBtn.style.fontSize = "20px";
-                importBtn.style.right = "35px";
-                importBtn.style.opacity = "0.8";
                 importBtn.addEventListener("click", e => {
                     if (!targetPre) return;
                     let configTxt = targetPre.innerText.trim(), configData;
@@ -11319,9 +11359,8 @@
                     switch (ruleType) {
                         case 0:
                             if (window.confirm(i18n("importOrNot"))) {
-                                if (importBtn.parentNode) {
-                                    importBtn.parentNode.removeChild(importBtn);
-                                    filterBtn.parentNode.removeChild(filterBtn);
+                                if (btnsCon.parentNode) {
+                                    btnsCon.parentNode.removeChild(btnsCon);
                                 }
                                 searchData.sitesConfig = configData;
                                 searchData.lastModified = new Date().getTime();
@@ -11364,16 +11403,10 @@
                 });
 
                 filterBtn.innerText = i18n("filter");
-                filterBtn.style.position = "absolute";
-                filterBtn.style.display = "block";
-                filterBtn.style.fontSize = "20px";
-                filterBtn.style.right = "115px";
-                filterBtn.style.opacity = "0.8";
                 filterBtn.addEventListener("click", e => {
                     if (targetPre) {
-                        if (importBtn.parentNode) {
-                            importBtn.parentNode.removeChild(importBtn);
-                            filterBtn.parentNode.removeChild(filterBtn);
+                        if (btnsCon.parentNode) {
+                            btnsCon.parentNode.removeChild(btnsCon);
                         }
                         let configTxt = targetPre.innerText.trim(), configData;
                         if (!configTxt || configTxt.indexOf('[') !== 0) return;
@@ -11385,39 +11418,42 @@
                         }
                     }
                 });
-                let bindPre = () => {
-                    let top = `${targetPre.offsetTop + 40}px`;
-                    let innerText = targetPre.innerText.trim();
+                let bindPre = target => {
+                    if (target == targetPre && btnsCon.parentNode) return;
+                    let top = target.offsetTop + 'px';
+                    let innerText = target.innerText.trim();
                     if (!innerText) return;
                     if (/^\[/.test(innerText)) {
                         ruleType = 0;
-                        importBtn.style.top = top;
-                        targetPre.parentNode.appendChild(importBtn);
-                        filterBtn.style.top = top;
-                        targetPre.parentNode.appendChild(filterBtn);
+                        btnsCon.style.top = top;
+                        btnsCon.classList.add("filter");
                     } else if (/^\{\s*"name"/.test(innerText)) {
                         ruleType = 1;
-                        importBtn.style.top = top;
-                        targetPre.parentNode.appendChild(importBtn);
+                        btnsCon.style.top = top;
+                        btnsCon.classList.remove("filter");
                     } else if (/^\{/.test(innerText)) {
                         ruleType = 2;
-                        importBtn.style.top = top;
-                        targetPre.parentNode.appendChild(importBtn);
-                    }
+                        btnsCon.style.top = top;
+                        btnsCon.classList.remove("filter");
+                    } else return;
+                    if (targetPre) targetPre.style.filter = "";
+                    target.parentNode.appendChild(btnsCon);
+                    target.style.filter = "blur(5px)";
+                    targetPre = target;
+                    btnsCon.classList.remove("hide");
                 };
                 window.addEventListener("load", e => {
                     if (!targetPre) {
-                        targetPre = document.querySelector('.highlight>pre');
-                        if (targetPre) {
-                            bindPre();
+                        let _targetPre = document.querySelector('.highlight>pre');
+                        if (_targetPre) {
+                            bindPre(_targetPre);
                         }
                     }
                 });
 
                 document.addEventListener("mouseover", e => {
                     if (e.target.nodeName.toUpperCase() === "PRE" && importPageReg.test(location.href)) {
-                        targetPre = e.target;
-                        bindPre();
+                        bindPre(e.target);
                     }
                 });
             }
