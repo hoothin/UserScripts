@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.36.113
+// @version      1.9.37.1
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4891,7 +4891,7 @@
     }
 
     var inUpdate = false;
-    var importHandler;
+    var importHandler, configCon;
     function initConfig(href) {
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
@@ -4899,7 +4899,7 @@
             if (location.hostname === "pagetual.hoothin.com") return true;
         }
 
-        var configCon, insertPos, click2import, importUrlPres;
+        var click2import, importUrlPres;
 
         let inConfig = isGuidePage;
         if (!inConfig) {
@@ -4910,15 +4910,20 @@
                 }
             }
         }
+        configCon = document.getElementById("configCon");
+        if (configCon) {
+            configCon.parentNode.removeChild(configCon);
+            let ruleExamples = document.querySelectorAll("#jsoneditor~p>a")
+            if (ruleExamples.length > 1) {
+                ruleExamples[0].parentNode.removeChild(ruleExamples[0]);
+            }
+        }
         if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
             if (!inUpdate && rulesData.uninited) {
                 setTimeout(() => {
                     if (!inUpdate && !importing) showTips(i18n("firstAlert"));
                 }, 3000);
-                setTimeout(() => {
-                    if (!inUpdate && !importing) showTips(i18n("firstAlert"));
-                }, 6000);
                 showTips(i18n("firstAlert"));
             }
             let defaultOption = document.querySelector('#discussion_rating_4');
@@ -5145,18 +5150,19 @@
                     }, 1000);
                     return true;
                 }
-                insertPos = configCon.querySelector("hr,#jsoneditor");
-                configCon = insertPos.parentNode;
+                let insertPos = configCon.querySelector("hr,#jsoneditor");
+                configCon = document.createElement("div");
+                configCon.id = "configCon";
+                insertPos.parentNode.insertBefore(configCon, insertPos);
 
                 importUrlPres = document.querySelectorAll("pre[name='user-content-pagetual'],pre[name='pagetual']");
-                if (!rulesData.uninited) {
-                    if (importUrlPres) {
-                        [].forEach.call(importUrlPres, importUrlPre => {
-                            importUrlPre.style.display = "none";
-                        });
-                    }
-                    if (click2import) click2import.style.display = "none";
+                if (importUrlPres) {
+                    [].forEach.call(importUrlPres, importUrlPre => {
+                        importUrlPre.style.overflow = "hidden";
+                        importUrlPre.style.display = rulesData.uninited ? "block" : "none";
+                    });
                 }
+                if (click2import) click2import.style.display = rulesData.uninited ? "block" : "none";
                 let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
                 if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
                 let rulesExample = document.querySelector("#user-content-rules-example+a,#rules-example>a");
@@ -5171,7 +5177,7 @@
             } else return false;
         } else return false;
         let ruleBarInsertPos = document.createTextNode(' ');
-        configCon.insertBefore(ruleBarInsertPos, insertPos);
+        configCon.appendChild(ruleBarInsertPos);
         class Rulebar {
             init(ruleUrl) {
                 let id = ruleUrl.id;
@@ -5303,7 +5309,7 @@
             langSelect.appendChild(option);
         }
         langSelect.value = rulesData.lang || "";
-        configCon.insertBefore(langSelect, insertPos);
+        configCon.appendChild(langSelect);
 
         let updateP = document.createElement("p"), i = 0;
         let now = new Date().getTime();
@@ -5330,7 +5336,7 @@
         updateP.className = "updateDate";
         updateP.innerHTML = passStr;
         updateP.title = i18n("update") + " - " + pastDate;
-        configCon.insertBefore(updateP, insertPos);
+        configCon.appendChild(updateP);
         if (ruleUrls) {
             ruleUrls.forEach(ruleUrl => {
                 let rulebar = new Rulebar();
@@ -5340,17 +5346,17 @@
         }
         let customUrlsTitle = document.createElement("h2");
         customUrlsTitle.innerHTML = i18n("customUrls");
-        configCon.insertBefore(customUrlsTitle, insertPos);
+        configCon.appendChild(customUrlsTitle);
         let customUrlsInput = document.createElement("textarea");
         customUrlsInput.style.width = "100%";
         customUrlsInput.style.position = "relative";
         customUrlsInput.placeholder = "http://wedata.net/databases/AutoPagerize/items_all.json \nhttps://hoothin.github.io/UserScripts/Pagetual/pagetualRules.json";
         customUrlsInput.spellcheck = false;
-        configCon.insertBefore(customUrlsInput, insertPos);
+        configCon.appendChild(customUrlsInput);
 
         let btns = document.createElement("div");
         btns.style.display = "flex";
-        configCon.insertBefore(btns, insertPos);
+        configCon.appendChild(btns);
         let upBtnImg = document.createElement("div");
         upBtnImg.style.width = "33%";
         let upBtnImgTitle = document.createElement("h2");
@@ -5401,7 +5407,7 @@
 
         let otherBtns = document.createElement("div");
         otherBtns.style.display = "flex";
-        configCon.insertBefore(otherBtns, insertPos);
+        configCon.appendChild(otherBtns);
         let loadingText = document.createElement("div");
         loadingText.style.width = "100%";
         let loadingTextTitle = document.createElement("h2");
@@ -5455,7 +5461,7 @@
         pageElementCssInput.placeholder = "font-size: xx-large;";
         pageElementCssInput.spellcheck = false;
         pageElementCss.appendChild(pageElementCssInput);
-        configCon.insertBefore(pageElementCss, insertPos);
+        configCon.appendChild(pageElementCss);
 
         let customCss = document.createElement("div");
         customCss.style.marginBottom = "50px";
@@ -5470,7 +5476,7 @@
         customCssInput.placeholder = ".pagetual {\n}";
         customCssInput.spellcheck = false;
         customCss.appendChild(customCssInput);
-        configCon.insertBefore(customCss, insertPos);
+        configCon.appendChild(customCss);
 
         let configTable = document.createElement("table");
         configTable.style.width = "100%";
@@ -5478,7 +5484,7 @@
         configTbody.style.width = "99%";
         configTbody.style.display = "inline-table";
         configTable.appendChild(configTbody);
-        configCon.insertBefore(configTable, insertPos);
+        configCon.appendChild(configTable);
         function createCheckbox(innerText, val, tag, parentCheck, otherType, alwaysShow) {
             if (typeof val == 'undefined') val = "";
             let title = document.createElement(tag || "h3");
@@ -5627,10 +5633,10 @@
         };
         let customRulesTitle = document.createElement("h2");
         customRulesTitle.innerHTML = i18n("customRules", /tree/.test(location.href) ? location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json' : 'https://github.com/hoothin/UserScripts/edit/master/Pagetual/pagetualRules.json');
-        configCon.insertBefore(customRulesTitle, insertPos);
+        configCon.appendChild(customRulesTitle);
         let customRulesInput = document.createElement("textarea");
         customRulesInput.spellcheck = false;
-        configCon.insertBefore(customRulesInput, insertPos);
+        configCon.appendChild(customRulesInput);
         if (rulesData.editTemp) {
             if (!ruleParser.customRules) {
                 ruleParser.customRules = [];
@@ -5665,12 +5671,12 @@
         blacklistBtn.onclick = e => {
             blacklistInput.style.display = blacklistInput.style.display == "none" ? "" : "none";
         };
-        configCon.insertBefore(blacklistBtn, insertPos);
-        configCon.insertBefore(blacklistInput, insertPos);
+        configCon.appendChild(blacklistBtn);
+        configCon.appendChild(blacklistInput);
         let saveBtn = document.createElement("button");
         saveBtn.innerHTML = i18n("save");
         saveBtn.id = "saveBtn";
-        configCon.insertBefore(saveBtn, insertPos);
+        configCon.appendChild(saveBtn);
         saveBtn.onclick = e => {
             try {
                 let customRules;
