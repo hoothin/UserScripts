@@ -91,9 +91,9 @@
  a.btn_L_blue>>let a=document.createElement("a");a.innerText=item.parentNode.parentNode.querySelector('.l_chaptname').innerText;a.href=item.href;return a;@@articles@@articlescontent
  ```
 + [📕pixiv](https://www.pixiv.net/novel/series/7807554)
-> p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta裡，需要自定義代碼提取meta-preload數據的content項。其中 "doc" 代表抓取網頁的document對象，若返回的是純文本，則用 `doc.body.innerText` 獲取。
+> p站小說的章節選擇器為`main>section ul>li div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta裡，需要自定義代碼提取meta-preload數據的content項。其中 "doc" 代表抓取網頁的document對象，若返回的是純文本，則用 `doc.body.innerText` 獲取。
  ``` javascript
-main>section ul>li>div>a @@@@@@ var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
+main>section ul>li div>a @@@@@@ var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
  ```
 + [📕紅薯中文網](https://g.hongshu.com/chapterlist/91735.do)
 > 這個站沒有目錄連結，此時可以遍歷標籤自己創建目錄連結下載
