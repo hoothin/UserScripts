@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.49
+// @version      1.7.50
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1543,6 +1543,95 @@
                      right: 0;
                      font-size: 2vw;
                  }
+                 #search-jumper-alllist>.modeSwitch {
+                     position: fixed;
+                     top: 5px;
+                     right: 5px;
+                     width: 45px;
+                     height: 45px;
+                     border-radius: 50%;
+                     box-shadow: 0px 0px 5px 0px #7a7a7a;
+                     cursor: pointer;
+                     transition: transform 0.25s ease;
+                 }
+                 #search-jumper-alllist>.modeSwitch:hover {
+                     transform: scale(1.1);
+                 }
+                 #search-jumper-alllist.new-mode {
+                     overflow-x: hidden;
+                     overflow-y: auto;
+                 }
+                 #search-jumper-alllist.new-mode>.sitelistBox {
+                     flex-wrap: wrap;
+                     flex-direction: column;
+                     align-items: center;
+                 }
+                 #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
+                     width: 80%;
+                     max-height: unset;
+                 }
+                 #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
+                     display: flex;
+                     flex-wrap: wrap;
+                 }
+                 #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon>p {
+                     text-align: left;
+                     font-size: large;
+                     padding: 15px 30px;
+                     display: table-caption;
+                     width: 100%;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist a {
+                     width: 250px;
+                     height: 100px;
+                     display: block!important;
+                     padding: 16px 8%;
+                     box-sizing: border-box;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div {
+                     padding: 10px;
+                     transition: transform 0.25s ease, box-shadow 0.25s ease;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:hover {
+                     transform: translateY(-6px);
+                     -webkit-transform: translateY(-6px);
+                     -moz-transform: translateY(-6px);
+                     box-shadow: 0px 5px 28px 0px rgba(65, 106, 123, 0.2);
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:after {
+                     content: attr(title);
+                     margin-left: 41px;
+                     color: #abb0bd;
+                     font-size: 12px;
+                     height: 3em;
+                     line-height: 1.5em;
+                     overflow: hidden;
+                     display: -webkit-box;
+                     -webkit-line-clamp: 2;
+                     -webkit-box-orient: vertical;
+                     margin-left: 61px;
+                     margin-top: -50px;
+                     width: 200px;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist a>img {
+                     width: 32px;
+                     height: 32px;
+                     float: left;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist a>p {
+                     -webkit-line-clamp: 2;
+                     -webkit-box-orient: vertical;
+                     display: block;
+                     font-size: 16px;
+                     height: 21px;
+                     line-height: 21px;
+                     margin-bottom: 8px;
+                     margin-top: 3px;
+                     margin-left: 40px;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     white-space: nowrap;
+                 }
                  .search-jumper-searchBarCon {
                      all: unset;
                      position: fixed;
@@ -2996,6 +3085,14 @@
                 timeInAll.className = "timeInAll";
                 alllist.appendChild(timeInAll);
                 this.timeInAll = timeInAll;
+
+                this.modeSwitch = document.createElement("div");
+                this.modeSwitch.className = "modeSwitch";
+                this.modeSwitch.innerHTML = createHTML(`<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" version="1.1"><rect height="450" width="520" y="287" x="253" fill="#fff"></rect><path d="m511.8,64.2c-247.5,0 -448.2,200.7 -448.2,448.2s200.7,448.2 448.2,448.2s448.2,-200.6 448.2,-448.2s-200.7,-448.2 -448.2,-448.2zm-260.4,353.9c0,-7.8 6.3,-14.2 14.2,-14.2l315.6,0l0,-102.5c0,-12.3 14.7,-18.8 23.7,-10.4l165.1,151.7c9.5,8.7 3.3,24.6 -9.6,24.6l-495,0c-7.8,0 -14.2,-6.3 -14.2,-14.2l0,-35l0.2,0zm523.2,188.5c0,7.8 -6.3,14.2 -14.2,14.2l-315.5,0l0,102.6c0,12.3 -14.7,18.8 -23.7,10.4l-165.2,-151.8c-9.5,-8.7 -3.3,-24.6 9.6,-24.6l495,0c7.8,0 14.2,6.3 14.2,14.2l0,35l-0.2,0z"></path></svg>`);
+                alllist.appendChild(this.modeSwitch);
+                this.modeSwitch.addEventListener("click", e => {
+                    alllist.classList.toggle("new-mode");
+                });
 
                 let dayInAll = document.createElement("span");
                 dayInAll.className = "dayInAll";
