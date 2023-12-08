@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.1
+// @version      1.9.37.2
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1697,7 +1697,7 @@
                 let paStyle = curWin.getComputedStyle(ele.parentNode);
                 let paDisplay = paStyle.display;
                 let paOverflow = paStyle.overflow;
-                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
+                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row" && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
             }
             let curStyle = curWin.getComputedStyle(ele);
             if (ele.children.length > 1) {
@@ -1717,7 +1717,7 @@
                             return ">*";
                         } else {
                             let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                            if ((curStyle.display === 'flex' && curStyle.flexDirection == "row") || (curStyle.float == "none" && rulesData.opacity != 0 && !pf)) {
+                            if ((curStyle.display === 'flex' && curStyle.flexDirection == "row" && curStyle.flexWrap !== "wrap") || (curStyle.float == "none" && rulesData.opacity != 0 && !pf)) {
                                 return "";
                             } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight == 0) {
                                 return "";
@@ -1968,8 +1968,7 @@
                         debug(ele, "Angular root");
                         return null;
                     }
-                    if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none') ele = ele.parentNode;
-                    else if (compareNodeName(ele, ["p", "br", "td"])) ele = ele.parentNode;
+                    if (compareNodeName(ele, ["p", "br", "td"])) ele = ele.parentNode;
                     else if (compareNodeName(ele, ["tbody"])) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         if (ele.children.length > 0 && ele.children[0].querySelector("th")) {
