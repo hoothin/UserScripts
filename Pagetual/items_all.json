@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86194",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//ul[@class='boxContentList']/li",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://www\\.dmm\\.co(?:m|\\.jp)/mono/[^/]+/-/special/",
+    "exampleUrl": "https://www.dmm.co.jp/mono/figure/-/special/=/id=156/page=2/ https://www.dmm.com/mono/dvd/-/special/=/id=166/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "DMM/Fanza 通販 特集",
+  "created_at": "2023-12-09T00:05:09+09:00",
+  "updated_at": "2023-12-09T00:05:09+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86193",
   "data": {
     "insertBefore": "",
