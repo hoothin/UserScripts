@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.2
+// @version      1.9.37.3
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4912,10 +4912,6 @@
         configCon = document.getElementById("configCon");
         if (configCon) {
             configCon.parentNode.removeChild(configCon);
-            let ruleExamples = document.querySelectorAll("#jsoneditor~p>a")
-            if (ruleExamples.length > 1) {
-                ruleExamples[0].parentNode.removeChild(ruleExamples[0]);
-            }
         }
         if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
@@ -5502,7 +5498,7 @@
             } else {
                 input.type = otherType || "checkbox";
             }
-            input.style.width = "30px";
+            input.style.width = "35px";
             input.style.height = "20px";
             input.style.float = "left";
             input.style.margin = "0 2px";
@@ -5744,7 +5740,7 @@
             rulesData.lastPageTips = lastPageTipsInput.checked;
             rulesData.initRun = initRunInput.checked;
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
-            rulesData.rate = parseInt(rateInput.value) || 1;
+            rulesData.rate = parseFloat(rateInput.value) || 1;
             rulesData.preload = preloadInput.checked;
             rulesData.manualMode = manualModeInput.checked;
             rulesData.clickMode = clickModeInput.checked;
