@@ -494,7 +494,8 @@
                         siteAddOver: '站点添加成功',
                         multiline: '是否以换行符分隔多行搜索？',
                         multilineTooMuch: '行数超过10行，是否继续搜索？',
-                        inputPlaceholder: '筛选引擎，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如 图片**baidu，tab 下一项',
+                        inputPlaceholder: '筛选引擎',
+                        inputTitle: '筛选引擎，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如 图片**baidu，tab 下一项',
                         inputKeywords: '输入搜索关键词',
                         inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                         inPagePlaceholder: '输入文字，按下回车进行页内查找',
@@ -598,7 +599,8 @@
                         siteAddOver: '站點添加成功',
                         multiline: '是否以換行符分隔多行搜索？',
                         multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                        inputPlaceholder: '篩選引擎，支持 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如 圖片**google，tab 下一項',
+                        inputPlaceholder: '篩選引擎',
+                        inputTitle: '篩選引擎，支援 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如 圖片**google，tab 下一項',
                         inputKeywords: '輸入搜索關鍵詞',
                         inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                         inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
@@ -701,7 +703,8 @@
                         siteAddOver: 'Site added successfully',
                         multiline: 'Search as multilines?',
                         multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
-                        inputPlaceholder: 'Filter engines, support * ? wildcards, $ means end, ^ means start, type name**site name to filter type like "image**google", tab to next ',
+                        inputPlaceholder: 'Filter engines',
+                        inputTitle: 'Filter engines, support * ? wildcards, $ means end, ^ means start, type name**site name to filter type like "image**google", tab to next. ',
                         inputKeywords: 'Enter search keywords',
                         inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                         inPagePlaceholder: 'Input text, press Enter to find in the page',
@@ -1659,7 +1662,7 @@
                      bottom: 5%;
                      line-height: 1.5;
                      color: white;
-                     opacity: 0.6;
+                     opacity: 0.35;
                      font-weight: bold;
                      font-family: Arial,sans-serif,微软雅黑;
                      overflow-wrap: normal;
@@ -3437,7 +3440,7 @@
                 <div class="line"></div>
                 <div class="content-container">
                   <div class="inputGroup" id="filterSites">
-                    <input spellcheck="false" id="searchJumperInput" autocomplete="on" title="${i18n("inputPlaceholder")}" placeholder="${i18n("inputPlaceholder")}" list="filterGlob" />
+                    <input spellcheck="false" id="searchJumperInput" autocomplete="on" title="${i18n("inputTitle")}" placeholder="${i18n("inputPlaceholder")}" list="filterGlob" />
                     <input spellcheck="false" id="searchJumperInputKeyWords" autocomplete="on" placeholder="${i18n("inputKeywords")}" list="suggest" />
                     <datalist id="filterGlob">
                     </datalist>
