@@ -49,6 +49,8 @@
 // @connect      suggestqueries.google.com
 // @connect      api.bing.com
 // @connect      suggestion.baidu.com
+// @connect      webdav.hoothin.com
+// @connect      search.hoothin.com
 // @connect      *
 // @run-at       document-start
 // ==/UserScript==
@@ -965,6 +967,123 @@
                 this.setItem(list, listData);
             }
         };
+
+        class WebDAV {
+            constructor(webDAVUrl, username, password) {
+                this.webDAVUrl = webDAVUrl;
+                this.username = username;
+                this.password = password;
+            }
+
+            init() {
+                if (this.inited) return;
+                this.inited = true;
+                this.auth = btoa(`${this.username}:${this.password}`);
+            }
+
+            request(action, data, url, type, callback, headers) {
+                this.init();
+                let _headers = {
+                    referer: url,
+                    origin: url,
+                    "Content-Type": "text/xml; charset=UTF-8",
+                    "Authorization": `Basic ${this.auth}`
+                };
+                for (let header in headers) {
+                    _headers[header] = headers[header];
+                }
+                _GM_xmlhttpRequest({
+                    method: action,
+                    url: url,
+                    data: data,
+                    headers: _headers,
+                    onload: function(d) {
+                        let response = d.response;
+                        if (d.status >= 400 || !response) response = "";
+                        if (type == 'xml') {
+                            var xml = d.responseXML;
+                            if(xml) {
+                                response = xml.firstChild.nextSibling ? xml.firstChild.nextSibling : xml.firstChild;
+                            }
+                        }
+                        callback && callback(response);
+                    },
+                    onerror: function(e) {
+                        debug(e);
+                        callback && callback(e);
+                    },
+                    ontimeout: function(e) {
+                        debug(e);
+                        callback && callback(e);
+                    }
+                });
+            }
+
+            GET(url, callback) {
+                return this.request('GET', null, url, 'text', callback, {});
+            }
+
+            PROPFIND(url, callback) {
+                return this.request('PROPFIND', null, url, 'xml', callback, {Depth: "1"});
+            }
+
+            MKCOL(url, callback) {
+                return this.request('MKCOL', null, url, 'text', callback, {});
+            }
+
+            DELETE(url, callback) {
+                return this.request('DELETE', null, url, 'text', callback, {});
+            }
+
+            PUT(url, data, callback) {
+                return this.request('PUT', data, url, 'text', callback, {});
+            }
+
+            async read(path) {
+                let self = this;
+                return new Promise((resolve) => {
+                    self.GET(self.webDAVUrl + path, resolve);
+                });
+            }
+
+            async write(path, data) {
+                let self = this;
+                return new Promise((resolve) => {
+                    self.PUT(self.webDAVUrl + path, data, resolve);
+                });
+            }
+
+            async rm(path) {
+                let self = this;
+                return new Promise((resolve) => {
+                    self.DELETE(self.webDAVUrl + path, resolve);
+                });
+            }
+        }
+        async function dataChanged(addSite, addInPage) {
+            if (!webDAV) return;
+            let lastModified = await webDAV.read("/SearchJumper/lastModified");
+            if (lastModified) {
+                lastModified = parseFloat(lastModified);
+            }
+            if (lastModified && (!searchData.lastModified || lastModified > searchData.lastModified)) {
+                searchData.lastModified = lastModified;
+                let sitesConfig = await webDAV.read("/sitesConfig.json");
+                if (sitesConfig) {
+                    sitesConfig = JSON.parse(sitesConfig);
+                    searchData.sitesConfig = sitesConfig;
+                }
+
+                let inPageRule = await webDAV.read("/inPageRule.json");
+                if (inPageRule) {
+                    inPageRule = JSON.parse(inPageRule);
+                    searchData.prefConfig.inPageRule = inPageRule;
+                }
+            }
+            storage.setItem("searchData", searchData);
+        }
+        //dataChanged();
+
         var escapeHTMLPolicy;
         if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) {
             escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('searchjumper_default', {
@@ -1188,7 +1307,7 @@
             setTimeout( checkReady, 100 );
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, sortSiteNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, sortSiteNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType, allPageNewMode = false;
         const logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${_GM_info.script.name}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         const logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         const noImgBase64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNDI5LjAxMzMzMyA2NDBBMzIgMzIgMCAwIDEgMzg0IDU5NC45ODY2NjdsMzcuNzYtMzcuNzYtMjIuODI2NjY3LTIyLjYxMzMzNC0xMzUuNjggMTM1LjY4IDkwLjQ1MzMzNCA5MC40NTMzMzQgMTM1LjY4LTEzNS42OC0yMi42MTMzMzQtMjIuNjEzMzM0ek01MzQuNjEzMzMzIDM5OC45MzMzMzNsMjIuNjEzMzM0IDIyLjYxMzMzNEw1OTQuOTg2NjY3IDM4NEEzMiAzMiAwIDAgMSA2NDAgNDI5LjAxMzMzM2wtMzcuNzYgMzcuNzYgMjIuNjEzMzMzIDIyLjYxMzMzNCAxMzUuNjgtMTM1LjY4LTkwLjQ1MzMzMy05MC40NTMzMzR6IiBmaWxsPSIjNUU1QzVDIj48L3BhdGg+PHBhdGggZD0iTTUxMiAyMS4zMzMzMzNhNDkwLjY2NjY2NyA0OTAuNjY2NjY3IDAgMSAwIDQ5MC42NjY2NjcgNDkwLjY2NjY2N0E0OTAuNjY2NjY3IDQ5MC42NjY2NjcgMCAwIDAgNTEyIDIxLjMzMzMzM3ogbTMxNi44IDM1NC45ODY2NjdsLTE4MS4xMiAxODEuMTJhMzIgMzIgMCAwIDEtNDUuMjI2NjY3IDBMNTU3LjIyNjY2NyA1MTIgNTEyIDU1Ny4yMjY2NjdsNDUuMjI2NjY3IDQ1LjIyNjY2NmEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N2wtMTgxLjEyIDE4MS4xMmEzMiAzMiAwIDAgMS00NS4yMjY2NjcgMGwtMTM1LjY4LTEzNS42OGEzMiAzMiAwIDAgMSAwLTQ1LjIyNjY2N2wxODEuMTItMTgxLjEyYTMyIDMyIDAgMCAxIDQ1LjIyNjY2NyAwTDQ2Ni43NzMzMzMgNTEyIDUxMiA0NjYuNzczMzMzbC00NS4yMjY2NjctNDUuMjI2NjY2YTMyIDMyIDAgMCAxIDAtNDUuMjI2NjY3bDE4MS4xMi0xODEuMTJhMzIgMzIgMCAwIDEgNDUuMjI2NjY3IDBsMTM1LjY4IDEzNS42OGEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N3oiIGZpbGw9IiM1RTVDNUMiPjwvcGF0aD4KPC9zdmc+";
@@ -1353,6 +1472,7 @@
 
         class SearchBar {
             constructor() {
+                let self = this;
                 this.scale = searchData.prefConfig.customSize / 100;
                 this.tilesZoom = searchData.prefConfig.tilesZoom / 100;
                 this.tipsZoom = searchData.prefConfig.tipsZoom / 100;
@@ -1423,7 +1543,7 @@
                      position: static;
                      display: block!important;
                      height: fit-content;
-                     max-height: calc(100vh - 120px);
+                     max-height: calc(100vh - 130px);
                      overscroll-behavior: contain;
                      -ms-scroll-chaining: contain;
                  }
@@ -1447,12 +1567,12 @@
                  }
                  #search-jumper-alllist {
                      display: none;
-                     top: 101px;
+                     top: 118px;
                      position: absolute;
                      width: 100%;
                      overflow-x: scroll;
                      overflow-y: hidden;
-                     height: calc(100% - 101px);
+                     height: calc(100% - 118px);
                      overscroll-behavior: contain;
                      -ms-scroll-chaining: contain;
                  }
@@ -1565,6 +1685,7 @@
                      flex-wrap: wrap;
                      flex-direction: column;
                      align-items: center;
+                     justify-content: flex-start;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
                      width: 80%;
@@ -1577,7 +1698,7 @@
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon>p {
                      text-align: left;
                      font-size: large;
-                     padding: 15px 30px;
+                     padding: 10px 30px;
                      display: table-caption;
                      width: 100%;
                  }
@@ -1585,11 +1706,14 @@
                      width: 250px;
                      height: 100px;
                      display: block!important;
-                     padding: 16px 8%;
+                     padding: 10px 8%;
                      box-sizing: border-box;
                  }
+                 #search-jumper.search-jumper-showall.searching #search-jumper-alllist.new-mode .sitelist>.sitelistCon a {
+                     display: block!important;
+                 }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div {
-                     padding: 10px;
+                     padding: 0 10px;
                      transition: transform 0.25s ease, box-shadow 0.25s ease;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:hover {
@@ -1598,7 +1722,7 @@
                      -moz-transform: translateY(-6px);
                      box-shadow: 0px 5px 28px 0px rgba(65, 106, 123, 0.2);
                  }
-                 #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:after {
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:before {
                      content: attr(title);
                      margin-left: 41px;
                      color: #abb0bd;
@@ -1609,9 +1733,11 @@
                      display: -webkit-box;
                      -webkit-line-clamp: 2;
                      -webkit-box-orient: vertical;
-                     margin-left: 61px;
-                     margin-top: -50px;
-                     width: 200px;
+                     margin-left: 63px;
+                     margin-top: 30px;
+                     width: 190px;
+                     position: absolute;
+                     pointer-events: none;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist a>img {
                      width: 32px;
@@ -1631,6 +1757,39 @@
                      overflow: hidden;
                      text-overflow: ellipsis;
                      white-space: nowrap;
+                 }
+                 #search-jumper .sitelist a+p {
+                     display: none;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist a+p {
+                     position: absolute;
+                     margin-top: -33px;
+                     color: white;
+                     width: 250px;
+                     display: flex;
+                     justify-content: space-evenly;
+                     overflow: hidden;
+                     opacity: 0;
+                     transition: .3s;
+                     border-top: 1px solid rgba(136,136,136,.2);
+                     padding-top: 3px;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist a+p>span {
+                     flex-shrink: 0;
+                     font-size: 14px;
+                     padding: 2px 6px;
+                     background: rgb(160 160 160 / 10%);
+                     color: #888;
+                     border-radius: 10px;
+                     transition: .3s;
+                     cursor: pointer;
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelist a+p>span:hover {
+                     color: white;
+                     background: rgb(160 160 160 / 30%);
+                 }
+                 #search-jumper #search-jumper-alllist.new-mode .sitelistCon>div:hover>p {
+                     opacity: 1;
                  }
                  .search-jumper-searchBarCon {
                      all: unset;
@@ -2908,6 +3067,7 @@
                      line-height: 32px;
                      min-width: auto;
                      min-height: auto;
+                     flex-shrink: 0;
                  }
                  .search-jumper-historylist>a.search-jumper-btn>img {
                      width: 32px;
@@ -3080,6 +3240,31 @@
                 sitelistBox.className = "sitelistBox";
                 alllist.appendChild(sitelistBox);
                 this.sitelistBox = sitelistBox;
+                const tagReg = /#[^\s#]+/g;
+                sitelistBox.addEventListener("mouseover", e => {
+                    if (!alllist.classList.contains("new-mode")) return;
+                    let target = e.target;
+                    if (target.parentNode && target.parentNode.dataset.name) {
+                        target = target.parentNode;
+                    }
+                    let title = target.title;
+                    if (!target.dataset.name || !title || target.initedTag) return;
+                    let tags = document.createElement("p");
+                    let tagMatch = title.match(tagReg);
+                    if (tagMatch) {
+                        tagMatch.forEach(tag => {
+                            let tagEle = document.createElement("span");
+                            tagEle.innerText = tag.slice(1);
+                            tagEle.addEventListener("click", e => {
+                                self.searchInput.value = tag;
+                                self.searchInput.dispatchEvent(new CustomEvent("input"));
+                            });
+                            tags.appendChild(tagEle);
+                        });
+                        target.appendChild(tags);
+                    }
+                    target.initedTag = true;
+                })
 
                 let timeInAll = document.createElement("span");
                 timeInAll.className = "timeInAll";
@@ -3092,7 +3277,9 @@
                 alllist.appendChild(this.modeSwitch);
                 this.modeSwitch.addEventListener("click", e => {
                     alllist.classList.toggle("new-mode");
+                    storage.setItem("allPageNewMode", alllist.classList.contains("new-mode"));
                 });
+                if (allPageNewMode) alllist.classList.add("new-mode");
 
                 let dayInAll = document.createElement("span");
                 dayInAll.className = "dayInAll";
@@ -3101,6 +3288,7 @@
 
                 alllist.addEventListener(getSupportWheelEventName(), e => {
                     if (e.target != alllist && e.target != showallBg && e.target != sitelistBox) return;
+                    if (alllist.classList.contains("new-mode")) return;
                     var deltaX, deltaY;
                     if(e.type !== 'wheel'){
                         var x = 0, y = 0;
@@ -5297,6 +5485,7 @@
                 document.removeEventListener("mousedown", self.showAllMouseHandler);
                 document.removeEventListener("keydown", self.showAllKeydownHandler);
                 this.con.classList.remove("search-jumper-showall");
+                document.documentElement.style.overflow = this.preOverflow;
                 this.searchJumperInputKeyWords.value = "";
                 this.historylist.innerHTML = createHTML();
                 /*this.historySiteBtns.slice(0, 10).forEach(btn => {
@@ -5328,6 +5517,8 @@
                 this.setFuncKeyCall(false);
                 this.hideSearchInput();
                 this.con.classList.add("search-jumper-showall");
+                this.preOverflow = document.documentElement.style.overflow || "";
+                document.documentElement.style.overflow = "hidden";
                 clearInterval(this.showAllTimeTimer);
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 if (window.innerWidth < 1000) {
@@ -5363,7 +5554,7 @@
                         }
                     }
                 });
-                this.historySiteBtns.slice(0, 10).forEach(btn => {
+                this.historySiteBtns.slice(0, 20).forEach(btn => {
                     let siteImg = btn.querySelector('img');
                     if (siteImg && siteImg.dataset.src) {
                         siteImg.src = siteImg.dataset.src;
@@ -8061,7 +8252,7 @@
                 let isPage = /^(https?|ftp):/.test(data.url);
                 if (isPage) ele.dataset.isPage = isPage;
                 ele.className = "search-jumper-btn";
-                if (typeof description !== 'undefined') ele.title = name + " - " + description;
+                if (typeof description !== 'undefined') ele.title = description;
                 ele.dataset.name = name;
                 ele.classList.add("search-jumper-word");
                 ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
@@ -13323,6 +13514,11 @@
             disableHighlight = await new Promise((resolve) => {
                 storage.getItem("disableHighlight", data => {
                     resolve(data || "");
+                });
+            });
+            allPageNewMode = await new Promise((resolve) => {
+                storage.getItem("allPageNewMode", data => {
+                    resolve(data || false);
                 });
             });
             lastAddType = await new Promise((resolve) => {
