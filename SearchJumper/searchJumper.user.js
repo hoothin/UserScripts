@@ -1060,29 +1060,42 @@
                 });
             }
         }
-        async function dataChanged(addSite, addInPage) {
-            if (!webDAV) return;
-            let lastModified = await webDAV.read("/SearchJumper/lastModified");
-            if (lastModified) {
-                lastModified = parseFloat(lastModified);
-            }
-            if (lastModified && (!searchData.lastModified || lastModified > searchData.lastModified)) {
-                searchData.lastModified = lastModified;
-                let sitesConfig = await webDAV.read("/sitesConfig.json");
-                if (sitesConfig) {
-                    sitesConfig = JSON.parse(sitesConfig);
-                    searchData.sitesConfig = sitesConfig;
+        var webDAV;
+        async function dataChanged(callback, override) {
+            if (!webDAV) return callback && callback();
+            if (!override) {
+                let lastModified = await webDAV.read("lastModified");
+                if (lastModified) {
+                    lastModified = parseFloat(lastModified);
                 }
+                if (lastModified && (!searchData.lastModified || lastModified > searchData.lastModified)) {
+                    searchData.lastModified = lastModified;
+                    let sitesConfig = await webDAV.read("sitesConfig.json");
+                    if (sitesConfig) {
+                        try {
+                            sitesConfig = JSON.parse(sitesConfig);
+                            searchData.sitesConfig = sitesConfig;
+                        } catch (e) {
+                            debug(e);
+                        }
+                    }
 
-                let inPageRule = await webDAV.read("/inPageRule.json");
-                if (inPageRule) {
-                    inPageRule = JSON.parse(inPageRule);
-                    searchData.prefConfig.inPageRule = inPageRule;
+                    let inPageRule = await webDAV.read("inPageRule.json");
+                    if (inPageRule) {
+                        try {
+                            inPageRule = JSON.parse(inPageRule);
+                            searchData.prefConfig.inPageRule = inPageRule;
+                        } catch (e) {
+                            debug(e);
+                        }
+                    }
                 }
             }
-            storage.setItem("searchData", searchData);
+            callback && callback();
+            await webDAV.write("lastModified", "" + searchData.lastModified);
+            await webDAV.write("sitesConfig.json", JSON.stringify(searchData.sitesConfig));
+            await webDAV.write("inPageRule.json", JSON.stringify(searchData.prefConfig.inPageRule));
         }
-        //dataChanged();
 
         var escapeHTMLPolicy;
         if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) {
@@ -6061,12 +6074,14 @@
                 });
                 this.saveRuleBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
-                    let inPageRule = searchData.prefConfig.inPageRule || {};
-                    inPageRule[this.inPageRuleKey || location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
-                    searchData.prefConfig.inPageRule = inPageRule;
-                    searchData.lastModified = new Date().getTime();
-                    storage.setItem("searchData", searchData);
-                    _GM_notification(i18n("save completed"));
+                    dataChanged(() => {
+                        let inPageRule = searchData.prefConfig.inPageRule || {};
+                        inPageRule[this.inPageRuleKey || location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
+                        searchData.prefConfig.inPageRule = inPageRule;
+                        searchData.lastModified = new Date().getTime();
+                        storage.setItem("searchData", searchData);
+                        _GM_notification(i18n("save completed"));
+                    });
                 });
                 this.emptyBtn.addEventListener("click", e => {
                     this.lockWords = "";
@@ -11650,10 +11665,12 @@
                                 if (btnsCon.parentNode) {
                                     btnsCon.parentNode.removeChild(btnsCon);
                                 }
-                                searchData.sitesConfig = configData;
-                                searchData.lastModified = new Date().getTime();
-                                storage.setItem("searchData", searchData);
-                                _GM_notification('Over!');
+                                dataChanged(() => {
+                                    searchData.sitesConfig = configData;
+                                    searchData.lastModified = new Date().getTime();
+                                    storage.setItem("searchData", searchData);
+                                    _GM_notification('Over!');
+                                }, true);
                             }
                             break;
                         case 1:
@@ -11926,41 +11943,43 @@
                     });
                 });
                 add.addEventListener("click", e => {
-                    let canImport = false;
-                    [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
-                        let typeName = details.children[0].children[0];
-                        let typeData = self.typeDict[typeName.title];
-                        typeData.type = typeName.innerText.trim();
-                        typeData.sites = [];
-                        [].forEach.call(details.querySelectorAll('div>[type="checkbox"]'), checkSite => {
-                            if (checkSite.checked) {
-                                canImport = true;
-                                let curData = self.siteDict[checkSite.parentNode.title];
-                                let otherType = checkSite.nextElementSibling;
-                                if (!curData || !otherType) return;
-                                if (otherType.value === "0") {
-                                    typeData.sites.push(curData);
+                    dataChanged(() => {
+                        let canImport = false;
+                        [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
+                            let typeName = details.children[0].children[0];
+                            let typeData = self.typeDict[typeName.title];
+                            typeData.type = typeName.innerText.trim();
+                            typeData.sites = [];
+                            [].forEach.call(details.querySelectorAll('div>[type="checkbox"]'), checkSite => {
+                                if (checkSite.checked) {
+                                    canImport = true;
+                                    let curData = self.siteDict[checkSite.parentNode.title];
+                                    let otherType = checkSite.nextElementSibling;
+                                    if (!curData || !otherType) return;
+                                    if (otherType.value === "0") {
+                                        typeData.sites.push(curData);
+                                    } else {
+                                        let typeIndex = self.searchType(otherType.value);
+                                        searchData.sitesConfig[typeIndex].sites.push(curData);;
+                                    }
+                                }
+                            });
+                            if (typeData.sites.length) {
+                                let typeIndex = self.searchType(typeData.type);
+                                if (typeIndex === false) {
+                                    searchData.sitesConfig.push(typeData);
                                 } else {
-                                    let typeIndex = self.searchType(otherType.value);
-                                    searchData.sitesConfig[typeIndex].sites.push(curData);;
+                                    searchData.sitesConfig[typeIndex].sites = searchData.sitesConfig[typeIndex].sites.concat(typeData.sites);
                                 }
                             }
                         });
-                        if (typeData.sites.length) {
-                            let typeIndex = self.searchType(typeData.type);
-                            if (typeIndex === false) {
-                                searchData.sitesConfig.push(typeData);
-                            } else {
-                                searchData.sitesConfig[typeIndex].sites = searchData.sitesConfig[typeIndex].sites.concat(typeData.sites);
-                            }
+                        if (canImport) {
+                            searchData.lastModified = new Date().getTime();
+                            storage.setItem("searchData", searchData);
+                            _GM_notification('Over!');
+                            this.close();
                         }
                     });
-                    if (canImport) {
-                        searchData.lastModified = new Date().getTime();
-                        storage.setItem("searchData", searchData);
-                        _GM_notification('Over!');
-                        this.close();
-                    }
                 });
                 this.filterFrame.addEventListener("click", e => {
                     if (e.target.id == "searchJumperFilter" || e.target.id == "cancel") {
@@ -12951,57 +12970,59 @@
                     }
                 });
                 addBtn.addEventListener("click", e => {
-                    let siteObj = null;
-                    for (let i = 0; i < searchData.sitesConfig.length; i++) {
-                        let typeConfig = searchData.sitesConfig[i];
-                        for (let j = 0; j < typeConfig.sites.length; j++) {
-                            let curSite = typeConfig.sites[j];
-                            if (curSite.url == urlInput.value) {
-                                if (i == parseInt(typeSelect.value)) return;
-                                if (window.confirm(i18n("siteExist"))) {
-                                    siteObj = {
-                                        name: curSite.name + " - " + typeConfig.type,
-                                        url: `["${curSite.name}"]`
-                                    };
-                                } else return;
+                    dataChanged(() => {
+                        let siteObj = null;
+                        for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                            let typeConfig = searchData.sitesConfig[i];
+                            for (let j = 0; j < typeConfig.sites.length; j++) {
+                                let curSite = typeConfig.sites[j];
+                                if (curSite.url == urlInput.value) {
+                                    if (i == parseInt(typeSelect.value)) return;
+                                    if (window.confirm(i18n("siteExist"))) {
+                                        siteObj = {
+                                            name: curSite.name + " - " + typeConfig.type,
+                                            url: `["${curSite.name}"]`
+                                        };
+                                    } else return;
+                                }
                             }
                         }
-                    }
-                    if (siteObj == null) {
-                        siteObj = {
-                            name: nameInput.value,
-                            url: urlInput.value
-                        };
-                        if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico")) {
-                            siteObj.icon = iconInput.value;
+                        if (siteObj == null) {
+                            siteObj = {
+                                name: nameInput.value,
+                                url: urlInput.value
+                            };
+                            if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico")) {
+                                siteObj.icon = iconInput.value;
+                            }
+                            if (descInput.value && descInput.value != nameInput.value) {
+                                siteObj.description = descInput.value;
+                            }
+                            if (siteKeywords.value) {
+                                siteObj.keywords = siteKeywords.value;
+                            }
+                            if (siteMatch.value) {
+                                siteObj.match = siteMatch.value;
+                            }
+                            if (openSelect.value && openSelect.value != '-1') {
+                                siteObj.openInNewTab = openSelect.value === 'true';
+                            }
+                            if (charset && charset.toLowerCase() != 'utf-8') {
+                                siteObj.charset = charset;
+                            }
+                            if (kwFilter) {
+                                siteObj.kwFilter = kwFilter;
+                            }
                         }
-                        if (descInput.value && descInput.value != nameInput.value) {
-                            siteObj.description = descInput.value;
+                        searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
+                        searchData.lastModified = new Date().getTime();
+                        storage.setItem("lastAddType", typeSelect.value);
+                        storage.setItem("searchData", searchData);
+                        _GM_notification(i18n("siteAddOver"));
+                        if (addFrame.parentNode) {
+                            addFrame.parentNode.removeChild(addFrame);
                         }
-                        if (siteKeywords.value) {
-                            siteObj.keywords = siteKeywords.value;
-                        }
-                        if (siteMatch.value) {
-                            siteObj.match = siteMatch.value;
-                        }
-                        if (openSelect.value && openSelect.value != '-1') {
-                            siteObj.openInNewTab = openSelect.value === 'true';
-                        }
-                        if (charset && charset.toLowerCase() != 'utf-8') {
-                            siteObj.charset = charset;
-                        }
-                        if (kwFilter) {
-                            siteObj.kwFilter = kwFilter;
-                        }
-                    }
-                    searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
-                    searchData.lastModified = new Date().getTime();
-                    storage.setItem("lastAddType", typeSelect.value);
-                    storage.setItem("searchData", searchData);
-                    _GM_notification(i18n("siteAddOver"));
-                    if (addFrame.parentNode) {
-                        addFrame.parentNode.removeChild(addFrame);
-                    }
+                    });
                 });
 
                 crawlBtn = addFrame.querySelector("#crawlBtn");
@@ -13600,6 +13621,9 @@
                 configPage = searchData.prefConfig.configPage;
             } else {
                 searchData.prefConfig.configPage = configPage;
+            }
+            if (searchData.webdavConfig) {
+                webDAV = new WebDAV(searchData.webdavConfig.host + "/SearchJumper" + (searchData.webdavConfig.path || "").replace(/^\/*/, "/").replace(/\/*$/, "/"), searchData.webdavConfig.username, searchData.webdavConfig.password);
             }
         }
 
