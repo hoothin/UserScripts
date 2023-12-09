@@ -5939,7 +5939,10 @@
                 };
                 document.addEventListener("keydown", e => {
                     if (e.keyCode === 27) {
-                        if (this.inInput) {
+                        if (isAllPage) {
+                            this.searchInput.value = "";
+                            this.searchInput.dispatchEvent(new CustomEvent("input"));
+                        } else if (this.inInput) {
                             this.hideSearchInput();
                         } else if (this.lockWords) {
                             this.highlight("");
@@ -11459,13 +11462,13 @@
                 if (shareEngines) {
                     try {
                         shareEngines = shareEngines.getAttribute("content");
-                        shareEngines = JSON.parse(unescape(shareEngines));
+                        shareEngines = JSON.parse(decodeURI(shareEngines));
                         searchData.sitesConfig = shareEngines;
                     } catch (e) {
                         shareEngines = null;
                     }
                 }
-                isAllPage = shareEngines || /all\.html$/.test(location.pathname);
+                isAllPage = !!shareEngines || /all\.html$/.test(location.pathname);
                 return true;
             }
             return false;
