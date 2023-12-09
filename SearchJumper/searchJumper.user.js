@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.50
+// @version      1.7.51
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1062,6 +1062,7 @@
         }
         var webDAV;
         async function dataChanged(callback, override) {
+            if (shareEngines) return;
             if (!webDAV) return callback && callback();
             if (!override) {
                 let lastModified = await webDAV.read("lastModified");
@@ -6074,6 +6075,7 @@
                 });
                 this.saveRuleBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
+                    if (shareEngines) return;
                     dataChanged(() => {
                         let inPageRule = searchData.prefConfig.inPageRule || {};
                         inPageRule[this.inPageRuleKey || location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
@@ -6264,6 +6266,13 @@
                     this.batchOpen(lastSign.sites, {button: 2});
                 }
                 lastSign = false;
+
+                if (inPagePostParams) {
+                    await this.submitAction(inPagePostParams);
+                    setTimeout(() => {
+                        storage.setListItem("inPagePostParams", location.hostname, "");
+                    }, 10000);
+                }
                 let searchWithCurrentFilter = () => {
                     clearTimeout(inputTimer);
                     let siteEle, forceTarget = "";
@@ -7693,7 +7702,7 @@
                         let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
                         if (searchData.prefConfig.disableTypeOpen) {
                             scrollSize = baseSize + "px";
-                            self.listPos(ele.children[0], siteList);
+                            if (e) self.listPos(ele.children[0], siteList);
                         }
                         if (leftRight) {
                             ele.style.height = scrollSize;
@@ -8314,12 +8323,6 @@
                         }
                     }
                     if (ele.dataset.current) {
-                        if (!currentSite && inPagePostParams) {
-                            await this.submitAction(inPagePostParams);
-                            setTimeout(() => {
-                                storage.setListItem("inPagePostParams", location.hostname, "");
-                            }, 10000);
-                        }
                     } else if (data.hideNotMatch) {
                         ele.style.display = 'none';
                         ele.classList.add("notmatch");
@@ -11446,9 +11449,20 @@
             }
         }
 
+        var shareEngines;
         function isInConfigPage() {
             if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && document.querySelector('[name="author"][content="Hoothin"]'))) {
-                isAllPage = /all\.html$/.test(location.pathname);
+                shareEngines = document.querySelector('[name="engines"]');
+                if (shareEngines) {
+                    try {
+                        shareEngines = shareEngines.getAttribute("content");
+                        shareEngines = JSON.parse(unescape(shareEngines));
+                        searchData.sitesConfig = shareEngines;
+                    } catch (e) {
+                        shareEngines = null;
+                    }
+                }
+                isAllPage = shareEngines || /all\.html$/.test(location.pathname);
                 return true;
             }
             return false;
@@ -11650,6 +11664,7 @@
                 const importFilter = new ImportFilter();
                 importBtn.innerText = i18n("import");
                 importBtn.addEventListener("click", e => {
+                    if (shareEngines) return;
                     if (!targetPre) return;
                     let configTxt = targetPre.innerText.trim(), configData;
                     if (!configTxt) return;
@@ -11943,6 +11958,7 @@
                     });
                 });
                 add.addEventListener("click", e => {
+                    if (shareEngines) return;
                     dataChanged(() => {
                         let canImport = false;
                         [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
@@ -12970,6 +12986,7 @@
                     }
                 });
                 addBtn.addEventListener("click", e => {
+                    if (shareEngines) return;
                     dataChanged(() => {
                         let siteObj = null;
                         for (let i = 0; i < searchData.sitesConfig.length; i++) {
