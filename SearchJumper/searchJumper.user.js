@@ -305,7 +305,8 @@
             icon: "book-open-reader",
             sites: [ {
                 name: "Wikipedia",
-                url: "https://en.wikipedia.org/wiki/%s"
+                url: "https://en.wikipedia.org/wiki/%s",
+                description: "The largest and most-read reference work in history.#wiki"
             }, {
                 name: "Quora",
                 url: "https://www.quora.com/search?q=%s"
