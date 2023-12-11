@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.3
+// @version      1.9.37.4
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -892,7 +892,7 @@
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true, firstRun: true}, ruleUrls, updateDate, clickedSth = false;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
-    var tryTimes = 0, showedLastPageTips = false;
+    var tryTimes = 0, showedLastPageTips = false, rate = 1;
 
     function getBody(doc) {
         return doc.body || doc.querySelector('body') || doc;
@@ -2234,7 +2234,7 @@
             };
             if (!ele) return false;
             let i = 0;
-            while (ele && i++ < 3) {
+            while (ele && i++ < 6) {
                 if (!verifyHandler(ele)) return false;
                 ele = ele.parentNode;
             }
@@ -3312,6 +3312,9 @@
             this.getRule(async () => {
                 if (self.curSiteRule.sideController === true || (self.curSiteRule.sideController !== false && rulesData.sideController)) {
                     isPause = manualPause;
+                }
+                if (typeof(self.curSiteRule.rate) !== "undefined") {
+                    rate = self.curSiteRule.rate;
                 }
                 if (self.curSiteRule.enable == 0) {
                     debug("Stop as rule disable");
@@ -5740,7 +5743,7 @@
             rulesData.lastPageTips = lastPageTipsInput.checked;
             rulesData.initRun = initRunInput.checked;
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
-            rulesData.rate = parseFloat(rateInput.value) || 1;
+            rulesData.rate = parseFloat(rateInput.value) || 0;
             rulesData.preload = preloadInput.checked;
             rulesData.manualMode = manualModeInput.checked;
             rulesData.clickMode = clickModeInput.checked;
@@ -6085,6 +6088,10 @@
                 if (typeof(rulesData.lastPageTips) == "undefined") {
                     rulesData.lastPageTips = true;
                 }
+                if (typeof(rulesData.rate) == "undefined") {
+                    rulesData.rate = 1;
+                }
+                rate = rulesData.rate;
                 if (rulesData.autoLoadNum && rulesData.initRun) {
                     autoLoadNum = parseInt(rulesData.autoLoadNum);
                 }
@@ -6611,7 +6618,7 @@
             top >= 0 &&
             left >= 0 &&
             right <= viewWidth + 1 &&
-            top <= viewHeight * (ruleParser.curSiteRule.rate || rulesData.rate || 1) &&
+            top <= viewHeight * rate &&
             isVisible(element, _unsafeWindow)
         );
     }
@@ -7088,7 +7095,7 @@
         }
         if (posEle) {
             let actualBottom = getElementBottom(posEle);
-            bottomGap = scrollH - actualBottom + (window.innerHeight || document.documentElement.clientHeight) * (ruleParser.curSiteRule.rate || rulesData.rate || 1);
+            bottomGap = scrollH - actualBottom + (window.innerHeight || document.documentElement.clientHeight) * rate;
             if (bottomGap < 100) bottomGap = 100;
         } else {
             bottomGap = 1000;
@@ -8183,7 +8190,6 @@
         if (loadingDiv.parentNode) {
             loadingDiv.parentNode.removeChild(loadingDiv);
         }
-        let rate = (ruleParser.curSiteRule.rate || rulesData.rate || 1);
         if (rate != 1 && !clickMode) {
             setTimeout(() => {
                 if (distToBottom() < bottomGap) {
