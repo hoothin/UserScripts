@@ -1710,7 +1710,7 @@
                      justify-content: flex-start;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                     width: 70%;
+                     width: 72%;
                      max-height: unset;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
@@ -1736,6 +1736,7 @@
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div {
                      padding: 0 10px;
+                     border-radius: 5px;
                      transition: transform 0.25s ease, box-shadow 0.25s ease;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:hover {
