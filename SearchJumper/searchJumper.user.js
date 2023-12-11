@@ -1631,7 +1631,7 @@
                  #search-jumper.search-jumper-showall>.search-jumper-showallBg {
                      display: block;
                  }
-                 .search-jumper-historylist {
+                 .search-jumper-historylistcon {
                      display: flex;
                      position: fixed;
                      width: 100%;
@@ -1644,6 +1644,10 @@
                      border-bottom: 1px solid #ddd;
                      pointer-events: all;
                      min-height: 40px;
+                 }
+                 .search-jumper-historylist {
+                     display: flex;
+                     max-width: 100%;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist {
                      display: block;
@@ -3151,7 +3155,7 @@
                      }
 
                      /* 历史列表 */
-                     .search-jumper-historylist {
+                     .search-jumper-historylistcon {
                          background-color: #181C20e0 !important;
                      }
 
@@ -3342,9 +3346,14 @@
                 });
                 alllist.appendChild(logoConfigBtn);
 
+
+                let historylistCon = document.createElement("div");
+                historylistCon.className = "search-jumper-historylistcon";
+                alllist.appendChild(historylistCon);
+
                 let historylist = document.createElement("div");
                 historylist.className = "search-jumper-historylist";
-                alllist.appendChild(historylist);
+                historylistCon.appendChild(historylist);
                 this.historylist = historylist;
 
                 bar.addEventListener('mouseenter', e => {
@@ -5588,7 +5597,7 @@
                 setTimeout(() => {
                     if (!self.showAllMouseHandler) {
                         self.showAllMouseHandler = e => {
-                            if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
+                            if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg') {
                                 self.closeShowAll();
                             }
                         };
