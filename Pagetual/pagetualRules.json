@@ -10473,6 +10473,12 @@
     "pageElement": "ul.DiscussionList-discussions>li"
 },
 {
+    "name": "Sanfoundry",
+    "url": "^https?://www\\.sanfoundry\\.com/",
+    "example": "https://www.sanfoundry.com/engineering-mathematics-questions-answers-nth-derivative-some-elementary-functions-1/",
+    "nextLink": ".sf-nav-prev-bottom+div > a[rel=next]"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
