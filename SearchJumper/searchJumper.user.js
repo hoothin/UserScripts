@@ -2802,6 +2802,12 @@
                      .inputGroup>.svgBtns {
                          width: 25px;
                      }
+                     #search-jumper-alllist>.modeSwitch {
+                         width: 36px;
+                         height: 36px;
+                         right: 2px;
+                         top: 10px;
+                     }
                  }
                  .search-jumper-input .content-container {
                      background: #eee;
