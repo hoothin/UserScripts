@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.51
+// @version      1.7.52
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -450,7 +450,7 @@
         minSizeMode: false,
         hidePopup: false,
         minPopup: 0,
-        selectToShow: true,
+        selectToShow: false,
         expandType: false,
         rightMouse: true,
         shiftLastUsedType: true,
@@ -1750,8 +1750,8 @@
                      display: -webkit-box;
                      -webkit-line-clamp: 2;
                      -webkit-box-orient: vertical;
-                     margin-left: 63px;
-                     margin-top: 30px;
+                     margin-left: 62px;
+                     margin-top: 35px;
                      width: 190px;
                      position: absolute;
                      pointer-events: none;
@@ -1780,7 +1780,7 @@
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist a+p {
                      position: absolute;
-                     margin-top: -33px;
+                     margin-top: -28px;
                      color: white;
                      width: 250px;
                      display: flex;
@@ -2217,7 +2217,6 @@
                      height: ${32 * this.tilesZoom}px;
                      width: ${32 * this.tilesZoom}px;
                  }
-                 .search-jumper-type.search-jumper-needInPage,
                  .search-jumper-type.search-jumper-targetImg,
                  .search-jumper-type.search-jumper-targetAudio,
                  .search-jumper-type.search-jumper-targetVideo,
@@ -2227,7 +2226,6 @@
                  .search-jumper-isTargetAudio>.search-jumper-type,
                  .search-jumper-isTargetVideo>.search-jumper-type,
                  .search-jumper-isTargetLink>.search-jumper-type,
-                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-needInPage,
                  .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetImg,
                  .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetAudio,
                  .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetVideo,
