@@ -11472,6 +11472,7 @@
                         shareEngines = shareEngines.getAttribute("content");
                         shareEngines = JSON.parse(decodeURI(shareEngines));
                         searchData.sitesConfig = shareEngines;
+                        getBody(document).innerHTML = createHTML("");
                     } catch (e) {
                         shareEngines = null;
                     }
