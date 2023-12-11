@@ -1710,7 +1710,7 @@
                      justify-content: flex-start;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                     width: 72%;
+                     width: 73%;
                      max-height: unset;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
