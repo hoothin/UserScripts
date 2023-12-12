@@ -70,7 +70,7 @@
     }
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
-    let configPage = 'https://hoothin.github.io/SearchJumper/';
+    let configPage = 'https://search.hoothin.com/config/';
     let isAllPage = false;
 
     var searchData = {};
