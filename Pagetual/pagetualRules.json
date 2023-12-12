@@ -10479,6 +10479,16 @@
     "nextLink": ".sf-nav-prev-bottom+div > a[rel=next]"
 },
 {
+    "name": "KossyDerrickEnt",
+    "url": "^https?://www\\.kossyderrickent\\.com/",
+    "example": "https://www.kossyderrickent.com/",
+    "nextLink": ".showpagePoint+.showpageNum>a",
+    "pageElement": ".date-posts>.post-outer",
+    "pageAction": "eles.forEach(ele=>{let thumb=ele.querySelector('.thumb>a');thumb.style.background=thumb.style.background.replace('s72-c','s1600')})",
+    "waitElement": ".showpagePoint",
+    "include": ".date-posts>.post-outer"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
