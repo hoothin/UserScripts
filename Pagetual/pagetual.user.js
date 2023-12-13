@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.5
+// @version      1.9.37.6
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -45,8 +45,6 @@
 // @grant        GM.deleteValue
 // @grant        GM.info
 // @grant        GM.setClipboard
-// @downloadURL  https://update.greasyfork.org/scripts/438684/Pagetual.user.js
-// @updateURL    https://update.greasyfork.org/scripts/438684/Pagetual.meta.js
 // @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
@@ -56,6 +54,8 @@
 // @connect      *
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
+// @downloadURL https://update.greasyfork.org/scripts/438684/Pagetual.user.js
+// @updateURL https://update.greasyfork.org/scripts/438684/Pagetual.meta.js
 // ==/UserScript==
 
 (function() {
@@ -81,20 +81,24 @@
             pauseVideo();
         } else {
             domloaded();
-            if (document.readystate == 'complete') {
+            if (document.readystate === 'complete') {
                 pauseVideo();
             } else {
-                window.addEventListener('load', e => {
+                window.addEventListener('load', () => {
                     pauseVideo();
                 }, false);
             }
         }
-        if (getComputedStyle(document.documentElement).display == 'none') document.documentElement.style.display = 'block';
-        if (document.body && getComputedStyle(document.body).display == 'none') document.body.style.display = 'block';
+        if (getComputedStyle(document.documentElement).display === 'none') {
+          document.documentElement.style.display = 'block';
+        }
+        if (document.body && getComputedStyle(document.body).display === 'none') {
+          document.body.style.display = 'block';
+        }
         return;
     }
 
-    if (window.top != window.self) {
+    if (window.top !== window.self) {
         try {
             if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
                 return;
@@ -105,7 +109,7 @@
     }
 
     const noRuleTest = false;
-    const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
+    const lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
     const langData = [
         {
             name: "English",
@@ -718,11 +722,11 @@
         }
     }
     setLang(lang);
-
     var enableDebug = true;
+    var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_addStyle, _GM_openInTab, _GM_info, _GM_setClipboard;
     function i18n(name, param) {
         return i18nData[name] ? i18nData[name].replace("#t#", param) : name;
-    };
+    }
 
     function debug(str, title) {
         if (enableDebug) {
@@ -732,47 +736,46 @@
                 str
             );
         }
-    };
+    }
 
-    var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_addStyle, _GM_openInTab, _GM_info, _GM_setClipboard;
-    if (typeof GM_xmlhttpRequest != 'undefined') {
+    if (typeof GM_xmlhttpRequest !== 'undefined') {
         _GM_xmlhttpRequest = GM_xmlhttpRequest;
-    } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.xmlHttpRequest !== 'undefined') {
         _GM_xmlhttpRequest = GM.xmlHttpRequest;
     } else {
-        _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response:data}; f.onload(res)}).catch(e => f.onerror(e))};
+        _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response:data}; f.onload(res);}).catch(e => f.onerror(e));};
     }
-    if (typeof GM_registerMenuCommand != 'undefined') {
+    if (typeof GM_registerMenuCommand !== 'undefined') {
         _GM_registerMenuCommand = GM_registerMenuCommand;
-    } else if (typeof GM != 'undefined' && typeof GM.registerMenuCommand != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.registerMenuCommand !== 'undefined') {
         _GM_registerMenuCommand = GM.registerMenuCommand;
     } else {
-        _GM_registerMenuCommand = (s, f) => {};
+        _GM_registerMenuCommand = (s, f) => {debug(s); debug(f);};
     }
-    if (typeof GM_info != 'undefined') {
+    if (typeof GM_info !== 'undefined') {
         _GM_info = GM_info;
-    } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.info !== 'undefined') {
         _GM_info = GM.info;
     } else {
         _GM_info = {script: {}};
     }
-    if (typeof GM_notification != 'undefined') {
+    if (typeof GM_notification !== 'undefined') {
         _GM_notification = GM_notification;
-    } else if (typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.notification !== 'undefined') {
         _GM_notification = GM.notification;
     } else {
-        _GM_notification = (s) => {showTips(String(s))};
+        _GM_notification = (s) => {showTips(String(s));};
     }
-    if (typeof GM_openInTab != 'undefined') {
+    if (typeof GM_openInTab !== 'undefined') {
         _GM_openInTab = GM_openInTab;
-    } else if (typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.openInTab !== 'undefined') {
         _GM_openInTab = GM.openInTab;
     } else {
-        _GM_openInTab = (s,t) => {window.open(s)};
+        _GM_openInTab = (s,t) => {window.open(s); debug(t);};
     }
-    if (typeof GM_addStyle != 'undefined') {
+    if (typeof GM_addStyle !== 'undefined') {
         _GM_addStyle = GM_addStyle;
-    } else if (typeof GM != 'undefined' && typeof GM.addStyle != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.addStyle !== 'undefined') {
         _GM_addStyle = GM.addStyle;
     } else {
         _GM_addStyle = cssStr => {
@@ -782,17 +785,17 @@
             return styleEle;
         };
     }
-    if (typeof GM_setClipboard != 'undefined') {
+    if (typeof GM_setClipboard !== 'undefined') {
         _GM_setClipboard = GM_setClipboard;
-    } else if (typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
+    } else if (typeof GM !== 'undefined' && typeof GM.setClipboard !== 'undefined') {
         _GM_setClipboard = GM.setClipboard;
     } else {
-        _GM_setClipboard = (s, i) => {};
+        _GM_setClipboard = (s, i) => {debug(s); debug(i);};
     }
-    const _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;//兼容 ios userscripts 的寫法
+    const _unsafeWindow = (typeof unsafeWindow === 'undefined') ? window : unsafeWindow;//兼容 ios userscripts 的寫法
     const storage = {
-        supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
-        supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a', 'b') != 'undefined' && typeof GM.getValue('a', 'b').then == 'function',
+        supportGM: typeof GM_getValue === 'function' && typeof GM_getValue('a', 'b') !== 'undefined',
+        supportGMPromise: typeof GM !== 'undefined' && typeof GM.getValue === 'function' && typeof GM.getValue('a', 'b') !== 'undefined' && typeof GM.getValue('a', 'b').then === 'function',
         supportCrossSave: function() {
             return this.supportGM || this.supportGMPromise;
         },
@@ -811,12 +814,12 @@
         setItem: function(key, value) {
             if (this.supportGMPromise) {
                 GM.setValue(key, value);
-                if (value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined') {
+                if (value === "" && typeof GM !== 'undefined' && typeof GM.deleteValue !== 'undefined') {
                     GM.deleteValue(key);
                 }
             } else if (this.supportGM) {
                 GM_setValue(key, value);
-                if (value === "" && typeof GM_deleteValue != 'undefined') {
+                if (value === "" && typeof GM_deleteValue !== 'undefined') {
                     GM_deleteValue(key);
                 }
             } else if (this.operaUJSStorage) {
@@ -830,7 +833,7 @@
         getItem: function(key, cb) {
             var value;
             if (this.supportGMPromise) {
-                value = GM.getValue(key).then(v => {cb(v)});
+                value = GM.getValue(key).then(v => {cb(v);});
                 return;
             } else if (this.supportGM) {
                 value = GM_getValue(key);
@@ -840,7 +843,7 @@
                 value = this.mxAppStorage.getConfig(key);
             } else if (window.localStorage) {
                 value = window.localStorage.getItem(key);
-            };
+            }
             cb(value);
         }
     };
@@ -849,7 +852,7 @@
             storage.getItem(key, value => {
                 resolve(value);
             });
-        })
+        });
     }
     async function getListData(list, key) {
         return new Promise((resolve) => {
@@ -858,7 +861,7 @@
                 if (listData) {
                     for(var i = 0; i < listData.length; i++) {
                         let data = listData[i];
-                        if (data.k == key) {
+                        if (data.k === key) {
                             value = data.v;
                             break;
                         }
@@ -866,15 +869,19 @@
                 }
                 resolve(value);
             });
-        })
+        });
     }
     function setListData(list, key, value, length) {
         storage.getItem(list, listData => {
-            if (!listData) listData = [];
-            listData = listData.filter(data => data && data.k != key);
+            if (!listData) {
+              listData = [];
+            }
+            listData = listData.filter(data => data && data.k !== key);
             if (value !== "") {
                 listData.unshift({k: key, v: value});
-                if (listData.length > (length || 100)) listData.pop();
+                if (listData.length > (length || 100)) {
+                  listData.pop();
+                }
             }
             storage.setItem(list, listData);
         });
@@ -918,7 +925,9 @@
             var query = doc.evaluate(xpath, contextNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
             for (var i = 0; i < query.snapshotLength; i++) {
                 var node = query.snapshotItem(i);
-                if (node.nodeType === 1) result.push(node);
+                if (node.nodeType === 1) {
+                  result.push(node);
+                }
             }
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
@@ -927,7 +936,9 @@
     }
 
     function isXPath(xpath) {
-        if (!xpath) return false;
+        if (!xpath) {
+          return false;
+        }
         return /^\(*(descendant::|\.\/|\/|id\()/.test(xpath);
     }
 
@@ -952,7 +963,9 @@
                     try {
                         for (let i = 0; i < selArr.length; i++) {
                             let ele = doc.querySelector(selArr[i].trim());
-                            if (ele) return ele;
+                            if (ele) {
+                              return ele;
+                            }
                         }
                     } catch(e) {
                         return doc.querySelector(sel);
@@ -967,10 +980,14 @@
     }
 
     function compareNodeName(node, names) {
-        if (!node || !node.nodeName || !node.nodeName.toLowerCase) return false;
+        if (!node || !node.nodeName || !node.nodeName.toLowerCase) {
+          return false;
+        }
         let nodeName = node.nodeName.toLowerCase();
         for (let i = 0; i < names.length; i++) {
-            if (names[i] === nodeName) return true;
+            if (names[i] === nodeName) {
+              return true;
+            }
         }
         return false;
     }
@@ -978,10 +995,10 @@
     function geneSelector(ele, addID) {
         let selector = ele.nodeName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
-        if (selector != "html" && selector != "body") {
+        if (selector !== "html" && selector !== "body") {
             let hasId = false;
             if (addID && ele.id && /^[a-z_][\w\-_]*$/i.test(ele.id)) {
-                if (ele.ownerDocument && ele.ownerDocument.querySelectorAll("#" + ele.id).length == 1) {
+                if (ele.ownerDocument && ele.ownerDocument.querySelectorAll("#" + ele.id).length === 1) {
                     hasId = true;
                     selector = '#' + ele.id;
                 }
@@ -989,7 +1006,7 @@
             if (!hasId) {
                 let className = "";
                 if (ele.className) {
-                    let classList = ele.classList, i = 0;
+                    let classList = ele.classList;
                     for (let i = 0; i < classList.length; i++) {
                         let c = classList[i];
                         if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
@@ -1003,7 +1020,7 @@
                     if (!className && !hasId && parent.children.length > 1 && !compareNodeName(parent, ["html"])) {
                         let prevE = ele.previousElementSibling;
                         if (prevE && prevE.className) {
-                            let classList = prevE.classList, i = 0;
+                            let classList = prevE.classList;
                             for (let i = 0; i < classList.length; i++) {
                                 let c = classList[i];
                                 if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
@@ -1017,15 +1034,17 @@
                         if (!className) {
                             let i, nth = 0, all = 0;
                             for (i = 0; i < parent.children.length; i++) {
-                                if (parent.children[i].nodeName == ele.nodeName) {
+                                if (parent.children[i].nodeName === ele.nodeName) {
                                     all++;
-                                    if (parent.children[i] == ele) {
+                                    if (parent.children[i] === ele) {
                                         nth = all;
                                     }
-                                    if (nth > 0 && all > 1) break;
+                                    if (nth > 0 && all > 1) {
+                                      break;
+                                    }
                                 }
                             }
-                            selector += (all == 1 ? "" : `:nth-of-type(${nth})`);
+                            selector += (all === 1 ? "" : `:nth-of-type(${nth})`);
                         }
                     }
                     selector = geneSelector(parent, addID) + ' > ' + selector;
@@ -1037,7 +1056,7 @@
 
     function createXPathFromElement(elm) {
         let allNodes = document.getElementsByTagName('*'), segs;
-        for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
+        for (segs = []; elm && elm.nodeType === 1; elm = elm.parentNode) {
             if (compareNodeName(elm, ["body", "html"])) {
                 segs.unshift(elm.localName.toLowerCase());
                 continue;
@@ -1045,10 +1064,14 @@
             if (elm.hasAttribute && elm.hasAttribute('id')) {
                 var uniqueIdCount = 0;
                 for (var n = 0; n < allNodes.length; n++) {
-                    if (allNodes[n].hasAttribute('id') && allNodes[n].id == elm.id) uniqueIdCount++;
-                    if (uniqueIdCount > 1) break;
+                    if (allNodes[n].hasAttribute('id') && allNodes[n].id === elm.id) {
+                      uniqueIdCount++;
+                    }
+                    if (uniqueIdCount > 1) {
+                      break;
+                    }
                 }
-                if ( uniqueIdCount == 1) {
+                if ( uniqueIdCount === 1) {
                     segs.unshift('id("' + elm.getAttribute('id') + '")');
                     return segs.join('/');
                 } else {
@@ -1059,7 +1082,9 @@
             } else {
                 let i, sib;
                 for (i = 1, sib = elm.previousSibling; sib; sib = sib.previousSibling) {
-                    if (sib.localName == elm.localName) i++;
+                    if (sib.localName === elm.localName) {
+                      i++;
+                    }
                 }
                 segs.unshift(elm.localName.toLowerCase() + '[' + i + ']');
             }
@@ -1082,7 +1107,7 @@
             setTimeout(() => {
                 resolve();
             }, time);
-        })
+        });
     }
 
     class RuleParser {
@@ -1159,7 +1184,7 @@
                 let result = {
                     name: item.name,
                     from: from,
-                    action: item.data.forceIframe=="true"?1:undefined,
+                    action: item.data.forceIframe === "true" ? 1 : undefined,
                     url: item.data.url,
                     pageElement: item.data.pageElement,
                     nextLink: item.data.nextLink,
@@ -1178,7 +1203,7 @@
         }
 
         addRuleByUrl(url, from, callback) {
-            if (url.indexOf("?") == -1) {
+            if (url.indexOf("?") === -1) {
                 url = url + "?" + Date.now();
             } else {
                 url = url + "&" + Date.now();
@@ -1196,12 +1221,12 @@
             if (rules && rules.length > 0) {
                 let first = -1;
                 this.rules = this.rules.filter((item, i) => {
-                    if (item.from == from) {
-                        if (first == -1) first = i;
+                    if (item.from === from) {
+                        if (first === -1) first = i;
                         return false;
                     } else return true;
                 });
-                if (first == -1) first = 0;
+                if (first === -1) first = 0;
                 rules.forEach(item => {
                     let rule = this.formatRule(item, from);
                     if (rule) {
@@ -1237,7 +1262,7 @@
 
         ruleMatchReady(r) {
             let findIndex = 0;
-            if (r.nextLink && r.nextLink != 0) {
+            if (r.nextLink && r.nextLink !== 0) {
                 let nextLinkSel = r.nextLink, nextLink;
                 if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
                     nextLink = !nextLinkSel.every((sel, i) => {
@@ -1304,9 +1329,9 @@
                 selArr = [selArr];
             }
             let includeSel = selArr[0].trim(), excludeSel;
-            if (selArr.length == 2) {
+            if (selArr.length === 2) {
                 excludeSel = selArr[1].trim().replace(/^!/, '');
-            } else if (includeSel.indexOf('!') == 0) {
+            } else if (includeSel.indexOf('!') === 0) {
                 excludeSel = includeSel.replace(/^!/, '');
                 includeSel = '';
             }
@@ -1331,7 +1356,7 @@
         runPageBar(pageBar) {
             if (this.curSiteRule.pageBar && this.curSiteRule.pageBar !== 0) {
                 try {
-                    ((typeof this.curSiteRule.pageBar == 'function') ? this.curSiteRule.pageBar : Function("pageBar",'"use strict";' + this.curSiteRule.pageBar))(pageBar);
+                    ((typeof this.curSiteRule.pageBar === 'function') ? this.curSiteRule.pageBar : Function("pageBar",'"use strict";' + this.curSiteRule.pageBar))(pageBar);
                 } catch(e) {
                     debug(e);
                 }
@@ -1347,7 +1372,7 @@
             } else if(this.curSiteRule.wait) {
                 if (isNaN(this.curSiteRule.wait)) {
                     try {
-                        checkEval = (typeof this.curSiteRule.wait == 'function') ? this.curSiteRule.wait : Function("doc", '"use strict";' + this.curSiteRule.wait);
+                        checkEval = (typeof this.curSiteRule.wait === 'function') ? this.curSiteRule.wait : Function("doc", '"use strict";' + this.curSiteRule.wait);
                     } catch(e) {
                         debug(e);
                     }
@@ -1359,10 +1384,10 @@
         }
 
         findNoNext() {
-            if (!this.curSiteRule || !this.curSiteRule.smart || this.curSiteRule.nextLink == 0 || this.possibleRule) return;
+            if (!this.curSiteRule || !this.curSiteRule.smart || this.curSiteRule.nextLink === 0 || this.possibleRule) return;
             let self = this;
             self.curSiteRule.nextLink = 0;
-            self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
+            self.smartRules = self.smartRules.filter(item => {return item && item.url !== self.curSiteRule.url;});
             self.smartRules.unshift(self.curSiteRule);
             storage.setItem("smartRules", self.smartRules);
         }
@@ -1407,11 +1432,11 @@
                         return callback();
                     }
                 }
-                if (r.from == 2) {
+                if (r.from === 2) {
                     delete r.autoLoadNum;
                     delete r.history;
                     delete r.sideController;
-                    if (r.pageBar == 0) delete r.pageBar;
+                    if (r.pageBar === 0) delete r.pageBar;
                 }
                 if (!r.smart) {
                     self.insert = null;
@@ -1423,11 +1448,11 @@
             }
 
             function checkRule(r) {
-                if (r.from == 1 && r.url.length <= 13) return false;
+                if (r.from === 1 && r.url.length <= 13) return false;
                 let urlReg = new RegExp(r.url, "i");
                 if (urlReg.test(href)) {
                     if (!self.ruleMatchPre(r)) return false;
-                    if (r.url.length > 15 && r.from != 1) {
+                    if (r.url.length > 15 && r.from !== 1) {
                         self.possibleRule = r;
                     }
                     if (r.waitElement) {
@@ -1448,7 +1473,7 @@
                         let waitTime = 500, checkEval, maxCheckTimes = 50;
                         if (isNaN(r.wait)) {
                             try {
-                                checkEval = (typeof r.wait == 'function') ? r.wait : Function("doc",'"use strict";' + r.wait);
+                                checkEval = (typeof r.wait === 'function') ? r.wait : Function("doc",'"use strict";' + r.wait);
                             } catch(e) {
                                 debug(e, 'Error when checkeval');
                             }
@@ -1549,7 +1574,7 @@
                 if (!this.hpRules) this.hpRules = [];
                 let url = this.curSiteRule && this.curSiteRule.url, self = this;
                 let href = location.href.slice(0, 500);
-                let matchedRules = this.hpRules.filter(rule => rule != self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
+                let matchedRules = this.hpRules.filter(rule => rule !== self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
                 if (url) matchedRules.unshift(this.curSiteRule);
                 matchedRules.sort((a, b) => {
                     if ((a.include || a.exclude) && (!b.include && !b.exclude)) {
@@ -1573,7 +1598,7 @@
                     }
                 });
                 this.hpRules = this.hpRules.filter(item => {
-                    return item && !matchedRules.find(rule => item.url == rule.url && JSON.stringify(item) == JSON.stringify(rule));
+                    return item && !matchedRules.find(rule => item.url === rule.url && JSON.stringify(item) === JSON.stringify(rule));
                 });
                 if (instead) {
                     if (url) this.hpRules.unshift(this.curSiteRule);
@@ -1652,11 +1677,11 @@
         getValidSize(ele, win) {
             if (!win) return {h: 0, w: 0};
             let eleStyle = win.getComputedStyle(ele);
-            if (!ele.offsetParent && (eleStyle.position != "fixed" || eleStyle.opacity == 0)) {
+            if (!ele.offsetParent && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
                 return {h: 0, w: 0};
             }
             let h = ele.scrollHeight;
-            if (eleStyle.overflow == "hidden") {
+            if (eleStyle.overflow === "hidden") {
                 h = ele.offsetHeight;
             }
             if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
@@ -1672,20 +1697,20 @@
                     let childSize = self.getValidSize(el, win);
                     if (childSize.h > maxChildSize.h) maxChildSize = childSize;
                 });
-                if (maxChildSize.h != 0) return maxChildSize;
+                if (maxChildSize.h !== 0) return maxChildSize;
             }
             const maxNum = 2147483647;
             let moreChild = ele.children[0], minOffsetTop = maxNum;
             while (moreChild) {
-                if ((moreChild.offsetParent == ele || moreChild.offsetParent == ele.offsetParent)) {
-                    let curOffsetTop = moreChild.offsetParent == ele.offsetParent ? moreChild.offsetTop - ele.offsetTop : moreChild.offsetTop;
+                if ((moreChild.offsetParent === ele || moreChild.offsetParent === ele.offsetParent)) {
+                    let curOffsetTop = moreChild.offsetParent === ele.offsetParent ? moreChild.offsetTop - ele.offsetTop : moreChild.offsetTop;
                     if (curOffsetTop < minOffsetTop) {
                         minOffsetTop = curOffsetTop;
                     }
                 }
                 moreChild = moreChild.nextElementSibling;
             }
-            if (h && minOffsetTop != maxNum && minOffsetTop > 0) {
+            if (h && minOffsetTop !== maxNum && minOffsetTop > 0) {
                 h -= minOffsetTop;
             }
             return {h: h, w: parseInt(ele.offsetWidth || ele.scrollWidth)};
@@ -1697,7 +1722,7 @@
                 let paStyle = curWin.getComputedStyle(ele.parentNode);
                 let paDisplay = paStyle.display;
                 let paOverflow = paStyle.overflow;
-                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection == "row" && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow == "hidden";
+                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection === "row" && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
             }
             let curStyle = curWin.getComputedStyle(ele);
             if (ele.children.length > 1) {
@@ -1707,19 +1732,19 @@
                     let hasText = false;
                     for (let i in ele.childNodes) {
                         let child = ele.childNodes[i];
-                        if (child.nodeType == 3 && child.nodeValue.trim() !== '') {
+                        if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
                             return "";
                         }
                     }
                     if (!hasText) {
                         let gridArea = curStyle.gridArea;
-                        if (gridArea && gridArea != "auto" && gridArea != "auto / auto / auto / auto") {
+                        if (gridArea && gridArea !== "auto" && gridArea !== "auto / auto / auto / auto") {
                             return ">*";
                         } else {
                             let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                            if ((curStyle.display === 'flex' && curStyle.flexDirection == "row" && curStyle.flexWrap !== "wrap") || (curStyle.float == "none" && rulesData.opacity != 0 && !pf)) {
+                            if ((curStyle.display === 'flex' && curStyle.flexDirection === "row" && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && rulesData.opacity !== 0 && !pf)) {
                                 return "";
-                            } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight == 0) {
+                            } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
                                 return "";
                             } else {
                                 return ">*";
@@ -1734,7 +1759,7 @@
         }
 
         getPageElement(doc, curWin, dontFind) {
-            if (doc == document && this.docPageElement && document.documentElement.contains(this.docPageElement[0])) {
+            if (doc === document && this.docPageElement && document.documentElement.contains(this.docPageElement[0])) {
                 return this.docPageElement;
             }
             let pageElement = null;
@@ -1746,7 +1771,7 @@
                     pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
                 }
                 pageElement = getAllElements(pageElementSel, doc);
-                if (this.curSiteRule.smart && (!pageElement || pageElement.length == 0)) {
+                if (this.curSiteRule.smart && (!pageElement || pageElement.length === 0)) {
                     const childSelMatch = />\s*\*$/;
                     const targetChild = childSelMatch.test(pageElementSel);
                     if (targetChild) pageElementSel = pageElementSel.replace(childSelMatch, "");
@@ -1755,7 +1780,7 @@
                         pageElementSelSplit.shift();
                         let tempSel = pageElementSelSplit.join(">");
                         pageElement = getAllElements(tempSel, doc);
-                        if (pageElement && pageElement.length == 1) {
+                        if (pageElement && pageElement.length === 1) {
                             if (targetChild) {
                                 pageElement = pageElement.children;
                             }
@@ -1763,10 +1788,10 @@
                             break;
                         }
                     }
-                    if (!pageElement || pageElement.length == 0) {
+                    if (!pageElement || pageElement.length === 0) {
                         pageElementSel = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
                         pageElement = getAllElements(pageElementSel, doc);
-                        if (pageElement && pageElement.length == 1) {
+                        if (pageElement && pageElement.length === 1) {
                             if (targetChild) {
                                 pageElement = pageElement.children;
                             }
@@ -1774,7 +1799,7 @@
                         }
                     }
                 }
-                if (this.curSiteRule.smart && pageElement && pageElement.length && curWin && curWin != _unsafeWindow) {
+                if (this.curSiteRule.smart && pageElement && pageElement.length && curWin && curWin !== _unsafeWindow) {
                     let parent = pageElement[0].parentNode;
                     let loading = parent.querySelector('[class*=loading]');
                     if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
@@ -1798,7 +1823,7 @@
                         newTdNum += el.colSpan || 1;
                     }
                 });
-                if (mainTdNum != newTdNum) {
+                if (mainTdNum !== newTdNum) {
                     this.curSiteRule.pageElement = this.curSiteRule.pageElement.replace(/> *table.*/, ">table");
                     this.getInsert(true);
                     return this.getPageElement(doc, curWin, dontFind);
@@ -1820,11 +1845,11 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
                     }
-                    if (ele.children && ele.children.length == 1) {
+                    if (ele.children && ele.children.length === 1) {
                         let hasText = false;
                         for (let i in ele.childNodes) {
                             let child = ele.childNodes[i];
-                            if (child.nodeType == 3 && child.nodeValue.trim() !== '') {
+                            if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
                                 hasText = true;
                                 break;
                             }
@@ -1836,24 +1861,24 @@
                             curWidth = validSize.w;
                         }
                     }
-                    if (compareNodeName(ele, ["picture"]) || !ele.innerText || ele.innerText.trim() == '') {
+                    if (compareNodeName(ele, ["picture"]) || !ele.innerText || ele.innerText.trim() === '') {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         let eles = [];
                         for (let i = 0; i < ele.parentNode.children.length; i++) {
                             let curNode = ele.parentNode.children[i];
-                            if (curNode.nodeName == ele.nodeName && curNode.id == ele.id && curNode.className == ele.className) {
+                            if (curNode.nodeName === ele.nodeName && curNode.id === ele.id && curNode.className === ele.className) {
                                 eles.push(curNode);
                             }
                         }
                         return eles;
                     }
-                    if (compareNodeName(ele, ["form"]) && ele.parentNode != getBody(document)) {
+                    if (compareNodeName(ele, ["form"]) && ele.parentNode !== getBody(document)) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
-                    if (ele.children.length == 0 && !self.curSiteRule.pageElement) {
+                    if (ele.children.length === 0 && !self.curSiteRule.pageElement) {
                         if (compareNodeName(ele.parentNode, ["p"])) ele = ele.parentNode;
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
@@ -1870,10 +1895,10 @@
                         }
                         if (compareNodeName(curNode, ["canvas", "nav"])) continue;
                         let curStyle = curWin.getComputedStyle(curNode);
-                        if (!curNode.offsetParent && (curStyle.position != "fixed" || curStyle.opacity == 0)) {
+                        if (!curNode.offsetParent && (curStyle.position !== "fixed" || curStyle.opacity === 0)) {
                             continue;
                         }
-                        if (!compareNodeName(curNode, ["img"]) && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
+                        if (!compareNodeName(curNode, ["img"]) && curNode.querySelector('img') === null && /^\s*$/.test(curNode.innerText)) continue;
                         if (needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode) > windowHeight) {
                             continue;
                         }
@@ -1882,7 +1907,7 @@
                         let h = validSize.h;
                         let w = validSize.w;
                         if (isNaN(h) || isNaN(w)) continue;
-                        isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop == -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop);
+                        isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop === -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop === curNode.offsetTop);
                         if (isHori && h <= 50) continue;
                         /*if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
                             let curRect = curNode.getBoundingClientRect();
@@ -1898,7 +1923,7 @@
                             if (h < ch) {
                                 h = ch;
                             }
-                            if (moreChild.innerText != "" && ch && cw) {
+                            if (moreChild.innerText !== "" && ch && cw) {
                                 a += ch * cw;
                             }
                             moreChild = moreChild.nextElementSibling;
@@ -1913,12 +1938,12 @@
                                 }
                             }
                         } else {
-                            if (curMaxEle && curMaxEle.offsetParent == curNode.offsetParent && curMaxEle.offsetTop == curNode.offsetTop) {
+                            if (curMaxEle && curMaxEle.offsetParent === curNode.offsetParent && curMaxEle.offsetTop === curNode.offsetTop) {
                                 if (curMaxArea * 2 > a) continue;
                             }
                             isMax = curMaxArea < a;
                         }
-                        if (curMaxEle == null || isMax) {
+                        if (curMaxEle === null || isMax) {
                             if (isHori) {
                                 if (w < minWidth) {
                                     continue;
@@ -1938,7 +1963,7 @@
                     }
                     if (curMaxEle && curHeight / bodyHeight <= 0.18) {
                         let article = doc.querySelectorAll(mainSel);
-                        if (article && article.length == 1) {
+                        if (article && article.length === 1) {
                             article = article[0];
                             let childrenEnd = self.checkTargetChildren(article, curWin, articleNum, curHeight);
                             self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + childrenEnd;
@@ -1952,9 +1977,9 @@
                         if (curMaxEle.className) {
                             for(i = 0; i < ele.children.length; i++) {
                                 let curNode = ele.children[i];
-                                if (curMaxEle != curNode && curNode.style.display !== 'none' && curMaxEle.className == curNode.className && curMaxEle.nodeName == curNode.nodeName){
+                                if (curMaxEle !== curNode && curNode.style.display !== 'none' && curMaxEle.className === curNode.className && curMaxEle.nodeName === curNode.nodeName){
                                     sameClassNum++;
-                                } else if (curMaxEle.className != curNode.className) {
+                                } else if (curMaxEle.className !== curNode.className) {
                                     hasDifferent = true;
                                 }
                             }
@@ -1963,7 +1988,7 @@
                             return checkElement(curMaxEle);
                         }
                     }
-                    if (ele.nodeName == "APP-ROOT") {
+                    if (ele.nodeName === "APP-ROOT") {
                         isPause = true;
                         debug(ele, "Angular root");
                         return null;
@@ -1978,7 +2003,7 @@
                         return ele.children;
                     }
                     let imgs = ele.querySelectorAll('img');
-                    if (imgs.length == 1) {
+                    if (imgs.length === 1) {
                         let img = imgs[0];
                         if (img.offsetWidth > ele.offsetWidth / 3 * 2 && img.offsetHeight > ele.offsetHeight / 2) {
                             ele = img;
@@ -2004,7 +2029,7 @@
                         pageElement = [];
                         sideController.remove();
                     } else {
-                        if (pageElement.length == 1 && compareNodeName(pageElement[0], ["img"])) {
+                        if (pageElement.length === 1 && compareNodeName(pageElement[0], ["img"])) {
                             self.curSiteRule.pageBar = 0;
                         }
                     }
@@ -2114,12 +2139,12 @@
                         }
                         checkItem.style.contentVisibility = "visible";
                     } else {
-                        if (top < viewPortHeight && checkItem.style.contentVisibility == "auto") {
+                        if (top < viewPortHeight && checkItem.style.contentVisibility === "auto") {
                             break;
                         } else checkItem.style.contentVisibility = "auto";
                     }
                 }
-                if (tempIndex == 0) break;
+                if (tempIndex === 0) break;
                 tempIndex--;
                 checkItem = this.visibilityItems[tempIndex];
             }
@@ -2139,12 +2164,12 @@
                         lastVisible = tempIndex;
                         checkItem.style.contentVisibility = "visible";
                     } else {
-                        if (findVisible && checkItem.style.contentVisibility == "auto") {
+                        if (findVisible && checkItem.style.contentVisibility === "auto") {
                             break;
                         } else checkItem.style.contentVisibility = "auto";
                     }
                 }
-                if (tempIndex == this.visibilityItems.length - 1) break;
+                if (tempIndex === this.visibilityItems.length - 1) break;
                 tempIndex++;
                 checkItem = this.visibilityItems[tempIndex];
             }
@@ -2201,7 +2226,7 @@
         }
 
         hrefIsJs(href) {
-            return /^(javascript|#)/.test(href.trim().replace("#p{", "").replace(location.href, ""))
+            return /^(javascript|#)/.test(href.trim().replace("#p{", "").replace(location.href, ""));
         }
 
         async querySelectorList(source, list) {
@@ -2217,7 +2242,7 @@
         verifyElement(ele) {
             let verifyHandler = e => {
                 if (e.nodeType == 9) return true;
-                if (e.style.display == "none" || e.getAttribute("aria-disabled") == "true") {
+                if (e.style.display === "none" || e.getAttribute("aria-disabled") === "true") {
                     return false;
                 }
                 if (e.className) {
@@ -2243,7 +2268,7 @@
         }
 
         async getPage(doc, exist) {
-            if (document.documentElement.className.indexOf('discourse') != -1) return {};
+            if (document.documentElement.className.indexOf('discourse') !== -1) return {};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
@@ -2357,7 +2382,7 @@
                 await sleep(1);
                 next = body.querySelector("a.curr+a") ||
                     body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a") ||
-                    body.querySelector(".number>ul>li.active+li>a");;
+                    body.querySelector(".number>ul>li.active+li>a");
             }
             if (!next) {
                 await sleep(1);
@@ -2371,7 +2396,7 @@
             if (!next) {
                 await sleep(1);
                 next = body.querySelector(".pages>a[href='javascript:;']+a");
-                if (next && (next.href == "javascript:;" || next.getAttribute("href") == "#")) next = null;
+                if (next && (next.href === "javascript:;" || next.getAttribute("href") === "#")) next = null;
             }
             if (!next) {
                 await sleep(1);
@@ -2407,13 +2432,13 @@
                 let aTags = body.querySelectorAll("a,button,[type='button']");
                 for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
-                    if (i % 100 == 0) {
+                    if (i % 100 === 0) {
                         await sleep(1);
                     }
                     let aTag = aTags[i];
                     let innerText = (aTag.title || aTag.innerText || aTag.value || '');
                     if (innerText) {
-                        if (innerText == "§") continue;
+                        if (innerText === "§") continue;
                         innerText = innerText.trim();
                         if (innerText.length > 80) continue;
                     }
@@ -2461,7 +2486,7 @@
                     if (!next4) {
                         let prevEle = aTag.previousElementSibling;
                         if (prevEle && compareNodeName(prevEle, ["b", "span", "strong"])) {
-                            if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
+                            if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) === parseInt(prevEle.innerText) + 1) {
                                 next4 = aTag;
                             }
                         }
@@ -2477,9 +2502,9 @@
                             if (_aHrefTrim == pageNum + 1) {
                                 next4 = aTag;
                             }
-                        } else if (this.curUrl != aTag.href) {
+                        } else if (this.curUrl !== aTag.href) {
                             _aHref = _aHref.replace(/\.s?html?$/i, "");
-                            if (_aHref.indexOf(_url) != -1) {
+                            if (_aHref.indexOf(_url) !== -1) {
                                 let pageTwoMatch = _aHref.replace(_url, "").match(pageTwoReg);
                                 if (pageTwoMatch) {
                                     afterStr = pageTwoMatch[2];
@@ -2524,7 +2549,7 @@
             if (!next) next = next1 || next4 || next3 || next2;
             if (!next) {
                 next = jsNext || nextJs1 || nextJs2;
-                if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') != -1) next = null;
+                if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') !== -1) next = null;
             }
             if (next && next.classList && (next.classList.contains("results-more") || next.classList.contains("no"))) next = null;
             if (next && next.hasAttribute && next.hasAttribute("disabled")) next = null;
@@ -2536,12 +2561,12 @@
             if (!next) return null;
             if (next.previousElementSibling && compareNodeName(next.previousElementSibling, ["br"])) return null;
             let eles = [];
-            if (next.innerText && next.innerText.indexOf("\n") == -1) {
+            if (next.innerText && next.innerText.indexOf("\n") === -1) {
                 eles = getAllElements(`//${next.nodeName}[text()='${next.innerText}']`, doc);
             }
-            if (eles.length >= 2 && eles[0].href != eles[1].href) {
+            if (eles.length >= 2 && eles[0].href !== eles[1].href) {
                 next = null;
-            } else if (doc == document) {
+            } else if (doc === document) {
                 let left = getElementLeft(next);
                 if (left < 20 || (document.documentElement.scrollWidth > 500 && left < 250)) {
                     next = null;
@@ -2563,8 +2588,8 @@
             if (!src) {
                 return "";
             }
-            if (src.charAt(0) == "#") return this.curUrl + src;
-            if (src.charAt(0) == "?") return this.curUrl.replace(/^([^\?#]+).*/, "$1" + src);
+            if (src.charAt(0) === "#") return this.curUrl + src;
+            if (src.charAt(0) === "?") return this.curUrl.replace(/^([^\?#]+).*/, "$1" + src);
             let origin = location.protocol + '//' + location.host;
             let url = this.basePath || origin;
             url = url.replace(/(\?|#).*/, "");
@@ -2583,7 +2608,7 @@
             if (/^\/\/\/?/.test(src)) {
                 src = location.protocol + src;
             }
-            return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
+            return (absolute_regex.test(src) ? src : ((src.charAt(0) === "/" ? root_domain : root_page) + src));
         }
 
         getLinkByPage(url, pageNum) {
@@ -2594,7 +2619,7 @@
                 if (!strMatch) return null;
                 let urlReg = new RegExp("(" + result.replace(strMatch[0], ")\\d+(") + ")", "i");
                 let code = strMatch[0].replace(/^{/, "").replace(/}$/, "").replace(/\$p/g, pageNum);
-                if (code == pageNum) {
+                if (code === pageNum) {
                     result = url.replace(urlReg, "$1" + code + "$2");
                 } else {
                     try {
@@ -2621,9 +2646,9 @@
                 if (!strMatch) return defaultPage;
                 let urlReg = new RegExp(".*" + result.replace(strMatch[0], "(\\d+)") + ".*", "i");
                 let curShowNum = url.replace(urlReg, "$1");
-                if (curShowNum != url) {
+                if (curShowNum !== url) {
                     let code = strMatch[0].replace(/^{/, "").replace(/}$/, "");
-                    if (code == "$p") {
+                    if (code === "$p") {
                         return curShowNum;
                     } else {
                         try {
@@ -2631,7 +2656,7 @@
                             let page2 = parseInt(Function('"use strict";return ' + code.replace("$p", "1"))());
                             let numGap = page2 - page1;
                             let _page = (parseInt(curShowNum) - page1) / numGap;
-                            if (_page && _page % 1 == 0) return _page;
+                            if (_page && _page % 1 === 0) return _page;
                             else {
                                 this.curSiteRule.pageNum = null;
                                 return defaultPage;
@@ -2645,7 +2670,7 @@
                 }
             }
             let pageNum = url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
-            return pageNum == url ? defaultPage : (pageNum.length > 4 ? defaultPage : pageNum);
+            return pageNum === url ? defaultPage : (pageNum.length > 4 ? defaultPage : pageNum);
         }
 
         async getNextLink(doc, exist) {
@@ -2667,23 +2692,22 @@
                     }
                 }
                 params = params.join('&');
-                return form.action + (form.action.indexOf('?') == -1 ? '?' : '&') + params + (form.method == 'post' ? '#p{' + params + '}' : '');
+                return form.action + (form.action.indexOf('?') === -1 ? '?' : '&') + params + (form.method === 'post' ? '#p{' + params + '}' : '');
             };
             if (this.curSiteRule.pageElementByJs) {
                 this.nextLinkHref = "#";
                 return true;
             } else if (this.curSiteRule.nextLinkByJs) {
                 try {
-                    let over = _url => {
-                    };
-                    let targetUrl = await ((typeof this.curSiteRule.nextLinkByJs == 'function') ? this.curSiteRule.nextLinkByJs : new AsyncFunction("doc", '"use strict";' + this.curSiteRule.nextLinkByJs))(doc);
+                    let over = _url => {};
+                    let targetUrl = await ((typeof this.curSiteRule.nextLinkByJs === 'function') ? this.curSiteRule.nextLinkByJs : new AsyncFunction("doc", '"use strict";' + this.curSiteRule.nextLinkByJs))(doc);
                     if (targetUrl) nextLink = {href: targetUrl};
                 } catch(e) {
                     debug(e);
                 }
             } else if (this.curSiteRule.nextLinkByUrl) {
                 let targetUrl = this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0], "i"), this.curSiteRule.nextLinkByUrl[1]);
-                if (targetUrl != this.curUrl) {
+                if (targetUrl !== this.curUrl) {
                     let includeSel = this.curSiteRule.nextLinkByUrl[2];
                     let excludeSel = this.curSiteRule.nextLinkByUrl[3];
                     if (includeSel) {
@@ -2719,24 +2743,24 @@
                     }
                 }
                 nextLink = {href: targetUrl};
-            } else if (typeof this.curSiteRule.nextLink != 'undefined') {
+            } else if (typeof this.curSiteRule.nextLink !== 'undefined') {
                 let nextLinkSel = this.curSiteRule.nextLink;
                 if (nextLinkSel != 0) {
                     if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
                         nextLink = getElement(nextLinkSel[nextIndex], doc, null, true);
-                        if (!nextLink && curPage == 1 && nextIndex != 0) {
+                        if (!nextLink && curPage === 1 && nextIndex !== 0) {
                             nextIndex = 0;
                             nextLink = getElement(nextLinkSel[nextIndex], doc, null, true);
                         }
                     } else nextLink = getElement(nextLinkSel, doc, null, true);
                 }
-                if (nextLink && (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2)) {
+                if (nextLink && (this.curSiteRule.action === 0 || this.curSiteRule.action === 1 || this.curSiteRule.action === 2)) {
                     let form = doc.querySelector('#search-form');
                     if (!nextLink.href && nextLink.hasAttribute && nextLink.hasAttribute("onclick") && form) {
                         if (/^\d+$/.test(nextLink.innerText)) {
                             nextLink.href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
-                    } else if (compareNodeName(nextLink, ["input"]) || nextLink.type == "submit") {
+                    } else if (compareNodeName(nextLink, ["input"]) || nextLink.type === "submit") {
                         form = nextLink.parentNode;
                         while (form) {
                             if (compareNodeName(form, ["form"])) break;
@@ -2746,7 +2770,7 @@
                             nextLink.href = getNextLinkByForm(form, nextLink);
                         }
                     }
-                    if (nextLink.href && this.curSiteRule.action != 0) {
+                    if (nextLink.href && this.curSiteRule.action !== 0) {
                         nextLink.href = nextLink.href.replace(/#p{.*/, "");
                     }
                 }
@@ -2754,7 +2778,7 @@
                 page = await this.getPage(doc, exist);
                 nextLink = page.next;
                 if (nextLink) {
-                    if (compareNodeName(nextLink, ["input"]) || nextLink.type == "submit") {
+                    if (compareNodeName(nextLink, ["input"]) || nextLink.type === "submit") {
                         if (!/next/i.test(nextLink.getAttribute("onclick"))) {
                             let form = nextLink.parentNode;
                             while (form) {
@@ -2784,7 +2808,7 @@
                         }
                         parent = parent.parentNode;
                     }
-                    if (doc == document) {
+                    if (doc === document) {
                         if (!this.linkHasHref(nextLink)) {
                             if (clickedSth || !isVisible(nextLink, _unsafeWindow)) {
                                 this.nextLinkHref = false;
@@ -2792,7 +2816,7 @@
                             }
                             let video = document.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
                             if (video) {
-                                if (video.offsetParent && video.name != 'pagetual-iframe') {
+                                if (video.offsetParent && video.name !== 'pagetual-iframe') {
                                     let scrollWidth = video.scrollWidth || video.offsetWidth;
                                     let scrollHeight = video.scrollHeight || video.offsetHeight;
                                     if (compareNodeName(video, ["iframe"])) {
@@ -2820,7 +2844,7 @@
                         }
 
                         let nextLinkCs = _unsafeWindow.getComputedStyle(nextLink);
-                        if (nextLinkCs.cursor == "not-allowed") {
+                        if (nextLinkCs.cursor === "not-allowed") {
                             this.nextLinkHref = false;
                             return null;
                         }
@@ -2839,16 +2863,16 @@
                     if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
                     return null;
                 }
-                if (this.curSiteRule.action == 3) {
+                if (this.curSiteRule.action === 3) {
                     if (doc == document) debug(nextLink, 'Next link');
                     this.nextLinkHref = '#';
                 } else {
-                    let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2);
+                    let needUrl = (this.curSiteRule.action === 0 || this.curSiteRule.action === 1 || this.curSiteRule.action === 2);
                     if (!href) href = nextLink.href;
                     if (href && nextLink.getAttribute) {
                         let _href = nextLink.getAttribute("href");
                         if (_href) {
-                            if (_href.charAt(0) == "#" || _href == "?"){
+                            if (_href.charAt(0) === "#" || _href === "?"){
                                 href = "#";
                             } else {
                                 href = _href;
@@ -2865,9 +2889,9 @@
                     } else {
                         this.nextLinkHref = (href && !/^(javascript:|#)/.test(href)) ? this.canonicalUri(href) : "#";
                         let tempUrl = this.nextLinkHref;
-                        if (tempUrl != "#" && (this.compareUrl(tempUrl, this.initUrl) || this.compareUrl(tempUrl, this.curUrl) || this.compareUrl(tempUrl, this.curUrl + "#") || this.compareUrl(tempUrl, this.oldUrl) || this.compareUrl(tempUrl, this.oldUrl + "#"))) {
+                        if (tempUrl !== "#" && (this.compareUrl(tempUrl, this.initUrl) || this.compareUrl(tempUrl, this.curUrl) || this.compareUrl(tempUrl, this.curUrl + "#") || this.compareUrl(tempUrl, this.oldUrl) || this.compareUrl(tempUrl, this.oldUrl + "#"))) {
                             this.nextLinkHref = false;
-                        } else if (doc == document) {
+                        } else if (doc === document) {
                             debug(nextLink, 'Next link');
                         }
                     }
@@ -2881,7 +2905,7 @@
         }
 
         compareUrl(url1, url2) {
-            if (url1 == url2) return true;
+            if (url1 === url2) return true;
             if (!url1 || !url2) return false;
             let url1Arr = url1.split("?");
             let url2Arr = url2.split("?");
@@ -2889,7 +2913,7 @@
             if (!url1Arr[1] || !url2Arr[1]) return false;
             url1Arr = url1Arr[1].split("&").sort().join("&");
             url2Arr = url2Arr[1].split("&").sort().join("&");
-            return url1Arr == url2Arr;
+            return url1Arr === url2Arr;
         }
 
         filterEles(doc, eles) {
@@ -2901,7 +2925,7 @@
                     eles = eles[0].children;
                 }
             }
-            if (typeof filter == "string") {
+            if (typeof filter === "string") {
                 if (/^\d+$/.test(filter)) {
                     filter = {count: parseInt(filter)};
                 } else filter = {words: filter};
@@ -3004,7 +3028,7 @@
                     }
                 } else {
                     try {
-                        let stopSign = ((typeof this.curSiteRule.stopSign == 'function') ? this.curSiteRule.stopSign : Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign))(doc, nextLink);
+                        let stopSign = ((typeof this.curSiteRule.stopSign === 'function') ? this.curSiteRule.stopSign : Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign))(doc, nextLink);
                         if (stopSign) {
                             isPause = true;
                             this.nextLinkHref = false;
@@ -4811,7 +4835,7 @@
     }
     const picker = new Picker();
 
-    var editor, editorChanged = false;
+    var editor, editorChanged = false, customRulesInput;
     function createEdit() {
         var options = {
             mode: 'code',
@@ -4863,18 +4887,24 @@
             var container = document.getElementById("jsoneditor");
             container.style.height = '800px';
             container.innerHTML = "";
-            editor = new JSONEditor(container, options);
-            editor.set(ruleParser.customRules);
+            try {
+                editor = new _unsafeWindow.JSONEditor(container, options);
+                editor.set(ruleParser.customRules);
+            } catch (e) {
+                editor = null;
+                container.style.display = 'none';
+                customRulesInput.style.display = "";
+            }
         }, 500);
     }
 
     function checkGuidePage(href) {
         if (guidePage.test(href)) {
-            if (typeof JSONEditor !== 'undefined') {
+            if (typeof _unsafeWindow.JSONEditor !== 'undefined') {
                 createEdit();
             } else {
                 let checkEditorReady = setInterval(() => {
-                    if (typeof JSONEditor !== 'undefined') {
+                    if (typeof _unsafeWindow.JSONEditor !== 'undefined') {
                         createEdit();
                         clearInterval(checkEditorReady);
                     }
@@ -5634,7 +5664,7 @@
         let customRulesTitle = document.createElement("h2");
         customRulesTitle.innerHTML = i18n("customRules", /tree/.test(location.href) ? location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json' : 'https://github.com/hoothin/UserScripts/edit/master/Pagetual/pagetualRules.json');
         configCon.appendChild(customRulesTitle);
-        let customRulesInput = document.createElement("textarea");
+        customRulesInput = document.createElement("textarea");
         customRulesInput.spellcheck = false;
         configCon.appendChild(customRulesInput);
         if (rulesData.editTemp) {
@@ -8188,11 +8218,11 @@
     function loadPageOver() {
         isLoading = false;
         stopScroll = true;
-        setTimeout(() => {stopScroll = false}, 300);
+        setTimeout(() => {stopScroll = false;}, 300);
         if (loadingDiv.parentNode) {
             loadingDiv.parentNode.removeChild(loadingDiv);
         }
-        if (rate != 1 && !clickMode) {
+        if (rate !== 1 && !clickMode) {
             setTimeout(() => {
                 if (distToBottom() < bottomGap) {
                     nextPage();
@@ -8203,7 +8233,7 @@
 
     function checkAutoLoadNum() {
         if (autoLoadNum >= 0) {
-            if (autoLoadNum != 0 && --autoLoadNum == 0) {
+            if (autoLoadNum !== 0 && --autoLoadNum === 0) {
                 autoLoadNum = -1;
             } else {
                 setTimeout(() => nextPage(), 1);
@@ -8212,12 +8242,12 @@
     }
 
     async function nextPage() {
-        if (typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
+        if (typeof ruleParser.curSiteRule.manualMode === 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
         if (clickMode) return;
-        if (isPause || isLoading || forceState == 1) return;
+        if (isPause || isLoading || forceState === 1) return;
         if (ruleParser.curSiteRule.delay) {
             try {
-                let checkDelay = ((typeof ruleParser.curSiteRule.delay == 'function') ? ruleParser.curSiteRule.delay : Function('"use strict";' + ruleParser.curSiteRule.delay))();
+                let checkDelay = ((typeof ruleParser.curSiteRule.delay === 'function') ? ruleParser.curSiteRule.delay : Function('"use strict";' + ruleParser.curSiteRule.delay))();
                 if (!checkDelay) return;
             } catch(e) {
                 debug(e);
@@ -8226,16 +8256,16 @@
         let nextLink = ruleParser.nextLinkHref;
         if (!nextLink) {
             isLoading = true;
-            if (curPage == 1) {
+            if (curPage === 1) {
                 await ruleParser.getNextLink(document, true);
                 nextLink = ruleParser.nextLinkHref;
             }
             if (!nextLink) {
-                if (curPage == 1) {
+                if (curPage === 1) {
                     if (ruleParser.curSiteRule.pinUrl) {
-                        setTimeout(() => {isLoading = false}, 500);
+                        setTimeout(() => {isLoading = false;}, 500);
                     } else if (tryTimes++ < 3) {
-                        setTimeout(() => {isLoading = false}, 1000);
+                        setTimeout(() => {isLoading = false;}, 1000);
                     } else {
                         ruleParser.findNoNext();
                     }
@@ -8249,25 +8279,25 @@
         }
         showedLastPageTips = false;
         let pvGallery = document.querySelector("span.pv-gallery-container");
-        if (pvGallery && pvGallery.style.display != "none") return;
+        if (pvGallery && pvGallery.style.display !== "none") return;
         let insert = ruleParser.getInsert();
         if (insert) {
-            if (curPage == 1) initView();
+            if (curPage === 1) initView();
             /*if (curPage == 1) {
                 window.postMessage({
                     command: 'pagetual.insert'
                 }, '*');
             }*/
-            let isJs = ruleParser.curSiteRule.action == 3 || ruleParser.hrefIsJs(nextLink);
+            let isJs = ruleParser.curSiteRule.action === 3 || ruleParser.hrefIsJs(nextLink);
             if (!isJs) {
                 emuIframe = null;
                 lastActiveUrl = nextLink;
-                if (location.protocol == "https:" && /^http:/.test(nextLink)) {
+                if (location.protocol === "https:" && /^http:/.test(nextLink)) {
                     nextLink = nextLink.replace(/^http/, "https");
                 }
             }
             isLoading = true;
-            if (curPage != 1 || !isJs || !ruleParser.curSiteRule.smart) {
+            if (curPage !== 1 || !isJs || !ruleParser.curSiteRule.smart) {
                 ruleParser.beginLoading(loadingDiv);
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
@@ -8290,11 +8320,11 @@
                         }
                     };
                     try {
-                        ((typeof ruleParser.curSiteRule.pageElementByJs == 'function') ? ruleParser.curSiteRule.pageElementByJs : Function("over", "pageNum",'"use strict";' + ruleParser.curSiteRule.pageElementByJs))(over, curPage);
+                        ((typeof ruleParser.curSiteRule.pageElementByJs === 'function') ? ruleParser.curSiteRule.pageElementByJs : Function("over", "pageNum",'"use strict";' + ruleParser.curSiteRule.pageElementByJs))(over, curPage);
                     } catch(e) {
                         debug(e);
                     }
-                } else if ((forceState == 2 || ruleParser.curSiteRule.action == 2) && !isJs) {
+                } else if ((forceState === 2 || ruleParser.curSiteRule.action === 2) && !isJs) {
                     forceIframe(nextLink, (iframe, refresh) => {
                         if (urlChanged || isPause) {
                             loadPageOver();
@@ -8307,7 +8337,7 @@
                         loadPageOver();
                         checkAutoLoadNum();
                     });
-                } else if ((forceState == 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
+                } else if ((forceState === 3 || ruleParser.curSiteRule.action === 1) && !isJs) {
                     requestFromIframe(nextLink, (doc, eles) => {
                         if (urlChanged || isPause) {
                             loadPageOver();
@@ -8352,13 +8382,13 @@
     }
 
     function init() {
-        if (document.readyState == 'loading' || document.readyState == 'uninitialized') {
+        if (document.readyState === 'loading' || document.readyState === 'uninitialized') {
             let domReady = e => {
                 initRules(() => {
                     initPage();
                 });
                 document.removeEventListener("DOMContentLoaded", domReady, false);
-            }
+            };
             document.addEventListener("DOMContentLoaded", domReady, false);
         } else {
             initRules(() => {
