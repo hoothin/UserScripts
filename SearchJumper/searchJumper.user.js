@@ -1593,12 +1593,12 @@
                  }
                  #search-jumper-alllist {
                      display: none;
-                     top: 118px;
+                     top: 101px;
                      position: absolute;
                      width: 100%;
                      overflow-x: scroll;
                      overflow-y: hidden;
-                     height: calc(100% - 118px);
+                     height: calc(100% - 101px);
                      overscroll-behavior: contain;
                      -ms-scroll-chaining: contain;
                  }
@@ -1653,6 +1653,12 @@
                      border-bottom: 1px solid #ddd;
                      pointer-events: all;
                      min-height: 40px;
+                     -ms-overflow-style: unset;
+                     scrollbar-width: unset;
+                 }
+                 .search-jumper-historylistcon::-webkit-scrollbar {
+                     width: 0 !important;
+                     height: 0 !important;
                  }
                  .search-jumper-historylist {
                      display: flex;
