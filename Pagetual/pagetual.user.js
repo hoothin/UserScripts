@@ -886,6 +886,7 @@
             storage.setItem(list, listData);
         });
     }
+    const isMobile = ('ontouchstart' in document.documentElement);
     const configPage = ["https://pagetual.hoothin.com/rule.html",
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
@@ -897,9 +898,9 @@
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
-    var rulesData = {uninited: true, firstRun: true}, ruleUrls, updateDate, clickedSth = false;
+    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
-    var tryTimes = 0, showedLastPageTips = false, rate = 1;
+    var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
     function getBody(doc) {
         return doc.body || doc.querySelector('body') || doc;
@@ -4120,13 +4121,17 @@
               margin: -5px 45px 10px 45px;
               font-size: 20px;
               font-weight: bold;
-              cursor: move;
+              cursor: pointer;
               border-bottom: 1px solid black;
               user-select: none;
               color: orangered;
               height: initial;
               width: initial;
               position: initial;
+              transition: transform .3s ease;
+             }
+             #pagetual-picker>.title:hover {
+              transform: scale(1.1);
              }
              #pagetual-picker button {
               background: none;
@@ -4451,13 +4456,17 @@
                 startAutoScroll();
             }, true);
             addOtherProp.addEventListener("click", e => {
-                let propName = prompt(i18n("propName"));
+                let propName = prompt(i18n("propName"), "author");
                 if (!propName) return;
                 let propValue = prompt(i18n("propValue"));
                 if (!propValue) return;
                 if (propValue === "true") propValue = true;
                 else if (propValue === "false") propValue = false;
                 else if (/^\d+$/.test(propValue)) propValue = parseInt(propValue);
+                if (propName === "author" && propValue) {
+                    author = propValue;
+                    storage.setItem("author", propValue);
+                }
                 let editTemp = self.getTempRule();
                 if (!editTemp) return;
                 editTemp[propName] = propValue;
@@ -4666,6 +4675,7 @@
                         url: "^" + (location.origin + location.pathname).replace(/[^\/]*$/, "").replace(/^https?/, "https?").replace(/\./g, "\\."),
                         example: location.href
                     };
+                    if (author) this.editTemp.author = author;
                 }
                 delete this.editTemp.from;
                 delete this.editTemp.type;
@@ -6147,6 +6157,8 @@
                 autoScroll = await getListData("autoScroll", location.host + location.pathname) || 0;
 
                 updateDate = await getData("ruleLastUpdate");
+
+                author = await getData("author") || "";
 
                 manualPause = !!await getListData("pauseState", location.host);
 
