@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.52
+// @version      1.7.53
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -58,7 +58,7 @@
 (function() {
     'use strict';
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) return;
-    const inIframe = window.top != window.self;
+    const inIframe = window.top !== window.self;
     if (inIframe) {
         try {
             if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
@@ -73,7 +73,7 @@
     let configPage = 'https://search.hoothin.com/config/';
     let isAllPage = false;
 
-    var searchData = {};
+    let searchData = {};
     searchData.sitesConfig = [
         {
             type: "Translate",
@@ -465,7 +465,7 @@
         switchSitesMeta: false
     };
     function run() {
-        let lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
+        let lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
         let config = {};
         function setLang() {
             switch (lang) {
@@ -872,7 +872,15 @@
         } else if (typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
             _GM_setClipboard = GM.setClipboard;
         } else {
-            _GM_setClipboard = (s, i) => {};
+            _GM_setClipboard = (s, i) => {
+                navigator.clipboard.writeText(s)
+                    .then(() => {
+                    console.log('Text copied to clipboard');
+                })
+                    .catch((error) => {
+                    console.error('Failed to copy text: ', error);
+                });
+            };
         }
         if (typeof GM_addStyle != 'undefined') {
             _GM_addStyle = GM_addStyle;
@@ -1710,7 +1718,7 @@
                      justify-content: flex-start;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                     width: 73%;
+                     width: 78%;
                      max-height: unset;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
