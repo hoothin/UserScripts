@@ -743,7 +743,7 @@
     } else if (typeof GM !== 'undefined' && typeof GM.xmlHttpRequest !== 'undefined') {
         _GM_xmlhttpRequest = GM.xmlHttpRequest;
     } else {
-        _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response:data}; f.onload(res);}).catch(e => f.onerror(e));};
+        _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data, headers: f.headers}).then(response => response.text()).then(data => {f.onload && f.onload({response: data})}).catch(f.onerror && f.onerror())};
     }
     if (typeof GM_registerMenuCommand !== 'undefined') {
         _GM_registerMenuCommand = GM_registerMenuCommand;
