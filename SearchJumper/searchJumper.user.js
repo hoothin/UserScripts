@@ -57,6 +57,7 @@
 
 (function() {
     'use strict';
+    const ext = false;
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) return;
     const inIframe = window.top !== window.self;
     if (inIframe) {
@@ -794,6 +795,10 @@
         };
         var disabled = false;
 
+        function createHTML(html = "") {
+            return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
+        }
+
         var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab, _GM_addStyle, _GM_info, GM_fetch;
         if (typeof GM_xmlhttpRequest != 'undefined') {
             _GM_xmlhttpRequest = GM_xmlhttpRequest;
@@ -853,7 +858,11 @@
         } else {
             _GM_registerMenuCommand = (s, f) => {};
         }
-        if (typeof GM_openInTab != 'undefined') {
+        if (ext) {
+            _GM_openInTab = (s, t) => {
+                chrome.extension.sendMessage({action:"openInTab", detail:{url: s, incognito: t && t.active, active: t && t.active}});
+            };
+        } else if (typeof GM_openInTab != 'undefined') {
             _GM_openInTab = GM_openInTab;
         } else if (typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
             _GM_openInTab = GM.openInTab;
@@ -865,7 +874,7 @@
         } else if (typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
             _GM_notification = s => GM.notification({text: s, onclick: e => _GM_openInTab(configPage, {active: true})});
         } else {
-            _GM_notification = (s) => {alert(s)};
+            _GM_notification = (s) => {};
         }
         if (typeof GM_setClipboard != 'undefined') {
             _GM_setClipboard = GM_setClipboard;
@@ -889,7 +898,7 @@
         } else {
             _GM_addStyle = cssStr => {
                 let styleEle = document.createElement("style");
-                styleEle.innerHTML = cssStr;
+                styleEle.innerHTML = createHTML(cssStr);
                 document.head.appendChild(styleEle);
                 return styleEle;
             };
@@ -923,7 +932,9 @@
                 }
             })(),
             setItem: function (key, value) {
-                if (this.supportGMPromise) {
+                if (ext) {
+                    chrome.storage.sync.set({ [key]: value }, () => {});
+                } else if (this.supportGMPromise) {
                     GM.setValue(key, value);
                     if(value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined'){
                         GM.deleteValue(key);
@@ -943,7 +954,10 @@
             },
             getItem: async function (key, cb) {
                 var value;
-                if (this.supportGMPromise) {
+                if (ext) {
+                    let result = await chrome.storage.sync.get([key]);
+                    value = result[key];
+                } else if (this.supportGMPromise) {
                     value = await GM.getValue(key);
                 } else if (this.supportGM) {
                     value = GM_getValue(key);
@@ -1140,10 +1154,6 @@
 
         function getBody(doc) {
             return doc.body || doc.querySelector('body');
-        }
-
-        function createHTML(html = "") {
-            return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
         }
 
         function getAllElementsByXpath(xpath, contextNode, doc) {
@@ -11498,7 +11508,7 @@
                         shareEngines = null;
                     }
                 }
-                isAllPage = !!shareEngines || /all\.html$/.test(location.pathname);
+                isAllPage = !!shareEngines || /all(\.html)?$/.test(location.pathname);
                 return true;
             }
             return false;
