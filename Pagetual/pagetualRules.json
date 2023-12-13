@@ -1,4 +1,127 @@
 [
+  {
+    "name": "uBlacklist",
+    "url": "^https?://iorate\\.github\\.io/ublacklist/docs/",
+    "example": "https://iorate.github.io/ublacklist/docs/getting-started",
+    "nextLink": "#docusaurus_skipToContent_fallback > div.docPage_KLoz > main.docMainContainer_sTIZ > div.container.padding-top--md.padding-bottom--lg > div.row > div.col.docItemCol_Qr34 > div.docItemContainer_tjFy > nav.pagination-nav.docusaurus-mt-lg > a.pagination-nav__link.pagination-nav__link--next > div.pagination-nav__label.fr-fix-385ec716"
+  },
+  {
+    "name": "愛下電子書",
+    "url": "^https?://ixdzs8\\.tw/read/\\d+/",
+    "example": "https://ixdzs8.tw/read/511963/",
+    "nextLink": "#readbtn > a"
+  },
+  {
+    "name": "愛發電",
+    "url": "^https?://afdian\\.net/p/",
+    "example": "https://afdian.net/p/cde00490063d11ebb53852540025c377",
+    "nextLink": "#app > div.wrapper.app-view > div.vm-page > section.page-content-w100 > div.page-content-box > div.content-left.max-width-640 > div.vm-feed.look1.footer-type > div.flex-box.mt16 > a.tab-page-box.flex-item-1.ml16"
+  },
+  {
+    "name": "Penana",
+    "url": "^https?://www\\.penana\\.com/story/\\d+/\\d+/issue/\\w+",
+    "example": "https://www.penana.com/story/136223/%E4%B8%8A%E5%8F%A4%E5%8D%B7%E8%BB%B8%E5%90%8C%E4%BA%BA-%E5%A4%A9%E9%9C%9C%E7%99%BD%E6%BF%81%E7%B4%80%E8%A1%8C/issue/2",
+    "nextLink": "#genre19 > div.actioncolumn.datadiv.scroll_menu.onerow > div.abtn.abtnwrap.thbox.center > div.sidebtn.hoverdim.cursorpointer.nextissue > div:nth-of-type(1)"
+  },
+  {
+    "name": "69書吧",
+    "url": "^https?://www\\.69shuba\\.com/txt/48434/",
+    "example": "https://www.69shuba.com/txt/48434/35167175",
+    "nextLink": "body > div.container > div.mybox > div.page1 > a:nth-of-type(4)",
+    "pageElement": "body > div.container > div.mybox > div.txtnav"
+  },
+  {
+    "name": "博客園",
+    "url": "^https?://www\\.cnblogs\\.com/moonfan/p/\\w+\\.html",
+    "example": "https://www.cnblogs.com/moonfan/p/12267772.html",
+    "nextLink": "#post_next_prev > a.link-instanted"
+  },
+  {
+    "name": "起點",
+    "url": "^https?://www\\.qidian\\.com/chapter/\\d+/\\w+/",
+    "example": "https://www.qidian.com/chapter/1037801132/763670334/",
+    "nextLink": "#reader-content > div.min-h-100vh.relative.z-1.bg-inherit > div > div.mx-64px.pb-64px.mt-auto > div > a:nth-child(3)"
+  },
+  {
+    "name": "google forms",
+    "url": "^https?://docs\\.google\\.com/forms/d/e/\\d+/\\w+",
+    "example": "https://docs.google.com/forms/d/e/1FAIpQLScShT-VRP7hGYwgib67CwUzr1EoLMG6VjWS7j4rA13-ZVJI-g/formResponse?pli=1"
+  },
+  {
+    "name": "LittleSkin",
+    "url": "^https?://littleskin\\.cn/",
+    "example": "https://littleskin.cn/skinlib?filter=skin&uploader=1049872&sort=time&page=1",
+    "pageElement": "body > div.-ns-nt-wrapper > div.-ns-nt-left > div.-ns-nt-list > ul > li:nth-of-type(1) > div.-ns-nt-list-title-wrapper > span.-ns-nt-list-item-title.-ns-nt-list-item-title-zh-CN",
+    "nextLink": "body > div.wrapper > div.content-wrapper > div.container > section.content > div.card > div.card-footer > div.d-flex.justify-content-center > ul.pagination > li.page-item > a.page-link"
+  },
+  {
+    "name": "HKTRPG",
+    "url": "^https?://bothelp\\.hktrpg\\.com/hktrpg-guan-fang-shi-yong-jiao-xue/trpg-gong-neng/",
+    "example": "https://bothelp.hktrpg.com/hktrpg-guan-fang-shi-yong-jiao-xue/trpg-gong-neng/ni-de-ming-zi-ban-yan-gong-neng",
+    "pageElement": "body > div.gitbook-root > div.css-175oi2r.r-13awgt0.r-12vffkv > div.css-175oi2r.r-13awgt0.r-12vffkv > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-14lw9ot > div.view_manYY.publicContainer_11UZS > div.css-175oi2r.r-13awgt0 > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-18u37iz > div.view_manYY.pageWrapper_ca2kA.noneVertical_jpmaI.autoHorizontal_dqmM-.flex1_aMpAE.column_C3yiR > main.r-1oszu61.r-1xc7w19.r-1phboty.r-1yadl64.r-deolkf.r-6koalj.r-crgep1.r-ifefl9.r-bcqeeo.r-t60dpp.r-bnwqim.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-eqz5dr > div.css-175oi2r > div.view_manYY.blockWrapper_y0Ubs.noneVertical_jpmaI.autoHorizontal_dqmM-.largeTop_jdaOn > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-18u37iz > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2 > div.css-175oi2r > div.css-175oi2r.r-1peese0 > a.css-175oi2r.r-lrvibr.r-1loqt21.r-1otgn73.r-190qawg.r-z2wwpe.r-rs99b7.r-1udh08x.r-1clhhh9.r-18u37iz.r-1awozwy.r-nsbfu8.r-1ro0kt6.r-16y2uox.r-1wbh5a2.link-instanted > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2 > div.css-1rynq56.r-dnmrzs.r-1udh08x.r-1udbk01.r-3s2u2q.r-1iln25a.r-gg6oyi.r-ubezar.r-135wba7.r-majxgm.r-1nf4jbm",
+    "nextLink": "body > div.gitbook-root > div.css-175oi2r.r-13awgt0.r-12vffkv > div.css-175oi2r.r-13awgt0.r-12vffkv > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-14lw9ot > div.view_manYY.publicContainer_11UZS > div.css-175oi2r.r-13awgt0 > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-18u37iz > div.view_manYY.pageWrapper_ca2kA.noneVertical_jpmaI.autoHorizontal_dqmM-.flex1_aMpAE.column_C3yiR > main.r-1oszu61.r-1xc7w19.r-1phboty.r-1yadl64.r-deolkf.r-6koalj.r-crgep1.r-ifefl9.r-bcqeeo.r-t60dpp.r-bnwqim.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-eqz5dr > div.css-175oi2r > div.view_manYY.blockWrapper_y0Ubs.noneVertical_jpmaI.autoHorizontal_dqmM-.largeTop_jdaOn > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2.r-18u37iz > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2 > div.css-175oi2r > div.css-175oi2r.r-1peese0 > a.css-175oi2r.r-lrvibr.r-1loqt21.r-1otgn73.r-190qawg.r-z2wwpe.r-rs99b7.r-1udh08x.r-1clhhh9.r-18u37iz.r-1awozwy.r-nsbfu8.r-1ro0kt6.r-16y2uox.r-1wbh5a2.link-instanted > div.css-175oi2r.r-1ro0kt6.r-16y2uox.r-1wbh5a2 > div.css-1rynq56.r-dnmrzs.r-1udh08x.r-1udbk01.r-3s2u2q.r-1iln25a.r-gg6oyi.r-ubezar.r-135wba7.r-majxgm.r-1nf4jbm"
+  },
+  {
+    "name": "mcmod Minecraft伺服器列表",
+    "url": "^https?://play\\.mcmod\\.cn/list/",
+    "example": "https://play.mcmod.cn/list/",
+    "nextLink": "body > div.col-lg-12.common-frame > div.col-lg-12.common-center > div.col-lg-12.center > div.col-lg-12.server-list-index > div.col-lg-12.server-list-pages > ul.pagination.common-pages > li.page-item > a.page-link"
+  },
+  {
+    "name": "東方永頁機",
+    "url": "^https?://pagetual\\.hoothin\\.com/\\d+\\.html",
+    "example": "https://pagetual.hoothin.com/setup.html",
+    "nextLink": "#app > div.theme-container > main.page > div.page-nav > p.inner > span.next"
+  },
+  {
+    "name": "最大的Minecraft中文MOD百科",
+    "url": "^https?://www\\.mcmod\\.cn/class/\\d+\\.html",
+    "example": "https://www.mcmod.cn/class/2686.html",
+    "nextLink": "body > div.col-lg-12.common-frame > div.col-lg-12.common-center > div.col-lg-12.center > div.col-lg-12.right > div.common-comment-block.lazy > div.comment-block > ul.comment-floor > ul.pagination.common-pages > li.page-item > a.page-link"
+  },
+  {
+    "name": "愛下電子書 - 閱讀",
+    "example": "https://ixdzs.tw/read/38804/p1.html",
+    "url": "^https?://ixdzs\\.tw/read/\\d+/\\w+\\.html",
+    "nextLink": "body > div.page-d.page-turn > div.chapter-act > a.chapter-paging.chapter-next.link-instanted",
+    "pageElement": "#page > article.page-content",
+    "replaceElement": "head>title,.page-d.page-turn,.page-d-top,.read-next,.read-pre,.read-prog-info",
+    "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let t=gae('#page .page-content');if(t.length>10){t[0].remove()}",
+    "css": ".page-content{margin-top:.16rem!important}.page-content h3{line-height:.20rem!important;font-size:.24rem!important;text-align:center!important}",
+    "author": "paul-16098"
+  },
+  {
+    "name": "線上看 | 小說狂人",
+    "url": "^https?://czbooks\\.net/n/\\d+",
+    "example": "https://czbooks.net/n/uia1bo",
+    "nextLink": "body > div.main > div.container > ul.nav.novel-detail-function-bar > li:nth-of-type(2) > a.btn-lastread"
+  },
+  {
+    "name": "閱讀完成 - 愛下電子書",
+    "url": "^https?://tw\\.ixdzs\\.com/read/\\d+/end\\.html",
+    "example": "https://tw.ixdzs.com/read/450963/end.html",
+    "nextLink": "#addbookshelf2"
+  },
+  {
+    "name": "巴哈姆特",
+    "url": "^https?://home\\.gamer\\.com\\.tw/artwork.php\\?sn=\\d+",
+    "example": "https://home.gamer.com.tw/artwork.php?sn=5768522",
+    "nextLink": "#article > div.ct-btn-box > a.ct-btn.normal"
+  },
+  {
+    "name": "內容簡介 - 愛下電子書",
+    "url": "^https?://ixdzs\\.tw/read/\\d+/",
+    "example": "https://ixdzs.tw/read/450963/",
+    "nextLink": "#readbtn > a"
+  },
+  {
+    "name": "頂點小說手機版",
+    "url": "^https?://ddxs\\.com/\\d+/\\w+\\.html",
+    "example": "https://ddxs.com/congbeimaoeniangjianhuihoukaishidewenziyouxi/113.html",
+    "nextLink": "#pb_next",
+    "pageElement": "#nr",
+    "author": "paul-16098"
+  }，
 {
     "name": "V2EX POST",
     "author": "jaeger",
@@ -14,7 +137,7 @@
     "url": "^https?://www\\.iconfinder\\.com/"
 },
 {
-    "name": "菜鸟工具 - JS/CSS/JSON/HTML 調整為上下欄",
+    "name": "菜鳥工具 - JS/CSS/JSON/HTML 調整為上下欄",
     "author": "skofkyo",
     "enable": 1,
     "example": "https://c.runoob.com/front-end/51/，https://c.runoob.com/front-end/52/，https://c.runoob.com/front-end/7683/，https://c.runoob.com/front-end/47/",
