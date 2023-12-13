@@ -5869,11 +5869,23 @@
             storage.setItem("smartRules", []);
         }
         let allOk = true;
+        let preLength = ruleParser.rules.length;
         function addNextRule() {
             if (ruleIndex < 0) {
                 let now = new Date().getTime();
                 storage.setItem("ruleLastUpdate", now);
                 storage.setItem("rules", ruleParser.rules);
+                let curLength = ruleParser.rules.length;
+                if (curLength !== preLength) {
+                    _GM_notification({
+                        text: `Rules has updated( ${preLength} => ${curLength} )`,
+                        title: "Pagetual rules updated",
+                        onclick: (event) => {
+                            event.preventDefault();
+                            _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                        }
+                    });
+                }
                 inUpdate = false;
                 if (rulesData.uninited && allOk && ruleUrls.length > 1) {
                     rulesData.uninited = false;
