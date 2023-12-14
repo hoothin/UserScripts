@@ -1321,5 +1321,16 @@ var siteInfo = [
  url: /^https:\/\/civitai\.com\//,
  r: /\/width=\d+\//,
  s: "/"
+},
+{
+ name: "網易雲音樂",
+ url: /^https:\/\/music\.163\.com\//,
+ getExtSrc:function() {
+    if (this.tagName === 'A' && this.className === "msk") {
+        return this.previousElementSibling.src.replace(/\?param=\d+y\d+/, "");
+    }
+ },
+ r: /\?param=\d+y\d+/,
+ s: ""
 }
 ];
