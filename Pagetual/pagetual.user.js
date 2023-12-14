@@ -3573,12 +3573,12 @@
             }
             let lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
             this.getInsert();
+            await this.pageInit(doc, eles);
             var self = this, newEles = [];
             if (!eles || eles.length == 0 || !self.insert || !self.insert.parentNode) {
                 if (callback) callback(eles);
                 loadPageOver();
             } else {
-                await this.pageInit(doc, eles);
                 if (callback) callback(eles);
                 loadPageOver();
                 const collection = document.createDocumentFragment();
@@ -6603,7 +6603,6 @@
            100% { opacity: 1 }
          }
         `;
-            let bodyColor
             pageBarStyle = `overflow: visible;text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity == 0 ? "none" : "inline-flex"};padding:0;font-size: 30px;visibility: visible; position: relative; width: auto; max-width: 100vw; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;box-sizing: content-box;${rulesData.opacity == 1 ? "border-top: 1px solid rgb(80, 80, 80);" : "box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);"}`;
         }
         if (!mainStyleEle || !mainStyleEle.parentNode) {
