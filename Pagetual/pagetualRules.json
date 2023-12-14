@@ -9709,7 +9709,7 @@
     "nextLink": "a[title='下一页']",
     "action": 2,
     "pageElement": "div#m_posts",
-    "init": "doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
+    "pageAction": "doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
 },
 {
     "name": "NGA列表页",
