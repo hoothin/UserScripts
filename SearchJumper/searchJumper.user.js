@@ -13598,6 +13598,9 @@
             if (!isAllPage) return;
             searchBar.appendBar();
             searchBar.showAllSites();
+            setTimeout(() => {
+                searchBar.con.style.zIndex = 0;
+            }, 5);
             if (location.hash) {
                 let hash = location.hash.slice(1);
                 try {
