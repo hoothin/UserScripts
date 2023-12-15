@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.53
+// @version      1.7.54
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -58,6 +58,9 @@
 (function() {
     'use strict';
     const ext = false;
+    const _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
+    if (_unsafeWindow.searchJumperInited) return;
+    _unsafeWindow.searchJumperInited = true;
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) return;
     const inIframe = window.top !== window.self;
     if (inIframe) {
@@ -356,9 +359,6 @@
             }, {
                 name: "🔎 Everything",
                 url: "ES://%s"
-            }, {
-                name: "Convert currency",
-                url: "javascript:fetch(`https://api.exchangerate.host/convert?from=%input{From currency/US Dollar/Euro/Japanese Yen/China Yuan,USD/EUR/JPY/CNY}&to=%input{Target currency/US Dollar/Euro/Japanese Yen/China Yuan,USD/EUR/JPY/CNY}&amount=%sr.replace(/\\D/g,\"\")`).then(r=>r.json()).then(r=>prompt(`${r.date} Exchange rate by the European Central Bank\\n${r.query.amount.toLocaleString()} ${r.query.from} =`,`${r.result.toLocaleString()} ${r.query.to}`)).catch(alert);"
             } ]
         },
         {
@@ -452,7 +452,7 @@
         minSizeMode: false,
         hidePopup: false,
         minPopup: 0,
-        selectToShow: false,
+        selectToShow: ext,
         expandType: false,
         rightMouse: true,
         shiftLastUsedType: true,
@@ -806,8 +806,15 @@
         } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
             _GM_xmlhttpRequest = GM.xmlHttpRequest;
             GM_fetch = true;
-        } else {
-            _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data || '', headers: f.headers}).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
+        } else {//will not cross csp, it's safe!
+            let res;
+            _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data, headers: f.headers}).then(response => {
+                res = response;
+                if (f.responseType === "blob") {
+                    return response.blob();
+                }
+                return response.text();
+            }).then(data => {f.onload && f.onload({status: res.status, response: data})}).catch(e => f.onerror && f.onerror(e))};
         }
         if (GM_fetch) {
             GM_fetch = async (url, option) => {
@@ -860,7 +867,7 @@
         }
         if (ext) {
             _GM_openInTab = (s, t) => {
-                chrome.extension.sendMessage({action:"openInTab", detail:{url: s, incognito: t && t.active, active: t && t.active}});
+                chrome.runtime.sendMessage({action: "openInTab", detail: {url: s, incognito: t && t.incognito, active: t && t.active}});
             };
         } else if (typeof GM_openInTab != 'undefined') {
             _GM_openInTab = GM_openInTab;
@@ -908,11 +915,8 @@
         } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
             _GM_info = GM.info;
         } else {
-            _GM_info = { script: {} };
+            _GM_info = { script: {name: 'SearchJumper', version: 0} };
         }
-        var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
-        if (_unsafeWindow.searchJumperInited) return;
-        _unsafeWindow.searchJumperInited = true;
         if (!_unsafeWindow.searchJumperAddons) _unsafeWindow.searchJumperAddons = [];
         const curRef = document.referrer;
 
@@ -933,7 +937,7 @@
             })(),
             setItem: function (key, value) {
                 if (ext) {
-                    chrome.storage.sync.set({ [key]: value }, () => {});
+                    chrome.storage.local.set({ [key]: value }, () => {});
                 } else if (this.supportGMPromise) {
                     GM.setValue(key, value);
                     if(value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined'){
@@ -955,7 +959,7 @@
             getItem: async function (key, cb) {
                 var value;
                 if (ext) {
-                    let result = await chrome.storage.sync.get([key]);
+                    let result = await chrome.storage.local.get([key]);
                     value = result[key];
                 } else if (this.supportGMPromise) {
                     value = await GM.getValue(key);
@@ -1007,82 +1011,89 @@
                 this.auth = btoa(`${this.username}:${this.password}`);
             }
 
-            request(action, data, url, type, callback, headers) {
-                this.init();
-                let _headers = {
-                    referer: url,
-                    origin: url,
-                    "Content-Type": "text/xml; charset=UTF-8",
-                    "Authorization": `Basic ${this.auth}`
-                };
-                for (let header in headers) {
-                    _headers[header] = headers[header];
-                }
-                _GM_xmlhttpRequest({
-                    method: action,
-                    url: url,
-                    data: data,
-                    headers: _headers,
-                    onload: function(d) {
-                        let response = d.response;
-                        if (d.status >= 400 || !response) response = "";
-                        if (type == 'xml') {
-                            var xml = d.responseXML;
-                            if(xml) {
-                                response = xml.firstChild.nextSibling ? xml.firstChild.nextSibling : xml.firstChild;
-                            }
-                        }
-                        callback && callback(response);
-                    },
-                    onerror: function(e) {
-                        debug(e);
-                        callback && callback(e);
-                    },
-                    ontimeout: function(e) {
-                        debug(e);
-                        callback && callback(e);
+            request(action, data, path, type, callback, headers) {
+                if (ext) {
+                    chrome.runtime.sendMessage({action: "webDAV", detail: {method: action, body: data, path: path, type: type, headers: headers}}, function(r) {
+                        callback && callback(r);
+                    });
+                } else {
+                    this.init();
+                    let url = this.webDAVUrl + path;
+                    let _headers = {
+                        referer: url,
+                        origin: url,
+                        "Content-Type": "text/xml; charset=UTF-8",
+                        "Authorization": `Basic ${this.auth}`
+                    };
+                    for (let header in headers) {
+                        _headers[header] = headers[header];
                     }
-                });
+                    _GM_xmlhttpRequest({
+                        method: action,
+                        url: url,
+                        data: data,
+                        headers: _headers,
+                        onload: function(d) {
+                            let response = d.response;
+                            if (d.status >= 400 || !response) response = "";
+                            if (type == 'xml') {
+                                var xml = d.responseXML;
+                                if(xml) {
+                                    response = xml.firstChild.nextSibling ? xml.firstChild.nextSibling : xml.firstChild;
+                                }
+                            }
+                            callback && callback(response);
+                        },
+                        onerror: function(e) {
+                            debug(e);
+                            callback && callback(e);
+                        },
+                        ontimeout: function(e) {
+                            debug(e);
+                            callback && callback(e);
+                        }
+                    });
+                }
             }
 
-            GET(url, callback) {
-                return this.request('GET', null, url, 'text', callback, {});
+            GET(path, callback) {
+                return this.request('GET', null, path, 'text', callback, {});
             }
 
-            PROPFIND(url, callback) {
-                return this.request('PROPFIND', null, url, 'xml', callback, {Depth: "1"});
+            PROPFIND(path, callback) {
+                return this.request('PROPFIND', null, path, 'xml', callback, {Depth: "1"});
             }
 
-            MKCOL(url, callback) {
-                return this.request('MKCOL', null, url, 'text', callback, {});
+            MKCOL(path, callback) {
+                return this.request('MKCOL', null, path, 'text', callback, {});
             }
 
-            DELETE(url, callback) {
-                return this.request('DELETE', null, url, 'text', callback, {});
+            DELETE(path, callback) {
+                return this.request('DELETE', null, path, 'text', callback, {});
             }
 
-            PUT(url, data, callback) {
-                return this.request('PUT', data, url, 'text', callback, {});
+            PUT(path, data, callback) {
+                return this.request('PUT', data, path, 'text', callback, {});
             }
 
             async read(path) {
                 let self = this;
                 return new Promise((resolve) => {
-                    self.GET(self.webDAVUrl + path, resolve);
+                    self.GET(path, resolve);
                 });
             }
 
             async write(path, data) {
                 let self = this;
                 return new Promise((resolve) => {
-                    self.PUT(self.webDAVUrl + path, data, resolve);
+                    self.PUT(path, data, resolve);
                 });
             }
 
             async rm(path) {
                 let self = this;
                 return new Promise((resolve) => {
-                    self.DELETE(self.webDAVUrl + path, resolve);
+                    self.DELETE(path, resolve);
                 });
             }
         }
@@ -1343,7 +1354,7 @@
             setTimeout( checkReady, 100 );
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, sortSiteNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType, allPageNewMode = false;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, disableState = false, cacheKeywords, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, sortSiteNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType, allPageNewMode = false;
         const logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${_GM_info.script.name}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         const logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         const noImgBase64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNDI5LjAxMzMzMyA2NDBBMzIgMzIgMCAwIDEgMzg0IDU5NC45ODY2NjdsMzcuNzYtMzcuNzYtMjIuODI2NjY3LTIyLjYxMzMzNC0xMzUuNjggMTM1LjY4IDkwLjQ1MzMzNCA5MC40NTMzMzQgMTM1LjY4LTEzNS42OC0yMi42MTMzMzQtMjIuNjEzMzM0ek01MzQuNjEzMzMzIDM5OC45MzMzMzNsMjIuNjEzMzM0IDIyLjYxMzMzNEw1OTQuOTg2NjY3IDM4NEEzMiAzMiAwIDAgMSA2NDAgNDI5LjAxMzMzM2wtMzcuNzYgMzcuNzYgMjIuNjEzMzMzIDIyLjYxMzMzNCAxMzUuNjgtMTM1LjY4LTkwLjQ1MzMzMy05MC40NTMzMzR6IiBmaWxsPSIjNUU1QzVDIj48L3BhdGg+PHBhdGggZD0iTTUxMiAyMS4zMzMzMzNhNDkwLjY2NjY2NyA0OTAuNjY2NjY3IDAgMSAwIDQ5MC42NjY2NjcgNDkwLjY2NjY2N0E0OTAuNjY2NjY3IDQ5MC42NjY2NjcgMCAwIDAgNTEyIDIxLjMzMzMzM3ogbTMxNi44IDM1NC45ODY2NjdsLTE4MS4xMiAxODEuMTJhMzIgMzIgMCAwIDEtNDUuMjI2NjY3IDBMNTU3LjIyNjY2NyA1MTIgNTEyIDU1Ny4yMjY2NjdsNDUuMjI2NjY3IDQ1LjIyNjY2NmEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N2wtMTgxLjEyIDE4MS4xMmEzMiAzMiAwIDAgMS00NS4yMjY2NjcgMGwtMTM1LjY4LTEzNS42OGEzMiAzMiAwIDAgMSAwLTQ1LjIyNjY2N2wxODEuMTItMTgxLjEyYTMyIDMyIDAgMCAxIDQ1LjIyNjY2NyAwTDQ2Ni43NzMzMzMgNTEyIDUxMiA0NjYuNzczMzMzbC00NS4yMjY2NjctNDUuMjI2NjY2YTMyIDMyIDAgMCAxIDAtNDUuMjI2NjY3bDE4MS4xMi0xODEuMTJhMzIgMzIgMCAwIDEgNDUuMjI2NjY3IDBsMTM1LjY4IDEzNS42OGEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N3oiIGZpbGw9IiM1RTVDNUMiPjwvcGF0aD4KPC9zdmc+";
@@ -3551,6 +3562,11 @@
                 this.initSetInPageWords();
             }
 
+            showFilterSearch() {
+                this.filterSitesTab.checked = true;
+                this.showSearchInput();
+            }
+
             initSetInPageWords() {
                 if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value) {
                     let words = this.searchJumperInputKeyWords.value.replace(/^\*/, "") || getKeywords();
@@ -3583,7 +3599,7 @@
                     let inWordMode = this.wordModeBtn.classList.contains("checked");
                     let splitSep = inWordMode ? new RegExp(`[\\${this.splitSep} \.]`) : this.splitSep;
 
-                    words.split(splitSep).forEach(word => {
+                    words.split(splitSep).sort((a, b) => b.length - a.length).forEach(word => {
                         let oriWord = word;
                         word = word.trim();
                         if (!word) return;
@@ -4007,7 +4023,7 @@
                              </div>
                          </div>
                         `);
-                        customInputFrame.appendChild(customInputCssEle);
+                        if (!disabled) customInputFrame.appendChild(customInputCssEle);
                         let cancelBtn = customInputFrame.querySelector("#cancel");
                         cancelBtn.addEventListener("click", e => {
                             if (customInputFrame.parentNode) {
@@ -4317,7 +4333,7 @@
                          </div>
                      </div>
                     `);
-                    modifyFrame.appendChild(modifyCssEle);
+                    if (!disabled) modifyFrame.appendChild(modifyCssEle);
                     let cancelBtn = modifyFrame.querySelector("#cancel");
                     cancelBtn.addEventListener("click", e => {
                         if (modifyFrame.parentNode) {
@@ -5563,6 +5579,16 @@
                 this.bar.style.display = ''
             }
 
+            toggleShowAll() {
+                this.appendBar();
+                if (!this.con || !this.con.parentNode) return;
+                if (this.con.classList.contains("search-jumper-showall")) {
+                    this.closeShowAll();
+                } else {
+                    this.showAllSites();
+                }
+            }
+
             showAllSites() {
                 if (!this.con || !this.con.parentNode || this.con.classList.contains("search-jumper-showall")) return;
                 this.con.style.display = "";
@@ -5795,9 +5821,18 @@
                     this.shadowContainer = document.createElement("div");
                 }
                 if (!this.shadowContainer.parentNode) {
-                    document.documentElement.appendChild(this.shadowContainer);
+                    if (shareEngines) {
+                        document.body.appendChild(this.shadowContainer);
+                    } else {
+                        document.documentElement.appendChild(this.shadowContainer);
+                    }
                 }
-                let shadow = this.shadowContainer.shadowRoot || this.shadowContainer.attachShadow({ mode: "open" });
+                let shadow;
+                if (disabled) {
+                    shadow = this.shadowContainer;
+                } else {
+                    shadow = this.shadowContainer.shadowRoot || this.shadowContainer.attachShadow({ mode: "open" });
+                }
                 if (ele.parentNode != shadow) shadow.appendChild(ele);
                 return true;
             }
@@ -5809,16 +5844,24 @@
             appendBar() {
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
                     mainStyleEle = _GM_addStyle(cssText);
-                    this.addToShadow(mainStyleEle);
+                    if (!disabled) this.addToShadow(mainStyleEle);
                 }
                 if (this.addToShadow(this.con)) {
                     setTimeout(() => {
                         if (this.con.parentNode) {
                             if (getComputedStyle(this.con).zIndex != "2147483647") {
-                                disabled = true;
                                 this.removeBar();
-                                debug(i18n("cspDisabled"));
-                            } else disabled = false;
+                                if (disabled) {
+                                    debug(i18n("cspDisabled"));
+                                } else {
+                                    disabled = true;
+                                    mainStyleEle = _GM_addStyle(cssText);
+                                    this.shadowContainer.parentNode.removeChild(this.shadowContainer);
+                                    this.shadowContainer = document.createElement("div");
+                                    document.documentElement.appendChild(this.shadowContainer);
+                                    this.appendBar();
+                                }
+                            }
                         }
                     }, 1);
                 }
@@ -5852,6 +5895,17 @@
                     }
                 }
             }
+
+            async searcAllhByTypeName(siteName) {
+                for (let i = searchTypes.length - 1; i >= 0; i--) {
+                    let typeEle = searchTypes[i];
+                    if (typeEle.dataset.type == siteName) {
+                        typeEle.firstChild.onmousedown({button: 2});
+                        return;
+                    }
+                }
+            }
+
 
             autoGetFirstType() {
                 if (!targetElement) targetElement = getBody(document);
@@ -6824,6 +6878,13 @@
                         }
                     });
                 };
+                if (ext) {
+                    requestSuggest = (api, cb) => {
+                        chrome.runtime.sendMessage({action: "getSuggest", detail: {suggestType: searchData.prefConfig.suggestType, searchWords: searchWords}}, function(r) {
+                            cb(r);
+                        });
+                    }
+                }
                 switch (searchData.prefConfig.suggestType) {
                     case "google":
                         requestSuggest("http://suggestqueries.google.com/complete/search?client=youtube&q=%s&jsonp=window.google.ac.h".replace("%s", searchWords), res => {
@@ -9045,6 +9106,16 @@
                             }
                         }
                     }
+                    if (targetUrlData.indexOf('%input{') !== -1) {
+                        self.showCustomInputWindow(targetUrlData, _url => {
+                            targetUrlData = _url;
+                            ele.href = _url;
+                            ele.click();
+                        });
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                        return;
+                    }
                     let findWordsMatch = targetUrlData.match(/^find(\.addto\((.*?)\))?:(.*)/);
                     if (findWordsMatch) {
                         if (e.preventDefault) e.preventDefault();
@@ -9079,6 +9150,19 @@
                         }
                         return false;
                     } else if (/^javascript:/.test(data.url)) {
+                        if (ext) {
+                            _unsafeWindow.targetElement = targetElement;
+                            _unsafeWindow.keywords = getKeywords();
+                            let func = (/^javascript:[_a-zA-Z0-9]+$/.test(targetUrlData) && _unsafeWindow[targetUrlData.replace("javascript:", "")]);
+                            if (func) {
+                                if (e.preventDefault) e.preventDefault();
+                                if (e.stopPropagation) e.stopPropagation();
+                                func();
+                                return false;
+                            }
+                            ele.href = targetUrlData;
+                            return;
+                        }
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
                         _unsafeWindow.targetElement = targetElement;
@@ -9087,7 +9171,7 @@
                         try {
                             targetUrlData = decodeURIComponent(targetUrlData);
                         } catch(e) {}
-                        let func = (/^[_a-zA-Z0-9]+$/.test(targetUrlData) && window[targetUrlData]) || new AsyncFunction(targetUrlData);
+                        let func = (/^[_a-zA-Z0-9]+$/.test(targetUrlData) && _unsafeWindow[targetUrlData]) || new AsyncFunction(targetUrlData);
                         if (func) func();
                         return false;
                     } else if (/^c(opy)?:/.test(data.url)) {
@@ -9186,16 +9270,6 @@
                             targetUrlData = processPostUrl(targetUrlData);
                             ele.href = targetUrlData;
                         }
-                    }
-                    if (targetUrlData.indexOf('%input{') !== -1) {
-                        self.showCustomInputWindow(targetUrlData, _url => {
-                            targetUrlData = _url;
-                            ele.href = _url;
-                            ele.click();
-                        });
-                        if (e.preventDefault) e.preventDefault();
-                        if (e.stopPropagation) e.stopPropagation();
-                        return;
                     }
                     if (shift && !ctrl && !meta && !alt && e.isTrusted) return;
                     if (/^(chrome|edge|about):/.test(targetUrlData)) {
@@ -9443,13 +9517,23 @@
                                 fetchOption.method = "POST";
                                 _url = _url.replace(postMatch[0], "");
                             }
-                            let failed = false;
+                            let failed = false, fetchData;
                             if (template && template[1].indexOf("json.") === 0) {
                                 let allValue = [];
-                                tipsResult = await GM_fetch(_url, fetchOption).then(r => {
-                                    data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
-                                    return r.json();
-                                }).then(r => {
+                                if (ext) {
+                                    fetchData = new Promise((resolve) => {
+                                        chrome.runtime.sendMessage({action: "showTips", detail: {from: url}}, function(r) {
+                                            data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                            resolve(r.data);
+                                        });
+                                    });
+                                } else {
+                                    fetchData = GM_fetch(_url, fetchOption).then(r => {
+                                        data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                        return r.json();
+                                    });
+                                }
+                                tipsResult = await fetchData.then(r => {
                                     if (!r) return null;
                                     storeData = r;
                                     let finalData = calcJson(r, template);
@@ -9462,13 +9546,26 @@
                                 tipsResult = [tipsResult, "\n" + allValue.join(",")];
                             } else {
                                 let hasData = false;
-                                tipsResult = await GM_fetch(_url, fetchOption).then(r => {
-                                    if (data.indexOf('【SEARCHJUMPERURL】') != -1) {
-                                        data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
-                                        hasData = true;
-                                    }
-                                    return r.text();
-                                }).then(r => {
+                                if (ext) {
+                                    fetchData = new Promise((resolve) => {
+                                        chrome.runtime.sendMessage({action: "showTips", detail: {from: url}}, function(r) {
+                                            if (data.indexOf('【SEARCHJUMPERURL】') != -1) {
+                                                data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                                hasData = true;
+                                            }
+                                            resolve(r.data);
+                                        });
+                                    });
+                                } else {
+                                    fetchData = GM_fetch(_url, fetchOption).then(r => {
+                                        if (data.indexOf('【SEARCHJUMPERURL】') != -1) {
+                                            data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                            hasData = true;
+                                        }
+                                        return r.text();
+                                    });
+                                }
+                                tipsResult = await fetchData.then(r => {
                                     let doc = document.implementation.createHTMLDocument('');
                                     doc.documentElement.innerHTML = r;
                                     let finalData = data;
@@ -9571,7 +9668,7 @@
                 }
                 if (!mainStyleEle || !mainStyleEle.parentNode) {
                     mainStyleEle = _GM_addStyle(cssText);
-                    this.addToShadow(mainStyleEle);
+                    if (!disabled) this.addToShadow(mainStyleEle);
                 }
                 let selectStr = getSelectStr();
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
@@ -10767,6 +10864,75 @@
                     quickAddByInput(firstInput);
                 }
             });
+            if (ext) {
+                chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+                    switch (request.command) {
+                        case "settings":
+                            _GM_openInTab(configPage, {active: true});
+                            break;
+                        case "searchInPage":
+                            searchBar.showInPage();
+                            searchBar.showInPageSearch();
+                            break;
+                        case "filterSearch":
+                            searchBar.showInPage();
+                            searchBar.showFilterSearch();
+                            break;
+                        case "search":
+                            if (request.name) {
+                                searchBar.searchBySiteName(request.name, request.key || {});
+                            } else {
+                                searchBar.searchAuto(request.index || 0, request.key || {});
+                            }
+                            break;
+                        case "searchAll":
+                            if (request.name) {
+                                searchBar.searcAllhByTypeName(request.name);
+                            }
+                            break;
+                        case "toggle":
+                            location.reload();
+                            break;
+                        case "showAll":
+                            searchBar.toggleShowAll();
+                            break;
+                        case "addSearchEngine":
+                            {
+                                if (shareEngines) return;
+                                let openSearch = document.head.querySelector('[rel="search"]');
+                                if (openSearch) {
+                                    showSiteAddFromOpenSearch(openSearch.href, (type, e) => {
+                                        if (type != 'load') {
+                                            if (e) debug(e.statusText || e.error || e.response || e);
+                                            let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input[type=search]:not([readonly]),input:not([type])');
+                                            quickAddByInput(firstInput);
+                                        }
+                                    });
+                                } else {
+                                    let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input[type=search]:not([readonly]),input:not([type])');
+                                    quickAddByInput(firstInput);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+            document.addEventListener('searchJumper', e => {
+                switch (e.detail.action) {
+                    case "search":
+                        if (e.detail.name) {
+                            searchBar.searchBySiteName(e.detail.name, e.detail.key || {});
+                        } else {
+                            searchBar.searchAuto(e.detail.index, e.detail.key || {});
+                        }
+                        break;
+                    case "show":
+                        searchBar.showInPage();
+                        break;
+                }
+            });
             targetElement = getBody(document);
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
@@ -10966,20 +11132,6 @@
                 searchBar.con.scrollLeft += deltaY;
             }, { passive: false, capture: false });
 
-            document.addEventListener('searchJumper', e => {
-                switch (e.detail.action) {
-                    case "search":
-                        if (e.detail.name) {
-                            searchBar.searchBySiteName(e.detail.name, e.detail.key || {});
-                        } else {
-                            searchBar.searchAuto(e.detail.index, e.detail.key || {});
-                        }
-                        break;
-                    case "show":
-                        searchBar.showInPage();
-                        break;
-                }
-            });
             if (searchData.prefConfig.switchSitesPreKey ||
                 searchData.prefConfig.switchSitesNextKey ||
                 searchData.prefConfig.shortcutKey ||
@@ -11230,8 +11382,10 @@
                     if (targetElement.shadowRoot) return;
                     if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                     if (targetElement.parentNode && targetElement.parentNode.getAttribute && targetElement.parentNode.getAttribute("draggable") == "true") return;
-                    showDragSearch(e.clientX, e.clientY);
                     searchBar.waitForHide(1);
+                    setTimeout(() => {
+                        showDragSearch(e.clientX, e.clientY);
+                    }, 2);
                     if (clickHandler) document.removeEventListener('click', clickHandler, true);
                     draging = true;
                 });
@@ -11395,6 +11549,7 @@
         }
 
         function quickAddByInput(input) {
+            if (shareEngines) return;
             let parentForm, url = location.href, showCrawl = false;
             if (input && input.name) {
                 parentForm = input.parentNode;
@@ -11503,7 +11658,7 @@
                         shareEngines = shareEngines.getAttribute("content");
                         shareEngines = JSON.parse(decodeURI(shareEngines));
                         searchData.sitesConfig = shareEngines;
-                        getBody(document).innerHTML = createHTML("");
+                        document.getElementById("spotlight").style.display = "none";
                     } catch (e) {
                         shareEngines = null;
                     }
@@ -11615,8 +11770,14 @@
                         searchData.sitesConfig.forEach(type => {
                             if (/^http/.test(type.icon)) {
                                 let typeCache = cacheIcon[type.icon];
-                                if (typeCache && typeCache !== 'fail') {
-                                    newCache[type.icon] = typeCache;
+                                if (typeCache) {
+                                    if (typeCache === 'fail') {
+                                        let img = document.createElement("img");
+                                        img.src = type.icon;
+                                        cachePool.push(img);
+                                    } else {
+                                        newCache[type.icon] = typeCache;
+                                    }
                                 }
                             }
                             type.sites.forEach(site => {
@@ -11624,8 +11785,14 @@
                                 if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                                 if (/^http/.test(icon)) {
                                     let siteCache = cacheIcon[icon];
-                                    if (siteCache && siteCache !== 'fail') {
-                                        newCache[icon] = siteCache;
+                                    if (siteCache) {
+                                        if (siteCache === 'fail') {
+                                            let img = document.createElement("img");
+                                            img.src = icon;
+                                            cachePool.push(img);
+                                        } else {
+                                            newCache[icon] = siteCache;
+                                        }
                                     }
                                 }
                             });
@@ -12401,7 +12568,7 @@
                 <div class="panel"></div>
                 <div class="dragLogo">${logoBtnSvg}</div>
                 `);
-                dragRoundFrame.appendChild(dragCssEle);
+                if (!disabled) dragRoundFrame.appendChild(dragCssEle);
                 const sector1Num = 6;
                 const sector2Num = 10;
                 let sectorCon = dragRoundFrame.querySelector(".panel");
@@ -12944,7 +13111,7 @@
                     </div>
                 </div>
                 `);
-                addFrame.appendChild(addFrameCssEle);
+                if (!disabled) addFrame.appendChild(addFrameCssEle);
                 nameInput = addFrame.querySelector("[name='siteName']");
                 descInput = addFrame.querySelector("[name='description']");
                 urlInput = addFrame.querySelector("[name='url']");
@@ -13482,6 +13649,16 @@
                 if (allPageBg) {
                     getBody(document).style.backgroundImage = `url("${allPageBg.base64}")`;
                 } else allPageBg = {url: ""};
+                if (ext) {
+                    chrome.runtime.sendMessage({action: "getBingBG", detail: {curBgUrl: allPageBg.url}}, function(r) {
+                        if (r) {
+                            allPageBg = r;
+                            storage.setItem("allPageBg", allPageBg);
+                            getBody(document).style.backgroundImage = `url("${allPageBg.base64}")`;
+                        }
+                    });
+                    return;
+                }
                 _GM_xmlhttpRequest({
                     method: 'GET',
                     url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
@@ -13541,6 +13718,11 @@
             cacheKeywords = await new Promise((resolve) => {
                 storage.getItem("cacheKeywords", data => {
                     resolve(data || '');
+                });
+            });
+            disableState = await new Promise((resolve) => {
+                storage.getItem("disableState", data => {
+                    resolve(data || false);
                 });
             });
             tipsStorage = await new Promise((resolve) => {
@@ -13680,7 +13862,9 @@
                     searchData.prefConfig.suggestType = "baidu";
                 } else searchData.prefConfig.suggestType = "google";
             }
-            if (searchData.prefConfig.configPage) {
+            if (ext) {
+                configPage = chrome.runtime.getURL('config/index.html');;
+            } else if (searchData.prefConfig.configPage) {
                 configPage = searchData.prefConfig.configPage;
             } else {
                 searchData.prefConfig.configPage = configPage;
@@ -13732,6 +13916,7 @@
                 inited = true;
                 preAction();
                 await initData();
+                if (disableState) return;
                 initView();
                 initConfig();
                 initMycroft();
