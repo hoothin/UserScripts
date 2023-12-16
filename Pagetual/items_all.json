@@ -4885,16 +4885,16 @@
 {
   "resource_url": "http://wedata.net/items/85690",
   "data": {
-    "pageElement": "//div[@class=\"post\"][not(//div[@class=\"article__content\"])]|//div[@class=\"article__content\"]/p[last()]/preceding-sibling::*",
+    "pageElement": "//div[@class=\"post\"][not(//div[@class=\"article__content\"])]|//div[@class=\"article__content\"]/*[not(contains(@class, '_CLS_'))]",
     "nextLink": "//li[@class=\"next\"]/a|//div[@data-max-page]/following-sibling::div[1]/a",
     "url": "^https://bestcarweb\\.jp/",
-    "exampleUrl": "https://bestcarweb.jp/news/296665\r\nhttps://bestcarweb.jp/feature/column/357128\r\nhttps://bestcarweb.jp/news/261798?prd=4\r\nhttps://bestcarweb.jp/latest\r\nhttps://bestcarweb.jp/newcar"
+    "exampleUrl": "https://bestcarweb.jp/news/296665\r\nhttps://bestcarweb.jp/feature/column/357128\r\nhttps://bestcarweb.jp/feature/column/357128?prd=4\r\nhttps://bestcarweb.jp/news/261798?prd=4\r\nhttps://bestcarweb.jp/latest\r\nhttps://bestcarweb.jp/newcar"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
   "name": "ベストカー Web",
   "created_at": "2021-07-01T19:30:54+09:00",
-  "updated_at": "2022-01-21T20:52:13+09:00"
+  "updated_at": "2023-12-15T22:35:32+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85687",
