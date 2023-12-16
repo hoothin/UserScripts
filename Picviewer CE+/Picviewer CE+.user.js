@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.12.5.1
+// @version              2023.12.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -44,8 +44,8 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://update.greasyfork.org/scripts/438080/1290755/pvcep_rules.js
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1262309
+// @require              https://update.greasyfork.org/scripts/438080/1295404/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/440698/1262309/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -19659,7 +19659,7 @@ ImgOps | https://imgops.com/#b#`;
                       100% { opacity: 0 }\
                     }\
                     .pv-pic-window-scroll {\
-                    max-height: 100vh;\
+                    max-height: calc(100vh - 26px);\
                     max-width: 100vw;\
                     overflow: scroll;\
                     }\
@@ -20049,7 +20049,7 @@ ImgOps | https://imgops.com/#b#`;
                 let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2), padding2 = 50;//内外侧间距
                 if (imgWindow.offsetWidth / imgWindow.offsetHeight > wSize.w / wSize.h) {
                     //宽条，上下半屏
-                    maxWidth = wSize.w;
+                    maxWidth = wSize.w - 56;
                     if (posY > wSize.h / 2) {
                         //上
                         maxHeight = posY - padding1 - padding2;
@@ -20071,7 +20071,7 @@ ImgOps | https://imgops.com/#b#`;
                     imgWindow.style.left = left + scrolled.x + 'px';
                 } else {
                     //窄条，左右半屏
-                    maxHeight = wSize.h;
+                    maxHeight = wSize.h - 56;
                     if (posX > wSize.w / 2) {
                         //左
                         maxWidth = posX - padding1 - padding2;
@@ -20131,7 +20131,7 @@ ImgOps | https://imgops.com/#b#`;
                 var wSize=getWindowSize();
                 var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                 if(horizontal)imgWindow.style.left = (wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
-                if(vertical)imgWindow.style.top = (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + (prefs.imgWindow.suitLongImg && this.isLongImg && !this.preview ? 13 : 0) +'px';
+                if(vertical)imgWindow.style.top = (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
             },
 
 
@@ -20910,7 +20910,7 @@ ImgOps | https://imgops.com/#b#`;
                         } else this.imgWindow.classList.add("pv-pic-window-scroll");
                         //this.center(true , true);
                         if(!inScroll){
-                            imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + 13 +'px';
+                            imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
                             var scrollTop=parseFloat(imgWindow.style.top)-origTop;
                             if(this.imgWindow.scrollTop)this.imgWindow.scrollTop = scrollTop;
                             else if(this.imgWindow.pageYOffset)this.imgWindow.pageYOffset = scrollTop;
@@ -22932,6 +22932,27 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         }
                     }*/
+                    }
+                    if (!result) {
+                        let checkEle = target;
+                        while(checkEle && checkEle.children.length === 1) {
+                            checkEle = checkEle.children[0];
+                            if (checkEle.nodeName === "IMG") {
+                                target = checkEle;
+                                break;
+                            } else if (prefs.floatBar.listenBg && hasBg(checkEle)) {
+                                targetBg = unsafeWindow.getComputedStyle(checkEle).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
+                                let src = targetBg, nsrc = src, noActual = true, type = "scale";
+                                result = {
+                                    src: nsrc,
+                                    type: type,
+                                    imgSrc: src,
+                                    noActual:noActual,
+                                    img: checkEle
+                                };
+                                break;
+                            }
+                        }
                     }
                     if (!result && document.elementsFromPoint && target.nodeName.toUpperCase() != 'A') {
                         let elements = document.elementsFromPoint(clientX, clientY);
