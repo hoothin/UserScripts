@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.7
+// @version      1.9.37.8
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2757,7 +2757,7 @@
                         }
                     } else nextLink = getElement(nextLinkSel, doc, null, true);
                 }
-                if (nextLink && (this.curSiteRule.action === 0 || this.curSiteRule.action === 1 || this.curSiteRule.action === 2)) {
+                if (nextLink && (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2)) {
                     let form = doc.querySelector('#search-form');
                     if (!nextLink.href && nextLink.hasAttribute && nextLink.hasAttribute("onclick") && form) {
                         if (/^\d+$/.test(nextLink.innerText)) {
@@ -2773,7 +2773,7 @@
                             nextLink.href = getNextLinkByForm(form, nextLink);
                         }
                     }
-                    if (nextLink.href && this.curSiteRule.action !== 0) {
+                    if (nextLink.href && this.curSiteRule.action != 0) {
                         nextLink.href = nextLink.href.replace(/#p{.*/, "");
                     }
                 }
@@ -2866,11 +2866,11 @@
                     if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
                     return null;
                 }
-                if (this.curSiteRule.action === 3) {
+                if (this.curSiteRule.action == 3) {
                     if (doc == document) debug(nextLink, 'Next link');
                     this.nextLinkHref = '#';
                 } else {
-                    let needUrl = (this.curSiteRule.action === 0 || this.curSiteRule.action === 1 || this.curSiteRule.action === 2);
+                    let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2);
                     if (!href) href = nextLink.href;
                     if (href && nextLink.getAttribute) {
                         let _href = nextLink.getAttribute("href");
@@ -8012,6 +8012,7 @@
             frameDoc.documentElement.scrollLeft = 0;
         } else {
             if (pageEle) {
+                if (document.body.scrollWidth) frameDoc.documentElement.style.width = document.body.scrollWidth + "px";
                 let fitWidth = ruleParser.curSiteRule.fitWidth !== false;
                 let targetElement = pageEle[0];
                 if (!targetElement) return;
@@ -8313,7 +8314,7 @@
                     command: 'pagetual.insert'
                 }, '*');
             }*/
-            let isJs = ruleParser.curSiteRule.action === 3 || ruleParser.hrefIsJs(nextLink);
+            let isJs = ruleParser.curSiteRule.action == 3 || ruleParser.hrefIsJs(nextLink);
             if (!isJs) {
                 emuIframe = null;
                 lastActiveUrl = nextLink;
@@ -8349,7 +8350,7 @@
                     } catch(e) {
                         debug(e);
                     }
-                } else if ((forceState === 2 || ruleParser.curSiteRule.action === 2) && !isJs) {
+                } else if ((forceState === 2 || ruleParser.curSiteRule.action == 2) && !isJs) {
                     forceIframe(nextLink, (iframe, refresh) => {
                         if (urlChanged || isPause) {
                             loadPageOver();
@@ -8362,7 +8363,7 @@
                         loadPageOver();
                         checkAutoLoadNum();
                     });
-                } else if ((forceState === 3 || ruleParser.curSiteRule.action === 1) && !isJs) {
+                } else if ((forceState === 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
                     requestFromIframe(nextLink, (doc, eles) => {
                         if (urlChanged || isPause) {
                             loadPageOver();
