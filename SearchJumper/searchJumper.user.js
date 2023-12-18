@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.54
+// @version      1.7.55
 // @description  META search assistant that assists with the seamless transition between search engines, providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换搜索引擎，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -508,6 +508,7 @@
                         copyInPageBtn: '复制查找文字',
                         wordModeBtn: '单词模式',
                         copyEleBtn: '复制选中元素',
+                        openLinkBtn: '打开选中链接',
                         maxEleBtn: '展开选中元素',
                         minEleBtn: '收起选中元素',
                         expandAll: '全部展开',
@@ -613,6 +614,7 @@
                         copyInPageBtn: '複製查找文字',
                         wordModeBtn: '單詞模式',
                         copyEleBtn: '複製選中元素',
+                        openLinkBtn: '打開選中連結',
                         maxEleBtn: '展開選中元素',
                         minEleBtn: '收起選中元素',
                         expandAll: '全部展開',
@@ -717,6 +719,7 @@
                         copyInPageBtn: 'Copy search text',
                         wordModeBtn: 'Word mode',
                         copyEleBtn: 'Copy selected elements',
+                        openLinkBtn: 'Open selected links',
                         maxEleBtn: 'Expand selected elements',
                         minEleBtn: 'Collapse selected elements',
                         expandAll: 'Expand All',
@@ -3499,6 +3502,7 @@
                     <span class="search-jumper-lock-input"></span>
                     <span class="svgBtns">
                       <svg id="copyEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyEleBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
+                      <svg id="openLinkBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("openLinkBtn")}</title><path d="M429.013333 640A32 32 0 0 1 384 594.986667l37.76-37.76-22.826667-22.613334-135.68 135.68 90.453334 90.453334 135.68-135.68-22.613334-22.613334zM534.613333 398.933333l22.613334 22.613334L594.986667 384A32 32 0 0 1 640 429.013333l-37.76 37.76 22.613333 22.613334 135.68-135.68-90.453333-90.453334z"/><path d="M512 21.333333a490.666667 490.666667 0 1 0 490.666667 490.666667A490.666667 490.666667 0 0 0 512 21.333333z m316.8 354.986667l-181.12 181.12a32 32 0 0 1-45.226667 0L557.226667 512 512 557.226667l45.226667 45.226666a32 32 0 0 1 0 45.226667l-181.12 181.12a32 32 0 0 1-45.226667 0l-135.68-135.68a32 32 0 0 1 0-45.226667l181.12-181.12a32 32 0 0 1 45.226667 0L466.773333 512 512 466.773333l-45.226667-45.226666a32 32 0 0 1 0-45.226667l181.12-181.12a32 32 0 0 1 45.226667 0l135.68 135.68a32 32 0 0 1 0 45.226667z"/></svg>
                       <svg id="maxEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("maxEleBtn")}</title><path d="M192 832h160a32 32 0 0 1 0 64H160a32 32 0 0 1-32-32V672a32 32 0 0 1 64 0zM182.72 886.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 0 1 45.44 45.44zM832 832V672a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H672a32 32 0 0 1 0-64zM886.72 841.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM192 192v160a32 32 0 0 1-64 0V160a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM137.28 182.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM832 192H672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0zM841.28 137.28a32 32 0 1 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
                       <svg id="minEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("minEleBtn")}</title><path d="M672 352h160a32 32 0 0 1 0 64H640a32 32 0 0 1-32-32V192a32 32 0 0 1 64 0zM662.72 406.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 1 1 45.44 45.44zM352 352V192a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H192a32 32 0 0 1 0-64zM406.72 361.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM672 672v160a32 32 0 0 1-64 0V640a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM617.28 662.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM192 672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V672zM361.28 617.28a32 32 0 0 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
                       <svg id="pickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("multiPickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
@@ -3533,6 +3537,7 @@
                 this.minEleBtn = searchInputDiv.querySelector("#minEleBtn");
                 this.maxEleBtn = searchInputDiv.querySelector("#maxEleBtn");
                 this.copyEleBtn = searchInputDiv.querySelector("#copyEleBtn");
+                this.openLinkBtn = searchInputDiv.querySelector("#openLinkBtn");
                 this.editBtn = searchInputDiv.querySelector("#editBtn");
                 this.addWord = searchInputDiv.querySelector("#addWord");
                 this.recoverBtn = searchInputDiv.querySelector("#recoverBtn");
@@ -5762,7 +5767,7 @@
                             }
                         } else if (this.searchJumperInPageInput.value) {
                             this.submitInPageWords();
-                        } else if (!this.initShowSearchInput && cacheKeywords) {
+                        } else if (!this.initShowSearchInput && cacheKeywords && this.lockWords !== cacheKeywords) {
                             this.searchJumperInPageInput.value = cacheKeywords;
                             this.initShowSearchInput = true;
                             this.searchJumperInPageInput.select();
@@ -5782,7 +5787,7 @@
             togglePicker() {
                 this.pickerBtn.classList.toggle("checked");
                 this.searchJumperInputKeyWords.disabled = !this.searchJumperInputKeyWords.disabled;
-                picker.toggle();
+                picker.toggle(true);
             }
 
             hideSearchInput() {
@@ -6309,6 +6314,9 @@
                 });
                 this.copyEleBtn.addEventListener("click", e => {
                     picker.copy();
+                });
+                this.openLinkBtn.addEventListener("click", e => {
+                    picker.openLinks();
                 });
                 let listArrow = document.createElement("div");
                 listArrow.className = "listArrow";
@@ -10089,7 +10097,53 @@
                  body.searchJumper-picker,
                  body.searchJumper-picker *:hover,
                  body.searchJumper-picker a:hover {
-                  cursor: crosshair !important;
+                   cursor: crosshair !important;
+                 }
+                 .select-rect {
+                   position: fixed;
+                   z-index: 2147483647;
+                   background: none;
+                   border: 1px dashed rgba(120, 170, 210, 0.8);
+                 }
+                 .select-rect>.dot {
+                   width: 10px;
+                   height: 10px;
+                   border: 2px solid #000;
+                   border-radius: 50%;
+                   background-color: white;
+                   position: absolute;
+                 }
+                 .select-rect>.top-left {
+                   top: -5px;
+                   left: -5px;
+                 }
+                 .select-rect>.top-right {
+                   top: -5px;
+                   right: -5px;
+                 }
+                 .select-rect>.bottom-left {
+                   bottom: -5px;
+                   left: -5px;
+                 }
+                 .select-rect>.bottom-right {
+                   bottom: -5px;
+                   right: -5px;
+                 }
+                 .select-rect>.top {
+                   top: -5px;
+                   left: calc(50% - 5px);
+                 }
+                 .select-rect>.right {
+                   top: calc(50% - 5px);
+                   right: -5px;
+                 }
+                 .select-rect>.left {
+                   top: calc(50% - 5px);
+                   left: -5px;
+                 }
+                 .select-rect>.bottom {
+                   bottom: -5px;
+                   left: calc(50% - 5px);
                  }
                 `;
                 _GM_addStyle(cssText);
@@ -10110,33 +10164,215 @@
                     searchBar.con.classList.add("selectedEle");
                 }
                 let cleanTimer;
+                this.initSelectRect();
+
                 this.mainSignDiv = this.createSignDiv();
                 this.setImportant(this.mainSignDiv, "pointer-events", "none");
+                this.setImportant(this.mainSignDiv, "background", "rgba(120, 170, 210, 0.3)");
                 this.moveHandler = e => {
                     if (e.target === document) return;
-                    self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
-                    if (e.ctrlKey || e.metaKey) {
-                        clearTimeout(cleanTimer);
-                        cleanTimer = setTimeout(() => {
-                            let target = self.cleanTarget(e.target);
-                            clickTarget(target);
-                        }, 5);
+                    if (self.inPicker) {
+                        e.preventDefault();
+                    }
+                    if (self.rectSelecting) {
+                        if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
+                        if (!self.selectRect.parentNode) getBody(document).appendChild(self.selectRect);
+                        self.createSelectRect({x: e.clientX, y: e.clientY});
+                    } else if (self.creatingRect) {
+                        return;
+                    } else {
+                        let target = self.getTarget(e.target);
+                        if (self.mainSignDiv.parentNode !== target.parentNode) target.parentNode.appendChild(self.mainSignDiv);
+                        self.adjustSignDiv(self.mainSignDiv, target);
+                        if (e.ctrlKey || e.metaKey) {
+                            clearTimeout(cleanTimer);
+                            cleanTimer = setTimeout(() => {
+                                let target = self.cleanTarget(e.target);
+                                clickTarget(target);
+                            }, 5);
+                        }
                     }
                 };
                 this.leaveHandler = e => {
-                    if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
-                };
-                this.enterHandler = e => {
-                    getBody(document).appendChild(this.mainSignDiv);
+                    if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
                 };
                 this.clickHandler = e => {
                     if (self.inPicker) {
                         e.stopPropagation();
                         e.preventDefault();
                     }
+                    if (self.creatingRect) return;
+                    if (self.rectSelecting) {
+                        if (self.selectRect.parentNode) {
+                            self.selectRect.parentNode.removeChild(self.selectRect);
+                        }
+                        self.rectSelecting = false;
+                        return;
+                    }
                     let target = self.getTarget(e.target);
                     clickTarget(target);
                 };
+                this.mouseDownHandler = e => {
+                    self.rectSelecting = true;
+                    self.rectInitPos = {x: e.clientX, y: e.clientY};
+                };
+                this.mouseUpHandler = e => {
+                    self.rectSelecting = false;
+                    if (self.creatingRect) return;
+                    if (self.selectRect.parentNode) {
+                        self.selectRect.parentNode.removeChild(self.selectRect);
+                        self.finishSelectRect();
+                        e && e.stopPropagation && e.stopPropagation();
+                        e && e.preventDefault && e.preventDefault();
+                    }
+                };
+            }
+
+            initSelectRect() {
+                this.waitToRemoveSigns = [];
+                this.waitToAddSigns = [];
+                let selectRect = document.createElement("div");
+                selectRect.innerHTML = createHTML(`
+                  <div class="dot top-left"></div>
+                  <div class="dot top-right"></div>
+                  <div class="dot bottom-left"></div>
+                  <div class="dot bottom-right"></div>
+                  <div class="dot top"></div>
+                  <div class="dot right"></div>
+                  <div class="dot left"></div>
+                  <div class="dot bottom"></div>
+                `);
+                selectRect.className = "select-rect";
+                this.selectRect = selectRect;
+            }
+
+            createSelectRect(pos) {
+                this.rectToPos = pos;
+                if (this.creatingRect) return;
+                this.creatingRect = true;
+                setTimeout(() => {
+                    this.creatingRect = false;
+                    this.selectRect.style.left = Math.min(this.rectToPos.x, this.rectInitPos.x) + "px";
+                    this.selectRect.style.top = Math.min(this.rectToPos.y, this.rectInitPos.y) + "px";
+                    this.selectRect.style.width = Math.abs(this.rectToPos.x - this.rectInitPos.x) + "px";
+                    this.selectRect.style.height = Math.abs(this.rectToPos.y - this.rectInitPos.y) + "px";
+                    this.checkRectAndSign();
+                    if (!this.rectSelecting) this.mouseUpHandler();
+                }, 100);
+            }
+
+            finishSelectRect() {
+                let self = this;
+                this.waitToRemoveSigns.forEach(sign => {
+                    self.removeSign(sign);
+                });
+                this.waitToAddSigns.forEach(sign => {
+                    delete sign.dataset.recttemp;
+                });
+                this.waitToRemoveSigns = [];
+                this.waitToAddSigns = [];
+                if (this.signList.length) {
+                    searchBar.con.classList.add("selectedEle");
+                } else {
+                    searchBar.con.classList.remove("selectedEle");
+                }
+            }
+
+            checkRectAndSign() {
+                if (!this.domInfo) return;
+                let self = this;
+                this.waitToRemoveSigns.forEach(sign => {
+                    sign.style.opacity = "";
+                });
+                this.waitToRemoveSigns = [];
+                this.signList.forEach(signArr => {
+                    let sign = signArr[0];
+                    if (sign.dataset.recttemp) return;
+                    let signRect = sign.getBoundingClientRect();
+                    let curRect = self.selectRect.getBoundingClientRect();
+                    if (self.compareRect(signRect, curRect)) {
+                        sign.style.opacity = "0";
+                        self.waitToRemoveSigns.push(sign);
+                    } else {
+                        sign.style.opacity = "";
+                    }
+                });
+                this.waitToAddSigns.forEach(sign => {
+                    self.removeSign(sign);
+                });
+                this.waitToAddSigns = [];
+                if (this.waitToRemoveSigns.length === 0) {
+                    this.curRectInfo = {};
+                    if (this.rectInitPos.x < this.rectToPos.x) {
+                        this.curRectInfo.left = this.rectInitPos.x;
+                        this.curRectInfo.right = this.rectToPos.x;
+                    } else {
+                        this.curRectInfo.left = this.rectToPos.x;
+                        this.curRectInfo.right = this.rectInitPos.x;
+                    }
+                    if (this.rectInitPos.y < this.rectToPos.y) {
+                        this.curRectInfo.top = this.rectInitPos.y;
+                        this.curRectInfo.bottom = this.rectToPos.y;
+                    } else {
+                        this.curRectInfo.top = this.rectToPos.y;
+                        this.curRectInfo.bottom = this.rectInitPos.y;
+                    }
+                    this.compareDomWithRect(this.domInfo);
+                    this.signDomWithRect(this.domInfo);
+                }
+            }
+
+            compareDomWithRect(dom) {
+                if (dom.children && dom.children.length > 0) {
+                    let matched = 0;
+                    for (let i = 0; i < dom.children.length; i++) {
+                        let child = dom.children[i];
+                        if (this.compareDomWithRect(child)) {
+                            matched++;
+                        }
+                    }
+                    if (matched === dom.children.length) {
+                        let rect = dom.target.getBoundingClientRect();
+                        if (rect.width && rect.height) {
+                            dom.sign = true;
+                            return true;
+                        }
+                    }
+                } else {
+                    if (this.compareRect(this.curRectInfo, dom.target.getBoundingClientRect())) {
+                        dom.sign = true;
+                        return true;
+                    }
+                }
+                dom.sign = false;
+                return false;
+            }
+
+            signDomWithRect(dom) {
+                if (dom.sign) {
+                    let sign = this.createSignDiv();
+                    sign.dataset.recttemp = 1;
+                    dom.target.parentNode.appendChild(sign);
+                    this.adjustSignDiv(sign, dom.target);
+                    this.signList.push([sign, dom.target]);
+                    this.waitToAddSigns.push(sign);
+                } else if (dom.children && dom.children.length > 0) {
+                    for (let i = 0; i < dom.children.length; i++) {
+                        let child = dom.children[i];
+                        this.signDomWithRect(child);
+                    }
+                }
+            }
+
+            compareRect(rect1, rect2) {
+                return (
+                    rect2.width &&
+                    rect2.height &&
+                    rect1.left <= rect2.right &&
+                    rect1.right >= rect2.left &&
+                    rect1.top <= rect2.bottom &&
+                    rect1.bottom >= rect2.top
+                );
             }
 
             cleanTarget(target) {
@@ -10155,15 +10391,17 @@
             }
 
             appendSign(sign, target, index) {
-                target.dataset.signNum = parseInt(target.dataset.signNum || 0) + 1;
+                if (target.dataset) {
+                    target.dataset.signNum = parseInt(target.dataset.signNum || 0) + 1;
+                }
                 sign.dataset.target = index;
-                getBody(document).appendChild(sign);
+                target.parentNode.appendChild(sign);
                 this.adjustSignDiv(sign, target);
                 this.signList.push([sign, target]);
             }
 
             removeSign(sign) {
-                getBody(document).removeChild(sign);
+                if (sign.parentNode) sign.parentNode.removeChild(sign);
                 for (let i = 0; i < this.signList.length; i++) {
                     let signArr = this.signList[i];
                     if (signArr[0] === sign) {
@@ -10190,7 +10428,15 @@
 
             close() {
                 if (!this.mainSignDiv) return;
+                if (this.rectSelecting) {
+                    if (this.selectRect.parentNode) {
+                        this.selectRect.parentNode.removeChild(this.selectRect);
+                    }
+                    this.finishSelectRect();
+                    this.rectSelecting = false;
+                }
                 this.callback = null;
+                this.domInfo = null;
                 this.clearSigns();
                 this.clickedEles = {};
                 if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
@@ -10198,8 +10444,9 @@
                 searchBar.con.classList.remove("selectedEle");
                 searchBar.con.removeEventListener("mouseenter", this.leaveHandler, true);
                 getBody(document).removeEventListener("mousemove", this.moveHandler, true);
-                getBody(document).removeEventListener("mouseenter", this.enterHandler, true);
                 getBody(document).removeEventListener("click", this.clickHandler, true);
+                getBody(document).removeEventListener("mousedown", this.mouseDownHandler, true);
+                getBody(document).removeEventListener("mouseup", this.mouseUpHandler, true);
                 this.inPicker = false;
             }
 
@@ -10219,24 +10466,19 @@
                 signDiv.addEventListener("mouseenter", e => {
                     if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
                 }, true);
-                signDiv.addEventListener("mouseleave", e => {
-                    getBody(document).appendChild(this.mainSignDiv);
-                }, true);
                 signDiv.addEventListener("mousedown", e => {
                     e.stopPropagation();
                     e.preventDefault();
                     this.removeSign(signDiv);
-                    getBody(document).appendChild(this.mainSignDiv);
                 }, true);
                 return signDiv;
             }
 
             adjustSignDiv(div, target) {
-                let rect = target.getBoundingClientRect();
-                this.setImportant(div, "width", rect.width + "px");
-                this.setImportant(div, "height", rect.height + "px");
-                this.setImportant(div, "left", rect.left + window.scrollX + "px");
-                this.setImportant(div, "top", rect.top + window.scrollY + "px");
+                this.setImportant(div, "width", target.offsetWidth + "px");
+                this.setImportant(div, "height", target.offsetHeight + "px");
+                this.setImportant(div, "left", target.offsetLeft + "px");
+                this.setImportant(div, "top", target.offsetTop + "px");
             }
 
             geneSelector(ele, id) {
@@ -10296,6 +10538,32 @@
                 }
             }
 
+            openLinks() {
+                if (!window.confirm(i18n('batchOpenConfirm'))) return;
+                let links = [];
+                this.signList.forEach(sign => {
+                    let ele = sign[1];
+                    if (ele.href) {
+                        if (/^(http|ftp)/i.test(ele.href) && links.indexOf(ele.href) === -1) {
+                            links.push(ele.href);
+                        }
+                    } else if (ele.parentNode && ele.parentNode.href) {
+                        if (/^(http|ftp)/i.test(ele.parentNode.href) && links.indexOf(ele.parentNode.href) === -1) {
+                            links.push(ele.parentNode.href);
+                        }
+                    } else if (ele.querySelectorAll) {
+                        [].forEach.call(ele.querySelectorAll('a[href]'), a => {
+                            if (/^(http|ftp)/i.test(a.href) && links.indexOf(a.href) === -1) {
+                                links.push(a.href);
+                            }
+                        });
+                    }
+                });
+                links.forEach(link => {
+                    _GM_openInTab(link, {active: false});
+                });
+            }
+
             getPickerStr() {
                 if (!this.inPicker) return "";
                 let resultStr = "";
@@ -10340,19 +10608,102 @@
                 this.signList = [];
             }
 
-            toggle() {
+            processNode(node, parent) {
+                const nodeInfo = {};
+                nodeInfo.target = node;
+                nodeInfo.children = [];
+
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const style = window.getComputedStyle(node);
+                    if (style.display === 'none' && style.visibility === 'hidden') return null;
+                    if (node.innerHTML.trim() === "") return null;
+                } else if (node.nodeType !== Node.TEXT_NODE || node.textContent.trim() === "") {
+                    return null;
+                }
+
+                const childNodes = node.childNodes;
+                if (childNodes.length > 0) {
+                    nodeInfo.target = node;
+                    parent.children.push(nodeInfo);
+                    for (const childNode of childNodes) {
+                        if (childNode.nodeType === Node.ELEMENT_NODE || childNode.nodeType === Node.TEXT_NODE) {
+                            this.processNode(childNode, nodeInfo);
+                        }
+                    }
+                } else {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        const lines = node.textContent.split("\n");
+
+                        const range = document.createRange();
+                        range.selectNodeContents(node);
+
+                        let offset = 0;
+                        let parentNode = node.parentNode;
+                        let paRect = parentNode.getBoundingClientRect();
+                        for (const line of lines) {
+                            if (line.trim() === '') {
+                                offset += (line.length + 1);
+                                continue;
+                            }
+                            range.setStart(node, offset);
+                            offset += line.length;
+                            range.setEnd(node, offset);
+                            offset++;
+
+                            const lineRect = range.getBoundingClientRect();
+                            let offsetLeft = lineRect.left - paRect.left;
+                            let offsetTop = lineRect.top - paRect.top;
+                            let offsetWidth = lineRect.width;
+                            let offsetHeight = lineRect.height;
+
+                            let textNodeInfo = {
+                                target: {innerText: line,
+                                         outerHTML: line,
+                                         parentNode: parentNode,
+                                         offsetLeft: offsetLeft + parentNode.offsetLeft,
+                                         offsetTop: offsetTop + parentNode.offsetTop,
+                                         offsetWidth: offsetWidth,
+                                         offsetHeight: offsetHeight,
+                                         getBoundingClientRect: () => {
+                                             let paRect = parentNode.getBoundingClientRect();
+                                             return {
+                                                 left: paRect.left + offsetLeft,
+                                                 top: paRect.top + offsetTop,
+                                                 right: paRect.left + offsetLeft + offsetWidth,
+                                                 bottom: paRect.top + offsetTop + offsetHeight,
+                                                 width: offsetWidth,
+                                                 height: offsetHeight,
+                                             };
+                                         }}
+                            };
+                            parent.children.push(textNodeInfo);
+                        }
+                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                        nodeInfo.target = node;
+                        parent.children.push(nodeInfo);
+                    }
+                }
+
+                return nodeInfo;
+            }
+
+            toggle(rectSel) {
                 this.init();
                 if (this.inPicker) {
                     this.close();
                     return;
                 }
+                this.rectSel = !!rectSel;
+                if (rectSel) {
+                    this.domInfo = this.processNode(getBody(document), {children: []});
+                    getBody(document).addEventListener("mousedown", this.mouseDownHandler, true);
+                    getBody(document).addEventListener("mouseup", this.mouseUpHandler, true);
+                }
                 this.inPicker = true;
-                getBody(document).appendChild(this.mainSignDiv);
                 getBody(document).classList.add("searchJumper-picker");
 
                 searchBar.con.addEventListener("mouseenter", this.leaveHandler, true);
                 getBody(document).addEventListener("mousemove", this.moveHandler, true);
-                getBody(document).addEventListener("mouseenter", this.enterHandler, true);
                 getBody(document).addEventListener("click", this.clickHandler, true);
             }
         }
