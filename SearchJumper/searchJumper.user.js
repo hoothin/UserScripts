@@ -238,6 +238,9 @@
                 name: "Google translate image",
                 url: "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
             }, {
+                name: "QR decode",
+                url: "https://hoothin.com/qrdecode/#%U"
+            }, {
                 name: "SauceNAO",
                 url: "https://saucenao.com/search.php?db=999&url=%t"
             }, {
@@ -339,7 +342,7 @@
             openInNewTab: true,
             sites: [ {
                 name: "QR code",
-                url: "https://hoothin.github.io/SearchJumper/qrcode.html#%U"
+                url: "https://hoothin.com/qrcode/#%U"
             }, {
                 name: "📦 Batch open links",
                 url: "%s[all]",
@@ -10961,30 +10964,36 @@
         async function imageSrc2Base64(src) {
             let urlSplit = src.split("/");
             return new Promise((resolve) => {
-                _GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: src,
-                    responseType:'blob',
-                    headers: {
-                        origin: urlSplit[0] + "//" + urlSplit[2],
-                        referer: src,
-                        accept: "*/*"
-                    },
-                    onload: function(d) {
-                        var blob = d.response;
-                        var fr = new FileReader();
-                        fr.readAsDataURL(blob);
-                        fr.onload = function (e) {
-                            resolve(e.target.result);
-                        };
-                    },
-                    onerror: function(){
-                        resolve(null);
-                    },
-                    ontimeout: function(){
-                        resolve(null);
-                    }
-                });
+                if (ext) {
+                    chrome.runtime.sendMessage({action: "getImgBase64", detail: {img: src}}, function(r) {
+                        resolve(r);
+                    });
+                } else {
+                    _GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: src,
+                        responseType:'blob',
+                        headers: {
+                            origin: urlSplit[0] + "//" + urlSplit[2],
+                            referer: src,
+                            accept: "*/*"
+                        },
+                        onload: function(d) {
+                            var blob = d.response;
+                            var fr = new FileReader();
+                            fr.readAsDataURL(blob);
+                            fr.onload = function (e) {
+                                resolve(e.target.result);
+                            };
+                        },
+                        onerror: function(){
+                            resolve(null);
+                        },
+                        ontimeout: function(){
+                            resolve(null);
+                        }
+                    });
+                }
             });
         }
 
