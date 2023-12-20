@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.8
+// @version      1.9.37.9
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1552,7 +1552,7 @@
                     await sleep(1000);
                 }
                 setTimeout(() => {
-                    let end = r + 20;
+                    let end = r + 25;
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
@@ -1575,7 +1575,7 @@
                 if (!this.hpRules) this.hpRules = [];
                 let url = this.curSiteRule && this.curSiteRule.url, self = this;
                 let href = location.href.slice(0, 500);
-                let matchedRules = this.hpRules.filter(rule => rule !== self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
+                let matchedRules = this.hpRules.filter(rule => rule != self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
                 if (url) matchedRules.unshift(this.curSiteRule);
                 matchedRules.sort((a, b) => {
                     if ((a.include || a.exclude) && (!b.include && !b.exclude)) {
@@ -1599,10 +1599,13 @@
                     }
                 });
                 this.hpRules = this.hpRules.filter(item => {
-                    return item && !matchedRules.find(rule => item.url === rule.url && JSON.stringify(item) === JSON.stringify(rule));
+                    return item && !matchedRules.find(rule => item.url == rule.url && JSON.stringify(item) == JSON.stringify(rule));
                 });
                 if (instead) {
-                    if (url) this.hpRules.unshift(this.curSiteRule);
+                    if (url) {
+                        this.hpRules.unshift(this.curSiteRule);
+                        matchedRules = [];
+                    }
                 } else {
                     this.hpRules = matchedRules.concat(this.hpRules);
                 }
@@ -3449,7 +3452,7 @@
                     if (initRun && initRun != false) {
                         setTimeout(() => {
                             nextPage();
-                        }, 500);
+                        }, 300);
                     }
                 }
             });
@@ -4503,12 +4506,7 @@
                 if(!ruleParser.customRules) {
                     ruleParser.customRules = [];
                 }
-                for (let i in ruleParser.customRules) {
-                    if (ruleParser.customRules[i].url == editTemp.url) {
-                        ruleParser.customRules.splice(i, 1);
-                        break;
-                    }
-                }
+                ruleParser.customRules = ruleParser.customRules.filter(item => {return item.url != editTemp.url || item.name != editTemp.name});
                 if (tempRule.value) {
                     ruleParser.customRules.unshift(editTemp);
                     ruleParser.curSiteRule = editTemp;
@@ -5170,7 +5168,8 @@
                   width: 60%;
                   position: fixed;
                   z-index: 999;
-                  bottom: 2%;
+                  bottom: 0;
+                  padding-bottom: 15px;
                   left: 20%;
                   font-size: xx-large;
                   opacity: 0.8;
@@ -6816,7 +6815,7 @@
             if (curPage > 1 || ruleParser.nextLinkHref) {
                 let pageEle = ruleParser.getPageElement(document);
                 if (pageEle && pageEle.length) {
-                    let parent = pageEle[0].parentNode, pageScrollY = parent.scrollTop;;
+                    let parent = pageEle[0].parentNode, pageScrollY = parent.scrollTop;
                     while (parent && pageScrollY == 0) {
                         parent = parent.parentNode;
                         pageScrollY = parent.scrollTop;
@@ -7834,7 +7833,7 @@
                 return;
             }
             if (!ruleParser.checkStopSign(nextLink, iframeDoc)) {
-                return returnFalse("Stop as stopSign");;
+                return returnFalse("Stop as stopSign");
             }
             if (checkTimes++ > 200) {
                 returnFalse("Stop as timeout when emu");
