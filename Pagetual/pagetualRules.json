@@ -9652,7 +9652,6 @@
     "name": "Hacker News",
     "action": 0,
     "url": "^https?://news\\.ycombinator\\.com/",
-    "pageElement": "table.itemlist>tbody>tr",
     "nextLink": "a.morelink"
 },
 {
