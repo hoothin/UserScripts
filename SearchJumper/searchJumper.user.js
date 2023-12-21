@@ -1635,7 +1635,7 @@
                      top: 101px;
                      position: absolute;
                      width: 100%;
-                     overflow-x: scroll;
+                     overflow-x: auto;
                      overflow-y: hidden;
                      height: calc(100% - 101px);
                      overscroll-behavior: contain;
