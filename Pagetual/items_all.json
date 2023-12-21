@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86196",
+  "data": {
+    "pageElement": "//div[@id='divMain']",
+    "nextLink": "(//div[@class='pagebar'])[1]/a[last()-1]",
+    "url": "^https://comics888\\.com/",
+    "exampleUrl": "https://comics888.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "blekai",
+  "name": "Comics888",
+  "created_at": "2023-12-19T18:44:25+09:00",
+  "updated_at": "2023-12-20T16:38:15+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86194",
   "data": {
     "insertBefore": "",
