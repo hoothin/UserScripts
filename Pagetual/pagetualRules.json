@@ -7,6 +7,13 @@
     "pageElement": "#Main>.box:nth-child(4)"
 },
 {
+    "name": "V2EX",
+    "url": "^https?://www\\.v2ex\\.com/t/",
+    "example": "https://www.v2ex.com/t/998253",
+    "author": "Hoothin",
+    "pageElement": "#Main>.box:not([style],[id])>.cell[id]"
+},
+{
     "name": "ICONFINDER ",
     "author": "skofkyo",
     "enable": 0,
