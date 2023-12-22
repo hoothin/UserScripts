@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.2
+// @version      2.8.3
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -451,7 +451,7 @@ if (window.top != window.self) {
             filterListContainer.id = "filterListContainer";
             filterListContainer.innerHTML = createHTML(`
                 <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 99998; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
-                <div style="padding: 5px; box-sizing: border-box; overflow: hidden; width: 600px; height: auto; max-height: 80vh; min-height: 200px; position: fixed; left: 50%; top: 10%; margin-left: -300px; z-index: 99998; background-color: #ffffff; border: 1px solid #afb3b6; border-radius: 10px; opacity: 0.95; filter: alpha(opacity=95); box-shadow: 5px 5px 20px 0px #000;">
+                <div id="filterListBody">
                     <div class="dacCustomRule">
                     ${i18n.custom}
                         <textarea id="dacCustomInput"></textarea>
@@ -692,6 +692,32 @@ if (window.top != window.self) {
                 }
                 #filterListContainer input[type=button]:active {
                     box-shadow: inset 1px 1px 1px #DFDFDF;
+                }
+                #filterListBody {
+                    padding: 5px;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                    width: 600px;
+                    height: auto;
+                    max-height: 80vh;
+                    min-height: 200px;
+                    position: fixed;
+                    left: 50%;
+                    top: 10%;
+                    margin-left: -300px;
+                    z-index: 99998;
+                    background-color: #ffffff;
+                    border: 1px solid #afb3b6;
+                    border-radius: 10px;
+                    opacity: 0.95;
+                    filter: alpha(opacity=95);
+                    box-shadow: 5px 5px 20px 0px #000;
+                }
+                @media screen and (max-width: 800px) {
+                    #filterListBody {
+                        width: 90%;
+                        margin-left: -45%;
+                    }
                 }
             `);
             dacLinksCon = filterListContainer.querySelector("#dacLinksCon");
