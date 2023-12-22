@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.57
+// @version      1.7.58
 // @description  Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1565,7 +1565,7 @@
                      display: none!important;
                  }
                  #search-jumper.search-jumper-showall #filterSites {
-                     background-color: #2a282cc0;
+                     background-color: #f5f5f5e0;
                      border: none;
                      height: 40px;
                      margin-bottom: 0;
@@ -1589,8 +1589,8 @@
                  }
                  #search-jumper.search-jumper-showall #filterSites>input,
                  #search-jumper.search-jumper-showall #filterSites>textarea {
-                     background-color: #000000;
-                     color: white;
+                     background-color: white;
+                     color: black;
                      border: none;
                      outline: none;
                      box-sizing: border-box;
@@ -1727,7 +1727,7 @@
                      white-space: nowrap;
                      margin: 20px;
                      pointer-events: none;
-                     text-shadow: 0 0 3px black;
+                     text-shadow: 0 0 5px black;
                      background-image: initial;
                  }
                  #search-jumper-alllist>.dayInAll {
@@ -3185,6 +3185,14 @@
                      /* 站点列表 */
                      #search-jumper .sitelist > .sitelistCon > p {
                          background-color: #252B32 !important;
+                     }
+                     #search-jumper.search-jumper-showall #filterSites {
+                         background-color: #2a282cc0;
+                     }
+                     #search-jumper.search-jumper-showall #filterSites>input,
+                     #search-jumper.search-jumper-showall #filterSites>textarea {
+                         background-color: #000000;
+                         color: white;
                      }
 
                      #search-jumper .sitelist > .sitelistCon {
