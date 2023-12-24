@@ -12047,12 +12047,15 @@
                         shareEngines = shareEngines.getAttribute("content");
                         shareEngines = JSON.parse(decodeURI(shareEngines));
                         searchData.sitesConfig = shareEngines;
-                        document.getElementById("spotlight").style.display = "none";
                     } catch (e) {
                         shareEngines = null;
                     }
                 }
                 isAllPage = !!shareEngines || /all(\.html)?$/.test(location.pathname);
+                let spotlight = document.getElementById("spotlight");
+                if (spotlight) {
+                    spotlight.style.display = "none";
+                }
                 return true;
             }
             return false;
