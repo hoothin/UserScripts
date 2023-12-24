@@ -476,6 +476,7 @@
             match: ["ja"],
             lang: {
                 enableDebug: "デバッグモード",
+                updateNotification: "ルール更新後の通知",
                 disable: "一時的に無効",
                 disableSite: "無効状態の切り替え",
                 disableSiteTips: "このサイトで既に無効になっています",
@@ -595,6 +596,7 @@
             match: ["ru", "ru-RU"],
             lang: {
                 enableDebug: "Включить отладку",
+                updateNotification: "Уведомление после обновления правила",
                 disable: "Выключить",
                 disableSite: "Включить/выключить на сайте",
                 disableSiteTips: "Выключено для этого сайта",
