@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.10
+// @version      1.9.37.11
 // @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -116,6 +116,7 @@
             match: ["en"],
             lang: {
                 enableDebug: "Enable debug output",
+                updateNotification: "Notification after rules updated",
                 disable: "Disable",
                 disableSite: "Toggle disabled state",
                 disableSiteTips: "Disabled on this site",
@@ -235,6 +236,7 @@
             match: ["zh-CN", "zh-SG"],
             lang: {
                 enableDebug: "调试模式，输出信息至控制台",
+                updateNotification: "规则更新后提示",
                 disable: "暂时禁用",
                 disableSite: "站点禁用开关",
                 disableSiteTips: "已在此站禁用",
@@ -354,6 +356,7 @@
             match: ["zh-TW", "zh-HK"],
             lang: {
                 enableDebug: "調試模式，輸出信息至控制台",
+                updateNotification: "規則更新后提示",
                 disable: "暫時禁用",
                 disableSite: "站點禁用開關",
                 disableSiteTips: "已在此站禁用",
@@ -5615,6 +5618,7 @@
         let wedata2githubInput = createCheckbox(i18n("wedata2github"), rulesData.wedata2github);
         let customFirstInput = createCheckbox(i18n("customFirst"), rulesData.customFirst);
         let lastPageTipsInput = createCheckbox(i18n("lastPageTips"), rulesData.lastPageTips);
+        let updateNotificationInput = createCheckbox(i18n("updateNotification"), rulesData.updateNotification != false);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -5780,6 +5784,7 @@
             rulesData.dbClick2Stop = dbClick2StopInput.checked;
             rulesData.enableWhiteList = !enableWhiteListInput.checked;
             rulesData.enableDebug = enableDebugInput.checked;
+            rulesData.updateNotification = updateNotificationInput.checked;
             rulesData.enableHistory = enableHistoryInput.checked;
             rulesData.enableHistoryAfterInsert = enableHistoryAfterInsertInput.checked;
             rulesData.openInNewTab = openInNewTabInput.checked;
@@ -5880,7 +5885,7 @@
                 storage.setItem("ruleLastUpdate", now);
                 storage.setItem("rules", ruleParser.rules);
                 let curLength = ruleParser.rules.length;
-                if (curLength !== preLength) {
+                if (curLength !== preLength && rulesData.updateNotification) {
                     _GM_notification({
                         text: `Rules has updated( ${preLength} => ${curLength} )`,
                         title: "Pagetual rules updated",
@@ -6115,6 +6120,9 @@
                 }
                 if (typeof(rulesData.enableDebug) == "undefined") {
                     rulesData.enableDebug = true;
+                }
+                if (typeof(rulesData.updateNotification) == "undefined") {
+                    rulesData.updateNotification = true;
                 }
                 if (typeof(rulesData.initRun) == "undefined") {
                     rulesData.initRun = true;
