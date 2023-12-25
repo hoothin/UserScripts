@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.60
+// @version      1.7.61
 // @description  Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -683,6 +683,111 @@
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
                         template: '請設置【#t#】的值'
+                    };
+                    break;
+                case 'ja':
+                    config = {
+                        import: 'インポート',
+                        filter: 'フィルター',
+                        selectAll: 'すべて選択',
+                        importOrNot: '設定をインポートしますか? ',
+                        settings: '構成スクリプト',
+                        batchOpen: 'バッチオープン',
+                        batchOpenConfirm: 'バッチオープンしてもよろしいですか? ',
+                        postOver: '正常に送信されました:',
+                        postError: '送信に失敗しました:',
+                        keywords: '検索語を入力してください',
+                        targetUrl: '検索 URL を入力してください',
+                        siteName: 'サイト名',
+                        siteDesc: '説明',
+                        siteUrl: 'アドレス',
+                        siteIcon: 'アイコン',
+                        siteTest: 'テスト',
+                        siteCancel: 'キャンセル',
+                        siteAdd: '追加',
+                        siteType: 'カテゴリ',
+                        siteExist: '同じルールがすでに存在します。クローンとして追加しますか? ',
+                        siteAddOver: 'サイトは正常に追加されました',
+                        multiline: '複数行の検索は改行で区切るべきですか? ',
+                        multilineTooMuch: '行数が 10 行を超えています。検索を続けますか? ',
+                        inputPlaceholder: 'フィルタリング エンジン',
+                        inputTitle: 'フィルタリング エンジン、*? ワイルドカードをサポート、$ は終わりを表し、^ は始まりを表します、グループ ** サイトは写真などの指定されたグループをフィルターできます ** Google、次の項目をタブします',
+                        inputKeywords: '検索キーワードを入力してください',
+                        inPageTips: 'カスタム区切り文字: $c と区切り文字 ($c| 検索 | ジャンパーなど)、デフォルトのスペースを区切り文字として使用\n元のテキストは分離されていません: $o と文字 (ヒーローが好んだ $oopai など)\n正規表現 ：/re/ 、$c、/google/i、/aPPle/ など\nプロンプト テキストの追加: 検索テキスト $t{プロンプト テキスト}、たとえば linux$t{Linux は Unix ではありません}\nカスタム スタイルの追加: 検索テキスト $s{背景;other}、例: google$s{#333333;color:red;}\nキーワードを左クリックすると次のキーワードにジャンプし、キーワードを右クリックすると前のキーワードにジャンプします',
+                        inPagePlaceholder: 'ページ内を検索するには、テキストを入力して Enter キーを押してください',
+                        pickerBtn: '要素の取得',
+                        multiPickerBtn: '要素を取得するには、Ctrl または Command を押したまま継続的に取得します',
+                        editBtn: '検索テキストを編集',
+                        emptyBtn: '空の検索テキスト',
+                        copyInPageBtn: '検索テキストをコピー',
+                        wordModeBtn: 'ワードモード',
+                        copyEleBtn: '選択した要素をコピー',
+                        openLinkBtn: '選択したリンクを開く',
+                        maxEleBtn: '選択した要素を展開',
+                        minEleBtn: '選択した要素を折りたたむ',
+                        expandAll: 'すべて展開',
+                        collapseAll: 'すべて折りたたむ',
+                        rename: '名前を変更',
+                        reverseBtn: '検索テキストを復元',
+                        pinBtn: '検索テキストを修正、すべてのタブで検索',
+                        locBtn: 'サイドバーを検索',
+                        filterSites: '検索エンジンをフィルタリング',
+                        searchInPage: 'ページ内を検索',
+                        removeBtn: '検索語を削除',
+                        saveRuleBtn: '現在のサイトの検索語を保存',
+                        wordContent: '単語の内容を検索',
+                        wordHide: '親要素を非表示',
+                        wordHideTips: '要素の深さ、0 が現在の親',
+                        wordStyle: '検索ワードスタイル',
+                        wordTitle: '検索単語の注釈',
+                        re: 'RegExp',
+                        ignoreCase: '大文字と小文字は区別されません',
+                        filterLink: 'フィルターリンク',
+                        modify: '変更',
+                        cancel: 'キャンセル',
+                        modifyWord: 'ページ上の検索ワードを変更します',
+                        addSearchEngine: '検索エンジンを追加',
+                        noValidItemAsk: '有効な要素が見つかりません。ルールを手動で編集して追加しますか? ',
+                        expand: '残りのサイトを展開します',
+                        add: '追加',
+                        addWord: '新しい単語を追加',
+                        wordRange: '有効範囲',
+                        customInputFrame: 'カスタム検索パラメータ',
+                        customSubmit: '検索を送信',
+                        finalSearch: '対象の検索文字列',
+                        search: 'このアイテムを検索',
+                        siteKeywords: 'キーワード (| で区切られた複数のキーワード)',
+                        siteMatch: '通常のサイト URL と一致',
+                        openSelect: 'オプションを開く',
+                        openInDefault: 'デフォルト',
+                        openInNewTab: '新しいタブが開きます',
+                        openInCurrent: '現在のページが開いています',
+                        currentType: '現在のカテゴリ',
+                        maxAddSiteBtn: '最大化',
+                        minAddSiteBtn: '復元',
+                        addAction: 'アクションを追加',
+                        rollInfo: '入力検索をシミュレート',
+                        inputAction: '入力',
+                        clickAction: 'クリック',
+                        sleepAction: '待機',
+                        submitCrawl: '操作を完了',
+                        inputOutput: '要素 <span title="#t1#" class="element">#t1#</span> 内に <span title="#t2#">#t2#</span> を入力します',
+                        clickOutput: 'クリック要素<span title="#t#" class="element">#t#</span>',
+                        sleepOutput: 'スリープ<span title="#t#">#t#</span> ミリ秒',
+                        inputNewValue: '新しい値を入力してください',
+                        deleteconfirm: 'この項目を削除してもよろしいですか? ',
+                        sleepPrompt: '待機時間 (ミリ秒)',
+                        startCache: 'キャッシュを開始します。キャッシュが完了するまで辛抱強く待ってください。設定ページは閉じないでください。 ',
+                        cacheOver: 'すべてのアイコンがキャッシュされました! ',
+                        cspDisabled: 'スクリプト スタイルは現在のサイトの CSP によってブロックされているため、表示できません。許可を取得するには、Allow CSP: Content-Security-Policy 拡張機能をインストールしてみてください',
+                        Sunday: '日曜日',
+                        Monday: '月曜日',
+                        Tuesday: '火曜日',
+                        Wednesday: '水曜日',
+                        Thursday: '木曜日',
+                        Friday: '金曜日',
+                        Saturday: '土曜日',
+                        template: '[#t#]の値を設定してください'
                     };
                     break;
                 default:
@@ -14272,6 +14377,34 @@
             }
         }
 
+        function globMatch(first, second) {
+            if (first === '*') {
+                return true;
+            }
+            if (first.length == 0 && second.length == 0){
+                return true;
+            }
+
+            if (first.length > 1 && first[0] == '*' &&
+                second.length == 0){
+                return false;
+            }
+
+            if ((first.length > 1 && first[0] == '?') ||
+                (first.length != 0 && second.length != 0 &&
+                 first[0] == second[0])){
+                return globMatch(first.substring(1),
+                                 second.substring(1));
+            }
+
+            if (first.length > 0 && first[0] == '*'){
+                return globMatch(first.substring(1), second) ||
+                    globMatch(first, second.substring(1));
+            }
+
+            return false;
+        }
+
         if (location.href.indexOf("#searchJumperMin") != -1) {
             inMinMode = true;
             if (location.href.indexOf("#searchJumperMinPost") != -1) {
@@ -14315,6 +14448,33 @@
                 preAction();
                 await initData();
                 if (disableState) return;
+                if (searchData.prefConfig.blacklist && searchData.prefConfig.blacklist.length > 0) {
+                    let href = location.href.slice(0, 500);
+                    let commentStart = false;
+                    for (let i = 0; i < searchData.prefConfig.blacklist.length; i++) {
+                        let curGlob = searchData.prefConfig.blacklist[i];
+                        if (!curGlob) continue;
+                        if (curGlob.indexOf("//") == 0) continue;
+                        if (commentStart) {
+                            if (/\*\/$/.test(curGlob)) {
+                                commentStart = false;
+                            }
+                            continue;
+                        }
+                        if (curGlob.indexOf("/*") == 0) {
+                            commentStart = true;
+                            continue;
+                        }
+                        if (curGlob.indexOf("/") == 0) {
+                            let regMatch = curGlob.match(/^\/(.*)\/(\w*)$/);
+                            if (regMatch && new RegExp(regMatch[1], regMatch[2]).test(href)) {
+                                return;
+                            }
+                        } else if (globMatch(curGlob, href)) {
+                            return;
+                        }
+                    }
+                }
                 initView();
                 initConfig();
                 initMycroft();
