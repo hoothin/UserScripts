@@ -4346,6 +4346,38 @@
               line-height: 35px;
               color: #161616;
              }
+             #pagetual-picker #edit{
+              -webkit-animation: jumpAnimation .6s 5;
+              animation: jumpAnimation .6s 5;
+             }
+             @keyframes jumpAnimation {
+              0% {
+                transform: scale(1) translateY(0);
+                animation-timing-function: ease-out;
+              }
+              50% {
+                transform: scale(1.2) translateY(-5px);
+                animation-timing-function: ease-in;
+              }
+              100% {
+                transform: scale(1) translateY(0);
+                animation-timing-function: ease-out;
+              }
+             }
+             @-webkit-keyframes jumpAnimation {
+              0% {
+                -webkit-transform: scale(1) translateY(0);
+                animation-timing-function: ease-out;
+              }
+              50% {
+                -webkit-transform: scale(1.2) translateY(-5px);
+                animation-timing-function: ease-in;
+              }
+              100% {
+                -webkit-transform: scale(1) translateY(0);
+                animation-timing-function: ease-out;
+              }
+             }
             `;
             this.mainSignDiv = this.createSignDiv();
             this.allSignDiv = [];
