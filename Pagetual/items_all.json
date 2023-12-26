@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86198",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('wishlist')//table[contains(concat(' ', @class, ' '), ' n_worklist ')]/tbody/*",
+    "nextLink": "id('wishlist')/table[contains(concat(' ', @class, ' '), ' global_pagination ')]//a[.='次へ']",
+    "url": "https://www.dlsite.com/*/mypage/wishlist",
+    "exampleUrl": ""
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "htsign_0",
+  "name": "DLSite wishlist",
+  "created_at": "2023-12-26T03:03:02+09:00",
+  "updated_at": "2023-12-26T03:03:02+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86196",
   "data": {
     "pageElement": "//div[@id='divMain']",
