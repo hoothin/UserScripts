@@ -496,7 +496,7 @@
                         siteAdd: '添加',
                         siteType: '分类',
                         siteExist: '已存在相同规则，是否添加为克隆项？',
-                        siteAddOver: '站点添加成功',
+                        siteAddOver: '站点添加成功，刷新后生效',
                         multiline: '是否以换行符分隔多行搜索？',
                         multilineTooMuch: '行数超过10行，是否继续搜索？',
                         inputPlaceholder: '筛选引擎',
@@ -602,7 +602,7 @@
                         siteAdd: '添加',
                         siteType: '分類',
                         siteExist: '已存在相同規則，是否添加為克隆項？',
-                        siteAddOver: '站點添加成功',
+                        siteAddOver: '站點添加成功，刷新後生效',
                         multiline: '是否以換行符分隔多行搜索？',
                         multilineTooMuch: '行數超過10行，是否繼續搜索？',
                         inputPlaceholder: '篩選引擎',
@@ -1223,6 +1223,8 @@
         var webDAV;
         async function dataChanged(callback, override) {
             if (shareEngines) return;
+            let _searchData = await storage.getItem("searchData");
+            if (_searchData) searchData = _searchData;
             if (!webDAV) return callback && callback();
             if (!override) {
                 let lastModified = await webDAV.read("lastModified");
