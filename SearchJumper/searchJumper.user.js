@@ -12163,6 +12163,13 @@
                 let spotlight = document.getElementById("spotlight");
                 if (spotlight) {
                     spotlight.style.display = "none";
+                } else {
+                    setTimeout(() => {
+                        spotlight = document.getElementById("spotlight");
+                        if (spotlight) {
+                            spotlight.style.display = "none";
+                        }
+                    }, 500);
                 }
                 return true;
             }
