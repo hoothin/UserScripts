@@ -4942,7 +4942,7 @@
                         const start = result.text.length;
                         result.text += "\n";
                         result.data[start] = {node: ele, text: "\n"};
-                    } else if (ele.offsetParent) {
+                    } else if (ele.offsetParent || ele.offsetHeight) {
                         if (/^(li|p|a)$/i.test(ele.nodeName)) {
                             let start = result.text.length;
                             result.text += "\n";
@@ -5395,7 +5395,7 @@
                         }
                     } else {
                         let blockValue = "";
-                        if (node.nodeType == 1 && node.value && node.offsetParent && !word.init && /^(button|select|input|textarea)$/i.test(node.nodeName) && !/^(hidden|file|password|radio|range|checkbox|image)$/i.test(node.type)) {
+                        if (node.nodeType == 1 && node.value && (node.offsetParent || node.offsetHeight) && !word.init && /^(button|select|input|textarea)$/i.test(node.nodeName) && !/^(hidden|file|password|radio|range|checkbox|image)$/i.test(node.type)) {
                             blockValue = node.value;
                         }
                         if (blockValue) {
