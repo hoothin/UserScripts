@@ -9965,6 +9965,13 @@
     "nextLink": "li.hupu-rc-pagination-next>a:not([disabled])"
 },
 {
+    "name": "虎扑社区",
+    "url": "^https?://bbs\\.hupu\\.com/",
+    "example": "https://bbs.hupu.com/623887205.html",
+    "author": "Hoothin",
+    "pageElement": "[class^=\"post-wrapper_bbs-post-wrapper-title\"]+div"
+},
+{
     "name": "小木虫论坛",
     "url": "^http://muchong\\.com",
     "pageElement": "div#maincontent"
