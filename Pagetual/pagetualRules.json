@@ -10508,6 +10508,13 @@
     "nextLink": "id('blog-pager-older-link')/a"
 },
 {
+    "name": "Switch520",
+    "url": "^https?://www\\.gamer520\\.com/",
+    "example": "https://www.gamer520.com/",
+    "nextLink": "a.next.page-numbers",
+    "pageElement": "main.site-main > div.row.posts-wrapper"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
