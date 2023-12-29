@@ -10,8 +10,8 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.11
-// @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
+// @version      1.9.37.12
+// @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
@@ -769,7 +769,7 @@
     } else if (typeof GM !== 'undefined' && typeof GM.notification !== 'undefined') {
         _GM_notification = GM.notification;
     } else {
-        _GM_notification = (s) => {showTips(String(s));};
+        _GM_notification = (s) => {showTips(String(s.text || s));};
     }
     if (typeof GM_openInTab !== 'undefined') {
         _GM_openInTab = GM_openInTab;
@@ -1940,9 +1940,9 @@
                         let isMax = false;
                         if (isHori) {
                             if (curMaxEle) {
-                                if (curWidth < w) {
+                                if (w > curWidth && (windowWidth>>1) > curWidth) {
                                     isMax = true;
-                                } else if (curWidth < w + 300 && curMaxArea < a) {
+                                } else if (w + 300 > curWidth && a > curMaxArea) {
                                     isMax = true;
                                 }
                             }
