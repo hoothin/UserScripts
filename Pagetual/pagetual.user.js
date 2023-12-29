@@ -5210,17 +5210,18 @@
                   position: fixed;
                   z-index: 999;
                   bottom: 0;
-                  padding-bottom: 15px;
                   left: 20%;
+                  background-color: #6b6b6b45;
                   font-size: xx-large;
                   opacity: 0.8;
                   cursor: pointer;
-                  -moz-transition:opacity 0.3s ease;
-                  -webkit-transition:opacity 0.3s ease;
-                  transition:opacity 0.3s ease;
+                  -moz-transition:all 0.3s ease;
+                  -webkit-transition:all 0.3s ease;
+                  transition:all 0.3s ease;
                  }
                  #saveBtn:hover {
                   opacity: 1;
+                  background-color: #6b6b6b;
                  }
                 `);
                 click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
