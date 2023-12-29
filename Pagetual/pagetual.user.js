@@ -4179,6 +4179,7 @@
               min-width: 290px;
               max-width: calc(65vw - 50px);
               min-height: unset;
+              max-height: unset;
               padding: 6px 12px;
               font-size: 16px;
               font-weight: 400;
