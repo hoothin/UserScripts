@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.12.23.1
+// @version              2023.12.30.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -44,7 +44,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://update.greasyfork.org/scripts/438080/1295404/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1303651/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1262309/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -11805,22 +11805,22 @@ ImgOps | https://imgops.com/#b#`;
         }
         switch (type) {
             case 1:
-                name = (name || nameFromUrl || "image").substr(-50);
+                name = (name || nameFromUrl || "image").substr(-80);
                 break;
             case 2:
-                name = (nameFromUrl || url || "image").substr(-50);
+                name = (nameFromUrl || url || "image").substr(-80);
                 break;
             case 3:
                 if (nameFromUrl && !name) {
-                    name = nameFromUrl.substr(-50);
+                    name = nameFromUrl.substr(-80);
                 } else if (nameFromUrl && name) {
-                    name = nameFromUrl.substr(-50) + " - " + name.substr(-50);
+                    name = nameFromUrl.substr(-80) + " - " + name.substr(-80);
                 } else if (!nameFromUrl && !name) {
                     name = "image";
                 }
                 break;
             default:
-                name = (nameFromUrl || name || "image").substr(-50);
+                name = (nameFromUrl || name || "image").substr(-80);
                 break;
         }
         return name.replace(/.*\/([^\/]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
@@ -15948,12 +15948,12 @@ ImgOps | https://imgops.com/#b#`;
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || (item.img ? (item.img.title || item.img.alt || "") : ""));
                             spanMark.dataset.thumbSrc=item.imgSrc;
-                            let title = item.img ? (item.img.title || item.img.alt || "").slice(-50) : "";
+                            let title = item.img ? (item.img.title || item.img.alt || "").slice(-80) : "";
                             if (title) {
                                 if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
                                 else title += '\n';
                             }
-                            spanMark.title = title + item.src.length > 150 ? item.src.slice(0, 110) + " ... " + item.src.slice(-30) : item.src;
+                            spanMark.title = title + (item.src.length > 150 ? item.src.slice(0, 110) + " ... " + item.src.slice(-30) : item.src);
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                         }catch(e){};
@@ -16163,6 +16163,12 @@ ImgOps | https://imgops.com/#b#`;
                 for(var i=0,ii=data.length;i<ii;i++){
                     data_i=data[i];
                     data_i_src=data_i.imgSrc;
+                    if (i + 1 < ii && data_i.img && data_i.img.nodeName != 'IMG' && data_i_src == data[i + 1].imgSrc) {
+                        data.splice(i, 1);
+                        i--;
+                        ii--;
+                        continue;
+                    }
                     if(dataSrcs.indexOf(data_i_src)!=-1){//已经存在
                         data.splice(i,1);//移除
                         i--;
@@ -23394,7 +23400,7 @@ ImgOps | https://imgops.com/#b#`;
             if (key == 'c' && event && (event.ctrlKey || event.metaKey)) return false;
             if (floatBar && isKeyDownEffectiveTarget(event.target)) {
                 Object.keys(prefs.floatBar.keys).some(function(action) {
-                    if (action == 'enable') return;
+                    if (action == 'enable' || action == 'search') return;
                     if (key == prefs.floatBar.keys[action]) {
                         floatBar.open(event, action);
                         event.stopPropagation();
