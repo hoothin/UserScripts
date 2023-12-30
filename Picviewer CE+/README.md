@@ -62,6 +62,7 @@ Using a standalone script, you have the ability to manage all of your custom rul
 // @description  Picviewer CE+ custom rules
 // @author       You
 // @match        *://*/*
+// @run-at       document-start
 // @grant        none
 // ==/UserScript==
 
