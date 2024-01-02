@@ -1,6 +1,7 @@
 [
 {
     "name": "PubMed",
+    "author": "1nker",
     "url": "^https?://pubmed\\.ncbi\\.nlm\\.nih\\.gov/",
     "example": "https://pubmed.ncbi.nlm.nih.gov/?term=",
     "loadMore": "button.load-button.next-page"
