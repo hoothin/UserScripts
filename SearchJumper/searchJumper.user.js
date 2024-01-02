@@ -12211,6 +12211,14 @@
                                                 console.log(e);
                                                 resolve(false);
                                             }
+                                        },
+                                        onerror: function(e) {
+                                            console.log(e);
+                                            resolve(false);
+                                        },
+                                        ontimeout: function(e) {
+                                            console.log(e);
+                                            resolve(false);
                                         }
                                     });
                                 }
