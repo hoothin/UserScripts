@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.7.61
+// @version      1.7.62
 // @description  Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
 // @description:zh-CN  高效搜索辅助，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -74,6 +74,7 @@
     }
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
+    const firstRunPage = "https://search.hoothin.com/firstRun";
     let configPage = 'https://search.hoothin.com/config/';
     let isAllPage = false;
 
@@ -400,6 +401,7 @@
             x: "0",
             y: "0"
         },
+        firstRun: true,
         openInNewTab: false,
         enableInPage: true,
         altKey: false,
@@ -1824,7 +1826,7 @@
                  #search-jumper-alllist>.timeInAll,
                  #search-jumper-alllist>.dayInAll {
                      position: fixed;
-                     bottom: 5%;
+                     bottom: 0;
                      line-height: 1.5;
                      color: white;
                      opacity: 0.35;
@@ -1917,15 +1919,16 @@
                      -webkit-line-clamp: 2;
                      -webkit-box-orient: vertical;
                      margin-left: 62px;
-                     margin-top: 35px;
+                     margin-top: 30px;
                      width: 190px;
                      position: absolute;
                      pointer-events: none;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist a>img {
-                     width: 32px;
-                     height: 32px;
+                     width: 48px;
+                     height: 48px;
                      float: left;
+                     margin-left: -20px;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist a>p {
                      -webkit-line-clamp: 2;
@@ -1935,7 +1938,7 @@
                      height: 21px;
                      line-height: 21px;
                      margin-bottom: 8px;
-                     margin-top: 3px;
+                     margin-top: 0px;
                      margin-left: 40px;
                      overflow: hidden;
                      text-overflow: ellipsis;
@@ -2087,7 +2090,8 @@
                  .in-input.in-find>.search-jumper-input {
                      pointer-events: all;
                  }
-                 .in-input.in-find>.search-jumper-searchBar {
+                 .in-input.in-find>.search-jumper-searchBar,
+                 .in-input.in-pick>.search-jumper-searchBar {
                      opacity: 0!important;
                      pointer-events: none;
                      transition: none;
@@ -2899,7 +2903,7 @@
                      height: 35px;
                      position: absolute;
                      user-select: none;
-                     background: #212022;
+                     background: transparent;
                      white-space: nowrap;
                      overflow: hidden;
                      display: flex;
@@ -2976,7 +2980,13 @@
                  }
                  @media screen and (max-width: 600px) {
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                         width: 300px;
+                         width: 100vw;
+                     }
+                     #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
+                         width: calc(100% - 20px);
+                     }
+                     #search-jumper-alllist>.timeInAll, #search-jumper-alllist>.dayInAll {
+                         margin: 10px;
                      }
                  }
                  @media screen and (max-width: 800px) {
@@ -4942,6 +4952,7 @@
                 let self = this;
                 let navMark = document.createElement("span");
                 let top = getElementTop(node);
+                navMark.title = word.title || word.showWords;
                 navMark.dataset.top = top;
                 navMark.dataset.content = word.showWords;
                 let scrollHeight = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
@@ -5943,6 +5954,7 @@
 
             togglePicker() {
                 this.pickerBtn.classList.toggle("checked");
+                this.con.classList.toggle("in-pick");
                 this.searchJumperInputKeyWords.disabled = !this.searchJumperInputKeyWords.disabled;
                 picker.toggle(true);
             }
@@ -14337,6 +14349,11 @@
                 lang = searchData.prefConfig.lang;
             }
             setLang();
+            if (searchData.prefConfig.firstRun) {
+                _GM_openInTab(firstRunPage, {active: true});
+                searchData.prefConfig.firstRun = false;
+                storage.setItem("searchData", searchData);
+            }
             //旧版兼容
             if (typeof searchData.prefConfig.customSize === "undefined") {
                 searchData.prefConfig.customSize = 100;
