@@ -907,6 +907,7 @@
             }
         };
         var disabled = false;
+        var isInConfigPage = false;
 
         function createHTML(html = "") {
             return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
@@ -6516,7 +6517,7 @@
                     this.initPos();
                     this.appendBar();
                 }
-                if (this.fontPool.length > 0 || isInConfigPage()) {
+                if (this.fontPool.length > 0 || isInConfigPage) {
                     let linkEle = document.createElement("link");
                     linkEle.rel="stylesheet";
                     linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.1.2/css/all.css";
@@ -11901,7 +11902,7 @@
                     shown = false;
                 });
             }
-            if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
+            if (searchData.prefConfig.dragToSearch && !isInConfigPage) {
                 getBody(document).addEventListener('dragstart', e => {
                     if (!e.isTrusted ||
                         (searchData.prefConfig.dragAlt && !e.altKey) ||
@@ -12185,16 +12186,47 @@
         }
 
         var shareEngines;
-        function isInConfigPage() {
+        async function checkConfigPage() {
             if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && document.querySelector('[name="author"][content="Hoothin"]'))) {
                 shareEngines = document.querySelector('[name="engines"]');
                 if (shareEngines) {
                     try {
                         shareEngines = shareEngines.getAttribute("content");
-                        shareEngines = JSON.parse(decodeURI(shareEngines));
-                        searchData.sitesConfig = shareEngines;
+                        if (shareEngines.indexOf("http") === 0) {
+                            let config = await new Promise((resolve) => {
+                                if (ext) {
+                                    chrome.runtime.sendMessage({action: "getShareEngines", detail: {engineUrl: shareEngines}}, function(r) {
+                                        resolve(r);
+                                    });
+                                } else {
+                                    _GM_xmlhttpRequest({
+                                        method: 'GET',
+                                        url: shareEngines,
+                                        onload: function(result) {
+                                            var jsonData = null;
+                                            try {
+                                                jsonData = JSON.parse(result.responseText);
+                                                resolve(jsonData);
+                                            } catch (e) {
+                                                console.log(e);
+                                                resolve(false);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            if (config) {
+                                searchData.sitesConfig = config;
+                                shareEngines = true;
+                            } else {
+                                shareEngines = false;
+                            }
+                        } else {
+                            searchData.sitesConfig = JSON.parse(decodeURI(shareEngines));
+                            shareEngines = true;
+                        }
                     } catch (e) {
-                        shareEngines = null;
+                        shareEngines = false;
                     }
                 }
                 isAllPage = !!shareEngines || /all(\.html)?$/.test(location.pathname);
@@ -12214,8 +12246,9 @@
             return false;
         }
 
-        function initConfig() {
-            if (isInConfigPage() && !isAllPage) {
+        async function initConfig() {
+            isInConfigPage = await checkConfigPage();
+            if (isInConfigPage && !isAllPage) {
                 let sendMessageTimer, received = false;
                 let loadConfig = () => {
                     sendMessageTimer = setTimeout(() => {
@@ -14528,7 +14561,7 @@
                     }
                 }
                 initView();
-                initConfig();
+                await initConfig();
                 initMycroft();
                 initRun();
                 if (cb) cb();
