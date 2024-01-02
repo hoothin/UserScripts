@@ -33927,7 +33927,7 @@
 {
   "resource_url": "http://wedata.net/items/60005",
   "data": {
-    "pageElement": "//div[@class='img']|//div[@class='hsNormal']",
+    "pageElement": "//div[@class='extMdlSeriesMngrArticleMargin']/div",
     "nextLink": "//a[@class='btnNext']\r\n",
     "url": "^https?://mangalifewin\\.takeshobo\\.co\\.jp/",
     "exampleUrl": "https://mangalifewin.takeshobo.co.jp/rensai/slanleat/slanleat-001/25887/\r\nhttp://mangalifewin.takeshobo.co.jp/rensai/halfde_ittoko/item-1/001/\r\nhttp://mangalifewin.takeshobo.co.jp/rensai/halfde_ittoko/item-3/033/"
@@ -33936,7 +33936,7 @@
   "created_by": "jigendaddy_be",
   "name": "ゆるっとcafe / まんがライフWIN",
   "created_at": "2012-04-08T11:52:07+09:00",
-  "updated_at": "2024-01-01T04:11:56+09:00"
+  "updated_at": "2024-01-01T16:27:07+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/59945",
