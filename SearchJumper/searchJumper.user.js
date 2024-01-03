@@ -992,15 +992,7 @@
         }
         if (ext) {
             _GM_notification = s => {
-                chrome.notifications.create(
-                  "searchjumper-notification",
-                  {
-                    type: "basic",
-                    iconUrl: "/icon/icon128.png",
-                    title: "SearchJumper",
-                    message: s,
-                  }
-                )
+                chrome.runtime.sendMessage({action: "notification", detail: {message: s}});
             }
         } else if (typeof GM_notification != 'undefined') {
             _GM_notification = s => GM_notification({text: s, onclick: e => _GM_openInTab(configPage, {active: true})});
@@ -6532,7 +6524,7 @@
                             hasFont = true;
                             cacheFontPool.unshift(font);
                         });
-                        if (hasFont) {
+                        if (hasFont && isInConfigPage) {
                             setTimeout(() => {cacheFontManager()}, 5000);
                         }
                     });
