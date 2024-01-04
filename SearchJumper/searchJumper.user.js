@@ -2,7 +2,7 @@
 // @name         SearchJumper
 // @name:zh-CN   搜索酱
 // @name:zh-TW   搜尋醬
-// @name:ja      検索ちゃん - SearchJumper
+// @name:ja      SearchJumper
 // @namespace    hoothin
 // @version      1.7.62
 // @description  Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
@@ -9002,6 +9002,13 @@
                                         }
                                     }
                                 }
+                                if (!imgBase64) {
+                                    self.customInput = true;
+                                    let src = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
+                                    if (src) {
+                                        imgBase64 = await imageSrc2Base64(src);
+                                    } else return false;
+                                }
                             }
                         }
                     } catch(e) {
@@ -9034,7 +9041,7 @@
                     }
                     if (targetUrl === '') {
                         let canBeUrl = getSelectStr() || self.searchJumperInputKeyWords.value;
-                        if (canBeUrl && !hasWordParam) {
+                        if (!hasWordParam && canBeUrl && /^(http|ftp)/i.test(canBeUrl)) {
                             targetUrl = canBeUrl;
                         } else {
                             let promptStr = false;
