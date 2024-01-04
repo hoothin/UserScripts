@@ -578,7 +578,8 @@
                         Thursday: '星期四 (木)',
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
-                        template: '请设置【#t#】的值'
+                        template: '请设置【#t#】的值',
+                        loadingCollection: '正在加载合集，请稍候……'
                     };
                     break;
                 case "zh-TW":
@@ -684,7 +685,8 @@
                         Thursday: '星期四 (木)',
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
-                        template: '請設置【#t#】的值'
+                        template: '請設置【#t#】的值',
+                        loadingCollection: '正在載入合集，請稍候……'
                     };
                     break;
                 case 'ja':
@@ -789,7 +791,8 @@
                         Thursday: '木曜日',
                         Friday: '金曜日',
                         Saturday: '土曜日',
-                        template: '[#t#]の値を設定してください'
+                        template: '[#t#]の値を設定してください',
+                        loadingCollection: 'コレクションを読み込み中...'
                     };
                     break;
                 default:
@@ -887,7 +890,8 @@
                         startCache: 'Start cache icons of engines, do not close this page!',
                         cacheOver: 'All icons cached!',
                         cspDisabled: 'The style of SearchJumper is blocked by the CSP of current site, please try to install the Allow CSP: Content-Security-Policy extension to obtain permission',
-                        template: 'Please set the value of "#t#"'
+                        template: 'Please set the value of "#t#"',
+                        loadingCollection: 'Preparing collection for SearchJumper...'
                     };
                     break;
             }
@@ -6361,7 +6365,7 @@
                 });
                 this.copyInPageBtn.addEventListener("click", e => {
                     if (!this.lockWords) return;
-                    _GM_setClipboard(this.lockWords);
+                    _GM_setClipboard(this.lockWords.replace(/◎/g, "\n"));
                     _GM_notification('Copied successfully!');
                 });
                 this.setNav(navEnable);
@@ -12181,10 +12185,16 @@
         async function checkConfigPage() {
             if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && document.querySelector('[name="author"][content="Hoothin"]'))) {
                 shareEngines = document.querySelector('[name="engines"]');
+                let spotlight = document.getElementById("spotlight");
                 if (shareEngines) {
                     try {
                         shareEngines = shareEngines.getAttribute("content");
                         if (shareEngines.indexOf("http") === 0) {
+                            if (spotlight) {
+                                const loadingCollection = i18n("loadingCollection");
+                                spotlight.innerText = loadingCollection;
+                                spotlight.setAttribute("spotlight", loadingCollection);
+                            }
                             let config = await new Promise((resolve) => {
                                 if (ext) {
                                     chrome.runtime.sendMessage({action: "getShareEngines", detail: {engineUrl: shareEngines}}, function(r) {
@@ -12230,7 +12240,6 @@
                     }
                 }
                 isAllPage = !!shareEngines || /all(\.html)?$/.test(location.pathname);
-                let spotlight = document.getElementById("spotlight");
                 if (spotlight) {
                     spotlight.style.display = "none";
                 } else {
