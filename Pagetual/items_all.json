@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86201",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class=\"l-section\"]/a",
+    "nextLink": "//span[@class=\"mod-pager__next\"]/a",
+    "url": "^https://search\\.shinchosha\\.co\\.jp/search",
+    "exampleUrl": "https://search.shinchosha.co.jp/search?site=ZXE8UIDC&design=sitesearch&group=sitesearch&charset=UTF-8&query=%E3%83%AD%E3%83%B3%E3%83%89%E3%83%B3#result-list"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "新潮社 検索",
+  "created_at": "2024-01-04T17:12:40+09:00",
+  "updated_at": "2024-01-04T17:12:40+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86198",
   "data": {
     "insertBefore": "",
