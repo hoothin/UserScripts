@@ -7126,7 +7126,7 @@
         let _time = 1500;
         if (href) {
             _time = 3500;
-            tipsWords.innerHTML = createHTML(`<a href='${href}'>${content}</a>`);
+            tipsWords.innerHTML = createHTML(`<a href='${href}' target='_blank'>${content}</a>`);
             tipsWords.style.pointerEvents = 'all';
         } else {
             tipsWords.innerHTML = createHTML(content);
