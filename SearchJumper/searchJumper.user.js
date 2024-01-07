@@ -4,9 +4,9 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.62
-// @description  Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly. Additionally, it allows for the selection of text, images, or links to be searched on any search engine with a simple right-click or by utilizing a range of menus and shortcuts.
-// @description:zh-CN  高效搜索辅助，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
+// @version      1.7.63
+// @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
+// @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
@@ -45,6 +45,7 @@
 // @homepage     https://github.com/hoothin/SearchJumper
 // @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
 // @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.meta.js
+// @require      https://update.greasyfork.org/scripts/484118/searchJumperDefaultConfig.js
 // @connect      global.bing.com
 // @connect      suggestqueries.google.com
 // @connect      api.bing.com
@@ -79,319 +80,8 @@
     let isAllPage = false;
 
     let searchData = {};
-    searchData.sitesConfig = [
-        {
-            type: "Translate",
-            icon: "language",
-            sites: [ {
-                name: "DeepL",
-                url: "https://www.deepl.com/translator#zh/en/%s",
-                icon: "https://www.deepl.com/img/favicon/favicon_96.png"
-            }, {
-                name: "Google translate",
-                url: "https://translate.google.com/?text=%s",
-                match: "translate\\.google\\.com.*\\btext="
-            }, {
-                name: "Bing translate",
-                url: "http://www.bing.com/dict/search?q=%s"
-            }, {
-                name: "Translate with ChatGPT",
-                url: "https://poe.com/ChatGPT#p{sleep(1000)&[class*\\='ChatMessageInputContainer'] textarea=Please help me to translate \\`%s\\` to English, please return only translated content not include the origin text&click(button[class*\\='ChatMessageSendButton_sendButton'])}"
-            } ]
-        },
-        {
-            type: "Video",
-            icon: "video",
-            sites: [ {
-                name: "bilibili",
-                url: "https://search.bilibili.com/all?keyword=%s"
-            }, {
-                name: "Youtube",
-                url: "https://www.youtube.com/results?search_query=%s"
-            }, {
-                name: "niconico",
-                url: "https://www.nicovideo.jp/search/%s"
-            } ]
-        },
-        {
-            type: "Music",
-            icon: "music",
-            sites: [ {
-                name: "163 Music",
-                url: "https://music.163.com/#/search/m/?s=%s"
-            }, {
-                name: "QQ Music",
-                url: "https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=song&w=%s"
-            }, {
-                name: "Jango",
-                url: "https://www.jango.com/music/%s"
-            } ]
-        },
-        {
-            type: "Social",
-            icon: "users",
-            sites: [ {
-                name: "Twitter",
-                url: "https://twitter.com/search/%s"
-            }, {
-                name: "Facebook",
-                url: "https://www.facebook.com/search/results.php?q=%s"
-            } ]
-        },
-        {
-            type: "Image",
-            icon: "image",
-            sites: [ {
-                name: "Google image",
-                url: "https://www.google.com/search?q=%s&tbm=isch",
-                match: "www\\.google\\..*tbm=isch"
-            }, {
-                name: "Bing image",
-                url: "https://www.bing.com/images/search?q=%s"
-            }, {
-                name: "pixiv",
-                url: "https://www.pixiv.net/search.php?word=%s"
-            }, {
-                name: "flickr",
-                url: "https://www.flickr.com/search/?q=%s"
-            } ]
-        },
-        {
-            type: "News",
-            icon: "newspaper",
-            sites: [ {
-                name: "Google news",
-                url: "https://news.google.com/search?q=%s&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
-                icon: "https://www.google.com/favicon.ico"
-            }, {
-                name: "CNN",
-                url: "https://edition.cnn.com/search/?q=%s"
-            }, {
-                name: "BBC",
-                url: "https://www.bbc.co.uk/search?q=%s"
-            } ]
-        },
-        {
-            type: "Search",
-            icon: "search",
-            sites: [ {
-                name: "Bing",
-                url: "https://www.bing.com/search?q=%s",
-                match: "^https://(www|cn|global)\\.bing\\.com/search"
-            }, {
-                name: "Baidu",
-                url: "https://www.baidu.com/s?wd=%s&ie=utf-8",
-                keywords: "(?:wd|word)=(.*?)(&|$)",
-                match: "https?://(www|m)\\.baidu\\.com/.*(wd|word)="
-            }, {
-                name: "Google advanced",
-                url: "https://www.google.com/search?q=%s%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{Limit lang/zh-CN/zh-TW/CN/EN,&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
-                match: "https://www\\.google\\..*/search",
-                hideNotMatch: true
-            } ]
-        },
-        {
-            type: "Search in page",
-            icon: "sitemap",
-            selectTxt: true,
-            openInNewTab: true,
-            sites: [ {
-                name: "Google",
-                url: "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
-                match: "https://www\\.google\\..*/search",
-            }, {
-                name: "Wikipedia ",
-                url: "[\"Wikipedia\"]"
-            }, {
-                name: "📄 Copy",
-                url: "copy:%sr",
-                nobatch: true
-            }, {
-                name: "🔆 Highlight",
-                url: "find:%sr",
-                nobatch: true
-            }, {
-                name: "🔗 Open text link",
-                url: "%sr.replace(/。/g,\".\").replace(/[^ \\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
-                kwFilter: "\\w.*\\..*\\w",
-                nobatch: true
-            }, {
-                name: "Google Search in site",
-                url: "https://www.google.com/search?q=%s%20site%3A%h&ie=utf-8&oe=utf-8",
-            }, {
-                name: "Words to QRCode",
-                url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
-            }, {
-                name: "💲 USD to RMB",
-                url: "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\D/,'')} RMB</i>",
-                kwFilter: "\\d\\$|\\$\\d"
-            } ]
-        },
-        {
-            type: "Search by image",
-            icon: "eye",
-            selectImg: true,
-            openInNewTab: true,
-            sites: [ {
-                name: "Google search by image",
-                url: "https://www.google.com/searchbyimage?sbisrc=cr_1_0_0&image_url=%T"
-            }, {
-                name: "Google translate image",
-                url: "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
-            }, {
-                name: "QR decode",
-                url: "https://hoothin.com/qrdecode/#%U"
-            }, {
-                name: "SauceNAO",
-                url: "https://saucenao.com/search.php?db=999&url=%t"
-            }, {
-                name :"IQDB",
-                url: "https://iqdb.org/?url=%t"
-            }, {
-                name: "Lunapic",
-                url: "https://www.lunapic.com/editor/index.php?action=url&url=%t"
-            }, {
-                name: "Pixlr easy",
-                url: "https://pixlr.com/x/#p{click(#home-open-url)&#image-url=%t&click(.dialog>.buttons>a.button.positive)}"
-            }, {
-                name: "Bing search by image",
-                url: "https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbisrc=UrlPaste&q=imgurl:%t"
-            }, {
-                name: "TinEye",
-                url: "https://www.tineye.com/search?url=%t"
-            } ]
-        },
-        {
-            type: "VIP",
-            icon: "key",
-            match: "://v\\.qq\\.com/x/",
-            sites: []
-        },
-        {
-            type: "Scholar",
-            icon: "graduation-cap",
-            sites: [ {
-                name: "Scholar",
-                url: "http://scholar.google.com/scholar?hl=zh-CN&q=%s"
-            }, {
-                name: "Google Book",
-                url: "https://www.google.com/search?q=%s&tbm=bks&tbo=1&hl=zh-CN&gws_rd=ssl"
-            }, {
-                name: "krugle",
-                url: "http://opensearch.krugle.org/document/search/#query=%s",
-                icon: "https://opensearch.krugle.org/media/images/favicon.ico"
-            }, {
-                name: "npm",
-                url: "https://www.npmjs.org/search?q=%s",
-                icon: "https://static.npmjs.com/b0f1a8318363185cc2ea6a40ac23eeb2.png"
-            } ]
-        },
-        {
-            type: "Developer",
-            icon: "code",
-            sites: [ {
-                name: "MDN",
-                url: "https://developer.mozilla.org/zh-CN/search?q=%s"
-            }, {
-                name: "stackoverflow",
-                url: "https://stackoverflow.com/search?q=%s"
-            }, {
-                name: "Can I Use",
-                url: "http://caniuse.com/#search=%s",
-                icon: "https://caniuse.com/img/favicon-128.png"
-            }, {
-                name: "GitHub",
-                url: "https://github.com/search?utf8=✓&q=%s",
-                match: "https://github\\.com/search\\?.*[&\?]q="
-            }, {
-                name: "w3c",
-                url: "http://www.runoob.com/?s=%s"
-            } ]
-        },
-        {
-            type: "Wiki",
-            icon: "book-open-reader",
-            sites: [ {
-                name: "Wikipedia",
-                url: "https://en.wikipedia.org/wiki/%s",
-                description: "The largest and most-read reference work in history.#wiki"
-            }, {
-                name: "Quora",
-                url: "https://www.quora.com/search?q=%s"
-            } ]
-        },
-        {
-            type: "Shopping",
-            icon: "shopping-cart",
-            sites: [ {
-                name: "Amazon",
-                url: "http://www.amazon.com/s/ref=nb_sb_noss?field-keywords=%s"
-            }, {
-                name: "1688",
-                url: "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
-            } ]
-        },
-        {
-            type: "Assit",
-            icon: "list-alt",
-            selectTxt: true,
-            selectImg: true,
-            selectAudio: true,
-            selectVideo: true,
-            selectLink: true,
-            selectPage: true,
-            openInNewTab: true,
-            sites: [ {
-                name: "QR code",
-                url: "https://hoothin.com/qrcode/#%U"
-            }, {
-                name: "📦 Batch open links",
-                url: "%s[all]",
-                kwFilter: "^https?:"
-            }, {
-                name: "Share to Twitter",
-                url: "https://twitter.com/intent/tweet?url=%T"
-            }, {
-                name: "Send by Gmail",
-                url: "https://mail.google.com/mail/u/0/?tf=cm&source=mailto&body=%n %T"
-            }, {
-                name: "Share to Facebook",
-                url: "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
-            }, {
-                name: "🧮 Calculator",
-                url: "calculator://"
-            }, {
-                name: "🔎 Everything",
-                url: "ES://%s"
-            } ]
-        },
-        {
-            type: "Page",
-            icon: "list",
-            selectLink: true,
-            selectPage: true,
-            openInNewTab: true,
-            sites: [ {
-                name: "🔗 Open url",
-                url: "%t",
-                openInNewTab: true
-            }, {
-                name: "📷 Search cache",
-                url: "https://2tool.top/kuaizhao.php?k=%u"
-            }, {
-                name: "Web archive",
-                url: "https://web.archive.org/web/*/%u",
-                icon: "https://web.archive.org/_static/images/archive.ico"
-            }, {
-                name: "Save archive",
-                url: "https://web.archive.org/save/%u",
-                icon: "https://web.archive.org/_static/images/archive.ico"
-            }, {
-                name: "✏️ Edit current page",
-                url: "javascript:(function(){document.body.setAttribute('contenteditable', 'true');alert('Now you can modify the page, cancel by ESC');document.onkeydown = function (e) {e = e || window.event;if(e.keyCode==27){document.body.setAttribute('contenteditable', 'false');}}})();"
-            } ]
-        }
-    ];
+    if (!sitesConfig) sitesConfig = [];
+    searchData.sitesConfig = sitesConfig;
     searchData.prefConfig = {
         position: {
             x: "left",
@@ -579,6 +269,8 @@
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
                         template: '请设置【#t#】的值',
+                        recordAction: '录制操作',
+                        startRecord: '开始录制操作，按回车键结束录制',
                         loadingCollection: '正在加载合集，请稍候……'
                     };
                     break;
@@ -686,6 +378,8 @@
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
                         template: '請設置【#t#】的值',
+                        recordAction: '錄製動作',
+                        startRecord: '開始錄製操作，按下回車鍵結束錄製',
                         loadingCollection: '正在載入合集，請稍候……'
                     };
                     break;
@@ -792,6 +486,8 @@
                         Friday: '金曜日',
                         Saturday: '土曜日',
                         template: '[#t#]の値を設定してください',
+                        RecordAction: '記録操作',
+                        startRecord: '記録操作を開始します。記録を終了するには Enter キーを押してください',
                         loadingCollection: 'コレクションを読み込み中...'
                     };
                     break;
@@ -891,6 +587,8 @@
                         cacheOver: 'All icons cached!',
                         cspDisabled: 'The style of SearchJumper is blocked by the CSP of current site, please try to install the Allow CSP: Content-Security-Policy extension to obtain permission',
                         template: 'Please set the value of "#t#"',
+                        recordAction: 'Record operation',
+                        startRecord: 'Start to record operation, press Enter to end',
                         loadingCollection: 'Preparing collection for SearchJumper...'
                     };
                     break;
@@ -7980,37 +7678,9 @@
                             //self.bar.classList.add("minSizeMode");
                             self.bar.classList.remove("minSizeModeClose");
                         }
-                        if (sites.length > (searchData.prefConfig.expandTypeLength || 12) && !searchData.prefConfig.expandType) {
-                            ele.classList.add("not-expand");
-                            ele.appendChild(self.searchJumperExpand);
-                        }
-                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
-                        if (searchData.prefConfig.disableTypeOpen) {
-                            scrollSize = baseSize + "px";
-                            if (e) self.listPos(ele.children[0], siteList);
-                        }
-                        if (leftRight) {
-                            ele.style.height = scrollSize;
-                            ele.style.width = "";
-                        } else {
-                            ele.style.width = scrollSize;
-                            ele.style.height = "";
-                        }
-                        setTimeout(() => {
-                            if (ele.classList.contains("search-jumper-open")) {
-                                ele.style.flexWrap = "nowrap";
-                            }
-                        }, searchData.prefConfig.typeOpenTime);
-                        searchTypes.forEach(type => {
-                            if (ele != type) {
-                                type.classList.remove("search-jumper-open");
-                                type.style.width = baseSize + "px";
-                                type.style.height = baseSize + "px";
-                                type.style.flexWrap = "";
-                            }
-                        });
                         let href = (targetElement && (targetElement.href || targetElement.src)) || location.href;
                         let keyWords = getKeywords();
+                        let shownSitesNum = 0;
                         siteEles.forEach((se, i) => {
                             let data = sites[i];
                             /*if (data.match && data.hideNotMatch) {
@@ -8038,9 +7708,41 @@
                                 }
                             }
                             let si = se.querySelector("img");
-                            if (se.style.display != "none" && si && !si.src && si.dataset.src) {
-                                si.src = si.dataset.src;
-                                delete si.dataset.src;
+                            if (se.style.display != "none") {
+                                shownSitesNum++;
+                                if (si && !si.src && si.dataset.src) {
+                                    si.src = si.dataset.src;
+                                    delete si.dataset.src;
+                                }
+                            }
+                        });
+                        if (shownSitesNum > (searchData.prefConfig.expandTypeLength || 12) && !searchData.prefConfig.expandType) {
+                            ele.classList.add("not-expand");
+                            ele.appendChild(self.searchJumperExpand);
+                        }
+                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
+                        if (searchData.prefConfig.disableTypeOpen) {
+                            scrollSize = baseSize + "px";
+                            if (e) self.listPos(ele.children[0], siteList);
+                        }
+                        if (leftRight) {
+                            ele.style.height = scrollSize;
+                            ele.style.width = "";
+                        } else {
+                            ele.style.width = scrollSize;
+                            ele.style.height = "";
+                        }
+                        setTimeout(() => {
+                            if (ele.classList.contains("search-jumper-open")) {
+                                ele.style.flexWrap = "nowrap";
+                            }
+                        }, searchData.prefConfig.typeOpenTime);
+                        searchTypes.forEach(type => {
+                            if (ele != type) {
+                                type.classList.remove("search-jumper-open");
+                                type.style.width = baseSize + "px";
+                                type.style.height = baseSize + "px";
+                                type.style.flexWrap = "";
                             }
                         });
                     } else {
@@ -10659,8 +10361,16 @@
             adjustSignDiv(div, target) {
                 this.setImportant(div, "width", target.offsetWidth + "px");
                 this.setImportant(div, "height", target.offsetHeight + "px");
-                this.setImportant(div, "left", target.offsetLeft + "px");
-                this.setImportant(div, "top", target.offsetTop + "px");
+                let left = target.offsetLeft;
+                let top = target.offsetTop;
+                if (target.offsetParent !== div.offsetParent) {
+                    let rect1 = div.offsetParent.getBoundingClientRect();
+                    let rect2 = target.offsetParent.getBoundingClientRect();
+                    left += rect2.left - rect1.left;
+                    top += rect2.top - rect1.top;
+                }
+                this.setImportant(div, "left", left + "px");
+                this.setImportant(div, "top", top + "px");
             }
 
             geneSelector(ele, id) {
@@ -10937,6 +10647,7 @@
             targetElement = input;
             let event = new Event('focus', { bubbles: true });
             input.dispatchEvent(event);
+            input.click && input.click();
             let lastValue = input.value;
             if (input.type == 'file') {
                 let file = v;
@@ -10952,9 +10663,12 @@
                 dataTransfer.items.add(file);
                 input.files = dataTransfer.files;
                 v = "c:/fakepath/fakefile";
-            } else if (input.nodeName.toUpperCase() == "INPUT") {
+            } else if (/INPUT/i.test(input.nodeName)) {
                 var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
                 nativeInputValueSetter.call(input, v);
+            } else if (/SELECT/i.test(input.nodeName)) {
+                var nativeSelectValueSetter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
+                nativeSelectValueSetter.call(input, v);
             } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
                 var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
                 nativeTextareaValueSetter.call(input, v);
@@ -13578,8 +13292,10 @@
                     .crawling>.searchJumperFrame-crawlBody {
                         display: block;
                     }
-                    .searchJumperFrame-buttons>button#submitCrawl {
-                        width: 99%;
+                    .searchJumperFrame-buttons>button#submitCrawl,
+                    .searchJumperFrame-buttons>button#record {
+                        width: 100%;
+                        margin: 0 3px;
                     }
                     .searchJumperFrame-crawlBody>.actionCon {
                         height: 200px;
@@ -13697,6 +13413,9 @@
                     </a>
                     <svg class="searchJumperFrame-closeBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close crawl</title>${closePath}</svg>
                     <div class="actionCon"></div>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="record" type="button">${i18n("recordAction")}</button>
+                    </div>
                     <div class="searchJumperFrame-buttons">
                         <button id="input" type="button">${i18n("inputAction")}</button>
                         <button id="click" type="button">${i18n("clickAction")}</button>
@@ -13858,10 +13577,11 @@
                 let clickAction = addFrame.querySelector("#click");
                 let sleepAction = addFrame.querySelector("#sleep");
                 let submitCrawl = addFrame.querySelector("#submitCrawl");
+                let recordBtn = addFrame.querySelector("#record");
                 let dragDiv;
                 let addAction = (type, sel, val) => {
                     let div = document.createElement("div");
-                    let words = "";
+                    let words = type;
                     switch(type) {
                         case "input":
                             words = i18n('inputOutput', [sel, val]);
@@ -13891,25 +13611,47 @@
                             actionCon.insertBefore(dragDiv, div);
                         }
                         div.onclick = e => {
-                            if (e.target.nodeName.toUpperCase() == 'SPAN') {
-                                if (e.target.className == 'element') {
+                            let target = e.target;
+                            if (target.nodeName.toUpperCase() == 'SPAN') {
+                                if (target.className == 'element') {
                                     picker.getSelector(selector => {
-                                        e.target.innerText = selector;
-                                        e.target.title = selector;
+                                        target.innerText = selector;
+                                        target.title = selector;
                                         addFrame.style.display = '';
                                         div.dataset.sel = selector;
                                     });
                                     addFrame.style.display = 'none';
                                 } else {
-                                    let newValue = prompt(i18n('inputNewValue'), e.target.innerText);
+                                    let newValue = prompt(i18n('inputNewValue'), target.innerText);
                                     if (newValue) {
-                                        e.target.innerText = newValue;
-                                        e.target.title = newValue;
+                                        target.innerText = newValue;
+                                        target.title = newValue;
                                         div.dataset.val = newValue;
                                     }
                                 }
                             } else if (confirm(i18n('deleteConfirm'))) {
                                 actionCon.removeChild(div);
+                            }
+                        }
+                        div.oncontextmenu = e => {
+                            let target = e.target;
+                            if (target.nodeName.toUpperCase() == 'SPAN') {
+                                e.preventDefault();
+                                if (target.className == 'element') {
+                                    let newValue = prompt('Selector', target.innerText);
+                                    if (newValue) {
+                                        target.innerText = newValue;
+                                        target.title = newValue;
+                                        div.dataset.sel = newValue;
+                                    }
+                                } else {
+                                    let newValue = prompt(i18n('inputNewValue'), target.innerText);
+                                    if (newValue) {
+                                        target.innerText = newValue;
+                                        target.title = newValue;
+                                        div.dataset.val = newValue;
+                                    }
+                                }
                             }
                         }
                         actionCon.appendChild(div);
@@ -13957,7 +13699,7 @@
                     [].forEach.call(actionCon.children, action => {
                         if (!action) return;
                         let sel = action.dataset.sel;
-                        let val = action.dataset.val;
+                        let val = action.dataset.val || '';
                         switch(action.dataset.type) {
                             case "click":
                                 actions.push(`click(${sel.replace(/([=&])/g, '\\$1')})`);
@@ -13969,6 +13711,7 @@
                                 actions.push(`sleep(${val})`);
                                 break;
                             default:
+                                actions.push(`${action.dataset.type}(${val})`);
                                 break;
                         }
                     });
@@ -13980,6 +13723,44 @@
                 });
                 closeCrawlBtn.addEventListener("click", e => {
                     addFrame.classList.remove("crawling");
+                });
+                let targetInput;
+                let clickSthHandler = e => {
+                    if (addFrame.style.display === '') return;
+                    if (/INPUT|TEXTAREA|SELECT|OPTION/i.test(e.target.nodeName)) {
+                        return;
+                    }
+                    addAction('click', picker.geneSelector(e.target, true));
+                };
+                let changeHandler = e => {
+                    if (addFrame.style.display === '') return;
+                    addAction('input', picker.geneSelector(e.target, true), e.target.value);
+                };
+                let keydownHandler = e => {
+                    if (addFrame.style.display === '') return;
+                    if (e.keyCode == 27) {
+                        addFrame.style.display = '';
+                        document.removeEventListener('keydown', keydownHandler, true);
+                        document.removeEventListener('click', clickSthHandler);
+                        document.removeEventListener('change', changeHandler);
+                    } else if (e.keyCode == 13) {
+                        //enter
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addFrame.style.display = '';
+                        document.removeEventListener('keydown', keydownHandler, true);
+                        document.removeEventListener('click', clickSthHandler);
+                        document.removeEventListener('change', changeHandler);
+                    }
+                };
+                recordBtn.addEventListener("click", e => {
+                    alert(i18n("startRecord"));
+                    addFrame.style.display = 'none';
+                    setTimeout(() => {
+                        document.addEventListener('keydown', keydownHandler, true);
+                        document.addEventListener('click', clickSthHandler);
+                        document.addEventListener('change', changeHandler);
+                    }, 100);
                 });
                 inputAction.addEventListener("click", e => {
                     picker.getSelector(selector => {
@@ -14393,6 +14174,9 @@
             });
             if (_searchData) {
                 searchData = _searchData;
+            }
+            if (!searchData.lastModified) {
+                searchData.sitesConfig = sitesConfig;
             }
             if (searchData.prefConfig.lang && searchData.prefConfig.lang != '0') {
                 lang = searchData.prefConfig.lang;
