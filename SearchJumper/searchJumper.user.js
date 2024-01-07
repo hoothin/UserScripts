@@ -13747,6 +13747,7 @@
                         //enter
                         e.preventDefault();
                         e.stopPropagation();
+                        e.target && e.target.blur && e.target.blur();
                         addFrame.style.display = '';
                         document.removeEventListener('keydown', keydownHandler, true);
                         document.removeEventListener('click', clickSthHandler);
