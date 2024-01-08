@@ -13522,7 +13522,10 @@
                             for (let j = 0; j < typeConfig.sites.length; j++) {
                                 let curSite = typeConfig.sites[j];
                                 if (curSite.url == urlInput.value) {
-                                    if (i == parseInt(typeSelect.value)) return;
+                                    if (i == parseInt(typeSelect.value)) {
+                                        alert('Already added!');
+                                        return;
+                                    }
                                     if (window.confirm(i18n("siteExist"))) {
                                         siteObj = {
                                             name: curSite.name + " - " + typeConfig.type,
