@@ -2385,7 +2385,7 @@
                  .minSizeMode.search-jumper-searchBar:hover>.search-jumper-type:not(.search-jumper-open) {
                      display: none;
                  }
-                 .minSizeModeClose.minSizeMode.search-jumper-searchBar:hover>.search-jumper-type {
+                 .minSizeModeClose.minSizeMode.search-jumper-searchBar:hover>.search-jumper-type:not(.search-jumper-targetImg,.search-jumper-targetLink,.search-jumper-targetPage,.search-jumper-targetVideo,.search-jumper-targetAudio) {
                      display: inline-flex;
                  }
                  .funcKeyCall>.search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
@@ -7782,11 +7782,14 @@
                 }, true);
 
                 let showTimer, siteList;
+                let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
+                let availableSize = !isMobile || (viewWidth > 600 && viewHeight > 600);
                 typeBtn.addEventListener('mouseenter', e => {
                     if (!self.funcKeyCall && searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || !ele.classList.contains("search-jumper-open"))) {
                         ele.appendChild(siteList);
                         self.listPos(ele.children[0], siteList);
-                    } else {
+                    } else if (availableSize) {
                         self.tipsPos(typeBtn, ele.dataset.title);
                     }
                     if (searchData.prefConfig.overOpen) {
@@ -14253,6 +14256,10 @@
                 if (lang === "zh-CN") {
                     searchData.prefConfig.suggestType = "baidu";
                 } else searchData.prefConfig.suggestType = "google";
+            }
+            if (searchData.prefConfig.minSizeMode) {
+                searchData.prefConfig.disableAutoOpen = false;
+                searchData.prefConfig.disableTypeOpen = false;
             }
             if (ext) {
                 configPage = chrome.runtime.getURL('config/index.html');;
