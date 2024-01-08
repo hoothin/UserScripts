@@ -892,7 +892,7 @@
         });
     }
     const isMobile = ('ontouchstart' in document.documentElement);
-    const configPage = ["https://pagetual.hoothin.com/rule.html",
+    const configPage = [`https://pagetual.hoothin.com/${lang === 'zh-CN' ? 'cn/' : ''}rule.html`,
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
     const firstRunPage = "https://pagetual.hoothin.com/firstRun";
