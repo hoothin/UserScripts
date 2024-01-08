@@ -2399,6 +2399,12 @@ switch (lang) {
                         "hideNotMatch": true
                     },
                     {
+                        "name": "Baidu",
+                        "url": "https://www.baidu.com/s?wd=%s&ie=utf-8",
+                        "keywords": "(?:wd|word)=(.*?)(&|$)",
+                        "match": "https?://(www|m)\\.baidu\\.com/.*(wd|word)="
+                    },
+                    {
                         "name": "SearX",
                         "url": "https://searx.be/search?q=%s"
                     },
