@@ -12016,6 +12016,16 @@
                 });
 
                 loadConfig();
+                let lastModified = searchData.lastModified;
+                document.addEventListener('visibilitychange', async e => {
+                    if (!document.hidden) {
+                        searchData = await storage.getItem("searchData");
+                        if (searchData.lastModified && lastModified != searchData.lastModified) {
+                            lastModified = searchData.lastModified;
+                            loadConfig();
+                        }
+                    }
+                });
 
                 let sendVerifyResult = (url, name, status, finalUrl) => {
                     window.postMessage({
