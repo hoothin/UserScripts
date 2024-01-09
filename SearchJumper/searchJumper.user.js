@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.63
+// @version      1.7.64
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -9290,7 +9290,8 @@
                 try {
                     const calcReg = /([^\\]|^)([\+\-*/])([\d\.]+)$/;
                     const cacheReg = /\|cache\=(\d+)$/;
-                    const postReg = /%p{(.*)}/;
+                    const postReg = /%p{(.*?)}/;
+                    const thenReg = /.then{(.*?)}/;
                     data = data.replace(/^showTips:/, '');
                     if (/^https?:/.test(data)) {
                         let url = data.split("\n");
@@ -9417,9 +9418,9 @@
                                 let allValue = [];
                                 if (ext) {
                                     fetchData = new Promise((resolve) => {
-                                        chrome.runtime.sendMessage({action: "showTips", detail: {from: url}}, function(r) {
-                                            data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
-                                            resolve(r.data);
+                                        chrome.runtime.sendMessage({action: "showTips", detail: {from: url + `\n{${template[1]}}`}}, function(r) {
+                                            data = data.replace(/【SEARCHJUMPERURL】/g, (r && r.finalUrl) || "");
+                                            resolve((r && r.data) || "");
                                         });
                                     });
                                 } else {
@@ -9441,16 +9442,41 @@
                                 tipsResult = [tipsResult, "\n" + allValue.join(",")];
                             } else {
                                 let hasData = false;
+                                let thenMatch = _url.match(thenReg), thenEleSelArr = [];
+                                while (thenMatch) {
+                                    let thenEleSel = thenMatch[1];
+                                    thenEleSelArr.push(thenEleSel);
+                                    _url = _url.replace(thenMatch[0], "");
+                                    thenMatch = _url.match(thenReg);
+                                }
                                 if (ext) {
                                     fetchData = new Promise((resolve) => {
-                                        chrome.runtime.sendMessage({action: "showTips", detail: {from: url}}, function(r) {
+                                        chrome.runtime.sendMessage({action: "showTips", detail: {from: url + `\n `}}, function(r) {
                                             if (data.indexOf('【SEARCHJUMPERURL】') != -1) {
-                                                data = data.replace(/【SEARCHJUMPERURL】/g, r.finalUrl);
+                                                data = data.replace(/【SEARCHJUMPERURL】/g, (r && r.finalUrl) || "");
                                                 hasData = true;
                                             }
-                                            resolve(r.data);
+                                            resolve((r && r.data) || "");
                                         });
                                     });
+                                    while (thenEleSelArr.length) {
+                                        let thenEleSel = thenEleSelArr.shift();
+                                        let thenUrl = await fetchData.then(r => {
+                                            let doc = document.implementation.createHTMLDocument('');
+                                            doc.documentElement.innerHTML = r;
+                                            let ele = getElement(thenEleSel, doc);
+                                            let basepath = doc.querySelector("base");
+                                            return canonicalUri(ele.getAttribute("href"), (basepath ? basepath.href : _url));
+                                        });
+
+                                        if (thenUrl) {
+                                            fetchData = new Promise((resolve) => {
+                                                chrome.runtime.sendMessage({action: "showTips", detail: {from: thenUrl + `\n `}}, function(r) {
+                                                    resolve((r && r.data) || "");
+                                                });
+                                            });
+                                        } else break;
+                                    }
                                 } else {
                                     fetchData = GM_fetch(_url, fetchOption).then(r => {
                                         if (data.indexOf('【SEARCHJUMPERURL】') != -1) {
@@ -9459,6 +9485,22 @@
                                         }
                                         return r.text();
                                     });
+                                    while (thenEleSelArr.length) {
+                                        let thenEleSel = thenEleSelArr.shift();
+                                        let thenUrl = await fetchData.then(r => {
+                                            let doc = document.implementation.createHTMLDocument('');
+                                            doc.documentElement.innerHTML = r;
+                                            let ele = getElement(thenEleSel, doc);
+                                            let basepath = doc.querySelector("base");
+                                            return canonicalUri(ele.getAttribute("href"), (basepath ? basepath.href : _url));
+                                        });
+
+                                        if (thenUrl) {
+                                            fetchData = GM_fetch(thenUrl).then(r => {
+                                                return r.text();
+                                            });
+                                        } else break;
+                                    }
                                 }
                                 tipsResult = await fetchData.then(r => {
                                     let doc = document.implementation.createHTMLDocument('');
@@ -11780,15 +11822,21 @@
             bodyObserver.observe(getBody(document), bodyObserverOptions);
         }
 
-        function canonicalUri(src) {
+        function canonicalUri(src, href) {
             if (!src) {
                 return "";
             }
-            if (src.charAt(0) == "#") return location.href + src;
-            if (src.charAt(0) == "?") return location.href.replace(/^([^\?#]+).*/, "$1" + src);
-            let origin = location.protocol + '//' + location.host;
-            let base = document.querySelector("base");
-            let basePath = base ? base.href : location.href;
+            let origin, basePath;
+            if (!href) {
+                if (src.charAt(0) == "#") return location.href + src;
+                if (src.charAt(0) == "?") return location.href.replace(/^([^\?#]+).*/, "$1" + src);
+                origin = location.protocol + '//' + location.host;
+                let base = document.querySelector("base");
+                basePath = base ? base.href : location.href;
+            } else {
+                origin = href.replace(/(^https?:\/\/.+)\/[^\/]*$/, "$1");
+                basePath = href;
+            }
             let url = basePath || origin;
             url = url.replace(/(\?|#).*/, "");
             if (/https?:\/\/[^\/]+$/.test(url)) url = url + '/';
