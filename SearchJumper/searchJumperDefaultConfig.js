@@ -506,9 +506,16 @@ switch (lang) {
                         "icon": "https://www.douban.com/favicon.ico"
                     },
                     {
+                        "name": "维基百科预览",
+                        "url": "showTips:https://zh.wikipedia.org/wiki/%s\n<div style=\"max-height: 500px; margin: 5px; overflow: hidden; font-size: large; text-align: left; font-weight: initial; line-height: initial;\">\n<img style=\"max-width: 250px; margin: 0 10px;\" align=\"left\" src=\"{.infobox img,figure>a>img|src}\"/>\n{.mw-parser-output>p}\n</div>"
+                    },
+                    {
                         "name": "Metacritic评分",
-                        "url": "showTips:https://www.metacritic.com/autosearch%p{search_term=%s&image_size=98&search_each=false} \n<div style=\"display: flex; font-size: 25px;\">\n<img src=\"{json.autoComplete.results.0.imagePath}\"/>\n<div>\n<p>{json.autoComplete.results.0.name}</p>\n<div style=\"display: flex; justify-content: space-between; align-items: center;    border-top: 1px solid;\">\n<span style=\"margin: 0 10px;\">{json.autoComplete.results.0.refType}</span>\n<span style=\"margin: 0 10px;\">{json.autoComplete.results.0.itemDate}</span>\n<span style=\"color: orange;margin: 0 10px;\">{json.autoComplete.results.0.metaScore}</span>\n</div>\n</div>\n</div>",
-                        "icon": "https://www.metacritic.com/favicon.ico"
+                        "url": "showTips:https://www.metacritic.com/search/%s/\n<div style=\"display: flex; font-size: 25px;\">\n<img src=\"{img.g-container-rounded-small|src}\"/>\n<div>\n<h2>{.c-pageSiteSearch-results-item>div>p}</h2>\n<div style=\"display: flex; justify-content: space-between; align-items: center;    border-top: 1px solid;\">\n<span style=\"margin: 0 10px;\">{.u-text-uppercase}</span>\n<span style=\"margin: 0 10px;\">{.c-pageSiteSearch-results-item strong}</span>\n<span style=\"color: orange;margin: 0 10px;\">{.c-siteReviewScore}</span>\n</div>\n</div>\n</div>"
+                    },
+                    {
+                        "name": "IMDb评分",
+                        "url": "showTips:https://www.imdb.com/find/?q=%s&exact=true.then{.find-title-result .ipc-metadata-list-summary-item__t}\n<h2 style=\"margin: 5px;\">\n{.hero__primary-text}\n<span style=\"position: absolute; right: 10px; color: orange;\">{.ipc-btn__text>div>div>div}</span>\n</h2>\n<div style=\"display: flex; font-size: 20px; width: 500px;\">\n<img style=\"height: fit-content;\" src=\"{.ipc-image|src}\"/>\n<div style=\"font-size: 16px; line-height: 1.5; text-align: left; margin: 5px;\">\n<div>{a.ipc-chip|<span style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">()</span>}</div>\n<div>Year: {h1+ul>li>.ipc-link}</div>\n<div>Director: {section>div>div>.title-pc-list>li:nth-child(1) li}</div>\n<div>Writer: {section>div>div>.title-pc-list>li:nth-child(2) li}</div>\n<div>Stars: {section>div>div>.title-pc-list>li:nth-child(3) li|()}</div>\n<div style=\"font-size: 16px; margin-top: 10px; border-top: 1px solid;\">{section>p>span}</div>\n</div>\n</div>"
                     },
                     {
                         "name": "展开所有引擎",
@@ -528,11 +535,6 @@ switch (lang) {
                         "kwFilter": "^magnet:",
                         "description": "磁力转种子",
                         "nobatch": true
-                    },
-                    {
-                        "name": "📏英里转公里",
-                        "url": "showTips:let s=\"%sr\".match(/(\\d+)(英里|英?哩|mi(le)?)/)[1];let km=(s*1.609344).toFixed(2);return `<i>${s} mi = ${km} km</i>`;",
-                        "kwFilter": "\\d+\\s*(英里|英?哩|mi(le)?\\b)"
                     },
                     {
                         "name": "💲美元转人民币",
@@ -2461,11 +2463,6 @@ switch (lang) {
                         "url": "[\"Google\"]"
                     },
                     {
-                        "name": "📏 Mile to Km",
-                        "url": "showTips:let s=\"%sr\".match(/(\\d+)(mi(le)?)/)[1];return `<i>${s} mi = ${(s*1.609344).toFixed(2)} km</i>`;",
-                        "kwFilter": "\\d+\\s*(mi(le)?\\b)"
-                    },
-                    {
                         "name": "💲USD to RMB",
                         "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\\D/,'')} RMB</i>",
                         "kwFilter": "\\d\\$|\\$\\d"
@@ -2495,8 +2492,7 @@ switch (lang) {
                     },
                     {
                         "name": "IMDb rating",
-                        "url": "showTips:let query = \"%s\";\nlet url = `https://www.imdb.com/find/?q=${query}&exact=true`;\nlet geneHTML = (title, intro, labels, director, writer, stars, image, rating, year) => {\nif (!title) return \"No result\";\nreturn `\n<p style=\"margin: 5px;\">\n${title}\n<span style=\"position: absolute; right: 10px; color: orange;\">${rating}</span>\n</p>\n<div style=\"display: flex; font-size: 20px; width: 500px;\">\n<img style=\"height: fit-content;\" src=\"${image}\"/>\n<div style=\"font-size: 16px; line-height: 1.5; text-align: left; margin: 5px;\">\n<div>${labels.reduce((r, c) => `${r}<span style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">${c}</span>`, \"\")}</div>\n<div>Year: ${year}</div>\n<div>Director: ${director}</div>\n<div>Writer: ${writer}</div>\n<div>Stars: ${stars}</div>\n<div style=\"font-size: 16px; margin-top: 10px; border-top: 1px solid;\">${intro}</div>\n</div>\n</div>`;};\nlet imdbData = await storage.getItem(\"imdbData\");\nif (!imdbData) imdbData=[];\nlet d = imdbData.find(data => data.query == query);\nif (d) {\nd = d.data;\nreturn[geneHTML(d.title, d.intro, d.labels, d.director, d.writer, d.stars, d.image, d.rating, d.year), url];\n}\nlet result = await fetch(url).then(r => r.text()).then(async r => {\nlet doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = r;\nlet item = doc.querySelector('.find-title-result .ipc-metadata-list-summary-item__t');\nif (!item) return null;\nlet _result = {title: item.innerText};\nurl = \"https://www.imdb.com/\" + item.getAttribute(\"href\");\nawait fetch(url).then(r => r.text()).then(r => {\nlet doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = r;\n_result.image = doc.querySelector(\".ipc-image\").src;\n_result.year = doc.querySelector(\"h1+ul>li>.ipc-link\").innerText;\n_result.intro = doc.querySelector(\"section>p>span\").innerText;\n_result.labels = [];\n[].forEach.call(doc.querySelectorAll(\"a.ipc-chip\"), ele => {\n_result.labels.push(ele.innerText)\n});\n_result.director = [];\n[].forEach.call(doc.querySelectorAll(\"section>div>div>.title-pc-list>li:nth-child(1) li\"), ele => {\n_result.director.push(ele.innerText)\n});\n_result.director = _result.director.join(\"/\");\n_result.writer = [];\n[].forEach.call(doc.querySelectorAll(\"section>div>div>.title-pc-list>li:nth-child(2) li\"), ele => {\n_result.writer.push(ele.innerText)\n});\n_result.writer = _result.writer.join(\"/\");\n_result.stars = [];\n[].forEach.call(doc.querySelectorAll(\"section>div>div>.title-pc-list>li:nth-child(3) li\"), ele => {\n_result.stars.push(ele.innerText)\n});\n_result.stars = _result.stars.join(\"/\");\n_result.rating = doc.querySelector(\".ipc-btn__text>div>div>div\").innerText;\n});\nreturn _result;\n}).catch(alert);\nif (!result) result = {};\nimdbData.push({query:query, data:result});\nif (imdbData.length > 50) imdbData.shift();\nstorage.setItem(\"imdbData\", imdbData);\nd = result;\nreturn[geneHTML(d.title, d.intro, d.labels, d.director, d.writer, d.stars, d.image, d.rating, d.year), url];",
-                        "icon": "https://www.imdb.com/favicon.ico"
+                        "url": "showTips:https://www.imdb.com/find/?q=%s&exact=true.then{.find-title-result .ipc-metadata-list-summary-item__t}\n<h2 style=\"margin: 5px;\">\n{.hero__primary-text}\n<span style=\"position: absolute; right: 10px; color: orange;\">{.ipc-btn__text>div>div>div}</span>\n</h2>\n<div style=\"display: flex; font-size: 20px; width: 500px;\">\n<img style=\"height: fit-content;\" src=\"{.ipc-image|src}\"/>\n<div style=\"font-size: 16px; line-height: 1.5; text-align: left; margin: 5px;\">\n<div>{a.ipc-chip|<span style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">()</span>}</div>\n<div>Year: {h1+ul>li>.ipc-link}</div>\n<div>Director: {section>div>div>.title-pc-list>li:nth-child(1) li}</div>\n<div>Writer: {section>div>div>.title-pc-list>li:nth-child(2) li}</div>\n<div>Stars: {section>div>div>.title-pc-list>li:nth-child(3) li|()}</div>\n<div style=\"font-size: 16px; margin-top: 10px; border-top: 1px solid;\">{section>p>span}</div>\n</div>\n</div>"
                     },
                     {
                         "name": "💞 AV preview",
@@ -2968,8 +2964,7 @@ switch (lang) {
                     },
                     {
                         "name": "Metacritic rating",
-                        "url": "showTips:https://www.metacritic.com/autosearch%p{search_term=%s&image_size=98&search_each=false}\n<div style=\"display: flex; font-size: 25px;\">\n<img src=\"{json.autoComplete.results.0.imagePath}\"/>\n<div>\n<p>{json.autoComplete.results.0.name}</p>\n<div style=\"display: flex; justify-content: space-between; align-items: center;    border-top: 1px solid;\">\n<span style=\"margin: 0 10px;\">{json.autoComplete.results.0.refType}</span>\n<span style=\"margin: 0 10px;\">{json.autoComplete.results.0.itemDate}</span>\n<span style=\"color: orange;margin: 0 10px;\">{json.autoComplete.results.0.metaScore}</span>\n</div>\n</div>\n</div>",
-                        "icon": "https://www.metacritic.com/favicon.ico"
+                        "url": "showTips:https://www.metacritic.com/search/%s/\n<div style=\"display: flex; font-size: 25px;\">\n<img src=\"{img.g-container-rounded-small|src}\"/>\n<div>\n<h2>{.c-pageSiteSearch-results-item>div>p}</h2>\n<div style=\"display: flex; justify-content: space-between; align-items: center;    border-top: 1px solid;\">\n<span style=\"margin: 0 10px;\">{.u-text-uppercase}</span>\n<span style=\"margin: 0 10px;\">{.c-pageSiteSearch-results-item strong}</span>\n<span style=\"color: orange;margin: 0 10px;\">{.c-siteReviewScore}</span>\n</div>\n</div>\n</div>"
                     },
                     {
                         "name": "Preview wikipedia",
