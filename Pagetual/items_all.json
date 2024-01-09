@@ -28833,17 +28833,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/72582",
-  "name": "All About　ガイド記事一覧",
-  "created_by": "memi",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-03-19T17:06:41+09:00",
   "data": {
-    "exampleUrl": "http://allabout.co.jp/gm/gp/714/library/\r\nhttp://allabout.co.jp/gm/gc/462037/\r\nhttp://allabout.co.jp/gm/gc/13353/\r\nhttp://allabout.co.jp/gm/gl/421/\r\nhttp://allabout.co.jp/recipe/search/material/10/",
+    "pageElement": "//div[@class=\"article-list\"]//li|//div[@class='aa_article-content']|//main[@class=\"aa_main\"]//ul[@class=\"aa_media-list\"]/li",
+    "nextLink": "//a[(text()=\"次のページへ\")]",
     "url": "^https://allabout\\.co\\.jp/gm/(gc|gp|gl)|^https://allabout\\.co\\.jp/recipe",
-    "pageElement": "//div[@class=\"article-list\"]//li|id(\"popin_read\")|//main[@class=\"aa_main\"]//ul[@class=\"aa_media-list\"]/li",
-    "nextLink": "//a[(text()=\"次のページへ\")]"
+    "exampleUrl": "https://allabout.co.jp/gm/gp/714/library/\r\nhttps://allabout.co.jp/gm/gc/462037/\r\nhttps://allabout.co.jp/gm/gc/13353/\r\nhttps://allabout.co.jp/gm/gl/421/\r\nhttps://allabout.co.jp/recipe/search/material/10/"
   },
-  "created_at": "2013-05-01T09:39:59+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "memi",
+  "name": "All About　ガイド記事一覧",
+  "created_at": "2013-05-01T09:39:59+09:00",
+  "updated_at": "2024-01-08T21:21:21+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/72581",
