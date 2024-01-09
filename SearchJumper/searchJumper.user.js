@@ -5717,7 +5717,7 @@
                 }
                 if (this.addToShadow(this.con)) {
                     setTimeout(() => {
-                        if (this.con.parentNode) {
+                        if (!isAllPage && this.con.parentNode) {
                             if (getComputedStyle(this.con).zIndex != "2147483647") {
                                 this.removeBar();
                                 if (disabled) {
@@ -10955,7 +10955,7 @@
         }
 
         async function cacheFontManager(noti) {
-            if (searchData.prefConfig.cacheSwitch) {
+            if (searchData.prefConfig.cacheSwitch && !isAllPage) {
                 searchBar.con.classList.add("in-input");
                 searchBar.con.style.visibility = "hidden";
                 searchBar.appendBar();
