@@ -780,7 +780,7 @@
                 var value;
                 if (ext) {
                     let result = await chrome.storage.local.get([key]);
-                    value = result[key];
+                    value = result && result[key];
                 } else if (this.supportGMPromise) {
                     value = await GM.getValue(key);
                 } else if (this.supportGM) {
@@ -7901,7 +7901,7 @@
                             let si = se.querySelector("img");
                             let data = sites[i];
 
-                            if (localKeywords && data.kwFilter) {
+                            if (data && localKeywords && data.kwFilter) {
                                 if (new RegExp(data.kwFilter).test(localKeywords)) {
                                     se.style.display = '';
                                 } else {
@@ -10956,6 +10956,9 @@
 
         async function cacheFontManager(noti) {
             if (searchData.prefConfig.cacheSwitch) {
+                searchBar.con.classList.add("in-input");
+                searchBar.con.style.visibility = "hidden";
+                searchBar.appendBar();
                 let needCache = cacheFontPool.length > 0;
                 while (cacheFontPool.length > 0) {
                     await cacheAction(cacheFontPool.shift());
@@ -14394,6 +14397,7 @@
         function checkVisibility() {
             if (document.hidden) {
                 if (searchBar) searchBar.closeShowAll();
+                else return;
                 if (!searchData.prefConfig.globalSearchNow) return;
                 checkGlobalIntv = setInterval(async () => {
                     let oldGlobalInPageWords = globalInPageWords;
@@ -14416,14 +14420,14 @@
                 storage.getItem("globalInPageWords", data => {
                     globalInPageWords = (data || '');
                     if (oldGlobalInPageWords != globalInPageWords) {
-                        searchBar.refreshPageWords();
+                        if (searchBar) searchBar.refreshPageWords();
                     }
                 });
                 let oldNavEnable = navEnable || false;
                 storage.getItem("navEnable", data => {
                     navEnable = (typeof data === "undefined" ? true : data);
                     if (oldNavEnable != navEnable) {
-                        searchBar.refreshNav();
+                        if (searchBar) searchBar.refreshNav();
                     }
                 });
             });

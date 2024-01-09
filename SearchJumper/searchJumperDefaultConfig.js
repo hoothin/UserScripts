@@ -1,3 +1,4 @@
+//Open setting page to change data, NOT HERE!
 let lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
 let sitesConfig = {};
 switch (lang) {
@@ -222,11 +223,6 @@ switch (lang) {
                     {
                         "name": "F搜",
                         "url": "https://fsoufsou.com/search?q=%s",
-                        "nobatch": true
-                    },
-                    {
-                        "name": "中国搜索",
-                        "url": "https://www.chinaso.com/newssearch/all/allResults?q=%s",
                         "nobatch": true
                     }
                 ]
