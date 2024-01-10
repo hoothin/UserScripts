@@ -7767,9 +7767,38 @@
                         }, 500);
                     }
                 };
-                typeBtn.onmousedown = typeAction;
-                typeBtn.oncontextmenu = function (event) {
-                    event.preventDefault();
+                let draged = false, initMousePos, initTilePos;
+                let mouseUpHandler = e => {
+                    document.removeEventListener('mouseup', mouseUpHandler);
+                    document.removeEventListener('mousemove', mouseMoveHandler);
+                    if (!draged) {
+                        typeAction(e);
+                    }
+                    draged = false;
+                }
+                let mouseMoveHandler = e => {
+                    if (!draged) {
+                        self.tips.style.opacity = 0;
+                        draged = true;
+                        initMousePos = {x: e.clientX, y: e.clientY};
+                        initTilePos = {x: parseInt(self.bar.style.left), y: parseInt(self.bar.style.top)};
+                    } else {
+                        self.bar.style.left = initTilePos.x + e.clientX - initMousePos.x + "px";
+                        self.bar.style.top = initTilePos.y + e.clientY - initMousePos.y + "px";
+                    }
+                }
+                typeBtn.onmousedown = function (e) {
+                    if (e && self.funcKeyCall && e.button === 0 && !(e.shiftKey || e.altKey || e.ctrlKey)) {
+                        draged = false;
+                        e.preventDefault && e.preventDefault();
+                        document.addEventListener('mouseup', mouseUpHandler);
+                        document.addEventListener('mousemove', mouseMoveHandler);
+                        return;
+                    }
+                    typeAction(e);
+                };
+                typeBtn.oncontextmenu = function (e) {
+                    e.preventDefault();
                 };
 
                 typeBtn.addEventListener('click', e => {
@@ -7786,6 +7815,9 @@
                 let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
                 let availableSize = !isMobile || (viewWidth > 600 && viewHeight > 600);
                 typeBtn.addEventListener('mouseenter', e => {
+                    if (draged) {
+                        return;
+                    }
                     if (!self.funcKeyCall && searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || !ele.classList.contains("search-jumper-open"))) {
                         ele.appendChild(siteList);
                         self.listPos(ele.children[0], siteList);
