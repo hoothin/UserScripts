@@ -8923,7 +8923,7 @@
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         let isCurrent = ele.dataset.current;
-                        if (!data.hideNotMatch && !data.kwFilter && !ele.dataset.clone && urlMatch !== '0' && historyLength && !isCurrent) {
+                        if (!data.hideNotMatch && !data.kwFilter && !showTips && !ele.dataset.clone && urlMatch !== '0' && historyLength && !isCurrent) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
                                 historySites = historySites.filter(site => {return site && site != name});
@@ -13081,7 +13081,17 @@
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
                 word.innerText = targetSite.dataset.name.substr(0, 10).trim();
-                if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 6);
+                if (!/^\w+$/.test(word.innerText)) {
+                    let text = "", len = 0;
+                    for (let char of word.innerText) {
+                        text += char;
+                        if (/^\w+$/.test(char)) {
+                            len++;
+                        } else len += 2;
+                        if (len > 10) break;
+                    }
+                    word.innerText = text;
+                }
                 let img = document.createElement("img");
                 img.style.display = "none";
                 span.appendChild(img);
