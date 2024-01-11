@@ -1,4 +1,4 @@
-起點等都推薦用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，遇到沒人願意適配的小站再考慮我的腳本。
+起點等都推薦用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，遇到沒人願意適配的小站再考慮我的腳本。勿用于版權站點，如造成侵權或對象站點損失，後果自負。
 
 輕量級抓取腳本，用於下載網頁小説或其他文字內容，理論上通用於任何靜態寫入正文的小說網站、論壇、貼吧等而無需規則。
 
