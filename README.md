@@ -26,8 +26,6 @@
 
 + [DownloadAllContent 怠惰小說下載器 ![](https://img.shields.io/greasyfork/dt/25068) ![](https://img.shields.io/greasyfork/dd/25068)](DownloadAllContent)
 
-+ [Disable AD of ThisAV ThisAV去廣告 ![](https://img.shields.io/greasyfork/dt/25297)](Disable%20AD%20of%20ThisAV)
-
 + [JandanHero 煎蛋俠 ![](https://img.shields.io/greasyfork/dt/25597)](JiandanHero)
 
 + [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](Pagetual) 
