@@ -79,9 +79,6 @@
   - 透過程式碼生成
     `a.links@@@@@@next:{return await getNextElement()}` 可以用多層 `{}` 來避免程式碼中出現大括號產生的問題
 
-### 💰付費咨詢
-看完自設教程還是搞不定也可選擇付費咨詢。非版權站，且服務器沒有爬蟲限制的，可[聯絡我](mailto:rixixi@gmail.com)指導規則編寫，$10/￥50 一次
-
 <a id="example"></a>
 ### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
 + [📕po18](https://www.po18.tw/books/755779/articles)
@@ -112,7 +109,7 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  .chapter-table>a@@@@@@fetch(data.querySelector("div.box-border>script").innerHTML.match(/\/chapter\/(.*?)"/)[0]) .then(response => response.text()) .then(d => {eval("window.txtObj="+d.match(/_txt_call\((.*)\);/)[1]);for(k in txtObj.replace){txtObj.content=txtObj.content.replaceAll(txtObj.replace[k],k)}cb(unescape(txtObj.content.replace(/&#x(.*?);/g,'%u$1')));});return false;
  ```
 + [📕某乎](https://www.某乎.com/xen/market/remix/paid_column/1465280726219968513)
-> 此頁章節沒有連結，使用以下規則可獲取章節連結，僅可下載免費可見内容，付費内容請自充會員
+> 此頁章節沒有連結，使用以下規則可獲取章節連結，僅可下載免費可見内容，付費内容請自充會員。具體操作請自行摸索，後果自負。
  ``` javascript
  [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=`https://${location.host}/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
  ```
@@ -172,7 +169,7 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
  ``` css
  a.chapter-item
  ```
-> 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請勿來問我要現成規則。後期如若有變動不再跟進。
+> 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請勿來問我要現成規則。後期如若有變動不再跟進。具體操作請自行摸索，後果自負。
 > 首先，某瓣的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，它會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到。
 > 因此步驟如下，首先調用 article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接。
 > 解密方法如下：
