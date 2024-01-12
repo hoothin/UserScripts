@@ -17843,6 +17843,7 @@ ImgOps | https://imgops.com/#b#`;
                     border: 5px solid #ff0000;\
                     }\
                     .pv-gallery-maximize-container img{\
+                    max-width: 100%;\
                     transition: transform .3s ease 0s;\
                     transform: scale3d(1, 1, 1);\
                     cursor: zoom-in;\
