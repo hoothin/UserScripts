@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.1.12.1
+// @version              2023.1.12.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11774,6 +11774,22 @@ ImgOps | https://imgops.com/#b#`;
         }
     } else GM_fetch = fetch;
 
+    function icon2Base64(icon, content, iconStyle) {
+        if (!content) return false;
+        var canvas = document.createElement("canvas");
+        let size = Math.min((icon.clientWidth || icon.offsetWidth), (icon.clientHeight || icon.offsetHeight));
+        canvas.width = size;
+        canvas.height = size;
+        var ctx = canvas.getContext("2d");
+        ctx.font = iconStyle.font;
+        ctx.strokeStyle = iconStyle.color || "black";
+        ctx.fillStyle = iconStyle.color || "black";
+        ctx.textBaseline = "top";
+        let metrics = ctx.measureText(content);
+        ctx.fillText(content, (canvas.width - metrics.width) / 2, (canvas.height - parseInt(iconStyle.fontSize)) / 2);
+        return canvas.toDataURL("image/png");
+    }
+
     function getRightSaveName(url, name, type, _ext) {
         /*
          0: i18n("default"),
@@ -16887,6 +16903,23 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             }
                         }
+                        let iconStyle = getComputedStyle(node, '::before');
+                        prop = iconStyle.content;
+                        if (!prop || prop === "none") {
+                            iconStyle = getComputedStyle(node, '::after');
+                            prop = iconStyle.content;
+                        }
+                        if (prop && prop !== "none") {
+                            prop = prop.replace(/[ '"]/g, "");
+                            if (prop && prop.length == 1) {
+                                let src = icon2Base64(node, prop, iconStyle);
+                                if (src != "data:,") {
+                                    node = document.createElement("img");
+                                    node.src = src;
+                                    total.push(node);
+                                }
+                            }
+                        }
                     }
                     return total;
                 }, []);
@@ -17647,6 +17680,7 @@ ImgOps | https://imgops.com/#b#`;
                     border:5px solid #313131;\
                     margin:1px;\
                     opacity:0.3;\
+                    box-sizing: content-box;\
                     background-color: #282828cc;\
                     '+
                     (prefs.gallery.transition ? ('\
