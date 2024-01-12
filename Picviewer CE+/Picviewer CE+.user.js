@@ -17187,7 +17187,7 @@ ImgOps | https://imgops.com/#b#`;
                      column-count: 2;\
                      -moz-column-count: 2;\
                      -webkit-column-count: 2;\
-                     padding-top: 300px;\
+                     padding-top: 200px;\
                      }\
                      .pv-gallery-sidebar-viewmore.showmore{\
                      transform: scale(3.5);\
@@ -17204,13 +17204,27 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     @media only screen and (min-width: 800px) {\
                      .pv-gallery-maximize-container{\
-                     column-count: 5;\
-                     -moz-column-count: 5;\
-                     -webkit-column-count: 5;\
+                     column-count: 3;\
+                     -moz-column-count: 3;\
+                     -webkit-column-count: 3;\
                      padding-top: 30px;\
                      }\
                      .pv-gallery-maximize-container span>p{\
                      opacity: 0;\
+                     }\
+                    }\
+                    @media only screen and (min-width: 1000px) {\
+                     .pv-gallery-maximize-container{\
+                     column-count: 4;\
+                     -moz-column-count: 4;\
+                     -webkit-column-count: 4;\
+                     }\
+                    }\
+                    @media only screen and (min-width: 1500px) {\
+                     .pv-gallery-maximize-container{\
+                     column-count: 5;\
+                     -moz-column-count: 5;\
+                     -webkit-column-count: 5;\
                      }\
                     }\
                     span.pv-gallery-tipsWords{\
