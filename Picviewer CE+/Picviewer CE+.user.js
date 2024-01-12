@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.1.7.1
+// @version              2023.1.12.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -22202,7 +22202,7 @@ ImgOps | https://imgops.com/#b#`;
                 srcs, // 备用的大图地址
                 type, // 类别
                 noActual = false, //没有原图
-                imgSrc = img.currentSrc||img.dataset.lazySrc||img.src, // img 节点的 src
+                imgSrc = img.src||img.currentSrc||img.dataset.lazySrc, // img 节点的 src
                 xhr,
                 description; // 图片的注释
             var imgCStyle = unsafeWindow.getComputedStyle(img);
@@ -23115,6 +23115,7 @@ ImgOps | https://imgops.com/#b#`;
                 return;
             }
 
+            let sizeHide = false;
             if (!result) {
                 pretreatment(target)
                 result = findPic(target);
@@ -23123,21 +23124,21 @@ ImgOps | https://imgops.com/#b#`;
                 } else if (!(result.imgAS.w == result.imgCS.w && result.imgAS.h == result.imgCS.h)) {//如果不是两者完全相等,那么被缩放了.
                     if (prefs.floatBar.sizeLimitOr) {
                         if (result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w) {//最小限定判断.
-                            return;
+                            sizeHide = true;
                         }
                     }else{
                         if (result.imgCS.h <= prefs.floatBar.minSizeLimit.h || result.imgCS.w <= prefs.floatBar.minSizeLimit.w) {//最小限定判断.
-                            return;
+                            sizeHide = true;
                         }
                     }
                 } else {
                     if (prefs.floatBar.sizeLimitOr) {
                         if (result.imgCS.w <= prefs.floatBar.forceShow.size.w && result.imgCS.h <= prefs.floatBar.forceShow.size.h) {
-                            return;
+                            sizeHide = true;
                         }
                     } else {
                         if (result.imgCS.w <= prefs.floatBar.forceShow.size.w || result.imgCS.h <= prefs.floatBar.forceShow.size.h) {
-                            return;
+                            sizeHide = true;
                         }
                     }
                 }
@@ -23164,7 +23165,7 @@ ImgOps | https://imgops.com/#b#`;
                     canclePreCTO = clickToOpen(result);
                 }
 
-                let hide = prefs.floatBar.position == "hide" ? !altKey : altKey;
+                let hide = sizeHide || (prefs.floatBar.position == "hide" ? !altKey : altKey);
                 result.hide = hide;
                 let canShow = floatBar.start(result);
                 if (!checkUniqueImgWin() && canShow) {
