@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86203",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('ichiran-first')/div[@class='booklist']",
+    "nextLink": "id('pager')/a[@title='next page']",
+    "url": "^https://www\\.h-up\\.com/e/index\\.php",
+    "exampleUrl": "https://www.h-up.com/e/index.php?Series=S01&flg_searchmode=shousai&ORDERBY=DateShuppan&ORDERBY2=DateShotenhatsubai&SORTORDER=DESC&action_search_do=true&page=8"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "法政大学出版局",
+  "created_at": "2024-01-11T16:15:48+09:00",
+  "updated_at": "2024-01-11T16:15:48+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86201",
   "data": {
     "insertBefore": "",
