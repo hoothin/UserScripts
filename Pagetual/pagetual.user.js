@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.14
+// @version      1.9.37.15
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1537,11 +1537,14 @@
 
             if (rulesData.customFirst) {
                 if (checkCustomRules()) return;
+                await sleep(1);
                 if (checkHpRules()) return;
             } else {
                 if (checkHpRules()) return;
+                await sleep(1);
                 if (checkCustomRules()) return;
             }
+            await sleep(1);
 
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
@@ -1557,7 +1560,7 @@
                     await sleep(1000);
                 }
                 setTimeout(() => {
-                    let end = r + 25;
+                    let end = r + 20;
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
