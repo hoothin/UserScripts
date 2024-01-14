@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.65
+// @version      1.7.66
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3613,7 +3613,7 @@
                         e.preventDefault();
                         if (e.target.nodeName.toUpperCase() === 'EM') return;
                         if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
-                        if (this.wordModeBtn.classList.contains("checked")) {
+                        if (this.lockWords.indexOf(word.oriWord) === -1) {
                             return;
                         }
                         this.showModifyWindow(word, wordSpan);
@@ -6194,7 +6194,7 @@
                     }
                     await this.createType(siteConfig);
                     sitesNum += siteConfig.sites.length;
-                    if (sitesNum > 500) {
+                    if (sitesNum > 100) {
                         await sleep(1);
                         sitesNum = 0;
                     }
@@ -6504,7 +6504,7 @@
                 for (let siteConfig of bookmarkTypes) {
                     await this.createType(siteConfig);
                     sitesNum += siteConfig.sites.length;
-                    if (sitesNum > 200) {
+                    if (sitesNum > 100) {
                         await sleep(1);
                         sitesNum = 0;
                     }
@@ -6611,11 +6611,14 @@
                 this.searchInPageTab.checked = true;
                 this.con.classList.add("in-find");
                 let beginHandler = () => {
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         if (getBody(document).style.display === "none") getBody(document).style.display = "";
                         if (this.lockWords) {
                             this.initInPageWords = [];
                         } else {
+                            while (document.hidden) {
+                                await sleep(1000);
+                            }
                             let word = this.initInPageWords.shift();
                             while (word) {
                                 this.searchJumperInPageInput.value = word;
