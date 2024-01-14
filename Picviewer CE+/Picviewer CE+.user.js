@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.1.12.3
+// @version              2023.1.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -45,7 +45,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://update.greasyfork.org/scripts/438080/1303651/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1262309/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1311439/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -11885,7 +11885,11 @@ ImgOps | https://imgops.com/#b#`;
         };
         img.src = dataurl;
     }
-    function urlToBlob(url, cb, forcePng) {
+    function urlToBlob(url, cb, forcePng, tryTimes = 0) {
+        tryTimes++;
+        if (tryTimes > 3) {
+            return cb(null, '');
+        }
         _GM_xmlhttpRequest({
             method: 'GET',
             url: url,
@@ -11911,17 +11915,19 @@ ImgOps | https://imgops.com/#b#`;
                         });
                     };
                     a.onerror = function (e){
-                        cb(null, '');
+                        urlToBlob(url, cb, forcePng, tryTimes);
                     }
-                }else{
+                } else if (!blob) {
+                    urlToBlob(url, cb, forcePng, tryTimes);
+                } else {
                     cb(blob, ext);
                 }
             },
             onerror: function(){
-                cb(null, '');
+                urlToBlob(url, cb, forcePng, tryTimes);
             },
             ontimeout: function(){
-                cb(null, '');
+                urlToBlob(url, cb, forcePng, tryTimes);
             }
         });
     }
@@ -12021,6 +12027,7 @@ ImgOps | https://imgops.com/#b#`;
                 wheelZoom:{//滚轮缩放.
                     enabled:true,
                     pauseFirst:true,//需要暂停(单击暂停)后,才能缩放.(推荐,否则因为放大镜会跟着鼠标,如果放大镜过大,那么会影响滚动.)..
+                    scaleImage:true,
                     range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0,5.0,6.0,7.0,8.0,9.0],//缩放的范围
                 },
             },
@@ -14885,7 +14892,7 @@ ImgOps | https://imgops.com/#b#`;
                                     zip.file(imgName.replace(/\//g, "").replace(/\.webp$/, ".png"), blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
-                                self.showTips("Downloading "+downloaded+"/"+len, 100000);
+                                self.showTips("Downloading "+downloaded+"/"+len, 1000000);
                                 if(downloaded == len){
                                     self.showTips("Begin compress to ZIP...", 100000);
                                     zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
@@ -14897,7 +14904,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if(/^data:/.test(imgSrc) || imgSrc.split("/")[2]==document.domain){
                             self.dataURLToCanvas(imgSrc, canvas=>{
-                                self.showTips("Downloading "+(downloaded+1)+"/"+len, 100000);
+                                self.showTips("Downloading "+(downloaded+1)+"/"+len, 1000000);
                                 if(!canvas){
                                     crosHandler(imgSrc);
                                     return;
@@ -15324,29 +15331,6 @@ ImgOps | https://imgops.com/#b#`;
                     var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     this.addViewmoreItem(nodes);
                 }
-            },
-            corsUrlToBlob:function (url, cb){
-                if(!url)return cb(null);
-                _GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: url,
-                    responseType:'arraybuffer',
-                    timeout:20000,
-                    headers: {
-                        origin: location.origin,
-                        referer: location.href,
-                        accept: "*/*"
-                    },
-                    onload: function(d) {
-                        cb(d.response);
-                    },
-                    onerror: function(){
-                        cb(null);
-                    },
-                    ontimeout: function(){
-                        cb(null);
-                    }
-                });
             },
             dataURLToCanvas:function (dataurl, cb){
                 if(!dataurl)return cb(null);
@@ -18690,8 +18674,24 @@ ImgOps | https://imgops.com/#b#`;
             },
             zoom:function(e){
                 if(e.deltaY===0)return;//非Y轴的滚动
-                if(prefs.magnifier.wheelZoom.pauseFirst && !this.paused)return;
                 e.preventDefault();
+                var ms=this.magnifier.style;
+                if(prefs.magnifier.wheelZoom.pauseFirst && !this.paused){
+                    if (typeof prefs.magnifier.wheelZoom.scaleImage !== false) {
+                        let curScale = ms.transform.match(/[\d\.]+/);
+                        if (curScale) {
+                            curScale = parseFloat(curScale[0]);
+                        } else curScale = 1;
+                        if (e.deltaY < 0) {
+                            curScale += 0.1;
+                        } else {
+                            curScale -= 0.1;
+                        }
+                        if (curScale < 0.5) curScale = 0.5;
+                        ms.transform = `scale(${curScale})`;
+                    }
+                    return;
+                }
                 if(e.deltaY < 0){//向上滚，放大；
                     if(this.diameter >= this.maxDia)return;
                     this.zoomOut=false;
@@ -18712,7 +18712,6 @@ ImgOps | https://imgops.com/#b#`;
                 var bRadius=this.radius;
                 this.radius=radius;
                 this.setMouseRange();
-                var ms=this.magnifier.style;
                 ms.width=diameter+'px';
                 ms.height=diameter+'px';
                 ms.borderRadius=radius+1 + 'px';
@@ -23850,6 +23849,11 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("magnifierWheelZoomEnabled"),
                     type: 'checkbox',
                     "default": prefs.magnifier.wheelZoom.enabled,
+                },
+                'magnifier.wheelZoom.scaleImage': {
+                    label: i18n("magnifierScaleImage"),
+                    type: 'checkbox',
+                    "default": typeof prefs.magnifier.wheelZoom.scaleImage !== false,
                 },
                 'magnifier.wheelZoom.range': {
                     label: i18n("magnifierWheelZoomRange"),
