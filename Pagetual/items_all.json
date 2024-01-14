@@ -38545,17 +38545,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/41315",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "name": "Weblio英語例文検索",
-  "created_by": "mi",
-  "updated_at": "2017-04-03T10:10:03+09:00",
   "data": {
-    "exampleUrl": "http://ejje.weblio.jp/sentence/content/%E6%84%9F%E3%81%98%E3%82%8B",
+    "pageElement": "id('main')//div[contains(concat(' ', @class, ' '), ' mainBlock ')][.//div[contains(concat(' ', @class, ' '), ' qotC ')]]",
+    "nextLink": "//span[@class='TargetPage']/following-sibling::a[1]",
     "url": "^https?://ejje\\.weblio\\.jp/sentence/content/",
-    "pageElement": "id('main')//div[contains(concat(' ', @class, ' '), ' kiji ')]/div[contains(concat(' ', @class, ' '), ' qotC ')]",
-    "nextLink": "//span[@class='TargetPage']/following-sibling::a[1]"
+    "exampleUrl": "http://ejje.weblio.jp/sentence/content/%E6%84%9F%E3%81%98%E3%82%8B"
   },
-  "created_at": "2011-01-11T20:11:35+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "mi",
+  "name": "Weblio英語例文検索",
+  "created_at": "2011-01-11T20:11:35+09:00",
+  "updated_at": "2024-01-13T17:03:32+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/41272",
