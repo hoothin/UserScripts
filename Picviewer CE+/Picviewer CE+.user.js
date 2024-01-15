@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.1.14.1
+// @version              2023.1.15.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12028,6 +12028,10 @@ ImgOps | https://imgops.com/#b#`;
                     enabled:true,
                     pauseFirst:true,//需要暂停(单击暂停)后,才能缩放.(推荐,否则因为放大镜会跟着鼠标,如果放大镜过大,那么会影响滚动.)..
                     scaleImage:true,
+                    ctrl: false,
+                    alt: false,
+                    shift: false,
+                    meta: false,
                     range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0,5.0,6.0,7.0,8.0,9.0],//缩放的范围
                 },
             },
@@ -18567,11 +18571,11 @@ ImgOps | https://imgops.com/#b#`;
                 this._clickOut=this.clickOut.bind(this);
                 this._keydown=this.keydown.bind(this);
 
-                if(prefs.magnifier.wheelZoom.enabled){
+                if (prefs.magnifier.wheelZoom.enabled || typeof prefs.magnifier.wheelZoom.scaleImage !== false) {
                     this.zoomLevel=1;
                     this.defaultDia=diameter;
                     addWheelEvent(container,this._zoom,false);
-                };
+                }
 
                 container.addEventListener('mouseover',this._focus,false);
                 container.addEventListener('mouseout',this._blur,false);
@@ -18673,8 +18677,13 @@ ImgOps | https://imgops.com/#b#`;
                 return level;
             },
             zoom:function(e){
+                if ((e.metaKey != !!prefs.magnifier.wheelZoom.meta) ||
+                   (e.altKey != !!prefs.magnifier.wheelZoom.alt) ||
+                   (e.ctrlKey != !!prefs.magnifier.wheelZoom.ctrl) ||
+                   (e.shiftKey != !!prefs.magnifier.wheelZoom.shift)) {
+                    return;
+                }
                 if(e.deltaY===0)return;//非Y轴的滚动
-                e.preventDefault();
                 var ms=this.magnifier.style;
                 if(prefs.magnifier.wheelZoom.pauseFirst && !this.paused){
                     if (typeof prefs.magnifier.wheelZoom.scaleImage !== false) {
@@ -18689,9 +18698,12 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if (curScale < 0.5) curScale = 0.5;
                         ms.transform = `scale(${curScale})`;
+                        e.preventDefault();
                     }
                     return;
                 }
+                if(!prefs.magnifier.wheelZoom.enabled)return;
+                e.preventDefault();
                 if(e.deltaY < 0){//向上滚，放大；
                     if(this.diameter >= this.maxDia)return;
                     this.zoomOut=false;
@@ -23759,7 +23771,7 @@ ImgOps | https://imgops.com/#b#`;
                     "default": false,
                 },
                 'floatBar.globalkeys.command': {
-                    after: "COMMAND",
+                    after: "META",
                     type: 'checkbox',
                     className: 'sep-x',
                     "default": false,
@@ -23854,6 +23866,32 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("magnifierScaleImage"),
                     type: 'checkbox',
                     "default": typeof prefs.magnifier.wheelZoom.scaleImage !== false,
+                },
+                'magnifier.wheelZoom.ctrl': {
+                    label: '',
+                    type: 'checkbox',
+                    after: "CTRL +",
+                    "default": false,
+                    line: 'start'
+                },
+                'magnifier.wheelZoom.alt': {
+                    after: "ALT +",
+                    type: 'checkbox',
+                    className: 'sep-x',
+                    "default": false,
+                },
+                'magnifier.wheelZoom.shift': {
+                    after: "SHIFT +",
+                    type: 'checkbox',
+                    className: 'sep-x',
+                    "default": false,
+                },
+                'magnifier.wheelZoom.meta': {
+                    after: "META",
+                    type: 'checkbox',
+                    className: 'sep-x',
+                    "default": false,
+                    line: 'end',
                 },
                 'magnifier.wheelZoom.range': {
                     label: i18n("magnifierWheelZoomRange"),
