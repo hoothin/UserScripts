@@ -21,13 +21,15 @@ More settings in "Picviewer CE+ config" to be customized, reviewing them is curr
 
 + And so on ...
 
-If you are glad to help me translate Picviewer CE+, [come here](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1).
+If you are glad to help me translate Picviewer CE+, [edit this file](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1).
 It will help the people who speak the same language just like you. Thank you.
 
-If you wish to add more rules for peculiar sites, come to [my Github](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js) and pull requests or open issues.
+If you wish to add more rules for peculiar sites, feel free to pull requests or open issues.
 
-### Custom rules example for config:
+**💝Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.**
 
+ <details>
+<summary><h2>Custom rules example for config:</h2></summary>
 <b>1.</b>
 This can add click-to-open for existing asiansister rule. Place it into the '[]' of rule textarea.
 <pre>
@@ -78,16 +80,17 @@ Using a standalone script, you have the ability to manage all of your custom rul
     ];
 })();
 ```
+ </details>
 
-### [📍Gallery page](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
+## Gallery page
+[https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
+
 *A blank Gallery page designed for viewing pictures, showcasing every image you have imported.*
 
 Include `mode=1` to open gallery in view-more mode.<br/>
 Add `imgs=http://xxx/xxx.jpg` to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
 For example: `https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?imgs=http://xxx/xxx[01-99].jpg`<br/>
 Just easily drag and drop your local images into the gallery to view them.
-
-*Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.*
 
 <img src='https://v2fy.com/asset/063_picviewer_ce/72723103-d911ce00-3bba-11ea-9541-0be746977dbc.gif' width=330><img src='https://v2fy.com/asset/063_picviewer_ce/72767872-7eb35480-3c30-11ea-814d-ce4678c81089.gif' width=330><img src='https://v2fy.com/asset/063_picviewer_ce/73130353-c4598e00-4031-11ea-810e-9498677a40d1.gif' width=330>
 
