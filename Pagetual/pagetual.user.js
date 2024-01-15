@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.15
+// @version      1.9.37.16
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -192,6 +192,8 @@
                 nextSwitch: "Switch next link",
                 arrowToScroll: "Press left arrow key to scroll prev and right arrow key to scroll next",
                 sideController: "Display the paging control bar in the sidebar",
+                sideControllerScroll: "Scroll button",
+                sideControllerAlways: "Always show",
                 hideLoadingIcon: "Hide loading animation",
                 hideBarArrow: "Hide arrow for page bar",
                 duplicate: "Duplicate Pagetual have been installed, check your script manager!",
@@ -312,6 +314,8 @@
                 nextSwitch: "切换其他页码",
                 arrowToScroll: "左方向键滚动至上一页，右方向键滚动至下一页",
                 sideController: "在侧边显示翻页控制栏",
+                sideControllerScroll: "滚动开关",
+                sideControllerAlways: "始终显示",
                 hideLoadingIcon: "隐藏加载动画",
                 hideBarArrow: "隐藏分隔条定位箭头",
                 duplicate: "检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
@@ -432,6 +436,8 @@
                 nextSwitch: "切換其他頁碼",
                 arrowToScroll: "左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
                 sideController: "在側邊顯示翻頁控制欄",
+                sideControllerScroll: "滾燈開關",
+                sideControllerAlways: "始終顯示",
                 hideLoadingIcon: "隱藏加載動畫",
                 hideBarArrow: "隱藏分隔條定位箭頭",
                 duplicate: "檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
@@ -552,6 +558,8 @@
                 nextSwitch: "次のページに切り替え",
                 arrowToScroll: "左矢印キーで前へ、右矢印キーで次へ",
                 sideController: "サイドバーにページング コントロール バーを表示する",
+                sideControllerScroll: "スクロール スイッチ",
+                sideControllerAlways: "常に表示",
                 hideLoadingIcon: "読み込み中のアニメーションを隠す",
                 hideBarArrow: "分割線の位置矢印を隠す",
                 duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
@@ -672,6 +680,8 @@
                 nextSwitch: "Переключить ссылку на следующую страницу",
                 arrowToScroll: "Листать страницы клавишами со стрелками влево и вправо",
                 sideController: "Показать справа панель перемещения по вкладке",
+                sideControllerScroll: "Переключатель прокрутки",
+                sideControllerAlways: "Всегда показывать",
                 hideLoadingIcon: "Скрыть анимацию загрузки",
                 hideBarArrow: "Скрыть кнопки перемещения на разделителе",
                 duplicate: "Похоже, Pagetual установлен несколько раз. Пожалуйста, удалите Pagetual из других менеджеров скриптов!",
@@ -3385,6 +3395,9 @@
                     });
                     return;
                 }
+                if (rulesData.sideControllerAlways) {
+                    sideController.setup();
+                }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
                 if (self.curSiteRule.smart) {
                     delete self.curSiteRule.pageElement;
@@ -3701,9 +3714,6 @@
                  opacity: 0.35;
                  transition: opacity .5s ease, background .5s, box-shadow .5s;
              }
-             #pagetual-sideController:hover {
-                 opacity: 1;
-             }
              #pagetual-sideController * {
                  font-weight: bold;
                  font-family: arial;
@@ -3725,13 +3735,6 @@
              #pagetual-sideController .pagetual-sideController-btn:hover {
                  transform: scale(1.5);
                  color: red!important;
-             }
-             #pagetual-sideController.minSize {
-                 box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
-                 background: #00000000!important;
-             }
-             #pagetual-sideController.minSize .pagetual-sideController-btn {
-                 opacity: 0;
              }
              #pagetual-sideController #pagetual-sideController-move > svg {
                  transition: transform .3s ease;
@@ -3775,10 +3778,34 @@
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
                  opacity: 0.8;
              }
+             #pagetual-sideController:hover {
+                 opacity: 1;
+             }
+             #pagetual-sideController>.scroll {
+                 width: 30px;
+                 height: 30px;
+                 top: -38px;
+                 left: 5px;
+                 opacity: 0.1;
+                 position: absolute;
+                 cursor: pointer;
+                 transition: opacity .3s ease;
+             }
+             #pagetual-sideController>.scroll:hover {
+                 opacity: 1;
+             }
+             #pagetual-sideController.minSize {
+                 box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
+                 background: #00000000!important;
+             }
+             #pagetual-sideController.minSize .pagetual-sideController-btn {
+                 opacity: 0;
+             }
             `;
             let frame = document.createElement("div");
             frame.id = "pagetual-sideController";
             frame.innerHTML = createHTML(`
+                <svg class="scroll" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 212.468019m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM512 383.400936m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM512 554.333853m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM609.447738 651.781591L512 749.229329l-97.447738-97.447738c-17.572543-17.572543-43.132605-17.572543-59.107644 0s-17.572543 43.132605 0 59.107645l127.800312 127.800312c7.98752 7.98752 20.767551 12.780031 30.352574 12.780031s20.767551-4.792512 30.352574-12.780031l127.800312-127.800312c17.572543-17.572543 17.572543-43.132605 0-59.107645-19.170047-17.572543-44.730109-17.572543-62.302652 0zM555.132605 0h-84.667706C302.726989 0 171.731669 132.592824 171.731669 298.733229v426.533542c0 166.140406 132.592824 298.733229 298.73323 298.733229h84.667706c166.140406 0 298.733229-132.592824 298.73323-298.733229V298.733229C852.268331 132.592824 721.273011 0 555.132605 0zM767.600624 723.669267c0 119.812793-94.25273 212.468019-212.468019 212.468018h-84.667706c-119.812793 0-212.468019-94.25273-212.468019-212.468018V298.733229c0-119.812793 94.25273-212.468019 212.468019-212.468018h84.667706c119.812793 0 212.468019 94.25273 212.468019 212.468018v424.936038z"></path></svg>
                 <div id="pagetual-sideController-top" class="pagetual-sideController-btn">⊼</div>
                 <div>
                   <div id="pagetual-sideController-pre" class="pagetual-sideController-btn">∧</div>
@@ -3794,6 +3821,10 @@
             let next = frame.querySelector("#pagetual-sideController-next");
             let bottom = frame.querySelector("#pagetual-sideController-bottom");
             let pagenum = frame.querySelector("#pagetual-sideController-pagenum");
+            let scroll = frame.querySelector(".scroll");
+            if (rulesData.sideControllerScroll === false) {
+                scroll.style.display = "none";
+            }
             if (sideControllerIcon) move.innerHTML = sideControllerIcon;
 
             frame.addEventListener("dblclick", e => {
@@ -3812,6 +3843,22 @@
                     frame.classList.add("minSize");
                 }, 800);
             });
+
+            document.body.addEventListener('touchstart', e => {
+                if (e.target === frame || frame.contains(e.target)) {
+                    frame.classList.remove("minSize");
+                } else {
+                    frame.classList.add("minSize");
+                }
+            });
+            scroll.addEventListener("click", e => {
+                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
+                autoScroll = parseInt(autoScroll) || 0;
+                if (autoScroll < 0) autoScroll = 0;
+                else if (autoScroll > 1000) autoScroll = 1000;
+                setListData("autoScroll", location.host + location.pathname, autoScroll);
+                startAutoScroll();
+            }, true);
 
             pre.addEventListener("click", e => {
                 let prePageBar = getPageBar().preBar;
@@ -3884,15 +3931,31 @@
                 picker.start();
             };
 
+            let clientX = e => {
+                if (e.type.indexOf('mouse') === 0) {
+                    return e.clientX;
+                } else {
+                    return e.changedTouches[0].clientX;
+                }
+            };
+
+            let clientY = e => {
+                if (e.type.indexOf('mouse') === 0) {
+                    return e.clientY;
+                } else {
+                    return e.changedTouches[0].clientY;
+                }
+            };
+
             let mouseMoveHandler = e => {
                 if (moving) {
                     let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                     let windowWidth = window.innerWidth || document.documentElement.clientWidth;
-                    initX = (e.clientX - 10 + 40) / windowWidth * 100;
-                    initY = (e.clientY - 83 + 83) / windowHeight * 100;
+                    initX = (clientX(e) - 10 + 40) / windowWidth * 100;
+                    initY = (clientY(e) - 83 + 83) / windowHeight * 100;
                     this.frame.style.top = `calc(${initY}% - 83px)`;
                     this.frame.style.left = `calc(${initX}% - 40px)`;
-                } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 20) {
+                } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 20) {
                     moving = true;
                     clearTimeout(removeTimer);
                 }
@@ -3901,23 +3964,35 @@
                 clearTimeout(removeTimer);
                 document.removeEventListener("mousemove", mouseMoveHandler, true);
                 document.removeEventListener("mouseup", mouseUpHandler, true);
+                document.removeEventListener("touchmove", mouseMoveHandler, true);
+                document.removeEventListener("touchend", mouseUpHandler, true);
                 if (moving) {
                     rulesData.sideControllerPos = {x: parseInt(initX), y: parseInt(initY)};
                     storage.setItem("rulesData", rulesData);
                 }
             };
-
-            move.addEventListener("mousedown", e => {
-                initX = e.clientX;
-                initY = e.clientY;
+            let mouseDownHandler = e => {
+                initX = clientX(e);
+                initY = clientY(e);
                 moving = false;
                 clearTimeout(removeTimer);
                 removeTimer = setTimeout(() => {
-                    self.remove();
+                    if (e.type === "touchstart") {
+                        picker.start();
+                    } else {
+                        self.remove();
+                    }
                 }, 1500);
                 document.addEventListener("mousemove", mouseMoveHandler, true);
                 document.addEventListener("mouseup", mouseUpHandler, true);
-            }, true);
+                document.addEventListener("touchmove", mouseMoveHandler, true);
+                document.addEventListener("touchend", mouseUpHandler, true);
+                e.stopPropagation();
+                e.preventDefault();
+            };
+
+            move.addEventListener("mousedown", mouseDownHandler, true);
+            move.addEventListener("touchstart", mouseDownHandler, true);
 
             this.frame = frame;
             this.pagenum = pagenum;
@@ -4187,7 +4262,7 @@
               display: inline-block;
               width: calc(100% - 65px);
               height: 20px;
-              min-width: 290px;
+              min-width: 250px;
               max-width: calc(65vw - 50px);
               min-height: unset;
               max-height: unset;
@@ -5217,11 +5292,11 @@
                   padding: 0!important;
                  }
                  #saveBtn {
-                  width: 60%;
+                  width: 60vw;
                   position: fixed;
                   z-index: 999;
                   bottom: 0;
-                  left: 20%;
+                  left: 20vw;
                   background-color: #6b6b6b99;
                   font-size: xx-large;
                   opacity: 0.8;
@@ -5645,6 +5720,8 @@
         let setConfigPageInput = createCheckbox(i18n("setConfigPage"), false);
         let enableWhiteListInput = createCheckbox(i18n("autoRun"), rulesData.enableWhiteList != true);
         let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
+        let sideControllerScrollInput = createCheckbox(i18n("sideControllerScroll"), rulesData.sideControllerScroll !== false, "h4", sideControllerInput);
+        let sideControllerAlwaysInput = createCheckbox(i18n("sideControllerAlways"), rulesData.sideControllerAlways, "h4", sideControllerInput);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
         let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true, "h4", enableHistoryInput);
@@ -5852,6 +5929,8 @@
                 rulesData.sideControllerPos = false;
             }
             rulesData.sideController = sideControllerInput.checked;
+            rulesData.sideControllerScroll = sideControllerScrollInput.checked;
+            rulesData.sideControllerAlways = sideControllerAlwaysInput.checked;
             rulesData.pageElementCss = pageElementCssInput.value;
             rulesData.customCss = customCssInput.value;
             rulesData.upBtnImg = upBtnImgInput.value;
