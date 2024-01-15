@@ -1,4 +1,4 @@
-# Popup/scale/rotate/batch save pictures and load pictures from next pages automatically. 
+# Picviewer CE+ - Popup/scale/rotate/batch save pictures and load pictures from next pages automatically. 
 
 Press CTRL+g to enter gallery quickly. Hold CTRL to view larger picture when mouse over images or links.
 
@@ -26,7 +26,7 @@ It will help the people who speak the same language just like you. Thank you.
 
 If you wish to add more rules for peculiar sites, feel free to pull requests or open issues.
 
-**💝Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.**
+### 💝Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.
 
  <details>
 <summary><h2>Custom rules example for config:</h2></summary>
