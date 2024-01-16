@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('category_list')/ul/li",
+    "nextLink": "//div[@class='page_nav']/ul/li[@class='active']/following-sibling::a",
+    "url": "^https://www\\.megahobby\\.jp/products/",
+    "exampleUrl": "https://www.megahobby.jp/products/lookup/9/?sort=new"
+  },
+  "created_by": "t_f_m'",
+  "name": "メガホビ MEGA HOBBY STATION メガハウスのホビー商品情報サイト",
+  "created_at": "2024-01-15T14:29:37+09:00",
+  "updated_at": "2024-01-15T14:29:37+09:00",
+  "resource_url": "http://wedata.net/items/86204",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
+},
+{
   "resource_url": "http://wedata.net/items/86203",
   "data": {
     "insertBefore": "",
