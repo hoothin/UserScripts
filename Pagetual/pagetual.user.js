@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.17
+// @version      1.9.37.18
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -192,7 +192,7 @@
                 nextSwitch: "Switch next link",
                 arrowToScroll: "Press left arrow key to scroll prev and right arrow key to scroll next",
                 sideController: "Display the paging control bar in the sidebar",
-                sideControllerScroll: "Scroll button",
+                sideControllerScroll: "Scroll toggle",
                 sideControllerAlways: "Always show",
                 hideLoadingIcon: "Hide loading animation",
                 hideBarArrow: "Hide arrow for page bar",
@@ -913,7 +913,7 @@
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
-    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false;
+    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false, loadNowNum = 5;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
     var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
@@ -3786,17 +3786,21 @@
              #pagetual-sideController:hover {
                  opacity: 1;
              }
-             #pagetual-sideController>.scroll {
+             #pagetual-sideController>.extra {
+                 bottom: 170px;
+                 left: 0px;
+                 width: 40px;
+                 position: absolute;
+             }
+             #pagetual-sideController>.extra>svg {
                  width: 30px;
                  height: 30px;
-                 top: -38px;
-                 left: 5px;
                  opacity: 0.1;
-                 position: absolute;
                  cursor: pointer;
+                 margin: 0 0 5px 0;
                  transition: opacity .3s ease;
              }
-             #pagetual-sideController>.scroll:hover {
+             #pagetual-sideController>.extra>svg:hover {
                  opacity: 1;
              }
              #pagetual-sideController.minSize {
@@ -3810,7 +3814,10 @@
             let frame = document.createElement("div");
             frame.id = "pagetual-sideController";
             frame.innerHTML = createHTML(`
-                <svg class="scroll" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 212.468019m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM512 383.400936m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM512 554.333853m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM609.447738 651.781591L512 749.229329l-97.447738-97.447738c-17.572543-17.572543-43.132605-17.572543-59.107644 0s-17.572543 43.132605 0 59.107645l127.800312 127.800312c7.98752 7.98752 20.767551 12.780031 30.352574 12.780031s20.767551-4.792512 30.352574-12.780031l127.800312-127.800312c17.572543-17.572543 17.572543-43.132605 0-59.107645-19.170047-17.572543-44.730109-17.572543-62.302652 0zM555.132605 0h-84.667706C302.726989 0 171.731669 132.592824 171.731669 298.733229v426.533542c0 166.140406 132.592824 298.733229 298.73323 298.733229h84.667706c166.140406 0 298.733229-132.592824 298.73323-298.733229V298.733229C852.268331 132.592824 721.273011 0 555.132605 0zM767.600624 723.669267c0 119.812793-94.25273 212.468019-212.468019 212.468018h-84.667706c-119.812793 0-212.468019-94.25273-212.468019-212.468018V298.733229c0-119.812793 94.25273-212.468019 212.468019-212.468018h84.667706c119.812793 0 212.468019 94.25273 212.468019 212.468018v424.936038z"></path></svg>
+                <div class="extra">
+                  <svg id="loadNow" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("loadNow")}</title><path d="M712.106667 525.653333l-291.413334 247.893334a21.333333 21.333333 0 0 1-14.506666 5.546666 20.053333 20.053333 0 0 1-22.186667-19.2V264.106667a20.053333 20.053333 0 0 1 20.906667-19.2 20.906667 20.906667 0 0 1 14.506666 5.546666l291.413334 247.893334a17.92 17.92 0 0 1 1.28 27.306666zM512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z" fill="#5E5C5C"></path></svg>
+                  <svg id="scroll" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("sideControllerScroll")}</title><path d="M912 544v82.64C912 846.096 732.912 1024 512 1024S112 846.096 112 626.64V544h800z" fill="#5E5C5C"></path><path d="M478.656 0v43.328a96 96 0 0 1-32.48 71.952c-27.68 24.448-41.968 48.128-42.896 71.04l-0.096 4.352v104c0 24.224 14.512 49.344 43.52 75.312a96 96 0 0 1 31.952 71.52V496H112.032L112 393.712C112 181.648 264.848 8.72 472.352 0.208L478.656 0z" fill="#999999"></path><path d="M534.24 0C747.584 5.232 912 179.504 912 393.728v102.256L534.208 496v-52.912a96 96 0 0 1 33.536-72.88c28.48-24.416 43.2-48.16 44.16-71.2l0.096-4.336v-104c0-24.352-14.928-49.52-44.784-75.488a96 96 0 0 1-33.008-72.432V0z" fill="#5E5C5C"></path></svg>
+                </div>
                 <div id="pagetual-sideController-top" class="pagetual-sideController-btn">⊼</div>
                 <div>
                   <div id="pagetual-sideController-pre" class="pagetual-sideController-btn">∧</div>
@@ -3826,9 +3833,13 @@
             let next = frame.querySelector("#pagetual-sideController-next");
             let bottom = frame.querySelector("#pagetual-sideController-bottom");
             let pagenum = frame.querySelector("#pagetual-sideController-pagenum");
-            let scroll = frame.querySelector(".scroll");
+            let scroll = frame.querySelector("#scroll");
+            let loadNow = frame.querySelector("#loadNow");
             if (rulesData.sideControllerScroll === false) {
                 scroll.style.display = "none";
+            }
+            if (rulesData.sideControllerLoadNow === false) {
+                loadNow.style.display = "none";
             }
             if (sideControllerIcon) move.innerHTML = sideControllerIcon;
 
@@ -3856,6 +3867,7 @@
                     frame.classList.add("minSize");
                 }
             });
+
             scroll.addEventListener("click", e => {
                 autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
                 autoScroll = parseInt(autoScroll) || 0;
@@ -3863,6 +3875,22 @@
                 else if (autoScroll > 1000) autoScroll = 1000;
                 setListData("autoScroll", location.host + location.pathname, autoScroll);
                 startAutoScroll();
+            }, true);
+
+            loadNow.addEventListener("click", e => {
+                if (autoLoadNum != -1) {
+                    autoLoadNum = -1;
+                    return;
+                }
+                let loadNum = window.prompt(i18n("loadConfirm"), loadNowNum);
+                if (loadNum === "" || loadNum === null) return;
+                loadNum = Math.abs(parseInt(loadNum)) || 0;
+                if (loadNowNum != loadNum) {
+                    loadNowNum = loadNum;
+                    storage.setItem("loadNowNum", loadNowNum);
+                }
+                autoLoadNum = loadNum;
+                nextPage();
             }, true);
 
             pre.addEventListener("click", e => {
@@ -5725,8 +5753,9 @@
         let setConfigPageInput = createCheckbox(i18n("setConfigPage"), false);
         let enableWhiteListInput = createCheckbox(i18n("autoRun"), rulesData.enableWhiteList != true);
         let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
-        let sideControllerScrollInput = createCheckbox(i18n("sideControllerScroll"), rulesData.sideControllerScroll !== false, "h4", sideControllerInput);
         let sideControllerAlwaysInput = createCheckbox(i18n("sideControllerAlways"), rulesData.sideControllerAlways, "h4", sideControllerInput);
+        let sideControllerScrollInput = createCheckbox(i18n("sideControllerScroll"), rulesData.sideControllerScroll !== false, "h4", sideControllerInput);
+        let sideControllerLoadNowInput = createCheckbox(i18n("loadNow"), rulesData.sideControllerLoadNow !== false, "h4", sideControllerInput);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
         let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true, "h4", enableHistoryInput);
@@ -5935,6 +5964,7 @@
             }
             rulesData.sideController = sideControllerInput.checked;
             rulesData.sideControllerScroll = sideControllerScrollInput.checked;
+            rulesData.sideControllerLoadNow = sideControllerLoadNowInput.checked;
             rulesData.sideControllerAlways = sideControllerAlwaysInput.checked;
             rulesData.pageElementCss = pageElementCssInput.value;
             rulesData.customCss = customCssInput.value;
@@ -6313,6 +6343,11 @@
 
                 updateDate = await getData("ruleLastUpdate");
 
+                let _loadNowNum = await getData("loadNowNum");
+                if (typeof(_loadNowNum) != "undefined") {
+                    loadNowNum = _loadNowNum;
+                }
+
                 author = await getData("author") || "";
 
                 manualPause = !!await getListData("pauseState", location.host);
@@ -6535,9 +6570,18 @@
                     });
                 }
                 _GM_registerMenuCommand(i18n("loadNow"), () => {
-                    let loadNum = window.prompt(i18n("loadConfirm"), "1");
+                    if (autoLoadNum != -1) {
+                        autoLoadNum = -1;
+                        return;
+                    }
+                    let loadNum = window.prompt(i18n("loadConfirm"), loadNowNum);
                     if (loadNum === "" || loadNum === null) return;
-                    autoLoadNum = Math.abs(parseInt(loadNum));
+                    loadNum = Math.abs(parseInt(loadNum)) || 0;
+                    if (loadNowNum != loadNum) {
+                        loadNowNum = loadNum;
+                        storage.setItem("loadNowNum", loadNowNum);
+                    }
+                    autoLoadNum = loadNum;
                     nextPage();
                 });
             }
