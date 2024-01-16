@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.18
+// @version      1.9.37.19
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -6816,22 +6816,18 @@
     var tipsWords = document.createElement("div");
     tipsWords.className = "pagetual_tipsWords";
 
-    var changeStopTimer;
     function changeStop(stop) {
         isPause = stop;
-        clearTimeout(changeStopTimer);
-        changeStopTimer = setTimeout(() => {
-            [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
-                if (isPause) {
-                    bar.classList.add("stop");
-                } else {
-                    bar.classList.remove("stop");
-                }
-            });
-            if (!isPause) ruleParser.showAddedElements();
-            manualPause = isPause;
-            if (sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
-        }, 350);
+        [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
+            if (isPause) {
+                bar.classList.add("stop");
+            } else {
+                bar.classList.remove("stop");
+            }
+        });
+        if (!isPause) ruleParser.showAddedElements();
+        manualPause = isPause;
+        if (sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
     }
 
     function changeHideBar(hide) {
