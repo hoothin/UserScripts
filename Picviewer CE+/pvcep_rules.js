@@ -251,7 +251,7 @@ var siteInfo = [
  r: /\d+_\d+\/|\d+_x\d+\.jpg$|@\d+w_\d+h.*\.webp$|_\d+x\d+\.jpg$/i,
  s: ""
 },
-{
+/*{
  name: "deviantart",
  example: "http://www.deviantart.com",
  enabled:true,
@@ -288,6 +288,18 @@ var siteInfo = [
      }
      return null;
  },
+},*/
+{
+    name:"deviantart",
+    url:/^https?:\/\/[^.]*\.deviantart\.com/i,
+    xhr: {
+        q: '[property="contentUrl"]'
+    },
+    getImage: function(a, p) {
+        if (a && a.dataset.hook == "deviation_link") {
+            return a.href;
+        }
+    }
 },
 {
  name: '花瓣网',
