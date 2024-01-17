@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.15.1
+// @version              2024.1.17.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -44,7 +44,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://update.greasyfork.org/scripts/438080/1303651/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1312857/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1311439/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -22505,8 +22505,18 @@ ImgOps | https://imgops.com/#b#`;
                 return newSrc;
             },
             getImage:function(img, a, p){
-                var newSrc,rule;
+                var newSrc,rule,stopXhr = false;
                 var base64Img=/^data:/i.test(img.src);
+                if(this._xhr && this._xhr.url){
+                    newSrc = this._xhr.url.call(img, a, p);
+                    if(newSrc){
+                        this.xhr = this._xhr || null;
+                        return newSrc;
+                    }else{
+                        this.xhr = null;
+                        stopXhr = true;
+                    }
+                }
                 for(var i in this.rules){
                     rule=this.rules[i];
                     if((!rule.url || !rule.getImage) && base64Img)continue;
@@ -22514,7 +22524,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(rule.exclude && rule.exclude.test(img.src))continue;
                     if(rule.getImage){
                         newSrc = rule.getImage.call(img, a, p, rule);
-                        this.xhr = (newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
+                        this.xhr = (!stopXhr && newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
                     }else newSrc = null;
                     if(!newSrc){
                         if(rule.r){
