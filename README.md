@@ -28,9 +28,9 @@
 
 + [JandanHero 煎蛋俠 ![](https://img.shields.io/greasyfork/dt/25597)](JiandanHero)
 
-+ [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](Pagetual) 
++ [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](https://pagetual.hoothin.com/) 
 
-+ [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://github.com/hoothin/SearchJumper)
++ [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/)
 
 ---
 ## Contributors
