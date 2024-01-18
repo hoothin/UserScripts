@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.66
+// @version      1.7.67
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -1595,12 +1595,13 @@
                      padding: 0 10px;
                      border-radius: 5px;
                      transition: transform 0.25s ease, box-shadow 0.25s ease;
+                     box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px #9e9e9e1a, 0 1px 2px -1px #9e9e9e1a;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:hover {
                      transform: translateY(-6px);
                      -webkit-transform: translateY(-6px);
                      -moz-transform: translateY(-6px);
-                     box-shadow: 0px 5px 28px 0px rgba(65, 106, 123, 0.2);
+                     box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px #0000001a, 0 1px 2px -1px #0000001a;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:before {
                      content: attr(title);
@@ -1614,7 +1615,7 @@
                      -webkit-line-clamp: 2;
                      -webkit-box-orient: vertical;
                      margin-left: 62px;
-                     margin-top: 30px;
+                     margin-top: 35px;
                      width: 190px;
                      position: absolute;
                      pointer-events: none;
@@ -1647,6 +1648,7 @@
                      margin-top: -28px;
                      color: white;
                      width: 250px;
+                     max-width: calc(100% - 20px);
                      display: flex;
                      justify-content: space-evenly;
                      overflow: hidden;
@@ -2675,13 +2677,35 @@
                  }
                  @media screen and (max-width: 600px) {
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                         width: 100vw;
+                         width: 95vw;
                      }
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
                          width: calc(100% - 20px);
                      }
                      #search-jumper-alllist>.timeInAll, #search-jumper-alllist>.dayInAll {
                          margin: 10px;
+                     }
+                     #search-jumper #search-jumper-alllist.new-mode .sitelist a {
+                         width: calc(50vw - 45px);
+                     }
+                     #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:before {
+                         width: 100px;
+                         margin-left: 68px;
+                     }
+                     #search-jumper #search-jumper-alllist.new-mode .sitelist a>img {
+                         margin-left: 0;
+                     }
+                 }
+                 @media screen and (max-width: 380px) {
+                     #search-jumper #search-jumper-alllist.new-mode .sitelist a {
+                         width: calc(100vw - 60px);
+                     }
+                     #search-jumper #search-jumper-alllist.new-mode .sitelist>.sitelistCon>div:before {
+                         width: calc(100vw - 150px);
+                         margin-left: 85px;
+                     }
+                     #search-jumper #search-jumper-alllist.new-mode .sitelist a+p {
+                         width: calc(100vw - 60px);
                      }
                  }
                  @media screen and (max-width: 800px) {
