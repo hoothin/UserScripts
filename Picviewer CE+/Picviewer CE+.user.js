@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.17.1
+// @version              2024.1.19.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11781,7 +11781,7 @@ ImgOps | https://imgops.com/#b#`;
         canvas.width = size;
         canvas.height = size;
         var ctx = canvas.getContext("2d");
-        ctx.font = iconStyle.font;
+        ctx.font = iconStyle.font || (iconStyle.fontSize + " " + iconStyle.fontFamily);
         ctx.strokeStyle = iconStyle.color || "black";
         ctx.fillStyle = iconStyle.color || "black";
         ctx.textBaseline = "top";
@@ -11968,7 +11968,7 @@ ImgOps | https://imgops.com/#b#`;
     function createScript(html){
         return escapeHTMLPolicy?escapeHTMLPolicy.createScript(html):html;
     }
-    function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
+    async function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
         prefs={
             floatBar:{//浮动工具栏相关设置.
@@ -12395,6 +12395,46 @@ ImgOps | https://imgops.com/#b#`;
                 return rv;
             };
         }();
+
+        const old_create = unsafeWindow.URL.createObjectURL;
+        const old_revoke = unsafeWindow.URL.revokeObjectURL;
+        Object.defineProperty(unsafeWindow.URL, 'createObjectURL', {
+            get: () => storeAndCreate
+        });
+        Object.defineProperty(unsafeWindow.URL, 'getFromObjectURL', {
+            get: () => getBlob
+        });
+        const dict = {};
+
+        function storeAndCreate(blob) {
+            const url = old_create(blob);
+            dict[url] = blob;
+            return url
+        }
+
+        function getBlob(url) {
+            return dict[url] || null;
+        }
+
+        function blobToDataURL(blob, cb) {
+            var a = new FileReader();
+            a.readAsDataURL(blob);
+            a.onload = function (e){
+                cb(e.target.result);
+            };
+            a.onerror = function (e){
+                cb(null);
+            }
+        }
+
+        async function getBase64FromBlobUrl(blobUrl) {
+            let blob = unsafeWindow.URL.getFromObjectURL(blobUrl);
+            return new Promise(resolve => {
+                blobToDataURL(blob, base64 => {
+                    resolve(base64);
+                });
+            });
+        }
 
         var rulerEle = document.createElement("span");
         if (rulerEle.style) {
@@ -15353,19 +15393,9 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 img.src = dataurl;
             },
-            blobToDataURL:function(blob, cb){
-                var a = new FileReader();
-                a.readAsDataURL(blob);
-                a.onload = function (e){
-                    cb(e.target.result);
-                };
-                a.onerror = function (e){
-                    cb(null);
-                }
-            },
             blobToCanvas: function (blob, cb){
                 var self=this;
-                this.blobToDataURL(blob, function (dataurl){
+                blobToDataURL(blob, function (dataurl){
                     self.dataURLToCanvas(dataurl, cb);
                 });
             },
@@ -16769,9 +16799,9 @@ ImgOps | https://imgops.com/#b#`;
                 return stop;
             },
 
-            reload: function() {// 重新加载所有图片到库里面
+            reload: async function() {// 重新加载所有图片到库里面
                 // 函数在 LoadingAnimC 中
-                var data = this.getAllValidImgs();
+                var data = await this.getAllValidImgs();
                 // 设置当前选中的图片
                 data.target = {
                     src: this.selected.dataset.src
@@ -16781,14 +16811,14 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.load(data, null, true);
             },
-            reloadNew: function() {// 加载新的图片到库里面
+            reloadNew: async function() {// 加载新的图片到库里面
                 var newer = true;
-                var data = this.getAllValidImgs(newer);
+                var data = await this.getAllValidImgs(newer);
                 if (data.length) {
                     this._appendThumbSpans(data);
                 }
             },
-            getAllValidImgs:function(newer){
+            getAllValidImgs:async function(newer){
                 var validImgs = [];
                 var container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
@@ -16814,12 +16844,12 @@ ImgOps | https://imgops.com/#b#`;
                                 if (!node.src) {
                                     node.src = node.toDataURL("image/png");
                                 }
-                                total.push(node);
                             } catch(e) {}
                         }
                         if (!node.src && node.dataset.src) {
                             node.src = node.dataset.src;
-                            delete node.dataset.src;
+                        }
+                        if (node.src) {
                             total.push(node);
                         }
                     }
@@ -16940,22 +16970,32 @@ ImgOps | https://imgops.com/#b#`;
 
                 // 已经在图库里面的
                 var self = this;
-                imgs.forEach(function(img) {
+                for (const img of imgs) {
                     let isImg = /^IMG$/i.test(img.nodeName);
                     if (isImg) {
                         pretreatment(img);
                     }
-                    if(!img.src || (isImg && img.getAttribute && !img.getAttribute("src"))) return;
-                    if (newer && self._dataCache[img.src]) return;
+                    if(!img.src || (isImg && img.getAttribute && !img.getAttribute("src"))) continue;
+                    if (newer && self._dataCache[img.src]) continue;
 
                     var result = findPic(img);
                     if (result) {
+                        if (result.src === 'data:,') continue;
+
+                        if (result.imgSrc.indexOf('blob:') === 0){
+                            if (result.src == result.imgSrc) {
+                                result.imgSrc = await getBase64FromBlobUrl(result.imgSrc);
+                                result.src = result.imgSrc;
+                            } else {
+                                result.imgSrc = await getBase64FromBlobUrl(result.imgSrc);
+                            }
+                        }
                         validImgs.push(result);
                         self.data.push(result);
                     }
 
                     self._dataCache[img.src] = true;
-                });
+                }
 
                 return validImgs;
             },
@@ -18933,12 +18973,12 @@ ImgOps | https://imgops.com/#b#`;
                 var maxButton=container.querySelector('.pv-pic-window-max');
                 maxButton.style.cssText='top: -24px;right: 46px;';
                 this.maxButton=maxButton;
-                maxButton.addEventListener('click',function(e){
+                maxButton.addEventListener('click',async function(e){
                     if(!gallery){
                         gallery=new GalleryC();
                         gallery.data=[];
                     }
-                    var allData=gallery.getAllValidImgs();
+                    var allData=await gallery.getAllValidImgs();
                     if(allData.length<1)return;
                     allData.target={src:img.src};
                     gallery.data=allData;
@@ -19339,7 +19379,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.preButton.style.display = "none";
                 this.nextButton.style.display = "none";
             },
-            switchImage:function(fw){
+            switchImage:async function(fw){
                 if (!gallery) {
                     gallery = new GalleryC();
                     gallery.data = [];
@@ -19347,7 +19387,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (gallery.shown || gallery.minimized) {
                     return;
                 }
-                var allData = gallery.getAllValidImgs();
+                var allData = await gallery.getAllValidImgs();
                 if (allData.length <= 1) return;
                 for (let i = 0; i < allData.length; i++) {
                     let imgData = allData[i];
@@ -20829,7 +20869,7 @@ ImgOps | https://imgops.com/#b#`;
                     };
                 };
             },
-            focusedKeydown:function(e){
+            focusedKeydown:async function(e){
                 var keyCode=e.keyCode;
                 if (this.data && this.data.img && e.key.toLowerCase() == prefs.floatBar.keys.download) {
                     downloadImg(this.img.src, (this.data.img.title || this.data.img.alt), prefs.saveName);
@@ -20854,7 +20894,7 @@ ImgOps | https://imgops.com/#b#`;
                         gallery = new GalleryC();
                         gallery.data = [];
                     }
-                    var allData = gallery.getAllValidImgs();
+                    var allData = await gallery.getAllValidImgs();
                     if (allData.length < 1) return;
                     allData.target = {src: this.img.src};
                     gallery.data = allData;
@@ -21471,7 +21511,7 @@ ImgOps | https://imgops.com/#b#`;
                 self.imgReady = imgReady(img, opts);
             },
 
-            load:function(img,e){
+            load:async function(img,e){
                 this.remove();
                 this.img=img;
                 var buttonType=this.buttonType;
@@ -21481,7 +21521,7 @@ ImgOps | https://imgops.com/#b#`;
                         gallery=new GalleryC();
                         gallery.data=[];
                     }
-                    var allData=gallery.getAllValidImgs();
+                    var allData=await gallery.getAllValidImgs();
                     allData.target=this.data;
                     this.data=allData;
                 };
@@ -22034,7 +22074,15 @@ ImgOps | https://imgops.com/#b#`;
                     self.setPosition();
                 },100);
             },
-            open:function(e,buttonType){
+            open:async function(e,buttonType){
+                if (this.data.imgSrc.indexOf("blob:") === 0) {
+                    if (this.data.src === this.data.imgSrc) {
+                        this.data.imgSrc = await getBase64FromBlobUrl(this.data.imgSrc);
+                        this.data.src = this.data.imgSrc;
+                    } else {
+                        this.data.imgSrc = await getBase64FromBlobUrl(this.data.imgSrc);
+                    }
+                }
                 if (buttonType === 'download' && !this.data.xhr) {
                     downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     return;
@@ -22352,11 +22400,6 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             if(!src)return;
-
-            if(/^blob/i.test(imgSrc)){
-                imgSrc=drawTobase64(img);
-                src=imgSrc;
-            }
 
             var ret = {
                 src: src,                  // 得到的src
@@ -23398,12 +23441,12 @@ ImgOps | https://imgops.com/#b#`;
             return true;
         }
 
-        function openGallery(){
+        async function openGallery(){
             if(!gallery){
                 gallery=new GalleryC();
                 gallery.data=[];
             }
-            var allData=gallery.getAllValidImgs();
+            var allData=await gallery.getAllValidImgs();
             if(allData.length<1)return;
             gallery.data=allData;
             gallery.load(gallery.data);
@@ -24416,7 +24459,7 @@ ImgOps | https://imgops.com/#b#`;
             let gallery = new GalleryC();
             gallery.data = [];
             gallery.lockGallery = true;
-            var allData = gallery.getAllValidImgs();
+            var allData = await gallery.getAllValidImgs();
             gallery.data = allData;
             gallery.load(gallery.data);
             let searchParams = new URLSearchParams(location.search);
@@ -24435,8 +24478,8 @@ ImgOps | https://imgops.com/#b#`;
                 let autoViewMore=siteReg[0]=="@";
                 if(autoViewMore)siteReg=siteReg.substr(1);
                 if(new RegExp(siteReg).test(_URL)){
-                    setTimeout(function(){
-                        let gallery = openGallery();
+                    setTimeout(async function(){
+                        let gallery = await openGallery();
                         if (gallery && autoViewMore) gallery.maximizeSidebar();
                     },2000);
                     break;
