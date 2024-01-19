@@ -1,5 +1,11 @@
 [
 {
+    "name": "IGGGAMES",
+    "url": "^https?://igg-games\\.com/",
+    "example": "https://igg-games.com/",
+    "pageElement": "body > div.tm-page-container.uk-clearfix > div.tm-page.uk-margin-auto.tm-page-margin-top.tm-page-margin-bottom  > main.tm-main.uk-section.uk-section-default > div.uk-container > div.uk-grid.uk-grid-small.uk-grid-divider > div.container-main-post.uk-first-column > div.uk-grid"
+},
+{
     "name": "PubMed",
     "author": "1nker",
     "url": "^https?://pubmed\\.ncbi\\.nlm\\.nih\\.gov/",
