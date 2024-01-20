@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.19.1
+// @version              2024.1.20.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11738,7 +11738,7 @@ ImgOps | https://imgops.com/#b#`;
                 let isPost = option && /^post$/i.test(option.method);
                 _GM_xmlhttpRequest({
                     method: (option && option.method) || 'GET',
-                    url: url,
+                    url: url.trim(),
                     data: (option && option.body) || '',
                     headers: (option && option.headers) || {
                         referer: url,
@@ -11892,7 +11892,7 @@ ImgOps | https://imgops.com/#b#`;
         }
         _GM_xmlhttpRequest({
             method: 'GET',
-            url: url,
+            url: url.trim(),
             responseType:'blob',
             timeout:20000,
             headers: {
@@ -11917,7 +11917,7 @@ ImgOps | https://imgops.com/#b#`;
                     a.onerror = function (e){
                         urlToBlob(url, cb, forcePng, tryTimes);
                     }
-                } else if (!blob) {
+                } else if (!blob || !blob.size) {
                     urlToBlob(url, cb, forcePng, tryTimes);
                 } else {
                     cb(blob, ext);
@@ -12398,12 +12398,7 @@ ImgOps | https://imgops.com/#b#`;
 
         const old_create = unsafeWindow.URL.createObjectURL;
         const old_revoke = unsafeWindow.URL.revokeObjectURL;
-        Object.defineProperty(unsafeWindow.URL, 'createObjectURL', {
-            get: () => storeAndCreate
-        });
-        Object.defineProperty(unsafeWindow.URL, 'getFromObjectURL', {
-            get: () => getBlob
-        });
+        unsafeWindow.URL.createObjectURL = storeAndCreate;
         const dict = {};
 
         function storeAndCreate(blob) {
@@ -12428,7 +12423,8 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         async function getBase64FromBlobUrl(blobUrl) {
-            let blob = unsafeWindow.URL.getFromObjectURL(blobUrl);
+            let blob = getBlob(blobUrl);
+            if (!blob) return "";
             return new Promise(resolve => {
                 blobToDataURL(blob, base64 => {
                     resolve(base64);
@@ -16968,6 +16964,7 @@ ImgOps | https://imgops.com/#b#`;
                     return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                 });
 
+                await sleep(1);
                 // 已经在图库里面的
                 var self = this;
                 for (const img of imgs) {
@@ -16989,6 +16986,10 @@ ImgOps | https://imgops.com/#b#`;
                             } else {
                                 result.imgSrc = await getBase64FromBlobUrl(result.imgSrc);
                             }
+                        }
+                        if (result.sizeH == 0 && result.sizeW == 0) {
+                            result.sizeH = img.naturalHeight;
+                            result.sizeW = img.naturalWidth;
                         }
                         validImgs.push(result);
                         self.data.push(result);
@@ -24664,7 +24665,7 @@ ImgOps | https://imgops.com/#b#`;
     function getUrl(url, callback, onError){
         _GM_xmlhttpRequest({
             method: 'GET',
-            url: url,
+            url: url.trim(),
             onload: callback,
             onerror: onError
         });

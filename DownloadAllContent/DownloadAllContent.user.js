@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3
+// @version      2.8.3.1
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -611,6 +611,7 @@ if (window.top != window.self) {
                     float: initial;
                     background-image: initial;
                     height: fit-content;
+                    color: black;
                 }
                 #filterListContainer.customRule .dacCustomRule {
                     display: flex;
@@ -1532,7 +1533,7 @@ if (window.top != window.self) {
                     })
                     exmpEles.forEach(e=>{
                         var cssSelStr="a",pa=e.parentNode,excludeTxt=excludeTxts[e];
-                        if(e.className)cssSelStr+="."+CSS.escape(e.className);
+                        if(e.className)cssSelStr+="."+CSS.escape(e.className.replace(/\s+/g, ".")).replace(/\\\./g, '.');
                         while(pa && pa.nodeName!="BODY"){
                             cssSelStr=pa.nodeName+">"+cssSelStr;
                             pa=pa.parentNode;
