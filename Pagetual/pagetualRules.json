@@ -1,5 +1,16 @@
 [
 {
+    "name": "Podium Audio",
+    "author": "uwuceo with help from Hoothin",
+    "url": "^https?://podiumaudio\\.com",
+    "example": "https://podiumaudio.com/browse-titles/",
+    "pageElement": "div.browse-all-titles-grid-container > div.inner > div",
+    "loadMore": "div.load-more-section > a",
+    "css": ".loading{opacity: 1;}",
+    "autoClick": "div.load-more-section > a",
+    "rate": 5
+},
+{
     "name": "PubMed",
     "author": "1nker",
     "url": "^https?://pubmed\\.ncbi\\.nlm\\.nih\\.gov/",
