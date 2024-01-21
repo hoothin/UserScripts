@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.20.2
+// @version              2024.1.21.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -44,7 +44,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://update.greasyfork.org/scripts/438080/1312857/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1314917/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1311439/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12137,6 +12137,7 @@ ImgOps | https://imgops.com/#b#`;
                     for (let i in lazyImgAttr) {
                         let attrName = lazyImgAttr[i];
                         let attrValue = this.getAttribute(attrName);
+                        if (/\bimagecover\.\w+$/i.test(attrValue)) continue;
                         if (attrValue) {
                             newsrc = attrValue;
                             break;
@@ -16984,8 +16985,10 @@ ImgOps | https://imgops.com/#b#`;
                             if (result.src == result.imgSrc) {
                                 result.imgSrc = await getBase64FromBlobUrl(result.imgSrc);
                                 result.src = result.imgSrc;
+                                result.srcs = [result.imgSrc];
                             } else {
                                 result.imgSrc = await getBase64FromBlobUrl(result.imgSrc);
+                                result.srcs = [result.imgSrc];
                             }
                         }
                         if (result.sizeH == 0 && result.sizeW == 0) {
@@ -17142,8 +17145,8 @@ ImgOps | https://imgops.com/#b#`;
                     left: 0;\
                     width: 100%;\
                     height: 100%;\
-                    min-width:none;\
-                    min-height:none;\
+                    min-width:unset;\
+                    min-height:unset;\
                     padding: 0;\
                     margin: 0;\
                     border: none;\
@@ -21938,7 +21941,6 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 }
-                var bodyPosi=document.documentElement.getBoundingClientRect();
                 var windowSize=getWindowSize();
                 var img=this.data.img;
 
@@ -21947,17 +21949,34 @@ ImgOps | https://imgops.com/#b#`;
                 var offsetX=prefs.floatBar.offset.x;
                 var offsetY=prefs.floatBar.offset.y;
 
+                let body = getBody(document);
+                let offsetParent, bodyPosi;
+                if (unsafeWindow.getComputedStyle(body).position === "static") {
+                    offsetParent = document.documentElement;
+                    bodyPosi = {
+                        top: 0,
+                        bottom: windowSize.h,
+                        left: 0,
+                        right: windowSize.w
+                    };
+                } else {
+                    offsetParent = body;
+                    bodyPosi = offsetParent.getBoundingClientRect();
+                }
 
-                var scrolled=getScrolled();
-                targetPosi.top -= bodyPosi.top + scrolled.y - (parseInt(unsafeWindow.getComputedStyle(document.documentElement).marginTop) || 0);
-                targetPosi.left -= bodyPosi.left + scrolled.x;
+
+                var scrolled=getScrolled(offsetParent);
+                targetPosi.top = targetPosi.top - bodyPosi.top;
+                targetPosi.left = targetPosi.left - bodyPosi.left;
+                targetPosi.bottom = bodyPosi.bottom - targetPosi.bottom;
+                targetPosi.right = bodyPosi.right - targetPosi.right;
 
                 var fbs = this.floatBar.style;
                 var setPosition = {
                     top:function() {
-                        var top = targetPosi.top + scrolled.y;
+                        var top = targetPosi.top;
                         if (targetPosi.top + offsetY < 10) {
-                            top = scrolled.y;
+                            top += 10;
                             offsetY = 0;
                         } else {
                             if (prefs.floatBar.stayOut) {
@@ -21967,15 +21986,15 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             if (targetPosi.height <= 50) top -= 10;
                         }
+                        fbs.bottom = 'unset';
                         fbs.top = top + 'px';
                     },
                     right:function() {
-                        var right = windowSize.w - targetPosi.right;
+                        var right = targetPosi.right;
                         if (right < offsetX) {
-                            right = -scrolled.x;
+                            right += 10;
                             offsetX = 0;
                         } else {
-                            right -= scrolled.x;
                             if (prefs.floatBar.stayOut) {
                                 right = right - offsetX - prefs.floatBar.stayOutOffsetX;
                             } else {
@@ -21983,15 +22002,15 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             if (targetPosi.width <= 50) right += 10;
                         }
+                        fbs.left = 'unset';
                         fbs.right = right + 'px';
                     },
                     bottom:function() {
-                        var bottom = windowSize.h - targetPosi.bottom;
+                        var bottom = targetPosi.bottom;
                         if (bottom <= offsetY) {
-                            bottom = -scrolled.y;
+                            bottom += 10;
                             offsetY = 0;
                         } else {
-                            bottom -= scrolled.y;
                             if (prefs.floatBar.stayOut) {
                                 bottom = bottom - offsetY - 40 - prefs.floatBar.stayOutOffsetY;
                             } else {
@@ -21999,12 +22018,13 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             if (targetPosi.height <= 50) bottom += 10;
                         }
+                        fbs.top = 'unset';
                         fbs.bottom = bottom + 'px';
                     },
                     left:function() {
-                        var left = targetPosi.left + scrolled.x;
+                        var left = targetPosi.left;
                         if (targetPosi.left + offsetX < 0) {
-                            left = scrolled.x;
+                            left += 10;
                             offsetX = 0;
                         } else {
                             if (prefs.floatBar.stayOut) {
@@ -22014,21 +22034,20 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             if (targetPosi.width <= 50) left -= 10;
                         }
+                        fbs.right = 'unset';
                         fbs.left = left + 'px';
                     },
                     center:function() {
-                        var left = targetPosi.left + scrolled.x + offsetX;
+                        var left = targetPosi.left + offsetX;
                         fbs.left = left + targetPosi.width / 2 + 'px';
                     },
                     hide:function(){
-                        var top=targetPosi.top + scrolled.y;
+                        var top=targetPosi.top;
                         if(targetPosi.top + offsetY < 0){
-                            top=scrolled.y;
                             offsetY=0;
                         }
-                        var left=targetPosi.left + scrolled.x;
+                        var left=targetPosi.left;
                         if(targetPosi.left + offsetX < 0){
-                            left=scrolled.x;
                             offsetX=0;
                         }
                         if(prefs.floatBar.stayOut){
@@ -22081,8 +22100,10 @@ ImgOps | https://imgops.com/#b#`;
                     if (this.data.src === this.data.imgSrc) {
                         this.data.imgSrc = await getBase64FromBlobUrl(this.data.imgSrc);
                         this.data.src = this.data.imgSrc;
+                        this.data.srcs = [this.data.imgSrc];
                     } else {
                         this.data.imgSrc = await getBase64FromBlobUrl(this.data.imgSrc);
+                        this.data.srcs = [this.data.imgSrc];
                     }
                 }
                 if (buttonType === 'download' && !this.data.xhr) {
