@@ -288,7 +288,7 @@ var siteInfo = [
      }
      return null;
  },
-},*/
+},
 {
     name:"deviantart",
     url:/^https?:\/\/[^.]*\.deviantart\.com/i,
@@ -299,6 +299,22 @@ var siteInfo = [
         if (a && a.dataset.hook == "deviation_link") {
             return a.href;
         }
+    }
+},*/
+{
+    name:"deviantart",
+    url:/^https?:\/\/[^.]*\.deviantart\.com/i,
+    getImage: function(a, p) {
+        if (!a) return;
+        let media =Object.keys(a).filter(prop => prop.indexOf("__reactProps") === 0);
+        if (!media || !a[media] || !a[media].children || !a[media].children.props || !a[media].children.props.deviation) return;
+        media = a[media].children.props.deviation.media;
+        let fullview = media.types.filter(d => d.t === "fullview");
+        let ext = media.baseUri.match(/\.\w+$/);
+        if (!fullview || !ext) return;
+        fullview = fullview[0];
+        ext = ext[0];
+        return media.baseUri + `/v1/fill/w_${fullview.w},h_${fullview.h}/${media.prettyName}-fullview${ext}?token=` + media.token[0];
     }
 },
 {
