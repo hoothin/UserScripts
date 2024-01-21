@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.21.1
+// @version              2024.1.21.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -21966,10 +21966,10 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 var scrolled=getScrolled(offsetParent);
-                targetPosi.top = targetPosi.top - bodyPosi.top;
-                targetPosi.left = targetPosi.left - bodyPosi.left;
-                targetPosi.bottom = bodyPosi.bottom - targetPosi.bottom;
-                targetPosi.right = bodyPosi.right - targetPosi.right;
+                targetPosi.top = targetPosi.top - bodyPosi.top + scrolled.y;
+                targetPosi.left = targetPosi.left - bodyPosi.left + scrolled.x;
+                targetPosi.bottom = bodyPosi.bottom - targetPosi.bottom - scrolled.y;
+                targetPosi.right = bodyPosi.right - targetPosi.right - scrolled.x;
 
                 var fbs = this.floatBar.style;
                 var setPosition = {
@@ -24478,7 +24478,12 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
-        if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
+        var configStyle = document.createElement("style");
+        configStyle.textContent = "#pv-prefs { display: initial; }";
+        configStyle.type = 'text/css';
+        if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/") {
+            openPrefs();
+        } else if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
             let gallery = new GalleryC();
             gallery.data = [];
             gallery.lockGallery = true;
@@ -24513,9 +24518,6 @@ ImgOps | https://imgops.com/#b#`;
         // 注册按键
         document.addEventListener('keydown', keydown, true);
 
-        var configStyle = document.createElement("style");
-        configStyle.textContent = "#pv-prefs { display: initial; }";
-        configStyle.type = 'text/css';
         function openPrefs() {
             let fieldsSearchData = GM_config.fields["gallery.searchData"];
             if (fieldsSearchData && fieldsSearchData.value) {
@@ -24529,7 +24531,11 @@ ImgOps | https://imgops.com/#b#`;
             GM_config.open();
 
             setTimeout(()=>{
-                if(GM_config.frame && GM_config.frame.style && GM_config.frame.style.display=="none"){
+                if (GM_config.frame && GM_config.frame.contentDocument.body.innerHTML === "") {
+                    _GM_openInTab("https://hoothin.github.io/UserScripts/Picviewer%20CE+/", {active:true});
+                    return;
+                }
+                if (GM_config.frame && GM_config.frame.style && GM_config.frame.style.display == "none") {
                     GM_config.frame.src="";
                 }
                 initKeyInputs();
