@@ -9464,7 +9464,8 @@
     "sandbox": false,
     "pageElement": "ul.cube-list>li,ul.video-list>li,ul.relation-list>li",
     "nextLink": ".be-pager-next,.next-page",
-    "wait": 1000
+    "wait": 1000,
+    "css": ".b-img.sleepy .b-img__inner{opacity:1}"
 },
 {
     "name": "动漫屋1",
