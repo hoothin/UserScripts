@@ -3727,6 +3727,7 @@
                  color: black!important;
                  line-height: normal;
                  float: none;
+                 text-align: center;
              }
              #pagetual-sideController.stop {
                  -webkit-filter: invert(100%);
