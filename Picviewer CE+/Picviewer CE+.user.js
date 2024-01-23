@@ -21933,9 +21933,9 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 var targetPosi = getContentClientRect(this.data.img);
                 var pa = this.data.img.parentNode;
-                if (pa && pa.scrollHeight > 20 && pa.scrollWidth > 20) {
+                if (pa && pa.scrollHeight > 30 && pa.scrollWidth > 30) {
                     var paPosi=getContentClientRect(pa);
-                    if (paPosi.width > 20 && paPosi.height > 20) {
+                    if (paPosi.width > 30 && paPosi.height > 30) {
                         if (this.data.img.offsetTop != 0) {
                             if (paPosi.height < targetPosi.height) {
                                 targetPosi.top = paPosi.top;
