@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.21
+// @version      1.9.37.22
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5080,9 +5080,14 @@
             if (typeof _unsafeWindow.JSONEditor !== 'undefined') {
                 createEdit();
             } else {
+                let timeout = 30;
                 let checkEditorReady = setInterval(() => {
                     if (typeof _unsafeWindow.JSONEditor !== 'undefined') {
                         createEdit();
+                        clearInterval(checkEditorReady);
+                    } else if (timeout-- <= 0) {
+                        editor = null;
+                        customRulesInput.style.display = "";
                         clearInterval(checkEditorReady);
                     }
                 }, 100);
@@ -5423,7 +5428,7 @@
                 this.item.appendChild(del);
                 this.item.appendChild(url);
                 if (ruleParser.rules) {
-                    url.style.maxWidth = "calc(100% - 140px)";
+                    url.style.maxWidth = "calc(100% - 150px)";
                     url.style.overflow = "hidden";
                     url.style.display = "inline-block";
                     url.style.textOverflow = "ellipsis";
@@ -6214,9 +6219,15 @@
                 setLang(rulesData.lang);
             }
             if (rulesData.firstRun && rulesData.uninited) {
-                _GM_openInTab(firstRunPage, {active: true});
                 rulesData.firstRun = false;
                 storage.setItem("rulesData", rulesData);
+                setTimeout(() => {
+                    storage.getItem("rulesData", data => {
+                        if (data.firstRun === false) {
+                            _GM_openInTab(firstRunPage, {active: true});
+                        }
+                    });
+                }, 100);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
