@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.67
+// @version      1.7.68
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -271,6 +271,11 @@
                         template: '请设置【#t#】的值',
                         recordAction: '录制操作',
                         startRecord: '开始录制操作，按回车键结束录制',
+                        loopAction: '开始循环',
+                        loopActionEnd: '循环结束',
+                        loopStart: '开始循环，循环次数为<span title="#t#">#t#</span>',
+                        loopEnd: '结束循环',
+                        loopTimes: '循环次数，将遍历所有匹配元素并顺序执行',
                         loadingCollection: '正在加载合集，请稍候……'
                     };
                     break;
@@ -380,6 +385,11 @@
                         template: '請設置【#t#】的值',
                         recordAction: '錄製動作',
                         startRecord: '開始錄製操作，按下回車鍵結束錄製',
+                        loopAction: '開始循環',
+                        loopActionEnd: '循環結束',
+                        loopStart: '開始循環，循環次數為<span title="#t#">#t#</span>',
+                        loopEnd: '結束循環',
+                        loopTimes: '循環次數，將遍歷所有匹配元素並順序執行',
                         loadingCollection: '正在載入合集，請稍候……'
                     };
                     break;
@@ -488,6 +498,11 @@
                         template: '[#t#]の値を設定してください',
                         RecordAction: '記録操作',
                         startRecord: '記録操作を開始します。記録を終了するには Enter キーを押してください',
+                        loopAction: 'ループの開始',
+                        loopActionEnd: 'ループの終了',
+                        loopStart: 'ループを開始します。ループ数は <span title="#t#">#t#</span> です',
+                        loopEnd: 'ループの終了',
+                        loopTimes: 'ループの数。一致するすべての要素が走査され、順番に実行されます',
                         loadingCollection: 'コレクションを読み込み中...'
                     };
                     break;
@@ -589,6 +604,11 @@
                         template: 'Please set the value of "#t#"',
                         recordAction: 'Record operation',
                         startRecord: 'Start to record operation, press Enter to end',
+                        loopAction: 'Start loop',
+                        loopActionEnd: 'Stop loop',
+                        loopStart: 'Start looping, the number of loops is <span title="#t#">#t#</span>',
+                        loopEnd: 'Stop loop',
+                        loopTimes: 'Number of loops, all matching elements will be traversed and executed sequentially',
                         loadingCollection: 'Preparing collection for SearchJumper...'
                     };
                     break;
@@ -1012,7 +1032,8 @@
                 var result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
                 return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
             } catch (err) {
-                throw new Error(`Invalid xpath: ${xpath}`);
+                debug(`Invalid xpath: ${xpath}`);
+                return false;
             }
         }
 
@@ -1022,6 +1043,7 @@
         }
 
         function getAllElements(sel, doc, contextNode) {
+            if (!doc) doc = document;
             try {
                 if (!isXPath(sel)) {
                     return doc.querySelectorAll(sel);
@@ -6263,7 +6285,7 @@
                 lastSign = false;
 
                 if (inPagePostParams) {
-                    await this.submitAction(inPagePostParams);
+                    this.submitAction(inPagePostParams);
                     setTimeout(() => {
                         storage.setListItem("inPagePostParams", location.hostname, "");
                     }, 10000);
@@ -8203,19 +8225,22 @@
                     this.submitAction(params);
                     return;
                 }
-                let form, input, clicked = false, self = this;
+                let form, input, clicked = false, self = this, inLoop = false, loopTimes = 0, loopArr = [];
                 let opened = false;
 
-                for (let param of params) {
+                let singleAction = async (param, eleIndex) => {
+                    let result = true;
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
                         debug(`sleep ${param[1]}`);
                     } else if (param[0] === "@click") {
                         clicked = true;
-                        await emuClick(param[1]);
+                        let _r = await emuClick(param[1], eleIndex);
+                        if (!_r) result = false;
                     } else if (param[1] === 'click' && param[0].indexOf('@') === 0) {
                         clicked = true;
-                        await emuClick(param[0].substr(1));
+                        let _r = await emuClick(param[0].substr(1), eleIndex);
+                        if (!_r) result = false;
                     } else if (param[0] === '@call') {
                         let func = window[param[1]] || new AsyncFunction('"use strict";' + param[1]);
                         if (func) await func();
@@ -8245,13 +8270,40 @@
                                 inputStr = customInputStr;
                             } else {
                                 storage.setListItem("inPagePostParams", location.hostname, "");
-                                return;
+                                return true;
                             }
                         }
-                        await emuInput(param[0], inputStr);
+                        let _r = await emuInput(param[0], inputStr, eleIndex);
+                        if (!_r) result = false;
                         if (param[0] !== "@") {
                             input = getElement(param[0]);
                         }
+                    }
+                    return result;
+                };
+
+                for (let param of params) {
+                    if (param[0] === "@loopStart") {
+                        inLoop = true;
+                        loopArr = [];
+                        loopTimes = parseInt(param[1]) || 1;
+                    } else if (param[0] === "@loopEnd") {
+                        inLoop = false;
+                        while (loopTimes-- > 0) {
+                            let allReady = false, eleIndex = 0;
+                            while (!allReady) {
+                                allReady = true;
+                                for (let param of loopArr) {
+                                    let ready = await singleAction(param, eleIndex);
+                                    if (!ready) allReady = false;
+                                }
+                                eleIndex++;
+                            }
+                        }
+                    } else if (inLoop) {
+                        loopArr.push(param);
+                    } else {
+                        await singleAction(param);
                     }
                     if (inPagePostParams) {
                         inPagePostParams.shift();
@@ -8259,6 +8311,20 @@
                         if (param[0] === '@reload') {
                             location.reload(!!param[1]);
                             return;
+                        }
+                    }
+                }
+                if (inLoop) {
+                    inLoop = false;
+                    while (loopTimes-- > 0) {
+                        let allReady = false, eleIndex = 0;
+                        while (!allReady) {
+                            allReady = true;
+                            for (let param of loopArr) {
+                                let ready = await singleAction(param, eleIndex);
+                                if (!ready) allReady = false;
+                            }
+                            eleIndex++;
                         }
                     }
                 }
@@ -8463,7 +8529,8 @@
                 let getUrl = async (_keyWords) => {
                     self.customInput = false;
                     inputString = "";
-                    let hasWordParam = wordParamReg.test(data.url);
+                    let dataUrl = data.url;
+                    let hasWordParam = wordParamReg.test(dataUrl);
                     let keywords = _keyWords || self.searchJumperInputKeyWords.value || getSelectStr();
                     if (!keywords && !draging && !self.bar.classList.contains("search-jumper-isTargetLink")) {
                         keywords = getKeywords();
@@ -8478,7 +8545,14 @@
                     }
                     let postMatch;
                     if (inPagePost) {
-                        postMatch = data.url.match(/#p{([\s\S]*[^\\])}/);
+                        if (dataUrl.indexOf('%input{') !== -1) {
+                            dataUrl = await new Promise(resolve => {
+                                self.showCustomInputWindow(dataUrl, _url => {
+                                    resolve(_url);
+                                });
+                            });
+                        }
+                        postMatch = dataUrl.match(/#p{([\s\S]*[^\\])}/);
                     }
                     let host = location.host;
                     let href = location.href;
@@ -8536,7 +8610,7 @@
                             return str.replace(keyToReg(key, "g"), (after ? after(value.replace(/\$/g, "$$$$")) : value.replace(/\$/g, "$$$$")));
                         }
                     };
-                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(data.url));
+                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(dataUrl));
                     let keywordsU = "", keywordsL = "", keywordsR = "", keywordsSC = "", keywordsTC = "";
                     let customReplaceKeywords = str => {
                         let _str = str;
@@ -8665,7 +8739,7 @@
                         return str;
                     }
                     if (!ele.dataset.url) {
-                        let tempUrl = data.url;
+                        let tempUrl = dataUrl;
                         if (inPagePost) {
                             tempUrl = tempUrl.replace(postMatch[0], "");
                         }
@@ -8687,7 +8761,7 @@
                             if (targetUrl) targetUrl = targetUrl.replace(/^blob:/, "");
                         }
                         targetName = targetElement.title || targetElement.alt || document.title;
-                        if (targetElement.nodeName.toUpperCase() == 'IMG' && /%i\b/.test(data.url)) {
+                        if (targetElement.nodeName.toUpperCase() == 'IMG' && /%i\b/.test(dataUrl)) {
                             if (targetElement.src) {
                                 if (/^data/.test(targetElement.src)) {
                                     imgBase64 = targetElement.src;
@@ -8746,7 +8820,7 @@
                                     inputString = keywords;
                                 }
                             }
-                            if (!imgBase64 && /%i\b/.test(data.url)) {
+                            if (!imgBase64 && /%i\b/.test(dataUrl)) {
                                 const permission = await navigator.permissions.query({
                                     name: "clipboard-read",
                                 });
@@ -8849,7 +8923,12 @@
                         let postParams = [];
                         postMatch[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
                             pair = pair.trim();
-                            if (pair.startsWith("click(") && pair.endsWith(')')) {
+                            if (/^loopStart\(\d+\)$/.test(pair)) {
+                                let loopStart = pair.match(/loopStart\((.*)\)/);
+                                postParams.push(['@loopStart', loopStart[1]]);
+                            } else if (pair == "loopEnd") {
+                                postParams.push(['@loopEnd', '']);
+                            } else if (pair.startsWith("click(") && pair.endsWith(')')) {
                                 let click = pair.slice(6, pair.length - 1);
                                 if (click) {
                                     postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
@@ -10062,6 +10141,7 @@
                 this.clickedIndex = 0;
                 this.signList = [];//所有标记
                 this.clickedEles = {};//点击的元素
+                this.exact = true;
             }
 
             /*static getInstance() {
@@ -10071,7 +10151,8 @@
                 return Picker.picker;
             }*/
 
-            getSelector(callback) {
+            getSelector(callback, exact = true) {
+                this.exact = exact;
                 this.close();
                 this.toggle();
                 this.callback = callback;
@@ -10139,7 +10220,7 @@
                     if (!target) return;
                     if (self.callback) {
                         if (target) {
-                            let sel = self.geneSelector(target, true);
+                            let sel = self.geneSelector(target, self.exact);
                             self.callback(sel);
                             self.close();
                         }
@@ -10725,6 +10806,7 @@
                     if (sel === "@") {
                         result = targetElement;
                     } else result = getElement(sel);
+                    if (result === false) return null;
                     if (result) {
                         clearInterval(checkInv);
                         resolve(result);
@@ -10746,8 +10828,29 @@
             });
         }
 
-        async function emuInput(sel, v) {
-            let input = await waitForElement(sel);
+        async function emuInput(sel, v, eleIndex = -1) {
+            let input, result = false;
+            if (eleIndex >= 0) {
+                if (eleIndex === 0) await waitForElement(sel);
+                let eles = getAllElements(sel);
+                if (eles.length === 0) {
+                    return true;
+                }
+                if (eles.length === 1) {
+                    input = eles[0];
+                    result = true;
+                } else if (eles.length <= eleIndex) {
+                    return true;
+                } else {
+                    input = eles[eleIndex];
+                    if (eles.length === eleIndex + 1) {
+                        result = true;
+                    }
+                }
+            } else {
+                input = await waitForElement(sel);
+                if (!input) return true;
+            }
             targetElement = input;
             let event = new Event('focus', { bubbles: true });
             input.dispatchEvent(event);
@@ -10788,10 +10891,32 @@
             event = new Event('change', { bubbles: true });
             input.dispatchEvent(event);
             debug(input, `input ${sel}`);
+            return result;
         }
 
-        async function emuClick(sel) {
-            let btn = await waitForElement(sel);
+        async function emuClick(sel, eleIndex = -1) {
+            let btn, result = false;
+            if (eleIndex >= 0) {
+                if (eleIndex === 0) await waitForElement(sel);
+                let btns = getAllElements(sel);
+                if (btns.length === 0) {
+                    return true;
+                }
+                if (btns.length === 1) {
+                    btn = btns[0];
+                    result = true;
+                } else if (btns.length <= eleIndex) {
+                    return true;
+                } else {
+                    btn = btns[eleIndex];
+                    if (btns.length === eleIndex + 1) {
+                        result = true;
+                    }
+                }
+            } else {
+                btn = await waitForElement(sel);
+                if (!btn) return true;
+            }
             targetElement = btn;
             if(!PointerEvent) return btn.click();
             let eventParam = {
@@ -10880,6 +11005,7 @@
             dispatchTouchEvent(btn, "touchend");
             btn.click();
             debug(btn, `click ${sel}`);
+            return result;
         }
 
         function submitByForm(charset, url, target) {
@@ -12125,6 +12251,16 @@
                     _GM_notification('Cache imported successfully!');
                 });
 
+                document.addEventListener('showSiteAdd', e => {
+                    let siteData = e.detail ? e.detail.site : e.site;
+                    if (!siteData) return;
+                    if (siteData.url) {
+                        showSiteAdd(siteData.name, siteData.description, siteData.url, (siteData.icon ? [siteData.icon] : []), siteData.charset, siteData.kwFilter);
+                    } else {
+                        importFilter.open(siteData);
+                    }
+                });
+
                 loadConfig();
                 let lastModified = searchData.lastModified;
                 document.addEventListener('visibilitychange', async e => {
@@ -12308,7 +12444,6 @@
                     if (targetPre) targetPre.style.filter = "";
                     btnsCon.classList.add("hide");
                 });
-                const importFilter = new ImportFilter();
                 importBtn.innerText = i18n("import");
                 importBtn.addEventListener("click", e => {
                     if (shareEngines) return;
@@ -12430,7 +12565,7 @@
         class ImportFilter {
             //static importFilter;
             constructor() {
-                this.init();
+                this.inited = false;
             }
 
             /*static getInstance() {
@@ -12441,6 +12576,8 @@
             }*/
 
             init() {
+                if (this.inited) return;
+                this.inited = true;
                 let self = this;
                 this.openList = [];
                 this.filterCss = `
@@ -12790,6 +12927,7 @@
             }
 
             open(configData) {
+                this.init();
                 let self = this;
                 this.siteDict = {};
                 this.typeDict = {};
@@ -12803,6 +12941,7 @@
                 //_GM_notification('Over!');
             }
         }
+        const importFilter = new ImportFilter();
 
         var dragRoundFrame, dragCon, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, openAllTimer, dragScaleWidth, dragScaleHeight, zoomDrag;
         function showDragSearch(left, top) {
@@ -13429,7 +13568,8 @@
                         display: block;
                     }
                     .searchJumperFrame-buttons>button#submitCrawl,
-                    .searchJumperFrame-buttons>button#record {
+                    .searchJumperFrame-buttons>button#record,
+                    .searchJumperFrame-buttons>button#loop {
                         width: 100%;
                         margin: 0 3px;
                     }
@@ -13553,6 +13693,9 @@
                         <button id="record" type="button">${i18n("recordAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
+                        <button id="loop" type="button">${i18n("loopAction")}</button>
+                    </div>
+                    <div class="searchJumperFrame-buttons">
                         <button id="input" type="button">${i18n("inputAction")}</button>
                         <button id="click" type="button">${i18n("clickAction")}</button>
                         <button id="sleep" type="button">${i18n("sleepAction")}</button>
@@ -13601,7 +13744,12 @@
                         let postParams = [];
                         actionParams[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
                             pair = pair.trim();
-                            if (pair.startsWith("click(") && pair.endsWith(')')) {
+                            if (/^loopStart\(\d+\)$/.test(pair)) {
+                                let loopStart = pair.match(/loopStart\((.*)\)/);
+                                postParams.push(['@loopStart', loopStart[1]]);
+                            } else if (pair == "loopEnd") {
+                                postParams.push(['@loopEnd', '']);
+                            } else if (pair.startsWith("click(") && pair.endsWith(')')) {
                                 let click = pair.slice(6, pair.length - 1);
                                 if (click) {
                                     postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
@@ -13717,8 +13865,9 @@
                 let sleepAction = addFrame.querySelector("#sleep");
                 let submitCrawl = addFrame.querySelector("#submitCrawl");
                 let recordBtn = addFrame.querySelector("#record");
+                let loopBtn = addFrame.querySelector("#loop");
                 let dragDiv;
-                let addAction = (type, sel, val) => {
+                let addAction = (type, sel = '', val = '') => {
                     let div = document.createElement("div");
                     let words = type;
                     switch(type) {
@@ -13727,6 +13876,12 @@
                             break;
                         case "click":
                             words = i18n('clickOutput', sel);
+                            break;
+                        case "loopStart":
+                            words = i18n('loopStart', val);
+                            break;
+                        case "loopEnd":
+                            words = i18n('loopEnd');
                             break;
                         case "sleep":
                             words = i18n('sleepOutput', val);
@@ -13802,7 +13957,12 @@
                     if (!actionParams) return;
                     actionParams[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {
                         pair = pair.trim();
-                        if (pair.startsWith("click(") && pair.endsWith(')')) {
+                        if (/^loopStart\(\d+\)$/.test(pair)) {
+                            let loopStart = pair.match(/loopStart\((.*)\)/);
+                            addAction('loopStart', '', loopStart[1]);
+                        } else if (pair == "loopEnd") {
+                            addAction('loopEnd');
+                        } else if (pair.startsWith("click(") && pair.endsWith(')')) {
                             let click = pair.slice(6, pair.length - 1);
                             if (click) {
                                 addAction('click', click.replace(/\\([\=&])/g, "$1").trim());
@@ -13830,8 +13990,6 @@
                             }
                         }
                     });
-
-
                 };
                 let geneUrl = () => {
                     let actions = [];
@@ -13848,6 +14006,9 @@
                                 break;
                             case "sleep":
                                 actions.push(`sleep(${val})`);
+                                break;
+                            case "loopEnd":
+                                actions.push('loopEnd');
                                 break;
                             default:
                                 actions.push(`${action.dataset.type}(${val})`);
@@ -13902,18 +14063,31 @@
                         document.addEventListener('change', changeHandler);
                     }, 100);
                 });
+                let inLoop = false;
+                loopBtn.addEventListener("click", e => {
+                    if (inLoop) {
+                        addAction('loopEnd');
+                        loopBtn.innerText = i18n("loopAction");
+                    } else {
+                        let loopTimes = prompt(i18n('loopTimes'), 1);
+                        if (!loopTimes) return;
+                        addAction('loopStart', '', loopTimes || '1');
+                        loopBtn.innerText = i18n("loopActionEnd");
+                    }
+                    inLoop = !inLoop;
+                });
                 inputAction.addEventListener("click", e => {
                     picker.getSelector(selector => {
                         addAction('input', selector, '%s');
                         addFrame.style.display = '';
-                    });
+                    }, !inLoop);
                     addFrame.style.display = 'none';
                 });
                 clickAction.addEventListener("click", e => {
                     picker.getSelector(selector => {
                         addAction('click', selector);
                         addFrame.style.display = '';
-                    });
+                    }, !inLoop);
                     addFrame.style.display = 'none';
                 });
                 sleepAction.addEventListener("click", e => {
@@ -13926,7 +14100,7 @@
                     addFrame.classList.remove("crawling");
                 });
             }
-            crawlBtn.style.display = showCrawl ? '' : 'none';
+            //crawlBtn.style.display = showCrawl ? '' : 'none';
             searchBar.addToShadow(addFrame);
             siteKeywords.value = "";
             siteMatch.value = "";
