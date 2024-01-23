@@ -500,7 +500,7 @@
                         startRecord: '記録操作を開始します。記録を終了するには Enter キーを押してください',
                         loopAction: 'ループの開始',
                         loopActionEnd: 'ループの終了',
-                        loopStart: 'ループを開始します。ループ数は <span title="#t#">#t#</span> です',
+                        loopStart: 'ループを開始。ループ数は <span title="#t#">#t#</span> です',
                         loopEnd: 'ループの終了',
                         loopTimes: 'ループの数。一致するすべての要素が走査され、順番に実行されます',
                         loadingCollection: 'コレクションを読み込み中...'
@@ -606,7 +606,7 @@
                         startRecord: 'Start to record operation, press Enter to end',
                         loopAction: 'Start loop',
                         loopActionEnd: 'Stop loop',
-                        loopStart: 'Start looping, the number of loops is <span title="#t#">#t#</span>',
+                        loopStart: 'Start loop <span title="#t#">#t#</span> times',
                         loopEnd: 'Stop loop',
                         loopTimes: 'Number of loops, all matching elements will be traversed and executed sequentially',
                         loadingCollection: 'Preparing collection for SearchJumper...'
