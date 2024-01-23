@@ -1854,10 +1854,10 @@
                  }
                  ${searchData.prefConfig.minPopup ? `
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
-                     visibility: hidden;
+                     display: none;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover>a.search-jumper-btn {
-                     visibility: visible;
+                     display: grid;
                  }
                  ` : ''}
                  ${searchData.prefConfig.minPopup == 2 ? `
@@ -9603,6 +9603,7 @@
                                             let doc = document.implementation.createHTMLDocument('');
                                             doc.documentElement.innerHTML = r;
                                             let ele = getElement(thenEleSel, doc);
+                                            if (!ele) return null;
                                             let basepath = doc.querySelector("base");
                                             return canonicalUri(ele.getAttribute("href"), (basepath ? basepath.href : _url));
                                         });
@@ -9613,7 +9614,7 @@
                                                     resolve((r && r.data) || "");
                                                 });
                                             });
-                                        } else break;
+                                        } else return "No result";;
                                     }
                                 } else {
                                     fetchData = GM_fetch(_url, fetchOption).then(r => {
@@ -9629,6 +9630,7 @@
                                             let doc = document.implementation.createHTMLDocument('');
                                             doc.documentElement.innerHTML = r;
                                             let ele = getElement(thenEleSel, doc);
+                                            if (!ele) return null;
                                             let basepath = doc.querySelector("base");
                                             return canonicalUri(ele.getAttribute("href"), (basepath ? basepath.href : _url));
                                         });
@@ -9637,7 +9639,7 @@
                                             fetchData = GM_fetch(thenUrl).then(r => {
                                                 return r.text();
                                             });
-                                        } else break;
+                                        } else return "No result";
                                     }
                                 }
                                 tipsResult = await fetchData.then(r => {
