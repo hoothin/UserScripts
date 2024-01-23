@@ -13974,6 +13974,16 @@
                             if (func) {
                                 addAction('call', '', func.replace(/\\([\=&])/g, "$1").trim());
                             }
+                        } else if (pair.startsWith("wait(") && pair.endsWith(')')) {
+                            let func = pair.slice(5, pair.length - 1);
+                            if (func) {
+                                addAction('wait', '', func.replace(/\\([\=&])/g, "$1").trim());
+                            }
+                        } else if (pair.startsWith("open(") && pair.endsWith(')')) {
+                            let func = pair.slice(5, pair.length - 1);
+                            if (func) {
+                                addAction('open', '', func.replace(/\\([\=&])/g, "$1").trim());
+                            }
                         } else if (/^sleep\(\d+\)$/.test(pair)) {
                             let sleep = pair.match(/sleep\((.*)\)/);
                             if (sleep) {
@@ -14013,7 +14023,7 @@
                                 actions.push('loopEnd');
                                 break;
                             default:
-                                actions.push(`${action.dataset.type}(${val})`);
+                                actions.push(`${action.dataset.type}(${val.replace(/([=&])/g, '\\$1')})`);
                                 break;
                         }
                     });
