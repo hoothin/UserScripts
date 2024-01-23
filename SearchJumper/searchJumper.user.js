@@ -1871,13 +1871,13 @@
                      max-width: ${40 * (searchData.prefConfig.numPerLine || 7) * this.tilesZoom}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
-                     visibility: visible;
+                     display: grid;
                  }
                  #search-jumper.funcKeyCall.targetInput>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
-                     visibility: hidden;
+                     display: none;
                  }
                  #search-jumper.funcKeyCall.targetInput>.search-jumper-searchBar>.search-jumper-type:hover>a.search-jumper-btn {
-                     visibility: visible;
+                     display: grid;
                  }
                  ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
