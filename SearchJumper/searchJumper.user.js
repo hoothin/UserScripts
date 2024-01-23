@@ -14121,7 +14121,7 @@
                     iconShow.src = icons[0];
                 }
             } else {
-                iconShow.src = location.origin + "/favicon.ico";
+                iconShow.src = (url.indexOf('http') === 0 ? url.replace(/^(https?:\/\/[^\/]+).*/, '$1') : location.origin) + "/favicon.ico";
             }
             iconsCon.innerHTML = createHTML();
             if (icons && icons.length > 1) {
