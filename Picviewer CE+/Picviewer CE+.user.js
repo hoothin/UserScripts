@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.21.3
+// @version              2024.1.24.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11803,7 +11803,7 @@ ImgOps | https://imgops.com/#b#`;
         url = url.replace(/.*?\/\/[^\/]+\//, "");
         let nameFromUrl = "";
         let ext;
-        if (_ext) {
+        if (_ext && /^\w{2,5}$/.test(_ext)) {
             ext = "." + _ext;
         } else {
             ext = url.match(/(\.\w{2,5})(\?|@|$)/);
@@ -12408,31 +12408,33 @@ ImgOps | https://imgops.com/#b#`;
             };
         }
 
-        unsafeWindow.CanvasRenderingContext2D.prototype.drawImage = function() {
-            var orig = unsafeWindow.CanvasRenderingContext2D.prototype.drawImage;
-            return function() {
-                let image = arguments[0];
-                if (image && image.src) {
-                    this.canvas.dataset.src = image.src;
+        const blobUrlMap = new Map();
+        if (!envir.firefox) {
+            const drawImageProxy = new Proxy(unsafeWindow.CanvasRenderingContext2D.prototype.drawImage, {
+                apply: function (target, thisArg, argumentsList) {
+                    let image = argumentsList[0];
+                    if (image && image.src) {
+                        thisArg.canvas.dataset.src = image.src;
+                    }
+                    const result = target.apply(thisArg, argumentsList);
+                    return result;
                 }
-                var rv = orig.apply(this, arguments);
-                return rv;
-            };
-        }();
+            });
+            unsafeWindow.CanvasRenderingContext2D.prototype.drawImage = drawImageProxy;
 
-        const old_create = unsafeWindow.URL.createObjectURL;
-        const old_revoke = unsafeWindow.URL.revokeObjectURL;
-        unsafeWindow.URL.createObjectURL = storeAndCreate;
-        const dict = {};
-
-        function storeAndCreate(blob) {
-            const url = old_create(blob);
-            dict[url] = blob;
-            return url
+            const createObjectURLProxy = new Proxy(unsafeWindow.URL.createObjectURL, {
+                apply: function (target, thisArg, argumentsList) {
+                    const blob = argumentsList[0];
+                    const blobUrl = target.apply(thisArg, argumentsList);
+                    blobUrlMap.set(blobUrl, blob);
+                    return blobUrl;
+                }
+            });
+            unsafeWindow.URL.createObjectURL = createObjectURLProxy;
         }
 
         function getBlob(url) {
-            return dict[url] || null;
+            return blobUrlMap.get(url) || null;
         }
 
         function blobToDataURL(blob, cb) {
@@ -17503,9 +17505,16 @@ ImgOps | https://imgops.com/#b#`;
                     max-width:50px;\
                     height:20px;\
                     background: white;\
+                    box-sizing: border-box;\
+                    display: initial;\
+                    margin: 0 5px;\
+                    padding: 0 5px;\
                     }\
                     .pv-gallery-head-command-drop-list-item input[type=checkbox]{\
-                    width:20px\
+                    width:20px;\
+                    box-sizing: border-box;\
+                    display: initial;\
+                    margin: 0 5px;\
                     }\
                     .pv-gallery-head-command-drop-list-item > * {\
                     vertical-align:middle;\
@@ -17513,7 +17522,11 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-head-command-drop-list-item label {\
                     font-weight: normal;\
-                    display:inline\
+                    display:inline;\
+                    font-size:unset;\
+                    }\
+                    .pv-gallery-head-command-drop-list-item label:after {\
+                    display:none;\
                     }\
                     .pv-gallery-head-command-drop-list-item:hover{\
                     background-color:#404040;\
@@ -17789,7 +17802,7 @@ ImgOps | https://imgops.com/#b#`;
                     line-height:0;\
                     text-align:center;\
                     background-color:#00000060;\
-                    color:#757575;\
+                    color:#a1a1a1;\
                     white-space:nowrap;\
                     cursor:pointer;\
                     z-index:1;\
