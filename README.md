@@ -36,5 +36,5 @@
 ## Contributors
 
 <a href="https://github.com/hoothin/UserScripts/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=hoothin/UserScripts" />
+  <img src="https://contrib.rocks/image?repo=hoothin/UserScripts&max=400&columns=15" />
 </a>
