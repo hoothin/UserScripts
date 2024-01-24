@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86205",
+  "data": {
+    "pageElement": "//ul[contains(@class,'-list')]",
+    "nextLink": "//a[contains(@id,'lnkNext')]",
+    "url": "^https:\\/\\/minkara.carview.co.jp\\/",
+    "exampleUrl": "https://minkara.carview.co.jp/search/?q=f-zero&c=0\r\nhttps://minkara.carview.co.jp/blog/\r\nhttps://minkara.carview.co.jp/review/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "foo2",
+  "name": "みんカラ",
+  "created_at": "2024-01-23T11:13:33+09:00",
+  "updated_at": "2024-01-23T13:20:45+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "id('category_list')/ul/li",
