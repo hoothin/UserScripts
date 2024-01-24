@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.68
+// @version      1.7.69
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -4723,7 +4723,7 @@
                         result.text += "\n";
                         result.data[start] = {node: ele, text: "\n"};
                     } else if (ele.offsetParent || ele.offsetHeight) {
-                        if (/^(li|p|a)$/i.test(ele.nodeName)) {
+                        if (/^(li|p|a|td)$/i.test(ele.nodeName)) {
                             let start = result.text.length;
                             result.text += "\n";
                             result.data[start] = {node: {}, text: "\n"};
@@ -5003,6 +5003,7 @@
                                 let curlen = Math.min(leftLen, curnode.text.length - curpos);
                                 leftLen -= curlen;
                                 if (!curnode.text.trim()) {
+                                    if (type === "start") pos += curnode.text.length;
                                     continue;
                                 }
                                 let nodeInfo;
@@ -11665,15 +11666,17 @@
                             searchBar.showAllSites();
                         }
                     }
-                    if (searchData.prefConfig.switchSitesPreKey) {
-                        if (checkShortcutEnable(e, searchData.prefConfig.switchSitesAlt, searchData.prefConfig.switchSitesCtrl, searchData.prefConfig.switchSitesShift, searchData.prefConfig.switchSitesMeta, searchData.prefConfig.switchSitesPreKey)) {
-                            searchBar.switchSite();
-                            return;
+                    if (currentSite && searchBar.bar.style.display !== "none") {
+                        if (searchData.prefConfig.switchSitesPreKey) {
+                            if (checkShortcutEnable(e, searchData.prefConfig.switchSitesAlt, searchData.prefConfig.switchSitesCtrl, searchData.prefConfig.switchSitesShift, searchData.prefConfig.switchSitesMeta, searchData.prefConfig.switchSitesPreKey)) {
+                                searchBar.switchSite();
+                                return;
+                            }
                         }
-                    }
-                    if (searchData.prefConfig.switchSitesNextKey) {
-                        if (checkShortcutEnable(e, searchData.prefConfig.switchSitesAlt, searchData.prefConfig.switchSitesCtrl, searchData.prefConfig.switchSitesShift, searchData.prefConfig.switchSitesMeta, searchData.prefConfig.switchSitesNextKey)) {
-                            searchBar.switchSite(true);
+                        if (searchData.prefConfig.switchSitesNextKey) {
+                            if (checkShortcutEnable(e, searchData.prefConfig.switchSitesAlt, searchData.prefConfig.switchSitesCtrl, searchData.prefConfig.switchSitesShift, searchData.prefConfig.switchSitesMeta, searchData.prefConfig.switchSitesNextKey)) {
+                                searchBar.switchSite(true);
+                            }
                         }
                     }
                 }, true);
@@ -13397,7 +13400,7 @@
                         filter: alpha(opacity=95);
                         box-shadow: 5px 5px 20px 0px #000;
                         color: #6e7070;
-                        transition:all 0.25s ease;
+                        transition: all 0.25s ease;
                         border: 0;
                         font-size: initial;
                     }
@@ -13410,6 +13413,11 @@
                         font-weight: bold;
                         font-size: 18px!important;
                         border-radius: 10px 10px 0 0!important;
+                    }
+                    .draging .searchJumperFrame-body,
+                    .draging .searchJumperFrame-crawlBody {
+                        transition: none;
+                        pointer-events: none;
                     }
                     .searchJumperFrame-title>img {
                         margin: 5px;
@@ -13639,12 +13647,19 @@
                         border: 2px solid #000000;
                       }
                     }
+                    @media screen and (max-height: 600px) {
+                      .searchJumperFrame-body,
+                      .searchJumperFrame-crawlBody {
+                        top: 10px;
+                        margin-top: 0px;
+                      }
+                    }
                 `;
                 let addFrameCssEle = _GM_addStyle(addFrameCssText);
                 addFrame = document.createElement("div");
                 addFrame.innerHTML = createHTML(`
                 <div class="searchJumperFrame-body">
-                    <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
+                    <a href="${configPage}" class="searchJumperFrame-title" target="_blank" draggable="false">
                         <img width="32px" height="32px" src="${logoBase64}" />${i18n("addSearchEngine")}
                     </a>
                     <div class="searchJumperFrame-maxBtn">
@@ -13708,6 +13723,7 @@
                 </div>
                 `);
                 if (!disabled) addFrame.appendChild(addFrameCssEle);
+                let addBody = addFrame.children[0];
                 nameInput = addFrame.querySelector("[name='siteName']");
                 descInput = addFrame.querySelector("[name='description']");
                 urlInput = addFrame.querySelector("[name='url']");
@@ -13721,6 +13737,35 @@
                 siteKeywords = addFrame.querySelector("[name='siteKeywords']");
                 siteMatch = addFrame.querySelector("[name='siteMatch']");
                 openSelect = addFrame.querySelector("select[name='openSelect']");
+                let title = addFrame.querySelector(".searchJumperFrame-title");
+                let initMousePos, initFramePos, moving = false;
+                let dragTitleMove = e => {
+                    if (!moving) {
+                        addFrame.classList.add("draging");
+                        moving = true;
+                    }
+                    let x = e.clientX - initMousePos.x + initFramePos.x;
+                    let y = e.clientY - initMousePos.y + initFramePos.y;
+                    addBody.style.marginLeft = x + "px";
+                    addBody.style.marginTop = y + "px";
+                };
+                let dragTitleUp = e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    addFrame.classList.remove("draging");
+                    document.removeEventListener("mousemove", dragTitleMove);
+                    document.removeEventListener("mouseup", dragTitleUp);
+                };
+                title.addEventListener("mousedown", e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    moving = false;
+                    initMousePos = {x: e.clientX, y: e.clientY};
+                    let addBodyStyle = getComputedStyle(addBody);
+                    initFramePos = {x: parseInt(addBodyStyle.marginLeft || 0), y: parseInt(addBodyStyle.marginTop || 0)};
+                    document.addEventListener("mousemove", dragTitleMove);
+                    document.addEventListener("mouseup", dragTitleUp);
+                });
                 let maxBtn = addFrame.querySelector("#maxBtn");
                 maxBtn.addEventListener("click", e => {
                     addFrame.classList.add("maxContent");
