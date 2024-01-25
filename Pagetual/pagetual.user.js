@@ -4293,7 +4293,7 @@
               left: 10px;
              }
              #pagetual-picker>.logoIcon.showSign>svg>path {
-              fill: gray;
+              fill: gray!important;
              }
              #pagetual-picker textarea{
               display: inline-block;
