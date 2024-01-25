@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.69
+// @version      1.7.70
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -14153,7 +14153,10 @@
                     if (sleepTime) addAction('sleep', '', sleepTime);
                 });
                 submitCrawl.addEventListener("click", e => {
-                    urlInput.value = location.href + '#p{' + geneUrl() + '}';
+                    let actionUrl = geneUrl();
+                    if (actionUrl) {
+                        urlInput.value = location.href + '#p{' + actionUrl + '}';
+                    }
                     addFrame.classList.remove("crawling");
                 });
             }
@@ -14161,9 +14164,9 @@
             searchBar.addToShadow(addFrame);
             siteKeywords.value = "";
             siteMatch.value = "";
-            nameInput.value = name;
-            descInput.value = description;
-            urlInput.value = url;
+            nameInput.value = name || "";
+            descInput.value = description || "";
+            urlInput.value = url || "";
             if (icons && icons[0]) {
                 iconShow.style.display = "";
                 if (url.indexOf(location.origin) === 0) {
@@ -14178,7 +14181,7 @@
                     iconShow.src = icons[0];
                 }
             } else {
-                iconShow.src = (url.indexOf('http') === 0 ? url.replace(/^(https?:\/\/[^\/]+).*/, '$1') : location.origin) + "/favicon.ico";
+                iconShow.src = (/^(showTips:)?https?:/.test(url) ? url.split('\n')[0].replace(/^(showTips:)?(https?:\/\/[^\/]+).*/, '$2') : location.origin) + "/favicon.ico";
             }
             iconsCon.innerHTML = createHTML();
             if (icons && icons.length > 1) {
