@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.24.1
+// @version              2024.1.25.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -18904,7 +18904,6 @@ ImgOps | https://imgops.com/#b#`;
                 container.className='pv-pic-window-container';
                 container.innerHTML=createHTML(
                     '<span class="pv-pic-window-imgbox transition-transform"></span>'+
-                    '<span class="pv-pic-window-center"></span>'+
                     '<span class="pv-pic-window-rotate-indicator">'+
                     '<span class="pv-pic-window-rotate-indicator-pointer"></span>'+
                     '</span>'+
@@ -19139,13 +19138,6 @@ ImgOps | https://imgops.com/#b#`;
                 this.shiftKeyUp=true;
                 this.moving=false;
 
-                container.querySelector('.pv-pic-window-center').addEventListener('mousedown', function(e) {
-                    var target = e.target;
-                    target.style.display = "none";
-                    setTimeout(() => {
-                        target.style.display = "";
-                    }, 500);
-                },true);
                 //缩放工具的扩展菜单
                 container.querySelector('.pv-pic-window-tb-tool-extend-menu-zoom').addEventListener('click',function(e){
                     var target=e.target;
@@ -19203,6 +19195,11 @@ ImgOps | https://imgops.com/#b#`;
                     self.toolbarEventHandler(e);
                 },false);
 
+                toolbar.addEventListener('click',function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                },false);
+
 
                 toolbar.addEventListener('dblclick',function(e){//鼠标双击工具
                     self.toolbarEventHandler(e);
@@ -19252,7 +19249,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.imgWindow.close.dblClickImgWindow){
                     var dblClickImgWindow=function(e){
                         var target=e.target;
-                        if(target==container || target==img || target.className=='pv-pic-window-center' || target==self.imgState || target==self.rotateOverlayer){
+                        if(target==container || target==img || target==self.imgState || target==self.rotateOverlayer){
                             self.remove();
                             e.stopPropagation();
                         };
@@ -19414,6 +19411,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 var allData = await gallery.getAllValidImgs();
                 if (allData.length <= 1) return;
+                const validData = (data, src) => {
+                    if (!data || !data.img || !data.img.parentNode) return false;
+                    if (data.img.parentNode.classList.contains("pv-pic-window-container")) return false;
+                    if (data.src == src) return false;
+                    if (data.src && /^data:/.test(data.src) && data.src.length < 250) return false;
+                    return true;
+                };
                 for (let i = 0; i < allData.length; i++) {
                     let imgData = allData[i];
                     if (imgData.img == this.data.img) {
@@ -19421,7 +19425,7 @@ ImgOps | https://imgops.com/#b#`;
                             if (i != allData.length - 1) {
                                 i++;
                                 imgData = allData[i];
-                                while (imgData && imgData.img && imgData.img.parentNode && (imgData.img.parentNode.classList.contains("pv-pic-window-container") || imgData.src == this.data.src || (imgData.src && /^data:/.test(imgData.src) && imgData.src.length < 250))) {
+                                while (!validData(imgData, this.data.src)) {
                                     i++;
                                     if (i == allData.length) return;
                                     imgData = allData[i];
@@ -19436,7 +19440,7 @@ ImgOps | https://imgops.com/#b#`;
                             if (i != 0) {
                                 i--;
                                 imgData = allData[i];
-                                while (imgData && imgData.img && imgData.img.parentNode && (imgData.img.parentNode.classList.contains("pv-pic-window-container") || imgData.src == this.data.src || (imgData.src && /^data:/.test(imgData.src) && imgData.src.length < 250))) {
+                                while (!validData(imgData, this.data.src)) {
                                     i--;
                                     if (i == -1) return;
                                     imgData = allData[i];
@@ -19670,11 +19674,6 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     pointer-events: none;\
                     }\
-                    .pv-pic-window-scroll>span.pv-pic-window-pre,\
-                    .pv-pic-window-scroll>span.pv-pic-window-next{\
-                    position: fixed;\
-                    pointer-events: all;\
-                    }\
                     span.pv-pic-window-pre {\
                     left: 8px;\
                     background-image: url("'+prefs.icons.arrowLeft+'");\
@@ -19683,20 +19682,8 @@ ImgOps | https://imgops.com/#b#`;
                     right: 8px;\
                     background-image: url("'+prefs.icons.arrowRight+'");\
                     }\
-                    .compare>.pv-pic-window-center,\
                     .compare>.pv-pic-search-state{\
                     display: none;\
-                    }\
-                    .pv-pic-window-center {\
-                    position: absolute;\
-                    height: 20%;\
-                    width: 20%;\
-                    top: 40%;\
-                    left: 40%;\
-                    opacity: 0;\
-                    }\
-                    .pv-pic-window-container>.pv-pic-window-center:hover~.pv-pic-search-state {\
-                    opacity: 0;\
                     }\
                     .pv-pic-window-container_focus .pv-pic-window-imgbox:hover~.pv-pic-window-pre,\
                     .pv-pic-window-container_focus .pv-pic-window-imgbox:hover~.pv-pic-window-next{\
@@ -19796,6 +19783,10 @@ ImgOps | https://imgops.com/#b#`;
                       100% { opacity: 0 }\
                     }\
                     .pv-pic-window-scroll {\
+                    max-height: calc(100vh - 26px);\
+                    max-width: 100vw;\
+                    }\
+                    .pv-pic-window-scroll>.pv-pic-window-imgbox {\
                     max-height: calc(100vh - 26px);\
                     max-width: 100vw;\
                     overflow-y: scroll;\
@@ -20006,8 +19997,8 @@ ImgOps | https://imgops.com/#b#`;
                     padding:0;\
                     background-color:rgba(255, 0, 0, 0.150);\
                     }\
-                    .pv-pic-window-container::-webkit-scrollbar { width: 0 !important }\
-                    .pv-pic-window-container { -ms-overflow-style: none;overflow: -moz-scrollbars-none; }\
+                    .pv-pic-window-container::-webkit-scrollbar, .pv-pic-window-container>.pv-pic-window-imgbox::-webkit-scrollbar { width: 0 !important }\
+                    .pv-pic-window-container, .pv-pic-window-container>.pv-pic-window-imgbox { -ms-overflow-style: none;overflow: -moz-scrollbars-none; }\
                     ');
             },
 
@@ -20315,6 +20306,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var img=this.img;
                 var imgWindow=this.imgWindow;
+                imgWindow.classList.remove("pv-pic-window-scroll");
 
                 var iTransform=img.style[support.cssTransform].replace(/rotate\([^)]*\)/i,'');
 
@@ -21041,9 +21033,13 @@ ImgOps | https://imgops.com/#b#`;
                         var scrolled=prefs.imgWindow.fixed ? {x:0, y:0} : getScrolled();
                         var origTop=parseFloat(imgWindow.style.top);
                         if(inScroll){
-                            imgWindow.style.top = parseFloat(imgWindow.style.top) - getScrolled(imgWindow).y +'px';
+                            imgWindow.style.top = parseFloat(imgWindow.style.top) - getScrolled(imgWindow.children[0]).y +'px';
                             this.imgWindow.classList.remove("pv-pic-window-scroll");
-                        } else this.imgWindow.classList.add("pv-pic-window-scroll");
+                        } else {
+                            this.rotate(0,true);
+                            this.imgWindow.classList.add("pv-pic-window-scroll");
+                            imgWindow.children[0].scrollTop = -parseInt(imgWindow.style.top);
+                        }
                         //this.center(true , true);
                         if(!inScroll){
                             imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
@@ -21084,7 +21080,7 @@ ImgOps | https://imgops.com/#b#`;
                             return;
                         };
 
-                        if((e.button!=0 && e.type!="touchstart") || (target!=this.imgWindow && target.className!='pv-pic-window-center' && target!=this.img && target!=this.rotateOverlayer && target!=this.imgState))return;
+                        if((e.button!=0 && e.type!="touchstart") || (target!=this.imgWindow && target!=this.img && target!=this.rotateOverlayer && target!=this.imgState))return;
                         e.preventDefault();
                         if(this.tempHand){
                             this.move(e);
@@ -23211,14 +23207,6 @@ ImgOps | https://imgops.com/#b#`;
             var checkUniqueImgWin = function() {
                 if (canPreview) {
                     if (result.type != "link" && result.src == result.imgSrc) {
-                        if (!result.imgAS && !result.imgCS) {
-                            let sizeInfo = {
-                                w: result.img.offsetWidth || result.img.scrollWidth,
-                                h: result.img.offsetHeight || result.img.scrollHeight
-                            }
-                            result.imgAS = sizeInfo;
-                            result.imgCS = sizeInfo;
-                        }
                         if (result.imgAS.w <= result.imgCS.w && result.imgAS.h <= result.imgCS.h) {
                             var wSize = getWindowSize();
                             if (result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
@@ -23254,10 +23242,6 @@ ImgOps | https://imgops.com/#b#`;
                     target = null;
                 }
                 if (target) {
-                    let sizeInfo = {
-                        w: target.offsetWidth || target.scrollWidth,
-                        h: target.offsetHeight || target.scrollHeight
-                    }
                     result = {
                         src: target.href,
                         type: "link",
@@ -23275,6 +23259,17 @@ ImgOps | https://imgops.com/#b#`;
                 pretreatment(target)
                 result = findPic(target);
                 if (!result) return;
+            }
+
+            if (result) {
+                if (!result.imgAS && !result.imgCS) {
+                    let sizeInfo = {
+                        w: result.img.offsetWidth || result.img.scrollWidth,
+                        h: result.img.offsetHeight || result.img.scrollHeight
+                    }
+                    result.imgAS = sizeInfo;
+                    result.imgCS = sizeInfo;
+                }
                 if (prefs.floatBar.showWithRules && result.type == "rule") {
                 } else if (!(result.imgAS.w == result.imgCS.w && result.imgAS.h == result.imgCS.h)) {//如果不是两者完全相等,那么被缩放了.
                     if (prefs.floatBar.sizeLimitOr) {
@@ -23297,9 +23292,6 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 }
-            }
-
-            if (result) {
                 debug(result);
                 if (!result.noActual) {
                     if (!result.srcs) {
@@ -24559,7 +24551,7 @@ ImgOps | https://imgops.com/#b#`;
                     GM_config.frame.src="";
                 }
                 initKeyInputs();
-            },500);
+            }, 1000);
         }
 
         function loadPrefs() {
