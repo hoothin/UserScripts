@@ -13906,6 +13906,11 @@
                         if (addFrame.parentNode) {
                             addFrame.parentNode.removeChild(addFrame);
                         }
+                        window.postMessage({
+                            searchData: searchData,
+                            version: _GM_info.script.version || 0,
+                            command: 'loadConfig'
+                        }, '*');
                     });
                 });
 
