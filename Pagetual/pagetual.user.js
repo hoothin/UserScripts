@@ -5346,9 +5346,8 @@
                   z-index: 999;
                   bottom: 0;
                   left: 20vw;
-                  background-color: #6b6b6b99;
                   font-size: xx-large;
-                  opacity: 0.8;
+                  opacity: 0.6;
                   cursor: pointer;
                   -moz-transition:all 0.3s ease;
                   -webkit-transition:all 0.3s ease;
@@ -5356,7 +5355,6 @@
                  }
                  #saveBtn:hover {
                   opacity: 1;
-                  background-color: #6b6b6b;
                  }
                 `);
                 click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
