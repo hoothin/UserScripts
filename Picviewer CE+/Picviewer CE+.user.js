@@ -19792,6 +19792,8 @@ ImgOps | https://imgops.com/#b#`;
                     max-width: 100vw;\
                     overflow-y: scroll;\
                     overflow-x: hidden;\
+                    overscroll-behavior: contain;\
+                    -ms-scroll-chaining: contain;\
                     }\
                     .pv-pic-window-scroll>.pv-pic-window-scrollSign {\
                     display: block;\
