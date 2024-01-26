@@ -12047,7 +12047,7 @@
 
         function quickAddByInput(input) {
             if (shareEngines) return;
-            let parentForm, url = location.href, showCrawl = false;
+            let parentForm, url = location.href;
             if (input && input.name) {
                 parentForm = input.parentNode;
                 while (parentForm) {
@@ -12067,7 +12067,6 @@
             }
             let fail = () => {
                 if (window.confirm(i18n("noValidItemAsk"))) {
-                    showCrawl = true;
                     return false;
                 }
                 return true;
@@ -12124,7 +12123,7 @@
                 if (icons.indexOf && icons.indexOf(link.href) !== -1) return;
                 icons.push(link.href);
             });
-            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, "", true);
+            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet);
         }
 
         const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
@@ -12260,7 +12259,7 @@
                     let siteData = e.detail ? e.detail.site : e.site;
                     if (!siteData) return;
                     if (siteData.url) {
-                        showSiteAdd(siteData.name, siteData.description, siteData.url, (siteData.icon ? [siteData.icon] : []), siteData.charset, siteData.kwFilter);
+                        showSiteAdd(siteData.name, siteData.description, siteData.url, (siteData.icon ? [siteData.icon] : []), siteData.charset, siteData.kwFilter, siteData.match, siteData.hideNotMatch);
                     } else {
                         importFilter.open(siteData);
                     }
@@ -12477,7 +12476,7 @@
                             }
                             break;
                         case 1:
-                            showSiteAdd(configData.name, "", configData.url, (configData.icon ? [configData.icon] : []), configData.charset, configData.kwFilter);
+                            showSiteAdd(configData.name, "", configData.url, (configData.icon ? [configData.icon] : []), configData.charset, configData.kwFilter, configData.match, configData.hideNotMatch);
                             break;
                         case 2:
                             if (!searchData.prefConfig.inPageRule) searchData.prefConfig.inPageRule = {};
@@ -13379,7 +13378,7 @@
         }
 
         var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, siteKeywords, siteMatch, openSelect, crawlBtn;
-        function showSiteAdd(name, description, url, icons, charset, kwFilter, showCrawl) {
+        function showSiteAdd(name, description, url, icons, charset, kwFilter, match, hideNotMatch) {
             if (!addFrame) {
                 let addFrameCssText = `
                     .searchJumperFrame-body,
@@ -13892,6 +13891,12 @@
                             if (kwFilter) {
                                 siteObj.kwFilter = kwFilter;
                             }
+                            if (match) {
+                                siteObj.match = match;
+                            }
+                            if (hideNotMatch) {
+                                siteObj.hideNotMatch = hideNotMatch;
+                            }
                         }
                         searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
                         searchData.lastModified = new Date().getTime();
@@ -14160,7 +14165,6 @@
                     addFrame.classList.remove("crawling");
                 });
             }
-            //crawlBtn.style.display = showCrawl ? '' : 'none';
             searchBar.addToShadow(addFrame);
             siteKeywords.value = "";
             siteMatch.value = "";
