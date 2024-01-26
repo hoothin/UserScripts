@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.25.1
+// @version              2024.1.26.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11778,6 +11778,7 @@ ImgOps | https://imgops.com/#b#`;
         if (!content) return false;
         var canvas = document.createElement("canvas");
         let size = Math.min((icon.clientWidth || icon.offsetWidth), (icon.clientHeight || icon.offsetHeight));
+        if (!size) return false;
         canvas.width = size;
         canvas.height = size;
         var ctx = canvas.getContext("2d");
@@ -16938,7 +16939,7 @@ ImgOps | https://imgops.com/#b#`;
                             prop = prop.replace(/[ '"]/g, "");
                             if (prop && prop.length == 1) {
                                 let src = icon2Base64(node, prop, iconStyle);
-                                if (src != "data:,") {
+                                if (src && src != "data:,") {
                                     node = document.createElement("img");
                                     node.src = src;
                                     total.push(node);
@@ -16975,7 +16976,7 @@ ImgOps | https://imgops.com/#b#`;
                     return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                 });
 
-                await sleep(1);
+                await sleep(0);
                 // 已经在图库里面的
                 var self = this;
                 for (const img of imgs) {
@@ -23264,8 +23265,8 @@ ImgOps | https://imgops.com/#b#`;
             if (result) {
                 if (!result.imgAS && !result.imgCS) {
                     let sizeInfo = {
-                        w: result.img.offsetWidth || result.img.scrollWidth,
-                        h: result.img.offsetHeight || result.img.scrollHeight
+                        w: result.img.offsetWidth || result.img.scrollWidth || target.offsetWidth || target.scrollWidth,
+                        h: result.img.offsetHeight || result.img.scrollHeight || target.offsetHeight || target.scrollHeight
                     }
                     result.imgAS = sizeInfo;
                     result.imgCS = sizeInfo;
@@ -24346,8 +24347,11 @@ ImgOps | https://imgops.com/#b#`;
                                             }
                                         },
                                         {
+                                            node: "br"
+                                        },
+                                        {
                                             node: "span",
-                                            text: " Join our "
+                                            text: "Join our "
                                         },
                                         {
                                             node: "a",
