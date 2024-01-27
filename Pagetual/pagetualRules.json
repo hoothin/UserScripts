@@ -9462,7 +9462,7 @@
     "name": "bilibili space",
     "url": "^https://space\\.bilibili\\.com/",
     "sandbox": false,
-    "pageElement": "ul.cube-list>li,ul.video-list>li,ul.relation-list>li",
+    "pageElement": "ul.cube-list>li,ul.video-list>li,ul.relation-list>li,ul.content>li",
     "nextLink": ".be-pager-next,.next-page",
     "wait": 1000,
     "css": ".b-img.sleepy .b-img__inner{opacity:1}"
