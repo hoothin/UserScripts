@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86206",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='index_box']/*",
+    "nextLink": "//a[@class='novelview_pager-next']",
+    "url": "^https://(?:ncode|novel18)\\.syosetu\\.com/n[^/]+/",
+    "exampleUrl": "https://ncode.syosetu.com/n8799hu/\r\nhttps://novel18.syosetu.com/n6382hq/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "小説家になろう 作品目次",
+  "created_at": "2024-01-26T21:47:14+09:00",
+  "updated_at": "2024-01-26T21:47:14+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86205",
   "data": {
     "pageElement": "//ul[contains(@class,'-list')]",
