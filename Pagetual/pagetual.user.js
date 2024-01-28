@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.23
+// @version      1.9.37.24
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1008,7 +1008,7 @@
         return false;
     }
 
-    function geneSelector(ele, addID) {
+    function geneSelector(ele, addID, exact) {
         let selector = ele.nodeName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
         if (selector !== "html" && selector !== "body") {
@@ -1033,7 +1033,21 @@
                 }
                 let parent = ele.parentElement;
                 if (parent) {
-                    if (!className && !hasId && parent.children.length > 1 && !compareNodeName(parent, ["html"])) {
+                    if (exact) {
+                        let i, nth = 0, all = 0;
+                        for (i = 0; i < parent.children.length; i++) {
+                            if (parent.children[i].nodeName === ele.nodeName) {
+                                all++;
+                                if (parent.children[i] === ele) {
+                                    nth = all;
+                                }
+                                if (nth > 0 && all > 1) {
+                                    break;
+                                }
+                            }
+                        }
+                        selector += (all === 1 ? "" : `:nth-of-type(${nth})`);
+                    } else if (!className && !hasId && parent.children.length > 1 && !compareNodeName(parent, ["html"])) {
                         let prevE = ele.previousElementSibling;
                         if (prevE && prevE.className) {
                             let classList = prevE.classList;
@@ -1063,7 +1077,7 @@
                             selector += (all === 1 ? "" : `:nth-of-type(${nth})`);
                         }
                     }
-                    selector = geneSelector(parent, addID) + ' > ' + selector;
+                    selector = geneSelector(parent, addID, exact) + ' > ' + selector;
                 }
             }
         }
@@ -1680,7 +1694,8 @@
                                 self.refreshing = false;
                                 let checkEles = getAllElements(refreshByClickSel, document);
                                 for (let i = 0; i < checkEles.length; i++) {
-                                    if (checkEles[i] === e.target) {
+                                    let curEle = checkEles[i];
+                                    if (curEle === e.target || curEle.contains(e.target)) {
                                         urlChanged = true;
                                         isPause = true;
                                         if (!ruleParser.nextLinkHref) isLoading = false;
@@ -2270,7 +2285,7 @@
                     return false;
                 }
                 if (e.className) {
-                    if (/slick|slide|gallery/i.test(e.className)) {
+                    if (/slick|slide|gallery|disabled/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
@@ -2842,7 +2857,7 @@
                     }
                     if (doc === document) {
                         if (!this.linkHasHref(nextLink)) {
-                            if (clickedSth || !isVisible(nextLink, _unsafeWindow)) {
+                            if ((clickedSth && this.curSiteRule.smart) || !isVisible(nextLink, _unsafeWindow)) {
                                 this.nextLinkHref = false;
                                 return null;
                             }
@@ -4252,6 +4267,9 @@
               font-family: Times New Roman;
               overflow: initial;
               user-select: none;
+              line-height: unset;
+              min-width: unset;
+              min-height: unset;
              }
              #pagetual-picker>.title {
               margin: -5px 45px 10px 45px;
@@ -7790,6 +7808,46 @@
         btn.click();
     }
 
+    function emuInput(input, v) {
+        let result = false;
+        if (!input) return true;
+        let event = new Event('focus', { bubbles: true });
+        input.dispatchEvent(event);
+        input.click && input.click();
+        let lastValue = input.value;
+        if (input.type == 'file') {
+            let file = v;
+            let blob = new Blob([file], {
+                type: 'text/plain'
+            });
+            file = new File([blob], 'noname.txt', { type: blob.type });
+            let dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            input.files = dataTransfer.files;
+            v = "c:/fakepath/fakefile";
+        } else if (/INPUT/i.test(input.nodeName)) {
+            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+            nativeInputValueSetter.call(input, v);
+        } else if (/SELECT/i.test(input.nodeName)) {
+            var nativeSelectValueSetter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
+            nativeSelectValueSetter.call(input, v);
+        } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
+            var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+            nativeTextareaValueSetter.call(input, v);
+        } else {
+            input.innerHTML = createHTML(v);
+        }
+        event = new Event('input', { bubbles: true });
+        let tracker = input._valueTracker;
+        if (tracker) {
+            tracker.setValue(lastValue);
+        }
+        input.dispatchEvent(event);
+        event = new Event('change', { bubbles: true });
+        input.dispatchEvent(event);
+        return result;
+    }
+
     var failFromIframe = 0;
     var inCors = false;
     var checkRemoveIntv;
@@ -7931,6 +7989,26 @@
                 emuIframe.parentNode.removeChild(emuIframe);
                 emuIframe = null;
             }
+        }
+        function cloneStatus() {
+            if (!iframeDoc) return;
+            let inputs = document.querySelectorAll("input:not([type=button],[type=image],[type=reset],[type=submit])");
+            let selectOptions = document.querySelectorAll("select>option");
+            [...inputs].forEach(input => {
+                let sel = geneSelector(input, true, true);
+                let mirrorEle = iframeDoc.querySelector(sel);
+                if (!mirrorEle) return;
+                emuInput(mirrorEle, input.value);
+            });
+            [...selectOptions].forEach(option => {
+                let sel = geneSelector(option, true, true);
+                let mirrorEle = iframeDoc.querySelector(sel);
+                if (!mirrorEle) return;
+                let selected = option.selected;
+                mirrorEle.click && mirrorEle.click();
+                mirrorEle.selected = !!selected;
+                mirrorEle.parentNode.dispatchEvent(new Event('change'));
+            });
         }
         async function checkPage() {
             if (isPause) return loadPageOver();
@@ -8144,6 +8222,15 @@
                             await new AsyncFunction('doc','win','iframe','click', 'enter', 'input', 'sleep', '"use strict";' + code)(iframeDoc, emuIframe.contentWindow, emuIframe, async sel => {await clickAction(sel, iframeDoc)}, async sel => {await enterAction(sel, iframeDoc)}, async (sel, v) =>{await inputAction(sel, v, iframeDoc)}, async time => {await sleep(time)});
                         } catch(e) {
                             debug(e);
+                        }
+                    } else {
+                        let refreshByClickSel = ruleParser.curSiteRule.refreshByClick;
+                        if (iframeDoc && refreshByClickSel) {
+                            let clickBtn = await waitForElement(refreshByClickSel, iframeDoc);
+                            await sleep(500);
+                            cloneStatus();
+                            emuClick(clickBtn, iframeDoc);
+                            await sleep(500);
                         }
                     }
                     if (loaded) return;
