@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.2
+// @version      2.8.3.3
 // @description  Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -952,7 +952,7 @@ if (window.top != window.self) {
                                 downNum--;
                                 setTimeout(() => {
                                     requestDoc();
-                                }, 500);
+                                }, Math.random() * 500 + validTimes * 1000);
                                 return;
                             }
                             if (wait) {
@@ -966,7 +966,7 @@ if (window.top != window.self) {
                             if(tryTimes++ < 5){
                                 setTimeout(() => {
                                     requestDoc();
-                                }, 500);
+                                }, Math.random() * 500 + tryTimes * 1000);
                                 return;
                             }
                             downIndex++;
@@ -979,12 +979,12 @@ if (window.top != window.self) {
                             } else downOnce();
                         },
                         ontimeout: function(e) {
-                            console.warn("timeout: times="+tryTimes+" url="+aTag.href);
+                            console.warn("timeout: times="+(tryTimes+1)+" url="+aTag.href);
                             //console.log(e);
                             if(tryTimes++ < 5){
                                 setTimeout(() => {
                                     requestDoc();
-                                }, 500);
+                                }, Math.random() * 500 + tryTimes * 1000);
                                 return;
                             }
                             downIndex++;
