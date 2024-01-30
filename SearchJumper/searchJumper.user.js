@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.70
+// @version      1.7.71
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2393,6 +2393,7 @@
                      text-align: center;
                      box-sizing: content-box;
                      overflow: hidden;
+                     font-family: Roboto,arial,sans-serif;
                  }
                  .search-jumper-tips * {
                      max-width: 640px;
@@ -7185,7 +7186,14 @@
             }
 
             insertHistory(typeEle, init) {
-                if (!searchData.prefConfig.historyLength) return;
+                if (!searchData.prefConfig.historyLength ||
+                    typeEle.classList.contains("search-jumper-targetImg") ||
+                    typeEle.classList.contains("search-jumper-targetAudio") ||
+                    typeEle.classList.contains("search-jumper-targetVideo") ||
+                    typeEle.classList.contains("search-jumper-targetLink") ||
+                    typeEle.classList.contains("search-jumper-targetPage")) {
+                    return;
+                }
                 typeEle.style.width = "auto";
                 typeEle.style.height = "auto";
                 let self = this;
@@ -13274,12 +13282,7 @@
                 }
                 return result;
             };
-            dragSiteCurSpans.forEach((span, i) => {
-                span.innerHTML = createHTML();
-                span.parentNode.parentNode.style.filter = 'contrast(0.5)';
-                let targetSite = getTargetSiteBtn();
-                if (!targetSite) return;
-                span.parentNode.parentNode.style.filter = '';
+            const filldragSpan = (span, targetSite) => {
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
                 word.innerText = targetSite.dataset.name.substr(0, 10).trim();
@@ -13290,7 +13293,10 @@
                         if (/^\w+$/.test(char)) {
                             len++;
                         } else len += 2;
-                        if (len > 10) break;
+                        if (len > 10) {
+                            text += "...";
+                            break;
+                        }
                     }
                     word.innerText = text;
                 }
@@ -13306,6 +13312,16 @@
                     let src = targetIcon.src || targetIcon.dataset.src;
                     if (src) img.src = src;
                 }
+            };
+            dragSiteCurSpans.forEach((span, i) => {
+                span.innerHTML = createHTML();
+                let targetSite = getTargetSiteBtn();
+                if (!targetSite) {
+                    span.parentNode.parentNode.style.filter = 'contrast(0.5)';
+                    return;
+                }
+                span.parentNode.parentNode.style.filter = '';
+                filldragSpan(span, targetSite);
             });
             let findIndex = 0;
             let getHistorySiteBtn = () => {
@@ -13338,22 +13354,7 @@
                     delete siteImg.dataset.src;
                 }
                 span.parentNode.parentNode.style.opacity = 1;
-                span.parentNode.dataset.name = targetSite.dataset.name;
-                let word = document.createElement("p");
-                word.innerText = targetSite.dataset.name.substr(0, 10).trim();
-                if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 6);
-                let img = document.createElement("img");
-                img.style.display = "none";
-                span.appendChild(img);
-                span.appendChild(word);
-                img.onload = e => {
-                    img.style.display = "";
-                };
-                let targetIcon = targetSite.querySelector("img");
-                if (targetIcon) {
-                    let src = targetIcon.src || targetIcon.dataset.src;
-                    if (src) img.src = src;
-                }
+                filldragSpan(span, targetSite);
             });
 
             dragCon.style.left = left - dragScaleWidth + "px";
