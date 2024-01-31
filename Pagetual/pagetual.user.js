@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.25
+// @version      1.9.37.26
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2594,7 +2594,7 @@
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
-            if (!next) {
+            if (!next && location.pathname !== "/") {
                 next = jsNext || nextJs1 || nextJs2;
                 if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') !== -1) next = null;
             }
@@ -7954,9 +7954,9 @@
                     return;
                 }
                 if (doc) {
+                    clearInterval(checkReady);
                     try {
                         Function('win', 'iframe', '"use strict";' + code)(iframe.contentWindow, iframe);
-                        clearInterval(checkReady);
                     } catch(e) {
                         debug(e);
                     }
@@ -8202,18 +8202,25 @@
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
             emuIframe.addEventListener("load", e => {
-                setTimeout(async () => {
-                    try {
-                        iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
-                    } catch(e) {
-                        if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
-                            emuIframe.removeAttribute("sandbox");
-                            meetCors = true;
-                            callback(false, false);
-                        } else {
-                            returnFalse("Stop as cors");
+                try {
+                    iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+                } catch(e) {
+                    if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
+                        emuIframe.removeAttribute("sandbox");
+                        meetCors = true;
+                        callback(false, false);
+                        if (ruleParser.curSiteRule.smart) {
+                            ruleParser.findNoNext();
                         }
-                        return;
+                    } else {
+                        returnFalse("Stop as cors");
+                    }
+                    return;
+                }
+                setTimeout(async () => {
+                    if (meetCors && ruleParser.curSiteRule.smart) {
+                        ruleParser.smartRules = ruleParser.smartRules.filter(item => {return item && item.url !== ruleParser.curSiteRule.url;});
+                        storage.setItem("smartRules", ruleParser.smartRules);
                     }
                     meetCors = false;
                     let code = ruleParser.curSiteRule.init;
@@ -8248,9 +8255,9 @@
                         return;
                     }
                     if (iframeDoc) {
+                        clearInterval(checkReady);
                         try {
                             Function('win', 'iframe', '"use strict";' + code)(emuIframe.contentWindow, emuIframe);
-                            clearInterval(checkReady);
                         } catch(e) {
                             debug(e);
                         }
@@ -8441,9 +8448,9 @@
                     return;
                 }
                 if (iframeDoc) {
+                    clearInterval(checkReady);
                     try {
                         Function('win', 'iframe', '"use strict";' + code)(curIframe.contentWindow, curIframe);
-                        clearInterval(checkReady);
                     } catch(e) {
                         debug(e);
                     }
