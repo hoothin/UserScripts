@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.71
+// @version      1.7.72
 // @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
 // @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -7186,12 +7186,7 @@
             }
 
             insertHistory(typeEle, init) {
-                if (!searchData.prefConfig.historyLength ||
-                    typeEle.classList.contains("search-jumper-targetImg") ||
-                    typeEle.classList.contains("search-jumper-targetAudio") ||
-                    typeEle.classList.contains("search-jumper-targetVideo") ||
-                    typeEle.classList.contains("search-jumper-targetLink") ||
-                    typeEle.classList.contains("search-jumper-targetPage")) {
+                if (!searchData.prefConfig.historyLength) {
                     return;
                 }
                 typeEle.style.width = "auto";
@@ -7756,6 +7751,23 @@
                             let checkKw = hasWordParam ? keyWords : href;
                             if (checkKw && data.kwFilter) {
                                 if (new RegExp(data.kwFilter).test(checkKw)) {
+                                    se.style.display = '';
+                                    if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
+                                } else {
+                                    se.style.display = 'none';
+                                    if (self.searchJumperExpand.parentNode == ele) {
+                                        ele.insertBefore(se, self.searchJumperExpand);
+                                    } else ele.appendChild(se);
+                                }
+                            }
+                            if (se.dataset.paste) {
+                                if (targetElement &&
+                                    ((/INPUT|TEXTAREA/i.test(targetElement.nodeName) &&
+                                      targetElement.getAttribute("aria-readonly") != "true"
+                                     ) ||
+                                     targetElement.contentEditable == 'true'
+                                    )
+                                   ) {
                                     se.style.display = '';
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
@@ -8394,6 +8406,9 @@
                     showTips = true;
                     ele.dataset.showTips = true;
                 }
+                if (/^paste:/.test(data.url)) {
+                    ele.dataset.paste = true;
+                }
                 if (typeof data.openInNewTab !== 'undefined') {
                     openInNewTab = data.openInNewTab;
                 }
@@ -9003,6 +9018,22 @@
                 let alt, ctrl, meta, shift;
                 let action = async e => {
                     delete ele.href;
+                    if (!e) e = {};
+                    alt = e.altKey;
+                    ctrl = e.ctrlKey;
+                    meta = e.metaKey;
+                    shift = e.shiftKey;
+                    if (openInNewTab === 2) {//隱身窗口
+                        alt = false;
+                        ctrl = true;
+                        meta = false;
+                        shift = true;
+                    } else if (openInNewTab === 3) {//小窗口
+                        alt = true;
+                        ctrl = false;
+                        meta = false;
+                        shift = false;
+                    }
                     if (showTips) {
                         ele.removeAttribute("target");
                         if (tipsData) {
@@ -9023,15 +9054,10 @@
                         }
                         return;
                     }
-                    if (!e) e = {};
-                    alt = e.altKey;
-                    ctrl = e.ctrlKey;
-                    meta = e.metaKey;
-                    shift = e.shiftKey;
                     clicked = false;
                     targetUrlData = "";
                     targetUrlData = await getUrl();
-                    if (/^c(opy)?:/.test(data.url) || /^javascript:/.test(data.url) || /^\[/.test(data.url) || /[:%]P{/.test(data.url) || (data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
+                    if (/^c(opy)?:|^paste:/.test(data.url) || /^javascript:/.test(data.url) || /^\[/.test(data.url) || /[:%]P{/.test(data.url) || (data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                         if (e.button == 1 || e.button == 2) {
                             clicked = true;
                         }
@@ -9070,7 +9096,7 @@
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         let isCurrent = ele.dataset.current;
-                        if (!data.hideNotMatch && !data.kwFilter && !showTips && !ele.dataset.clone && urlMatch !== '0' && historyLength && !isCurrent) {
+                        if (!data.hideNotMatch && !data.kwFilter && !showTips && !ele.dataset.clone && !ele.dataset.paste && urlMatch !== '0' && historyLength && !isCurrent) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
                                 historySites = historySites.filter(site => {return site && site != name});
@@ -9231,6 +9257,48 @@
                             //_GM_notification('Copied successfully!');
                         }
                         return false;
+                    } else if (/^paste:/.test(data.url)) {
+                        function triggerPaste(element, value) {
+                            targetElement.focus();
+                            if (typeof element.value !== "undefined") {
+                                const startPos = element.selectionStart;
+                                const endPos = element.selectionEnd;
+                                let newValue = element.value.substring(0, startPos) + value + element.value.substring(endPos, element.value.length);
+                                startInput(element, newValue);
+                                element.selectionStart = startPos + value.length;
+                                element.selectionEnd = startPos + value.length;
+                            } else {
+                                const selection = window.getSelection();
+                                const range = selection.getRangeAt(0);
+                                range.deleteContents();
+                                range.insertNode(document.createTextNode(value));
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                            }
+                        }
+                        if (targetElement &&
+                            ((/INPUT|TEXTAREA/i.test(targetElement.nodeName) &&
+                              targetElement.getAttribute("aria-readonly") != "true"
+                             ) ||
+                             targetElement.contentEditable == 'true'
+                            )
+                           ) {
+                            if (!targetUrlData) {
+                                return false;
+                            }
+                            targetUrlData = targetUrlData.replace(/^paste:/, "");
+                            if (targetUrlData.indexOf('%input{') !== -1) {
+                                self.showCustomInputWindow(targetUrlData, _url => {
+                                    triggerPaste(targetElement, _url);
+                                });
+                            } else if (targetUrlData) {
+                                triggerPaste(targetElement, targetUrlData);
+                            } else if (typeof navigator.clipboard.readText !== "undefined") {
+                                navigator.clipboard.readText().then((clipboardValue) => {
+                                    triggerPaste(targetElement, clipboardValue);
+                                });
+                            }
+                        }
                     } else if (/^\[/.test(data.url)) {
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
@@ -9339,9 +9407,11 @@
                             }
                             let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
                             let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
-                            let left = viewWidth - 450;
-                            let top = (viewHeight - 800) / 2;
-                            window.open(targetUrlData + "#searchJumperMin" + (/#p{/.test(data.url) ? 'Post' : ''), "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                            let showWidth = Math.min(viewWidth, 550);
+                            let showHeight = Math.min(viewHeight, 800);
+                            let left = viewWidth - showWidth;
+                            let top = (viewHeight - showHeight) / 2;
+                            window.open(targetUrlData + "#searchJumperMin" + (/#p{/.test(data.url) ? 'Post' : ''), "_blank", `width=${showWidth}, height=${showHeight}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                         } else if (shift) {
                             _GM_openInTab(targetUrlData, {active: true});
                         }
@@ -10839,29 +10909,9 @@
             });
         }
 
-        async function emuInput(sel, v, eleIndex = -1) {
-            let input, result = false;
-            if (eleIndex >= 0) {
-                if (eleIndex === 0) await waitForElement(sel);
-                let eles = getAllElements(sel);
-                if (eles.length === 0) {
-                    return true;
-                }
-                if (eles.length === 1) {
-                    input = eles[0];
-                    result = true;
-                } else if (eles.length <= eleIndex) {
-                    return true;
-                } else {
-                    input = eles[eleIndex];
-                    if (eles.length === eleIndex + 1) {
-                        result = true;
-                    }
-                }
-            } else {
-                input = await waitForElement(sel);
-                if (!input) return true;
-            }
+        function startInput(input, v) {
+            if (!input) return true;
+            let result = false;
             targetElement = input;
             let event = new Event('focus', { bubbles: true });
             input.dispatchEvent(event);
@@ -10901,8 +10951,34 @@
             input.dispatchEvent(event);
             event = new Event('change', { bubbles: true });
             input.dispatchEvent(event);
-            debug(input, `input ${sel}`);
+            debug(input, `input`);
             return result;
+        }
+
+        async function emuInput(sel, v, eleIndex = -1) {
+            let input, result = false;
+            if (eleIndex >= 0) {
+                if (eleIndex === 0) await waitForElement(sel);
+                let eles = getAllElements(sel);
+                if (eles.length === 0) {
+                    return true;
+                }
+                if (eles.length === 1) {
+                    input = eles[0];
+                    result = true;
+                } else if (eles.length <= eleIndex) {
+                    return true;
+                } else {
+                    input = eles[eleIndex];
+                    if (eles.length === eleIndex + 1) {
+                        result = true;
+                    }
+                }
+            } else {
+                input = await waitForElement(sel);
+                if (!input) return true;
+            }
+            return startInput(input, v);
         }
 
         async function emuClick(sel, eleIndex = -1) {
@@ -12155,7 +12231,7 @@
 
         var shareEngines;
         async function checkConfigPage() {
-            if (location.href.indexOf(configPage) === 0 || (document.title === "SearchJumper" && document.querySelector('[name="author"][content="Hoothin"]'))) {
+            if (location.href.indexOf(configPage) === 0 || ((document.title === "SearchJumper" || document.querySelector('[name="from"][content="SearchJumper"]')) && document.querySelector('[name="author"][content="Hoothin"]'))) {
                 shareEngines = document.querySelector('[name="engines"]');
                 let spotlight = document.getElementById("spotlight");
                 if (shareEngines) {
