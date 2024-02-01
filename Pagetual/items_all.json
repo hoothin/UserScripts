@@ -11379,16 +11379,16 @@
 {
   "resource_url": "http://wedata.net/items/82058",
   "data": {
-    "pageElement": "//div[contains(@class, 'articleBody')]/nav/preceding-sibling::*[not(./following-sibling::*[1][self::nav])]",
-    "nextLink": "//li[contains(@class, \"p-pagination_list_item\") and contains(@class, \"-next\")]/a[@aria-label=\"次のページへリンク\"]",
+    "pageElement": "//div[contains(concat(' ',@class,' '), ' articleBody ')]/node()[self::nav or contains(.,'.p-article_watchBox')]/preceding-sibling::*",
+    "nextLink": "//li[contains(concat(' ',@class,' '), ' -next ')]/a[@aria-label=\"次のページへリンク\"]",
     "url": "^https://business\\.nikkei\\.com/",
-    "exampleUrl": "https://business.nikkei.com/atcl/seminar/19/00030/032200460/\r\nhttps://business.nikkei.com/atcl/gen/19/00533/030600006/\r\nhttps://business.nikkei.com/atcl/gen/19/00297/041900122/"
+    "exampleUrl": "https://business.nikkei.com/atcl/seminar/19/00030/032200460/\r\nhttps://business.nikkei.com/atcl/gen/19/00533/030600006/\r\nhttps://business.nikkei.com/atcl/gen/19/00297/041900122/\r\nhttps://business.nikkei.com/atcl/gen/19/00562/012900029/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "love_livedoor",
   "name": "日経ビジネス電子版",
   "created_at": "2019-01-16T14:26:53+09:00",
-  "updated_at": "2023-08-04T14:01:33+09:00"
+  "updated_at": "2024-01-31T17:56:47+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82056",
