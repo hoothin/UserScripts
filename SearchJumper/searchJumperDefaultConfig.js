@@ -478,6 +478,10 @@ switch (lang) {
                         "nobatch": true
                     },
                     {
+                        "name": "📝  粘贴",
+                        "url": "paste:"
+                    },
+                    {
                         "name": "🔆 页内搜索",
                         "url": "find:%sr"
                     },
@@ -2397,12 +2401,6 @@ switch (lang) {
                         "hideNotMatch": true
                     },
                     {
-                        "name": "Baidu",
-                        "url": "https://www.baidu.com/s?wd=%s&ie=utf-8",
-                        "keywords": "(?:wd|word)=(.*?)(&|$)",
-                        "match": "https?://(www|m)\\.baidu\\.com/.*(wd|word)="
-                    },
-                    {
                         "name": "SearX",
                         "url": "https://searx.be/search?q=%s"
                     },
@@ -2474,6 +2472,10 @@ switch (lang) {
                     {
                         "name": "📄  Copy",
                         "url": "c:%sr"
+                    },
+                    {
+                        "name": "📝  Paste",
+                        "url": "paste:"
                     },
                     {
                         "name": "🔆 Find in page",
