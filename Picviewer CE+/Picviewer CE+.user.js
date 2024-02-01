@@ -12465,6 +12465,7 @@ ImgOps | https://imgops.com/#b#`;
             rulerEle.style.whiteSpace = "nowrap";
         }
         function visualLength(str,size,family) {
+            if (!rulerEle.style) return 230;
             rulerEle.style.fontSize = size || "inherit";
             rulerEle.style.fontFamily = family || "inherit";
             rulerEle.innerText = str;
