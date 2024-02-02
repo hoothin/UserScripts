@@ -9023,16 +9023,18 @@
                     ctrl = e.ctrlKey;
                     meta = e.metaKey;
                     shift = e.shiftKey;
-                    if (openInNewTab === 2) {//隱身窗口
-                        alt = false;
-                        ctrl = true;
-                        meta = false;
-                        shift = true;
-                    } else if (openInNewTab === 3) {//小窗口
-                        alt = true;
-                        ctrl = false;
-                        meta = false;
-                        shift = false;
+                    if (!alt && !ctrl && !meta && !shift) {
+                        if (openInNewTab === 2) {//隱身窗口
+                            alt = false;
+                            ctrl = true;
+                            meta = false;
+                            shift = true;
+                        } else if (openInNewTab === 3) {//小窗口
+                            alt = true;
+                            ctrl = false;
+                            meta = false;
+                            shift = false;
+                        }
                     }
                     if (showTips) {
                         ele.removeAttribute("target");
