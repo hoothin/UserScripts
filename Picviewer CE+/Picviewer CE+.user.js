@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.1.28.1
+// @version              2024.2.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11774,20 +11774,31 @@ ImgOps | https://imgops.com/#b#`;
         }
     } else GM_fetch = fetch;
 
+    var canvas = document.createElement('CANVAS');
+    canvas.style.display = "none";
+    document.body.appendChild(canvas);
+    if (typeof canvas.getContext === 'undefined') {
+        document.body.removeChild(canvas);
+        canvas = null;
+    } else {
+        document.body.removeChild(canvas);
+    }
     function icon2Base64(icon, content, iconStyle) {
-        if (!content) return false;
-        var canvas = document.createElement("canvas");
+        if (!content || !canvas) return false;
         let size = Math.min((icon.clientWidth || icon.offsetWidth), (icon.clientHeight || icon.offsetHeight));
         if (!size) return false;
         canvas.width = size;
         canvas.height = size;
+        document.body.appendChild(canvas);
         var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = iconStyle.font || (iconStyle.fontSize + " " + iconStyle.fontFamily);
         ctx.strokeStyle = iconStyle.color || "black";
         ctx.fillStyle = iconStyle.color || "black";
         ctx.textBaseline = "top";
         let metrics = ctx.measureText(content);
         ctx.fillText(content, (canvas.width - metrics.width) / 2, (canvas.height - parseInt(iconStyle.fontSize)) / 2);
+        document.body.removeChild(canvas);
         return canvas.toDataURL("image/png");
     }
 
@@ -11894,18 +11905,21 @@ ImgOps | https://imgops.com/#b#`;
     };
     function dataURLToCanvas(dataurl, cb){
         if(!dataurl)return cb(null);
-        var canvas = document.createElement('CANVAS');
+        document.body.appendChild(canvas);
         var ctx = canvas.getContext('2d');
         var img = new Image();
         img.setAttribute("crossOrigin","anonymous");
         img.onload = function(){
             canvas.width = img.width;
             canvas.height = img.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
             cb(canvas);
+            document.body.removeChild(canvas);
         };
         img.onerror = function(){
             cb(null);
+            document.body.removeChild(canvas);
         };
         img.src = dataurl;
     }
@@ -11927,7 +11941,7 @@ ImgOps | https://imgops.com/#b#`;
             onload: function(d) {
                 let blob = d.response;
                 let ext = blob.type.replace(/.*image\/(\w+).*/, "$1");
-                if (ext == "webp" || forcePng) {
+                if (canvas && (ext == "webp" || forcePng)) {
                     var self = this;
                     var a = new FileReader();
                     a.readAsDataURL(blob);
@@ -14970,7 +14984,7 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             });
                         }
-                        if(/^data:/.test(imgSrc) || imgSrc.split("/")[2]==document.domain){
+                        if(canvas && (/^data:/.test(imgSrc) || imgSrc.split("/")[2] == document.domain)){
                             self.dataURLToCanvas(imgSrc, canvas=>{
                                 self.showTips("Downloading "+(downloaded+1)+"/"+len, 1000000);
                                 if(!canvas){
@@ -15402,18 +15416,21 @@ ImgOps | https://imgops.com/#b#`;
             },
             dataURLToCanvas:function (dataurl, cb){
                 if(!dataurl)return cb(null);
-                var canvas = document.createElement('CANVAS');
+                document.body.appendChild(canvas);
                 var ctx = canvas.getContext('2d');
                 var img = new Image();
                 img.setAttribute("crossOrigin","anonymous");
                 img.onload = function(){
                     canvas.width = img.width;
                     canvas.height = img.height;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
                     cb(canvas);
+                    document.body.removeChild(canvas);
                 };
                 img.onerror = function(){
                     cb(null);
+                    document.body.removeChild(canvas);
                 };
                 img.src = dataurl;
             },
@@ -24601,11 +24618,13 @@ ImgOps | https://imgops.com/#b#`;
     };
 
     function drawTobase64(img){
-        let canvas = document.createElement('CANVAS');
+        document.body.appendChild(canvas);
         canvas.width = img.naturalWidth || img.width;
         canvas.height = img.naturalHeight || img.height;
         let ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
+        document.body.removeChild(canvas);
         return canvas.toDataURL("image/png");
     }
 
