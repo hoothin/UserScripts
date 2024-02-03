@@ -9260,6 +9260,15 @@
     "wait": 1000
 },
 {
+    "name": "中国知网 AdvSearch",
+    "url": "^https://kns\\.cnki\\.net/kns8s/AdvSearch",
+    "nextLink": "a#PageNext",
+    "pageElement": ".result-table-list tbody>*",
+    "refreshByClick": ".search-btn",
+    "initRun": 0,
+    "wait": 1000
+},
+{
     "name": "图怪兽",
     "url": "^https://818ps\\.com/",
     "pageElement": "#masonry"
