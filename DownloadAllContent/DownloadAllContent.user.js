@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.3
+// @version      2.8.3.4
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -999,7 +999,7 @@ if (window.top != window.self) {
                     });
                 };
                 if (useIframe) {
-                    let iframe = document.createElement('iframe'), inited = false;
+                    let iframe = document.createElement('iframe'), inited = false, failedTimes = 0;
                     iframe.name = 'pagetual-iframe';
                     iframe.width = '100%';
                     iframe.height = '1000';
@@ -1021,7 +1021,7 @@ if (window.top != window.self) {
                                 }
                                 doc.body.scrollTop = 9999999;
                                 doc.documentElement.scrollTop = 9999999;
-                                if (!processFunc && validTimes++ > 5) {
+                                if (!processFunc && validTimes++ > 5 && failedTimes++ < 2) {
                                     iframe.src = iframe.src;
                                     validTimes = 0;
                                     inited = false;
@@ -1039,7 +1039,7 @@ if (window.top != window.self) {
                                 }
                                 downIndex++;
                                 downNum++;
-                                let validData = processDoc(curIndex, aTag, doc, "", true);
+                                let validData = processDoc(curIndex, aTag, doc, "", failedTimes < 2);
                                 if (!validData) {
                                     downIndex--;
                                     downNum--;

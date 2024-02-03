@@ -3,7 +3,7 @@
 // @name:zh-CN   怠惰小说下载器 ZIP 扩展
 // @name:zh-TW   怠惰小説下載器 ZIP 擴充
 // @namespace    hoothin
-// @version      0.5
+// @version      0.6
 // @description  Save content as ZIP for DownloadAllContent
 // @description:zh-CN  下载时分章节保存 TXT 并打包为 ZIP
 // @description:zh-TW  下載時分章節儲存 TXT 並打包為 ZIP
@@ -182,6 +182,7 @@
         let zipTemp = [];
         for (let i = 0; i < rCats.length; i++) {
             let cat = rCats[i];
+            if (!cat) continue;
             let catTitle = cat.match(/.*?\r\n/);
             if (!catTitle) continue;
             catTitle = catTitle[0].trim();
