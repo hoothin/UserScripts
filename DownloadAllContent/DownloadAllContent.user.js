@@ -1010,7 +1010,7 @@ if (window.top != window.self) {
                         if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
                         if (inited) return;
                         inited = true;
-                        function checkIframe() {
+                        async function checkIframe() {
                             try {
                                 let doc = iframe.contentDocument || iframe.contentWindow.document;
                                 if (!doc || !doc.body) {
@@ -1026,6 +1026,42 @@ if (window.top != window.self) {
                                     validTimes = 0;
                                     inited = false;
                                     return;
+                                }
+                                let base = doc.querySelector("base");
+                                let nextPages = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
+                                if (nextPages) {
+                                    if (!nextPages.length) nextPages = [nextPages];
+                                    nextPages.forEach(nextPage => {
+                                        var inArr=false;
+                                        for(var ai=0;ai<aEles.length;ai++){
+                                            if(aEles[ai].href==nextPage.href){
+                                                inArr=true;
+                                                break;
+                                            }
+                                        }
+                                        if(!inArr){
+                                            nextPage.innerText=aTag.innerText+"\t>>";
+                                            aEles.push(nextPage);
+                                            let targetIndex = curIndex;
+                                            for(let a=0;a<insertSigns.length;a++){
+                                                let signs=insertSigns[a],breakSign=false;
+                                                if(signs){
+                                                    for(let b=0;b<signs.length;b++){
+                                                        let sign=signs[b];
+                                                        if(sign==curIndex){
+                                                            targetIndex=a;
+                                                            breakSign=true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                if(breakSign)break;
+                                            }
+                                            let insertSign = insertSigns[targetIndex];
+                                            if(!insertSign)insertSigns[targetIndex] = [];
+                                            insertSigns[targetIndex].push(aEles.length-1);
+                                        }
+                                    });
                                 }
                                 if (customTitle) {
                                     try {
