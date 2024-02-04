@@ -4,10 +4,10 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.72
-// @description  Most powerful aggregated search extension. Assist with the seamless transition between any search engine(Google/Bing/Custom), providing the ability to swiftly navigate to any platform and conduct searches effortlessly.
-// @description:zh-CN  最强聚合搜索插件，高效搜索辅助工具，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
-// @description:zh-TW  高效搜尋輔助，在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
+// @version      1.7.73
+// @description  Most powerful aggregated search extension providing the ability to conduct searches effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
+// @description:zh-CN  最强聚合搜索插件，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
+// @description:zh-TW  在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
 // @license      MPL-2.0
@@ -8376,6 +8376,9 @@
                 let tipsData;
                 let pointer = !isBookmark && /^\[/.test(data.url);
                 let description = data.description;
+                if (typeof data.openInNewTab !== 'undefined') {
+                    openInNewTab = data.openInNewTab;
+                }
                 if (pointer) {
                     ele.dataset.pointer = true;
                     let siteNames = JSON.parse(data.url);
@@ -8408,9 +8411,6 @@
                 }
                 if (/^paste:/.test(data.url)) {
                     ele.dataset.paste = true;
-                }
-                if (typeof data.openInNewTab !== 'undefined') {
-                    openInNewTab = data.openInNewTab;
                 }
                 let isPage = /^(https?|ftp):/.test(data.url);
                 if (isPage) ele.dataset.isPage = isPage;
@@ -9034,6 +9034,11 @@
                             ctrl = false;
                             meta = false;
                             shift = false;
+                        } else if (openInNewTab === 4) {//后台标签页
+                            alt = false;
+                            ctrl = true;
+                            meta = false;
+                            shift = false;
                         }
                     }
                     if (showTips) {
@@ -9388,7 +9393,7 @@
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
                         if (ctrl) {
-                            _GM_openInTab(targetUrlData);
+                            _GM_openInTab(targetUrlData, {active: false});
                         } else {
                             _GM_openInTab(targetUrlData, {active: true});
                         }
@@ -9396,7 +9401,7 @@
                         if ((ctrl || meta) && shift) {
                             _GM_openInTab(targetUrlData, {incognito: true});
                         } else if (ctrl || meta) {
-                            _GM_openInTab(targetUrlData);
+                            _GM_openInTab(targetUrlData, {active: false});
                         } else if (alt) {
                             if (data.match) {
                                 let match = data.match.replace(/\\/g, "");
