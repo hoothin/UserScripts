@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.2.2.1
+// @version              2024.2.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11775,13 +11775,15 @@ ImgOps | https://imgops.com/#b#`;
     } else GM_fetch = fetch;
 
     var canvas = document.createElement('CANVAS');
-    canvas.style.display = "none";
-    document.body.appendChild(canvas);
-    if (typeof canvas.getContext === 'undefined') {
-        document.body.removeChild(canvas);
-        canvas = null;
-    } else {
-        document.body.removeChild(canvas);
+    if (document.body) {
+        if (canvas.style) canvas.style.display = "none";
+        document.body.appendChild(canvas);
+        if (typeof canvas.getContext === 'undefined') {
+            document.body.removeChild(canvas);
+            canvas = null;
+        } else {
+            document.body.removeChild(canvas);
+        }
     }
     function icon2Base64(icon, content, iconStyle) {
         if (!content || !canvas) return false;
@@ -11789,7 +11791,6 @@ ImgOps | https://imgops.com/#b#`;
         if (!size) return false;
         canvas.width = size;
         canvas.height = size;
-        document.body.appendChild(canvas);
         var ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = iconStyle.font || (iconStyle.fontSize + " " + iconStyle.fontFamily);
@@ -11798,7 +11799,6 @@ ImgOps | https://imgops.com/#b#`;
         ctx.textBaseline = "top";
         let metrics = ctx.measureText(content);
         ctx.fillText(content, (canvas.width - metrics.width) / 2, (canvas.height - parseInt(iconStyle.fontSize)) / 2);
-        document.body.removeChild(canvas);
         return canvas.toDataURL("image/png");
     }
 
@@ -11905,7 +11905,6 @@ ImgOps | https://imgops.com/#b#`;
     };
     function dataURLToCanvas(dataurl, cb){
         if(!dataurl)return cb(null);
-        document.body.appendChild(canvas);
         var ctx = canvas.getContext('2d');
         var img = new Image();
         img.setAttribute("crossOrigin","anonymous");
@@ -11915,11 +11914,9 @@ ImgOps | https://imgops.com/#b#`;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
             cb(canvas);
-            document.body.removeChild(canvas);
         };
         img.onerror = function(){
             cb(null);
-            document.body.removeChild(canvas);
         };
         img.src = dataurl;
     }
@@ -15416,7 +15413,6 @@ ImgOps | https://imgops.com/#b#`;
             },
             dataURLToCanvas:function (dataurl, cb){
                 if(!dataurl)return cb(null);
-                document.body.appendChild(canvas);
                 var ctx = canvas.getContext('2d');
                 var img = new Image();
                 img.setAttribute("crossOrigin","anonymous");
@@ -15426,11 +15422,9 @@ ImgOps | https://imgops.com/#b#`;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
                     cb(canvas);
-                    document.body.removeChild(canvas);
                 };
                 img.onerror = function(){
                     cb(null);
-                    document.body.removeChild(canvas);
                 };
                 img.src = dataurl;
             },
@@ -22012,8 +22006,8 @@ ImgOps | https://imgops.com/#b#`;
                 var setPosition = {
                     top:function() {
                         var top = targetPosi.top;
-                        if (targetPosi.top + offsetY < 10) {
-                            top += 10;
+                        if (top + offsetY - scrolled.y < 10) {
+                            top = scrolled.y;
                             offsetY = 0;
                         } else {
                             if (prefs.floatBar.stayOut) {
@@ -22028,40 +22022,30 @@ ImgOps | https://imgops.com/#b#`;
                     },
                     right:function() {
                         var right = targetPosi.right;
-                        if (right < offsetX) {
-                            right += 10;
-                            offsetX = 0;
+                        if (prefs.floatBar.stayOut) {
+                            right = right - offsetX - prefs.floatBar.stayOutOffsetX;
                         } else {
-                            if (prefs.floatBar.stayOut) {
-                                right = right - offsetX - prefs.floatBar.stayOutOffsetX;
-                            } else {
-                                right = right - offsetX;
-                            }
-                            if (targetPosi.width <= 50) right += 10;
+                            right = right - offsetX;
                         }
+                        if (targetPosi.width <= 50) right += 10;
                         fbs.left = 'unset';
                         fbs.right = right + 'px';
                     },
                     bottom:function() {
                         var bottom = targetPosi.bottom;
-                        if (bottom <= offsetY) {
-                            bottom += 10;
-                            offsetY = 0;
+                        if (prefs.floatBar.stayOut) {
+                            bottom = bottom - offsetY - 40 - prefs.floatBar.stayOutOffsetY;
                         } else {
-                            if (prefs.floatBar.stayOut) {
-                                bottom = bottom - offsetY - 40 - prefs.floatBar.stayOutOffsetY;
-                            } else {
-                                bottom = bottom - offsetY - 30;
-                            }
-                            if (targetPosi.height <= 50) bottom += 10;
+                            bottom = bottom - offsetY - 30;
                         }
+                        if (targetPosi.height <= 50) bottom += 10;
                         fbs.top = 'unset';
                         fbs.bottom = bottom + 'px';
                     },
                     left:function() {
                         var left = targetPosi.left;
-                        if (targetPosi.left + offsetX < 0) {
-                            left += 10;
+                        if (left + offsetX - scrolled.x < 0) {
+                            left = scrolled.x;
                             offsetX = 0;
                         } else {
                             if (prefs.floatBar.stayOut) {
@@ -22080,13 +22064,7 @@ ImgOps | https://imgops.com/#b#`;
                     },
                     hide:function(){
                         var top=targetPosi.top;
-                        if(targetPosi.top + offsetY < 0){
-                            offsetY=0;
-                        }
                         var left=targetPosi.left;
-                        if(targetPosi.left + offsetX < 0){
-                            offsetX=0;
-                        }
                         if(prefs.floatBar.stayOut){
                             top=top + offsetY - 10 - prefs.floatBar.stayOutOffsetY;
                             left=left + offsetX - prefs.floatBar.stayOutOffsetX;
@@ -24618,13 +24596,11 @@ ImgOps | https://imgops.com/#b#`;
     };
 
     function drawTobase64(img){
-        document.body.appendChild(canvas);
         canvas.width = img.naturalWidth || img.width;
         canvas.height = img.naturalHeight || img.height;
         let ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
-        document.body.removeChild(canvas);
         return canvas.toDataURL("image/png");
     }
 
