@@ -652,8 +652,10 @@ var siteInfo = [
      if (newsrc != this.src) {
         if (a && a.role == 'link') {
             let match = a.href.match(/\/([^\/]+)\/status\/([^\/]+)\/photo\/(\d+)/);
-            let time = p[14].querySelector('time');
-            this.alt = match[1] + " - " + time.innerText + "_" + match[3];
+            let time = p[14] && p[14].querySelector('time');
+            if (time) {
+                this.alt = match[1] + " - " + time.innerText + "_" + match[3];
+            }
         }
         return newsrc+"&name=orig";
      }
