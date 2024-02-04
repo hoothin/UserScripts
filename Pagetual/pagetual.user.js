@@ -6244,7 +6244,7 @@
                             _GM_openInTab(firstRunPage, {active: true});
                         }
                     });
-                }, 100);
+                }, 500);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
