@@ -50689,14 +50689,14 @@
   "data": {
     "pageElement": "id('searched')/li|//table[@class='rank']/tbody/tr",
     "nextLink": "//a[@class='next']",
-    "url": "^https://(?:\\w+db\\.)?supleks\\.jp/search",
-    "exampleUrl": "https://ramendb.supleks.jp/search\r\nhttps://supleks.jp/search?q=カレー"
+    "url": "^https://(?:[^/]+db\\.)?supleks\\.jp/search",
+    "exampleUrl": "https://ramendb.supleks.jp/search\r\nhttps://supleks.jp/search?q=カレー\r\nhttps://tokyo-ramendb.supleks.jp/search?state=tokyo"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "ngs",
   "name": "なんとかデータベース",
   "created_at": "2008-07-23T00:07:49+09:00",
-  "updated_at": "2020-07-01T17:58:28+09:00"
+  "updated_at": "2024-02-04T10:42:36+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/2025",
