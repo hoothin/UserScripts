@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86208",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('article')/div[@id]",
+    "nextLink": "//ul[contains(concat(' ',@class,' '),' pagenav ')]/li[a/@class='active']/following-sibling::li/a",
+    "url": "^https://kyotolove\\.kyoto/",
+    "exampleUrl": "https://kyotolove.kyoto/I0000332/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "Kyoto Love. Kyoto KLK",
+  "created_at": "2024-02-06T02:30:53+09:00",
+  "updated_at": "2024-02-06T02:30:53+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86206",
   "data": {
     "insertBefore": "",
