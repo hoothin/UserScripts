@@ -10464,9 +10464,7 @@
     "name": "观察者网",
     "url": "^https?://www\\.guancha\\.cn/",
     "example": "https://www.guancha.cn/economy/2023_10_27_713575_2.shtml",
-    "nextLink": "a.next",
-    "pageElement": ".comment-list > ul.list-body.list-body-all > li.comment-item.cmt-item",
-    "include": "#comments-container",
+    "pageElement": "div[class='content all-txt']",
     "waitElement": "a.next"
 },
 {
