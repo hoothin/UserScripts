@@ -1094,7 +1094,7 @@ const langData = [
         onlineEdit: "Онлайн-редактирование",
         onlineEditTip: "Отредактируйте это изображение онлайн с помощью #t#",
         openInNewWindow: "Открыть в новом окне",
-        openInNewWindowTip: "Открывает изображение в новом окне",
+        openInNewWindowTip: "Открыть изображение в новом окне",
         findInPage: "Перейти к изображению",
         findInPageTip: "Прокручивает туда, где находится текущее изображение",
         viewCollection: "Открыть коллекцию",
@@ -1113,7 +1113,7 @@ const langData = [
         enterFullsc: "Полноэкранный режим",
         exitFullsc: "Выйти из полноэкранного режима",
         config: "Параметры",
-        openConfig: "Открывает параметры",
+        openConfig: "Открыть параметры",
         closeGallery: "Закрыть галерею",
         returnToGallery: "Вернуться в галерею",
         picInfo: "Нажмите, чтобы изменить",
@@ -1225,7 +1225,7 @@ const langData = [
         gallerySearchData: "Поиск настроек сайта, очистка и восстановление",
         galleryEditSite: "Сайт онлайн-редактирования",
         imgWindow: "Окно изображения",
-        imgWindowFitToScreen: "Адаптируется под размер экрана и выравнивается",
+        imgWindowFitToScreen: "Адаптировать под размер экрана",
         imgWindowFitToScreenTip: "Метод адаптации - contain, а не cover",
         imgWindowFitToScreenWhenSmall: "Даже маленькие изображения растягиваются по размеру экрана",
         imgWindowDefaultTool: "Инструмент, выбранный по умолчанию при открытии окна",
@@ -1264,7 +1264,7 @@ const langData = [
         galleryDownloadGap: "Интервал скачивания",
         galleryDisableArrow: "Отключить клавиши со стрелками",
         positionFixed: "Фиксированная позиция",
-        switchStoreLoc: "Положение памяти при переключении"
+        switchStoreLoc: "Сохранять позицию в памяти во время переключения"
     }
 },
 {
