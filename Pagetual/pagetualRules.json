@@ -8893,7 +8893,7 @@
     "name": "linuxfromscratch",
     "url": "^https://www\\.linuxfromscratch\\.org",
     "pageElement": "body>*",
-    "css": ".sect1{overflow-wrap: break-word;}div.navheader{position: relative;}"
+    "css": "div.sect1{position:static;overflow-wrap: break-word;}div.navheader{position: relative;}"
 },
 {
     "name": "Standards DOC",
