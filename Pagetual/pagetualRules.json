@@ -8107,6 +8107,13 @@
     "autoLoadNum": 1
 },
 {
+    "name": "motherless",
+    "url": "^https://motherless\\.com/.+",
+    "pageElement": "//div[@class='content-inner']",
+    "nextLink": "//a[@rel='next']",
+    "action": 0
+},
+{
     "name": "雅拉伊",
     "author": "skofkyo",
     "example": "https://www.yalayi.com/gallery/",
