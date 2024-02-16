@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.73
+// @version      1.7.74
 // @description  Most powerful aggregated search extension providing the ability to conduct searches effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  最强聚合搜索插件，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -251,9 +251,11 @@
                         inputAction: '输入',
                         clickAction: '点击',
                         sleepAction: '等待',
+                        copyAction: '复制元素',
                         submitCrawl: '完成操作',
                         inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>内输入<span title="#t2#">#t2#</span>',
                         clickOutput: '点击元素<span title="#t#" class="element">#t#</span>',
+                        copyOutput: '复制元素<span title="#t#" class="element">#t#</span>',
                         sleepOutput: '休眠<span title="#t#">#t#</span>毫秒',
                         inputNewValue: '请输入新值',
                         deleteConfirm: '确定要删除此项吗？',
@@ -365,9 +367,11 @@
                         inputAction: '輸入',
                         clickAction: '點擊',
                         sleepAction: '等待',
+                        copyAction: '複製元素',
                         submitCrawl: '完成操作',
                         inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>內輸入<span title="#t2#">#t2#</span>',
                         clickOutput: '點擊元素<span title="#t#" class="element">#t#</span>',
+                        copyOutput: '複製元素<span title="#t#" class="element">#t#</span>',
                         sleepOutput: '休眠<span title="#t#">#t#</span>毫秒',
                         inputNewValue: '請輸入新值',
                         deleteConfirm: '確定要刪除此項嗎？ ',
@@ -478,9 +482,11 @@
                         inputAction: '入力',
                         clickAction: 'クリック',
                         sleepAction: '待機',
+                        copyAction: '要素のコピー',
                         submitCrawl: '操作を完了',
                         inputOutput: '要素 <span title="#t1#" class="element">#t1#</span> 内に <span title="#t2#">#t2#</span> を入力します',
                         clickOutput: 'クリック要素<span title="#t#" class="element">#t#</span>',
+                        copyOutput: 'コピー要素<span title="#t#" class="element">#t#</span>',
                         sleepOutput: 'スリープ<span title="#t#">#t#</span> ミリ秒',
                         inputNewValue: '新しい値を入力してください',
                         deleteconfirm: 'この項目を削除してもよろしいですか? ',
@@ -591,9 +597,11 @@
                         inputAction: 'Input',
                         clickAction: 'Click',
                         sleepAction: 'Wait',
+                        copyAction: 'Copy element',
                         submitCrawl: 'Complete operation',
                         inputOutput: 'Input <span title="#t2#">#t2#</span> in the element <span title="#t1#" class="element">#t1#</span>',
                         clickOutput: 'Click on element <span title="#t#" class="element">#t#</span>',
+                        copyOutput: 'Copy element <span title="#t#" class="element">#t#</span>',
                         sleepOutput: 'Sleep for <span title="#t#">#t#</span> milliseconds',
                         inputNewValue: 'Please enter a new value',
                         deleteConfirm: 'Are you sure you want to delete this item? ',
@@ -8247,7 +8255,11 @@
                     return;
                 }
                 let form, input, clicked = false, self = this, inLoop = false, loopTimes = 0, loopArr = [];
-                let opened = false;
+                let opened = false, copyList = [];
+                let copyStore = await storage.getItem("copyStore");
+                if (copyStore) {
+                    copyList = JSON.parse(copyStore);
+                }
 
                 let singleAction = async (param, eleIndex) => {
                     let result = true;
@@ -8262,6 +8274,14 @@
                         clicked = true;
                         let _r = await emuClick(param[0].substr(1), eleIndex);
                         if (!_r) result = false;
+                    } else if (param[0] === '@copy') {
+                        let _r = await returnElement(param[1], eleIndex);
+                        if (_r && _r !== true) {
+                            copyList.push(_r.innerText);
+                            if (!reachLast) {
+                                result = false;
+                            }
+                        }
                     } else if (param[0] === '@call') {
                         let func = window[param[1]] || new AsyncFunction('"use strict";' + param[1]);
                         if (func) await func();
@@ -8328,7 +8348,14 @@
                     }
                     if (inPagePostParams) {
                         inPagePostParams.shift();
-                        storage.setListItem("inPagePostParams", location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
+                        if (inPagePostParams && inPagePostParams.length) {
+                            storage.setListItem("inPagePostParams", location.hostname, inPagePostParams);
+                            storage.setItem("copyStore", JSON.stringify(copyList));
+                        } else {
+                            _GM_setClipboard(copyList.join("\n"));
+                            storage.setListItem("inPagePostParams", location.hostname, "");
+                            storage.setItem("copyStore", "");
+                        }
                         if (param[0] === '@reload') {
                             location.reload(!!param[1]);
                             return;
@@ -8956,6 +8983,11 @@
                                 let click = pair.slice(6, pair.length - 1);
                                 if (click) {
                                     postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (pair.startsWith("copy(") && pair.endsWith(')')) {
+                                let copy = pair.slice(5, pair.length - 1);
+                                if (copy) {
+                                    postParams.push(['@copy', copy.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
                             } else if (pair.startsWith("call(") && pair.endsWith(')')) {
                                 let func = pair.slice(5, pair.length - 1);
@@ -10916,9 +10948,9 @@
             });
         }
 
+        let reachLast = false;
         function startInput(input, v) {
             if (!input) return true;
-            let result = false;
             targetElement = input;
             let event = new Event('focus', { bubbles: true });
             input.dispatchEvent(event);
@@ -10959,11 +10991,11 @@
             event = new Event('change', { bubbles: true });
             input.dispatchEvent(event);
             debug(input, `input`);
-            return result;
         }
 
-        async function emuInput(sel, v, eleIndex = -1) {
-            let input, result = false;
+        async function returnElement(sel, eleIndex = -1) {
+            reachLast = false;
+            let ele;
             if (eleIndex >= 0) {
                 if (eleIndex === 0) await waitForElement(sel);
                 let eles = getAllElements(sel);
@@ -10971,46 +11003,33 @@
                     return true;
                 }
                 if (eles.length === 1) {
-                    input = eles[0];
-                    result = true;
+                    ele = eles[0];
+                    reachLast = true;
                 } else if (eles.length <= eleIndex) {
                     return true;
                 } else {
-                    input = eles[eleIndex];
+                    ele = eles[eleIndex];
                     if (eles.length === eleIndex + 1) {
-                        result = true;
+                        reachLast = true;
                     }
                 }
             } else {
-                input = await waitForElement(sel);
-                if (!input) return true;
+                ele = await waitForElement(sel);
+                if (!ele) return true;
             }
-            return startInput(input, v);
+            return ele;
+        }
+
+        async function emuInput(sel, v, eleIndex = -1) {
+            let input = await returnElement(sel, eleIndex);
+            if (input === true) return true;
+            startInput(input, v);
+            return reachLast;
         }
 
         async function emuClick(sel, eleIndex = -1) {
-            let btn, result = false;
-            if (eleIndex >= 0) {
-                if (eleIndex === 0) await waitForElement(sel);
-                let btns = getAllElements(sel);
-                if (btns.length === 0) {
-                    return true;
-                }
-                if (btns.length === 1) {
-                    btn = btns[0];
-                    result = true;
-                } else if (btns.length <= eleIndex) {
-                    return true;
-                } else {
-                    btn = btns[eleIndex];
-                    if (btns.length === eleIndex + 1) {
-                        result = true;
-                    }
-                }
-            } else {
-                btn = await waitForElement(sel);
-                if (!btn) return true;
-            }
+            let btn = await returnElement(sel, eleIndex);
+            if (btn === true) return true;
             targetElement = btn;
             if(!PointerEvent) return btn.click();
             let eventParam = {
@@ -11099,7 +11118,7 @@
             dispatchTouchEvent(btn, "touchend");
             btn.click();
             debug(btn, `click ${sel}`);
-            return result;
+            return reachLast;
         }
 
         function submitByForm(charset, url, target) {
@@ -13662,6 +13681,7 @@
                     }
                     .searchJumperFrame-buttons>button#submitCrawl,
                     .searchJumperFrame-buttons>button#record,
+                    .searchJumperFrame-buttons>button#copy,
                     .searchJumperFrame-buttons>button#loop {
                         width: 100%;
                         margin: 0 3px;
@@ -13790,15 +13810,18 @@
                     <svg class="searchJumperFrame-closeBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close crawl</title>${closePath}</svg>
                     <div class="actionCon"></div>
                     <div class="searchJumperFrame-buttons">
+                        <button id="input" type="button">${i18n("inputAction")}</button>
+                        <button id="click" type="button">${i18n("clickAction")}</button>
+                        <button id="sleep" type="button">${i18n("sleepAction")}</button>
+                    </div>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="copy" type="button">${i18n("copyAction")}</button>
+                    </div>
+                    <div class="searchJumperFrame-buttons">
                         <button id="record" type="button">${i18n("recordAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
                         <button id="loop" type="button">${i18n("loopAction")}</button>
-                    </div>
-                    <div class="searchJumperFrame-buttons">
-                        <button id="input" type="button">${i18n("inputAction")}</button>
-                        <button id="click" type="button">${i18n("clickAction")}</button>
-                        <button id="sleep" type="button">${i18n("sleepAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
                         <button id="submitCrawl" type="button">${i18n("submitCrawl")}</button>
@@ -13883,6 +13906,11 @@
                                 let click = pair.slice(6, pair.length - 1);
                                 if (click) {
                                     postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (pair.startsWith("copy(") && pair.endsWith(')')) {
+                                let copy = pair.slice(5, pair.length - 1);
+                                if (copy) {
+                                    postParams.push(['@copy', copy.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
                             } else if (pair.startsWith("call(") && pair.endsWith(')')) {
                                 let func = pair.slice(5, pair.length - 1);
@@ -14004,6 +14032,7 @@
                 let inputAction = addFrame.querySelector("#input");
                 let clickAction = addFrame.querySelector("#click");
                 let sleepAction = addFrame.querySelector("#sleep");
+                let copyAction = addFrame.querySelector("#copy");
                 let submitCrawl = addFrame.querySelector("#submitCrawl");
                 let recordBtn = addFrame.querySelector("#record");
                 let loopBtn = addFrame.querySelector("#loop");
@@ -14017,6 +14046,9 @@
                             break;
                         case "click":
                             words = i18n('clickOutput', sel);
+                            break;
+                        case "copy":
+                            words = i18n('copyOutput', sel);
                             break;
                         case "loopStart":
                             words = i18n('loopStart', val);
@@ -14108,6 +14140,11 @@
                             if (click) {
                                 addAction('click', click.replace(/\\([\=&])/g, "$1").trim());
                             }
+                        } else if (pair.startsWith("copy(") && pair.endsWith(')')) {
+                            let copy = pair.slice(5, pair.length - 1);
+                            if (copy) {
+                                addAction('copy', copy.replace(/\\([\=&])/g, "$1").trim());
+                            }
                         } else if (pair.startsWith("call(") && pair.endsWith(')')) {
                             let func = pair.slice(5, pair.length - 1);
                             if (func) {
@@ -14151,6 +14188,9 @@
                         switch(action.dataset.type) {
                             case "click":
                                 actions.push(`click(${sel.replace(/([=&])/g, '\\$1')})`);
+                                break;
+                            case "copy":
+                                actions.push(`copy(${sel.replace(/([=&])/g, '\\$1')})`);
                                 break;
                             case "input":
                                 actions.push(`${sel.replace(/([=&])/g, '\\$1')}=${val}`);
@@ -14230,6 +14270,13 @@
                 inputAction.addEventListener("click", e => {
                     picker.getSelector(selector => {
                         addAction('input', selector, '%s');
+                        addFrame.style.display = '';
+                    }, !inLoop);
+                    addFrame.style.display = 'none';
+                });
+                copyAction.addEventListener("click", e => {
+                    picker.getSelector(selector => {
+                        addAction('copy', selector, '%s');
                         addFrame.style.display = '';
                     }, !inLoop);
                     addFrame.style.display = 'none';
