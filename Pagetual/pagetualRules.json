@@ -1,5 +1,13 @@
 [
 {
+    "name": "Qi Xing Blog | 一个互联网角落的秘密基地~🥳",
+    "author": "qi_xing_jk",
+    "url": "^https?://blog\\.qixing1217\\.top/",
+    "example": "https://blog.qixing1217.top/",
+    "pageElement": "#container",
+    "nextLink": "id(\"container\")/div[2]/a[@rel=\"next\"]/div"
+},
+{
     "name": "Podium Audio",
     "author": "uwuceo with help from Hoothin",
     "url": "^https?://podiumaudio\\.com",
