@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.74
+// @version      1.7.75
 // @description  Most powerful aggregated search extension providing the ability to conduct searches effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  最强聚合搜索插件，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -251,8 +251,8 @@
                         inputAction: '输入',
                         clickAction: '点击',
                         sleepAction: '等待',
-                        copyAction: '复制元素',
-                        submitCrawl: '完成操作',
+                        copyAction: '📄复制元素',
+                        submitCrawl: '☑️完成操作',
                         inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>内输入<span title="#t2#">#t2#</span>',
                         clickOutput: '点击元素<span title="#t#" class="element">#t#</span>',
                         copyOutput: '复制元素<span title="#t#" class="element">#t#</span>',
@@ -271,10 +271,10 @@
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
                         template: '请设置【#t#】的值',
-                        recordAction: '录制操作',
+                        recordAction: '⏺️录制操作',
                         startRecord: '开始录制操作，按回车键结束录制',
-                        loopAction: '开始循环',
-                        loopActionEnd: '循环结束',
+                        loopAction: '🔁开始循环',
+                        loopActionEnd: '⏹️循环结束',
                         loopStart: '开始循环，循环次数为<span title="#t#">#t#</span>',
                         loopEnd: '结束循环',
                         loopTimes: '循环次数，将遍历所有匹配元素并顺序执行',
@@ -367,8 +367,8 @@
                         inputAction: '輸入',
                         clickAction: '點擊',
                         sleepAction: '等待',
-                        copyAction: '複製元素',
-                        submitCrawl: '完成操作',
+                        copyAction: '📄複製元素',
+                        submitCrawl: '☑️完成操作',
                         inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>內輸入<span title="#t2#">#t2#</span>',
                         clickOutput: '點擊元素<span title="#t#" class="element">#t#</span>',
                         copyOutput: '複製元素<span title="#t#" class="element">#t#</span>',
@@ -387,10 +387,10 @@
                         Friday: '星期五 (金)',
                         Saturday: '星期六 (土)',
                         template: '請設置【#t#】的值',
-                        recordAction: '錄製動作',
+                        recordAction: '⏺️錄製動作',
                         startRecord: '開始錄製操作，按下回車鍵結束錄製',
-                        loopAction: '開始循環',
-                        loopActionEnd: '循環結束',
+                        loopAction: '🔁開始循環',
+                        loopActionEnd: '⏹️循環結束',
                         loopStart: '開始循環，循環次數為<span title="#t#">#t#</span>',
                         loopEnd: '結束循環',
                         loopTimes: '循環次數，將遍歷所有匹配元素並順序執行',
@@ -482,8 +482,8 @@
                         inputAction: '入力',
                         clickAction: 'クリック',
                         sleepAction: '待機',
-                        copyAction: '要素のコピー',
-                        submitCrawl: '操作を完了',
+                        copyAction: '📄要素のコピー',
+                        submitCrawl: '☑️操作を完了',
                         inputOutput: '要素 <span title="#t1#" class="element">#t1#</span> 内に <span title="#t2#">#t2#</span> を入力します',
                         clickOutput: 'クリック要素<span title="#t#" class="element">#t#</span>',
                         copyOutput: 'コピー要素<span title="#t#" class="element">#t#</span>',
@@ -502,10 +502,10 @@
                         Friday: '金曜日',
                         Saturday: '土曜日',
                         template: '[#t#]の値を設定してください',
-                        RecordAction: '記録操作',
+                        recordAction: '⏺️記録操作',
                         startRecord: '記録操作を開始します。記録を終了するには Enter キーを押してください',
-                        loopAction: 'ループの開始',
-                        loopActionEnd: 'ループの終了',
+                        loopAction: '🔁ループの開始',
+                        loopActionEnd: '⏹️ループの終了',
                         loopStart: 'ループを開始。ループ数は <span title="#t#">#t#</span> です',
                         loopEnd: 'ループの終了',
                         loopTimes: 'ループの数。一致するすべての要素が走査され、順番に実行されます',
@@ -597,8 +597,8 @@
                         inputAction: 'Input',
                         clickAction: 'Click',
                         sleepAction: 'Wait',
-                        copyAction: 'Copy element',
-                        submitCrawl: 'Complete operation',
+                        copyAction: '📄Copy element',
+                        submitCrawl: '☑️Complete operation',
                         inputOutput: 'Input <span title="#t2#">#t2#</span> in the element <span title="#t1#" class="element">#t1#</span>',
                         clickOutput: 'Click on element <span title="#t#" class="element">#t#</span>',
                         copyOutput: 'Copy element <span title="#t#" class="element">#t#</span>',
@@ -610,10 +610,10 @@
                         cacheOver: 'All icons cached!',
                         cspDisabled: 'The style of SearchJumper is blocked by the CSP of current site, please try to install the Allow CSP: Content-Security-Policy extension to obtain permission',
                         template: 'Please set the value of "#t#"',
-                        recordAction: 'Record operation',
+                        recordAction: '⏺️Record operation',
                         startRecord: 'Start to record operation, press Enter to end',
-                        loopAction: 'Start loop',
-                        loopActionEnd: 'Stop loop',
+                        loopAction: '🔁Start loop',
+                        loopActionEnd: '⏹️Stop loop',
                         loopStart: 'Start loop <span title="#t#">#t#</span> times',
                         loopEnd: 'Stop loop',
                         loopTimes: 'Number of loops, all matching elements will be traversed and executed sequentially',
@@ -3680,6 +3680,34 @@
                             this.focusHighlightByText(word.showWords, false, wordSpan);
                         }
                     });
+                    let wheelScrolling = false;
+                    wordSpan.addEventListener(getSupportWheelEventName(), e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (wheelScrolling) return;
+                        wheelScrolling = true;
+                        setTimeout(() => {
+                            wheelScrolling = false;
+                        }, 100);
+                        let deltaY;
+                        if(e.type !== 'wheel'){
+                            let y = 0;
+                            if (typeof e.axis == 'number') {
+                                if (e.axis == 2) {
+                                    y = e.detail;
+                                }
+                            } else {
+                                if (typeof e.wheelDeltaY == 'undefined' || e.wheelDeltaY != 0) {
+                                    y = -e.wheelDelta / 40;
+                                }
+                            };
+                            deltaY = y;
+
+                        } else {
+                            deltaY = e.deltaY;
+                        }
+                        this.focusHighlightByText(word.showWords, deltaY > 0, wordSpan);
+                    }, { passive: false, capture: false });
                     wordSpan.addEventListener("editword", e => {
                         wordSpan.parentNode.removeChild(wordSpan);
                         this.removeHighlightWord(word);
@@ -8007,6 +8035,25 @@
                             ele.classList.add("not-expand");
                             ele.appendChild(self.searchJumperExpand);
                         }
+                        let shownIconNum = -1, waitIconList = [];
+                        if (document.readyState !== 'complete') {
+                            shownIconNum = 3;
+                            let loadHandler = e => {
+                                if (document.readyState === "complete") {
+                                    document.removeEventListener("readystatechange", loadHandler);
+                                    window.removeEventListener('load', loadHandler);
+                                    waitIconList.forEach(icon => {
+                                        if (icon && !icon.src && icon.dataset.src) {
+                                            icon.src = icon.dataset.src;
+                                            delete icon.dataset.src;
+                                        }
+                                    });
+                                    waitIconList = [];
+                                }
+                            };
+                            document.addEventListener("readystatechange", loadHandler);
+                            window.addEventListener('load', loadHandler);
+                        }
                         siteEles.forEach((se, i) => {
                             let si = se.querySelector("img");
                             let data = sites[i];
@@ -8022,6 +8069,14 @@
                                 }
                             }
                             if (se.style.display != 'none' && si && !si.src && si.dataset.src) {
+                                if (shownIconNum >= 0) {
+                                    if (shownIconNum !== 0) {
+                                        shownIconNum--;
+                                    } else {
+                                        waitIconList.push(si);
+                                        return;
+                                    }
+                                }
                                 si.src = si.dataset.src;
                             }
                         });
@@ -8796,11 +8851,12 @@
                         }
                         ele.dataset.url = tempUrl.replace(/%e\b/g, document.characterSet).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
                     }
-                    let targetUrl = '';
+                    let targetUrl = '', targetLink = '';
                     let targetName = inputString || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     if (targetElement && targetElement.nodeName) {
                         targetUrl = targetElement.href || (targetElement.parentNode && targetElement.parentNode.href) || '';
+                        targetLink = targetUrl || (targetElement.parentNode && targetElement.parentNode.parentNode && targetElement.parentNode.parentNode.href) || '';
                         if ((typeData.selectImg || typeData.selectAudio || typeData.selectVideo) && targetElement.src) {
                             targetUrl = targetElement.src;
                         }
@@ -8967,8 +9023,8 @@
                             }
                         }
                     }
-                    if (targetUrl && !/%t\b/i.test(ele.dataset.url)) {
-                        href = targetUrl;
+                    if ((targetLink || targetUrl) && !/%t\b/i.test(ele.dataset.url)) {
+                        href = targetLink || targetUrl;
                     }
                     if (inPagePost) {
                         let postParams = [];
@@ -10262,6 +10318,8 @@
                 this.signList = [];//所有标记
                 this.clickedEles = {};//点击的元素
                 this.exact = true;
+                this.accu = 0;
+                this.wheelScrolling = false;
             }
 
             /*static getInstance() {
@@ -10414,6 +10472,39 @@
                         e && e.stopPropagation && e.stopPropagation();
                         e && e.preventDefault && e.preventDefault();
                     }
+                };
+                this.wheelHandler = e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (self.wheelScrolling) return;
+                    self.wheelScrolling = true;
+                    setTimeout(() => {
+                        self.wheelScrolling = false;
+                    }, 100);
+                    let deltaY;
+                    if(e.type !== 'wheel'){
+                        let y = 0;
+                        if (typeof e.axis == 'number') {
+                            if (e.axis == 2) {
+                                y = e.detail;
+                            }
+                        } else {
+                            if (typeof e.wheelDeltaY == 'undefined' || e.wheelDeltaY != 0) {
+                                y = -e.wheelDelta / 40;
+                            }
+                        };
+                        deltaY = y;
+
+                    } else {
+                        deltaY = e.deltaY;
+                    }
+                    if (deltaY > 0) self.accu--;
+                    else self.accu++;
+                    if (self.accu < 0) self.accu = 0;
+                    else if (self.accu > 8) self.accu = 8;
+                    let target = self.getTarget(e.target);
+                    if (self.mainSignDiv.parentNode !== target.parentNode) target.parentNode.appendChild(self.mainSignDiv);
+                    self.adjustSignDiv(self.mainSignDiv, target);
                 };
             }
 
@@ -10609,6 +10700,13 @@
             }
 
             getTarget(ele) {
+                let accu = this.accu;
+                while (ele && accu) {
+                    let parentNode = ele.parentNode;
+                    if (!parentNode) break;
+                    ele = parentNode;
+                    accu--;
+                }
                 while (ele.parentNode && (ele.offsetWidth === 0 || ele.offsetHeight === 0)) {
                     ele = ele.parentNode;
                 }
@@ -10636,6 +10734,7 @@
                 getBody(document).removeEventListener("click", this.clickHandler, true);
                 getBody(document).removeEventListener("mousedown", this.mouseDownHandler, true);
                 getBody(document).removeEventListener("mouseup", this.mouseUpHandler, true);
+                getBody(document).removeEventListener(getSupportWheelEventName(), this.wheelHandler, { passive: false, capture: true });
                 this.inPicker = false;
             }
 
@@ -10895,7 +10994,10 @@
                     this.domInfo = this.processNode(getBody(document), {children: []});
                     getBody(document).addEventListener("mousedown", this.mouseDownHandler, true);
                     getBody(document).addEventListener("mouseup", this.mouseUpHandler, true);
+                } else {
+                    getBody(document).addEventListener(getSupportWheelEventName(), this.wheelHandler, { passive: false, capture: true });
                 }
+                this.accu = 0;
                 this.inPicker = true;
                 getBody(document).classList.add("searchJumper-picker");
 
@@ -11311,7 +11413,8 @@
         }
 
         function getSelectStr() {
-            let selStr = picker.getPickerStr() || window.getSelection().toString();
+            let selStr = extSelectionText || picker.getPickerStr() || window.getSelection().toString();
+            extSelectionText = "";
             if (!selStr) {
                 let tar = getActiveElement(document);
                 if (tar && /^(TEXTAREA|INPUT)$/i.test(tar.nodeName)) {
@@ -11437,6 +11540,7 @@
         }
 
         let draging = false;
+        let extSelectionText = "";
         function initListener() {
             _GM_registerMenuCommand(i18n('settings'), () => {
                 _GM_openInTab(configPage, {active: true});
@@ -11465,6 +11569,7 @@
             });
             if (ext) {
                 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+                    if (request.selectionText) extSelectionText = request.selectionText;
                     switch (request.command) {
                         case "settings":
                             _GM_openInTab(configPage, {active: true});
@@ -14885,7 +14990,6 @@
                 if (cb) cb();
             }
             defaultTitle = document.title;
-            document.addEventListener('visibilitychange', visibilitychangeHandler);
         }
 
         function checkVisibility() {
@@ -14963,6 +15067,7 @@
                     };
                     checkReady();
                 }
+                document.addEventListener('visibilitychange', visibilitychangeHandler);
             }
         });
     }
