@@ -214,6 +214,11 @@ function decode(t) {
 ``` javascript
 .list-group-item>div>a.text-decoration-none@@@@@@next:{[aria-label='后一页']+a}
 ```
++ [📕又一個頂點小説網](https://www.booktxts.com/book/77/77540/2.html)
+> 首先遍歷目錄，生成實際鏈接，再分析頁内代碼，調用網站自身的解密函數解密内容，最後分析下一頁鏈接，把分頁内容補上。
+``` javascript
+.yanqing_list>li>a>>item.href=item.getAttribute('onclick').replace(/.*\((.*)\)/, location.href.replace(/\d+\.html/,'').replace('/book/','/books/')+'$1.html');return item;@@@@@@let content='';let anylize=doc=>{let contentTags=doc.body.innerHTML.match(/<script>document\.writeln\(qsbs\.bb\('(.*?)'\)\);<\/script>/g);if(!contentTags)return cb(content);contentTags.forEach(c=>{content+=qsbs.bb(c.replace("<script>document.writeln(qsbs.bb('",'').replace("'));</script>",'')).replace(/<.?p>/g,'')+'\n'}); let nextLink=doc.querySelector('.read_btn>a:last-child'); if(/\_\d+\.html/.test(nextLink.href)){ let fetchNext=()=>{return fetch(nextLink.href).then(res => res.text()).then(d=>{let _doc = document.implementation.createHTMLDocument(''); _doc.documentElement.innerHTML = d;anylize(_doc);})}; fetchNext().catch(e=>{fetchNext()}); }else{cb(content);} };let script=document.createElement('script');script.src='https://www.booktxts.com/yanqing/pc/js/yueduqsbs.js';script.type = "text/javascript";document.body.appendChild(script);script.onload=e=>{anylize(doc);};return false;
+```
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
