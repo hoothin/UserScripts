@@ -11930,9 +11930,7 @@
                     }
                     if (searchBar.bar.classList.contains("grabbing")) return;
                     let targetInput = false;
-                    if (e.target.nodeName.toUpperCase() == 'INPUT' ||
-                        e.target.nodeName.toUpperCase() == 'TEXTAREA' ||
-                        e.target.contentEditable == 'true') {
+                    if (inputActive(document)) {
                         targetInput = true;
                     } else {
                         let contentEditable = false;
