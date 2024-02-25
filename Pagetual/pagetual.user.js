@@ -6237,7 +6237,7 @@
             if (rulesData.lang) {
                 setLang(rulesData.lang);
             }
-            if (rulesData.firstRun && rulesData.uninited) {
+            if (rulesData.firstRun) {
                 rulesData.firstRun = false;
                 storage.setItem("rulesData", rulesData);
                 setTimeout(() => {
@@ -6246,7 +6246,7 @@
                             _GM_openInTab(firstRunPage, {active: true});
                         }
                     });
-                }, 500);
+                }, 100);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
