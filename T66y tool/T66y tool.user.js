@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.7.1
+// @version      0.7.2
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -153,9 +153,7 @@
                     var $tLike = $(".t_like");
                     if ($tLike.length) {
                         var $tLikeClone = $tLike.clone();
-                        if (!$tLike.isInViewport()) {
-                            $("#conttpc").prepend($tLikeClone);
-                        }
+                        $("#conttpc").prepend($tLikeClone);
 
                         $(window).on("resize scroll", function() {
                             if ($tLike.isInViewport()) {
