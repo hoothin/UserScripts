@@ -53961,17 +53961,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/414",
-  "name": "All About　新着記事一覧",
-  "created_by": "swdyh",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-01-17T10:18:19+09:00",
   "data": {
-    "exampleUrl": "https://allabout.co.jp/gm/latest/1732/",
+    "pageElement": "//main/section[contains(@data-tracking-zone, 'mainContents')]|\r\n//ul[contains(concat(' ', @class, ' '), ' aa_media-list ')]",
+    "nextLink": "//a[.='次のページへ']",
     "url": "^https?://allabout\\.co\\.jp/",
-    "pageElement": "id('popin_read')/div/ul/*",
-    "nextLink": "//a[.='次のページへ']"
+    "exampleUrl": "https://allabout.co.jp/gm/latest/1732/\r\nhttps://allabout.co.jp/r_hobby/latest/"
   },
-  "created_at": "2008-04-16T12:35:21+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "swdyh",
+  "name": "All About　新着記事一覧",
+  "created_at": "2008-04-16T12:35:21+09:00",
+  "updated_at": "2024-02-24T18:13:35+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/412",
