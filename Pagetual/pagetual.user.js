@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.31
+// @version      1.9.37.32
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -909,7 +909,7 @@
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
-    const mainSel = "article,.article,[role=main],main,.main,#main";
+    const mainSel = ["article,.article","[role=main],main,.main,#main","#results"];
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
@@ -2000,7 +2000,11 @@
                     }
                     let curHeightPercent = curHeight / bodyHeight;
                     if (curMaxEle && curHeightPercent <= 0.18) {
-                        let article = doc.querySelectorAll(mainSel);
+                        let article;
+                        for (let i = 0; i < mainSel.length; i++) {
+                            article = doc.querySelectorAll(mainSel[i]);
+                            if (article && article.length === 1) break;
+                        }
                         if (article && article.length === 1) {
                             article = article[0];
                             let childrenEnd = self.checkTargetChildren(article, curWin, articleNum, curHeight);
@@ -2062,7 +2066,11 @@
                 }
                 pageElement = checkElement(body);
                 if (pageElement && pageElement.length > 0 && self.initNext) {
-                    let lastBottom = getElementBottom(pageElement[pageElement.length - 1]);
+                    let posEle = pageElement[pageElement.length - 1];
+                    while (posEle && !posEle.offsetParent) {
+                        posEle = posEle.previousElementSibling || posEle.parentNode;
+                    }
+                    let lastBottom = posEle && getElementBottom(posEle);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
                         debug("Stop as too long between next & page element");
                         isPause = true;
@@ -6544,7 +6552,11 @@
                     return callback(false);
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
-                    let article = doc.querySelectorAll(mainSel);
+                    let article;
+                    for (let i = 0; i < mainSel.length; i++) {
+                        article = doc.querySelectorAll(mainSel[i]);
+                        if (article && article.length === 1) break;
+                    }
                     if (article && article.length == 1) {
                         article = article[0];
                         ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
