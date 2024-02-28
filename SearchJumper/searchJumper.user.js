@@ -10082,7 +10082,7 @@
                     let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     let tileOffset = searchData.prefConfig.tileOffset || 0;
-                    let clientX = e.pageX - self.bar.clientWidth / 2 - document.documentElement.offsetLeft;
+                    let clientX = e.pageX - self.bar.clientWidth / 2 - (getComputedStyle(document.documentElement).position !== 'static' ? document.documentElement.offsetLeft : 0);
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth + scrollLeft) clientX = viewWidth + scrollLeft - self.bar.clientWidth - 20;
                     let clientY = e.pageY;
