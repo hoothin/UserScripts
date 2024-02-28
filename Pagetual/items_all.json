@@ -26488,7 +26488,7 @@
   "resource_url": "http://wedata.net/items/74897",
   "data": {
     "pageElement": "//div[@class='l-article']/div[@class='article-body']",
-    "nextLink": "//div[contains(concat(' ',@class,' '),' m-pagination ')]/a[@class='is-active']/following-sibling::a",
+    "nextLink": "//div[contains(concat(' ',@class,' '),' m-pagination ')]/*[@class='is-active']/following-sibling::a",
     "url": "^https?://dot\\.asahi\\.com/",
     "exampleUrl": "https://dot.asahi.com/wa/2022080300076.html?page=1\r\nhttps://dot.asahi.com/dot/photoarticle/2019060500079.html?page=1\r\nhttps://dot.asahi.com/articles/-/196996?page=1"
   },
@@ -26496,7 +26496,7 @@
   "created_by": "t_f_m",
   "name": "dot asahi",
   "created_at": "2014-06-13T17:32:13+09:00",
-  "updated_at": "2023-07-26T15:14:34+09:00"
+  "updated_at": "2024-02-27T19:25:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74895",
