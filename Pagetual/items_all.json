@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86211",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='pagesprit01']/preceding-sibling::*|id('writer01')",
+    "nextLink": "//p[@class='next-page-link']/a",
+    "url": "^https://monomax\\.jp/archives/\\d+",
+    "exampleUrl": "https://monomax.jp/archives/213091/3/\r\nhttps://monomax.jp/archives/213091/4/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "モノマックス（MonoMax）",
+  "created_at": "2024-03-03T20:05:40+09:00",
+  "updated_at": "2024-03-03T20:05:40+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86208",
   "data": {
     "insertBefore": "",
