@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86213",
+  "data": {
+    "pageElement": "//div[@class='theme-grid row justify-content-center']",
+    "nextLink": "//a[@data-toggle='page-jump']/following-sibling::a[1]",
+    "url": "^https?://themeplaza\\.art/",
+    "exampleUrl": "https://themeplaza.art/themes"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "タックン君",
+  "name": "Theme Plaza",
+  "created_at": "2024-03-09T17:58:59+09:00",
+  "updated_at": "2024-03-09T23:42:39+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86212",
   "data": {
     "insertBefore": "",
@@ -20057,16 +20071,16 @@
 {
   "resource_url": "http://wedata.net/items/77625",
   "data": {
-    "pageElement": "//div[@class='block--2_RlJqhg']",
+    "pageElement": "id('maincontent')/*[not(contains(@class, 'pagination'))]",
     "nextLink": "//a[@rel='next']",
     "url": "^https?://(www\\.)?macrumors\\.com/",
-    "exampleUrl": "https://www.macrumors.com/mac/"
+    "exampleUrl": "https://www.macrumors.com/\r\nhttps://www.macrumors.com/mac/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
   "name": "Mac Rumors: Apple Mac iOS Rumors and News You Care About",
   "created_at": "2015-11-01T09:39:03+09:00",
-  "updated_at": "2020-06-15T08:36:34+09:00"
+  "updated_at": "2024-03-09T12:25:29+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77624",
