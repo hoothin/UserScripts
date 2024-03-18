@@ -7750,15 +7750,15 @@
   "resource_url": "http://wedata.net/items/85355",
   "data": {
     "pageElement": "//article[contains(@class, 'hentry')]",
-    "nextLink": "//span[@class='current']/following-sibling::a[1]|//link[@rel='prev']",
+    "nextLink": "//span[@class='current']/following-sibling::a[1]|//a[@rel='prev']",
     "url": "^https://mon-ja\\.net/.+",
-    "exampleUrl": "https://mon-ja.net/articles/page/2/ https://mon-ja.net/200523-01_bicycle-insurance-mandatory/"
+    "exampleUrl": "https://mon-ja.net/articles/page/2/ https://mon-ja.net/tag/nisa/page/2/ https://mon-ja.net/200523-01_bicycle-insurance-mandatory/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa",
   "name": "MonJa",
   "created_at": "2020-05-28T12:12:09+09:00",
-  "updated_at": "2020-07-16T20:42:07+09:00"
+  "updated_at": "2024-03-17T21:40:07+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85354",
