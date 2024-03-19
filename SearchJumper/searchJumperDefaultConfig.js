@@ -243,6 +243,12 @@ switch (lang) {
                         "url": "[\"百度\"]"
                     },
                     {
+                        "name": "Google",
+                        "url": "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
+                        "keywords": "textarea[name='q']",
+                        "match": "https://www\\.google\\..*/search(?!.*tbm=isch)"
+                    },
+                    {
                         "name": "📄  复制",
                         "url": "c:%sr",
                         "nobatch": true
