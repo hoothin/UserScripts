@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86216",
+  "data": {
+    "pageElement": "//div[@class='product-list product-list--collection product-list--with-sidebar']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://jp\\.daisonet\\.com/",
+    "exampleUrl": "https://jp.daisonet.com/collections/electricity"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "タックン君",
+  "name": "ダイソーネットストア",
+  "created_at": "2024-03-20T15:18:37+09:00",
+  "updated_at": "2024-03-20T15:21:04+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86215",
   "data": {
     "insertBefore": "",
