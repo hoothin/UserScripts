@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86217",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//*[not(self::a)][contains(@class,'page-num') or @class='pagechunk']/preceding-sibling::*[1]",
+    "nextLink": "//a[contains(@id,'lnkNext') or @class='page-num next']",
+    "url": "^https?://minkara\\.carview\\.co\\.jp/",
+    "exampleUrl": "https://minkara.carview.co.jp/car/mini/mini/partsreview/ https://minkara.carview.co.jp/car/mini/mini/note/ https://minkara.carview.co.jp/usercar/decotora/ https://minkara.carview.co.jp/note/?ci=1 https://minkara.carview.co.jp/partsreview/?bi=1&ci=1"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "みんカラ 非list",
+  "created_at": "2024-03-30T10:35:10+09:00",
+  "updated_at": "2024-03-30T10:35:10+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86216",
   "data": {
     "pageElement": "//div[@class='product-list product-list--collection product-list--with-sidebar']",
@@ -122,14 +137,14 @@
   "data": {
     "pageElement": "//ul[contains(@class,'-list')]",
     "nextLink": "//a[contains(@id,'lnkNext')]",
-    "url": "^https:\\/\\/minkara.carview.co.jp\\/",
+    "url": "^https://minkara\\.carview\\.co\\.jp\\/(this_string_is_required_to_exceed_86217)?",
     "exampleUrl": "https://minkara.carview.co.jp/search/?q=f-zero&c=0\r\nhttps://minkara.carview.co.jp/blog/\r\nhttps://minkara.carview.co.jp/review/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "foo2",
   "name": "みんカラ",
   "created_at": "2024-01-23T11:13:33+09:00",
-  "updated_at": "2024-01-23T13:20:45+09:00"
+  "updated_at": "2024-03-30T10:35:57+09:00"
 },
 {
   "data": {
@@ -49163,17 +49178,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/25601",
-  "name": "みんカラ",
   "data": {
-    "url": "^https?://minkara\\.carview\\.co\\.jp/",
-    "pageElement": "//div[@class='mainright']/table[@class='car-table']//tr|//ul[ ../@class='maincontents_body displaymode-detail' or @class='pr_search_result_box' or @class='gallery-list-photo clearfix']/li",
-    "exampleUrl": "http://minkara.carview.co.jp/en/car/mini/mini/partsreview/? http://minkara.carview.co.jp/en/car/mini/mini/note/ http://minkara.carview.co.jp/en/usercar/decotora/ http://minkara.carview.co.jp/en/note/?ci=1 http://minkara.carview.co.jp/en/partsreview/?bi=1&ci=1",
-    "nextLink": "//a[contains(@id,'lnkNext') or @class='page-num next']"
+    "pageElement": "//div[@class='contents'][count(./*)>1]",
+    "nextLink": "//div[@class='paging']//a[contains(., '>')]",
+    "url": "^https?://minkara\\.carview\\.co\\.jp/userid/\\d+/blog/",
+    "exampleUrl": "https://minkara.carview.co.jp/userid/2209010/blog/b/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "x2xx",
+  "name": "みんカラ ブログ",
   "created_at": "2008-10-26T01:16:07+09:00",
-  "updated_at": "2020-04-05T07:13:38+09:00"
+  "updated_at": "2024-03-30T11:03:00+09:00"
 },
 {
   "name": "\u3044\u3061\u3054\u3046\u3057\u3064",
