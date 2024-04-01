@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.78
+// @version      1.7.79
 // @description  Most powerful aggregated search extension providing the ability to conduct searches effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  最强聚合搜索插件，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -2630,7 +2630,7 @@
                      height: 35px;
                      position: absolute;
                      user-select: none;
-                     background: transparent;
+                     background: #212022;
                      white-space: nowrap;
                      overflow: hidden;
                      display: flex;
@@ -2770,6 +2770,7 @@
                      pointer-events: none;
                      transition: 0.25s ease;
                      color: #333;
+                     overflow: hidden;
                  }
                  .search-jumper-input svg,
                  .searchJumperNavBar svg {
@@ -5791,7 +5792,18 @@
                 if (disabled) {
                     shadow = this.shadowContainer;
                 } else {
-                    shadow = this.shadowContainer.shadowRoot || this.shadowContainer.attachShadow({ mode: "open" });
+                    if (this.shadowContainer.shadowRoot) {
+                        shadow = this.shadowContainer.shadowRoot.firstElementChild;
+                    } else {
+                        let shadowRoot = this.shadowContainer.attachShadow({ mode: "open" });
+                        shadow = document.createElement("div");
+                        shadow.id = "search-jumper-root";
+                        shadow.style.display = "none";
+                        let hideShadowStyle = document.createElement("style");
+                        hideShadowStyle.innerHTML = createHTML("#search-jumper-root{display: block!important;}");
+                        shadow.appendChild(hideShadowStyle);
+                        shadowRoot.appendChild(shadow);
+                    }
                 }
                 if (ele.parentNode != shadow) shadow.appendChild(ele);
                 return true;
@@ -6346,10 +6358,6 @@
                     }
                     if (siteEle) {
                         self.openSiteBtn(siteEle, forceTarget);
-                        if (cacheFilter !== self.searchInput.value) {
-                            cacheFilter = self.searchInput.value;
-                            storage.setItem("cacheFilter", cacheFilter);
-                        }
                     }
                 };
                 let inputTimer;
@@ -6387,9 +6395,14 @@
                                     self.openSiteBtn(siteEle, forceTarget);
                                 }
                             } else {
-                                this.searchJumperInputKeyWords.focus();
-                                if (this.searchJumperInputKeyWords.value || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) {
+                                if (this.searchJumperInputKeyWords.value) {
                                     searchWithCurrentFilter();
+                                } else {
+                                    this.searchJumperInputKeyWords.focus();
+                                }
+                                if (cacheFilter !== self.searchInput.value) {
+                                    cacheFilter = self.searchInput.value;
+                                    storage.setItem("cacheFilter", cacheFilter);
                                 }
                             }
                             break;
@@ -6430,6 +6443,10 @@
                             break;
                         case 13://回车
                             searchWithCurrentFilter();
+                            if (cacheFilter !== self.searchInput.value) {
+                                cacheFilter = self.searchInput.value;
+                                storage.setItem("cacheFilter", cacheFilter);
+                            }
                             break;
                         default:
                             break;
@@ -7974,7 +7991,7 @@
                     self.allSiteBtns.push([siteEle, site]);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
-                    if (!site.nobatch) batchSiteNames.push(site.name);
+                    if (!site.nobatch && site.match !== "0") batchSiteNames.push(site.name);
                     if (!isCurrent && !currentSite && (siteEle.dataset.current || match) && !ele.classList.contains("notmatch")) {
                         isCurrent = true;
                         if (siteEle.dataset.current) {
@@ -12192,6 +12209,7 @@
 
             let removeMark = node => searchBar.removeMark(node);
             let highlight = (words, node) => searchBar.highlight(words, node);
+            let appendBar = () => searchBar.appendBar();
             let bodyObserverOptions = {
                 childList: true,
                 characterData: true,
@@ -12233,6 +12251,7 @@
                             });
                         }
                     }
+                    appendBar();
                 }
             });
             bodyObserver.observe(getBody(document), bodyObserverOptions);
