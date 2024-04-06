@@ -52838,17 +52838,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/731",
-  "name": "ニコニコ動画",
+  "data": {
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' NewVideosPage-videoList ')]|\r\n//div[contains(concat(' ', @class, ' '), ' OpenlistPage-openList ')]|\r\n//ul[contains(concat(' ', @class, ' '), ' RelatedTagPage-tagList ')]|\r\n//div[contains(concat(' ',normalize-space(@class),' '), ' main ') or @data-main-contents]/div[contains(@class,'contentBody')]/ul[@class='videoListInner']/node()",
+    "nextLink": "//li[contains(@class, 'current')][number()>0]/following-sibling::li[1]/a[number()>0]|\r\n//div[@class='pager']/a[contains(@class,'active')]/following-sibling::a[1]",
+    "url": "^https?://www\\.nicovideo\\.jp/(?:newarrival|openlist|recent|related_tag|search|tag)",
+    "exampleUrl": "http://www.nicovideo.jp/newarrival\r\nhttp://www.nicovideo.jp/openlist/sm9\r\nhttp://www.nicovideo.jp/recent\r\nhttp://www.nicovideo.jp/related_tag/test\r\nhttp://www.nicovideo.jp/search/test\r\nhttp://www.nicovideo.jp/tag/test"
+  },
   "created_by": "swdyh",
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-12-15T17:30:26+09:00",
-  "data": {
-    "exampleUrl": "http://www.nicovideo.jp/newarrival\r\nhttp://www.nicovideo.jp/mylist_search/test\r\nhttp://www.nicovideo.jp/openlist/sm9\r\nhttp://www.nicovideo.jp/recent\r\nhttp://www.nicovideo.jp/related_tag/test\r\nhttp://www.nicovideo.jp/search/test\r\nhttp://www.nicovideo.jp/tag/test",
-    "url": "^https?://(?:www|nine)\\.nicovideo\\.jp/(?:newarrival|mylist_search|migiue|openlist|recent|related_tag|search|tag)",
-    "pageElement": "id('PAGEBODY')/div[starts-with(@class,'content_672')]/*[preceding::table/@class='pager' or preceding-sibling::div[h1][not(count(following::table[@class='pager'])=2)]][following::table/@class='pager'][not(self::script)]|//div[contains(concat(' ',normalize-space(@class),' '), ' main ') or @data-main-contents]/div[contains(@class,'contentBody')]/ul[@class='list']/node()",
-    "nextLink": "(/descendant::span|//div[@class='pager']/a)[contains(@class,'active') or contains(@class,'here')]/following-sibling::a[1]"
-  },
-  "created_at": "2008-04-16T12:36:46+09:00"
+  "name": "ニコニコ動画",
+  "created_at": "2008-04-16T12:36:46+09:00",
+  "updated_at": "2024-04-05T22:43:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/728",
