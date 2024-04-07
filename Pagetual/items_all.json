@@ -1,18 +1,47 @@
 [
 {
-  "resource_url": "http://wedata.net/items/86217",
+  "resource_url": "http://wedata.net/items/86219",
   "data": {
     "insertBefore": "",
-    "pageElement": "//*[not(self::a)][contains(@class,'page-num') or @class='pagechunk']/preceding-sibling::*[1]",
+    "pageElement": "//ul[contains(concat(' ', @class, ' '), ' usercar-list ')]",
+    "nextLink": "//a[contains(@id,'lnkNext') or @class='page-num next']",
+    "url": "^https://minkara\\.carview\\.co\\.jp/usercar/",
+    "exampleUrl": "https://minkara.carview.co.jp/usercar/\r\nhttps://minkara.carview.co.jp/usercar/decotora/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "みんカラ /usercar/",
+  "created_at": "2024-04-03T16:29:47+09:00",
+  "updated_at": "2024-04-03T16:29:47+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86218",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='single_page_text']",
+    "nextLink": "//span[contains(@class, 'current')][number()>0]/following-sibling::a[1]",
+    "url": "^https://juventus-journal\\.com/archives/\\d+",
+    "exampleUrl": "https://juventus-journal.com/archives/129133"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "J-JOURNAL 記事",
+  "created_at": "2024-04-02T18:03:47+09:00",
+  "updated_at": "2024-04-02T18:03:47+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86217",
+  "data": {
+    "pageElement": "//div[contains(@class,'page-num') or @class='pagechunk']/preceding-sibling::*[self::ul[starts-with(@class, 'summary')] or .//a[contains(@href, '/userid/')]]",
     "nextLink": "//a[contains(@id,'lnkNext') or @class='page-num next']",
     "url": "^https?://minkara\\.carview\\.co\\.jp/",
-    "exampleUrl": "https://minkara.carview.co.jp/car/mini/mini/partsreview/ https://minkara.carview.co.jp/car/mini/mini/note/ https://minkara.carview.co.jp/usercar/decotora/ https://minkara.carview.co.jp/note/?ci=1 https://minkara.carview.co.jp/partsreview/?bi=1&ci=1"
+    "exampleUrl": "https://minkara.carview.co.jp/car/mini/mini/partsreview/ https://minkara.carview.co.jp/car/mini/mini/note/ https://minkara.carview.co.jp/usercar/decotora/ https://minkara.carview.co.jp/note/?ci=1 https://minkara.carview.co.jp/partsreview/?bi=1&ci=1\r\n\r\nhttps://minkara.carview.co.jp/search/?q=f-zero&c=0\r\nhttps://minkara.carview.co.jp/blog/\r\nhttps://minkara.carview.co.jp/review/\r\n\r\nhttps://minkara.carview.co.jp/spot/unit.aspx\r\nhttps://minkara.carview.co.jp/like/1/\r\nhttps://minkara.carview.co.jp/select/\r\nhttps://minkara.carview.co.jp/summary/newly/\r\nhttps://minkara.carview.co.jp/summary/ranking/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
-  "name": "みんカラ 非list",
+  "name": "みんカラ",
   "created_at": "2024-03-30T10:35:10+09:00",
-  "updated_at": "2024-03-30T10:35:10+09:00"
+  "updated_at": "2024-04-02T22:19:12+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86216",
@@ -135,16 +164,16 @@
 {
   "resource_url": "http://wedata.net/items/86205",
   "data": {
-    "pageElement": "//ul[contains(@class,'-list')]",
+    "pageElement": "//section[@class='itemlist']/ul",
     "nextLink": "//a[contains(@id,'lnkNext')]",
-    "url": "^https://minkara\\.carview\\.co\\.jp\\/(this_string_is_required_to_exceed_86217)?",
-    "exampleUrl": "https://minkara.carview.co.jp/search/?q=f-zero&c=0\r\nhttps://minkara.carview.co.jp/blog/\r\nhttps://minkara.carview.co.jp/review/"
+    "url": "^https://minkara\\.carview\\.co\\.jp/search/",
+    "exampleUrl": "https://minkara.carview.co.jp/search/?q=f-zero&c=0"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "foo2",
-  "name": "みんカラ",
+  "name": "みんカラ /search/",
   "created_at": "2024-01-23T11:13:33+09:00",
-  "updated_at": "2024-03-30T10:35:57+09:00"
+  "updated_at": "2024-04-03T18:34:02+09:00"
 },
 {
   "data": {
@@ -52809,17 +52838,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/731",
-  "name": "ニコニコ動画",
+  "data": {
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' NewVideosPage-videoList ')]|\r\n//div[contains(concat(' ', @class, ' '), ' OpenlistPage-openList ')]|\r\n//ul[contains(concat(' ', @class, ' '), ' RelatedTagPage-tagList ')]|\r\n//div[contains(concat(' ',normalize-space(@class),' '), ' main ') or @data-main-contents]/div[contains(@class,'contentBody')]/ul[@class='videoListInner']/node()",
+    "nextLink": "//li[contains(@class, 'current')][number()>0]/following-sibling::li[1]/a[number()>0]|\r\n//div[@class='pager']/a[contains(@class,'active')]/following-sibling::a[1]",
+    "url": "^https?://www\\.nicovideo\\.jp/(?:newarrival|openlist|recent|related_tag|search|tag)",
+    "exampleUrl": "http://www.nicovideo.jp/newarrival\r\nhttp://www.nicovideo.jp/openlist/sm9\r\nhttp://www.nicovideo.jp/recent\r\nhttp://www.nicovideo.jp/related_tag/test\r\nhttp://www.nicovideo.jp/search/test\r\nhttp://www.nicovideo.jp/tag/test"
+  },
   "created_by": "swdyh",
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-12-15T17:30:26+09:00",
-  "data": {
-    "exampleUrl": "http://www.nicovideo.jp/newarrival\r\nhttp://www.nicovideo.jp/mylist_search/test\r\nhttp://www.nicovideo.jp/openlist/sm9\r\nhttp://www.nicovideo.jp/recent\r\nhttp://www.nicovideo.jp/related_tag/test\r\nhttp://www.nicovideo.jp/search/test\r\nhttp://www.nicovideo.jp/tag/test",
-    "url": "^https?://(?:www|nine)\\.nicovideo\\.jp/(?:newarrival|mylist_search|migiue|openlist|recent|related_tag|search|tag)",
-    "pageElement": "id('PAGEBODY')/div[starts-with(@class,'content_672')]/*[preceding::table/@class='pager' or preceding-sibling::div[h1][not(count(following::table[@class='pager'])=2)]][following::table/@class='pager'][not(self::script)]|//div[contains(concat(' ',normalize-space(@class),' '), ' main ') or @data-main-contents]/div[contains(@class,'contentBody')]/ul[@class='list']/node()",
-    "nextLink": "(/descendant::span|//div[@class='pager']/a)[contains(@class,'active') or contains(@class,'here')]/following-sibling::a[1]"
-  },
-  "created_at": "2008-04-16T12:36:46+09:00"
+  "name": "ニコニコ動画",
+  "created_at": "2008-04-16T12:36:46+09:00",
+  "updated_at": "2024-04-05T22:43:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/728",
