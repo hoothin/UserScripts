@@ -10697,5 +10697,12 @@
     "name": "pexels",
     "url": "^https?://www\\.pexels\\.com/",
     "enable": 0
+},
+{
+    "name": "KDays 论坛",
+    "url": "^https?://bbs2\\.kdays\\.net/search/",
+    "pageElement": "body > div.wrapper > div.container",
+    "nextLink": "li.current + li >a",
+    "author": "hhhllll"
 }
 ]
