@@ -10699,10 +10699,17 @@
     "enable": 0
 },
 {
+    "name": "IGGGAMES » Free Download PC Games - Direct Links - Torrent",
+    "url": "^https?://igg-games\\.com/",
+    "author": "hhhllll",
+    "pageElement": "main.tm-main:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)",
+    "nextLink": ".uk-pagination>.uk-active ~ li>a"
+  },
+  {
     "name": "KDays 论坛",
-    "url": "^https?://bbs2\\.kdays\\.net/search/",
+    "url": "^https?://bbs2\\.kdays\\.net/(thread|search)/",
     "pageElement": "body > div.wrapper > div.container",
     "nextLink": "li.current + li >a",
     "author": "hhhllll"
-}
+  }
 ]
