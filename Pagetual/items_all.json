@@ -4864,14 +4864,14 @@
   "data": {
     "pageElement": "//div[@class=\"interview-container\"]/div[position()>2]",
     "nextLink": "descendant::div[contains(@class,\"bottom\")][1]//a[not(contains(@class,\"prev\"))]",
-    "url": "^https://www\\.nintendo\\.co\\.jp/interview/",
-    "exampleUrl": "https://www.nintendo.co.jp/interview/switch-oled/index.html"
+    "url": "^https://www\\.nintendo\\.com/jp/interview/",
+    "exampleUrl": "https://www.nintendo.com/jp/interview/switch-oled/index.html"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
   "name": "開発者に訊きました 任天堂",
   "created_at": "2021-10-08T23:17:05+09:00",
-  "updated_at": "2021-10-09T08:07:07+09:00"
+  "updated_at": "2024-04-07T07:46:34+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85725",
