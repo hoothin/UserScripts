@@ -6192,16 +6192,16 @@
 {
   "resource_url": "http://wedata.net/items/85518",
   "data": {
-    "pageElement": "//*[./div[contains(@data-href,\"/article/\")]] | //div[@class=\"cmp-thmb002\"]/div[@class=\"wrp\"]",
-    "nextLink": "//div[@class=\"pager\"]//a[contains(span/text(),\"次\")] | //a[@class=\"lnk next\"]",
+    "pageElement": "//div[@class='pager']/../preceding-sibling::div[1][contains(@class, '-lst00')]",
+    "nextLink": "//div[@class='cmp-misc002']//li[@class='is-active']/following-sibling::li[1]/a[number() > 0]",
     "url": "^https?://www\\.tokyo-np\\.co\\.jp/",
-    "exampleUrl": "https://www.tokyo-np.co.jp/tokyo/t_news\r\nhttps://www.tokyo-np.co.jp/tokyo/hotweb/1\r\nhttps://www.tokyo-np.co.jp/article_photo/list?article_id=159660&pid=589621"
+    "exampleUrl": "https://www.tokyo-np.co.jp/tokyo/t_news\r\nhttps://www.tokyo-np.co.jp/tokyo/gururi/1\r\nhttps://www.tokyo-np.co.jp/f/photo/square\r\nhttps://www.tokyo-np.co.jp/beans/recipe\r\nhttps://www.tokyo-np.co.jp/tags/tag_movie\r\nhttps://www.tokyo-np.co.jp/english_articles/covid19_in_english\r\nhttps://www.tokyo-np.co.jp/tags/tokyo140th\r\nhttps://www.tokyo-np.co.jp/n/genpatsu\r\nhttps://www.tokyo-np.co.jp/event/list/buyou"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "brib2",
   "name": "東京新聞",
   "created_at": "2020-09-29T21:12:21+09:00",
-  "updated_at": "2022-02-14T14:20:36+09:00"
+  "updated_at": "2024-04-11T22:18:50+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85517",
