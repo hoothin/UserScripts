@@ -10072,17 +10072,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/82197",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
-    "pageElement": "//div[@class=\"p-cardList\"]",
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' p-cardList ')]",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://www\\.businessinsider\\.jp/.",
-    "exampleUrl": "https://www.businessinsider.jp/articles/"
+    "exampleUrl": "https://www.businessinsider.jp/articles/\r\nhttps://www.businessinsider.jp/moneyplan/"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "BUSINESS INSIDER JAPAN",
   "created_at": "2019-06-29T07:18:24+09:00",
-  "updated_at": "2022-01-19T17:21:08+09:00"
+  "updated_at": "2024-04-13T22:27:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82196",
@@ -51356,17 +51356,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/1868",
-  "name": "dafont.com",
   "data": {
+    "pageElement": "//a[@name]|//a[@name]/following-sibling::*[preceding-sibling::div/@class=\"dfxsmall\"][following-sibling::div/@class=\"titlebar\"]",
+    "nextLink": "//a[@title=\"Keyboard shortcut: Right arrow\"]",
     "url": "^https://(www\\.)?dafont\\.com/",
-    "pageElement": "//div[@class='titlebar'][1]/following-sibling::div[form/@name='nb'][1]/following-sibling::*[following-sibling::div/@class='titlebar']",
-    "exampleUrl": "https://www.dafont.com/theme.php?cat=113\r\nhttps://www.dafont.com/new.php",
-    "nextLink": "//span[@class='select']/following-sibling::a[1]"
+    "exampleUrl": "https://www.dafont.com/theme.php?cat=113\r\nhttps://www.dafont.com/new.php"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "cool_ni_ikou",
+  "name": "dafont.com",
   "created_at": "2008-06-28T06:32:03+09:00",
-  "updated_at": "2020-03-28T11:57:55+09:00"
+  "updated_at": "2024-04-13T16:02:33+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/1867",
