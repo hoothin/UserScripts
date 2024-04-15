@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.33
+// @version      1.9.37.34
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2097,37 +2097,6 @@
                     this.openInNewTab(pageElement);
                 }
             }
-            /*
-            if (this.curSiteRule.smart && pageElement && pageElement.length > 0) {
-                let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
-                let video = targetEle.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
-                if (video && doc == document) {
-                    if (video.offsetParent && video.name != 'pagetual-iframe') {
-                        let scrollWidth = video.scrollWidth || video.offsetWidth;
-                        let scrollHeight = video.scrollHeight || video.offsetHeight;
-                        if (/IFRAME/i.test(video.nodeName)) {
-                        } else if (scrollWidth > 100 && scrollHeight > 100) {
-                            let winWidth = window.innerWidth || document.documentElement.clientWidth;
-                            let winHeight = window.innerHeight || document.documentElement.clientHeight;
-                            if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
-                                debug("Disable when large media found");
-                            } else {
-                                video = null;
-                            }
-                        } else {
-                            video = null;
-                        }
-                    } else {
-                        video = null;
-                    }
-                }
-                if (video) {
-                    isPause = true;
-                    this.clearAddedElements();
-                    return null;
-                }
-            }
-            */
             return pageElement;
         }
 
@@ -2503,7 +2472,7 @@
                     if (!this.verifyElement(aTag)) continue;
                     if (aTag.dataset && aTag.dataset.preview) continue;
                     let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
-                    if (availableHref && /next\-?(page)?$/i.test(aTag.href)) continue;
+                    if (availableHref && /next\-?(page)?$|\/video\/|\/vod\/play\//i.test(aTag.href)) continue;
                     if (compareNodeName(aTag.parentNode, ["blockquote"])) continue;
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
