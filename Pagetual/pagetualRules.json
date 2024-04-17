@@ -10712,4 +10712,16 @@
     "nextLink": "li.current + li >a",
     "author": "hhhllll"
 }
+    {
+    "name": "JavBus - AV磁力連結分享 - 日本成人影片資料庫",
+    "url": "^https?://www\\.busfan\\.art/",
+    "example": "https://www.busfan.art/",
+    "author": "小小_xiaoxiao",
+    "nextLink": "#next, .pagination>.active+li>a",
+    "pageElement": "#waterfall>.item",
+    "replaceElement": ".pagination",
+    "css": "#waterfall>.item {position: static !important; float:right !important; height: 650px !important;display: inline-block !important;}",
+    "pageBar": 0,
+    "action": 0
+}
 ]
