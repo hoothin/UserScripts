@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.34
+// @version      1.9.37.35
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1759,7 +1759,7 @@
                 let paStyle = curWin.getComputedStyle(ele.parentNode);
                 let paDisplay = paStyle.display;
                 let paOverflow = paStyle.overflow;
-                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection === "row" && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
+                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection.indexOf("row") === 0 && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
             }
             let curStyle = curWin.getComputedStyle(ele);
             if (ele.children.length > 1) {
@@ -1770,22 +1770,21 @@
                     for (let i in ele.childNodes) {
                         let child = ele.childNodes[i];
                         if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
-                            return "";
+                            hasText = true;
+                            break;
                         }
                     }
-                    if (!hasText) {
-                        let gridArea = curStyle.gridArea;
-                        if (gridArea && gridArea !== "auto" && gridArea !== "auto / auto / auto / auto") {
-                            return ">*";
+                    let gridArea = curStyle.gridArea;
+                    if (gridArea && gridArea !== "auto" && gridArea !== "auto / auto / auto / auto") {
+                        return ">*";
+                    } else {
+                        let middleChild = ele.children[parseInt(ele.children.length / 2)];
+                        if ((curStyle.display === 'flex' && curStyle.flexDirection.indexOf("row") === 0 && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && (rulesData.opacity !== 0 || hasText) && !pf)) {
+                            return "";
+                        } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
+                            return "";
                         } else {
-                            let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                            if ((curStyle.display === 'flex' && curStyle.flexDirection === "row" && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && rulesData.opacity !== 0 && !pf)) {
-                                return "";
-                            } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
-                                return "";
-                            } else {
-                                return ">*";
-                            }
+                            return ">*";
                         }
                     }
                 }
@@ -2421,7 +2420,7 @@
                 await sleep(1);
                 let pageDiv = body.querySelector(".pagination");
                 if (pageDiv) {
-                    cur = pageDiv.querySelector("[class*=current]");
+                    cur = pageDiv.querySelector("[class*=current],.page-selected");
                     if (cur) next = cur.parentNode.nextElementSibling;
                     if (next) next = next.querySelector("a");
                 }
@@ -2433,10 +2432,10 @@
                     for (let i = pageDivs.length - 1; i >= 0; i--) {
                         let p = pageDivs[i];
                         if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(p.title || p.value || '')) {
-                            next = p.querySelector('a') || p;
+                            next = p.querySelector("a,button,[type='button']") || p;
                             break;
                         } else if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test((p.innerText || '').trim())) {
-                            next = p.querySelector('a') || p;
+                            next = p.querySelector("a,button,[type='button']") || p;
                             break;
                         }
                     }
