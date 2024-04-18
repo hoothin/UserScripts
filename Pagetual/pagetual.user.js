@@ -2329,6 +2329,7 @@
                 "li.page-current+li>a",
                 "[class^=pag] a[rel=next]",
                 "[class^=Pag] [aria-label=next]",
+                "[aria-label='Next Page']",
                 "[aria-label='Next page']",
                 "[aria-label='next page']",
                 ".pagination-nav__item--next>a",
@@ -4748,7 +4749,7 @@
                     return;
                 }
                 if (moving) return;
-                getBody(document).appendChild(self.mainSignDiv);
+                document.documentElement.appendChild(self.mainSignDiv);
                 self.clearSigns();
             });
             checkBtn.addEventListener("click", e => {
@@ -4881,7 +4882,7 @@
             let signDiv = document.createElement("div");
             this.setImportant(signDiv, "position", "absolute");
             this.setImportant(signDiv, "pointer-events", "none");
-            this.setImportant(signDiv, "z-index", "2147483646");
+            this.setImportant(signDiv, "z-index", "2147483645");
             this.setImportant(signDiv, "background", "rgba(120, 170, 210, 0.6)");
             this.setImportant(signDiv, "transition", "all 0.15s ease-out");
             this.setImportant(signDiv, "box-shadow", "rgb(0 0 0) 0px 0px 3px 0px");
@@ -4962,7 +4963,7 @@
                 this.foundEle = eles;
                 eles.forEach(ele => {
                     let sign = self.createSignDiv();
-                    getBody(document).appendChild(sign);
+                    document.documentElement.appendChild(sign);
                     self.adjustSignDiv(sign, ele);
                     self.signList.push(sign);
                 });
@@ -4985,7 +4986,7 @@
                 this.styleEle = _GM_addStyle(this.cssText);
             }
             document.documentElement.appendChild(this.frame);
-            getBody(document).appendChild(this.mainSignDiv);
+            document.documentElement.appendChild(this.mainSignDiv);
             getBody(document).classList.add("pagetual-picker");
 
             this.logoBtn.classList.remove("showSign");
