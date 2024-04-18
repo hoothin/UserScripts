@@ -2555,7 +2555,7 @@
                                         parent = parent.parentNode;
                                     }
                                 }
-                                if (parent && parent.contains(next4) && !/^\d+$/.test(otherPageEle.innerText.trim())) {
+                                if (parent && parent.contains(next4) && !/^\d+$/.test(next4.innerText.trim())) {
                                     next4 = null;
                                 }
                             }
