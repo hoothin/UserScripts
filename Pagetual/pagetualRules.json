@@ -7070,7 +7070,7 @@
     "author": "skofkyo",
     "example": "https://www.xvideos.com/",
     "url": "^https?://www\\.(xvideos|xnxx)\\.com/",
-    "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
+    "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a | //a[@class='no-page next-page']",
     "pinUrl": true,
     "pageElement": ".mozaique.cust-nb-cols",
     "replaceElement": ".pagination",
