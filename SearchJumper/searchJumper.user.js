@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.80
+// @version      1.7.81
 // @description  Most powerful aggregated search extension providing the ability to conduct searches effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  最强聚合搜索插件，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -5792,7 +5792,7 @@
                     shadow = this.shadowContainer;
                 } else {
                     if (this.shadowContainer.shadowRoot) {
-                        shadow = this.shadowContainer.shadowRoot.firstElementChild;
+                        shadow = this.shadowRoot;
                     } else {
                         let shadowRoot = this.shadowContainer.attachShadow({ mode: "open" });
                         shadow = document.createElement("div");
@@ -5802,6 +5802,7 @@
                         hideShadowStyle.innerHTML = createHTML("#search-jumper-root{display: block!important;}");
                         shadow.appendChild(hideShadowStyle);
                         shadowRoot.appendChild(shadow);
+                        this.shadowRoot = shadow;
                     }
                 }
                 if (ele.parentNode != shadow) shadow.appendChild(ele);
@@ -8622,9 +8623,9 @@
                 } else if (icon) {
                     imgSrc = icon;
                 } else if (!isBookmark && isPage) {
-                    imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
+                    imgSrc = data.url.replace(/\?.*/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                 } else if (/^showTips:https?:\/\//.test(data.url)) {
-                    imgSrc = data.url.replace(/^showTips:(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
+                    imgSrc = data.url.replace(/\?.*/, "").replace(/^showTips:(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                 }
                 if (imgSrc) {
                     img.onload = e => {
@@ -12569,7 +12570,7 @@
                             }
                             type.sites.forEach(site => {
                                 let icon = site.icon;
-                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
+                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/\?.*/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                                 if (/^http/.test(icon)) {
                                     let siteCache = cacheIcon[icon];
                                     if (siteCache) {
@@ -12598,7 +12599,7 @@
                             }
                             type.sites.forEach(site => {
                                 let icon = site.icon;
-                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
+                                if (!icon) icon = site.url.replace(/^showTips:/, "").replace(/\?.*/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                                 if (/^http/.test(icon)) {
                                     let siteCache = cacheIcon[icon];
                                     if (siteCache) {
@@ -14117,7 +14118,7 @@
                                 name: nameInput.value,
                                 url: urlInput.value
                             };
-                            if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico")) {
+                            if (iconInput.value && iconInput.value != urlInput.value.replace(/\?.*/, "").replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico")) {
                                 siteObj.icon = iconInput.value;
                             }
                             if (descInput.value && descInput.value != nameInput.value) {
@@ -14456,7 +14457,7 @@
                     iconShow.src = icons[0];
                 }
             } else {
-                iconShow.src = (/^(showTips:)?https?:/.test(url) ? url.split('\n')[0].replace(/^(showTips:)?(https?:\/\/[^\/]+).*/, '$2') : location.origin) + "/favicon.ico";
+                iconShow.src = (/^(showTips:)?https?:/.test(url) ? url.split('\n')[0].replace(/\?.*/, "").replace(/^(showTips:)?(https?:\/\/[^\/]+).*/, '$2') : location.origin) + "/favicon.ico";
             }
             iconsCon.innerHTML = createHTML();
             if (icons && icons.length > 1) {
