@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.35
+// @version      1.9.37.36
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3796,12 +3796,19 @@
                  margin: 0 0 5px 0;
                  transition: opacity .3s ease;
              }
+             #pagetual-sideController.minSize>.extra>svg {
+                 opacity: 0;
+             }
              #pagetual-sideController>.extra>svg:hover {
                  opacity: 1;
              }
              #pagetual-sideController.minSize {
                  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
                  background: #00000000!important;
+                 pointer-events: none;
+             }
+             #pagetual-sideController.minSize #pagetual-sideController-move {
+                 pointer-events: all;
              }
              #pagetual-sideController.minSize .pagetual-sideController-btn {
                  opacity: 0;
@@ -4438,6 +4445,7 @@
              }
              #pagetual-picker.showDetail .tempRule {
               display: inline-block;
+              word-break: break-all;
              }
              #pagetual-picker #saveDetail {
               display: none;
@@ -4740,7 +4748,7 @@
             frame.addEventListener("mouseenter", e => {
                 if (!self.showSign || moving) return;
                 if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
-                self.checkInputSelector();
+                self.checkInputSelector(false);
             });
             frame.addEventListener("mouseleave", e => {
                 if (!self.showSign) {
@@ -4768,8 +4776,8 @@
                 }
                 let element = getElement(selectorInput.value, document);
                 let selector = self.getSelectorFromEle(element);
-                self.setSelectorDiv(selector);
                 selectorInput.value = selector;
+                self.setSelectorDiv(selector);
             });
             editBtn.addEventListener("click", e => {
                 rulesData.editTemp = self.getTempRule();
@@ -4851,6 +4859,15 @@
                 delete this.editTemp.updatedAt;
             }
             if (this.selectorInput.value && !this.frame.classList.contains("showDetail")) {
+                if (this.foundEle && this.foundEle.length === 1) {
+                    let foundEleRect = this.foundEle[0].getBoundingClientRect();
+                    if (foundEleRect.height < 100) {
+                        showTips("Next Link");
+                        this.editTemp.nextLink = this.selectorInput.value;
+                        return this.editTemp;
+                    }
+                }
+                showTips("Page Element");
                 this.editTemp.pageElement = this.selectorInput.value;
             }
             return this.editTemp;
@@ -4906,21 +4923,22 @@
         }
 
         setSelectorDiv(selector) {
-            this.fillTempRuleTextarea();
             let self = this;
             this.allpath.innerHTML = createHTML("");
-            if (!selector) return;
-            if (this.xpath.checked) {
-                let span = document.createElement("span");
-                span.innerText = selector;
-                span.addEventListener("click", e => {
-                    self.selectorInput.value = selector;
-                    self.checkInputSelector();
-                }, true);
-                this.allpath.appendChild(span);
-            } else {
-                selector.split(">").forEach((item, index) => self.geneSelectorItem(item, index));
+            if (selector) {
+                if (this.xpath.checked) {
+                    let span = document.createElement("span");
+                    span.innerText = selector;
+                    span.addEventListener("click", e => {
+                        self.selectorInput.value = selector;
+                        self.checkInputSelector();
+                    }, true);
+                    this.allpath.appendChild(span);
+                } else {
+                    selector.split(">").forEach((item, index) => self.geneSelectorItem(item, index));
+                }
             }
+            this.checkInputSelector();
         }
 
         geneSelectorItem(item, index) {
@@ -4953,7 +4971,7 @@
             this.allpath.appendChild(span);
         }
 
-        checkInputSelector() {
+        checkInputSelector(fill = true) {
             let self = this;
             this.clearSigns();
             if (!this.selectorInput.value) return;
@@ -4967,7 +4985,7 @@
                     self.adjustSignDiv(sign, ele);
                     self.signList.push(sign);
                 });
-                this.fillTempRuleTextarea();
+                if (fill) this.fillTempRuleTextarea();
             }
         }
 
