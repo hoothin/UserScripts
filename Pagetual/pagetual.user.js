@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.36
+// @version      1.9.37.37
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2069,9 +2069,9 @@
                     while (posEle && !posEle.offsetParent) {
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
-                    let lastBottom = posEle && getElementBottom(posEle);
+                    let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
-                        debug("Stop as too long between next & page element");
+                        debug("Stop as too long between next & page element, try to enable Force-Join mode.");
                         isPause = true;
                         pageElement = [];
                         sideController.remove();
@@ -5030,6 +5030,7 @@
                 pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
             }
             this.setSelectorDiv(pageElementSel);
+            this.fillTempRuleTextarea();
         }
     }
     const picker = new Picker();
