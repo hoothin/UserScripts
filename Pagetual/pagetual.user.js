@@ -1368,6 +1368,8 @@
             if (includeSel) {
                 let include = getElement(includeSel, doc);
                 if (!include) {
+                    getBody(doc).scrollTop = 9999999;
+                    doc.documentElement.scrollTop = 9999999;
                     return false;
                 }
             }
