@@ -8925,7 +8925,7 @@
 {
     "name": "Bing",
     "action": 1,
-    "url": "^https://.*\\.bing\\.com/",
+    "url": "^https://.*\\.bing\\.com/search",
     "nextLink": "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
     "pageElement": "body>style,ol#b_results>li.b_algo",
     "waitElement": [
