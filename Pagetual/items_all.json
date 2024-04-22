@@ -312,8 +312,7 @@
 {
   "resource_url": "http://wedata.net/items/86189",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[contains(concat(' ',@class,' '),' itemcolmn ')]/div",
+    "pageElement": "//div[@class='searchinfo-mainwrap-center']/div[contains(concat(' ',@class,' '),' itemcolmn ')]/div",
     "nextLink": "//a[contains(concat(' ',@class,' '),' next ')]",
     "url": "^https://netmall\\.hardoff\\.co\\.jp/cate/",
     "exampleUrl": "https://netmall.hardoff.co.jp/cate/00010012/?q=%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3"
@@ -322,7 +321,7 @@
   "created_by": "t_f_m'",
   "name": "HARD OFF 通販 netmall",
   "created_at": "2023-11-24T18:38:36+09:00",
-  "updated_at": "2023-11-24T18:38:36+09:00"
+  "updated_at": "2024-04-21T11:38:31+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86188",
