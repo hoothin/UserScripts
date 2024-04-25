@@ -25612,19 +25612,19 @@
 },
 {
   "resource_url": "http://wedata.net/items/76290",
-  "name": "Variety",
   "data": {
-    "url": "^https://variety\\.com",
     "pageElement": "//ul[contains(@class,'o-tease-news-list')]/li[not(.//div[contains(@id,'sponsored')])]",
-    "Stylish": "@-moz-document url(\"https://variety.com/\") {\r\n img.lazy { display: inline-block !important; } \r\nli.l-list__item figure a{padding:0;}\r\nli.l-list__item:nth-of-type(-n+14) figure a{opacity:0;height:100%}\r\n}",
     "bookmarklet": "Array.prototype.forEach.call(document.querySelectorAll('img'), function(img) { var lazySrc = img.hasAttribute('data-src') ? img.getAttribute('data-src') : img.getAttribute('data-original'); if (lazySrc) { img.src = lazySrc;} });",
-    "exampleUrl": "https://variety.com https://variety.com/v/tv/",
-    "nextLink": "//div[@class='o-more-link // lrv-u-margin-l-auto']/a"
+    "Stylish": "@-moz-document url(\"https://variety.com/\") {\r\n img.lazy { display: inline-block !important; } \r\nli.l-list__item figure a{padding:0;}\r\nli.l-list__item:nth-of-type(-n+14) figure a{opacity:0;height:100%}\r\n}",
+    "nextLink": "//div[starts-with(normalize-space(@class),'o-more-link // lrv-u-text-align-right ')]/a",
+    "url": "^https://variety\\.com",
+    "exampleUrl": "https://variety.com https://variety.com/v/tv/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
+  "name": "Variety",
   "created_at": "2014-09-03T07:41:14+09:00",
-  "updated_at": "2020-04-03T06:27:04+09:00"
+  "updated_at": "2024-04-24T23:16:02+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76288",
