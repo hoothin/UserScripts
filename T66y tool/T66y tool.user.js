@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.7.2
+// @version      0.7.3
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -140,7 +140,7 @@
                 });
                 $('body').append('<div style="position:fixed;top:0px;background:#def7d4;width:100%;padding:4px;text-align:center;"><details>' + tmpNode + '</details></div>');
             }
-            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 0; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child { height: 200px; }');
+            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 0; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child,form[name="FORM"]:focus-within tbody>tr:last-child { height: 200px; }');
             var submitBtn = $('form[name="FORM"] .btn[name="Submit"]');
             var textarea = $('form[name="FORM"] [name="atc_content"]');
             if (submitBtn.length && textarea.length) {
@@ -264,6 +264,8 @@
                             success: function (res) {
                                 if (res.indexOf("發貼完畢點擊進入主題列表") == -1) {
                                     replyFail();
+                                    alert($(res).find("ol").text() || $(res).find("center").text());
+                                    quickReply.removeAttr("disabled");
                                 } else {
                                     replySuccess();
                                 }
