@@ -2578,7 +2578,7 @@
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
-            if (!next && location.pathname !== "/") {
+            if (!next && location.pathname + location.search !== "/") {
                 next = jsNext || nextJs1 || nextJs2;
                 if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') !== -1) next = null;
             }
