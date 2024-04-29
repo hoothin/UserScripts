@@ -2249,12 +2249,20 @@
             return /^(javascript|#|$)/.test(href.trim().replace("#p{", "").replace(location.href, ""));
         }
 
-        async querySelectorList(source, list) {
+        async querySelectorList(source, list, defaultView) {
             for (let i = 0; i < list.length; i++) {
                 await sleep(1);
                 let sel = list[i];
                 let result = source.querySelectorAll(sel);
-                if (result.length > 0) return result[result.length - 1];
+                if (result.length > 0) {
+                    if (defaultView) {
+                        for (let i = result.length - 1; i >= 0; i--) {
+                            let ele = result[i];
+                            if (isVisible(ele, defaultView)) return ele;
+                        }
+                    }
+                    return result[result.length - 1];
+                }
             }
             return null;
         }
@@ -2368,7 +2376,7 @@
                 "[class*=pagination-next]>a",
                 "[class*=pagination-next]>button"
             ];
-            let next = await this.querySelectorList(body, selectorList);
+            let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
                 await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
