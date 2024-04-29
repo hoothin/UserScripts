@@ -2254,12 +2254,7 @@
                 await sleep(1);
                 let sel = list[i];
                 let result = source.querySelectorAll(sel);
-                if (result.length > 0) {
-                    for (let i = result.length - 1; i >= 0; i--) {
-                        let ele = result[i];
-                        if (this.verifyElement(ele)) return ele;
-                    }
-                }
+                if (result.length > 0) return result[result.length - 1];
             }
             return null;
         }
@@ -2271,7 +2266,7 @@
                     return false;
                 }
                 if (e.className) {
-                    if (/slick|slide|gallery|disabled|hidden\s*$/i.test(e.className)) {
+                    if (/slick|slide|gallery|disabled\s*$/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
