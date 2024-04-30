@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.4.30.1
+// @version              2024.4.30.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -17543,6 +17543,7 @@ ImgOps | https://imgops.com/#b#`;
                     font-weight: normal;\
                     display:inline;\
                     font-size:unset;\
+                    line-height: initial;\
                     }\
                     .pv-gallery-head-command-drop-list-item label:after {\
                     display:none;\
@@ -18655,7 +18656,7 @@ ImgOps | https://imgops.com/#b#`;
                 this._clickOut=this.clickOut.bind(this);
                 this._keydown=this.keydown.bind(this);
 
-                if (prefs.magnifier.wheelZoom.enabled || typeof prefs.magnifier.wheelZoom.scaleImage !== false) {
+                if (prefs.magnifier.wheelZoom.enabled || prefs.magnifier.wheelZoom.scaleImage !== false) {
                     this.zoomLevel=1;
                     this.defaultDia=diameter;
                     addWheelEvent(container,this._zoom,false);
@@ -18770,7 +18771,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(e.deltaY===0)return;//非Y轴的滚动
                 var ms=this.magnifier.style;
                 if(prefs.magnifier.wheelZoom.pauseFirst && !this.paused){
-                    if (typeof prefs.magnifier.wheelZoom.scaleImage !== false) {
+                    if (prefs.magnifier.wheelZoom.scaleImage !== false) {
                         let curScale = ms.transform.match(/[\d\.]+/);
                         if (curScale) {
                             curScale = parseFloat(curScale[0]);
@@ -23958,7 +23959,7 @@ ImgOps | https://imgops.com/#b#`;
                 'magnifier.wheelZoom.scaleImage': {
                     label: i18n("magnifierScaleImage"),
                     type: 'checkbox',
-                    "default": typeof prefs.magnifier.wheelZoom.scaleImage !== false,
+                    "default": prefs.magnifier.wheelZoom.scaleImage !== false,
                 },
                 'magnifier.wheelZoom.ctrl': {
                     label: '',
