@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.2.26.1
+// @version              2024.4.30.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -45,8 +45,8 @@
 // @grant                GM.registerMenuCommand
 // @grant                GM.notification
 // @grant                unsafeWindow
-// @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://update.greasyfork.org/scripts/438080/1322681/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
+// @require              https://update.greasyfork.org/scripts/438080/1368645/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1333524/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -24303,7 +24303,7 @@ ImgOps | https://imgops.com/#b#`;
                 },
                 'customRules': {
                     label: GM_config.create('a', {
-                        href: 'https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js',
+                        href: 'https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B#-custom-rules-example',
                         target: '_blank',
                         textContent: i18n("customRules")
                     }),
@@ -24323,13 +24323,32 @@ ImgOps | https://imgops.com/#b#`;
             },
             events: {
                 open: async function(doc, win, frame) {
-                    let saveBtn=doc.querySelector("#"+this.id+"_saveBtn");
-                    let closeBtn=doc.querySelector("#"+this.id+"_closeBtn");
-                    let resetLink=doc.querySelector("#"+this.id+"_resetLink");
-                    let customInput=doc.querySelector("#"+this.id+"_field_customRules");
-                    customInput.style.height="188px";
-                    saveBtn.textContent=i18n("saveBtn");
-                    saveBtn.title=i18n("saveBtnTips");
+                    let saveBtn = doc.querySelector("#"+this.id+"_saveBtn");
+                    let closeBtn = doc.querySelector("#"+this.id+"_closeBtn");
+                    let resetLink = doc.querySelector("#"+this.id+"_resetLink");
+                    let customInput = doc.querySelector("#"+this.id+"_field_customRules");
+                    customInput.style.height = "188px";
+                    saveBtn.textContent = i18n("saveBtn");
+                    saveBtn.title = i18n("saveBtnTips");
+                    saveBtn.addEventListener('click', e => {
+                        if (customInput.value) {
+                            if (customInput.value.trim().indexOf("[") != 0) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                alert("The rules must be enclosed in square brackets ([]).");
+                                return;
+                            }
+                            if (!isunsafe()) {
+                                try {
+                                    unsafeWindow.eval(createScript(customInput.value));
+                                } catch(err) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    alert("Wrong rule:" + err.toString());
+                                }
+                            }
+                        }
+                    }, true);
                     closeBtn.textContent=i18n("closeBtn");
                     closeBtn.title=i18n("closeBtnTips");
                     resetLink.textContent=i18n("resetLink");
@@ -24345,14 +24364,14 @@ ImgOps | https://imgops.com/#b#`;
                             let newsEles = createEleFromJson([
                                 {
                                     node: "div",
-                                    text: "Made with ❤️ by ",
+                                    text: "Made with ❤️ by @",
                                     attr: {
                                         style: "width: calc(100% - 8px); text-align: center;"
                                     },
                                     children: [
                                         {
                                             node: "a",
-                                            text: "@Hoothin",
+                                            text: "Hoothin",
                                             attr: {
                                                 "href": "mailto:rixixi@gmail.com"
                                             }
