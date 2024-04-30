@@ -1385,7 +1385,12 @@ var siteInfo = [
 {
  name: "piccoma jp",
  url: /^https:\/\/piccoma\.com\//,
- r: /(thumbnail|cover)_x\d/,
- s: "cover_x3"
+ r: [/(thumbnail|cover)_x\d/, /x\d$/],
+ s: ["cover_x3", "x3"],
+ getExtSrc: function() {
+    if (this.children[0] && this.children[0].nodeName === "IMG") {
+        return this.children[0].src.replace(/(thumbnail|cover)_x\d/, "cover_x3").replace(/x\d$/, "x3");
+    }
+ }
 }
 ];
