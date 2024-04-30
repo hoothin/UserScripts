@@ -21,42 +21,45 @@ More settings in "Picviewer CE+ config" to be customized, reviewing them is curr
 
 + And so on ...
 
-If you are glad to help me translate Picviewer CE+, [edit this file](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1).
-It will help the people who speak the same language just like you. Thank you.
+If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
-If you wish to add more rules for peculiar sites, feel free to pull requests or open issues.
+Need more rules for peculiar sites? feel free to pull requests or open issues.
 
-### 💝Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.
+### 💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.
 
- <details>
-<summary><h2>Custom rules example for config:</h2></summary>
-<b>1.</b>
-This can add click-to-open for existing asiansister rule. Place it into the '[]' of rule textarea.
-<pre>
+### 🔧 Custom rules example for config:
+``` js
+// Match image src(no matter which site) with /pics\.dmm\.co\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
 {
-&nbsp;name: "asiansister",
-&nbsp;clickToOpen:{
-&nbsp;&nbsp;enabled:true,
-&nbsp;&nbsp;preventDefault:true,
-&nbsp;&nbsp;type:'actual'
-&nbsp;}
+    name: "dmm",
+    src: /pics\.dmm\.co\.jp/i,
+    r: "ps.jpg",
+    s: "pl.jpg"
 }
-</pre> 
-<br>
-<b>2.</b>
-This can add large-image rule for dmm to view high-definition original images or download them.
-<pre>
-{
-&nbsp;name: "dmm",
-&nbsp;src: /pics\.dmm\.co\.jp/i,
-&nbsp;r: "ps.jpg",
-&nbsp;s: "pl.jpg"
-}
-</pre>
-<b>3.</b>
-Using a standalone script, you have the ability to manage all of your custom rules.
-
 ```
+``` js
+// Match site with /xxx\.com/ and replace image url from /us\.xxx\.com\/\d+wm\//i to "previews.xxx.com/images/"
+{
+   name: "Example",
+   url: /xxx\.com/,
+   r: /us\.xxx\.com\/\d+wm\//i,
+   s: "previews.xxx.com/images/"
+}
+```
+``` js
+//Add click-to-open for existing asiansister rule. Place it into the '[]' of rule textarea.
+{
+    name: "asiansister",
+    clickToOpen:{
+        enabled:true,
+        preventDefault:true,
+        type:'actual'
+    }
+}
+```
+Using a standalone userscript, you have the ability to manage all of your custom rules.
+
+``` js
 // ==UserScript==
 // @name         Picviewer CE+ custom rules
 // @namespace    hoothin
@@ -80,12 +83,11 @@ Using a standalone script, you have the ability to manage all of your custom rul
     ];
 })();
 ```
- </details>
 
-## Gallery page
+## Blank Gallery page
 [https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 
-*A blank Gallery page designed for viewing pictures, showcasing every image you have imported.*
+*A blank Gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
 Include `mode=1` to open gallery in view-more mode.<br/>
 Add `imgs=http://xxx/xxx.jpg` to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
