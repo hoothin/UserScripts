@@ -5,9 +5,9 @@
 // @name:ja      SearchJumper
 // @namespace    hoothin
 // @version      1.7.81
-// @description  Most powerful aggregated search extension providing the ability to conduct searches effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
-// @description:zh-CN  最强聚合搜索插件，在搜索时一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
-// @description:zh-TW  在搜尋時一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
+// @description  Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
+// @description:zh-CN  万能聚合搜索，一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
+// @description:zh-TW  一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
 // @license      MPL-2.0
@@ -746,18 +746,19 @@
                 });
             };
         }
-        if (typeof GM_addStyle != 'undefined') {
-            _GM_addStyle = GM_addStyle;
-        } else if (typeof GM != 'undefined' && typeof GM.addStyle != 'undefined') {
-            _GM_addStyle = GM.addStyle;
-        } else {
-            _GM_addStyle = cssStr => {
+        _GM_addStyle = cssStr => {
+            cssStr = cssStr.replace(/\n\s*/g, "");
+            if (typeof GM_addStyle != 'undefined') {
+                return GM_addStyle(cssStr);
+            } else if (typeof GM != 'undefined' && typeof GM.addStyle != 'undefined') {
+                return GM.addStyle(cssStr);
+            } else {
                 let styleEle = document.createElement("style");
                 styleEle.innerHTML = createHTML(cssStr);
                 document.head.appendChild(styleEle);
                 return styleEle;
-            };
-        }
+            }
+        };
         if (typeof GM_info != 'undefined') {
             _GM_info = GM_info;
         } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
@@ -3160,6 +3161,7 @@
                      padding: 1px 0;
                      -webkit-text-fill-color: initial;
                      text-shadow: initial;
+                     min-width: inherit;
                  }
                  mark.searchJumper:before,
                  a.searchJumper:before,
@@ -3864,15 +3866,12 @@
                              left: -7px;
                              position: relative;
                              border: unset!important;
-                             width: 80px;
+                             width: calc(100% - 25px);
                              padding-bottom: 3px;
                              margin-bottom: -30px;
                              float: left;
                              background: unset;
                              height: 28px;
-                         }
-                         .customInputFrame-body .select>input[type=text]:focus {
-                             width: calc(100% - 25px);
                          }
                          .customInputFrame-body .select>p {
                              padding: 0;
@@ -11664,7 +11663,15 @@
                         }
                         break;
                     case "show":
+                        searchBar.setFuncKeyCall(false);
                         searchBar.showInPage();
+                        if (!searchData.prefConfig.disableInputOnWords || searchBar.inInput || !getSelectStr()) {
+                            searchBar.showSearchInput();
+                        }
+                        break;
+                    case "showAll":
+                        searchBar.appendBar();
+                        searchBar.showAllSites();
                         break;
                 }
             });
