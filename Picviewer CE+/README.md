@@ -57,7 +57,7 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
     }
 }
 ```
-Using a standalone userscript, you have the ability to manage all of your custom rules.
+You have the option to use a standalone userscript, which allows you to manage all of your custom rules effectively.
 
 ``` js
 // ==UserScript==
