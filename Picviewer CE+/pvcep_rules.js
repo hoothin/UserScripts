@@ -1369,5 +1369,23 @@ var siteInfo = [
  },
  r: /\?param=\d+y\d+/,
  s: ""
+},
+{
+ name: "Dlsite",
+ src: /^https:\/\/img\.dlsite\.jp\//,
+ r: /\/resize\/(.*)_\d+x\d+/,
+ s: "/modpub/$1"
+},
+{
+ name: "postype",
+ url: /^https:\/\/www\.postype\.com\//,
+ r: [/\/resize(\/.*\/)\d+x\d+x\d+\/\w+?\//, /\?w=.*/],
+ s: ["$1", ""]
+},
+{
+ name: "piccoma jp",
+ url: /^https:\/\/piccoma\.com\//,
+ r: /(thumbnail|cover)_x\d/,
+ s: "cover_x3"
 }
 ];
