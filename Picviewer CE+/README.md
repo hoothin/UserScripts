@@ -47,7 +47,7 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 }
 ```
 ``` js
-//Add click-to-open for existing asiansister rule. Place it into the '[]' of rule textarea.
+//Add click-to-open for existing asiansister rule.
 {
     name: "asiansister",
     clickToOpen:{
@@ -75,10 +75,16 @@ Using a standalone userscript, you have the ability to manage all of your custom
     'use strict';
     window.pvcepRules = [
         {
-            name: "dmm",
+            name: "rule1",
             src: /pics\.dmm\.co\.jp/i,
             r: "ps.jpg",
             s: "pl.jpg"
+        },
+        {
+            name: "rule2",
+            url: /xxx\.com/,
+            r: /us\.xxx\.com\/\d+wm\//i,
+            s: "previews.xxx.com/images/"
         }
     ];
 })();
