@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.81
+// @version      1.7.82
 // @description  Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  万能聚合搜索，一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -5701,6 +5701,7 @@
                     if (cacheFilter) {
                         this.searchInput.value = cacheFilter;
                         this.searchInput.dispatchEvent(new Event("input"));
+                        this.searchJumperInputKeyWords.focus();
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.con.classList.add("in-find");
@@ -6345,7 +6346,7 @@
                         storage.setListItem("inPagePostParams", location.hostname, "");
                     }, 10000);
                 }
-                let searchWithCurrentFilter = () => {
+                let searchWithCurrentFilter = e => {
                     clearTimeout(inputTimer);
                     let siteEle, forceTarget = "";
                     if (currentSite && !self.searchInput.value) {
@@ -6356,7 +6357,7 @@
                         forceTarget = "_blank";
                     }
                     if (siteEle) {
-                        self.openSiteBtn(siteEle, forceTarget);
+                        self.openSiteBtn(siteEle, forceTarget, !e.ctrlKey);
                     }
                 };
                 let inputTimer;
@@ -6391,11 +6392,11 @@
                                     forceTarget = "_blank";
                                 }
                                 if (siteEle) {
-                                    self.openSiteBtn(siteEle, forceTarget);
+                                    self.openSiteBtn(siteEle, forceTarget, !e.ctrlKey);
                                 }
                             } else {
                                 if (this.searchJumperInputKeyWords.value) {
-                                    searchWithCurrentFilter();
+                                    searchWithCurrentFilter(e);
                                 } else {
                                     this.searchJumperInputKeyWords.focus();
                                 }
@@ -6441,7 +6442,7 @@
                             }
                             break;
                         case 13://回车
-                            searchWithCurrentFilter();
+                            searchWithCurrentFilter(e);
                             if (cacheFilter !== self.searchInput.value) {
                                 cacheFilter = self.searchInput.value;
                                 storage.setItem("cacheFilter", cacheFilter);
@@ -8150,7 +8151,7 @@
                 return ele;
             }
 
-            async openSiteBtn(siteEle, forceTarget) {
+            async openSiteBtn(siteEle, forceTarget, active = false) {
                 await this.siteSetUrl(siteEle);
                 let isPage = siteEle.dataset.isPage;
                 if (!forceTarget) forceTarget = "_blank";
@@ -8158,7 +8159,7 @@
                     siteEle.setAttribute("target", forceTarget);
                 }
                 if (isPage && forceTarget == "_blank" && siteEle.href) {
-                    _GM_openInTab(siteEle.href);
+                    _GM_openInTab(siteEle.href, {active: active});
                 } else {
                     siteEle.click();
                 }
@@ -12077,8 +12078,12 @@
                         if (e.button === 2 && !searchData.prefConfig.rightMouse) return;
                         if (e.button === 0 && !searchData.prefConfig.leftMouse) return;
                         //if (e.button === 0 && getSelectStr() !== '') return;
-                        searchBar.setFuncKeyCall(false);
-                        searchBar.showInPage();
+                        if (searchData.prefConfig.longPressTile) {
+                            searchBar.showInPage(true, e);
+                        } else {
+                            searchBar.setFuncKeyCall(false);
+                            searchBar.showInPage();
+                        }
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
                     if ((e.button !== 2 && clientRect && !inputSign &&
