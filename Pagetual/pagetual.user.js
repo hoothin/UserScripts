@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.39
+// @version      1.9.37.40
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1783,7 +1783,7 @@
                         return ">*";
                     } else {
                         let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                        if ((curStyle.display === 'flex' && curStyle.flexDirection.indexOf("row") === 0 && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && (rulesData.opacity !== 0 || hasText) && !pf)) {
+                        if ((curStyle.display === 'flex' && curStyle.flexDirection.indexOf("row") === 0 && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && curStyle.display !== "table-cell" && (rulesData.opacity !== 0 || hasText) && !pf)) {
                             return "";
                         } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
                             return "";
@@ -4875,12 +4875,12 @@
                 if (this.foundEle && this.foundEle.length === 1) {
                     let foundEleRect = this.foundEle[0].getBoundingClientRect();
                     if (foundEleRect.height < 100) {
-                        showTips("Next Link");
+                        showTips("Next Link", "", 500);
                         this.editTemp.nextLink = this.selectorInput.value;
                         return this.editTemp;
                     }
                 }
-                showTips("Page Element");
+                showTips("Page Element", "", 500);
                 this.editTemp.pageElement = this.selectorInput.value;
             }
             return this.editTemp;
@@ -7315,7 +7315,7 @@
     let hideTipsTimeout;
     function showTips(content, href, time, wordColor, backColor) {
         initView();
-        getBody(document).appendChild(tipsWords);
+        document.documentElement.appendChild(tipsWords);
         tipsWords.style.color = wordColor || 0xFFFFFF;
         tipsWords.style.backgroundColor = backColor || 0x000;
         let _time = 1500;
