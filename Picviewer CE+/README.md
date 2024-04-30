@@ -27,7 +27,7 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 
 ### 💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.
 
-### 🔧 Custom rules example for config:
+### 🔧 Custom [rules example](pvcep_rules.js):
 ``` js
 // Match image src(no matter which site) with /pics\.dmm\.co\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
 {
