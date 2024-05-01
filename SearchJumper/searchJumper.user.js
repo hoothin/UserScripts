@@ -5414,6 +5414,7 @@
                     this.searchJumperNavBar.classList.add("sjNavShow");
                     if (navEnable) {
                         this.appendBar();
+                        this.con.style.display = "";
                         this.setNav(true, true);
                     }
                 }
