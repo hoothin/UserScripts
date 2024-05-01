@@ -73,7 +73,7 @@
             return;
         }
     }
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|\/?$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
     const firstRunPage = "https://search.hoothin.com/firstRun";
     let configPage = 'https://search.hoothin.com/config/';
@@ -12689,6 +12689,13 @@
                     .filter>#filter-btn {
                         display: block;
                     }
+                    #import-btns-con>h3 {
+                        float: left;
+                        margin-left: 20px;
+                    }
+                    #import-btns-con.hide>h3 {
+                        display: none;
+                    }
                 `);
                 let targetPre, ruleType = 0;
                 let importBtn = document.createElement("button");
@@ -12697,11 +12704,13 @@
                 let filterBtn = document.createElement("button");
                 filterBtn.id = "filter-btn";
                 filterBtn.className = "btn Button--secondary Button";
+                let ruleTitle = document.createElement("h3");
                 let btnsCon = document.createElement("div");
                 btnsCon.id = "import-btns-con";
                 btnsCon.appendChild(importCss);
                 btnsCon.appendChild(importBtn);
                 btnsCon.appendChild(filterBtn);
+                btnsCon.appendChild(ruleTitle);
                 btnsCon.addEventListener("click", e => {
                     if (targetPre) targetPre.style.filter = "";
                     btnsCon.classList.add("hide");
@@ -12788,6 +12797,7 @@
                     let top = target.offsetTop + 'px';
                     let innerText = target.innerText.trim();
                     if (!innerText) return;
+                    ruleTitle.innerText = "";
                     if (/^\[/.test(innerText)) {
                         ruleType = 0;
                         btnsCon.style.top = top;
@@ -12796,6 +12806,7 @@
                         ruleType = 1;
                         btnsCon.style.top = top;
                         btnsCon.classList.remove("filter");
+                        ruleTitle.innerText = innerText.match(/"name":\s*"(.*)"/)[1];
                     } else if (/^\{/.test(innerText)) {
                         ruleType = 2;
                         btnsCon.style.top = top;
@@ -12817,8 +12828,15 @@
                 });
 
                 document.addEventListener("mouseover", e => {
-                    if (e.target.nodeName.toUpperCase() === "PRE" && importPageReg.test(location.href)) {
-                        bindPre(e.target);
+                    if (importPageReg.test(location.href)) {
+                        if (e.target.nodeName === "PRE") {
+                            bindPre(e.target);
+                        } else {
+                            let target = e.target.children[0];
+                            if (target && target.nodeName === "PRE") {
+                                bindPre(target);
+                            }
+                        }
                     }
                 });
             }
