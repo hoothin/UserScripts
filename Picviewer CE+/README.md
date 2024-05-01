@@ -31,7 +31,7 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 ``` js
 // Match image src(no matter which site) with /pics\.dmm\.co\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
 {
-    name: "dmm",
+    name: "Dmm",
     src: /pics\.dmm\.co\.jp/i,
     r: "ps.jpg",
     s: "pl.jpg"
@@ -49,7 +49,7 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 ``` js
 //Add click-to-open for existing asiansister rule.
 {
-    name: "asiansister",
+    name: "Asiansister",
     clickToOpen:{
         enabled:true,
         preventDefault:true,
@@ -90,14 +90,14 @@ You have the option to use a standalone userscript, which allows you to manage a
 })();
 ```
 
-## Blank Gallery page
+## Blank Gallery Page
 [https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 
-*A blank Gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
+*A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
 Include `mode=1` to open gallery in view-more mode.<br/>
 Add `imgs=http://xxx/xxx.jpg` to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
-For example: `https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?imgs=http://xxx/xxx[01-99].jpg`<br/>
+For example: `https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?mode=0&imgs=http://xxx/xxx[01-99].jpg`<br/>
 Just easily drag and drop your local images into the gallery to view them.
 
 <img src='https://v2fy.com/asset/063_picviewer_ce/72723103-d911ce00-3bba-11ea-9541-0be746977dbc.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/72767872-7eb35480-3c30-11ea-814d-ce4678c81089.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/73130353-c4598e00-4031-11ea-810e-9498677a40d1.gif' width=325>
