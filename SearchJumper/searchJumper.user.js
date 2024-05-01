@@ -12087,10 +12087,38 @@
                         }
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
-                    if ((e.button !== 2 && clientRect && !inputSign &&
-                         e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
-                         e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
-                        (matchKey && e.button === 2)) {
+                    let canShow = false;
+                    if (e.button === 2) {
+                        if (matchKey) {
+                            canShow = true;
+                        }
+                    } else {
+                        if (e.button === 0) {
+                            if (searchData.prefConfig.leftMouse) {
+                                canShow = true;
+                            }
+                        } else if (e.button === 1) {
+                            if (searchData.prefConfig.middleMouse) {
+                                canShow = true;
+                            }
+                        }
+                        if (canShow) {
+                            if (inputSign) {
+                                canShow = false;
+                            } else if (!clientRect) {
+                                canShow = false;
+                            } else if (e.clientX < clientRect.left) {
+                                canShow = false;
+                            } else if (e.clientX > clientRect.left + clientRect.width) {
+                                canShow = false;
+                            } else if (e.clientY < clientRect.top) {
+                                canShow = false;
+                            } else if (e.clientY > clientRect.top + clientRect.height) {
+                                canShow = false;
+                            }
+                        }
+                    }
+                    if (canShow) {
                         setTimeout(() => {
                             if (!draging) {
                                 searchBar.showInPage(true, e);
