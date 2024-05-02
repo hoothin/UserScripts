@@ -910,7 +910,7 @@ var siteInfo = [
  r: /\/(\d{14}\/)?smaller_square\//i,
  s: "/large/",
  getImage: function(a, p) {
-    if (p && p[0] && p[0].className === 'project-image') return a.href.replace('/artwork/', '/projects/') + '.json';
+    if (a && a.href.match('/artwork/')) return a.href.replace('/artwork/', '/projects/') + '.json';
  },
  xhr: {
      q: function(html) {
