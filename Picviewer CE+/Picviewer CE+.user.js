@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.4.30.2
+// @version              2024.5.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1368651/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1369762/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1333524/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -14327,11 +14327,12 @@ ImgOps | https://imgops.com/#b#`;
                 });
 
 
-
-                var loadThumbsTimer;
+                let loadingThumbs = false;
                 eleMaps['sidebar-thumbnails-container'].addEventListener('scroll',function(e){//发生scroll事件时加载缩略图
-                    clearTimeout(loadThumbsTimer);//加个延时，在连续触发的时候缓一缓。
-                    loadThumbsTimer=setTimeout(function(){
+                    if (loadingThumbs) return;
+                    loadingThumbs = true;
+                    setTimeout(function(){
+                        loadingThumbs = false;
                         self.loadThumb();
                     },200);
                 },false);
@@ -14390,8 +14391,7 @@ ImgOps | https://imgops.com/#b#`;
                 document.head.appendChild(headScrollStyle);
                 let galleryHead = eleMaps['head'];
                 addWheelEvent(galleryHead, function(e) {
-                    if (e.deltaY > 0) galleryHead.scrollLeft += 50;
-                    else galleryHead.scrollLeft -= 50;
+                    galleryHead.scrollLeft += e.deltaY;
                     headScrollStyle.textContent = '';
                     let scrollLeft = galleryHead.scrollLeft;
                     if (!scrollLeft) return;
@@ -19008,14 +19008,14 @@ ImgOps | https://imgops.com/#b#`;
 
                 //关闭
                 var closeButton=container.querySelector('.pv-pic-window-close');
-                closeButton.style.cssText='top: -24px;right: 0px;';
+                closeButton.style.cssText='top: -22px;right: 0px;';
                 this.closeButton=closeButton;
                 closeButton.addEventListener('click',function(e){
                     self.remove();
                 },false);
 
                 var maxButton=container.querySelector('.pv-pic-window-max');
-                maxButton.style.cssText='top: -24px;right: 46px;';
+                maxButton.style.cssText='top: -22px;right: 46px;';
                 this.maxButton=maxButton;
                 maxButton.addEventListener('click',async function(e){
                     if(!gallery){
@@ -19031,7 +19031,7 @@ ImgOps | https://imgops.com/#b#`;
                 },false);
 
                 //var searchButton=container.querySelector('.pv-pic-window-search');
-                //searchButton.style.cssText='top: -24px;right: 50px;';
+                //searchButton.style.cssText='top: -22px;right: 50px;';
                 //this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
@@ -19061,6 +19061,15 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 };
+                this.curIndex = -1;
+                if (this.data.all && this.data.all.length) {
+                    for (let i = 0; i < this.data.all.length; i++) {
+                        if (this.data.all[i] == this.data.src) {
+                            this.curIndex = i;
+                            break;
+                        }
+                    }
+                }
                 img.onload = function(e) {
                     if (self.removed) return;
                     self.loaded = true;
@@ -19071,11 +19080,11 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     //self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     self.imgWindow.style.display = "";
-                    setSearchState(img.naturalWidth + " x " + img.naturalHeight, self.imgState);
                     self.imgNaturalSize = {
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
+                    self.setToolBadge('zoom',self.zoomLevel);
                     if (self==uniqueImgWin && prefs.floatBar.globalkeys.previewFollowMouse) {
                         self.following=true;
                         self.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
@@ -19135,7 +19144,7 @@ ImgOps | https://imgops.com/#b#`;
                 var toolbar=container.querySelector('.pv-pic-window-toolbar');
                 toolbar.style.cssText='\
                 top: 0px;\
-                left: -45px;\
+                left: -42px;\
                 ';
                 this.toolbar=toolbar;
 
@@ -19422,6 +19431,31 @@ ImgOps | https://imgops.com/#b#`;
                 this.nextButton.style.display = "none";
             },
             switchImage:async function(fw){
+                if (this.data.all && this.data.all.length) {
+                    let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
+                    this.remove();
+                    let imgData = this.data;
+                    let curIndex;
+                    for (curIndex = 0; curIndex < this.data.all.length; curIndex++) {
+                        if (this.data.all[curIndex] == this.data.src) break;
+                    }
+                    if (fw) {
+                        curIndex++;
+                        if (curIndex == this.data.all.length) curIndex = 0;
+                    } else {
+                        curIndex--;
+                        if (curIndex == -1) curIndex = this.data.all.length - 1;
+                    }
+                    imgData.xhr = null;
+                    imgData.src = this.data.all[curIndex];
+                    let openType = this.actual ? "actual" : "current";
+                    if (uniqueImgWin = this) {
+                        uniqueImgWin = null;
+                        openType = "popup";
+                    }
+                    new LoadingAnimC(imgData, openType, false, true, initPos);
+                    return;
+                }
                 if (!gallery) {
                     gallery = new GalleryC();
                     gallery.data = [];
@@ -19495,9 +19529,8 @@ ImgOps | https://imgops.com/#b#`;
                 ImgWindowC.style=_GM_addStyle('\
                     .pv-pic-window-container {\
                     ' + (prefs.imgWindow.fixed ? 'position: fixed;' : 'position: absolute;') + '\
-                    background-color: rgba(40,40,40,0.65);\
                     background-image: initial;\
-                    padding: 8px;\
+                    padding: 0;\
                     border: 0;\
                     border-radius: 1px;\
                     line-height: 0;\
@@ -19519,12 +19552,13 @@ ImgOps | https://imgops.com/#b#`;
                     transition: top 0.2s ease, left 0.2s ease;\
                     }\
                     .pv-pic-window-container_focus {\
-                    border: 5px solid rgb(255 255 255 / 50%);\
+                    border: 3px solid rgb(255 255 255 / 50%);\
                     }\
                     .pv-pic-window-imgbox {\
                     position: relative;\
                     display: block;\
                     overflow: hidden;\
+                    background-color: rgba(40, 40, 40, 0.65);\
                     }\
                     .pv-pic-window-container .compareBox {\
                     position: absolute;\
@@ -19589,6 +19623,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-tb-tool-extend-menu{\
                     -webkit-transition: opacity 0.2s ease-in-out;\
                     transition: opacity 0.2s ease-in-out;\
+                    box-sizing: content-box;\
                     }\
                     .pv-pic-window-toolbar {\
                     position: absolute;\
@@ -19612,7 +19647,7 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     position: absolute;\
                     right: 0px;\
-                    top: -24px;\
+                    top: -22px;\
                     background: url("'+prefs.icons.close+'") no-repeat center bottom;\
                     height: 17px;\
                     width: 46px;\
@@ -19635,7 +19670,7 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     position: absolute;\
                     right: 50px;\
-                    top: -24px;\
+                    top: -22px;\
                     background: url("'+prefs.icons.searchBtn+'") no-repeat center bottom;\
                     height: 17px;\
                     width: 46px;\
@@ -19650,7 +19685,7 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     position: absolute;\
                     right: 46px;\
-                    top: -24px;\
+                    top: -22px;\
                     background: url("'+prefs.icons.maxBtn+'") no-repeat center bottom;\
                     height: 17px;\
                     width: 46px;\
@@ -19695,11 +19730,11 @@ ImgOps | https://imgops.com/#b#`;
                     pointer-events: none;\
                     }\
                     span.pv-pic-window-pre {\
-                    left: 8px;\
+                    left: 0;\
                     background-image: url("'+prefs.icons.arrowLeft+'");\
                     }\
                     span.pv-pic-window-next {\
-                    right: 8px;\
+                    right: 0;\
                     background-image: url("'+prefs.icons.arrowRight+'");\
                     }\
                     .compare>.pv-pic-search-state{\
@@ -19717,7 +19752,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-window-container:hover>.pv-pic-search-state{\
                     border-radius: 0 0 8px 0;\
-                    top: 8px;\
+                    top: 0px;\
                     opacity:0.8;\
                     }\
                     .pv-pic-window-container>span.pv-pic-search-state:hover{\
@@ -19731,8 +19766,8 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     span.pv-pic-search-state {\
-                    top: -10px;\
-                    left: 8px;\
+                    top: 0px;\
+                    left: 0px;\
                     display: block;\
                     position: absolute;\
                     z-index: 1;\
@@ -19778,7 +19813,7 @@ ImgOps | https://imgops.com/#b#`;
                     pointer-events: none;\
                     }\
                     .pv-pic-window-container_focus>.pv-pic-search-state {\
-                    top: -23px;\
+                    top: -20px;\
                     }\
                     .pv-pic-window-scrollSign {\
                     display: none;\
@@ -19786,7 +19821,7 @@ ImgOps | https://imgops.com/#b#`;
                     height: auto;\
                     fill: black;\
                     top: 10px;\
-                    right: 8px;\
+                    right: 0px;\
                     position: absolute;\
                     opacity: 0;\
                     -webkit-animation: scroll_sign_opacity 2s 3 ease-in-out;\
@@ -19803,11 +19838,11 @@ ImgOps | https://imgops.com/#b#`;
                       100% { opacity: 0 }\
                     }\
                     .pv-pic-window-scroll {\
-                    max-height: calc(100vh - 26px);\
+                    max-height: calc(100vh - 2px);\
                     max-width: 100vw;\
                     }\
                     .pv-pic-window-scroll>.pv-pic-window-imgbox {\
-                    max-height: calc(100vh - 26px);\
+                    max-height: calc(100vh - 2px);\
                     max-width: 100vw;\
                     overflow-y: scroll;\
                     overflow-x: hidden;\
@@ -20045,7 +20080,7 @@ ImgOps | https://imgops.com/#b#`;
                     w:parseFloat(imgWindowCS.width),
                 };
                 this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 2.5;
-                if(prefs.imgWindow.suitLongImg && this.isLongImg && !this.preview){
+                if(prefs.imgWindow.suitLongImg && this.isLongImg){
                     this.center(rectSize.w <= wSize.w,false);
                     this.imgWindow.classList.add("pv-pic-window-scroll");
                 }else if(prefs.imgWindow.fitToScreen){
@@ -20122,10 +20157,10 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
 
-                keepSI(this.closeButton,['top','right'],[-24,0]);
-                keepSI(this.maxButton,['top','right'],[-24,46],[0,46]);
-                //keepSI(this.searchButton,['top','right'],[-24,50]);
-                keepSI(this.toolbar,['top','left'],[0,-45]);
+                keepSI(this.closeButton,['top','right'],[-22,0]);
+                keepSI(this.maxButton,['top','right'],[-22,46],[0,46]);
+                //keepSI(this.searchButton,['top','right'],[-22,50]);
+                keepSI(this.toolbar,['top','left'],[0,-42]);
 
                 // 保持注释在图片里面
                 // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
@@ -20133,7 +20168,7 @@ ImgOps | https://imgops.com/#b#`;
             followPos: function(posX, posY) {
                 if (this.removed) return;
                 if (!prefs.floatBar.globalkeys.previewFollowMouse) return;
-                var imgWindow = this.imgWindow;
+                let imgWindow = this.imgWindow;
                 if (!imgWindow) return;
                 this.followPosX = posX;
                 this.followPosY = posY;
@@ -20147,23 +20182,23 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 }
                 this.following = false;
-                var wSize = getWindowSize();
+                let wSize = getWindowSize();
                 this.zoom(1);
-                if (prefs.imgWindow.fitToScreen && !imgWindow.classList.contains("pv-pic-window-scroll")) {
-                    var imgWindowCS = unsafeWindow.getComputedStyle(imgWindow);
-                    var rectSize = {
+                if (prefs.imgWindow.fitToScreen) {
+                    let imgWindowCS = unsafeWindow.getComputedStyle(imgWindow);
+                    let rectSize = {
                         h: parseFloat(imgWindowCS.height),
                         w: parseFloat(imgWindowCS.width),
                     };
 
-                    var size;
+                    let size, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
                     if (prefs.imgWindow.fitToScreenSmall || (rectSize.w - wSize.w > 0 || rectSize.h - wSize.h > 0)) {
                         if (rectSize.w / rectSize.h > wSize.w / wSize.h) {
                             size = {
                                 w: wSize.w,
                                 h: wSize.w / (rectSize.w / rectSize.h),
                             };
-                        } else {
+                        } else if (!containsScroll) {
                             size = {
                                 h: wSize.h,
                                 w: wSize.h * (rectSize.w / rectSize.h),
@@ -20201,16 +20236,16 @@ ImgOps | https://imgops.com/#b#`;
                     maxWidth = wSize.w - 56;
                     if (posY > wSize.h / 2) {
                         //上
-                        maxHeight = posY - padding1 - padding2;
-                        resizeWithLimit();
-                        imgWindow.style.top = posY - imgWindow.offsetHeight - padding1 + scrolled.y + 'px';
+                        top = posY - imgWindow.offsetHeight - padding1 + scrolled.y;
+                        if (top < 1) top = 1;
+                        imgWindow.style.top = top + 'px';
                     } else {
                         //下
-                        maxHeight = wSize.h - posY - padding1 - padding2;
-                        resizeWithLimit();
-                        imgWindow.style.top = posY + padding1 + scrolled.y + 'px';
+                        top = posY + padding1 + scrolled.y;
+                        if (top > wSize.h - imgWindow.offsetHeight - 1) top = wSize.h - imgWindow.offsetHeight - 1;
+                        imgWindow.style.top = top + 'px';
                     }
-                    let left = (wSize.w - imgWindow.offsetWidth) / 2;
+                    left = (wSize.w - imgWindow.offsetWidth) / 2;
                     let maxLeft = posX + padding1;
                     if (left > maxLeft) left = maxLeft;
                     else {
@@ -20223,16 +20258,16 @@ ImgOps | https://imgops.com/#b#`;
                     maxHeight = wSize.h - 56;
                     if (posX > wSize.w / 2) {
                         //左
-                        maxWidth = posX - padding1 - padding2;
-                        resizeWithLimit();
-                        imgWindow.style.left = posX - imgWindow.offsetWidth - padding1 + scrolled.x + 'px';
+                        left = posX - imgWindow.offsetWidth - padding1 + scrolled.x;
+                        if (left < 1) left = 1;
+                        imgWindow.style.left = left + 'px';
                     } else {
                         //右
-                        maxWidth = wSize.w - posX - padding1 - padding2;
-                        resizeWithLimit();
-                        imgWindow.style.left = posX + padding1 + scrolled.x + 'px';
+                        left = posX + padding1 + scrolled.x;
+                        if (left > wSize.w - imgWindow.offsetWidth - 1) left = wSize.w - imgWindow.offsetWidth - 1;
+                        imgWindow.style.left = left + 'px';
                     }
-                    let top = (wSize.h - imgWindow.offsetHeight) / 2;
+                    top = (wSize.h - imgWindow.offsetHeight) / 2;
                     let maxTop = posY + padding1;
                     if (top > maxTop) top = maxTop;
                     else {
@@ -20243,34 +20278,34 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
             fitToScreen:function(){
-                var imgWindow=this.imgWindow;
-                if(!prefs.imgWindow.fitToScreen || imgWindow.classList.contains("pv-pic-window-scroll"))return;
-                var wSize=getWindowSize();
+                let imgWindow = this.imgWindow;
+                if (!prefs.imgWindow.fitToScreen) return;
+                let wSize=getWindowSize();
                 //空隙
-                wSize.h -= 26;
-                wSize.w -= 26;
+                wSize.h -= 6;
+                wSize.w -= 6;
 
-                var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
-                var rectSize={
-                    h:parseFloat(imgWindowCS.height),
-                    w:parseFloat(imgWindowCS.width),
+                let imgWindowCS = unsafeWindow.getComputedStyle(imgWindow);
+                let rectSize = {
+                    h: parseFloat(imgWindowCS.height),
+                    w: parseFloat(imgWindowCS.width),
                 };
 
-                var size;
-                if(prefs.imgWindow.fitToScreenSmall || (rectSize.w - wSize.w>0 || rectSize.h - wSize.h>0)){//超出屏幕，那么缩小。
-                    if(rectSize.w/rectSize.h > wSize.w/wSize.h){
-                        size={
-                            w:wSize.w,
-                            h:wSize.w / (rectSize.w/rectSize.h),
+                let size, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
+                if (prefs.imgWindow.fitToScreenSmall || rectSize.w - wSize.w > 0 || rectSize.h - wSize.h > 0) {//超出屏幕，那么缩小。
+                    if (rectSize.w / rectSize.h > wSize.w / wSize.h) {
+                        size = {
+                            w: wSize.w,
+                            h: wSize.w / (rectSize.w / rectSize.h),
                         };
-                    }else{
-                        size={
-                            h:wSize.h,
-                            w:wSize.h * (rectSize.w/rectSize.h),
+                    } else if (!containsScroll) {
+                        size = {
+                            h: wSize.h,
+                            w: wSize.h * (rectSize.w / rectSize.h),
                         }
                     };
 
-                    this.zoom(this.getRotatedImgCliSize(size).w/this.imgNaturalSize.w);
+                    this.zoom(this.getRotatedImgCliSize(size).w / this.imgNaturalSize.w);
                 };
             },
             center:function(horizontal,vertical){
@@ -20524,11 +20559,11 @@ ImgOps | https://imgops.com/#b#`;
                         self.imgState.style.display = "";
                     }
                     if (afterImgSize.w < 100 || afterImgSize.h < 100) {
-                        self.preButton.style.left = "-28px";
-                        self.nextButton.style.right = "-28px";
+                        self.preButton.style.left = "-36px";
+                        self.nextButton.style.right = "-36px";
                     } else {
-                        self.preButton.style.left = "8px";
-                        self.nextButton.style.right = "8px";
+                        self.preButton.style.left = "0px";
+                        self.nextButton.style.right = "0px";
                     }
 
                     var afterimgRectSize=self.getRotatedImgRectSize( self.rotatedRadians, afterImgSize );
@@ -20769,6 +20804,9 @@ ImgOps | https://imgops.com/#b#`;
                 switch(tool){
                     case 'zoom':{
                         scale=2;
+                        if (this.img.naturalWidth) {
+                            setSearchState(this.img.naturalWidth + " x " + this.img.naturalHeight + " (" + parseInt(content * 100) + "%)" + (this.curIndex >=0 ? ` [${this.curIndex + 1}/${this.data.all.length}]` : ""), this.imgState);
+                        }
                     }break;
                     case 'rotate':{
                         scale=1;
@@ -21329,6 +21367,20 @@ ImgOps | https://imgops.com/#b#`;
 
         };
 
+        addWheelEvent(getBody(document), e => {
+            if (uniqueImgWin && !uniqueImgWin.removed) {
+                if (uniqueImgWin.isLongImg) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    uniqueImgWin.img.parentNode.scrollTop += e.deltaY;
+                } else if (uniqueImgWin.curIndex >= 0) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    uniqueImgWin.switchImage(e.deltaY > 0);
+                }
+            }
+        }, true);
+
         // 载入动画
         function LoadingAnimC(data, buttonType, waitImgLoad, openInTopWindow, initPos) {
             this.args = arrayFn.slice.call(arguments, 0);
@@ -21418,7 +21470,8 @@ ImgOps | https://imgops.com/#b#`;
                             xhr: this.data.xhr,
                             cb: function(imgSrc, imgSrcs, caption) {
                                 if (imgSrc) {
-                                    self.data.src=imgSrc;
+                                    self.data.src = imgSrc;
+                                    self.data.all = imgSrcs;
                                     if (caption) self.data.description = caption;
                                     self.loadImg(imgSrc, imgSrcs);
                                 } else {
@@ -22204,14 +22257,14 @@ ImgOps | https://imgops.com/#b#`;
                         iurl = q(html, doc, url);
                         if (Array.isArray(iurl)) {
                             iurls = iurl;
-                            iurl = iurls.shift();
+                            iurl = iurls[0];
                         }
                     } else {
                         var inodes = findNodes(q, doc);
                         inodes.forEach(function(node) {
                             iurls.push(findFile(node, url));
                         });
-                        iurl = iurls.shift();
+                        iurl = iurls[0];
                     }
 
                     if(typeof c == 'function') {
@@ -22381,7 +22434,7 @@ ImgOps | https://imgops.com/#b#`;
             if(!src && matchedRule.rules.length>0){// 通过高级规则获取.
                 // 排除
                 try{
-                    var newSrc=matchedRule.getImage(img,imgPA,imgPE);
+                    let newSrc=matchedRule.getImage(img,imgPA,imgPE);
                     if(newSrc && imgSrc!=newSrc) src=newSrc;
                 }catch(err){
                     throwErrorInfo(err);
