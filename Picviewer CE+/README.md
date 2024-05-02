@@ -97,8 +97,8 @@ You have the option to use a standalone userscript, which allows you to manage a
 
 *A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
-Include `mode = 1` to open gallery in view-more mode.<br/>
-Add `imgs = http://xxx/xxx.jpg` to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
+Include `mode=`*`1`* to open gallery in view-more mode.<br/>
+Add `imgs=`*`http://xxx/xxx.jpg`* to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
 For example: 
 ```url
 https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?mode=0&imgs=http://xxx/xxx[01-99].jpg
