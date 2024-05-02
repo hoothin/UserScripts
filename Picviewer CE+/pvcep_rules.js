@@ -17,7 +17,7 @@ Licenced under the MIT license.
  getImage(a, p): 指向圖片時的地址替換函數，a 為第一個父級A元素，p 為所有父級元素的陣列，詳情見下方例子
 }
 其他參數項按需添加即可。
-需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定站點 URL 之後方可使用
+需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定 url 之後方可使用
 xhr 為內頁圖片獲取屬性，配合 getImage 使用。
     1. 首先使用 getImage 或 xhr.url() 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁。
     2. 透過 xhr 獲取圖片。
@@ -41,7 +41,7 @@ or
   getImage(a, p): Replace the image URL when pointing to an image, 'a' refers to the first parent A element, and 'p' is an array of all parent elements, see the example below for details
 }
 Other parameter items can be added as needed.
-you need to pay attention to css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen in the specified site URL available after
+Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen should only be used after specifying the url.
 xhr is used to obtain the attributes of the pictures on the inner pages. It is used together with getImage. 
     1. First, use getImage or xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
     2. And get pictures through xhr.
