@@ -1,10 +1,10 @@
 # Picviewer CE+
 
-> Zoom images on all your favorite websites. Popup/scale/edit/rotate/batch save images or load pictures from next pages automatically. Hover your mouse over any image and click the icons on float bar.
+> Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
-Press CTRL+g to enter gallery quickly. Hold CTRL to view larger picture when mouse over images or links.
+Press CTRL+G to quickly enter the gallery. Hold CTRL to view a larger picture when hovering over images or links.
 
-More settings in "Picviewer CE+ config" to be customized, reviewing them is currently the best way to learn about what the script is capable of. try to seach more functions by yourself ! 
+There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
 
 + **Adjust:** Scale/rotate/batch save every picture
 
