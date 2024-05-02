@@ -28,7 +28,7 @@ If you are glad to assist with the translation, please [🌐edit this file](http
 Need more rules for peculiar sites? feel free to pull requests or open issues.
 
 
-## 🔧 Custom [rules example](pvcep_rules.js):
+## 🔧 Custom [Rules Example](pvcep_rules.js):
 **💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.**
 ``` js
 // Match image src(no matter which site) with /pics\.dmm\.co\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
