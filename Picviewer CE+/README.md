@@ -1,4 +1,6 @@
-# Picviewer CE+ - Popup/scale/rotate/batch save pictures and load pictures from next pages automatically. 
+# Picviewer CE+
+
+> Zoom images on all your favorite websites. Popup/scale/edit/rotate/batch save images or load pictures from next pages automatically. Hover your mouse over any image and click the icons on float bar.
 
 Press CTRL+g to enter gallery quickly. Hold CTRL to view larger picture when mouse over images or links.
 
