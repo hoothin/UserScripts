@@ -989,7 +989,7 @@
 {
   "resource_url": "http://wedata.net/items/86110",
   "data": {
-    "pageElement": "//section[@class='content']/*[not((.|preceding-sibling::div)[contains(@class, 'pagination')])]|id('wym_custom_archive')",
+    "pageElement": "(//section[@class='content']|//div[@class='fc content selector'])[last()]/*[not((.|preceding-sibling::div)[contains(@class, 'pagination')])]|id('wym_custom_archive')",
     "nextLink": "//li[contains(@class, 'current')][number()>0]/following-sibling::li[1]/a",
     "url": "^https://young-machine\\.com/",
     "exampleUrl": "https://young-machine.com/2022/08/06/354094/\r\nhttps://young-machine.com/latest-model/\r\nhttps://young-machine.com/2023/09/15/489213/"
@@ -998,7 +998,7 @@
   "created_by": "t_f_m'",
   "name": "WEBヤングマシン",
   "created_at": "2023-04-25T20:55:07+09:00",
-  "updated_at": "2023-09-28T18:34:32+09:00"
+  "updated_at": "2024-05-02T20:02:01+09:00"
 },
 {
   "data": {
@@ -5525,7 +5525,7 @@
 {
   "resource_url": "http://wedata.net/items/85630",
   "data": {
-    "pageElement": "//main//div[contains(@class, 'kanren')]/*\r\n|//div[@class='entry-content']/h2[1]/preceding-sibling::*[1]/following-sibling::*",
+    "pageElement": "//main//aside/div[contains(@class, 'kanren')]/*\r\n|//div[@class='entry-content']/h2[1]/preceding-sibling::*[1]/following-sibling::*",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://bushoojapan\\.com/",
     "exampleUrl": "https://bushoojapan.com/\r\nhttps://bushoojapan.com/bushoo/others/2022/01/05/87277"
@@ -5534,7 +5534,7 @@
   "created_by": "kenzou_ogawa",
   "name": "BUSHOO!JAPAN（武将ジャパン）",
   "created_at": "2021-03-29T13:14:01+09:00",
-  "updated_at": "2022-01-10T08:48:36+09:00"
+  "updated_at": "2024-05-02T20:14:59+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85627",
