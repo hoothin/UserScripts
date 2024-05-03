@@ -1,10 +1,6 @@
-# Picviewer CE+
+# 🏞️ Picviewer CE+
 
 > Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
-
-Press CTRL+G to quickly enter the gallery. Hold CTRL to view a larger picture when hovering over images or links.
-
-There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
 
 + **Adjust:** Scale/rotate/batch save every picture
 
@@ -19,9 +15,9 @@ There are additional settings available in the "Picviewer CE+ config" for furthe
 
 + View long image by scroll
 
-+ Change webp to png
+Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger picture when hovering over images or links.
 
-+ And so on ...
+There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
 
 If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
@@ -107,8 +103,8 @@ Just easily drag and drop your local images into the gallery to view them.
 
 <img src='https://v2fy.com/asset/063_picviewer_ce/72723103-d911ce00-3bba-11ea-9541-0be746977dbc.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/72767872-7eb35480-3c30-11ea-814d-ce4678c81089.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/73130353-c4598e00-4031-11ea-810e-9498677a40d1.gif' width=325>
 
-Thousands compatible sites for find larger or original images like
---
+## Thousands compatible sites for find larger or original images like
+
 deviantart.com
 google.com
 wikipedia.org
