@@ -19648,7 +19648,7 @@ ImgOps | https://imgops.com/#b#`;
                     position: absolute;\
                     background-color: #535353;\
                     padding: 0;\
-                    opacity: 0.7;\
+                    opacity: 0.5;\
                     display: none;\
                     cursor: default;\
                     -o-user-select: none;\
@@ -19670,7 +19670,7 @@ ImgOps | https://imgops.com/#b#`;
                     background: url("'+prefs.icons.close+'") no-repeat center bottom;\
                     height: 17px;\
                     width: 46px;\
-                    opacity: 0.7;\
+                    opacity: 0.5;\
                     border:none;\
                     padding:0;\
                     padding-top:2px;\
@@ -19708,7 +19708,7 @@ ImgOps | https://imgops.com/#b#`;
                     background: url("'+prefs.icons.maxBtn+'") no-repeat center bottom;\
                     height: 17px;\
                     width: 46px;\
-                    opacity: 0.7;\
+                    opacity: 0.5;\
                     border:none;\
                     border-right: 1px solid #868686;\
                     padding:0;\
