@@ -73,7 +73,7 @@
             return;
         }
     }
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|\/?$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|\/?$|#)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
     const firstRunPage = "https://search.hoothin.com/firstRun";
     let configPage = 'https://search.hoothin.com/config/';
@@ -278,7 +278,14 @@
                         loopStart: '开始循环，循环次数为<span title="#t#">#t#</span>',
                         loopEnd: '结束循环',
                         loopTimes: '循环次数，将遍历所有匹配元素并顺序执行',
-                        loadingCollection: '正在加载合集，请稍候……'
+                        loadingCollection: '正在加载合集，请稍候……',
+                        emuInputTips: '在指定页面元素（例如输入框）内输入搜索词',
+                        emuClickTips: '单击指定页面元素（例如按钮）',
+                        emuWaitTips: '等待一段时间后继续执行，当某个操作需要一段时间才能完成时很有用',
+                        emuCopyTips: '复制指定元素的文本到剪贴板',
+                        emuRecordTips: '录制接下来的点击和输入操作',
+                        emuLoopTips: '开始循环，接下来的操作将遍历所有找到的元素并且重复指定次数',
+                        emuStopTips: '结束操作并生成规则'
                     };
                     break;
                 case "zh-TW":
@@ -394,7 +401,14 @@
                         loopStart: '開始循環，循環次數為<span title="#t#">#t#</span>',
                         loopEnd: '結束循環',
                         loopTimes: '循環次數，將遍歷所有匹配元素並順序執行',
-                        loadingCollection: '正在載入合集，請稍候……'
+                        loadingCollection: '正在載入合集，請稍候……',
+                        emuInputTips: '在指定頁面元素（例如輸入框）內輸入搜尋字詞',
+                        emuClickTips: '點擊指定頁面元素（例如按鈕）',
+                        emuWaitTips: '等待一段時間後繼續執行，當某個操作需要一段時間才能完成時很有用',
+                        emuCopyTips: '複製指定元素的文字到剪貼簿',
+                        emuRecordTips: '錄製接下來的點擊和輸入操作',
+                        emuLoopTips: '開始循環，接下來的操作將遍歷所有找到的元素並且重複指定次數',
+                        emuStopTips: '結束操作並產生規則'
                     };
                     break;
                 case 'ja':
@@ -509,7 +523,14 @@
                         loopStart: 'ループを開始。ループ数は <span title="#t#">#t#</span> です',
                         loopEnd: 'ループの終了',
                         loopTimes: 'ループの数。一致するすべての要素が走査され、順番に実行されます',
-                        loadingCollection: 'コレクションを読み込み中...'
+                        loadingCollection: 'コレクションを読み込み中...',
+                        emuInputTips: '指定されたページ要素 (入力ボックスなど) に検索語を入力します',
+                        emuClickTips: '指定されたページ要素 (ボタンなど) をクリックします',
+                        emuWaitTips: '続行する前にしばらく待ってください。操作が完了するまでに時間がかかる場合に便利です',
+                        emuCopyTips: '指定された要素のテキストをクリップボードにコピーします',
+                        emuRecordTips: '次のクリックと入力操作を記録します',
+                        emuLoopTips: 'ループを開始します。次の操作は見つかったすべての要素を走査し、指定された回数だけ繰り返します',
+                        emuStopTips: '操作を終了してルールを生成'
                     };
                     break;
                 default:
@@ -617,7 +638,14 @@
                         loopStart: 'Start loop <span title="#t#">#t#</span> times',
                         loopEnd: 'Stop loop',
                         loopTimes: 'Number of loops, all matching elements will be traversed and executed sequentially',
-                        loadingCollection: 'Preparing collection for SearchJumper...'
+                        loadingCollection: 'Preparing collection for SearchJumper...',
+                        emuInputTips: 'Enter search terms in specified page elements (such as input boxes)',
+                        emuClickTips: 'Click on a specified page element (such as a button)',
+                        emuWaitTips: 'Wait for a while before continuing, useful when an operation takes a while to complete',
+                        emuCopyTips: 'Copy the text of the specified element to the clipboard',
+                        emuRecordTips: 'Record the next clicks and input operations',
+                        emuLoopTips: 'Start the loop, the next operation will traverse all found elements and repeat the specified number of times',
+                        emuStopTips: 'End the operation and generate rules'
                     };
                     break;
             }
@@ -14005,21 +14033,21 @@
                     <svg class="searchJumperFrame-closeBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close crawl</title>${closePath}</svg>
                     <div class="actionCon"></div>
                     <div class="searchJumperFrame-buttons">
-                        <button id="input" type="button">${i18n("inputAction")}</button>
-                        <button id="click" type="button">${i18n("clickAction")}</button>
-                        <button id="sleep" type="button">${i18n("sleepAction")}</button>
+                        <button id="input" type="button" title="${i18n("emuInputTips")}">${i18n("inputAction")}</button>
+                        <button id="click" type="button" title="${i18n("emuClickTips")}">${i18n("clickAction")}</button>
+                        <button id="sleep" type="button" title="${i18n("emuWaitTips")}">${i18n("sleepAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
-                        <button id="copy" type="button">${i18n("copyAction")}</button>
+                        <button id="copy" type="button" title="${i18n("emuCopyTips")}">${i18n("copyAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
-                        <button id="record" type="button">${i18n("recordAction")}</button>
+                        <button id="record" type="button" title="${i18n("emuRecordTips")}">${i18n("recordAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
-                        <button id="loop" type="button">${i18n("loopAction")}</button>
+                        <button id="loop" type="button" title="${i18n("emuLoopTips")}">${i18n("loopAction")}</button>
                     </div>
                     <div class="searchJumperFrame-buttons">
-                        <button id="submitCrawl" type="button">${i18n("submitCrawl")}</button>
+                        <button id="submitCrawl" type="button" title="${i18n("emuStopTips")}">${i18n("submitCrawl")}</button>
                     </div>
                 </div>
                 `);
