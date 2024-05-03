@@ -1721,10 +1721,11 @@
             if (!ele.offsetParent && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
                 return {h: 0, w: 0};
             }
-            let h = ele.scrollHeight;
+            let h = ele.scrollHeight, w;
             if (eleStyle.overflow === "hidden") {
                 h = ele.offsetHeight;
-            }
+                w = ele.offsetWidth;
+            } else w = parseInt(ele.offsetWidth || ele.scrollWidth);
             if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
                 h = ele.parentNode.scrollHeight;
             }
@@ -1754,7 +1755,7 @@
             if (h && minOffsetTop !== maxNum && minOffsetTop > 0) {
                 h -= minOffsetTop;
             }
-            return {h: h, w: parseInt(ele.offsetWidth || ele.scrollWidth)};
+            return {h: h, w: w};
         }
 
         checkTargetChildren(ele, curWin, articleNum, curHeight) {
@@ -1946,7 +1947,7 @@
                         let validSize = self.getValidSize(curNode, curWin);
                         let h = validSize.h;
                         let w = validSize.w;
-                        if (isNaN(h) || isNaN(w)) continue;
+                        if (isNaN(h) || isNaN(w) || !h || !w) continue;
                         isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop === -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop === curNode.offsetTop);
                         if (isHori && h <= 50) continue;
                         /*if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
