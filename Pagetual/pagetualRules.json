@@ -9846,7 +9846,6 @@
 },
 {
     "name": "YTS Movies",
-    "type": 0,
     "url": "^https://yts\\.mx/browse-movies",
     "pageElement": "//section/div[@class=\"row\"]/div",
     "nextLink": "//li[./a[@class=\"current\"]]/following-sibling::li[1]/a",
@@ -9855,11 +9854,16 @@
 },
 {
     "name": "Mobilism",
-    "type": 0,
     "url": "^https://forum\\.mobilism\\.org/",
     "pageElement": "id('page-body')//section|id('page-body')/main/table[last()]/tbody/tr|//div[@class='row-fluid blue-bar']",
     "nextLink": "//a[i/@class='icon-chevron-right']",
     "css": "table.phone .stats-color,table.phone .last-color,table.phone td.center { display: none; }"
+},
+{
+    "name": "Search | Mobilism",
+    "url": "^https?://forum\\.mobilism\\.org/",
+    "pageElement": "main > div.row-fluid > div.well.well-small",
+    "nextLink": "//a[.//i[@class='icon-chevron-right']]"
 },
 {
     "name": "不死鸟",
