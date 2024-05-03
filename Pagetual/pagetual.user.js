@@ -2348,6 +2348,7 @@
                 "a.pageright",
                 ".page-numbers.current+a",
                 "a.page-numbers.next",
+                "body [class*=pagination] li.active+span+li>a",
                 "body [class*=pagination] li.active+li>a",
                 "body [class^=pag] .current+a",
                 ".page_current+a",
