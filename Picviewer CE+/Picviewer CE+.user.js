@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.2.1
+// @version              2024.5.3.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1369762/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1370237/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1333524/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -11812,7 +11812,7 @@ ImgOps | https://imgops.com/#b#`;
          3: i18n("urlAndText")
         */
         type = parseInt(type || 0);
-        if (name) name = name.split("\n")[0];
+        if (name) name = name.split("\n")[0].replace(/.*?\/\/[^\/]+\//, "").replace(/\?.*/, "");
         if (!url.replace) url = "";
         url = url.replace(/.*?\/\/[^\/]+\//, "");
         let nameFromUrl = "";
@@ -11823,7 +11823,7 @@ ImgOps | https://imgops.com/#b#`;
             ext = url.match(/(\.\w{2,5})(\?|@|$)/);
             if (ext) {
                 ext = ext[1];
-                nameFromUrl = url.replace(/.*\/([^\/]+?)\.\w{2,5}(\?|@|$).*/, "$1");
+                nameFromUrl = url.replace(/.*\/([^\/\?]+?)\.\w{2,5}(\?|@|$).*/, "$1");
                 if (/\=&/.test(nameFromUrl)) {
                     nameFromUrl = "";
                 } else {
@@ -11853,7 +11853,7 @@ ImgOps | https://imgops.com/#b#`;
                 name = (nameFromUrl || name || "image").substr(-80);
                 break;
         }
-        return name.replace(/.*\/([^\/]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
+        return name.replace(/.*\/([^\/\?]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
     }
     function canonicalUri(src) {
         if (src.charAt(0) == "#") return location.href + src;
@@ -15512,10 +15512,12 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.gallery.transition){
                     this.loadImgTimer=setTimeout(function(){//快速跳转的时候不要尝试读取图片。
                         self.loadImg(ele);
+                        self.selectedIntoView(noTransition);
                     },200);
                 }else{
                     setTimeout(function(){
                         self.loadImg(ele);
+                        self.selectedIntoView(noTransition);
                     },1);
                 }
 
@@ -16067,6 +16069,7 @@ ImgOps | https://imgops.com/#b#`;
                                     createSpanMark(result);
                                     if (imgSrcs && imgSrcs.length) {
                                         imgSrcs.forEach(src => {
+                                            if (src == imgSrc) return;
                                             let img = document.createElement('img');
                                             img.src = src;
                                             let result = findPic(img);
@@ -16602,6 +16605,7 @@ ImgOps | https://imgops.com/#b#`;
                                             });
                                             if (imgSrcs && imgSrcs.length) {
                                                 imgSrcs.forEach(src => {
+                                                    if (src == imgSrc) return;
                                                     let img = document.createElement('img');
                                                     img.src = src;
                                                     imgReady(img,{
@@ -17340,11 +17344,10 @@ ImgOps | https://imgops.com/#b#`;
                     overflow-y: auto;\
                     white-space: nowrap;\
                     -ms-overflow-style: none;\
-                    scrollbar-width: none;\
                     }\
                     span.pv-gallery-head::-webkit-scrollbar {\
                     width: 0 !important;\
-                    height: 0 !important;\
+                    height: 15px !important;\
                     }\
                     .pv-gallery-head > span{\
                     vertical-align:middle;\
@@ -17374,7 +17377,7 @@ ImgOps | https://imgops.com/#b#`;
                     overflow: hidden;\
                     text-overflow: ellipsis;\
                     white-space: nowrap;\
-                    max-width: 25em;\
+                    max-width: 10em;\
                     display: inherit;\
                     }\
                     .pv-gallery-range-box{\
@@ -18287,6 +18290,8 @@ ImgOps | https://imgops.com/#b#`;
                     max-height: 100% !important;\
                     height: auto !important;\
                     width: auto !important;\
+                    min-width: 10%;\
+                    min-height: 10%;\
                     }\
                     .pv-gallery-vertical-align-helper{\
                     display:inline-block;\
@@ -18745,19 +18750,25 @@ ImgOps | https://imgops.com/#b#`;
                 var level;
                 var self=this;
                 if(this.zoomOut){//缩小
-                    MagnifierC.zoomRangeR.find(function(value){
+                    let found = MagnifierC.zoomRangeR.find(function(value){
                         if(value < self.zoomLevel){
                             level=value;
                             return true;
                         }
                     })
+                    if (!found) {
+                        level = self.zoomLevel * 0.9;
+                    }
                 }else{
-                    MagnifierC.zoomRange.find(function(value){
+                    let found = MagnifierC.zoomRange.find(function(value){
                         if(value > self.zoomLevel){
                             level=value;
                             return true;
                         };
                     });
+                    if (!found) {
+                        level = self.zoomLevel * 1.1;
+                    }
                 }
                 return level;
             },
@@ -18867,10 +18878,9 @@ ImgOps | https://imgops.com/#b#`;
             this.data = data;
             this.initPos = initPos || false;
             this.preview = !!preview;
-
             this.init();
-            if(data){
-                this.img.src = location.protocol == "https"?data.src.replace(/^http:/,"https:"):data.src;
+            if (data) {
+                this.img.src = location.protocol == "https" ? data.src.replace(/^http:/,"https:") : data.src;
             }
         };
 
@@ -19449,7 +19459,7 @@ ImgOps | https://imgops.com/#b#`;
                     imgData.xhr = null;
                     imgData.src = this.data.all[curIndex];
                     let openType = this.actual ? "actual" : "current";
-                    if (uniqueImgWin = this) {
+                    if (uniqueImgWin && uniqueImgWin == this) {
                         uniqueImgWin = null;
                         openType = "popup";
                     }
@@ -19780,8 +19790,10 @@ ImgOps | https://imgops.com/#b#`;
                     user-select: none;\
                     -webkit-box-sizing: content-box;\
                     box-sizing: content-box;\
-                    border-radius: 1px 1px 0 0;\
+                    border-radius: 0 0 8px 0;\
                     background: rgb(0 0 0 / 80%);\
+                    max-width: 100%;\
+                    overflow: hidden;\
                     }\
                     .pv-pic-search-state>span {\
                     pointer-events: none;\
@@ -19814,6 +19826,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-window-container_focus>.pv-pic-search-state {\
                     top: -20px;\
+                    border-radius: 1px 1px 0 0;\
                     }\
                     .pv-pic-window-scrollSign {\
                     display: none;\
@@ -20648,19 +20661,25 @@ ImgOps | https://imgops.com/#b#`;
                 var level;
                 var self=this;
                 if(this.zoomOut){//缩小
-                    ImgWindowC.zoomRangeR.find(function(value){
+                    let found = ImgWindowC.zoomRangeR.find(function(value){
                         if(value < self.zoomLevel){
                             level=value;
                             return true;
                         }
-                    })
+                    });
+                    if (!found) {
+                        level = self.zoomLevel * 0.9;
+                    }
                 }else{
-                    ImgWindowC.zoomRange.find(function(value){
+                    let found = ImgWindowC.zoomRange.find(function(value){
                         if(value > self.zoomLevel){
                             level=value;
                             return true;
                         };
                     });
+                    if (!found) {
+                        level = self.zoomLevel * 1.1;
+                    }
                 }
                 return level;
             },
@@ -22223,6 +22242,9 @@ ImgOps | https://imgops.com/#b#`;
                     waitImgLoad = true;
                 };
                 new LoadingAnimC(this.data, buttonType, waitImgLoad, openInTopWindow);
+                if (e.type == "click") {
+                    floatBar.hide();
+                }
             },
             update:function(img,src){
                 if(this.data.img==img && this.data.imgSrc!=src){
@@ -22350,6 +22372,11 @@ ImgOps | https://imgops.com/#b#`;
                 }
 
                 handleError = opt.onerror || function() {};
+                let postParams = opt.url.match(/#p{(.*)}$/);
+                if (!opt.post && postParams) {
+                    opt.post = postParams[1];
+                    opt.url = opt.url.replace(/#p{.*/, "");
+                }
 
                 parsePage(opt.url, opt.xhr.q, opt.xhr.c, opt.post, opt.cb);
             };
@@ -22645,15 +22672,26 @@ ImgOps | https://imgops.com/#b#`;
                 if(newSrc && newSrc.length==0)newSrc=null;
                 return newSrc;
             },
-            getImage:function(img, a, p){
+            getImage:function(img, a, p, target){
                 var newSrc,rule,stopXhr = false;
                 var base64Img=/^data:/i.test(img.src);
                 if(this._xhr && this._xhr.url){
-                    newSrc = this._xhr.url.call(img, a, p);
-                    if(newSrc){
-                        this.xhr = this._xhr || null;
+                    if (typeof this._xhr.url === 'string') {
+                        try {
+                            let allEles = Array.from(document.querySelectorAll(this._xhr.url));
+                            if (a && allEles.includes(a)) {
+                                newSrc = a.href;
+                            }
+                        } catch(e) {
+                            debug(e);
+                        }
+                    } else {
+                        newSrc = this._xhr.url.call(target || img, a, p);
+                    }
+                    if (newSrc) {
+                        this.xhr = this._xhr;
                         return newSrc;
-                    }else{
+                    } else {
                         this.xhr = null;
                         stopXhr = true;
                     }
@@ -22664,7 +22702,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(rule.src && !rule.src.test(img.src))continue;
                     if(rule.exclude && rule.exclude.test(img.src))continue;
                     if(rule.getImage){
-                        newSrc = rule.getImage.call(img, a, p, rule);
+                        newSrc = rule.getImage.call(target || img, a, p, rule);
                         this.xhr = (!stopXhr && newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
                     }else newSrc = null;
                     if(!newSrc){
@@ -23220,7 +23258,7 @@ ImgOps | https://imgops.com/#b#`;
                                         imgPE.push(imgPN);
                                     }
                                 }
-                                var newSrc = matchedRule.getImage(img, imgPA, imgPE);
+                                var newSrc = matchedRule.getImage(img, imgPA, imgPE, target);
                                 if (newSrc && imgSrc != newSrc) {
                                     let srcs, description;
                                     src = newSrc;
@@ -23387,15 +23425,16 @@ ImgOps | https://imgops.com/#b#`;
         function globalMouseoverHandler(e) {
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
+            let canPreview = checkPreview(e);
             if (e.type == "mousemove") {
                 if ((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)) {
                     uniqueImgWin.followPos(e.clientX, e.clientY);
-                    if (!checkPreview(e)) {
+                    if (!canPreview) {
                         uniqueImgWin.remove();
                     }
                     return;
                 } else {
-                    if (!checkPreview(e)) return;
+                    if (!canPreview) return;
                     let target = e.target;
                     if (target.nodeName.toUpperCase() == "PICTURE"){
                         target = target.querySelector("img") || target;
@@ -23407,7 +23446,7 @@ ImgOps | https://imgops.com/#b#`;
             checkFloatBarTimer = setTimeout(function() {
                 if (!e || !e.target || !e.target.parentNode) return;
                 if (gallery && gallery.shown) return;
-                checkFloatBar(e.target, e.type, checkPreview(e), e.clientX, e.clientY, e.altKey);
+                checkFloatBar(e.target, e.type, canPreview, e.clientX, e.clientY, e.altKey);
             }, 50);
         }
 
@@ -23773,7 +23812,8 @@ ImgOps | https://imgops.com/#b#`;
                 "#pv-prefs input.color { width: 120px; }",
                 "#pv-prefs input.order { width: 250px; }",
                 "#pv-prefs .config_header>a { border-bottom: solid 2px; }",
-                "#pv-prefs .config_header>a:hover { color: #9f9f9f; }",
+                "#pv-prefs a:hover { color: #9f9f9f; }",
+                "#pv-prefs a { color: black; }",
                 "#pv-prefs .section_header_holder { padding-right: 10px; }",
                 "#pv-prefs textarea { width: 100%; }",
                 "#pv-prefs .nav-tabs { white-space: nowrap; width: fit-content; max-width: 100%; margin: 20 auto; display: flex; overflow-x: auto; overflow-y: visible; }",
@@ -24676,7 +24716,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
             } catch(e) {}
 
-            debug = prefs.debug ? console.debug.bind(console) : function() {};
+            debug = prefs.debug ? console.log.bind(console) : function() {};
         }
 
     };
