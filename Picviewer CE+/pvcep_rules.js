@@ -1426,5 +1426,11 @@ var siteInfo = [
          return r && r[1];
      }
  }
+},
+{
+ name: "sspai",
+ url: /^https?:\/\/sspai\.com\//,
+ r: /\?imageMogr.*/,
+ s: ""
 }
 ];
