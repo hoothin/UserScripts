@@ -17347,7 +17347,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     span.pv-gallery-head::-webkit-scrollbar {\
                     width: 0 !important;\
-                    height: 15px !important;\
+                    height: 0 !important;\
                     }\
                     .pv-gallery-head > span{\
                     vertical-align:middle;\
@@ -19072,7 +19072,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 };
                 this.curIndex = -1;
-                if (this.data.all && this.data.all.length) {
+                if (this.data && this.data.all && this.data.all.length) {
                     for (let i = 0; i < this.data.all.length; i++) {
                         if (this.data.all[i] == this.data.src) {
                             this.curIndex = i;
@@ -19441,7 +19441,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.nextButton.style.display = "none";
             },
             switchImage:async function(fw){
-                if (this.data.all && this.data.all.length) {
+                if (this.data && this.data.all && this.data.all.length) {
                     let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
                     this.remove();
                     let imgData = this.data;
