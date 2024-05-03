@@ -656,9 +656,11 @@ var siteInfo = [
      if (newsrc != this.src) {
         if (a && a.role == 'link') {
             let match = a.href.match(/\/([^\/]+)\/status\/([^\/]+)\/photo\/(\d+)/);
-            let time = p[14] && p[14].querySelector('time');
-            if (time) {
-                this.alt = match[1] + " - " + time.innerText + "_" + match[3];
+            if (match) {
+                let time = p[14] && p[14].querySelector('time');
+                if (time) {
+                    this.alt = match[1] + " - " + time.innerText + "_" + match[3];
+                }
             }
         }
         return newsrc+"&name=orig";
@@ -1395,6 +1397,34 @@ var siteInfo = [
     if (this.children[0] && this.children[0].nodeName === "IMG") {
         return this.children[0].src.replace(/(thumbnail|cover)_x\d/, "cover_x3").replace(/x\d$/, "x3");
     }
+ }
+},
+{
+ name: "bunkr",
+ url: /bunkr\.si/,
+ r: /\/thumbs(\/.*)png/,
+ s: "$1jpg"
+},
+{
+ name:"vk",
+ url:/vk\.com/,
+ xhr:{
+     url: function() {
+         if (this.classList.contains("photos_row")) {
+             return this.firstElementChild && this.firstElementChild.href;
+         }
+     },
+     q: function(html, doc) {
+         let r = doc.querySelector('meta[name="og:image"]');
+         if (!r) return;
+         r = r.getAttribute("value");
+         if (!r) return;
+         r = r.match(/\/([\w\-]+)\.(jpg|png)/);
+         if (!r) return;
+         r = r[1];
+         r = html.match(new RegExp(`"z_src":"([^"]*?${r}[^"]*?)","z_"`));
+         return r && r[1];
+     }
  }
 }
 ];
