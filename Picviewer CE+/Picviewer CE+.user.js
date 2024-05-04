@@ -12100,7 +12100,7 @@ ImgOps | https://imgops.com/#b#`;
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
                 backgroundColor: 'rgba(20,20,20,0.75)',
                 sidebarToggle: true, // 是否显示隐藏按钮
-                transition:false,//大图片区的动画。
+                transition:true,//大图片区的动画。
                 preload:true,//对附近的图片进行预读。
                 max:5,//最多预读多少张（前后各多少张）
 
@@ -14943,7 +14943,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 });
                 imgs.forEach(imgSrc => {
-                    if (imgSrc.indexOf("$") === 0) {
+                    if (imgSrc.indexOf("$") === 0 || imgSrc.indexOf("￥") === 0) {
                         self.addPageImages(imgSrc.slice(1));
                         return;
                     }
