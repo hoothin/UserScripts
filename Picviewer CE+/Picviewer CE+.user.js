@@ -16699,7 +16699,7 @@ ImgOps | https://imgops.com/#b#`;
                                 },0);
                             }
                             if(!preloadContainer)preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
-                            preloadContainer.appendChild(img);
+                            preloadContainer&&preloadContainer.appendChild(img);
                         }
                         if(prefs.gallery.downloadGap > 0){
                             self.loadingImgs=self.loadingImgs.concat(imgs);
@@ -16709,6 +16709,7 @@ ImgOps | https://imgops.com/#b#`;
                                     if(!img){
                                         clearInterval(self.loadIntv);
                                         self.loadIntv=null;
+                                        self.changeSizeInputReset();
                                     }else loadImg(img);
                                 },prefs.gallery.downloadGap);
                             }
