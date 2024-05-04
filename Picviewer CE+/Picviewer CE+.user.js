@@ -17578,6 +17578,7 @@ ImgOps | https://imgops.com/#b#`;
                     max-width:50px;\
                     height:20px;\
                     background: white;\
+                    color: black;\
                     box-sizing: border-box;\
                     display: initial;\
                     margin: 0 5px;\
