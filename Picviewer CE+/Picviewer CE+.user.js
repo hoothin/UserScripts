@@ -14225,6 +14225,7 @@ ImgOps | https://imgops.com/#b#`;
                                             self._appendThumbSpans([result]);
                                         }
                                         self.loadThumb();
+                                        self.changeSizeInputReset();
                                     }
                                 }, false);
                                 fileInput.click();
@@ -14963,6 +14964,7 @@ ImgOps | https://imgops.com/#b#`;
                     self._appendThumbSpans([result]);
                 });
                 self.loadThumb();
+                self.changeSizeInputReset();
             },
             rotateBigImg:function(){
                 if (this.img) this.img.style[support.cssTransform] = 'rotate(' + (this.galleryRotate || 0) + 'deg)';
