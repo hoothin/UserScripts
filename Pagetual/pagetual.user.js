@@ -6717,7 +6717,7 @@
            display: block!important;
          }
          .pagetual_pageBar a:hover>span.prevScreen {
-           margin-top: -${rulesData.opacity == 1 ? 31 : 30}px!important;
+           margin-top: -30px!important;
            pointer-events: all;
          }
          .pagetual_pageBar span.refreshRing {
