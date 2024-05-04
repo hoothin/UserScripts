@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.82
+// @version      1.7.83
 // @description  Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  万能聚合搜索，一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -73,7 +73,7 @@
             return;
         }
     }
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|\/?$|#)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/(issue|discussions)|\/?$|#|\?)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
     const firstRunPage = "https://search.hoothin.com/firstRun";
     let configPage = 'https://search.hoothin.com/config/';
@@ -188,7 +188,7 @@
                         siteAdd: '添加',
                         siteType: '分类',
                         siteExist: '已存在相同规则，是否添加为克隆项？',
-                        siteAddOver: '站点添加成功，刷新后生效',
+                        siteAddOver: '站点添加成功',
                         multiline: '是否以换行符分隔多行搜索？',
                         multilineTooMuch: '行数超过10行，是否继续搜索？',
                         inputPlaceholder: '筛选引擎',
@@ -311,7 +311,7 @@
                         siteAdd: '添加',
                         siteType: '分類',
                         siteExist: '已存在相同規則，是否添加為克隆項？',
-                        siteAddOver: '站點添加成功，刷新後生效',
+                        siteAddOver: '站點添加成功',
                         multiline: '是否以換行符分隔多行搜索？',
                         multilineTooMuch: '行數超過10行，是否繼續搜索？',
                         inputPlaceholder: '篩選引擎',
@@ -981,12 +981,13 @@
             if (_searchData) searchData = _searchData;
             if (!webDAV) return callback && callback();
             if (!override) {
-                let lastModified = await webDAV.read("lastModified");
-                if (lastModified) {
-                    lastModified = parseFloat(lastModified);
+                let _lastModified = await webDAV.read("lastModified");
+                if (_lastModified) {
+                    _lastModified = parseFloat(_lastModified);
                 }
-                if (lastModified && (!searchData.lastModified || lastModified > searchData.lastModified)) {
-                    searchData.lastModified = lastModified;
+                if (_lastModified && (!searchData.lastModified || _lastModified > searchData.lastModified)) {
+                    searchData.lastModified = _lastModified;
+                    lastModified = searchData.lastModified;
                     let sitesConfig = await webDAV.read("sitesConfig.json");
                     if (sitesConfig) {
                         try {
@@ -1235,7 +1236,7 @@
             setTimeout( checkReady, 100 );
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, disableState = false, cacheKeywords, cacheFilter, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, sortSiteNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType, allPageNewMode = false;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, disableState = false, cacheKeywords, cacheFilter, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, sortSiteNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType, allPageNewMode = false, lastModified = 0;
         const logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${_GM_info.script.name}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         const logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         const noImgBase64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNDI5LjAxMzMzMyA2NDBBMzIgMzIgMCAwIDEgMzg0IDU5NC45ODY2NjdsMzcuNzYtMzcuNzYtMjIuODI2NjY3LTIyLjYxMzMzNC0xMzUuNjggMTM1LjY4IDkwLjQ1MzMzNCA5MC40NTMzMzQgMTM1LjY4LTEzNS42OC0yMi42MTMzMzQtMjIuNjEzMzM0ek01MzQuNjEzMzMzIDM5OC45MzMzMzNsMjIuNjEzMzM0IDIyLjYxMzMzNEw1OTQuOTg2NjY3IDM4NEEzMiAzMiAwIDAgMSA2NDAgNDI5LjAxMzMzM2wtMzcuNzYgMzcuNzYgMjIuNjEzMzMzIDIyLjYxMzMzNCAxMzUuNjgtMTM1LjY4LTkwLjQ1MzMzMy05MC40NTMzMzR6IiBmaWxsPSIjNUU1QzVDIj48L3BhdGg+PHBhdGggZD0iTTUxMiAyMS4zMzMzMzNhNDkwLjY2NjY2NyA0OTAuNjY2NjY3IDAgMSAwIDQ5MC42NjY2NjcgNDkwLjY2NjY2N0E0OTAuNjY2NjY3IDQ5MC42NjY2NjcgMCAwIDAgNTEyIDIxLjMzMzMzM3ogbTMxNi44IDM1NC45ODY2NjdsLTE4MS4xMiAxODEuMTJhMzIgMzIgMCAwIDEtNDUuMjI2NjY3IDBMNTU3LjIyNjY2NyA1MTIgNTEyIDU1Ny4yMjY2NjdsNDUuMjI2NjY3IDQ1LjIyNjY2NmEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N2wtMTgxLjEyIDE4MS4xMmEzMiAzMiAwIDAgMS00NS4yMjY2NjcgMGwtMTM1LjY4LTEzNS42OGEzMiAzMiAwIDAgMSAwLTQ1LjIyNjY2N2wxODEuMTItMTgxLjEyYTMyIDMyIDAgMCAxIDQ1LjIyNjY2NyAwTDQ2Ni43NzMzMzMgNTEyIDUxMiA0NjYuNzczMzMzbC00NS4yMjY2NjctNDUuMjI2NjY2YTMyIDMyIDAgMCAxIDAtNDUuMjI2NjY3bDE4MS4xMi0xODEuMTJhMzIgMzIgMCAwIDEgNDUuMjI2NjY3IDBsMTM1LjY4IDEzNS42OGEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N3oiIGZpbGw9IiM1RTVDNUMiPjwvcGF0aD4KPC9zdmc+";
@@ -3274,7 +3275,7 @@
                         target.appendChild(tags);
                     }
                     target.initedTag = true;
-                })
+                });
 
                 let timeInAll = document.createElement("span");
                 timeInAll.className = "timeInAll";
@@ -5820,13 +5821,15 @@
                 if (disabled) {
                     shadow = this.shadowContainer;
                 } else {
-                    if (this.shadowContainer.shadowRoot) {
+                    if (this.shadowRoot) {
                         shadow = this.shadowRoot;
                     } else {
-                        let shadowRoot = this.shadowContainer.attachShadow({ mode: "open" });
+                        this.shadowContainer.setAttribute('contenteditable', 'true');
+                        let shadowRoot = this.shadowContainer.attachShadow({ mode: "closed" });
                         shadow = document.createElement("div");
                         shadow.id = "search-jumper-root";
                         shadow.style.display = "none";
+                        shadow.setAttribute('contenteditable', 'false');
                         let hideShadowStyle = document.createElement("style");
                         hideShadowStyle.innerHTML = createHTML("#search-jumper-root{display: block!important;}");
                         shadow.appendChild(hideShadowStyle);
@@ -5859,6 +5862,7 @@
                                     mainStyleEle = _GM_addStyle(cssText);
                                     this.shadowContainer.parentNode.removeChild(this.shadowContainer);
                                     this.shadowContainer = document.createElement("div");
+                                    this.shadowContainer.setAttribute('contenteditable', 'false');
                                     document.documentElement.appendChild(this.shadowContainer);
                                     this.appendBar();
                                 }
@@ -6181,6 +6185,7 @@
                         inPageRule[this.inPageRuleKey || location.href.replace(/([&\?]_i=|#).*/, "")] = this.lockWords;
                         searchData.prefConfig.inPageRule = inPageRule;
                         searchData.lastModified = new Date().getTime();
+                        lastModified = searchData.lastModified;
                         storage.setItem("searchData", searchData);
                         _GM_notification(i18n("save completed"));
                     });
@@ -6685,6 +6690,22 @@
                 }
             }
 
+            async refreshEngines() {
+                lastModified = searchData.lastModified;
+                if (!searchData) return;
+                this.removeBar();
+                if (searchTypes && searchTypes.length) {
+                    searchTypes.forEach(type => {
+                        type.parentNode.removeChild(type);
+                    });
+                }
+                for (let siteConfig of searchData.sitesConfig) {
+                    await this.createType(siteConfig);
+                }
+                this.initHistorySites();
+                this.initSort();
+            }
+
             waitForHide(delay) {
                 let self = this;
                 if (this.bar.classList.contains("grabbing")) return;
@@ -6934,7 +6955,7 @@
                         });
                         break;
                     case "bing":
-                        requestSuggest("http://api.bing.com/qsonhs.aspx?type=cb&q=%s".replace("%s", searchWords), res => {
+                        requestSuggest("http://api.bing.com/qsonhs.aspx?type=json&q=%s".replace("%s", searchWords), res => {
                             if (res) {
                                 res = JSON.parse(res).AS.Results;
                                 for (let i in res) {
@@ -12581,15 +12602,8 @@
                 });
 
                 loadConfig();
-                let lastModified = searchData.lastModified;
-                document.addEventListener('visibilitychange', async e => {
-                    if (!document.hidden) {
-                        searchData = await storage.getItem("searchData");
-                        if (searchData.lastModified && lastModified != searchData.lastModified) {
-                            lastModified = searchData.lastModified;
-                            loadConfig();
-                        }
-                    }
+                document.addEventListener('dataChanged', e => {
+                    loadConfig();
                 });
 
                 let sendVerifyResult = (url, name, status, finalUrl) => {
@@ -12794,8 +12808,8 @@
                                     searchData.sitesConfig = configData;
                                     searchData.lastModified = new Date().getTime();
                                     storage.setItem("searchData", searchData);
-                                    _GM_notification('Over!');
-                                    window.location.reload();
+                                    _GM_notification(i18n("siteAddOver"));
+                                    searchBar.refreshEngines();
                                 }, true);
                             }
                             break;
@@ -13114,8 +13128,8 @@
                         if (canImport) {
                             searchData.lastModified = new Date().getTime();
                             storage.setItem("searchData", searchData);
-                            _GM_notification('Over!');
-                            window.location.reload();
+                            _GM_notification(i18n("siteAddOver"));
+                            searchBar.refreshEngines();
                             this.close();
                         }
                     });
@@ -14246,6 +14260,7 @@
                             version: _GM_info.script.version || 0,
                             command: 'loadConfig'
                         }, '*');
+                        searchBar.refreshEngines();
                     });
                 });
 
@@ -14916,6 +14931,7 @@
             });
             if (_searchData) {
                 searchData = _searchData;
+                lastModified = searchData.lastModified;
             }
             if (!searchData.lastModified) {
                 searchData.sitesConfig = sitesConfig;
@@ -14997,6 +15013,9 @@
                 if (lang === "zh-CN") {
                     searchData.prefConfig.suggestType = "baidu";
                 } else searchData.prefConfig.suggestType = "google";
+            }
+            if (typeof searchData.prefConfig.syncBuild === "undefined") {
+                searchData.prefConfig.syncBuild = true;
             }
             if (searchData.prefConfig.minSizeMode) {
                 searchData.prefConfig.disableAutoOpen = false;
@@ -15142,7 +15161,14 @@
                 }, parseInt(500 + Math.random() * 500));
                 return;
             }
-            init(() => {
+            init(async () => {
+                if (isInConfigPage || searchData.prefConfig.syncBuild) {
+                    searchData = await storage.getItem("searchData");
+                    if (searchBar && searchData.lastModified && lastModified != searchData.lastModified) {
+                        searchBar.refreshEngines();
+                        document.dispatchEvent(new Event('dataChanged'));
+                    }
+                }
                 let oldGlobalInPageWords = globalInPageWords || '';
                 storage.getItem("globalInPageWords", data => {
                     globalInPageWords = (data || '');
