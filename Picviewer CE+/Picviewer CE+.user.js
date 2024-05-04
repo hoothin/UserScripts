@@ -23853,6 +23853,7 @@ ImgOps | https://imgops.com/#b#`;
                 minWidth: "350px",
                 width: ((visualLength((i18n("floatBar") + i18n("magnifier") + i18n("gallery") + i18n("imgWindow") + i18n("others")),"14px","arial,tahoma,myriad pro,sans-serif") + 250) || 480) + 'px',
                 zIndex:'2147483648',
+                margin: '1px'
             },
             css: [
                 "#pv-prefs input[type='text'] { width: 50px; } ",
