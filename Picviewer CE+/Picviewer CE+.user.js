@@ -19851,7 +19851,7 @@ ImgOps | https://imgops.com/#b#`;
                     user-select: none;\
                     -webkit-box-sizing: content-box;\
                     box-sizing: content-box;\
-                    border-radius: 3px;\
+                    border-radius: 1px;\
                     background: rgb(0 0 0 / 80%);\
                     max-width: 100%;\
                     overflow: hidden;\
