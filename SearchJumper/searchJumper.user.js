@@ -7867,7 +7867,13 @@
                             let hasWordParam = wordParamReg.test(data.url);
                             let checkKw = hasWordParam ? keyWords : href;
                             if (checkKw && data.kwFilter) {
-                                if (new RegExp(data.kwFilter, "i").test(checkKw)) {
+                                let kwRe, fullMatch = data.kwFilter.match(/^\/(.*)\/(\w*)$/);
+                                if (fullMatch) {
+                                    kwRe = new RegExp(fullMatch[1], fullMatch[2]);
+                                } else {
+                                    kwRe = new RegExp(data.kwFilter, "i");
+                                }
+                                if (kwRe.test(checkKw)) {
                                     se.style.display = '';
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
@@ -8140,7 +8146,13 @@
                             let data = sites[i];
 
                             if (data && localKeywords && data.kwFilter) {
-                                if (new RegExp(data.kwFilter, "i").test(localKeywords)) {
+                                let kwRe, fullMatch = data.kwFilter.match(/^\/(.*)\/(\w*)$/);
+                                if (fullMatch) {
+                                    kwRe = new RegExp(fullMatch[1], fullMatch[2]);
+                                } else {
+                                    kwRe = new RegExp(data.kwFilter, "i");
+                                }
+                                if (kwRe.test(localKeywords)) {
                                     se.style.display = '';
                                 } else {
                                     se.style.display = 'none';
@@ -8590,7 +8602,13 @@
                     ele.classList.add("notmatch");
                 } else if (!isBookmark && (!currentSite || data.hideNotMatch) && window.top == window.self) {
                     if (urlMatch) {
-                        if (new RegExp(urlMatch, "i").test(location.href)) {
+                        let urlRe, fullMatch = urlMatch.match(/^\/(.*)\/(\w*)$/);
+                        if (fullMatch) {
+                            urlRe = new RegExp(fullMatch[1], fullMatch[2]);
+                        } else {
+                            urlRe = new RegExp(urlMatch, "i");
+                        }
+                        if (urlRe.test(location.href)) {
                             ele.dataset.current = true;
                         }
                     } else if (!pointer && location.hostname && data.url.indexOf(location.hostname) != -1) {
