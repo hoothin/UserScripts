@@ -45,7 +45,7 @@
 // @homepage     https://github.com/hoothin/SearchJumper
 // @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
 // @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.meta.js
-// @require      https://update.greasyfork.org/scripts/484118/searchJumperDefaultConfig.js
+// @require      https://update.greasyfork.org/scripts/484118/1371046/searchJumperDefaultConfig.js
 // @connect      global.bing.com
 // @connect      suggestqueries.google.com
 // @connect      api.bing.com
@@ -6696,7 +6696,7 @@
                 this.removeBar();
                 if (searchTypes && searchTypes.length) {
                     searchTypes.forEach(type => {
-                        type.parentNode.removeChild(type);
+                        type.parentNode && type.parentNode.removeChild(type);
                     });
                 }
                 for (let siteConfig of searchData.sitesConfig) {
@@ -6720,6 +6720,7 @@
                     self.bar.classList.remove("initShow");
                     self.tips.style.opacity = 0;
                     self.tips.style.display = "none";
+                    self.tips.innerHTML = createHTML("");
                     //self.recoveHistory();
                     if (self.funcKeyCall) {
                         self.setFuncKeyCall(false);
@@ -7866,7 +7867,7 @@
                             let hasWordParam = wordParamReg.test(data.url);
                             let checkKw = hasWordParam ? keyWords : href;
                             if (checkKw && data.kwFilter) {
-                                if (new RegExp(data.kwFilter).test(checkKw)) {
+                                if (new RegExp(data.kwFilter, "i").test(checkKw)) {
                                     se.style.display = '';
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
@@ -8139,7 +8140,7 @@
                             let data = sites[i];
 
                             if (data && localKeywords && data.kwFilter) {
-                                if (new RegExp(data.kwFilter).test(localKeywords)) {
+                                if (new RegExp(data.kwFilter, "i").test(localKeywords)) {
                                     se.style.display = '';
                                 } else {
                                     se.style.display = 'none';
@@ -8565,7 +8566,8 @@
                             }
                         }
                     }
-                } else if (/^d:/.test(data.url)) {
+                }
+                if (/^d:/.test(data.url)) {
                     ele.setAttribute('download', '');
                     data.url = data.url.replace(/^d:/, '');
                 } else if (/^showTips:/.test(data.url)) {
@@ -8588,7 +8590,7 @@
                     ele.classList.add("notmatch");
                 } else if (!isBookmark && (!currentSite || data.hideNotMatch) && window.top == window.self) {
                     if (urlMatch) {
-                        if (new RegExp(urlMatch).test(location.href)) {
+                        if (new RegExp(urlMatch, "i").test(location.href)) {
                             ele.dataset.current = true;
                         }
                     } else if (!pointer && location.hostname && data.url.indexOf(location.hostname) != -1) {
