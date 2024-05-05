@@ -19165,7 +19165,9 @@ ImgOps | https://imgops.com/#b#`;
                                 self.zoomLevel=0;
                                 self.zoom(1);
                             }
-                            self.initMaxSize();
+                            if (self == uniqueImgWin) {
+                                self.initMaxSize();
+                            }
                             if (prefs.imgWindow.fitToScreen) {
                                 self.fitToScreen();
                             }
