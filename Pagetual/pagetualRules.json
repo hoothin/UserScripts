@@ -10719,15 +10719,15 @@
 {
     "name": "MAL - Genre Search",
     "author": "lemonadeforlife",
-    "example": "https://myanimelist\\.net/anime/genre/62/Isekai",
+    "example": "https://myanimelist.net/anime/genre/62/Isekai",
     "url": "^https://myanimelist\\.net/(anime|manga)/\\genre/\\d+/\\w+",
     "nextlink": ".pagination.ac>a",
     "pageElement": ".seasonal-anime-list",
     "autoLoadNum": 4,
     "pageBar": 0,
     "replaceElement": ".pagination"
-  },
-  {
+},
+{
     "name": "MAL - Advance Search",
     "author": "lemonadeforlife",
     "url": "^https?://myanimelist\\.net/(anime|manga)\\.php\\?cat=",
@@ -10741,5 +10741,5 @@
     "action": 0,
     "pageNum": "&show={50*($p-1)}",
     "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
-  }
+}
 ]
