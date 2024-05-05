@@ -75,6 +75,7 @@ You have the option to use a standalone userscript, which allows you to manage a
     window.pvcepRules.push(
         ...
         [
+            //Delete these two example rules and add your own.
             {
                 name: "rule1",
                 src: /pics\.dmm\.co\.jp/i,
