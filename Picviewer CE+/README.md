@@ -71,20 +71,24 @@ You have the option to use a standalone userscript, which allows you to manage a
 
 (function() {
     'use strict';
-    window.pvcepRules = [
-        {
-            name: "rule1",
-            src: /pics\.dmm\.co\.jp/i,
-            r: "ps.jpg",
-            s: "pl.jpg"
-        },
-        {
-            name: "rule2",
-            url: /xxx\.com/,
-            r: /us\.xxx\.com\/\d+wm\//i,
-            s: "previews.xxx.com/images/"
-        }
-    ];
+    window.pvcepRules = window.pvcepRules || [];
+    window.pvcepRules.push(
+        ...
+        [
+            {
+                name: "rule1",
+                src: /pics\.dmm\.co\.jp/i,
+                r: "ps.jpg",
+                s: "pl.jpg"
+            },
+            {
+                name: "rule2",
+                url: /xxx\.com/,
+                r: /us\.xxx\.com\/\d+wm\//i,
+                s: "previews.xxx.com/images/"
+            }
+        ]
+    );
 })();
 ```
 
