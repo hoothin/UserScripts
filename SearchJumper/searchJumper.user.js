@@ -1409,6 +1409,9 @@
                  #search-jumper {
                      font-size: 16px;
                  }
+                 #search-jumper-root {
+                     font-size: initial;
+                 }
                  #search-jumper.search-jumper-showall {
                      overflow-y: hidden;
                      pointer-events: all;
