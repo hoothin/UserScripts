@@ -62,7 +62,7 @@ var siteInfo = [
  enabled: true,
  
  //站點正則，匹配站點url該條規則才會生效
- url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
+ url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&(tbm=isch|udm=2)/,
  
  //鼠標點擊直接打開（僅當高級規則的getImage()或者r/s替換有返回值的時候生效）
  clickToOpen: {
