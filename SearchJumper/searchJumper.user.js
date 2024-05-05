@@ -3548,7 +3548,7 @@
                 }
                 if (this.splitSep) {
                     let inWordMode = this.wordModeBtn.classList.contains("checked");
-                    let splitSep = inWordMode ? new RegExp(`[\\${this.splitSep} \.]`) : this.splitSep;
+                    let splitSep = inWordMode ? new RegExp(`[\\${this.splitSep} ]`) : this.splitSep;
 
                     words.split(splitSep).sort((a, b) => b.length - a.length).forEach(word => {
                         let oriWord = word;
@@ -4509,7 +4509,7 @@
                         findNum = 1;
                     }
                     for (let i = 0; i < targetArr.length; i++) {
-                        let wordArr = targetArr[i].split(/[ \.]/);
+                        let wordArr = targetArr[i].split(/[ ]/);
                         findIndex = wordArr.indexOf(word.oriWord);
                         if (findIndex != -1) {
                             findNum++;
