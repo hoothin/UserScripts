@@ -3656,6 +3656,7 @@
                     }
                     return wordSpans;
                 }
+                this.initHighlight = !!init;
                 if (!this.lockWords) {
                     if (words.indexOf("$c") === 0 && words.length > 2) {
                         this.splitSep = words.substr(2, 1);
@@ -3664,7 +3665,7 @@
                     } else this.splitSep = "◎";
                     this.curWordIndex = 0;
                 }
-                let targetWords = this.anylizeInPageWords(words, !!init);
+                let targetWords = this.anylizeInPageWords(words, this.initHighlight);
                 if (!targetWords || targetWords.length == 0) return wordSpans;
                 if (this.lockWords) {
                     this.lockWords += this.splitSep + words;
@@ -12328,7 +12329,7 @@
             };
             let bodyObserver = new MutationObserver((mutationsList, observer) => {
                 let lockWords = searchBar.lockWords;
-                if (lockWords) {
+                if (lockWords && !searchBar.initHighlight) {
                     for (let mutation of mutationsList) {
                         if (mutation.type === "characterData") {
                             let parentNode = mutation.target.parentNode;
