@@ -17878,6 +17878,9 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head:hover{\
                     opacity: 1;\
                     }\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide .pv-gallery-img-parent{\
+                    cursor: none;\
+                    }\
                     .pv-gallery-sidebar-viewmore{\
                     position:absolute;\
                     line-height:0;\
