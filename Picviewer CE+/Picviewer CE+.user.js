@@ -17276,7 +17276,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-trigger-close:hover{\
                     background-color:#333;\
                     }\
-                    @media only screen and (max-width: 800px) {\
+                    @media only screen and (max-width: 799px) {\
                      .pv-gallery-range-box>input {\
                      display: none;\
                      }\
@@ -17315,7 +17315,7 @@ ImgOps | https://imgops.com/#b#`;
                      height: 29px!important;\
                      }\
                     }\
-                    @media only screen and (min-width: 800px) {\
+                    @media only screen and (min-width: 799px) {\
                      .pv-gallery-maximize-container{\
                      column-count: 3;\
                      -moz-column-count: 3;\
