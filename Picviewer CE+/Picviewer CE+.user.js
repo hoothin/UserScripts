@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.5.1
+// @version              2024.5.5.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
 // @require              https://update.greasyfork.org/scripts/438080/1371012/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1333524/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1371108/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -12216,7 +12216,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
-        const imageReg = /\.(avif|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|png|svg|webp|xbm)\b/i;
+        const imageReg = /\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib)\b/i;
 
         //图标
         prefs.icons={
@@ -19165,6 +19165,7 @@ ImgOps | https://imgops.com/#b#`;
                                 self.zoomLevel=0;
                                 self.zoom(1);
                             }
+                            self.initMaxSize();
                             if (prefs.imgWindow.fitToScreen) {
                                 self.fitToScreen();
                             }
@@ -19602,7 +19603,7 @@ ImgOps | https://imgops.com/#b#`;
                     ' + (prefs.imgWindow.fixed ? 'position: fixed;' : 'position: absolute;') + '\
                     background-image: initial;\
                     padding: 0;\
-                    border: 0;\
+                    border: 3px solid rgb(255 255 255 / 50%);\
                     border-radius: 1px;\
                     line-height: 0;\
                     text-align: left;\
@@ -19621,9 +19622,6 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-transition-all{\
                     -webkit-transition: top 0.2s ease, left 0.2s ease;\
                     transition: top 0.2s ease, left 0.2s ease;\
-                    }\
-                    .pv-pic-window-container_focus {\
-                    border: 3px solid rgb(255 255 255 / 50%);\
                     }\
                     .pv-pic-window-imgbox {\
                     position: relative;\
@@ -19837,7 +19835,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     span.pv-pic-search-state {\
-                    top: -20px;\
+                    top: -21px;\
                     left: 0px;\
                     display: block;\
                     position: absolute;\
@@ -20238,6 +20236,41 @@ ImgOps | https://imgops.com/#b#`;
                 // 保持注释在图片里面
                 // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
             },
+            initMaxSize: function() {
+                let wSize = getWindowSize();
+                let maxWidth = wSize.w - 50, maxHeight = wSize.h - 50, left, top;
+                if (prefs.floatBar.previewMaxSizeW && maxWidth > prefs.floatBar.previewMaxSizeW) {
+                    maxWidth = prefs.floatBar.previewMaxSizeW;
+                }
+                if (prefs.floatBar.previewMaxSizeW && maxHeight > prefs.floatBar.previewMaxSizeH) {
+                    maxHeight = prefs.floatBar.previewMaxSizeH;
+                }
+                this.zoom(1);
+
+                let imgWindowCS = unsafeWindow.getComputedStyle(this.imgWindow);
+                let rectSize = {
+                    h: parseFloat(imgWindowCS.height),
+                    w: parseFloat(imgWindowCS.width),
+                };
+
+                let size, containsScroll = this.imgWindow.classList.contains("pv-pic-window-scroll");
+
+                if (prefs.imgWindow.fitToScreenSmall || rectSize.w > maxWidth || rectSize.h > maxHeight) {
+                    if (rectSize.w / rectSize.h > maxWidth / maxHeight) {
+                        size = {
+                            w: maxWidth,
+                            h: maxWidth / (rectSize.w / rectSize.h),
+                        };
+                    } else if (!containsScroll) {
+                        size = {
+                            h: maxHeight,
+                            w: maxHeight * (rectSize.w / rectSize.h),
+                        }
+                    };
+
+                    this.zoom(this.getRotatedImgCliSize(size).w / this.imgNaturalSize.w);
+                }
+            },
             followPos: function(posX, posY) {
                 if (this.removed) return;
                 if (!prefs.floatBar.globalkeys.previewFollowMouse) return;
@@ -20256,58 +20289,18 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 this.following = false;
                 let wSize = getWindowSize();
-                this.zoom(1);
-                if (prefs.imgWindow.fitToScreen) {
-                    let imgWindowCS = unsafeWindow.getComputedStyle(imgWindow);
-                    let rectSize = {
-                        h: parseFloat(imgWindowCS.height),
-                        w: parseFloat(imgWindowCS.width),
-                    };
 
-                    let size, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
-                    if (prefs.imgWindow.fitToScreenSmall || (rectSize.w - wSize.w > 0 || rectSize.h - wSize.h > 0)) {
-                        if (rectSize.w / rectSize.h > wSize.w / wSize.h) {
-                            size = {
-                                w: wSize.w,
-                                h: wSize.w / (rectSize.w / rectSize.h),
-                            };
-                        } else if (!containsScroll) {
-                            size = {
-                                h: wSize.h,
-                                w: wSize.h * (rectSize.w / rectSize.h),
-                            }
-                        };
-
-                        this.zoom(this.getRotatedImgCliSize(size).w / this.imgNaturalSize.w);
-                    }
-                }
-
-                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2), padding2 = 50;//内外侧间距
+                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2), padding2 = 50, left, top;//内外侧间距
                 let scrolled = prefs.imgWindow.fixed ? {x: 0, y: 0} : getScrolled();
-                let maxWidth = wSize.w - padding2, maxHeight = wSize.h - padding2, left, top;
-                let self = this;
-                if (imgWindow.offsetWidth > maxWidth || imgWindow.offsetHeight > maxHeight) {
-                    var size;
-                    if (imgWindow.offsetWidth / imgWindow.offsetHeight > maxWidth / maxHeight) {
-                        size = {
-                            w: maxWidth,
-                            h: maxWidth / (imgWindow.offsetWidth / imgWindow.offsetHeight),
-                        };
-                    } else {
-                        size = {
-                            h: maxHeight,
-                            w: maxHeight * (imgWindow.offsetWidth / imgWindow.offsetHeight),
-                        }
-                    };
 
-                    self.zoom(self.getRotatedImgCliSize(size).w / self.imgNaturalSize.w);
-                }
+                this.initMaxSize();
+
                 if (imgWindow.offsetWidth / imgWindow.offsetHeight > wSize.w / wSize.h) {
                     //宽条，上下半屏
                     if (posY > wSize.h / 2) {
                         //上
                         top = posY - imgWindow.offsetHeight - padding1 + scrolled.y;
-                        if (top < 1) top = 1;
+                        if (top < padding2>>1) top = padding2>>1;
                         imgWindow.style.top = top + 'px';
                     } else {
                         //下
@@ -21776,6 +21769,7 @@ ImgOps | https://imgops.com/#b#`;
                                     uniqueImgWin.following=true;
                                     uniqueImgWin.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
                                 } else {
+                                    uniqueImgWin.initMaxSize();
                                     uniqueImgWin.center(true,true);
                                     if(centerInterval)clearInterval(centerInterval);
                                     centerInterval=setInterval(function(){
@@ -23483,8 +23477,9 @@ ImgOps | https://imgops.com/#b#`;
             let canPreview = checkPreview(e);
             if (e.type == "mousemove") {
                 if ((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)) {
-                    uniqueImgWin.followPos(e.clientX, e.clientY);
-                    if (!canPreview) {
+                    if (canPreview) {
+                        uniqueImgWin.followPos(e.clientX, e.clientY);
+                    } else {
                         uniqueImgWin.remove();
                     }
                     return;
@@ -24032,6 +24027,22 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("closeAfterPreview"),
                     type: 'checkbox',
                     "default": prefs.floatBar.globalkeys.closeAfterPreview
+                },
+                'floatBar.previewMaxSizeW': {
+                    label: i18n("previewMaxSize"),
+                    type: 'int',
+                    className: 'size',
+                    "default": prefs.previewMaxSizeW || 0,
+                    title: i18n("previewMaxSizeTip"),
+                    line: 'start',
+                },
+                'floatBar.previewMaxSizeH': {
+                    label: ' x ',
+                    type: 'int',
+                    className: 'sep-x',
+                    after: ' '+i18n("px"),
+                    "default": prefs.previewMaxSizeH || 0,
+                    line: 'end',
                 },
                 'floatBar.globalkeys.invertInitShow': {
                     label: i18n("initShow"),
