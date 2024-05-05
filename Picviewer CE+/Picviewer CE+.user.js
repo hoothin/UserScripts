@@ -12216,6 +12216,8 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
+        const imageReg = /\.(avif|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|png|svg|webp|xbm)\b/i;
+
         //图标
         prefs.icons={
             actual:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==',
@@ -23382,8 +23384,8 @@ ImgOps | https://imgops.com/#b#`;
             };
 
             if (!result && target.nodeName.toUpperCase() != 'IMG') {
-                if (target.nodeName.toUpperCase() == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)) {
-                } else if (target.parentNode && target.parentNode.nodeName.toUpperCase() == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
+                if (target.nodeName.toUpperCase() == 'A' && imageReg.test(target.href)) {
+                } else if (target.parentNode && target.parentNode.nodeName.toUpperCase() == 'A' && imageReg.test(target.parentNode.href)) {
                     target = target.parentNode;
                 } else {
                     target = null;
