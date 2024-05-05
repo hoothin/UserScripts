@@ -10715,5 +10715,31 @@
     "pageElement": "body > div.wrapper > div.container",
     "nextLink": "li.current + li >a",
     "author": "hhhllll"
+},
+{
+    "name": "MAL - Genre Search",
+    "author": "lemonadeforlife",
+    "example": "https://myanimelist.net/anime/genre/62/Isekai",
+    "url": "^https://myanimelist\\.net/(anime|manga)/\\genre/\\d+/\\w+",
+    "nextlink": ".pagination.ac>a",
+    "pageElement": ".seasonal-anime-list",
+    "autoLoadNum": 4,
+    "pageBar": 0,
+    "replaceElement": ".pagination"
+},
+{
+    "name": "MAL - Advance Search",
+    "author": "lemonadeforlife",
+    "url": "^https?://myanimelist\\.net/(anime|manga)\\.php\\?cat=",
+    "example": "https://myanimelist.net/anime.php?cat=anime&q=&type=0&score=0&status=2&p=0&r=0&sm=0&sd=0&sy=0&em=0&ed=0&ey=0&c%5B%5D=c&genre%5B%5D=10&genre_ex%5B%5D=12&genre%5B%5D=62&genre_ex%5B%5D=25",
+    "nextLinkByUrl": [
+      "(&show=(\\d+))?$",
+      "&show={$2+50}"
+    ],
+    "pageElement": ".js-categories-seasonal>table",
+    "replaceElement": ".spaceit>span",
+    "action": 0,
+    "pageNum": "&show={50*($p-1)}",
+    "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
 }
 ]
