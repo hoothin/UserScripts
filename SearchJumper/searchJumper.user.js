@@ -45,7 +45,7 @@
 // @homepage     https://github.com/hoothin/SearchJumper
 // @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
 // @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.meta.js
-// @require      https://update.greasyfork.org/scripts/484118/1371046/searchJumperDefaultConfig.js
+// @require      https://update.greasyfork.org/scripts/484118/searchJumperDefaultConfig.js
 // @connect      global.bing.com
 // @connect      suggestqueries.google.com
 // @connect      api.bing.com
