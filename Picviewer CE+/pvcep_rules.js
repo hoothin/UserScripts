@@ -1431,5 +1431,11 @@ var siteInfo = [
  url: /^https?:\/\/sspai\.com\//,
  r: /\?imageMogr.*/,
  s: ""
+},
+{
+ name: "la-croix",
+ url: /^https?:\/\/www\.la\-croix\.com\//,
+ r: /\/\d+x\d+\//,
+ s: "/x/"
 }
 ];
