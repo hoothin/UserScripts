@@ -19145,7 +19145,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (self.removed) return;
                     self.loaded = true;
                     container.style.background='';
-                    if (img.naturalHeight == 1 && img.naturalWidth == 1) {
+                    if (self.preview && img.naturalHeight == 1 && img.naturalWidth == 1) {
                         self.remove();
                         return;
                     }
@@ -23274,6 +23274,7 @@ ImgOps | https://imgops.com/#b#`;
                             if (!ele) continue;
                             if (/img/i.test(ele.nodeName)) {
                                 target = ele;
+                                result = null;
                                 break;
                             } else if (prefs.floatBar.listenBg && hasBg(ele)) {
                                 target = ele;
@@ -23286,7 +23287,6 @@ ImgOps | https://imgops.com/#b#`;
                                     noActual:noActual,
                                     img: target
                                 };
-                                break;
                             }
                         }
                     }
