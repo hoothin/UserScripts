@@ -17289,11 +17289,12 @@ ImgOps | https://imgops.com/#b#`;
                      white-space: nowrap;\
                      }\
                      span.pv-gallery-sidebar-toggle-content {\
-                     font-size: 80px!important;\
+                     font-size: 50px!important;\
                      }\
                      span.pv-gallery-sidebar-toggle {\
-                     height: 80px!important;\
+                     height: 50px!important;\
                      opacity: 0.6;\
+                     border-radius: 0!important;\
                      }\
                      .pv-gallery-sidebar-viewmore:not(.showmore) {\
                      opacity: 0!important;\
@@ -17855,6 +17856,42 @@ ImgOps | https://imgops.com/#b#`;
                     transition: background-color .3s ease, opacity .3s ease;\
                     justify-content: center;\
                     display:none;\
+                    }\
+                    :fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide span.pv-gallery-sidebar-toggle {\
+                    opacity: 0!important;\
+                    }\
+                    :-webkit-full-screen .pv-gallery-container.pv-gallery-sidebar-toggle-hide span.pv-gallery-sidebar-toggle {\
+                    opacity: 0!important;\
+                    }\
+                    :-ms-fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide span.pv-gallery-sidebar-toggle {\
+                    opacity: 0!important;\
+                    }\
+                    :fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide span.pv-gallery-sidebar-toggle:hover {\
+                    opacity: 1!important;\
+                    }\
+                    :-webkit-full-screen .pv-gallery-container.pv-gallery-sidebar-toggle-hide span.pv-gallery-sidebar-toggle:hover {\
+                    opacity: 1!important;\
+                    }\
+                    :-ms-fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide span.pv-gallery-sidebar-toggle:hover {\
+                    opacity: 1!important;\
+                    }\
+                    :fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head {\
+                    opacity: 0!important;\
+                    }\
+                    :-webkit-full-screen .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head {\
+                    opacity: 0!important;\
+                    }\
+                    :-ms-fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head {\
+                    opacity: 0!important;\
+                    }\
+                    :fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head:hover {\
+                    opacity: 1!important;\
+                    }\
+                    :-webkit-full-screen .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head:hover {\
+                    opacity: 1!important;\
+                    }\
+                    :-ms-fullscreen .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head:hover {\
+                    opacity: 1!important;\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle{\
                     opacity: 0.6;\
