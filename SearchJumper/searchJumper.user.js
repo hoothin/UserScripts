@@ -1885,6 +1885,34 @@
                      background: #d0d0d0d0;
                      box-sizing: content-box;
                  }
+                 ${searchData.prefConfig.hideTileType ? `
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:before {
+                     content: attr(data-title);
+                     position: absolute;
+                     background: #ffffffd0;
+                     margin-top: -20px;
+                     font-size: 13px;
+                     font-weight: bold;
+                     border-radius: 20px;
+                     padding: 1px 5px;
+                     box-shadow: #000000 0px 0px 10px;
+                     opacity: 0;
+                     pointer-events: none;
+                     transition: all 0.5s ease;
+                     left: 50%;
+                     transform: translate(-50%, 0);
+                     z-index: 1;
+                 }
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>span.search-jumper-btn:first-child {
+                     display: none;
+                 }
+                 #search-jumper.funcKeyCall .search-jumper-type.search-jumper-open.not-expand>a:nth-of-type(${(searchData.prefConfig.expandTypeLength || 12)+1}) {
+                     display: grid!important;
+                 }
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover:before {
+                     opacity: 1;
+                 }
+                 ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type.search-jumper-open {
                      overscroll-behavior: contain;
                      -ms-scroll-chaining: contain;
