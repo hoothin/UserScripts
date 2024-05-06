@@ -83,14 +83,20 @@ var siteInfo = [
  getImage: function(a) {
      if(!a) return;
      let jsaction = a.getAttribute("jsaction");
-     if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
+     if (a.href.match(/imgurl=(.*?)&/i)) {
          return decodeURIComponent(RegExp.$1);
      } else if (jsaction && jsaction.indexOf('touchstart') !== -1) {
-         var fakeEvent = new TouchEvent('touchstart', {bubbles: true});
+         const touchList = [new Touch({
+          identifier: 1,
+          target: document.documentElement,
+          clientX: 0,
+          clientY: 0
+         })];
+         var fakeEvent = new TouchEvent('touchstart', {bubbles: true, touches: touchList});
          a.dispatchEvent(fakeEvent);
          fakeEvent = new TouchEvent('touchend', {bubbles: true});
          a.dispatchEvent(fakeEvent);
-         if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
+         if (a.href.match(/imgurl=(.*?)&/i)) {
              return decodeURIComponent(RegExp.$1);
          }
      }
