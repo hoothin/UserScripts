@@ -1297,7 +1297,7 @@ var siteInfo = [
                     if (carousel) {
                         let gallery = [];
                         let captions = [];
-                        carousel.map(c => { gallery.push([c.video_versions ? c.video_versions[0].url : c.image_versions2.candidates[0].url]); });
+                        carousel.map(c => { gallery.push(c.video_versions ? c.video_versions[0].url : c.image_versions2.candidates[0].url); });
                         return gallery;
                     } else if (images) {
                         const imagesUrl = images.candidates[0].url;
