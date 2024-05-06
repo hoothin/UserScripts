@@ -1700,7 +1700,7 @@
                                 for (let i = 0; i < checkEles.length; i++) {
                                     let curEle = checkEles[i];
                                     if (curEle === e.target || curEle.contains(e.target)) {
-                                        urlChanged = true;
+                                        ruleParser.urlChanged();
                                         isPause = true;
                                         if (!ruleParser.nextLinkHref) isLoading = false;
                                         break;
@@ -3357,6 +3357,11 @@
             [].forEach.call(doc.querySelectorAll("img,picture>source"), img => {
                 setLazyImg(img);
             });
+        }
+
+        urlChanged() {
+            urlChanged = true;
+            this.clearAddedElements();
         }
 
         initPage(callback) {
@@ -6717,7 +6722,7 @@
            display: block!important;
          }
          .pagetual_pageBar a:hover>span.prevScreen {
-           margin-top: -30px!important;
+           margin-top: -${rulesData.opacity == 1 ? 31 : 30}px!important;
            pointer-events: all;
          }
          .pagetual_pageBar span.refreshRing {
@@ -6986,7 +6991,7 @@
                             urlChanging = false;
                         }, 1000);
                     } else {
-                        urlChanged = true;
+                        ruleParser.urlChanged();
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
                         }
@@ -7255,7 +7260,7 @@
         if (ruleParser.curSiteRule.listenHashChange) {
             hashchangeHandler = () => {
                 isPause = true;
-                urlChanged = true;
+                ruleParser.urlChanged();
                 if (!ruleParser.nextLinkHref) isLoading = false;
             };
             window.addEventListener('hashchange', hashchangeHandler, false);
@@ -7375,13 +7380,17 @@
     }
 
     var targetY = -1;
-    function scrollToPageBar(bar){
-        let yOffset = -20;
-        if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
-            yOffset = -ruleParser.curSiteRule.pageBarTop;
+    function scrollToPageBar(bar) {
+        if (window.pageYOffset == 0) {
+            bar.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+        } else {
+            let yOffset = -20;
+            if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
+                yOffset = -ruleParser.curSiteRule.pageBarTop;
+            }
+            targetY = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: targetY, behavior: 'smooth'});
         }
-        targetY = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: targetY, behavior: 'smooth'});
     }
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
@@ -7667,7 +7676,7 @@
                 changeStop(true);
             }
             pageBar.title = i18n(isPause ? "enable" : "disable");
-            scrollH=Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+            scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
             getBody(document).scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
