@@ -1890,6 +1890,7 @@
                      content: attr(data-title);
                      position: absolute;
                      background: #ffffffd0;
+                     color: black;
                      margin-top: -20px;
                      font-size: 13px;
                      font-weight: bold;
