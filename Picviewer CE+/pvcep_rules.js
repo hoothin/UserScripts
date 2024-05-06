@@ -803,8 +803,8 @@ var siteInfo = [
      }
      return target;
  },
- r: /\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/i,
- s: "/w/1080/"
+ r: [/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/i, /.*\.xhscdn\.com.*\/(\w+)(!.*|$)/i],
+ s: ["/w/1080/", "https://sns-img-bd.xhscdn.com/$1"]
 },
 {
  name: "Youtube",
