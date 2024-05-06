@@ -1891,7 +1891,8 @@
                      position: absolute;
                      background: #ffffffd0;
                      color: black;
-                     margin-top: -20px;
+                     margin-top: -22px;
+                     line-height: 1.5;
                      font-size: 13px;
                      font-weight: bold;
                      border-radius: 20px;
@@ -7759,7 +7760,7 @@
                 let img = document.createElement("img");
                 let iEle = document.createElement("b");
                 if (type.length >= 3) {
-                    iEle.innerText = type.trim();
+                    iEle.innerText = type.trim().substr(0, 4);
                     if (!/^[\w \-]+$/.test(iEle.innerText.substr(0, 3))) iEle.innerText = iEle.innerText.substr(0, 2);
                 } else iEle.innerText = type;
                 typeBtn.appendChild(iEle);
@@ -8694,7 +8695,7 @@
 
                 let word = document.createElement("span");
                 if (!isBookmark && name.length >= 3) {
-                    word.innerText = name;
+                    word.innerText = name.substr(0, 4);
                     if (!/^[\w \-]+$/.test(word.innerText.substr(0, 3))) word.innerText = word.innerText.substr(0, 2);
                 } else word.innerText = name;
                 ele.appendChild(word);
