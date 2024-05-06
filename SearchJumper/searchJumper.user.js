@@ -7738,12 +7738,16 @@
                 let isBookmark = /^BM/.test(type) && data.icon === "bookmark";//書簽就不緩存了
                 if (icon) {
                     typeBtn.classList.remove("noIcon");
+                    let isFontIcon = /^[a-z\- ]+$/.test(icon);
                     img.onload = e => {
                         img.style.display = "";
                         iEle.innerText = '';
                         iEle.style.display = 'none';
+                        if (!isFontIcon) {
+                            typeBtn.classList.remove("search-jumper-word");
+                        }
                     };
-                    if (/^[a-z\- ]+$/.test(icon)) {
+                    if (isFontIcon) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
                         if (cache === 'fail' || !cache) {
                             iEle.className = icon.indexOf("fa") === 0 ? icon : "fa fa-" + icon;
@@ -10018,6 +10022,20 @@
                 }
             }
 
+            reopenType(type) {
+                let mouseEvent = new PointerEvent("mousedown");
+                if (type.parentNode.classList.contains('search-jumper-open')) {
+                    if (type.onmousedown) type.onmousedown();
+                    else {
+                        type.dispatchEvent(mouseEvent);
+                    }
+                }
+                if (type.onmousedown) type.onmousedown();
+                else {
+                    type.dispatchEvent(mouseEvent);
+                }
+            }
+
             showInPage(_funcKeyCall, e) {
                 if (this.contains(targetElement) || (this.inInput && mainStyleEle) || (!_funcKeyCall && this.funcKeyCall)) {
                     return;
@@ -10049,8 +10067,6 @@
                     if (_targetElement) targetElement = _targetElement;
                 }
                 this.appendBar();
-                //this.recoveHistory();
-                let firstType, targetSiteImgs;
                 let self = this;
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
@@ -10075,11 +10091,11 @@
                 this.bar.classList.remove("search-jumper-isTargetPage");
                 this.bar.classList.remove("initShow");
                 setTimeout(() => {this.bar.classList.add("initShow");}, 10);
+                let typeSel = "";
                 if (selectStr) {
                     this.bar.classList.add("search-jumper-isInPage");
                     if (this.bar.style.display == "none" || _funcKeyCall) {
-                        firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
-                        targetSiteImgs = this.bar.querySelectorAll('.search-jumper-needInPage:not(.notmatch)>a>img');
+                        typeSel = "needInPage";
                     } else {
                         let openType = this.bar.querySelector(".search-jumper-type.search-jumper-open");
                         if (!openType || openType.classList.contains('notmatch') ||
@@ -10088,8 +10104,7 @@
                             openType.classList.contains('search-jumper-targetAudio') ||
                             openType.classList.contains('search-jumper-targetVideo') ||
                             openType.classList.contains('search-jumper-targetLink')) {
-                            firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-needInPage:not(.notmatch)>a>img');
+                            typeSel = "needInPage";
                         }
                     }
                 } else {
@@ -10099,23 +10114,19 @@
                     switch (targetElement.nodeName.toUpperCase()) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
-                            firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetImg:not(.notmatch)>a>img');
+                            typeSel = "targetImg";
                             break;
                         case 'AUDIO':
                             this.bar.classList.add("search-jumper-isTargetAudio");
-                            firstType = this.bar.querySelector('.search-jumper-targetAudio:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetAudio:not(.notmatch)>a>img');
+                            typeSel = "targetAudio";
                             break;
                         case 'VIDEO':
                             this.bar.classList.add("search-jumper-isTargetVideo");
-                            firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetVideo:not(.notmatch)>a>img');
+                            typeSel = "targetVideo";
                             break;
                         case 'A':
                             this.bar.classList.add("search-jumper-isTargetLink");
-                            firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetLink:not(.notmatch)>a>img');
+                            typeSel = "targetLink";
                             break;
                         default:
                             break;
@@ -10123,38 +10134,34 @@
                     let parentNode = targetElement.parentNode;
                     if (parentNode && parentNode.nodeName.toUpperCase() === 'A') {
                         this.bar.classList.add("search-jumper-isTargetLink");
-                        if (!firstType) {
-                            firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetLink:not(.notmatch)>a>img');
+                        if (!typeSel) {
+                            typeSel = "targetLink";
                         }
                     }
-                    if (!firstType) {
+                    if (!typeSel) {
                         this.bar.classList.add("search-jumper-isTargetPage");
-                        firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
-                        targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetPage:not(.notmatch)>a>img');
+                        typeSel = "targetPage";
                     }
-                    if (!firstType) {
-                        firstType = this.bar.querySelector('.search-jumper-targetAll:not(.notmatch)>span');
-                        targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetAll:not(.notmatch)>a>img');
+                    if (!typeSel) {
+                        typeSel = "targetAll";
                     }
                 }
                 if (this.bar.style.display == "none") {
                     this.bar.style.display = "";
                 }
+                if (!typeSel) return;
+                let firstType = this.bar.querySelector(`.search-jumper-${typeSel}:not(.notmatch)>span`);
+                let targetSiteImgs = this.bar.querySelectorAll(`.search-jumper-${typeSel}:not(.notmatch)>a>img`);
                 self.setFuncKeyCall(false);
                 if (firstType) {
                     if ((!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) || _funcKeyCall) {
-                        let mouseEvent = new PointerEvent("mousedown");
-                        if (firstType.parentNode.classList.contains('search-jumper-open')) {
-                            if (firstType.onmousedown) firstType.onmousedown();
-                            else {
-                                firstType.dispatchEvent(mouseEvent);
+                        let targetTypes = this.bar.querySelectorAll(`.search-jumper-${typeSel}:not(.notmatch)>span`);
+                        [].forEach.call(targetTypes, type => {
+                            if (type !== firstType) {
+                                self.reopenType(type);
                             }
-                        }
-                        if (firstType.onmousedown) firstType.onmousedown();
-                        else {
-                            firstType.dispatchEvent(mouseEvent);
-                        }
+                        });
+                        self.reopenType(firstType);
                         self.insertHistory(firstType.parentNode);
                     }
                 }
