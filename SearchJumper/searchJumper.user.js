@@ -1887,7 +1887,7 @@
                  }
                  ${searchData.prefConfig.hideTileType ? `
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:before {
-                     content: attr(data-title);
+                     content: attr(data-type);
                      position: absolute;
                      background: #ffffffd0;
                      color: black;
@@ -1903,6 +1903,10 @@
                      left: 50%;
                      transform: translate(-50%, 0);
                      z-index: 1;
+                     max-width: 100%;
+                     white-space: nowrap;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>span.search-jumper-btn:first-child {
                      display: none;
