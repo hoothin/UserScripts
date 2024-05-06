@@ -23133,19 +23133,7 @@ ImgOps | https://imgops.com/#b#`;
                     let img = target.parentNode.querySelector('img');
                     if (img) target = img;
                 }
-                if (target.nodeName.toUpperCase() == 'CANVAS') {
-                    let src = target.src || target.dataset.src;
-                    if (src) {
-                        let nsrc = src, noActual = true, type = "scale";
-                        result = {
-                            src: nsrc,
-                            type: type,
-                            imgSrc: src,
-                            noActual:noActual,
-                            img: target
-                        };
-                    }
-                } else if (target.nodeName.toUpperCase() != 'IMG') {
+                if (target.nodeName.toUpperCase() != 'IMG') {
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
                     var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
@@ -23179,6 +23167,18 @@ ImgOps | https://imgops.com/#b#`;
                         };
                     } else if (broImg) {
                         target = broImg;
+                    } else if (target.nodeName.toUpperCase() == 'CANVAS') {
+                        let src = target.src || target.dataset.src;
+                        if (src) {
+                            let nsrc = src, noActual = true, type = "scale";
+                            result = {
+                                src: nsrc,
+                                type: type,
+                                imgSrc: src,
+                                noActual:noActual,
+                                img: target
+                            };
+                        }
                     } else if (target.children.length == 1 && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
