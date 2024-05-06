@@ -10178,9 +10178,11 @@
                 if (this.bar.style.display == "none") {
                     this.bar.style.display = "";
                 }
-                if (!typeSel) return;
-                let firstType = this.bar.querySelector(`.search-jumper-${typeSel}:not(.notmatch)>span`);
-                let targetSiteImgs = this.bar.querySelectorAll(`.search-jumper-${typeSel}:not(.notmatch)>a>img`);
+                let firstType, targetSiteImgs;
+                if (typeSel) {
+                    firstType = this.bar.querySelector(`.search-jumper-${typeSel}:not(.notmatch)>span`);
+                    targetSiteImgs = this.bar.querySelectorAll(`.search-jumper-${typeSel}:not(.notmatch)>a>img`);
+                }
                 self.setFuncKeyCall(false);
                 if (firstType) {
                     if ((!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) || _funcKeyCall) {
@@ -12759,12 +12761,6 @@
                         });
                         storage.setItem("cacheIcon", newCache);
                         if (searchData.prefConfig.cacheSwitch) {
-                            searchBar.con.classList.add("in-input");
-                            searchBar.con.style.visibility = "hidden";
-                            searchBar.appendBar();
-                            setTimeout(() => {
-                                cacheFontManager(true);
-                            }, 2000);
                             if (cachePool.length > 0) {
                                 _GM_notification(i18n('startCache'));
                                 cacheImgManager(true);
