@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.6.1
+// @version              2024.5.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1371909/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1372140/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1371108/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -19248,13 +19248,8 @@ ImgOps | https://imgops.com/#b#`;
                 */
                 if (this.data) {
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
-                    // descriptionSpan.style.cssText = '\
-                    //  bottom: -40px;\
-                    //  left: 10px;\
-                    // ';
                     descriptionSpan.textContent = this.data.description || '';
-                    // descriptionSpan.style.display = this.data.description ? 'block' : 'none';
-                    descriptionSpan.style.display = 'none';
+                    descriptionSpan.style.display = this.data.description ? "" : "none";
                     this.descriptionSpan = descriptionSpan;
                 }
 
@@ -19827,8 +19822,18 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     .pv-pic-window-description {\
-                    margin-top: 20px;\
-                    min-height: 20px;\
+                    background: yellow;\
+                    margin: 0 -5px 0 15px;\
+                    padding: 3px;\
+                    color: black;\
+                    }\
+                    .pv-pic-window-description::before {\
+                    display: inline-block;\
+                    content:"";\
+                    position: absolute;\
+                    border: 10px solid transparent;\
+                    margin-left: -22px;\
+                    border-right-color: yellow;\
                     }\
                     span.pv-pic-window-pre,\
                     span.pv-pic-window-next{\
@@ -19868,6 +19873,10 @@ ImgOps | https://imgops.com/#b#`;
                     border-radius: 0 0 8px 0;\
                     top: 0px;\
                     opacity:0.5;\
+                    }\
+                    .pv-pic-window-container>.pv-pic-window-pre:hover~span.pv-pic-search-state,\
+                    .pv-pic-window-container>.pv-pic-window-next:hover~span.pv-pic-search-state{\
+                    opacity:0;\
                     }\
                     .pv-pic-window-container>span.pv-pic-search-state:hover{\
                     overflow:visible;\
@@ -20285,7 +20294,7 @@ ImgOps | https://imgops.com/#b#`;
                 keepSI(this.toolbar,['top','left'],[0,-42]);
 
                 // 保持注释在图片里面
-                // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
+                //keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
             },
             initMaxSize: function() {
                 let wSize = getWindowSize();
@@ -20925,6 +20934,7 @@ ImgOps | https://imgops.com/#b#`;
                         scale=2;
                         if (this.img.naturalWidth) {
                             setSearchState(this.img.naturalWidth + " x " + this.img.naturalHeight + " (" + parseInt(content * 100) + "%)" + (this.curIndex >=0 ? ` <b>[${this.curIndex + 1}/${this.data.all.length}]</b>` : ""), this.imgState);
+                            this.imgState.appendChild(this.descriptionSpan);
                         }
                     }break;
                     case 'rotate':{
@@ -22660,7 +22670,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 noActual:noActual,
                 xhr: xhr,
-                description: description || '',
+                description: description || img.alt || '',
 
                 img: img,                  // 处理的图片
                 imgPA: imgPA,              // 图片的第一个父a元素
@@ -23464,7 +23474,8 @@ ImgOps | https://imgops.com/#b#`;
                         type: "link",
                         imgSrc: target.href,
                         noActual:true,
-                        img: target
+                        img: target,
+                        description: target.title
                     };
                     checkUniqueImgWin();
                 }
