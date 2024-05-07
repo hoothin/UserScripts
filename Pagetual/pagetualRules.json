@@ -10761,5 +10761,15 @@
     "replaceElement": ".spaceit>span",
     "pageNum": "&show={50*($p-1)}",
     "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
+},
+{
+    "name": "MAL News",
+    "author": "lemonadeforlife",
+    "url": "^https?://myanimelist\\.net/news",
+    "example": "https://myanimelist.net/news",
+    "nextlink": ".pagination.ac>a",
+    "replaceElement": ".pagination",
+    "pageElement": "div.news-list",
+    "action": 1
 }  
 ]
