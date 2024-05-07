@@ -19249,7 +19249,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (this.data) {
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
                     descriptionSpan.textContent = this.data.description || '';
-                    descriptionSpan.style.display = this.data.description ? "" : "none";
+                    descriptionSpan.style.display = this.data.description ? "inline" : "none";
                     this.descriptionSpan = descriptionSpan;
                 }
 
@@ -19822,6 +19822,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     .pv-pic-window-description {\
+                    display: none;\
                     background: yellow;\
                     margin: 0 -5px 0 15px;\
                     padding: 3px;\
@@ -20935,7 +20936,7 @@ ImgOps | https://imgops.com/#b#`;
                         scale=2;
                         if (this.img.naturalWidth) {
                             setSearchState(this.img.naturalWidth + " x " + this.img.naturalHeight + " (" + parseInt(content * 100) + "%)" + (this.curIndex >=0 ? ` <b>[${this.curIndex + 1}/${this.data.all.length}]</b>` : ""), this.imgState);
-                            this.imgState.appendChild(this.descriptionSpan);
+                            this.descriptionSpan && this.imgState.appendChild(this.descriptionSpan);
                         }
                     }break;
                     case 'rotate':{
