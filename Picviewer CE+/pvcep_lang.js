@@ -249,6 +249,7 @@ const langData = [
         initShow: "Invert Shortcut to show preview by default",
         stayOut: "Let float bar stay out of the image",
         galleryDownloadGap: "Download interval",
+        formatConversion: "Convert the image format when downloading. One rule per line",
         galleryDisableArrow: "Disable arrow key",
         positionFixed: "Fixed position",
         switchStoreLoc: "Memory position retention during switching"
@@ -503,6 +504,7 @@ const langData = [
         initShow: "反转快捷键，默认显示预览",
         stayOut: "使浮动工具栏显示在图片外部",
         galleryDownloadGap: "下载间隔时间",
+        formatConversion: "下载时转换图片格式，一行一条",
         galleryDisableArrow: "禁用方向键",
         positionFixed: "固定位置",
         switchStoreLoc: "切换时记忆位置"
@@ -757,6 +759,7 @@ const langData = [
         initShow: "反轉快捷鍵，默認顯示預覽",
         stayOut: "使浮動工具欄顯示在圖片外部",
         galleryDownloadGap: "下載間隔時間",
+        formatConversion: "下載時轉換圖片格式，一行一條",
         galleryDisableArrow: "禁用方向鍵",
         positionFixed: "固定位置",
         switchStoreLoc: "切換時記憶位置"
@@ -1012,6 +1015,7 @@ const langData = [
         initShow: "Inverter atalho para exibir a Pré-visualização por padrão",
         stayOut: "Permitir que a Barra de Ferramentas fique fora da imagem",
         galleryDownloadGap: "Intervalo para baixar",
+        formatConversion: "Converta o formato da imagem durante o download, uma linha por linha",
         galleryDisableArrow: "Desativar as teclas de seta",
         positionFixed: "Posição fixa",
         switchStoreLoc: "Posição da memória ao alternar"
@@ -1267,6 +1271,7 @@ const langData = [
         initShow: "Инвертировать сочетания клавиш, предпросмотр отображается по умолчанию",
         stayOut: "Сделать так, чтобы плавающая панель отображалась за пределами изображения",
         galleryDownloadGap: "Интервал скачивания",
+        formatConversion: "Преобразовывать формат изображения при загрузке, по одной строке в строке",
         galleryDisableArrow: "Отключить клавиши со стрелками",
         positionFixed: "Фиксированная позиция",
         switchStoreLoc: "Сохранять позицию в памяти во время переключения"
@@ -1522,6 +1527,7 @@ const langData = [
         initShow: "Varsayılan olarak önizlemeyi göstermek için kısayolu tersine çevir",
         stayOut: "Kayan araç çubuğunun görüntünün dışında kalmasına izin verin",
         galleryDownloadGap: "İndirme aralığı",
+        formatConversion: "İndirirken resim formatını her satıra bir satır olacak şekilde dönüştürün",
         galleryDisableArrow: "Ok tuşlarını devre dışı bırakın",
         positionFixed: "sabit konum",
         switchStoreLoc: "Anahtarlama sırasında hafıza konumu"
@@ -1776,6 +1782,7 @@ const langData = [
         initShow: "ショートカットを反転して、デフォルトでプレビューを表示",
         stayOut: "フロートバーを画像外に留める",
         galleryDownloadGap: "ダウンロード間隔",
+        formatConversion: "ダウンロード時に画像形式を変換します。1 行に 1 行",
         galleryDisableArrow: "矢印キーを無効にする",
         positionFixed: "固定位置",
         switchStoreLoc: "切り替え中に位置を保持"
@@ -2031,6 +2038,7 @@ const langData = [
         initShow: "Інвертувати комбінацію клавіш для попереднього перегляду за замовчуванням",
         stayOut: "Дозволити плавучій панелі залишитись поза зображенням",
         galleryDownloadGap: "Інтервал завантаження",
+        formatConversion: "Перетворити формат зображення під час завантаження. Один рядок на рядок",
         galleryDisableArrow: "Вимкнути клавіші зі стрілками",
         positionFixed: "Фіксоване положення",
         switchStoreLoc: "Положення пам'яті при перемиканні"
