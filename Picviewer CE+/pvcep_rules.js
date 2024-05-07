@@ -1296,9 +1296,9 @@ var siteInfo = [
                     const carousel = items0.carousel_media;
                     if (carousel) {
                         let gallery = [];
-                        let captions = [];
+                        const caption = (items0.caption ? items0.caption.text : (items0.accessibility_caption ? items0.accessibility_caption : items0.user.full_name));
                         carousel.map(c => { gallery.push(c.video_versions ? c.video_versions[0].url : c.image_versions2.candidates[0].url); });
-                        return gallery;
+                        return {url: gallery, cap: caption};
                     } else if (images) {
                         const imagesUrl = images.candidates[0].url;
                         return imagesUrl;
