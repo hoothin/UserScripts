@@ -17235,8 +17235,9 @@ ImgOps | https://imgops.com/#b#`;
                 var container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
-                var bgReg=/.*?url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
-                var imgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
+                var bgReg = /.*?url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
+                var body = getBody(document);
+                var imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
                     if(/^img$/i.test(node.nodeName)){
                         total.push(node);
                     }else if(/^svg$/i.test(node.nodeName)){
@@ -17357,7 +17358,7 @@ ImgOps | https://imgops.com/#b#`;
                     return total;
                 }, []);
                 imgs = imgs.reverse();
-                arrayFn.forEach.call(getBody(document).querySelectorAll("iframe"),function(iframe){
+                arrayFn.forEach.call(body.querySelectorAll("iframe"),function(iframe){
                     if (iframe.name == "pagetual-iframe") return;
                     if (!iframe.src || (iframe.src && (iframe.src == "about:blank" || iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname) != -1))) {
                         try{
