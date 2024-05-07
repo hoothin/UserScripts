@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.7.1
+// @version              2024.5.7.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11635,6 +11635,293 @@ module.exports = typeof setImmediate === 'function' ? setImmediate :
 },{}]},{},[10])(10)
 });
 
+//Bricks.js MIT. © 2017 Michael Cavalea
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global.Bricks = factory());
+}(this, (function () { 'use strict';
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var knot = function knot() {
+  var extended = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var events = Object.create(null);
+
+  function on(name, handler) {
+    events[name] = events[name] || [];
+    events[name].push(handler);
+    return this;
+  }
+
+  function once(name, handler) {
+    handler._once = true;
+    on(name, handler);
+    return this;
+  }
+
+  function off(name) {
+    var handler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    handler ? events[name].splice(events[name].indexOf(handler), 1) : delete events[name];
+
+    return this;
+  }
+
+  function emit(name) {
+    var _this = this;
+
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    // cache the events, to avoid consequences of mutation
+    var cache = events[name] && events[name].slice();
+
+    // only fire handlers if they exist
+    cache && cache.forEach(function (handler) {
+      // remove handlers added with 'once'
+      handler._once && off(name, handler);
+
+      // set 'this' context, pass args to handlers
+      handler.apply(_this, args);
+    });
+
+    return this;
+  }
+
+  return _extends({}, extended, {
+
+    on: on,
+    once: once,
+    off: off,
+    emit: emit
+  });
+};
+
+var bricks = function bricks() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  // privates
+
+  var persist = void 0; // packing new elements, or all elements?
+  var ticking = void 0; // for debounced resize
+
+  var sizeIndex = void 0;
+  var sizeDetail = void 0;
+
+  var columnTarget = void 0;
+  var columnHeights = void 0;
+
+  var nodeTop = void 0;
+  var nodeLeft = void 0;
+  var nodeWidth = void 0;
+  var nodeHeight = void 0;
+
+  var nodes = void 0;
+  var nodesWidths = void 0;
+  var nodesHeights = void 0;
+
+  // resolve options
+
+  var packed = options.packed.indexOf('data-') === 0 ? options.packed : 'data-' + options.packed;
+  var sizes = options.sizes.slice().reverse();
+  var position = options.position !== false;
+
+  var container = options.container.nodeType ? options.container : document.querySelector(options.container);
+
+  var selectors = {
+    all: function all() {
+      return toArray(container.children);
+    },
+    new: function _new() {
+      return toArray(container.children).filter(function (node) {
+        return !node.hasAttribute('' + packed);
+      });
+    }
+  };
+
+  // series
+
+  var setup = [setSizeIndex, setSizeDetail, setColumns];
+
+  var run = [setNodes, setNodesDimensions, setNodesStyles, setContainerStyles];
+
+  // instance
+
+  var instance = knot({
+    pack: pack,
+    update: update,
+    resize: resize
+  });
+
+  return instance;
+
+  // general helpers
+
+  function runSeries(functions) {
+    functions.forEach(function (func) {
+      return func();
+    });
+  }
+
+  // array helpers
+
+  function toArray(input) {
+    var scope = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+
+    return Array.prototype.slice.call(input);
+  }
+
+  function fillArray(length) {
+    return Array.apply(null, Array(length)).map(function () {
+      return 0;
+    });
+  }
+
+  // size helpers
+
+  function getSizeIndex() {
+    // find index of widest matching media query
+    return sizes.map(function (size) {
+      return size.mq && window.matchMedia('(min-width: ' + size.mq + ')').matches;
+    }).indexOf(true);
+  }
+
+  function setSizeIndex() {
+    sizeIndex = getSizeIndex();
+  }
+
+  function setSizeDetail() {
+    // if no media queries matched, use the base case
+    sizeDetail = sizeIndex === -1 ? sizes[sizes.length - 1] : sizes[sizeIndex];
+  }
+
+  // column helpers
+
+  function setColumns() {
+    columnHeights = fillArray(sizeDetail.columns);
+  }
+
+  // node helpers
+
+  function setNodes() {
+    nodes = selectors[persist ? 'new' : 'all']();
+  }
+
+  function setNodesDimensions() {
+    // exit if empty container
+    if (nodes.length === 0) {
+      return;
+    }
+
+    nodesWidths = nodes.map(function (element) {
+      return element.clientWidth;
+    });
+    nodesHeights = nodes.map(function (element) {
+      return element.clientHeight;
+    });
+  }
+
+  function setNodesStyles() {
+    nodes.forEach(function (element, index) {
+      columnTarget = columnHeights.indexOf(Math.min.apply(Math, columnHeights));
+
+      element.style.position = 'absolute';
+
+      nodeTop = columnHeights[columnTarget] + 'px';
+      nodeLeft = columnTarget * nodesWidths[index] + columnTarget * sizeDetail.gutter + 'px';
+
+      // support positioned elements (default) or transformed elements
+      if (position) {
+        element.style.top = nodeTop;
+        element.style.left = nodeLeft;
+      } else {
+        element.style.transform = 'translate3d(' + nodeLeft + ', ' + nodeTop + ', 0)';
+      }
+
+      element.setAttribute(packed, '');
+
+      // ignore nodes with no width and/or height
+      nodeWidth = nodesWidths[index];
+      nodeHeight = nodesHeights[index];
+
+      if (nodeWidth && nodeHeight) {
+        columnHeights[columnTarget] += nodeHeight + sizeDetail.gutter;
+      }
+    });
+  }
+
+  // container helpers
+
+  function setContainerStyles() {
+    container.style.position = 'relative';
+    container.style.width = sizeDetail.columns * nodeWidth + (sizeDetail.columns - 1) * sizeDetail.gutter + 'px';
+    container.style.height = Math.max.apply(Math, columnHeights) - sizeDetail.gutter + 'px';
+  }
+
+  // resize helpers
+
+  function resizeFrame() {
+    if (!ticking) {
+      window.requestAnimationFrame(resizeHandler);
+      ticking = true;
+    }
+  }
+
+  function resizeHandler() {
+    if (sizeIndex !== getSizeIndex()) {
+      pack();
+      instance.emit('resize', sizeDetail);
+    }
+
+    ticking = false;
+  }
+
+  // API
+
+  function pack() {
+    persist = false;
+    runSeries(setup.concat(run));
+
+    return instance.emit('pack');
+  }
+
+  function update() {
+    persist = true;
+    runSeries(run);
+
+    return instance.emit('update');
+  }
+
+  function resize() {
+    var flag = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+    var action = flag ? 'addEventListener' : 'removeEventListener';
+
+    window[action]('resize', resizeFrame);
+
+    return instance;
+  }
+};
+
+return bricks;
+
+})));
+
 var floatBar;
 ;(function(topObject,window,document,unsafeWindow){
     'use strict';
@@ -12122,7 +12409,6 @@ ImgOps | https://imgops.com/#b#`;
                 searchData:defaultSearchData,
                 downloadWithZip:true,
                 autoOpenViewmore:false,
-                viewmoreLayout:0,
                 downloadGap:0
             },
 
@@ -13470,6 +13756,33 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>');
                 getBody(document).appendChild(container);
 
+                let bricksInstance = Bricks({
+                    container: ".pv-gallery-maximize-container",
+                    packed: "data-packed",
+                    sizes: [{
+                        columns: 2,
+                        gutter: 10
+                    }, {
+                        mq: "600px",
+                        columns: 3,
+                        gutter: 10
+                    }, {
+                        mq: "800px",
+                        columns: 4,
+                        gutter: 10
+                    }, {
+                        mq: "1000px",
+                        columns: 5,
+                        gutter: 10
+                    }, {
+                        mq: "1130px",
+                        columns: 6,
+                        gutter: 12
+                    }]
+                });
+                this.bricksInstance = bricksInstance;
+                unsafeWindow.bricksInstance = this.bricksInstance;
+
                 this.hideScrollStyle = document.createElement("style");
                 this.hideScrollStyle.textContent = "html {-ms-overflow-style: none; scrollbar-width: none;}html::-webkit-scrollbar { width: 0 !important; height: 0 !important; }";
                 this.hideScrollStyle.type = 'text/css';
@@ -14579,6 +14892,36 @@ ImgOps | https://imgops.com/#b#`;
                     document.addEventListener('mouseup',upHandler,true);
                 },true);
 
+                function popupFiddleWindow(target) {
+                    if(self.hideImg && self.hideImg.parentNode){
+                        return;
+                    }else{
+                        self.hideImg=target;
+                        target.style.display="none";
+                        imgReady(self.src,{
+                            ready:function(){
+                                var fiddleWindow=new ImgWindowC(this);
+                                fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
+                                    if(self.hideImg && self.hideImg.parentNode){
+                                        self.hideImg.style.display="";
+                                        self.hideImg=null;
+                                    }
+                                });
+                            },
+                            error:function(e){
+                                var t_img = document.createElement('img');
+                                t_img.src = self.img.src;
+                                var fiddleWindow = new ImgWindowC(t_img);
+                                fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
+                                    if(self.hideImg && self.hideImg.parentNode){
+                                        self.hideImg.style.display="";
+                                        self.hideImg=null;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
                 eleMaps['img-parent'].addEventListener('click',function(e){//点击图片本身就行图片缩放处理
                     var target=e.target;
                     if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
@@ -14601,33 +14944,20 @@ ImgOps | https://imgops.com/#b#`;
                     }else if(target.classList.contains('pv-gallery-img_zoom-out')){
                         self.fitContains=true;
                         self.fitToScreen();
-                    };
+                    }else{
+                        popupFiddleWindow(target);
+                    }
                 },true);
                 eleMaps['img-parent'].addEventListener('dblclick',function(e){
                     var target=e.target;
-                    if(self.hideImg && self.hideImg.parentNode){
-                        return;
-                    }else{
-                        self.hideImg=target;
-                    }
                     if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
+                    if (!target.classList.contains('pv-gallery-img_zoom-in') && !target.classList.contains('pv-gallery-img_zoom-out')) return;
 
                     if(imgDraged){
                         imgDraged=false;
                         return;
                     };
-                    target.style.display="none";
-                    imgReady(self.src,{
-                        ready:function(){
-                            var fiddleWindow=new ImgWindowC(this);
-                            fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
-                                if(self.hideImg && self.hideImg.parentNode){
-                                    self.hideImg.style.display="";
-                                    self.hideImg=null;
-                                }
-                            });
-                        },
-                    });
+                    popupFiddleWindow(target);
                 },true);
 
 
@@ -14682,9 +15012,6 @@ ImgOps | https://imgops.com/#b#`;
                         self.getImg(self.errorSpan);
                     };
                 },false);
-                if(prefs.gallery.viewmoreLayout==1){
-                    eleMaps['maximize-container'].classList.add("pv-gallery-flex-maximize");
-                }
 
                 if(prefs.gallery.viewmoreEndless || prefs.gallery.scrollEndAndLoad){
                     var isScrolling = false;
@@ -15113,6 +15440,7 @@ ImgOps | https://imgops.com/#b#`;
                     sizeInputW.min=minSizeW;
                     sizeInputW.title="min width: "+sizeInputW.value+"px";
                     sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
+                    this.bricksInstance.pack();
                 }else{
                     this.data.forEach(function(item) {
                         if(!item)return;
@@ -15422,6 +15750,7 @@ ImgOps | https://imgops.com/#b#`;
                     };
                 if(alreadyShow){
                     this.closeViewMore();
+                    this.bricksInstance.resize(false);
                 }else{
                     maximizeContainer.style.minHeight = "100%";
                     maximizeContainer.parentNode.style.display = "block";
@@ -15435,6 +15764,8 @@ ImgOps | https://imgops.com/#b#`;
 
                     var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     this.addViewmoreItem(nodes);
+                    this.bricksInstance.pack();
+                    this.bricksInstance.resize(true);
                 }
             },
             dataURLToCanvas:function (dataurl, cb){
@@ -16166,6 +16497,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(!selectSpan && this.imgSpans.length)selectSpan=this.imgSpans[0];
                 }
                 this.select(selectSpan, true);
+                this.bricksInstance.pack();
             },
             load:function(data, from, reload){
                 if(this.shown || this.minimized){//只允许打开一个,请先关掉当前已经打开的库
@@ -17284,6 +17616,31 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-trigger-close:hover{\
                     background-color:#333;\
                     }\
+                    @media only screen and (max-width: 600px) {\
+                     .pv-gallery-maximize-container>.maximizeChild{\
+                     width:calc(50vw - 5px);\
+                     }\
+                    }\
+                    @media only screen and (min-width: 600px) {\
+                     .pv-gallery-maximize-container>.maximizeChild{\
+                     width:calc(33vw - 5px);\
+                     }\
+                    }\
+                    @media only screen and (min-width: 800px) {\
+                     .pv-gallery-maximize-container>.maximizeChild{\
+                     width:calc(25vw - 5px);\
+                     }\
+                    }\
+                    @media only screen and (min-width: 1000px) {\
+                     .pv-gallery-maximize-container>.maximizeChild{\
+                     width:calc(20vw - 5px);\
+                     }\
+                    }\
+                    @media only screen and (min-width: 1130px) {\
+                     .pv-gallery-maximize-container>.maximizeChild{\
+                     width:calc(16.6vw - 6px);\
+                     }\
+                    }\
                     @media only screen and (max-width: 799px) {\
                      .pv-gallery-range-box>input {\
                      display: none;\
@@ -17306,10 +17663,7 @@ ImgOps | https://imgops.com/#b#`;
                      opacity: 0!important;\
                      }\
                      .pv-gallery-maximize-container{\
-                     column-count: 2;\
-                     -moz-column-count: 2;\
-                     -webkit-column-count: 2;\
-                     padding-top: 200px;\
+                     margin-top: 200px;\
                      }\
                      .pv-gallery-sidebar-viewmore.showmore{\
                      transform: scale(3.5);\
@@ -17326,27 +17680,10 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     @media only screen and (min-width: 799px) {\
                      .pv-gallery-maximize-container{\
-                     column-count: 3;\
-                     -moz-column-count: 3;\
-                     -webkit-column-count: 3;\
-                     padding-top: 30px;\
+                     margin-top: 30px;\
                      }\
                      .pv-gallery-maximize-container span>p{\
                      opacity: 0;\
-                     }\
-                    }\
-                    @media only screen and (min-width: 1000px) {\
-                     .pv-gallery-maximize-container{\
-                     column-count: 4;\
-                     -moz-column-count: 4;\
-                     -webkit-column-count: 4;\
-                     }\
-                    }\
-                    @media only screen and (min-width: 1500px) {\
-                     .pv-gallery-maximize-container{\
-                     column-count: 5;\
-                     -moz-column-count: 5;\
-                     -webkit-column-count: 5;\
                      }\
                     }\
                     span.pv-gallery-tipsWords{\
@@ -17928,7 +18265,7 @@ ImgOps | https://imgops.com/#b#`;
                     position:absolute;\
                     line-height:0;\
                     text-align:center;\
-                    background-color:#00000060;\
+                    background-color:#00000030;\
                     color:#a1a1a1;\
                     white-space:nowrap;\
                     cursor:pointer;\
@@ -17983,9 +18320,10 @@ ImgOps | https://imgops.com/#b#`;
                     color: red;\
                     }\
                     .pv-gallery-maximize-container{\
-                    width: 100%;\
+                    min-width: 100%;\
                     display: block;\
                     background: black;\
+                    margin-left: 3px;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize{\
                     column-count: unset;\
@@ -18026,7 +18364,6 @@ ImgOps | https://imgops.com/#b#`;
                     text-align: center;\
                     background-color: rgba(40, 40, 40, 0.8);\
                     border: 5px solid #000000;\
-                    width: 100%;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover{\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
@@ -18046,6 +18383,9 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container>.maximizeChild:hover img {\
                     transform: scale3d(1.1, 1.1, 1.1);\
                     filter: brightness(1.1) !important;\
+                    }\
+                    .pv-gallery-maximize-container.pv-gallery-flex-maximize>.maximizeChild:hover img {\
+                    transform: translateY(-50%) scale3d(1.1, 1.1, 1.1);\
                     }\
                     .pv-gallery-maximize-container span>p{\
                     position: absolute;\
@@ -18113,12 +18453,14 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-scroll{\
                     overflow-y: scroll;\
+                    overflow-x: hidden;\
                     height: 100%;\
                     width: 100%;\
                     position: absolute;\
                     display: none;\
                     top: 0;\
                     left: 0;\
+                    background: black;\
                     }\
                     .pv-gallery-sidebar-toggle:hover,.pv-gallery-sidebar-viewmore:hover{\
                     color:#ccc;\
@@ -24375,15 +24717,6 @@ ImgOps | https://imgops.com/#b#`;
                     "default": prefs.gallery.descriptionLength,
                     after: i18n("galleryDescriptionLength2")
                 },
-                'gallery.viewmoreLayout': {
-                    label: i18n("galleryViewmoreLayout"),
-                    type: 'select',
-                    options: {
-                        '0': "default",
-                        '1': "flex-box"
-                    },
-                    "default": prefs.gallery.viewmoreLayout
-                },
                 'gallery.autoOpenViewmore': {
                     label: i18n("autoOpenViewmore"),
                     type: 'checkbox',
@@ -24972,7 +25305,7 @@ ImgOps | https://imgops.com/#b#`;
         },
         setListItem: function(list, key, value, limitNum = 50) {
             var listData = this.getItem(list);
-            if (!listData) listData = [];
+            if (!listData || !listData.filter) listData = [];
             listData = listData.filter(data => data && data.k != key);
             if (value) {
                 listData.unshift({k: key, v: value});
