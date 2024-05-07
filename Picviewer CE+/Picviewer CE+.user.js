@@ -19826,6 +19826,7 @@ ImgOps | https://imgops.com/#b#`;
                     margin: 0 -5px 0 15px;\
                     padding: 3px;\
                     color: black;\
+                    text-shadow: 0 0 0px black;\
                     }\
                     .pv-pic-window-description::before {\
                     display: inline-block;\
@@ -22670,7 +22671,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 noActual:noActual,
                 xhr: xhr,
-                description: description || img.alt || '',
+                description: description || img.title || img.alt || '',
 
                 img: img,                  // 处理的图片
                 imgPA: imgPA,              // 图片的第一个父a元素
