@@ -10745,10 +10745,31 @@
 {
     "name": "MAL - Top (Anime/Manga)",
     "author": "lemonadeforlife",
-    "url": "^https?://myanimelist\\.net/top(anime|manga).php",
+    "url": "^https?://myanimelist\\.net/top(anime|manga)\\.php",
     "example": "https://myanimelist.net/topanime.php",
     "nextlink": "icon-top-ranking-page-bottom> .link-blue-box.next",
     "replaceElement": ".link-blue-box",
     "pageElement": ".top-ranking-table"
+},
+{
+    "name": "MAL - recommendations",
+    "author": "lemonadeforlife",
+    "url": "^https?://myanimelist\\.net/recommendations\\.php",
+    "example": "https://myanimelist.net/recommendations.php?s=recentrecs&t=anime",
+    "nextLinkByUrl": ["(&show=(\\d+))?$", "&show={$2+100}"],
+    "pageElement": "#content > div:nth-child(3)",
+    "replaceElement": ".spaceit>span",
+    "pageNum": "&show={50*($p-1)}",
+    "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
+},
+{
+    "name": "MAL News",
+    "author": "lemonadeforlife",
+    "url": "^https?://myanimelist\\.net/news",
+    "example": "https://myanimelist.net/news",
+    "nextlink": ".pagination.ac>a",
+    "replaceElement": ".pagination",
+    "pageElement": "div.news-list",
+    "action": 1
 }  
 ]
