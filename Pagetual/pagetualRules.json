@@ -10741,5 +10741,14 @@
     "action": 0,
     "pageNum": "&show={50*($p-1)}",
     "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
-}
+},
+{
+    "name": "MAL - Top (Anime/Manga)",
+    "author": "lemonadeforlife",
+    "url": "^https?://myanimelist\\.net/top(anime|manga).php",
+    "example": "https://myanimelist.net/topanime.php",
+    "nextlink": "icon-top-ranking-page-bottom> .link-blue-box.next",
+    "replaceElement": ".link-blue-box",
+    "pageElement": ".top-ranking-table"
+}  
 ]
