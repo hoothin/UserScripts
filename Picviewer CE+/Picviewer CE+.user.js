@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
 // @require              https://update.greasyfork.org/scripts/438080/1372140/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1371108/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1372505/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -12074,6 +12074,7 @@ ImgOps | https://imgops.com/#b#`;
             document.body.removeChild(canvas);
         }
     }
+    var formatDict = new Map();
     function icon2Base64(icon, content, iconStyle) {
         if (!content || !canvas) return false;
         let size = Math.min((icon.clientWidth || icon.offsetWidth), (icon.clientHeight || icon.offsetHeight));
@@ -12242,15 +12243,16 @@ ImgOps | https://imgops.com/#b#`;
             onload: function(d) {
                 let blob = d.response;
                 let ext = blob.type.replace(/.*image\/(\w+).*/, "$1");
-                if (canvas && (ext == "webp" || forcePng)) {
+                let conversion = formatDict.get(ext);
+                if (canvas && (conversion || forcePng)) {
                     var self = this;
                     var a = new FileReader();
                     a.readAsDataURL(blob);
                     a.onload = function (e) {
                         dataURLToCanvas(e.target.result, canvas => {
                             canvas.toBlob(blob => {
-                                cb(blob, "png");
-                            }, "image/png");
+                                cb(blob, conversion || "png");
+                            }, "image/" + (conversion || "png"));
                         });
                     };
                     a.onerror = function (e){
@@ -12386,6 +12388,7 @@ ImgOps | https://imgops.com/#b#`;
                 sidebarPosition: 'bottom',//'top' 'right' 'bottom' 'left'  四个可能值
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
                 backgroundColor: 'rgba(20,20,20,0.75)',
+                formatConversion: "webp>png",
                 sidebarToggle: true, // 是否显示隐藏按钮
                 transition:true,//大图片区的动画。
                 preload:true,//对附近的图片进行预读。
@@ -15321,7 +15324,11 @@ ImgOps | https://imgops.com/#b#`;
                         let crosHandler = imgSrc => {
                             urlToBlob(imgSrc, blob=>{
                                 if (blob && blob.size>58) {
-                                    zip.file(imgName.replace(/\//g, "").replace(/\.webp$/, ".png"), blob);
+                                    let fileName = imgName.replace(/\//g, "");
+                                    formatDict.forEach((value, key) => {
+                                        fileName.replace(new RegExp(`\\.${key}$`), value);
+                                    });
+                                    zip.file(fileName, blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 1000000);
@@ -24659,6 +24666,11 @@ ImgOps | https://imgops.com/#b#`;
                     "default": prefs.gallery.downloadGap,
                     after: ' ms',
                 },
+                'gallery.formatConversion': {
+                    label: i18n("formatConversion"),
+                    type: 'textarea',
+                    "default": prefs.gallery.formatConversion || ''
+                },
                 'gallery.scaleSmallSize': {
                     label: i18n("galleryScaleSmallSize1"),
                     type: 'int',
@@ -25199,6 +25211,14 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
             } catch(e) {}
+            if (typeof prefs.gallery.formatConversion == 'undefined') {
+                prefs.gallery.formatConversion = "webp>png";
+            }
+            prefs.gallery.formatConversion.split("\n").forEach(str => {
+                let pair = str.split(">");
+                if (pair.length !== 2) return;
+                formatDict.set(pair[0].trim(), pair[1].trim());
+            });
 
             debug = prefs.debug ? console.log.bind(console) : function() {};
         }
