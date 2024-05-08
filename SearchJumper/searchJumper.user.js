@@ -1291,6 +1291,7 @@
                         break
                     }
                 }
+                if (!lunarData) return null;
 
                 for (let k = 0; k < lunarYearMonths(lunarData).length; k++) {
                     daySpan -= lunarYearMonths(lunarData)[k];
@@ -1636,6 +1637,7 @@
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon {
                      display: flex;
                      flex-wrap: wrap;
+                     padding: 0;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist>.sitelistCon>p {
                      text-align: left;
@@ -1645,7 +1647,7 @@
                      width: 100%;
                  }
                  #search-jumper #search-jumper-alllist.new-mode .sitelist a {
-                     width: 250px;
+                     width: 240px;
                      height: 100px;
                      display: block!important;
                      padding: 10px 8%;
@@ -1679,7 +1681,7 @@
                      -webkit-box-orient: vertical;
                      margin-left: 62px;
                      margin-top: 35px;
-                     width: 190px;
+                     width: 185px;
                      position: absolute;
                      pointer-events: none;
                  }
@@ -1892,11 +1894,11 @@
                      background: #ffffffd0;
                      color: black;
                      margin-top: -22px;
-                     line-height: 1.5;
+                     line-height: 1.2;
                      font-size: 13px;
                      font-weight: bold;
                      border-radius: 20px;
-                     padding: 1px 5px;
+                     padding: 3px 6px;
                      box-shadow: #000000 0px 0px 10px;
                      opacity: 0;
                      pointer-events: none;
@@ -2754,22 +2756,22 @@
                  }
                  @media screen and (max-width: 1920px) {
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                         width: 1370px;
+                         width: 1320px;
                      }
                  }
                  @media screen and (max-width: 1600px) {
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                         width: 1100px;
+                         width: 1060px;
                      }
                  }
                  @media screen and (max-width: 1300px) {
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                         width: 830px;
+                         width: 800px;
                      }
                  }
                  @media screen and (max-width: 900px) {
                      #search-jumper.search-jumper-showall #search-jumper-alllist.new-mode .sitelist {
-                         width: 560px;
+                         width: 540px;
                      }
                  }
                  @media screen and (max-width: 600px) {
@@ -5633,11 +5635,12 @@
                 let dayLabelStr = i18n(days[now.getDay()]) + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date);
                 if (lang.indexOf("zh-") == 0) {
                     let lunar = sloarToLunar(year, month, date);
-                    let lunarStr = `${lunar.lunarYear}年${lunar.lunarMonth}月${lunar.lunarDay}`;
-                    self.dayInAll.innerHTML = createHTML(dayLabelStr + "<br/>" + lunarStr);
-                } else {
-                    self.dayInAll.innerHTML = createHTML(dayLabelStr);
+                    if (lunar) {
+                        let lunarStr = `${lunar.lunarYear}年${lunar.lunarMonth}月${lunar.lunarDay}`;
+                        dayLabelStr = dayLabelStr + "<br/>" + lunarStr;
+                    }
                 }
+                self.dayInAll.innerHTML = createHTML(dayLabelStr);
                 let setTimeLabel = () => {
                     let now = new Date();
                     let hour = now.getHours(), minute = now.getMinutes(), seconds = now.getSeconds();
@@ -7350,6 +7353,17 @@
                 this.historyInserted = true;
                 let num = 0;
                 let toFirst = !init && searchData.prefConfig.historyInsertFirst;
+                let insertBefore = false, maxSiteNum = 0;
+                if (!toFirst) {
+                    insertBefore = this.searchJumperExpand.parentNode == typeEle && !searchData.prefConfig.expandType;
+                    if (insertBefore) {
+                        maxSiteNum = (searchData.prefConfig.numPerLine || 7) - 1;
+                        maxSiteNum = searchData.prefConfig.historyLength < maxSiteNum ? (maxSiteNum + maxSiteNum - searchData.prefConfig.historyLength) : maxSiteNum;
+                        if (searchData.prefConfig.hideTileType) {
+                            maxSiteNum++;
+                        }
+                    }
+                }
                 for (let i = 0; i < this.historySiteBtns.length; i++) {
                     let btn = this.historySiteBtns[i];
                     if (btn.style.display == "none") continue;
@@ -7374,10 +7388,8 @@
                                 typeEle.insertBefore(btn, typeEle.children[1]);
                             } else typeEle.appendChild(btn);
                         } else {
-                            if (self.searchJumperExpand.parentNode == typeEle && !searchData.prefConfig.expandType) {
+                            if (insertBefore) {
                                 let siteBtns = typeEle.querySelectorAll("a.search-jumper-btn");
-                                let maxSiteNum = (searchData.prefConfig.numPerLine || 7) - 1;
-                                maxSiteNum = searchData.prefConfig.historyLength < maxSiteNum ? (maxSiteNum + maxSiteNum - searchData.prefConfig.historyLength) : maxSiteNum;
                                 if (siteBtns.length > maxSiteNum) {
                                     typeEle.insertBefore(btn, siteBtns[maxSiteNum]);
                                 } else typeEle.insertBefore(btn, self.searchJumperExpand);
