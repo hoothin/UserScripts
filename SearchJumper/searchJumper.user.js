@@ -1893,11 +1893,11 @@
                      position: absolute;
                      background: #ffffffd0;
                      color: black;
-                     margin-top: -22px;
+                     margin-top: -${22 * this.tilesZoom}px;
                      line-height: 1.2;
-                     font-size: 13px;
+                     font-size: ${13 * this.tilesZoom}px;
                      font-weight: bold;
-                     border-radius: 20px;
+                     border-radius: ${20 * this.tilesZoom}px;
                      padding: 3px 6px;
                      box-shadow: #000000 0px 0px 10px;
                      opacity: 0;
