@@ -6795,7 +6795,7 @@
            color: #ff6464;
          }
          .pagetual_tipsWords {
-           font-size: 3em;
+           font-size: 50px;
            font-weight: bold;
            font-family: "黑体", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
              "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
