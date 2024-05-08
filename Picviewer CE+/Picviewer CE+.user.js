@@ -16491,6 +16491,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.imgSpans = thumbnails.children;
 
                 this.thumbScrollbar.reset();
+                this.bricksInstance.pack();
 
                 if(!data && (!selectSpan || (selectSpan.style.display=="none" && !selectData))){
                     for(var j in this.imgSpans){
@@ -16504,7 +16505,6 @@ ImgOps | https://imgops.com/#b#`;
                     if(!selectSpan && this.imgSpans.length)selectSpan=this.imgSpans[0];
                 }
                 this.select(selectSpan, true);
-                this.bricksInstance.pack();
             },
             load:function(data, from, reload){
                 if(this.shown || this.minimized){//只允许打开一个,请先关掉当前已经打开的库
@@ -16553,6 +16553,18 @@ ImgOps | https://imgops.com/#b#`;
                 this.from=from;//如果来自frame，那么这个from应该保存了那个frame的窗口id，便于以后通信。
 
                 this._appendThumbSpans(null, index);
+                if (this.urlFilter) {
+                    var thumbnails = this.eleMaps['sidebar-thumbnails-container'].childNodes;
+                    thumbnails = Array.prototype.slice.call(thumbnails).filter(function(thumbnail) {
+                        if (thumbnail.style.display == "none") {
+                            return false;
+                        }
+                        return true;
+                    });
+                    if (thumbnails.length === 0) {
+                        this.showTips("No images match the filter");
+                    }
+                }
 
                 this.runOnce();
 
@@ -18801,13 +18813,30 @@ ImgOps | https://imgops.com/#b#`;
                 if(!ele){
                     return;
                 };
-
-                var self=this;
-                this.imgReady=imgReady(dataset(ele,'src'),{
-                    loadEnd:function(){
-                        if(self.aborted){
+                this.waitForReady(ele);
+            },
+            waitForReady: function(ele) {
+                var self = this;
+                this.imgReady = imgReady(dataset(ele,'src'), {
+                    loadEnd: function(e) {
+                        if (self.aborted) {
                             return;
-                        };
+                        }
+
+                        if (e.type == 'error') {
+                            var srcs = dataset(ele, 'srcs');
+                            if (srcs) srcs = srcs.split(",");
+                            if (srcs && srcs.length > 0) {
+                                var src = srcs.shift();
+                                dataset(ele, 'srcs', srcs.join(","));
+                                if (src) {
+                                    dataset(ele, 'src', src);
+                                    self.waitForReady(ele);
+                                    return;
+                                }
+                            }
+                        }
+
                         dataset(ele,'preloaded','true')
                         self.container.appendChild(this);
                         self.preload();
