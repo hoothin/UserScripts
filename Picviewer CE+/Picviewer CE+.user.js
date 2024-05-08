@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.7.2
+// @version              2024.5.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -22654,13 +22654,14 @@ ImgOps | https://imgops.com/#b#`;
             },
             open:async function(e,buttonType){
                 if (this.data.imgSrc.indexOf("blob:") === 0) {
-                    if (this.data.src === this.data.imgSrc) {
-                        this.data.imgSrc = await getBase64FromBlobUrl(this.data.imgSrc);
-                        this.data.src = this.data.imgSrc;
+                    let blobUrl = await getBase64FromBlobUrl(this.data.imgSrc);
+                    if (blobUrl) {
+                        let sameSrc = (this.data.src === this.data.imgSrc);
+                        this.data.imgSrc = blobUrl;
                         this.data.srcs = [this.data.imgSrc];
-                    } else {
-                        this.data.imgSrc = await getBase64FromBlobUrl(this.data.imgSrc);
-                        this.data.srcs = [this.data.imgSrc];
+                        if (sameSrc) {
+                            this.data.src = blobUrl;
+                        }
                     }
                 }
                 if (buttonType === 'download' && !this.data.xhr) {
