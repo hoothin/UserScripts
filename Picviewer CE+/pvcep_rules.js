@@ -1479,5 +1479,21 @@ var siteInfo = [
         url: /^https?:\/\/www\.la\-croix\.com\//,
         r: /\/\d+x\d+\//,
         s: "/x/"
+    },
+    {
+        name:"e-hentai",
+        url:/^https?:\/\/(e\-|ex)hentai\.org\//i,
+        xhr: {
+            url: function(a, p) {
+                if (!a) return;
+                const re = /\/s\//i;
+                const m = a.href.match(re);
+                return m && a.href;
+            },
+            q: function(html, doc) {
+                let img = doc.querySelector("#img");
+                return img && img.src;
+            }
+        }
     }
 ];
