@@ -5652,7 +5652,7 @@
     "author": "skofkyo",
     "example": "https://jable.tv/new-release/",
     "url": "^https?://(jable|fs1)\\.(tv|app)/",
-    "init": "document.querySelectorAll('#list_videos_common_videos_list_sort_list a').forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 800)')})",
+    "refreshByClick": "[data-action='ajax']",
     "nextLink": "//li[span/@class='page-link active disabled']/following-sibling::li[1]/a",
     "pageElement": "section>.row",
     "replaceElement": ".pagination",
