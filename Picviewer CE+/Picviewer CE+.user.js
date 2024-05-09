@@ -13641,14 +13641,13 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-others">'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="urlFilter" title="'+i18n("urlFilterTip")+'">'+i18n("urlFilter")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip"," " + prefs.gallery.editSite + " ")+'">'+i18n("onlineEdit")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("rotateTips")+'">'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item">'+
                     i18n("rotate")+' <select id="galleryRotate">'+
                     '<option value="0">0°</option>'+
                     '<option value="90">90°</option>'+
@@ -13660,6 +13659,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<label data-command="scrollToEndAndReload">'+i18n("autoRefresh")+'</label>'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
                     '</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="urlFilter" title="'+i18n("urlFilterTip")+'">'+i18n("urlFilter")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="addImageUrls" title="'+i18n("addImageUrlsTips")+'">'+i18n("addImageUrls")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openImages" title="'+i18n("openImagesTips")+'">'+i18n("openImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="operate" title="'+i18n("fiddleTip")+'">'+i18n("fiddle")+'</span>'+
