@@ -10736,7 +10736,7 @@
     ],
     "pageElement": ".js-categories-seasonal>table",
     "replaceElement": ".spaceit>span",
-    "action": 0,
+    "action": 2,
     "pageNum": "&show={50*($p-1)}",
     "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
 },
