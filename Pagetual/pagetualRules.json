@@ -9213,7 +9213,6 @@
     "pageBar": "pageBar.classList.add('l_post')",
     "nextLink": "//div[@class=\"pb_footer\"]//a[starts-with(text(), '下一页')]",
     "pageElement": "//div[@class=\"p_postlist\"]/div[starts-with(@class, 'l_post')]",
-    "type": 0,
     "action": 1,
     "pageNum": "&pn={$p}",
     "url": "^https?://tieba\\.baidu\\.com/p/.+",
