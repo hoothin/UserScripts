@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.41
+// @version      1.9.37.42
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5399,8 +5399,15 @@
                   -webkit-transition:all 0.3s ease;
                   transition:all 0.3s ease;
                  }
-                 #saveBtn:hover {
+                 #configCon #saveBtn:hover {
                   opacity: 1;
+                  margin-bottom: 0px;
+                 }
+                 #configCon #saveBtn {
+                  margin-bottom: -40px;
+                 }
+                 #configCon.showSave #saveBtn {
+                  margin-bottom: 0px;
                  }
                 `);
                 click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
@@ -5436,6 +5443,17 @@
                         rulesExample.href = rulesExample.href.replace("/en", "");
                     }
                 }
+
+                let newPos, lastPos = 0;
+                window.addEventListener('scroll', function(e) {
+                    newPos = window.scrollY;
+                    if (newPos > lastPos) {
+                        configCon.classList.add("showSave");
+                    } else {
+                        configCon.classList.remove("showSave");
+                    }
+                    lastPos = newPos;
+                });
             } else return false;
         } else return false;
         let ruleBarInsertPos = document.createTextNode(' ');
@@ -6100,7 +6118,37 @@
         }
         let allOk = true;
         let preLength = ruleParser.rules.length;
-        function addNextRule() {
+        let fetchVersion = -1;
+        async function needUpdate(url) {
+            if (!/^https:\/\/hoothin\.github\.io\/|\/hoothin\/UserScripts\/.*\/Pagetual\/pagetualRules\.json/i.test(url)) {
+                return true;
+            }
+            if (fetchVersion >= 0) {
+                return fetchVersion > (rulesData.ruleVersion || 0);
+            }
+            fetchVersion = await new Promise(resolve => {
+                _GM_xmlhttpRequest({
+                    url: url.replace(/\/\w+\.json/i, "/version"),
+                    method: 'GET',
+                    timeout: 20000,
+                    headers: {
+                        'accept': 'application/json,text/html'
+                    },
+                    onload: function(res) {
+                        let version = parseInt(res.response || res.responseText);
+                        resolve(version || -1);
+                    },
+                    onerror: function(e) {
+                        resolve(-1);
+                    },
+                    ontimeout: function(e) {
+                        resolve(-1);
+                    }
+                });
+            });
+            return fetchVersion > (rulesData.ruleVersion || 0);
+        }
+        async function addNextRule() {
             if (ruleIndex < 0) {
                 let now = new Date().getTime();
                 storage.setItem("ruleLastUpdate", now);
@@ -6117,20 +6165,32 @@
                     });
                 }
                 inUpdate = false;
+                let rulesDataChanged = false;
+                if (fetchVersion >= 0 && rulesData.ruleVersion !== fetchVersion) {
+                    rulesData.ruleVersion = fetchVersion;
+                    rulesDataChanged = true;
+                }
                 if (rulesData.uninited && allOk && ruleUrls.length > 1) {
                     rulesData.uninited = false;
+                    rulesDataChanged = true;
+                }
+                if (rulesDataChanged) {
                     storage.setItem("rulesData", rulesData);
                 }
                 success();
             } else {
                 let rule = ruleUrls[ruleIndex--];
-                ruleParser.addRuleByUrl(rule.url, rule.id, (json, err) => {
-                    if (!json) {
-                        allOk = false;
-                        fail(rule, err);
-                    }
+                if (await needUpdate(rule.url)) {
+                    ruleParser.addRuleByUrl(rule.url, rule.id, (json, err) => {
+                        if (!json) {
+                            allOk = false;
+                            fail(rule, err);
+                        }
+                        addNextRule();
+                    });
+                } else {
                     addNextRule();
-                })
+                }
             }
         }
         addNextRule();
