@@ -1,0 +1,32 @@
+name: Update Version on File Change
+on:
+  push:
+    paths:
+      - 'Pagetual/items_all.json'
+      - 'Pagetual/pagetualRules.json'
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Read current version
+        id: read_version
+        run: echo "::set-output name=version::$(cat Pagetual/version)"
+
+      - name: Increment version
+        id: increment_version
+        run: echo "::set-output name=version::$((${{ steps.read_version.outputs.version }} + 1))"
+
+      - name: Update version file
+        run: echo "${{ steps.increment_version.outputs.version }}" > Pagetual/version
+
+      - name: Commit version update
+        run: |
+          git config --local user.email "rixixi@gmail.com"
+          git config --local user.name "hoothin-update"
+          git add Pagetual/version
+          git commit -m "Update version of Pagetual rules to ${{ steps.increment_version.outputs.version }}"
+          git push https://${{ secrets.ACTION_SECRET }}@github.com/${{ github.repository }}
