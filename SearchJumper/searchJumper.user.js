@@ -9972,7 +9972,7 @@
                                     }
                                 }
                                 tipsResult = await fetchData.then(r => {
-                                    if (!template) {
+                                    if (!data) {
                                         return r;
                                     }
                                     let doc = document.implementation.createHTMLDocument('');
