@@ -9759,7 +9759,7 @@
                     const cacheReg = /\|cache\=(\d+)$/;
                     const postReg = /%p{(.*?)}/;
                     const thenReg = /.then{(.*?)}/;
-                    data = data.replace(/^showTips:/, '');
+                    data = data.replace(/^showTips:/, '').trim();
                     if (/^https?:/.test(data)) {
                         let url = data.split("\n");
                         if (url.length == 1) url = data.split(" ");
@@ -9972,6 +9972,9 @@
                                     }
                                 }
                                 tipsResult = await fetchData.then(r => {
+                                    if (!template) {
+                                        return r;
+                                    }
                                     let doc = document.implementation.createHTMLDocument('');
                                     doc.documentElement.innerHTML = createHTML(r);
                                     let finalData = data;
