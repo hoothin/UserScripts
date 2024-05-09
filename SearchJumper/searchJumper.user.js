@@ -1486,6 +1486,7 @@
                  #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist>.sitelistCon>p {
                      pointer-events: all;
                      cursor: pointer;
+                     margin: 0 auto;
                  }
                  #search-jumper.search-jumper-showall.searching #search-jumper-alllist .sitelist>.sitelistCon a {
                      display: flex!important;
@@ -2292,7 +2293,7 @@
                      position: fixed;
                      text-align: left;
                      background: #00000000;
-                     max-height: calc(100vh - 20px);
+                     max-height: 100vh;
                      overflow: scroll;
                      border: 0;
                      pointer-events: none;
@@ -2300,6 +2301,8 @@
                      ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.25s ease;"}
                      scrollbar-width: none;
                      box-sizing: content-box;
+                     overscroll-behavior: contain;
+                     -ms-scroll-chaining: contain;
                  }
                  #search-jumper .search-jumper-type:hover>.sitelist {
                      pointer-events: all;
@@ -2373,7 +2376,6 @@
                  }
                  #search-jumper .sitelist>.sitelistCon>p {
                      color: #565656;
-                     margin: 0;
                      text-align: center;
                      font-size: 16px;
                      font-family: Arial, sans-serif;
@@ -2382,7 +2384,6 @@
                      border-radius: 10px 10px 0 0;
                      overflow: hidden;
                      white-space: nowrap;
-                     margin: 0 auto;
                      text-overflow: ellipsis;
                      padding: 3px 10px;
                      position: sticky;
@@ -6740,6 +6741,7 @@
                         type.parentNode && type.parentNode.removeChild(type);
                     });
                 }
+                searchTypes = [];
                 for (let siteConfig of searchData.sitesConfig) {
                     await this.createType(siteConfig);
                 }
