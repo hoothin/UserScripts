@@ -2389,6 +2389,7 @@
                      position: sticky;
                      top: 0;
                      pointer-events: none;
+                     margin: -1px 0 0 0;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
                      pointer-events: none;
