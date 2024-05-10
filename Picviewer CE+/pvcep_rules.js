@@ -702,7 +702,7 @@ var siteInfo = [
                     return a.href;
                 }
             },
-            query: ['#picarea']
+            query: '#picarea'
         }
     },
     {
@@ -1357,8 +1357,9 @@ var siteInfo = [
     {
         name: "Sankaku Complex",
         url:/sankakucomplex\.com/,
+        src:/\/data\/preview\//,
         xhr:{
-            url: /\/data\/preview\//,
+            url: "a",
             query: "img#image"
         }
     },
