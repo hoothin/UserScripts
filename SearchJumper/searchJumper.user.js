@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.83
+// @version      1.7.84
 // @description  Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  万能聚合搜索，一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -3698,6 +3698,11 @@
                     return wordSpans;
                 }
                 this.initHighlight = !!init;
+                if (this.initHighlight) {
+                    setTimeout(() => {
+                        this.initHighlight = false;
+                    }, 500);
+                }
                 if (!this.lockWords) {
                     if (words.indexOf("$c") === 0 && words.length > 2) {
                         this.splitSep = words.substr(2, 1);
@@ -12391,9 +12396,11 @@
                 characterData: true,
                 subtree: true
             };
+            let highlightTimes = 0;
             let bodyObserver = new MutationObserver((mutationsList, observer) => {
                 let lockWords = searchBar.lockWords;
-                if (lockWords && !searchBar.initHighlight) {
+                if (lockWords) {
+                    if (searchBar.initHighlight && highlightTimes > 100) return;
                     for (let mutation of mutationsList) {
                         if (mutation.type === "characterData") {
                             let parentNode = mutation.target.parentNode;
@@ -12403,6 +12410,7 @@
                                 return;
                             }
                             searchBar.checkCharacterData(parentNode);
+                            searchBar.initHighlight && highlightTimes++;
                         }
                         if (mutation.removedNodes.length) {
                             [].forEach.call(mutation.removedNodes, removedNode => {
@@ -12423,6 +12431,7 @@
                                     setTimeout(() => {
                                         highlight("insert", target)
                                     }, 0);
+                                    searchBar.initHighlight && highlightTimes++;
                                 }
                             });
                         }
