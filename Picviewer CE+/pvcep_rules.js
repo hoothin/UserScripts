@@ -692,7 +692,7 @@ var siteInfo = [
     },
     {
         name:"绅士漫画",
-        url:/^https?:\/\/wnacg\./,
+        url:/^https?:\/\/(www\.)?wnacg\./,
         src: /\/\/t(\w\.qy.*data\/)t\//,
         r: /\/\/t(\w\.qy.*data\/)t\//,
         s: "//img$1",
