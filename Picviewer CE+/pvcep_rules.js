@@ -2,7 +2,7 @@
 PVCEP - Rules for Picviewer CE+
 <https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js>
 
-(c) 2021-2022 Hoothin <rixixi [at] gmail.com>
+(c) 2021-2024 Hoothin <rixixi [at] gmail.com>
 Licenced under the MIT license.
 
 最少僅需
@@ -176,26 +176,27 @@ var siteInfo = [
         r: [/\/sys\/portrait/i,
             /^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i],
         s: ["/sys/portraitl", "$1$2"],
-        getImage: function(a, p, rule) {
-            rule.stopXhr = true;
-            let pid = this.src.match(/\.baidu\.com\/forum\/w.*\/(\w+)\./);
-            if (!pid) return null;
-            pid = pid[1];
-            let tid = 0;
-            let tidm = location.href.match(/\/p\/(\d+)/);
-            if (tidm) tid = tidm[1];
-            if (tid) {
-                let kw = document.querySelector(`#wd2`);
-                if (kw && kw.value) {
-                    rule.stopXhr = false;
-                    return `https://tieba.baidu.com/photo/bw/picture/guide?kw=${kw.value}&tid=${tid}&pic_id=${pid}&see_lz=0&from_page=0&alt=jview`;
-                }
-            }
+        getImage: function(a, p) {
             let bsrc = this.getAttribute('bpic');
             return bsrc || null;
         },
         xhr: {
-            q: function(html, doc, url) {
+            url: function(a, p) {
+                let pid = this.src.match(/\.baidu\.com\/forum\/w.*\/(\w+)\./);
+                if (!pid) return null;
+                pid = pid[1];
+                let tid = 0;
+                let tidm = location.href.match(/\/p\/(\d+)/);
+                if (tidm) tid = tidm[1];
+                if (tid) {
+                    let kw = document.querySelector(`#wd2`);
+                    if (kw && kw.value) {
+                        return `https://tieba.baidu.com/photo/bw/picture/guide?kw=${kw.value}&tid=${tid}&pic_id=${pid}&see_lz=0&from_page=0&alt=jview`;
+                    }
+                }
+                return null;
+            },
+            query: function(html, doc, url) {
                 let data = JSON.parse(html);
                 if (!data) return null;
                 let pid = url.match(/&pic_id=(\w+)/)[1];
@@ -302,12 +303,8 @@ var siteInfo = [
     name:"deviantart",
     url:/^https?:\/\/[^.]*\.deviantart\.com/i,
     xhr: {
-        q: '[property="contentUrl"]'
-    },
-    getImage: function(a, p) {
-        if (a && a.dataset.hook == "deviation_link") {
-            return a.href;
-        }
+        url: 'a[data-hook = "deviation_link"]',
+        query: '[property="contentUrl"]'
     }
 },*/
     {
@@ -433,14 +430,10 @@ var siteInfo = [
     {
         name: '优美图',
         url: /http:\/\/(?:www\.)?topit\.me\//,
-        getImage: function(a) {
-            if (a && a.href.match(/topit\.me\/item\/\d+/)) {
-                return a.href;
-            }
-        },
         lazyAttr: 'data-original',
         xhr: {
-            q: ['a[download]', 'a#item-tip'],
+            url: /topit\.me\/item\/\d+/,
+            query: ['a[download]', 'a#item-tip'],
         }
     },
     {
@@ -703,13 +696,13 @@ var siteInfo = [
         src: /\/\/t(\w\.qy.*data\/)t\//,
         r: /\/\/t(\w\.qy.*data\/)t\//,
         s: "//img$1",
-        getImage: function(a, p) {
-            if (p && p[1] && p[1].className === 'pic_box tb' && a && a.href) {
-                return a.href;
-            }
-        },
         xhr: {
-            q: ['#picarea']
+            url: function(a, p) {
+                if (p && p[1] && p[1].className === 'pic_box tb' && a && a.href) {
+                    return a.href;
+                }
+            },
+            query: ['#picarea']
         }
     },
     {
@@ -916,11 +909,11 @@ var siteInfo = [
         url: /artstation\.com/,
         r: /\/(\d{14}\/)?smaller_square\//i,
         s: "/large/",
-        getImage: function(a, p) {
-            if (a && a.href.match('/artwork/')) return a.href.replace('/artwork/', '/projects/') + '.json';
-        },
         xhr: {
-            q: function(html) {
+            url: function(a, p) {
+                if (a && a.href.match('/artwork/')) return a.href.replace('/artwork/', '/projects/') + '.json';
+            },
+            query: function(html) {
                 let datas = JSON.parse(html);
                 let urls = [];
                 datas.assets.forEach(d => {
@@ -1288,7 +1281,7 @@ var siteInfo = [
             },
             headers: {"X-IG-App-ID":"936619743392459"},
             cacheNum: 20,
-            q: function(html) {
+            query: function(html) {
                 try {
                     const o = JSON.parse(html);
                     const items0 = o.items[0];
@@ -1331,13 +1324,13 @@ var siteInfo = [
         name:"nsfw.xxx",
         url:/^https?:\/\/nsfw\.xxx/,
         src: /thumbnails/,
-        getImage: function(a,p) {
-            if (a && a.className==='slider_init_href' && a.href && !this.nextElementSibling) {
-                return a.href;
-            }
-        },
         xhr: {
-            q: '.sh-section__image>img',
+            url: function(a,p) {
+                if (a && a.className==='slider_init_href' && a.href && !this.nextElementSibling) {
+                    return a.href;
+                }
+            },
+            query: '.sh-section__image>img',
         }
     },
     {
@@ -1364,12 +1357,9 @@ var siteInfo = [
     {
         name: "Sankaku Complex",
         url:/sankakucomplex\.com/,
-        src:/\/data\/preview\//,
-        getImage:function(a){
-            return a?a.href:null;
-        },
         xhr:{
-            q:["img#image"]
+            url: /\/data\/preview\//,
+            query: "img#image"
         }
     },
     {
@@ -1455,7 +1445,7 @@ var siteInfo = [
                     return this.firstElementChild && this.firstElementChild.href;
                 }
             },
-            q: function(html, doc) {
+            query: function(html, doc) {
                 let r = doc.querySelector('meta[name="og:image"]');
                 if (!r) return;
                 r = r.getAttribute("value");
@@ -1490,7 +1480,7 @@ var siteInfo = [
                 const m = a.href.match(re);
                 return m && a.href;
             },
-            q: function(html, doc) {
+            query: function(html, doc) {
                 let img = doc.querySelector("#img");
                 return img && img.src;
             }
