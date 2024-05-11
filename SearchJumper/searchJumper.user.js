@@ -3728,7 +3728,7 @@
                     wordSpan.innerHTML = createHTML(word.showWords);
                     wordSpan.title = word.title ? JSON.parse('"' + word.title + '"') : word.showWords;
                     let background = word.style.match(/background: *(#?\w+)/);
-                    if (background) wordSpan.style.background = background[1];
+                    if (background && background[1].indexOf('unset') === -1) wordSpan.style.background = background[1];
                     let color = word.style.match(/color: *(#?\w+)/);
                     if (color) wordSpan.style.color = color[1];
 
@@ -4870,9 +4870,9 @@
                     }
                 };
                 spannode.addEventListener("mouseenter", e => {
-                    targetShowTipsSite = null;
+                    spannode.addEventListener("mousemove", mouseMoveHandler);
                     if (targetElement != spannode || !self.funcKeyCall) {
-                        spannode.addEventListener("mousemove", mouseMoveHandler);
+                        targetShowTipsSite = null;
                         targetElement = spannode;
                         if (word.showTips) {
                             if (/^\d+$/.test(word.showTips)) {
