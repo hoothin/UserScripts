@@ -18,8 +18,8 @@ Licenced under the MIT license.
 }
 其他參數項按需添加即可。
 需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定 url 之後方可使用
-xhr 為內頁圖片獲取屬性，配合 getImage 使用。
-    1. 首先使用 getImage 或 xhr.url() 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁。
+xhr 為內頁圖片獲取屬性。
+    1. 首先使用 xhr.url() 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁。
     2. 透過 xhr 獲取圖片。
         2.1 其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
         2.2 xhr.c 為圖片的文字描述，抓取方式同上
@@ -42,8 +42,8 @@ or
 }
 Other parameter items can be added as needed.
 Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen should only be used after specifying the url.
-xhr is used to obtain the attributes of the pictures on the inner pages. It is used together with getImage. 
-    1. First, use getImage or xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
+xhr is used to obtain the attributes of the pictures on the inner pages. 
+    1. First, use xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
     2. And get pictures through xhr.
         2.1 xhr.q is the picture (you can For multiple, multiple will be added to the gallery) selector or function
         2.2 xhr.c is the description of picture
