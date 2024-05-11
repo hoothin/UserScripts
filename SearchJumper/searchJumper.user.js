@@ -4863,10 +4863,17 @@
 
             highlightPopup(spannode, word) {
                 let self = this;
+                let targetShowTipsSite;
+                let mouseMoveHandler = e => {
+                    if (targetShowTipsSite) {
+                        self.clingPos(spannode, self.tips);
+                    }
+                };
                 spannode.addEventListener("mouseenter", e => {
+                    targetShowTipsSite = null;
                     if (targetElement != spannode || !self.funcKeyCall) {
+                        spannode.addEventListener("mousemove", mouseMoveHandler);
                         targetElement = spannode;
-                        let targetShowTipsSite;
                         if (word.showTips) {
                             if (/^\d+$/.test(word.showTips)) {
                                 let firstType = self.autoGetFirstType();
@@ -4884,6 +4891,9 @@
                             self.showInPage(true, e);
                         }
                     }
+                });
+                spannode.addEventListener("mouseleave", e => {
+                    spannode.removeEventListener("mousemove", mouseMoveHandler);
                 });
             }
 
@@ -9734,6 +9744,9 @@
                 }
                 ele.addEventListener('mouseenter', e => {
                     showTipsHandler(ele);
+                }, false);
+                ele.addEventListener('mousemove', e => {
+                    self.clingPos(ele, self.tips);
                 }, false);
                 ele.addEventListener('showTips', e => {
                     showTipsHandler(targetElement);
