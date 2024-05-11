@@ -10764,5 +10764,13 @@
     "replaceElement": ".pagination",
     "pageElement": "div.news-list",
     "action": 1
-}  
+},
+{
+    "name": "Торрент-трекер :: NNM-Club",
+    "url": "^https?://nnmclub\\.to/",
+    "example": "https://nnmclub.to/",
+    "pageElement": ".leftnav+td>*",
+    "pageAction": "eles.forEach(ele=>{let portalImg=ele.querySelector('var.portalImg');if(!portalImg)return;portalImg.innerHTML=`<img border='0' width='256' align='left' style='margin-bottom:8px;margin-right:8px;' title='pic' src='${portalImg.title}'>`})",
+    "action": 0
+}
 ]
