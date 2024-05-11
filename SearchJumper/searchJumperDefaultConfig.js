@@ -323,12 +323,6 @@ switch (lang) {
                         "nobatch": true
                     },
                     {
-                        "name": "💞 AV预览",
-                        "url": "showTips:https://www.javbus.com/%sr.replace(/^(\\w+?)[\\-_]?(\\d+)$/,\"$1-$2\") \n<span style='font-size:22px;line-height:1.2;'>{h3}</span>\n<p style=\"margin: 0; font-size: 18px; font-weight: normal;\">{.info>p:nth-child(2)}</p>\n<p style=\"margin: 0; font-size: 18px; font-weight: normal;\">{.info>p:nth-child(6)}</p>\n<p style=\"margin: 0;\">{.genre a|<mark style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">()</mark>}</p>\n<img src='https://www.javbus.com{a.bigImage>img|src}' referrerpolicy='no-referrer'/>",
-                        "kwFilter": "^[0-9a-zA-Z]+[\\-_]?\\d+$",
-                        "nobatch": true
-                    },
-                    {
                         "name": "📦 批量打开链接",
                         "url": "%s[all]",
                         "kwFilter": "^https?:"
@@ -918,16 +912,6 @@ switch (lang) {
                         "description": "哔咪哔咪,火影忍者,海贼王,这里是兴趣使然的无名小站_bimibimi"
                     },
                     {
-                        "name": "💞 AV预览啰嗦版",
-                        "url": "showTips:let javbus='https://www.javbus.com';let avid='%sr.replace(/^(\\w+?)[\\-_]?(\\d+)$/,\"$1-$2\")';let avDatas=await storage.getItem(\"avDatas\");if(!avDatas)avDatas=[];let url=javbus+'/'+avid;let genehtml=(title,img,labels)=>`<span style='font-size:22px;line-height:1.2;'>${title}</span><br/><p style=\"margin: 0;\">${(labels || []).reduce((result, label)=>`${result}<mark style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">${label}</mark>`, '')}</p><img src='${img}' referrerpolicy='no-referrer'/>`;let d=avDatas.find(avData=>avData.id==avid);if(d)return [genehtml(d.title, d.img, d.labels),url];let doc=await fetch(url).then(r=>r.text()).then(r=>{let doc=document.implementation.createHTMLDocument('');doc.documentElement.innerHTML=r;return doc;}).catch(alert);let title=doc.title;let img=doc.querySelector('a.bigImage>img');let labels=[];doc.querySelectorAll(\".genre a\").forEach(a=>labels.push(a.innerText));if(!img)return;img=javbus+img.getAttribute('src');avDatas.push({id:avid,title:title,img:img,labels:labels});if(avDatas.length>20)avDatas.shift();storage.setItem(\"avDatas\",avDatas);return[`${genehtml(title,img,labels)}`,url];",
-                        "kwFilter": "^[0-9a-zA-Z]+[\\-_]?\\d+$"
-                    },
-                    {
-                        "name": "💲美元转人民币啰嗦版",
-                        "url": "showTips:let usd2rmb=await storage.getItem(\"usd2rmb\");let usd2rmbUpdate=await storage.getItem(\"usd2rmbUpdate\");if(!usd2rmbUpdate || usd2rmbUpdate > Date.now()+3600000){usd2rmb=await fetch(`https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1`).then(r=>r.json()).then(r=>r.result).catch(alert);storage.setItem(\"usd2rmb\",usd2rmb||7);storage.setItem(\"usd2rmbUpdate\",Date.now());}let usd=\"%sr\".replace(/\\D/g,\"\"); let rmb=(usd * parseFloat(usd2rmb||7)).toFixed(2);return [`${usd} USD = ${rmb} RMB`,rmb]",
-                        "kwFilter": "\\d\\$|\\$\\d"
-                    },
-                    {
                         "name": "🔆  高亮关键词",
                         "url": "javascript:(function()%7Bvar%20count=0,text,dv;text=prompt(%22%E6%90%9C%E7%B4%A2%E9%85%B1%EF%BC%9A%E8%AF%B7%E8%BE%93%E5%85%A5%E9%AB%98%E4%BA%AE%E5%85%B3%E9%94%AE%E8%AF%8D%EF%BC%8Calt%E5%B7%A6%E9%94%AE%E5%8D%95%E5%87%BB%E4%B8%8B%E4%B8%80%E4%B8%AA%EF%BC%8Calt%E5%8F%B3%E9%94%AE%E4%B8%8A%E4%B8%80%E4%B8%AA%EF%BC%8Cr%E8%BF%98%E5%8E%9F%EF%BC%8Cc%7C%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%86%E9%9A%94(%E7%AB%96%E6%9D%A0)%EF%BC%8Co%E5%8E%9F%E5%A7%8B%E6%96%87%E6%9C%AC:%22,%20%22%S%22);if%20(text==null%7C%7Ctext.length==0)return;if(text===%22r%22)%7B%5B%5D.forEach.call(document.querySelectorAll(%22mark.searchJumper%22),mark=%3E%7Blet%20newNode=document.createTextNode(mark.innerText);mark.parentNode.replaceChild(newNode,mark);%7D);return;%7Dif(text.indexOf(%22o%22)===0)%7Btext=%5Btext.substr(1)%5D;%7Delse%20if(text.indexOf(%22c%22)===0)%7Btext=text.substr(1);text=text.substr(1).split(text.substr(0,1));%7Delse%20text=%5Btext%5D;dv=document.defaultView;let%20marks=%7B%7D;let%20focusMark;function%20setFocus(ele)%7BfocusMark.style.border=%22%22;focusMark=ele;focusMark.scrollIntoView(%7Bbehavior:%22smooth%22,block:%22center%22,inline:%22nearest%22%7D);focusMark.style.border=%222px%20dashed%20red%22;%7Dfunction%20searchWithinNode(node,te,len)%20%7Bvar%20pos,skip,spannode,middlebit,middleclone;skip=0;if(node.nodeType==3)%7Bpos=node.data.toUpperCase().indexOf(te);if%20(pos%3E=0)%20%7Blet%20index=marks%5Bte%5D.length;spannode=document.createElement(%22mark%22);spannode.className=%22searchJumper%22;spannode.addEventListener(%22mousedown%22,e=%3E%7Bif%20(!e.altKey)return;if(e.which===1)%7Bif(index!=marks%5Bte%5D.length-1)%7BsetFocus(marks%5Bte%5D%5Bindex+1%5D);%7D%7Delse%20if(e.which===3)%7Bif(index!=0)%7BsetFocus(marks%5Bte%5D%5Bindex-1%5D);%7D%7D%7D);spannode.addEventListener(%22click%22,e=%3E%7Be.stopPropagation();e.preventDefault();return%20false;%7D);middlebit=node.splitText(pos);middlebit.splitText(len);middleclone=middlebit.cloneNode(true);spannode.appendChild(middleclone);middlebit.parentNode.replaceChild(spannode,middlebit);marks%5Bte%5D.push(spannode);focusMark=spannode;++count;skip%20=%201;%7D%7D%20else%20if%20(node.nodeType==1&&node.childNodes&&node.tagName.toUpperCase()!=%22SCRIPT%22&&node.tagName.toUpperCase()!=%22STYLE%22&&node.tagName.toUpperCase()!=%22MARK%22)%7Bfor%20(var%20child=0;child%3Cnode.childNodes.length;++child)%7Bchild=child+searchWithinNode(node.childNodes%5Bchild%5D,te,len);%7D%7Dreturn%20skip;%7Dtext.forEach(t=%3E%7Bt=t.toUpperCase();marks%5Bt%5D=%5B%5D;searchWithinNode(document.body,t,t.length);%7D)%0A%7D)();"
                     },
@@ -1275,32 +1259,6 @@ switch (lang) {
                 ]
             },
             {
-                "type": "Porn",
-                "icon": "female",
-                "sites": [
-                    {
-                        "name": "JAVlibrary",
-                        "url": "http://www.javlibrary.com/cn/vl_searchbyid.php?keyword=%s",
-                        "icon": "data:image/x-icon;base64,AAABAAEAEBAAAAAAIAA3AQAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAP5JREFUeJylkzFKBDEUhr+3SQZdF8vFxmobwT2AtXgHCzsbQbyANuJVbLyAnR7BTlFBrGwUsRBcGdckz2JFd5zMzA7+Vf6Q9+XPSyIfc2fKP9RJznYNZncZpBkgpQQC2fvGjx3Pn7dLIP2seds6gD6N0YccgHj63AiwpQSrPbCC374injy2BHQN7mJtMnbp/v5VYZXZXPo1ruIKsg6yspAGYKeKTBpgj4fo7WgGQEUAffksllQC+g73uk7YukRHAfGKRiXs3dQApurtwYBwdI8Me4gAi5a4f1c+UjroROZwUPAhASj2II/w5iEP4PXbB/zOdeWTLv+FlprttdToC7F9R7urpLwHAAAAAElFTkSuQmCC"
-                    },
-                    {
-                        "name": "JAVbus",
-                        "url": "https://www.javbus.com/search/%s",
-                        "icon": "data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAMxWAADM2wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzNsAAMxWAADM2wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM2wAAzP8AAMz/AADM/wAAzP8AAMz/AADL/wAAzP8BAcz/AADL/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/BATN/0VF2v+Jief/kZHp/15e3/8PD8//AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADL/0hI2v/q6vv//Pz+//b2/f/6+v7/iIjn/wUFzf8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wEBzP+YmOr//////4uL6P9LS9v/4eH5/9zc+P8dHdL/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8CAsz/Skrb/39/5v8oKNT/DAzO/7+/8v/t7fv/Li7V/wAAy/8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAy/8AAMz/AADM/w0Nz/++vvL/7e38/zAw1v8AAMv/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8NDc//vr7y/+3t+/8wMNb/AADL/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/DQ3P/76+8v/t7fv/MDDW/wAAy/8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/w0Nz/++vvL/7e37/zAw1v8AAMv/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8NDc//urrx/+jo+v8vL9X/AADL/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/BATN/0BA2f9QUNz/EBDP/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMv/AADL/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzNsAAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzNsAAMxWAADM2wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzP8AAMz/AADM/wAAzNsAAMxWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
-                    },
-                    {
-                        "name": "Jable",
-                        "url": "https://jable.tv/search/%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAmklEQVQ4jWP4m9xX9y+p9+e/pL7/pOHen3+T++oYyNMMxz8ZKND8/19S33/CBmRM+v9v3dH//5qWkmlA/vT///////9v8d5RAxbvoacByf0IdvcaiAEzt5FgwPxd//89efP/351n////+v3//5uP///lTCXBgKKZkEDbcOz/vwW7///LnUZBSiSAKcxMvT8ZyM/OfT//J/fVAQB8gvyNVegtUAAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "PornHub",
-                        "url": "https://cn.pornhub.com/video/search?search=%s",
-                        "icon": "data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAABorAAACAwAAwP8AAG+5AAA0VgAAUYkAAInkAAA/aQAAMFEAAJf/AABZlAAAmv8AAGSnAAAaLAAAERwAAKP/AABHZAAABAcAAC0xAACp/wAArP8AALL/AABDcAAAbowAAI/uAAAKEAAAht4AALv/AAAtSwAAiOEAAI3sAACV/wAAmP8AAJv/AAABAQAAnv8AAHrHAABlpwAA//8AAND/AACh/wAAiOIAAC9PAABqsgAApP8AAEVkAABJegAAp/8AADFSAACq/wAAGSoAAAECAACt/wAAM1UAAIjjAAA+aAAAfcgAALb/AAAdMAAAT4MAADpjAABAawAAuf8AAAsQAAC//wAAAAYAAML/AAADBgAACQ4AAMX/AACW/wAAmf8AADdcAACc/wAAn/8AABAcAABRhwAAov8AAIXdAADX/wAAqP8AAKv/AACQ8AAAWI0AAC5NAACx/wAAIEMAALT/AACF3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISAxISEhISCIiSEgMIkhICkpWLSBIIUg1MEcgEDUiCk4ZCAQUSCQiMTwUNQ0xHxBSTwAvQ0sQSgAzWBw4AFkyUSoABjpOPykANihQCwA3UVEHAjRCRVQyD0wuETs0B1FRNyNVGAkAJh0CGkASAgdRUR4ALCdOAD0BVUFGTQA3UVIbAEQTAAA5AA4/Az4AWTJOUxcFV0klNSs8FDUNMR8QCkoWFhZYNSEVMEcgEDUiCkhIDAwMSEhIIiJISAwiSEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
-                    }
-                ]
-            },
-            {
                 "type": "Search",
                 "icon": "search",
                 "sites": [
@@ -1414,11 +1372,6 @@ switch (lang) {
                     {
                         "name": "IMDb rating",
                         "url": "showTips:https://www.imdb.com/find/?q=%s&exact=true.then{.find-title-result .ipc-metadata-list-summary-item__t}\n<h2 style=\"margin: 5px;\">\n{.hero__primary-text}\n<span style=\"position: absolute; right: 10px; color: orange;\">{.ipc-btn__text>div>div>div}</span>\n</h2>\n<div style=\"display: flex; font-size: 20px; width: 500px;\">\n<img style=\"height: fit-content;\" src=\"{.ipc-image|src}\"/>\n<div style=\"font-size: 16px; line-height: 1.5; text-align: left; margin: 5px;\">\n<div>{a.ipc-chip|<span style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">()</span>}</div>\n<div>Year: {h1+ul>li>.ipc-link}</div>\n<div>Director: {section>div>div>.title-pc-list>li:nth-child(1) li}</div>\n<div>Writer: {section>div>div>.title-pc-list>li:nth-child(2) li}</div>\n<div>Stars: {section>div>div>.title-pc-list>li:nth-child(3) li|()}</div>\n<div style=\"font-size: 16px; margin-top: 10px; border-top: 1px solid;\">{section>p>span}</div>\n</div>\n</div>"
-                    },
-                    {
-                        "name": "💞 AV preview",
-                        "url": "showTips:https://www.javbus.com/%sr.replace(/^(\\w+?)[\\-_]?(\\d+)$/,\"$1-$2\") \n<span style='font-size:22px;line-height:1.2;'>{h3}</span>\n<p style=\"margin: 0; font-size: 18px; font-weight: normal;\">{.info>p:nth-child(2)}</p>\n<p style=\"margin: 0; font-size: 18px; font-weight: normal;\">{.info>p:nth-child(6)}</p>\n<p style=\"margin: 0;\">{.genre a|<mark style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">()</mark>}</p>\n<img src='https://www.javbus.com{a.bigImage>img|src}' referrerpolicy='no-referrer'/>",
-                        "kwFilter": "^[0-9a-zA-Z]+[\\-_]?\\d+$"
                     },
                     {
                         "name": "📦 Batch open links",
