@@ -762,7 +762,34 @@ var siteInfo = [
         name: "Reddit",
         url: /reddit\.com|redd\.it/,
         r: /https?:\/\/preview\.redd.it\/([^\?]+)?.*/i,
-        s: "https://i.redd.it/$1"
+        s: "https://i.redd.it/$1",
+        xhr: {
+            url: function(a, p) {
+                if (a) {
+                    if (a.href.indexOf("//v.redd.it/") != -1) {
+                        return a.href + '/DASHPlaylist.mpd';
+                    }
+                }
+            },
+            query: function(html, doc, url) {
+                try {
+                    var xmlDoc = (new DOMParser()).parseFromString(html, 'application/xml');
+                    var highestRes = [].slice.call(xmlDoc.querySelectorAll('Representation[frameRate]'))
+                    .sort(function (r1, r2) {
+                        var w1 = parseInt(r1.getAttribute('width')), w2 = parseInt(r2.getAttribute('width'));
+                        return w1 > w2 ? -1 : (w1 < w2 ? 1 : 0);
+                    })
+                    .find(function (repr) { return !!repr.querySelector('BaseURL'); });
+
+                    if (highestRes) {
+                        var baseUrl = highestRes.querySelector('BaseURL').textContent.trim();
+                        return baseUrl.indexOf('//') !== -1 ? baseUrl : url.replace('DASHPlaylist.mpd', baseUrl);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }
     },
     {
         name: "Rule34hentai",
