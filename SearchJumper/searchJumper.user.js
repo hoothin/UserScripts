@@ -4884,10 +4884,11 @@
                                 targetShowTipsSite = self.getTargetSitesByName([word.showTips])[0];
                             }
                         }
-                        self.setFuncKeyCall(true);
                         if (targetShowTipsSite) {
+                            self.funcKeyCall = true;
                             targetShowTipsSite.dispatchEvent(new CustomEvent('showTips'));
                         } else {
+                            self.setFuncKeyCall(true);
                             self.showInPage(true, e);
                         }
                     }
