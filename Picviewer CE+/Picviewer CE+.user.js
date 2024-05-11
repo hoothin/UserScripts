@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.8.2
+// @version              2024.5.11.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1373030/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1374629/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1372505/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12452,16 +12452,13 @@ ImgOps | https://imgops.com/#b#`;
             debug: false,
             customLang:'auto',
             customRules:`[
-/*
-  {
-    name: "Example, can be deleted safely",
-    url: /^https?:\\/\\/www\\.google\\.com\\/search\\?/,
-    getImage: function(a) {},
-    src: /avatar/i,
-    r: /\\?.*$/i,
-    s: ''
-  }
-*/
+    {
+        "name": "Example, can be deleted safely",
+        "url": "/^$/i",
+        "src": "/avatar/i",
+        "r": "/\\\\?.*$/i",
+        "s": ""
+    }
 ]`,
             firstEngine:"Tineye"
         };
@@ -12506,6 +12503,8 @@ ImgOps | https://imgops.com/#b#`;
         ];
 
         const imageReg = /\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib)\b/i;
+
+        const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)/i;
 
         //图标
         prefs.icons={
@@ -19361,8 +19360,9 @@ ImgOps | https://imgops.com/#b#`;
             this.data = data;
             this.initPos = initPos || false;
             this.preview = !!preview;
+            this.isImg = this.img.nodeName.toUpperCase() == 'IMG';
             this.init();
-            if (data) {
+            if (data && this.isImg) {
                 this.img.src = location.protocol == "https" ? data.src.replace(/^http:/,"https:") : data.src;
             }
         };
@@ -19529,8 +19529,9 @@ ImgOps | https://imgops.com/#b#`;
                 var srcs, from;
                 img.onerror=function(e){
                     //setSearchState(i18n("loadNextSimilar"),img.parentNode);
+                    if(self.removed)return;
                     console.info(img.src+" "+i18n("loadError"));
-                    if(self.removed || !self.data)return;
+                    if(!self.data)return;
                     var src;
                     if(self.data.srcs)
                         src=self.data.srcs.shift();
@@ -19610,6 +19611,13 @@ ImgOps | https://imgops.com/#b#`;
                 if (imgNaturalSize.h && imgNaturalSize.w) {
                     container.style.background='';
                     setSearchState(img.naturalWidth + " x " + img.naturalHeight, self.imgState);
+                }
+                if (!this.isImg) {
+                    img.naturalHeight = img.videoHeight || img.scrollHeight;
+                    img.naturalWidth = img.videoWidth || img.scrollWidth;
+                    setTimeout(() => {
+                        img.onload();
+                    }, 0);
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
@@ -20365,8 +20373,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     .pv-pic-window-scroll>.pv-pic-window-close,\
-                    .pv-pic-window-scroll>.pv-pic-window-max,\
-                    .pv-pic-window-scroll>.pv-pic-search-state {\
+                    .pv-pic-window-scroll>.pv-pic-window-max {\
                     display: none;\
                     }\
                     .transition-transform{\
@@ -20686,6 +20693,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (prefs.floatBar.previewMaxSizeW && maxHeight > prefs.floatBar.previewMaxSizeH) {
                     maxHeight = prefs.floatBar.previewMaxSizeH;
                 }
+                this.zoomLevel = 0;
                 this.zoom(1);
 
                 let imgWindowCS = unsafeWindow.getComputedStyle(this.imgWindow);
@@ -20709,7 +20717,11 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     };
 
-                    this.zoom(this.getRotatedImgCliSize(size).w / this.imgNaturalSize.w);
+                    let cs = this.getRotatedImgCliSize(size);
+                    let ns = this.imgNaturalSize;
+                    if (cs && ns && cs.w && ns.w) {
+                        this.zoom(cs.w / ns.w);
+                    }
                 }
             },
             followPos: function(posX, posY) {
@@ -20808,7 +20820,11 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     };
 
-                    this.zoom(this.getRotatedImgCliSize(size).w / this.imgNaturalSize.w);
+                    let cs = this.getRotatedImgCliSize(size);
+                    let ns = this.imgNaturalSize;
+                    if (cs && ns && cs.w && ns.w) {
+                        this.zoom(cs.w / ns.w);
+                    }
                 };
             },
             center:function(horizontal,vertical){
@@ -21893,6 +21909,11 @@ ImgOps | https://imgops.com/#b#`;
 
         // 载入动画
         function LoadingAnimC(data, buttonType, waitImgLoad, openInTopWindow, initPos) {
+            if (LoadingAnimC.all.find(function(item, index, array) {
+                if (data.src == item.data.src || data.img == item.data.img) {
+                    return true;
+                }
+            })) return false;
             this.args = arrayFn.slice.call(arguments, 0);
             if (data.src != data.imgSrc && !data.srcs) {
                 data.srcs = [data.imgSrc];
@@ -21938,7 +21959,7 @@ ImgOps | https://imgops.com/#b#`;
                 container.addEventListener('click',function(e){
                     var tcl=e.target.classList;
                     if(tcl.contains('pv-loading-cancle')){
-                        self.imgReady.abort();
+                        self.imgReady && self.imgReady.abort();
                         self.remove();
                     }else if(tcl.contains('pv-loading-retry')){
                         self.remove();
@@ -22037,10 +22058,12 @@ ImgOps | https://imgops.com/#b#`;
                 opacity: 1;\
                 }\
                 .pv-loading-cancle{\
+                pointer-events: all;\
                 background-image: url("'+prefs.icons.loadingCancle+'");\
                 }\
                 .pv-loading-retry{\
                 display:none;\
+                pointer-events: all;\
                 background-image: url("'+prefs.icons.retry+'");\
                 }\
                 .pv-loading-container_error{\
@@ -22092,8 +22115,29 @@ ImgOps | https://imgops.com/#b#`;
             loadImg: function(imgSrc, imgSrcs, nextFun) {
                 var self = this;
 
-                var img = document.createElement('img');
-                img.src = imgSrc;
+                var mode = matchedRule.getMode(imgSrc);
+                var media;
+                switch (mode) {
+                    case "video":
+                        media = document.createElement('video');
+                        media.style.width = 0;
+                        media.style.height = 0;
+                        media.controls = true;
+                        media.loop = true;
+                        media.autoplay = true;
+                        if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                        break;
+                    case "audio":
+                        media = document.createElement('audio');
+                        media.controls = true;
+                        media.autoplay = true;
+                        media.volume = 1;
+                        break;
+                    default:
+                        media = document.createElement('img');
+                        break;
+                }
+                media.src = imgSrc;
 
                 var opts = {
                     error: function(e) {
@@ -22114,7 +22158,17 @@ ImgOps | https://imgops.com/#b#`;
                     self.load(this, e);
                 };
 
-                self.imgReady = imgReady(img, opts);
+                if (mode === 'video' || mode === 'audio') {
+                    let loaded = function() {
+                        media.play();
+                        self.load(this);
+                        media.removeEventListener('loadeddata', loaded);
+                    }
+                    media.addEventListener('loadeddata', loaded);
+                    media.load();
+                } else {
+                    self.imgReady = imgReady(media, opts);
+                }
             },
 
             load:async function(img,e){
@@ -22451,10 +22505,10 @@ ImgOps | https://imgops.com/#b#`;
 
                 //读取中的图片,不显示浮动栏,调整读取图标的位置.
                 if(LoadingAnimC.all.find(function(item,index,array){
-                    if(data.src==item.data.src){
+                    if (data.src == item.data.src || data.img == item.data.img) {
                         return true;
-                    };
-                }))return false;
+                    }
+                })) return false;
 
 
                 //被放大镜盯上的图片,不要显示浮动栏.
@@ -22765,7 +22819,7 @@ ImgOps | https://imgops.com/#b#`;
             * @param  q  图片的选择器或函数
             * @param  c  图片说明的选择器或函数
             */
-            function parsePage(url, q, c, post, cb, headers) {
+            function parsePage(url, q, c, post, cb, headers, after) {
                 downloadPage(url, post, headers, async function(html) {
                     var iurl, iurls = [], cap, caps, doc = createDoc(html);
 
@@ -22777,27 +22831,30 @@ ImgOps | https://imgops.com/#b#`;
                                 iurl = iurl.url;
                             }
                             if (Array.isArray(iurl)) {
+                                iurl = iurl.map(u => after(u));
                                 iurls = iurl;
                                 iurl = iurls[0];
-                            }
+                            } else iurl = after(iurl);
                         }
                     } else {
                         var inodes = findNodes(q, doc);
                         inodes.forEach(function(node) {
-                            iurls.push(findFile(node, url));
+                            iurls.push(after(findFile(node, url)));
                         });
                         iurl = iurls[0];
                     }
 
-                    if(typeof c == 'function') {
-                        cap = await c(html, doc);
-                    } else {
-                        var cnodes = findNodes(c, doc);
-                        cap = cnodes.length ? findCaption(cnodes[0]) : false;
-                    }
-                    if (Array.isArray(cap)) {
-                        caps = cap;
-                        cap = caps[0];
+                    if (c) {
+                        if(typeof c == 'function') {
+                            cap = await c(html, doc);
+                        } else {
+                            var cnodes = findNodes(c, doc);
+                            cap = cnodes.length ? findCaption(cnodes[0]) : false;
+                        }
+                        if (Array.isArray(cap)) {
+                            caps = cap;
+                            cap = caps[0];
+                        }
                     }
 
                     // 缓存
@@ -22891,7 +22948,7 @@ ImgOps | https://imgops.com/#b#`;
                     opt.url = opt.url.replace(/#p{.*/, "");
                 }
 
-                parsePage(opt.url, opt.xhr.q, opt.xhr.c, opt.xhr.post, opt.cb, opt.xhr.headers);
+                parsePage(opt.url, opt.xhr.query || opt.xhr.q, opt.xhr.caption || opt.xhr.c, opt.xhr.post, opt.cb, opt.xhr.headers, opt.xhr.after);
             };
 
             return _;
@@ -23075,15 +23132,60 @@ ImgOps | https://imgops.com/#b#`;
             this.init();
         }
 
+        const videoExtensions = new Set(['3gpp', 'm4v', 'mkv', 'mp4', 'ogv', 'webm']);
+        const audioExtensions = new Set(['flac', 'm4a', 'mp3', 'oga', 'ogg', 'opus', 'wav']);
+
+        function isVideoLink(url) {
+            if (url.indexOf('.video') !== -1)
+                return true;
+
+            url = url.replace(/.gif(\?width=\d*&|\?)format=mp4/, '.mp4?');
+            if (url.lastIndexOf('?') > 0)
+                url = url.substring(0, url.lastIndexOf('?'));
+            const ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+
+            return videoExtensions.has(ext)
+            || url.indexOf('googlevideo.com/videoplayback') > 0
+            || url.indexOf('v.redd.it') > 0;
+        }
+
+        function isAudioLink(url) {
+            if (url.lastIndexOf('?') > 0)
+                url = url.substring(0, url.lastIndexOf('?'));
+            const ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+            return audioExtensions.has(ext);
+        }
+
         MatchedRuleC.prototype={
             init:function(){
-                if (prefs.customRules && !isunsafe()) {
+                if (prefs.customRules) {
+                    if (prefs.customRules == `[
+/*
+  {
+    name: "Example, can be deleted safely",
+    url: /^https?:\\/\\/www\\.google\\.com\\/search\\?/,
+    getImage: function(a) {},
+    src: /avatar/i,
+    r: /\\?.*$/i,
+    s: ''
+  }
+*/]`) {
+                        prefs.customRules = "[]";
+                    }
                     try {
-                        var customRules = unsafeWindow.eval(createScript(prefs.customRules));
+                        var customRules;
+                        if (prefs.customRules.indexOf("name:") !== -1) {
+                            if (!isunsafe()) {
+                                customRules = unsafeWindow.eval(createScript(prefs.customRules));
+                            }
+                        } else {
+                            customRules = JSON.parse(prefs.customRules);
+                        }
                         if (Array.isArray(customRules)) {
                             customRules.forEach(rule => {
+                                rule.custom = true;
                                 let hasRule = false;
-                                for (let s in siteInfo) {
+                                for (let s = 0; s < siteInfo.length; s++) {
                                     if (siteInfo[s].name == rule.name) {
                                         hasRule = true;
                                         for (let si in rule) {
@@ -23102,8 +23204,9 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (unsafeWindow.pvcepRules && Array.isArray(unsafeWindow.pvcepRules)) {
                     unsafeWindow.pvcepRules.forEach(rule => {
+                        rule.custom = true;
                         let hasRule = false;
-                        for (let s in siteInfo) {
+                        for (let s = 0; s < siteInfo.length; s++) {
                             if (siteInfo[s].name == rule.name) {
                                 hasRule = true;
                                 for (let si in rule) {
@@ -23125,26 +23228,47 @@ ImgOps | https://imgops.com/#b#`;
                         for(;r<end;r++){
                             let site=siteInfo[r];
                             if (site.enabled != false && (!site.url || toRE(site.url).test(_URL))) {
-                                if(site.url){
-                                    if(site.css){
+                                if (site.xhr) {
+                                    site.xhr.after = src => {
+                                        let newSrc = self.replaceByRule(src, site, true);
+                                        if (Array.isArray(newSrc)) newSrc = newSrc[0];
+                                        return newSrc && newSrc.length ? newSrc : src;
+                                    };
+                                    let reMatch = typeof site.xhr.url === "string" && site.xhr.url.match(/^\/(.*)\/(\w*)$/);
+                                    if (reMatch) {
+                                        site.xhr.url = toRe(reMatch[1], reMatch[2]);
+                                    }
+                                }
+                                if (site.url) {
+                                    if (site.css) {
                                         var style = _GM_addStyle(site.css);
                                         style.id = 'gm-picviewer-site-style';
                                     }
-                                    if(site.xhr){
-                                        self._xhr=site.xhr;
-                                        self.xhr=site.xhr;
+                                    if (site.lazyAttr) {
+                                        self.lazyAttr = site.lazyAttr;
                                     }
-                                    if(site.lazyAttr){
-                                        self.lazyAttr=site.lazyAttr;
+                                    if (site.description) {
+                                        self.description = site.description;
                                     }
-                                    if(site.description){
-                                        self.description=site.description;
+                                    if (site.clickToOpen) {
+                                        self.clickToOpen = site.clickToOpen;
                                     }
-                                    if(site.clickToOpen){
-                                        self.clickToOpen=site.clickToOpen;
+                                    if (site.ext) {
+                                        self.ext = site.ext;
                                     }
-                                    if(site.ext){
-                                        self.ext=site.ext;
+                                    if (site.video) {
+                                        let reMatch = typeof site.video === "string" && site.video.match(/^\/(.*)\/(\w*)$/);
+                                        if (reMatch) {
+                                            site.video = toRe(reMatch[1], reMatch[2]);
+                                        }
+                                        self.video = site.video;
+                                    }
+                                    if (site.audio) {
+                                        let reMatch = typeof site.audio === "string" && site.audio.match(/^\/(.*)\/(\w*)$/);
+                                        if (reMatch) {
+                                            site.audio = toRe(reMatch[1], reMatch[2]);
+                                        }
+                                        self.audio = site.audio;
                                     }
                                 }
                                 self.rules.push(site);
@@ -23152,6 +23276,14 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if(end<siteInfo.length){
                             searchByTime();
+                        }else{
+                            self.rules.sort((a, b) => {
+                                if (a.custom && !b.custom) return -1;
+                                if (!a.custom && b.custom) return 1;
+                                if (a.url && !b.url) return -1;
+                                if (!a.url && b.url) return 1;
+                                return 0;
+                            });
                         }
                     },1);
                 }
@@ -23159,6 +23291,10 @@ ImgOps | https://imgops.com/#b#`;
             },
             replace:function(str, r, s){
                 var results=[],rt;
+                let reMatch = typeof r === "string" && r.match(/^\/(.*)\/(\w*)$/);
+                if (reMatch) {
+                    r = toRe(reMatch[1], reMatch[2]);
+                }
                 if(Array.isArray(s)){
                     s.forEach(_s=>{
                         rt=str.replace(r, _s);
@@ -23172,7 +23308,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             getExtSrc:function(ele){
                 var newSrc,rule;
-                for(var i in this.rules){
+                for(var i = 0; i < this.rules.length; i++){
                     rule=this.rules[i];
                     if(rule.getExtSrc){
                         newSrc = rule.getExtSrc.call(ele);
@@ -23185,65 +23321,99 @@ ImgOps | https://imgops.com/#b#`;
                 if(newSrc && newSrc.length==0)newSrc=null;
                 return newSrc;
             },
-            getImage:function(img, a, p, target){
-                var newSrc,rule,stopXhr = false;
-                var base64Img=/^data:/i.test(img.src);
-                if(this._xhr && this._xhr.url){
-                    if (typeof this._xhr.url === 'string') {
-                        try {
-                            let allEles = Array.from(document.querySelectorAll(this._xhr.url));
-                            if (a && allEles.includes(a)) {
-                                newSrc = a.href;
-                            }
-                        } catch(e) {
-                            debug(e);
-                        }
-                    } else {
-                        newSrc = this._xhr.url.call(target || img, a, p);
-                    }
-                    if (newSrc) {
-                        this.xhr = this._xhr;
-                        return newSrc;
-                    } else {
-                        this.xhr = null;
-                        stopXhr = true;
-                    }
+            replaceByRule: function(src, rule, check) {
+                if (check) {
+                    if (!rule.r || /^data:/i.test(src)) return src;
                 }
-                for(var i in this.rules){
-                    rule=this.rules[i];
-                    if((!rule.url || !rule.getImage) && base64Img)continue;
-                    if(rule.src && !rule.src.test(img.src))continue;
-                    if(rule.exclude && rule.exclude.test(img.src))continue;
-                    if(rule.getImage){
-                        newSrc = rule.getImage.call(target || img, a, p, rule);
-                        this.xhr = (!stopXhr && newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
-                    }else newSrc = null;
-                    if(!newSrc){
-                        if(rule.r){
-                            if(Array.isArray(rule.r)){//r最多一层
-                                for(var j in rule.r){
-                                    var _r=rule.r[j];
-                                    if(_r && _r.test && _r.test(img.src)){
-                                        if(Array.isArray(rule.s)){//s对上r最多两层
-                                            var _s=rule.s[j];
-                                            newSrc=this.replace(img.src, _r, _s);
-                                        }else{
-                                            newSrc=this.replace(img.src, _r, rule.s);
-                                        }
-                                        break;
-                                    }
-                                }
-                            }else{
-                                newSrc=this.replace(img.src, rule.r, rule.s);
+                let newSrc;
+                if (Array.isArray(rule.r)) {//r最多一层
+                    for (var j = 0; j < rule.r.length; j++) {
+                        var _r = rule.r[j];
+                        if (_r && _r.test && _r.test(src)) {
+                            if (Array.isArray(rule.s)) {//s对上r最多两层
+                                var _s = rule.s[j];
+                                newSrc = this.replace(src, _r, _s);
+                            } else {
+                                newSrc = this.replace(src, _r, rule.s);
                             }
+                            break;
                         }
                     }
-                    if(newSrc && newSrc.length>0 && newSrc!=img.src){
+                } else {
+                    newSrc = this.replace(src, rule.r, rule.s);
+                }
+                return newSrc;
+            },
+            getMode: function(src) {
+                if (!src || !src.length) return "";
+                if (this.video && this.video.test(src)) {
+                    return "video";
+                }
+                if (this.audio && this.audio.test(src)) {
+                    return "audio";
+                }
+                if (isVideoLink(src)) {
+                    return "video";
+                }
+                if (isAudioLink(src)) {
+                    return "audio";
+                }
+                return "";
+            },
+            getImage: function(img, a, p, target) {
+                var newSrc, rule;
+                var base64Img = /^data:/i.test(img.src);
+                for (var i = 0; i < this.rules.length; i++) {
+                    rule = this.rules[i];
+
+                    if (rule.xhr) {
+                        if (rule.xhr.url) {
+                            if (rule.xhr.url.test) {
+                                if (a && rule.xhr.url.test(a.href)) {
+                                    newSrc = a.href;
+                                }
+                            } else if (typeof rule.xhr.url === 'string') {
+                                try {
+                                    if (a && a.matches(rule.xhr.url)) {
+                                        newSrc = a.href;
+                                    }
+                                } catch(e) {
+                                    debug(e);
+                                }
+                            } else {
+                                newSrc = rule.xhr.url.call(target || img, a, p);
+                            }
+                            if (newSrc) {
+                                this.xhr = rule.xhr;
+                                return newSrc;
+                            } else {
+                                this.xhr = null;
+                            }
+                        } else if (a) {
+                            newSrc = a.href;
+                        }
+                    }
+
+                    if (base64Img && (!rule.url || !rule.getImage)) continue;
+                    if (rule.src && !toRE(rule.src).test(img.src)) continue;
+                    if (rule.exclude && toRE(rule.exclude).test(img.src)) continue;
+                    if (newSrc) {
+                        this.xhr = rule.xhr;
+                        return newSrc;
+                    }
+                    if (rule.getImage) {
+                        newSrc = rule.getImage.call(target || img, a, p, rule);
+                    } else newSrc = null;
+                    if (!base64Img && rule.r) {
+                        if (!newSrc) newSrc = img.src;
+                        newSrc = this.replaceByRule(newSrc, rule);
+                    }
+                    if (newSrc && newSrc.length > 0 && newSrc != img.src) {
                         debug(rule);
                         break;
-                    }
+                    } else newSrc = null;
                 }
-                if(newSrc && newSrc.length==0)newSrc=null;
+                if (newSrc && newSrc.length == 0) newSrc = null;
                 return newSrc;
             }
         };
@@ -24958,14 +25128,19 @@ ImgOps | https://imgops.com/#b#`;
                                 alert("The rules must be enclosed in square brackets ([]).");
                                 return;
                             }
-                            if (!isunsafe()) {
-                                try {
-                                    unsafeWindow.eval(createScript(customInput.value));
-                                } catch(err) {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    alert("Wrong rule:" + err.toString());
+                            try {
+                                var customRules;
+                                if (customInput.value.indexOf("name:") !== -1) {
+                                    if (!isunsafe()) {
+                                        unsafeWindow.eval(createScript(customInput.value));
+                                    }
+                                } else {
+                                    customInput.value = JSON.stringify(JSON.parse(customInput.value), null, 4);
                                 }
+                            } catch(err) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                alert("Wrong rule:" + err.toString());
                             }
                         }
                     }, true);
@@ -25183,6 +25358,31 @@ ImgOps | https://imgops.com/#b#`;
 
         // 注册按键
         document.addEventListener('keydown', keydown, true);
+
+        if (ruleImportUrlReg.test(location.href)) {
+            document.addEventListener('click', e => {
+                if (/pre|code/i.test(e.target.nodeName)) {
+                    let content = e.target.innerText.trim();
+                    if (/"name":/.test(content)) {
+                        try {
+                            let webRule = JSON.parse(content);
+                            let customRules;
+                            let fieldsCustomRules = GM_config.fields.customRules;
+                            if (fieldsCustomRules.value.indexOf('"name":') !== -1) {
+                                customRules = JSON.parse(fieldsCustomRules.value);
+                            } else {
+                                customRules = [];
+                            }
+                            customRules.push(webRule);
+                            fieldsCustomRules.value = JSON.stringify(customRules, null, 4);
+                            openPrefs();
+                        } catch (e) {
+                            alert(e.toString());
+                        }
+                    }
+                }
+            }, true);
+        }
 
         function openPrefs() {
             let fieldsSearchData = GM_config.fields["gallery.searchData"];
