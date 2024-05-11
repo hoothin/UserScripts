@@ -24058,6 +24058,7 @@
   "data": {
     "pageElement": "id('content')//*[@class='container index-container' or @id='image-container' or @id='favcontainer' or @id='tag-container']",
     "insertBefore": "//section[@class='pagination']",
+    "comment": "Adjusted the pageElement to not include the image-container because it causes the image size to be small initially. Updated on behalf of: https://github.com/sixcious/infy-scroll/issues/85",
     "nextLink": "//a[@class='next']",
     "url": "^https?://nhentai\\.net/",
     "exampleUrl": "http://nhentai.net/artist/kokutou-nikke/ http://nhentai.net/?page=3 http://nhentai.net/g/124271/1/"
@@ -24066,7 +24067,7 @@
   "created_by": "theydonotwant",
   "name": "nHentai",
   "created_at": "2014-12-28T23:26:34+09:00",
-  "updated_at": "2022-11-18T08:32:21+09:00"
+  "updated_at": "2024-05-11T01:15:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76713",
@@ -31791,17 +31792,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/64117",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2012-10-21T17:22:55+09:00",
   "data": {
-    "pageElement": "//table[@class='list']//tr[last()]/preceding-sibling::tr[not(@bgcolor)]",
-    "exampleUrl": "https://www.bookshop-ps.com/bsp/bsp_mag_search?sha=1&sc=066000",
+    "pageElement": "//table[@class='list']",
+    "comment": "CSSで偶数番目のtr要素が非表示になるためtable要素を取得する必要があります。",
+    "nextLink": "//a[contains(.,'次へ>>>')]",
     "url": "^https://(www\\.)?bookshop-ps\\.com/bsp/bsp_(?!detail|magcode)",
-    "nextLink": "//a[contains(.,'次へ>>>')]"
+    "exampleUrl": "https://www.bookshop-ps.com/bsp/bsp_mag_search?sha=1&sc=066000"
   },
-  "updated_at": "2020-05-23T06:23:11+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "plais",
   "name": "BOOK SHOP 小学館",
-  "created_by": "plais"
+  "created_at": "2012-10-21T17:22:55+09:00",
+  "updated_at": "2024-05-10T23:00:31+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/64116",
