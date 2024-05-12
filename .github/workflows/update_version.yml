@@ -4,6 +4,10 @@ on:
     paths:
       - 'Pagetual/items_all.json'
       - 'Pagetual/pagetualRules.json'
+  workflow_run:
+    workflows: ["Collect wedata for pagetual"]
+    types:
+        - completed
 
 jobs:
   update_version:
