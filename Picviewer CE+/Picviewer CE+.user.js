@@ -25363,7 +25363,7 @@ ImgOps | https://imgops.com/#b#`;
             document.addEventListener('click', e => {
                 if (/pre|code/i.test(e.target.nodeName)) {
                     let content = e.target.innerText.trim();
-                    if (/"name":/.test(content)) {
+                    if (/"name":/.test(content) && /"(r|xhr)":/.test(content)) {
                         try {
                             let webRule = JSON.parse(content);
                             let customRules;
