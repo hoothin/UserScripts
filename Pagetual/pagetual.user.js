@@ -1507,7 +1507,7 @@
                         let waitTime = 500, checkEval, maxCheckTimes = 50;
                         if (isNaN(r.wait)) {
                             try {
-                                checkEval = (typeof r.wait === 'function') ? r.wait : Function("doc",'"use strict";' + r.wait);
+                                checkEval = (typeof r.wait === 'function') ? r.wait : AsyncFunction("doc",'"use strict";' + r.wait);
                             } catch(e) {
                                 debug(e, 'Error when checkeval');
                             }
@@ -1520,8 +1520,8 @@
                                 setRule(r);
                                 return;
                             }
-                            setTimeout(() => {
-                                if (!self.ruleMatchReady(r) || (checkEval && !checkEval(document))) {
+                            setTimeout(async() => {
+                                if (!self.ruleMatchReady(r) || (checkEval && !await checkEval(document))) {
                                     checkReady();
                                 } else {
                                     setRule(r);
@@ -8233,7 +8233,7 @@
                     checkItem = eles[0];
                 }
             }
-            if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
+            if (!checkItem || (checkEval && !await checkEval(iframeDoc))) {
                 if (checkEval) checkTimes = 0;
                 setTimeout(() => {
                     checkPage();
