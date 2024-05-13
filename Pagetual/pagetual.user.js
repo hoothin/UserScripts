@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.42
+// @version      1.9.37.43
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -6649,17 +6649,17 @@
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if (ruleParser.curSiteRule.action == 1) {
                         isLoading = true;
-                        requestFromIframe(url, (doc, eles) => {
+                        requestFromIframe(url, async (doc, eles) => {
                             if (eles) {
-                                ruleParser.insertPage(doc, eles, url, callback, true);
+                                await ruleParser.insertPage(doc, eles, url, callback, true);
                             } else isLoading = false;
                         });
                     } else ruleParser.curSiteRule.action = 0;
                 } else if ((ruleParser.curSiteRule.smart || curPage == 1) && !inCors) {
                     ruleParser.curSiteRule.action = 1;
-                    requestFromIframe(url, (doc, eles) => {
+                    requestFromIframe(url, async (doc, eles) => {
                         if (eles) {
-                            ruleParser.insertPage(doc, eles, url, callback, true);
+                            await ruleParser.insertPage(doc, eles, url, callback, true);
                         } else isLoading = false;
                     });
                 } else {
@@ -7998,7 +7998,7 @@
                         return;
                     } else if (eles && eles.length > 0) {
                         await ruleParser.hookUrl(doc);
-                        callback(doc, eles);
+                        await callback(doc, eles);
                     } else if (pageEleTryTimes++ < 100) {
                         getBody(doc).scrollTop = 9999999;
                         doc.documentElement.scrollTop = 9999999;
@@ -8759,13 +8759,13 @@
                         checkAutoLoadNum();
                     });
                 } else if ((forceState === 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
-                    requestFromIframe(nextLink, (doc, eles) => {
+                    requestFromIframe(nextLink, async (doc, eles) => {
                         if (urlChanged || isPause) {
                             loadPageOver();
                             return;
                         }
                         if (eles) {
-                            ruleParser.insertPage(doc, eles, nextLink, () => {
+                            await ruleParser.insertPage(doc, eles, nextLink, () => {
                                 createPageBar(nextLink);
                                 checkAutoLoadNum();
                             }, true);
