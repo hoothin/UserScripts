@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.43
+// @version      1.9.37.44
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1400,13 +1400,13 @@
         runWait(cb) {
             let checkEval = null, waitTime = 0;
             if (this.curSiteRule.waitElement) {
-                checkEval = doc => {
-                    return this.waitElement(doc);
+                checkEval = async doc => {
+                    return await this.waitElement(doc);
                 };
             } else if(this.curSiteRule.wait) {
                 if (isNaN(this.curSiteRule.wait)) {
                     try {
-                        checkEval = (typeof this.curSiteRule.wait === 'function') ? this.curSiteRule.wait : Function("doc", '"use strict";' + this.curSiteRule.wait);
+                        checkEval = (typeof this.curSiteRule.wait === 'function') ? this.curSiteRule.wait : new AsyncFunction("doc", '"use strict";' + this.curSiteRule.wait);
                     } catch(e) {
                         debug(e);
                     }
@@ -7990,31 +7990,33 @@
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
                     let base = doc.querySelector("base");
                     ruleParser.basePath = base ? base.href : url;
-                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
-                    if (checkEval && !checkEval(doc)) {
-                        setTimeout(() => {
-                            checkIframe();
-                        }, waitTime);
-                        return;
-                    } else if (eles && eles.length > 0) {
-                        await ruleParser.hookUrl(doc);
-                        await callback(doc, eles);
-                    } else if (pageEleTryTimes++ < 100) {
-                        getBody(doc).scrollTop = 9999999;
-                        doc.documentElement.scrollTop = 9999999;
+                    if (checkEval && !await checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
                         }, waitTime);
                         return;
                     } else {
-                        if (failFromIframe++ > 2) {
-                            failFromIframe = 0;
-                            debug("Stop as failFromIframe");
-                            changeStop(true);
-                            callback(false, false);
+                        let eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
+                        if (eles && eles.length > 0) {
+                            await ruleParser.hookUrl(doc);
+                            await callback(doc, eles);
+                        } else if (pageEleTryTimes++ < 100) {
+                            getBody(doc).scrollTop = 9999999;
+                            doc.documentElement.scrollTop = 9999999;
+                            setTimeout(() => {
+                                checkIframe();
+                            }, waitTime);
+                            return;
                         } else {
-                            ruleParser.noValidContent(url);
-                            callback(false, false);
+                            if (failFromIframe++ > 2) {
+                                failFromIframe = 0;
+                                debug("Stop as failFromIframe");
+                                changeStop(true);
+                                callback(false, false);
+                            } else {
+                                ruleParser.noValidContent(url);
+                                callback(false, false);
+                            }
                         }
                     }
                 } catch(e) {
@@ -8145,7 +8147,7 @@
                         loadmoreEnd = true;
                     }
                 }
-                if (checkEval && !checkEval(iframeDoc)) {
+                if (checkEval && !await checkEval(iframeDoc)) {
                     waitTimes = 50;
                     setTimeout(() => {
                         checkPage();
