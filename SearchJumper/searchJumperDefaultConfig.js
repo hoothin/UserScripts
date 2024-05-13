@@ -132,11 +132,6 @@ switch (lang) {
                         "url": "https://www.sogou.com/web?query=%s",
                         "keywords": "(?:query|keyword)=(.*?)(&|$)",
                         "match": "(www|wap|m)\\.sogou\\.com/(web|web/searchList\\.jsp).*(query|keyword)="
-                    },
-                    {
-                        "name": "F搜",
-                        "url": "https://fsoufsou.com/search?q=%s",
-                        "nobatch": true
                     }
                 ]
             },
@@ -189,40 +184,6 @@ switch (lang) {
                         "name": "在线之家",
                         "url": "https://www.zxzj.org/vodsearch/-------------.html?wd=%s",
                         "icon": "https://zxzj.vip/statics/img/favicon.ico"
-                    },
-                    {
-                        "name": "小苹果影院",
-                        "url": "https://www.163kp.cc/index.php?m=vod-search&wd=%s&submit="
-                    },
-                    {
-                        "name": "谍影网",
-                        "url": "https://www.tvdie.cc/search.html%p{searchword=%s}",
-                        "icon": "https://www.tvdie.cc/favicon.ico"
-                    },
-                    {
-                        "name": "茶杯狐",
-                        "url": "https://cupfox.app/s/%s",
-                        "icon": "https://p0.meituan.net/dpgroup/cd088044f183d2719f3f9fe56d5c34204207.png"
-                    },
-                    {
-                        "name": "HOHO TV",
-                        "url": "https://www.hoho.tv/vod/search.html%p{wd=%s}",
-                        "icon": "https://www.hoho.tv/img/left_logo.png"
-                    },
-                    {
-                        "name": "西瓜视频",
-                        "url": "https://www.ixigua.com/search/%s/",
-                        "icon": "https://sf1-cdn-tos.douyinstatic.com/obj/eden-cn/lpqpflo/ixigua_favicon.ico"
-                    },
-                    {
-                        "name": "量子资源网",
-                        "url": "http://lzizy.net/index.php/vod/search.html?wd=%s"
-                    },
-                    {
-                        "name": "蚂蚁4K",
-                        "url": "https://www.mayi4k.com/vodsearch/-------------.html?wd=%s",
-                        "icon": "https://www.mayi4k.com/upload/mxcms/20230718-1/4bdda0aaaa64c431daf6254f99a5cae1.png",
-                        "description": " 4K蓝光原盘磁力链115网盘下载"
                     }
                 ]
             },
@@ -300,21 +261,6 @@ switch (lang) {
                     {
                         "name": "展开所有引擎",
                         "url": "https://search.hoothin.com/all#%s"
-                    },
-                    {
-                        "name": "磁力转种子-lolicon",
-                        "url": "https://m2t.lolicon.app/#p{#magnet=%s}",
-                        "kwFilter": "^magnet:",
-                        "description": "磁力转种子",
-                        "nobatch": true
-                    },
-                    {
-                        "name": "Magnet-vip",
-                        "url": "https://magnet-vip.com/#p{.form-group input=%s&click(.btn-outline-secondary)}",
-                        "icon": "https://magnet-vip.com/favicon.png",
-                        "kwFilter": "^magnet:",
-                        "description": "磁力转种子",
-                        "nobatch": true
                     },
                     {
                         "name": "💲美元转人民币",
@@ -397,32 +343,6 @@ switch (lang) {
                         "nobatch": true
                     },
                     {
-                        "name": "Gif控制器-以图搜图",
-                        "url": "[\"Gif控制器\"]"
-                    },
-                    {
-                        "name": "Pixlr easy",
-                        "url": "https://pixlr.com/x/#p{click(#home-open-url)&#image-url=%t&click(.dialog>.buttons>a.button.positive)}",
-                        "description": "使用 Pixlr easy 编辑图片",
-                        "nobatch": true
-                    },
-                    {
-                        "name": "SauceNAO",
-                        "url": "https://saucenao.com/search.php?db=999&url=%t"
-                    },
-                    {
-                        "name": "IQDB",
-                        "url": "https://iqdb.org/?url=%t"
-                    },
-                    {
-                        "name": "Yandex以图搜图",
-                        "url": "https://yandex.com/images/search?source=collections&rpt=imageview&url=%T"
-                    },
-                    {
-                        "name": "3D IQDB",
-                        "url": "https://3d.iqdb.org/?url=%t"
-                    },
-                    {
                         "name": "百度以图搜图",
                         "url": "https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=%T"
                     },
@@ -441,15 +361,6 @@ switch (lang) {
                     {
                         "name": "360以图搜图",
                         "url": "https://st.so.com/stu?imgurl=%t"
-                    },
-                    {
-                        "name": "ImgOps",
-                        "url": "https://imgops.com/%b"
-                    },
-                    {
-                        "name": "Photopea",
-                        "url": "https://www.photopea.com/#%7B%22files%22:%5B%22%t%22%5D,%22environment%22:%7B%7D%7D",
-                        "nobatch": true
                     },
                     {
                         "name": "二维码生成-以图搜图",
@@ -482,15 +393,6 @@ switch (lang) {
                         "name": "天眼查",
                         "url": "https://www.tianyancha.com/search?key=%s",
                         "match": "^https?:\\/\\/www\\.tianyancha\\.com\\/(?:search|company)"
-                    },
-                    {
-                        "name": "中國大陸地方志書目查詢系統",
-                        "url": "https://webgis.sinica.edu.tw/place/query.asp?A1=%E5%9C%B0%E6%96%B9%E5%BF%97%E5%90%8D&B1=containing&C1=%s&Page_setup=10&D1=AND&A2=99&B2=containing&C2=&D2=AND&A3=99&B3=containing&C3=&page=1",
-                        "charset": "Big5"
-                    },
-                    {
-                        "name": "金山文档 · 一起办公才高效",
-                        "url": "https://edu.kdocs.cn/?show=all#p{#app input.kdv-input__inner=%s}"
                     }
                 ]
             },
@@ -603,14 +505,6 @@ switch (lang) {
                         "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^\\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\")"
                     },
                     {
-                        "name": "敏感词查询",
-                        "url": "http://www.txttool.com/t/?id=NDY4#p{#wordkey=%sr&click(.panel-body>div>button)}"
-                    },
-                    {
-                        "name": "IP查询",
-                        "url": "https://www.ipuu.net/query/ip?search=%sr"
-                    },
-                    {
                         "name": "⭐ 查找当前Favicon",
                         "url": "javascript:let ico=document.querySelector(\"link[rel='shortcut icon'],link[rel='icon']\");if(ico)window.open(ico.href, \"_blank\");else window.open(location.origin + \"/favicon.ico\", \"_blank\")"
                     },
@@ -704,12 +598,6 @@ switch (lang) {
                         "nobatch": true
                     },
                     {
-                        "name": "⏬ 全网视频下载",
-                        "url": "lux://%u",
-                        "description": "需要配合注册表补丁使用，详阅项目主页",
-                        "nobatch": true
-                    },
-                    {
                         "name": "复制链接为 Markdown",
                         "url": "copy:[%sr](%t)",
                         "nobatch": true
@@ -797,15 +685,6 @@ switch (lang) {
                         "url": "https://archive.is/%u"
                     },
                     {
-                        "name": "Memento",
-                        "url": "http://timetravel.mementoweb.org/memento/0/%u",
-                        "icon": "http://mementoweb.org/static/css/images/timetravel_logo_20x20.png"
-                    },
-                    {
-                        "name": "Megalodon",
-                        "url": "https://megalodon.jp/?url=%u"
-                    },
-                    {
                         "name": "Yahoo 快照",
                         "url": "https://search.yahoo.com/search?p=url:%u#p{open(#results li:first-of-type a[href*\\=\"cc.bingj.com/cache\"], #results li:first-of-type a[href*\\=\"cc.bingj.com%2fcache\"])}"
                     },
@@ -866,50 +745,6 @@ switch (lang) {
                     {
                         "name": "复制知乎回答 ",
                         "url": "c:%element{.AuthorInfo>[itemprop='name']}.prop(content)\n%element{.CopyrightRichText-richText}\n%element{.ContentItem-time}"
-                    },
-                    {
-                        "name": "forfrigg",
-                        "url": "http://forfrigg.com/#gsc.tab=0&gsc.q=%s&gsc.sort=",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFQUlEQVR4nMWXT4tlSRHFfxGZee97VdXaOroRBuYbCLpwIaMtbl26Ety7HETQxegX8A8uXLkVP4AwMAgiyKCCqMwoCuKgojjWOI12t1317s3MiHCRr9rpnq56U90LAx6XR76XcfJEnBM3JSIE4DOf/9IL6Y2ffuve2Y6LyCmRn7vF04aKnIvw4kvf+8a3H12TiBAR0U/futU/9fzH+N1vXuPDH/kob56e8tvXfs1nv/JdTDMybZimmQCSCN0DiWA7ZwDWZuSkuEE1Y8qJtXUc+Nvrf+DVV37sL3//m1NE+NsB5ItnRPCn1//I7dtv8de//Jnbt98C4Pf/+A+hGc2NMjdUhGrGunSmOdOqkbPSu7OZM0vttOZMRUmq7JbOsx98jpKT7vPVh9h55Dm+qCIiAIRDb8E8JZII5kavDiIUVUpO4+QetOZYD25sC/OUWKshArUaIvqOPJcCeKhGCtOcuH/ecIIIcAIBzpZKSoIIEFBbZypK92C3jOQi+/VL8lya+CLWarQ26AVwBxxKUXJSlrXjBkiwmQvzlDk7b8yTgkBrRsTl++fLl/YIdX88oHdn7UYQrIuBQskJc8Mddkuj5oQq1OpMKdHE2WwuT3OQARVISVHAAsKCpON0SZXWjW6BR5BzorcOIkgSlto4OS7Uak8OYLd0rAUhMGfh5o2ZIPAY/eEetOqEQ107200ZElwac8ncvbcOwJfEwRLklEhFqatRNoV791dKSeRkJBGON4W1GggIwm7p5KxsN4XajHnKXJTwiRjo3tktFSMwC3IRWuu4D4nulqGOpEJtxnaT6N1Y1g4hIOBP04RzzsxHE0uH6UgokanitO4jcUrjJCIcbTIEnBxPuAVLNVRGoz4xgJITZpCTEAFrdcwckSBrwnHMRj/U1QenaxCM/4gIu6Veuv/BEpwtjbPdikdQu9PMSVmYS2K3jnqHBOFjXYDaHLOg9+B8167c/7AMFTZTZlk6WYWswhgnylwUAqaUEFGmSShJOd4WFCEnmKe0b8THx2EVqGI+ZoGKoCr05qzRcGNvw0LrRm3BWV9JIsxTwh26Ofo2L742AE1KUqEFnC2dpELKwpQTZ2vHHMw6qso8Cds5YR7kJKzNqdWxhyfw9QC4GVOZmEomNOPuRATNgqJK7cZcEq0HhLP04HibaT0oScknBb9ChwcBIEK3YLHG0VHBI8Y7QbNhQONHlCQESgnHA5KCuUOMGXJZHGxCsxhzwIKIQBDOzitTVt57Y0JEhkSB3hxNym7XHshQk1zpAwcBjLnfuHFUEITejZIT1ZxlNbZzQlVQgXmTEAm224wA988bEXBFDx4uQVLBXHCH5n00ZRLqOvzfHTSCtTllEnDoPijPOdFteMITM9B8jNnmTk46qO6BxTAfGVZAKcK6Gr075mNkBwEB7k/RA0rg4eNkFnh3WjOyKrI3JXNHRJhKIgAJwczJ+9LkdzULvPG+9z/Dm6dvcOM9N7lz59+oKh965gTNE5pnQhKigvcgZYEQLIb9XkhN9i+IIkJE4A7JlsMAvJ3zq1/+AoCf/+wVAMrJB7C/v8rjSni1wz8c5+s6WLwKQN7exOoOLVsAnv/kJ3jxq19jXddrpHp81O584ctfvxKAR0QNb5OvQ8M/+eFL/OjlH/Dsxz83Zq0oSALNoBlJGUll/5mQVNBckIs1/V/d651T1rWeAu+g4QEA0/k7mpYXvC0Ko7Onacty985TMxARt+/+659ffByAB3dD4AQ44t3Y8/WjA+fA/UfvhnJxO96DyAxpHpTnNWJ/laE/mvwhAP+v+C9sz+VdwyQu0gAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "威锋网",
-                        "url": "https://s.feng.com/index.php?srchtxt=%s",
-                        "icon": "data:image/x-icon;base64,AAABAAEAEBAAAAAAIAAAAwAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAsdJREFUeJyNkl1IUwEUx3+73nbVTV13zaZlsw8VIyvbSkiyeimjHtKHIkSiwCAwhIiIoIceCqJeyqIg6qUoiIigDyOKCsUinPmxMpZmpubH5pz7crve7fZQSSuIztvhnP///M//HN3zL9OaMqOyUtaRKxv4n5gKK5zrCeAtkhEe2lJ5sMTIoX4NZ6/nvwhudI0x5ZhHToaAYALMAlhLjZx+rxCORP8JVtU4LaMxxJ+58HvRF5fodvUAEI6pOIciPOkN0eSa4ONwAABRTGHu2DdGxsEPiH5ABXxe8LU5mb+mmFa3l2tBA2ORcQDMjnymvbD46SgNjgzqNy9k3/kmJjZVoNvRltDiMRh69pZdmR/YsGUbjQYrEXczL2r2I5ksrL90hsRMFGlhGYlOH9e3zyUUDPCs+R26xptPtGHPJKWLjJSXr6ehSyTDnsDVeI3RVg+WiloE5Q0dZ0+w/dVTJOsKClq6ObWn5MdK9TVbZz1ock2g5qXzYGslaeZlFNbUIWWm4r7dTn71cbKLlqDMgRa/Ad9UCDnLmGxi50iALJtI6eF6YgEV962rtB6tZdIdYu2RGkyZ6WgqqFIqx+5+IpZg9hoA6AWJiA9K9uwkz74O5+V7yGuqkB12gsEp/AGJRDydeGCadr2e665gsgJ7joC/L05QA3NhLvLyfLKKV2GwptF74y2Pqg8w8nKQac84WTmZdAz6kgkcS+eR9vELk1/B3eam8/wVoqMfSLPEsFWtIkU00n32JOEBJ4piZnN6IJnAIIkcWR3B8/gzfXe6AcguL0M0yuizC5Hte8mdb6JEjlJncrN70wp0mqZpf77roxdOTly6jyc4g6WiFoDIwHuqlic4XFuJxWya7U0yMRJVuNA8TI/OiliwGke4n4MbFVL1IrYFG7AtyPlzVrKCi68H6SnLQxIgFIVPj72cW6lhX2b5C/grvgPjZxiC9n+r/wAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "我的小书屋",
-                        "url": "http://mebook.cc/?s=%s%input{Please select your cup/rare/excellent/So big, A/B/C}",
-                        "icon": "data:image/x-icon;base64,AAABAAEAEBAAAAAAIAC2AQAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAX1JREFUeJylk7Gq6mAQhL8NtxMDAdu/DphKUvgCQdKr8SG08DFSWsp5gxT2FrGNIAo2thY2lkqKaKHurY4ajxzk3oGFhf2Zf2bYFdd1lf+A9d2ICO/6jwlUH0Ke+98gIvx5NzDGEEURnucBMJ/PSZKEPM9L71QVec3AGMNkMsG2bbIswxiDMYbNZkO73S4RnE6nsgIRIQxDbNtmOBwynU4BGI1GhGGI53ksFgvyPKcoCm6324NARFDVu8woigDIsozBYMDxeCTPcy6XS9mv67r6Wl9fX/qM5XKpURSpiPysd3twvV6pVqs0m00ajQbdbhfHcWi1WqRpelcMlDNQVfr9PvV6nV6vx3q9BmA2m5EkCb7vk6bp3S487cH5fGa327Hf7wmCgPF4TBAEBEFAp9MBYLvd3j8qZVCr1VRE1LIstSxL4zjWV8Rx/MO/ZVkqlUpFi6J4jQHHcfB9H4DVasXhcCjNvzMQEfnnYxKRRwYvrB8RqGr5GlW1lPAn+Asf+sooQi/6SwAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "B-OK",
-                        "url": "http://b-ok.xyz/s/?q=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEN0lEQVR4nOWWTWxUZRSGn3O/+W3Lj7VtaGlri1UUBEy6IPEnRBMTiYFVW6MmJmDUGHDjlo3EpRsTDQmJUSORhYCYYnDhQkCNhJ8FhM4ChKFUBEMJUjrTzsz9vuPiOkOnc6ftlKILz2Ly5TvvOe97zz2578D/PaTWgp7D5+PxTKxXPdoEbUc9dWovR9T83tjceeboc+IvuIDH96U3esIWlD5EZqlRpyq7UftFauDhE/cmQFWe2H+lV8X9CNIwF7GlUrgRcaw/O9CVnpeAtQd+a7EaGQFitRBXCFH+Wqxe2/GBzomwvBd2ufLb4TbfmV33Sg4gwtIxse+v/fJafWh++kWwZNGJsHetxR+pLJwpB6Cq2VR/d4WIigkkMtHXiuRWwVfFE0gYoSluaEka6iMSEN7lpCHi0ZI0NCUMES/I+6o4LU5C6lZ9PfzMjBNYvT/9Ccg2gJgn/LK5g4SREmjCKqpQFwluPjs/RmvSsLGjHqeQ9R1RT4ibIO8UxgqOpw+NIMEUfFS3pwZW7C5yRsrHJP0ioApL4x5JI1wcKzB4ZZw/sparGR+nyprGOM8uS7L10cUAHLw8zrHrE4xkfOojwuoH4rTWGV5sr6c5YYh5QsEpIhJR4U2gUsCaAyPtTm1LcaweglXlw7O3+PnP8gU+dyvPngtjpPq6uJmz7Dh1E2/KLE+P5gDIW+WNlUvKxixI70OfpxPDW7onYcoOOLXrp7+fqhsFiAhOFasaDijWh0Rysekpnj2A3sGrdapsm3uL2hDTwzj7VpmAfME1gnbW3GmWqC5NHuk5fD5eEmCt60JYtuACqikQ7TH5+IMlARiNCWJCsQutCkAlavJ+pCRA8O4o5EKx90OAaCaGnSgJUMst0PH7wVUlbrrJRdmSgNRQxyVROfrv8cuhs6+3ZkoC2ClOhV9nK1OCr2S1nNPq+XKwniweS1/CzB39tGGRfDwV5wEvLK9jU2c9jf8YkRG4lrWcHJ0MGgjseLKRtY0xmhIG38H1CZ/RSUtzMnSvGervPlI8TzOjyzkgpkBzwnDkpfaywpwN3C051Q0VPAmePmcD5yyaUTHWfTOMvTuZ60N9Xa0VEwBw6Mse7BGkYXTS8tTgCDmnZH1FUYq+qChLooafNrWT9ZUN3wW4qXlBWBQVBCmRK5p2YjZP5SwTUKgrfB/Pxr4C3ga4XXAIEDxQuaWMFxzvHb/B7bzDV4hIeR4g4yugpUpP5aNUX+c5KpDTYtW+9EURWRGWm3cox4b6uzZMvw79T6jCu6qMLCD9Cet5tZvd6n3pHxCeBwkVOmsoOYS9Q31dW6tBZmwc1cKrKB/Mj1wVZXsiFt0+E2xOXtO7+1Q009S0xii7FB4TWBLKCTdE9YyqeSc11HGJneJm612T2a07mF6a93WlIK8g0iFKmwqKckUg7am3N5YwF09vXp6tpe9/Gn8DQrStezS4ePUAAAAASUVORK5CYII="
-                    },
-                    {
-                        "name": "数字图书馆",
-                        "url": "https://zh.b-ok.cc/s/?q=%s",
-                        "icon": "https://zh.b-ok.cc/favicon.svg"
-                    },
-                    {
-                        "name": "努努影院",
-                        "url": "https://www.nunuyy1.org/so/%s-%s--.html"
-                    },
-                    {
-                        "name": "77影院",
-                        "url": "https://www.77zyy.com/vodsearch.html?wd=%s",
-                        "icon": "https://www.77zyy.com/template/vfed1/asset/img/favicon.png"
-                    },
-                    {
-                        "name": "美剧天堂",
-                        "url": "https://www.meijutt.net/sousuo/index.asp%p{searchword=%s}",
-                        "charset": "GBK"
-                    },
-                    {
-                        "name": "哔咪动漫",
-                        "url": "https://www.bimiacg4.net/vod/search/%p{wd=%s}",
-                        "description": "哔咪哔咪,火影忍者,海贼王,这里是兴趣使然的无名小站_bimibimi"
                     },
                     {
                         "name": "🔆  高亮关键词",
@@ -1066,8 +901,7 @@ switch (lang) {
                     },
                     {
                         "name": "GreasyFork",
-                        "url": "https://greasyfork.org/zh-CN/scripts?q=%s&utf8=✓",
-                        "icon": "https://greasyfork.org/packs/media/images/blacklogo96-b2384000fca45aa17e45eb417cbcbb59.png"
+                        "url": "https://greasyfork.org/zh-CN/scripts?q=%s&utf8=✓"
                     },
                     {
                         "name": "Gen RegExp by AI",
@@ -1102,11 +936,6 @@ switch (lang) {
                     {
                         "name": "Facebook",
                         "url": "https://www.facebook.com/search/results.php?q=%s"
-                    },
-                    {
-                        "name": "V2ex",
-                        "url": "https://www.sov2ex.com/?q=%s",
-                        "icon": "https://sov2ex.oss-cn-shanghai.aliyuncs.com/assets/favicon/apple-icon-57x57.png"
                     }
                 ]
             },
@@ -1143,8 +972,7 @@ switch (lang) {
                 "sites": [
                     {
                         "name": "Jango",
-                        "url": "https://www.jango.com/music/%s",
-                        "icon": "https://s1.cdn107.com/assets/logos/jango/favicon-32x32-2d45face09da6b62b25031d8b9afeefc9274656a5a969c75e6afc644bf85eb96.png"
+                        "url": "https://www.jango.com/music/%s"
                     },
                     {
                         "name": "QQ Music",
@@ -1164,97 +992,6 @@ switch (lang) {
                     {
                         "name": "1688",
                         "url": "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
-                    }
-                ]
-            },
-            {
-                "type": "E-book",
-                "icon": "book",
-                "sites": [
-                    {
-                        "name": "Jiumodiary",
-                        "url": "https://www.jiumodiary.com/#p{#SearchWord=%s}",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAABi0lEQVR4nJ2VsU4CQRRFzy66GCtLrWysjMbEyi+wNFHBmGDpH1jYWJtAq5WxpoFEorXxB6xs1CBBI4WJVhpNoPBayMAuuzOw3FcwvMe5eTOzy0OYIGCHMk3ayBJf3FMmTxCieotN6lZwMOpsRQzIUBwZNlEk0zdIjwtR7BqQGwsXIicg4HVsgxYBFGzlGS1pepjFHlSSCiUZ/ehQS9rVerJB1eOZeUKapINNXjz14jMbzdhxWImn5oi2dCa3FuObCH85HoJL0o3mIgYeMt0o3qBVbaZ659LlfpOOyCHza5/ewsPjKJXJv0L7ORjhDIwSDnGi+/kxAv6QfAsIvY+At5SxGSxbkEshtKqanpS1PwcmGgN4xfE6hZ4DowXqlitLkh9PlVJe42e8rYvIBr4dG6ANj0mF/ZBBw2Xw7HOX1NY5Hlfd9b2r/1ufmq22gcc18OYyqA39U53Smr3aIosg7zJwRt4MltJYeEn0R9tJavw0NNqEYDvVcM31uH6WgAJVmnSsYIcmVQrh8f4HufpcPqh3SFcAAAAASUVORK5CYII=",
-                        "match": "https://www\\.jiumodiary\\.com"
-                    },
-                    {
-                        "name": "Forfrigg",
-                        "url": "http://forfrigg.com/#gsc.tab=0&gsc.q=%s&gsc.sort=",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFQUlEQVR4nMWXT4tlSRHFfxGZee97VdXaOroRBuYbCLpwIaMtbl26Ety7HETQxegX8A8uXLkVP4AwMAgiyKCCqMwoCuKgojjWOI12t1317s3MiHCRr9rpnq56U90LAx6XR76XcfJEnBM3JSIE4DOf/9IL6Y2ffuve2Y6LyCmRn7vF04aKnIvw4kvf+8a3H12TiBAR0U/futU/9fzH+N1vXuPDH/kob56e8tvXfs1nv/JdTDMybZimmQCSCN0DiWA7ZwDWZuSkuEE1Y8qJtXUc+Nvrf+DVV37sL3//m1NE+NsB5ItnRPCn1//I7dtv8de//Jnbt98C4Pf/+A+hGc2NMjdUhGrGunSmOdOqkbPSu7OZM0vttOZMRUmq7JbOsx98jpKT7vPVh9h55Dm+qCIiAIRDb8E8JZII5kavDiIUVUpO4+QetOZYD25sC/OUWKshArUaIvqOPJcCeKhGCtOcuH/ecIIIcAIBzpZKSoIIEFBbZypK92C3jOQi+/VL8lya+CLWarQ26AVwBxxKUXJSlrXjBkiwmQvzlDk7b8yTgkBrRsTl++fLl/YIdX88oHdn7UYQrIuBQskJc8Mddkuj5oQq1OpMKdHE2WwuT3OQARVISVHAAsKCpON0SZXWjW6BR5BzorcOIkgSlto4OS7Uak8OYLd0rAUhMGfh5o2ZIPAY/eEetOqEQ107200ZElwac8ncvbcOwJfEwRLklEhFqatRNoV791dKSeRkJBGON4W1GggIwm7p5KxsN4XajHnKXJTwiRjo3tktFSMwC3IRWuu4D4nulqGOpEJtxnaT6N1Y1g4hIOBP04RzzsxHE0uH6UgokanitO4jcUrjJCIcbTIEnBxPuAVLNVRGoz4xgJITZpCTEAFrdcwckSBrwnHMRj/U1QenaxCM/4gIu6Veuv/BEpwtjbPdikdQu9PMSVmYS2K3jnqHBOFjXYDaHLOg9+B8167c/7AMFTZTZlk6WYWswhgnylwUAqaUEFGmSShJOd4WFCEnmKe0b8THx2EVqGI+ZoGKoCr05qzRcGNvw0LrRm3BWV9JIsxTwh26Ofo2L742AE1KUqEFnC2dpELKwpQTZ2vHHMw6qso8Cds5YR7kJKzNqdWxhyfw9QC4GVOZmEomNOPuRATNgqJK7cZcEq0HhLP04HibaT0oScknBb9ChwcBIEK3YLHG0VHBI8Y7QbNhQONHlCQESgnHA5KCuUOMGXJZHGxCsxhzwIKIQBDOzitTVt57Y0JEhkSB3hxNym7XHshQk1zpAwcBjLnfuHFUEITejZIT1ZxlNbZzQlVQgXmTEAm224wA988bEXBFDx4uQVLBXHCH5n00ZRLqOvzfHTSCtTllEnDoPijPOdFteMITM9B8jNnmTk46qO6BxTAfGVZAKcK6Gr075mNkBwEB7k/RA0rg4eNkFnh3WjOyKrI3JXNHRJhKIgAJwczJ+9LkdzULvPG+9z/Dm6dvcOM9N7lz59+oKh965gTNE5pnQhKigvcgZYEQLIb9XkhN9i+IIkJE4A7JlsMAvJ3zq1/+AoCf/+wVAMrJB7C/v8rjSni1wz8c5+s6WLwKQN7exOoOLVsAnv/kJ3jxq19jXddrpHp81O584ctfvxKAR0QNb5OvQ8M/+eFL/OjlH/Dsxz83Zq0oSALNoBlJGUll/5mQVNBckIs1/V/d651T1rWeAu+g4QEA0/k7mpYXvC0Ko7Onacty985TMxARt+/+659ffByAB3dD4AQ44t3Y8/WjA+fA/UfvhnJxO96DyAxpHpTnNWJ/laE/mvwhAP+v+C9sz+VdwyQu0gAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "Library Genesis",
-                        "url": "http://gen.lib.rus.ec/search.php?req=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADfElEQVR4nM2XQWgbRxSGv5SFncNSDXQhexB4aQUVRhARDBFOwSEt2PRSU3pI6CFJL8mtLTmEnEoOxYRSQm/pLaE15FCa9NCSQy+FYmQwRQFTVmCCAqJsQIQR7GEWBtrDaFeqsaVdieI+GObtaPa9f2b+9+/o1KtXvb85QXvtJJP/LwA4ZSbv7Bsu33mEEIJACgJfUl+SrDVDLja9uQCcKsuBW/f3ebD9G3gC9Hg8CCs8/uoSb/qmFIDSR3D3RgNZPW0fPEDYFkcv+Wa7XTbcfBy4sBKCBikrBIFtSMHTvV7pWKWPYNJel9XcV0oT9RXL1XJHUJiEz2OHXqyIlUYbjdaA6ZMaS4SKZ0mplGC1UZzbhWaeufYDcX9oHwxgtO2zt3NfWE44sPXpOp9sVI+I9m8rdAQ7keHy7UdonYJwbcIMfpbcpIBr/SRFBhW63300E0AhEq7WHe7d2rBlZwBS+0PmG8Bxx2MCtNZHRJoTAMCHLZ9mawl0apOZ1LYESFIYDG2v7VgYyEJxSynhlXebdJ5281VKv0IYSKQnEA5oA/FAEUUv2VyrF4pZugy/eLC/kPQuDCCzP/sO8cCWpUo0w0QjRvvpCoEUEPhyJtCZR/BLO2E36tHpxvQGGqUUOhkRT2twxHhyXhHjcem7PL539ViBmroD17/e48n3u1bzHWGDZ5Az1h9ejjnUD4a03nmbn7beOzLH1B349uYKwRuC+9u74LnjWp80M1kV2VgGwgVP0IvVsTlmluGdqw1ufHwOBlnyUfnlySdAOIz6CbHCVsfcADIQuQbAeMWOa0GJETCyXZoAZCD05WIAALauXxh57pgLJp0QIcYA9chPUhhoNs6Fx8YtLERnaw71xhLRXjcnpAwqNGsBzbcClqqS0JdIKZCeQCWaqBfzoq/4/FJtcQAAV9brPEw0G2t11lshZ2tHvW7Y2Y9ZbXgsV33AnxpzoQvJYfvx9wEPf+7Q/rXLZzfXuT1l5ZmV2oFJex479AaKZwcx7WcxnShGxUMb0RMoVexrWBjAX8rj2pdP7I1Ia5QaES9TPYHVCgdQKULMCFgWgEo0nb0XNhHYMvMgr4r8nmA1YG0lLBS3cBkuVw1B7TRkWzspRnp8DyAesrl5houNYl/LUiT848Bwd7tNdBATJzpXO+kJAl9QDwM+OB/yfms68+cG8F/Yif85/QdlMHLuJQQjHQAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "B-OK",
-                        "url": "http://b-ok.xyz/s/?q=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEN0lEQVR4nOWWTWxUZRSGn3O/+W3Lj7VtaGlri1UUBEy6IPEnRBMTiYFVW6MmJmDUGHDjlo3EpRsTDQmJUSORhYCYYnDhQkCNhJ8FhM4ChKFUBEMJUjrTzsz9vuPiOkOnc6ftlKILz2Ly5TvvOe97zz2578D/PaTWgp7D5+PxTKxXPdoEbUc9dWovR9T83tjceeboc+IvuIDH96U3esIWlD5EZqlRpyq7UftFauDhE/cmQFWe2H+lV8X9CNIwF7GlUrgRcaw/O9CVnpeAtQd+a7EaGQFitRBXCFH+Wqxe2/GBzomwvBd2ufLb4TbfmV33Sg4gwtIxse+v/fJafWh++kWwZNGJsHetxR+pLJwpB6Cq2VR/d4WIigkkMtHXiuRWwVfFE0gYoSluaEka6iMSEN7lpCHi0ZI0NCUMES/I+6o4LU5C6lZ9PfzMjBNYvT/9Ccg2gJgn/LK5g4SREmjCKqpQFwluPjs/RmvSsLGjHqeQ9R1RT4ibIO8UxgqOpw+NIMEUfFS3pwZW7C5yRsrHJP0ioApL4x5JI1wcKzB4ZZw/sparGR+nyprGOM8uS7L10cUAHLw8zrHrE4xkfOojwuoH4rTWGV5sr6c5YYh5QsEpIhJR4U2gUsCaAyPtTm1LcaweglXlw7O3+PnP8gU+dyvPngtjpPq6uJmz7Dh1E2/KLE+P5gDIW+WNlUvKxixI70OfpxPDW7onYcoOOLXrp7+fqhsFiAhOFasaDijWh0Rysekpnj2A3sGrdapsm3uL2hDTwzj7VpmAfME1gnbW3GmWqC5NHuk5fD5eEmCt60JYtuACqikQ7TH5+IMlARiNCWJCsQutCkAlavJ+pCRA8O4o5EKx90OAaCaGnSgJUMst0PH7wVUlbrrJRdmSgNRQxyVROfrv8cuhs6+3ZkoC2ClOhV9nK1OCr2S1nNPq+XKwniweS1/CzB39tGGRfDwV5wEvLK9jU2c9jf8YkRG4lrWcHJ0MGgjseLKRtY0xmhIG38H1CZ/RSUtzMnSvGervPlI8TzOjyzkgpkBzwnDkpfaywpwN3C051Q0VPAmePmcD5yyaUTHWfTOMvTuZ60N9Xa0VEwBw6Mse7BGkYXTS8tTgCDmnZH1FUYq+qChLooafNrWT9ZUN3wW4qXlBWBQVBCmRK5p2YjZP5SwTUKgrfB/Pxr4C3ga4XXAIEDxQuaWMFxzvHb/B7bzDV4hIeR4g4yugpUpP5aNUX+c5KpDTYtW+9EURWRGWm3cox4b6uzZMvw79T6jCu6qMLCD9Cet5tZvd6n3pHxCeBwkVOmsoOYS9Q31dW6tBZmwc1cKrKB/Mj1wVZXsiFt0+E2xOXtO7+1Q009S0xii7FB4TWBLKCTdE9YyqeSc11HGJneJm612T2a07mF6a93WlIK8g0iFKmwqKckUg7am3N5YwF09vXp6tpe9/Gn8DQrStezS4ePUAAAAASUVORK5CYII="
-                    }
-                ]
-            },
-            {
-                "type": "Download",
-                "icon": "download",
-                "sites": [
-                    {
-                        "name": "ThePiratebay",
-                        "url": "https://thepiratebay.org/search/%s",
-                        "icon": "data:image/jpeg;base64,AAABAAEAEBAAAAAAIAA2AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAf1JREFUeJx9kj9r8nAQxy8xLQatGmPtIoiigoKCoAZHyeQutEtBHHRpl7yELq6+AP+8AIcWOxURQRzMIDhEyeLilIKDQYUg+eWeIT48VujzWe4Ovtzd9zgKEeEvl/kVFEXZCWMHVVUlSTIMg6bpK6ndpV6vPz4+nmtE7Pf7v/W2qVQqtvI8gWHOyc3NDSGE4zhCyH6/BwDLshDx9vbWFvxYIJ1Oz+fz5+fnXq8ny3KtVnt/f282m5f2mMtFWZblef50Or2+vjqdTtM0X15eFEWx5/zzhIjtdtsuvV7v5cy7uzuHwwEAhULhdDoh4vVNdF0Ph8MulwsAEomEYRiEEAA4Ho9nD8vlUpIk0zTtToIg5PN5n88HAMViURAEjuMAIBgMMgxDCKHG43GpVHp7e3O73Q8PDxzHHQ4H0zTtVVmWpWmapulcLjcYDKbTKTMcDgFgPB5blhWJRDKZjCiKqVTKPvRut1utVqqqdrvdVquVTqepr6+vz89PRVEajcZiseh0OtvtNhAIxONxTdMMw4jFYqFQ6Pv7W9M0QgiFiJqmJZNJn88XjUbv7+89Hk8ikbAsS5ZlVVV5ns9msx8fH6IoVqtVQMT9fu/3+yVJ0nUdf6Lr+mQyeXp6AoDZbIaIgIimaY5Go+12i7+w2WzK5fJ6vUZE6j8vfQki2h/+B8UpLqpv9VygAAAAAElFTkSuQmCC"
-                    },
-                    {
-                        "name": "Google cse",
-                        "url": "https://cse.google.com/?q=%s&newwindow=1&cx=006100883259189159113%3Atwgohm0sz8q",
-                        "icon": "https://www.google.com/favicon.ico"
-                    },
-                    {
-                        "name": "BTDigg",
-                        "url": "https://btdig.com/search?q=%s"
-                    },
-                    {
-                        "name": "Btsow",
-                        "url": "https://btsow.com/search/%s",
-                        "icon": "https://btsow.bar/app/bts/View/img/favicon.ico",
-                        "match": "btsow\\."
-                    },
-                    {
-                        "name": "Torrentkitty",
-                        "url": "https://www.torrentkitty.app/search/%s"
-                    },
-                    {
-                        "name": "Idope",
-                        "url": "https://idope.se/torrent-list/%s",
-                        "icon": "https://idope.se/static/search/pc/img/favicon.ico"
-                    },
-                    {
-                        "name": "limetorrents.co",
-                        "url": "https://www.limetorrents.co/search/all/%s"
-                    },
-                    {
-                        "name": "limetorrents.asia",
-                        "url": "https://www.limetorrents.asia/search/all/%s"
-                    },
-                    {
-                        "name": "limetorrents.pro",
-                        "url": "https://www.limetor.pro/search/all/%s"
-                    },
-                    {
-                        "name": "Cdsoso",
-                        "url": "https://www.cdsoso.cc/searches-%s-hot-1-null.html"
-                    },
-                    {
-                        "name": "Sub HD",
-                        "url": "https://subhd.la/search/%s",
-                        "icon": "https://img.huo720.com/favicon-32x32.png"
-                    },
-                    {
-                        "name": "Subscene",
-                        "url": "https://subscene.com/subtitles/searchbytitle:p{query=%s}"
-                    },
-                    {
-                        "name": "R3SUB",
-                        "url": "https://r3sub.com/search.php?s=%s"
                     }
                 ]
             },
@@ -1308,10 +1045,6 @@ switch (lang) {
                         "icon": "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
                     },
                     {
-                        "name": "Fsou",
-                        "url": "https://fsoufsou.com/search?q=%s"
-                    },
-                    {
                         "name": "Qwant",
                         "url": "https://www.qwant.com/?q=%s"
                     },
@@ -1322,8 +1055,7 @@ switch (lang) {
                     },
                     {
                         "name": "Brave",
-                        "url": "https://search.brave.com/search?q=%s",
-                        "icon": "https://cdn.search.brave.com/serp/v1/static/brand/16c26cd189da3f0f7ba4e55a584ddde6a7853c9cc340ff9f381afc6cb18e9a1e-favicon-32x32.png"
+                        "url": "https://search.brave.com/search?q=%s"
                     }
                 ]
             },
@@ -1377,19 +1109,6 @@ switch (lang) {
                         "name": "📦 Batch open links",
                         "url": "%s[all]",
                         "kwFilter": "^https?:"
-                    },
-                    {
-                        "name": "Magnet2Torrent-lolicon",
-                        "url": "https://m2t.lolicon.app/#p{#magnet=%s}",
-                        "kwFilter": "^magnet:",
-                        "nobatch": true
-                    },
-                    {
-                        "name": "Magnet-vip",
-                        "url": "https://magnet-vip.com/#p{.form-group input=%s&click(.btn-outline-secondary)}",
-                        "icon": "https://magnet-vip.com/favicon.png",
-                        "kwFilter": "^magnet:",
-                        "nobatch": true
                     },
                     {
                         "name": "↩️ Short link restore",
@@ -1555,68 +1274,18 @@ switch (lang) {
                         "nobatch": true
                     },
                     {
-                        "name": "Pixlr easy editor",
-                        "url": "https://pixlr.com/x/#p{click(#home-open-url)&#image-url=%t&click(.dialog>.buttons>a.button.positive)}",
-                        "nobatch": true
-                    },
-                    {
-                        "name": "Photopea editor",
-                        "url": "https://www.photopea.com/#%7B%22files%22:%5B%22%t%22%5D,%22environment%22:%7B%7D%7D",
-                        "nobatch": true
-                    },
-                    {
-                        "name": "Yandex Search by image",
-                        "url": "https://yandex.com/images/search?source=collections&rpt=imageview&url=%t"
-                    },
-                    {
                         "name": "QRCode detection",
                         "url": "https://hoothin.com/qrdecode#p{#fileInput=%i}",
                         "icon": "https://hoothin.com/qrcode/favicon.svg"
-                    },
-                    {
-                        "name": "SauceNAO",
-                        "url": "https://saucenao.com/search.php?db=999&url=%t"
-                    },
-                    {
-                        "name": "IQDB",
-                        "url": "https://iqdb.org/?url=%t"
-                    },
-                    {
-                        "name": "3D IQDB",
-                        "url": "https://3d.iqdb.org/?url=%t"
-                    },
-                    {
-                        "name": "Baidu Search by image",
-                        "url": "https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=%t"
-                    },
-                    {
-                        "name": "Bing Search by image",
-                        "url": "https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbisrc=UrlPaste&q=imgurl:%t"
                     },
                     {
                         "name": "TinEye",
                         "url": "https://www.tineye.com/search?url=%t"
                     },
                     {
-                        "name": "Sogou Search by image",
-                        "url": "https://pic.sogou.com/ris?query=%t"
-                    },
-                    {
                         "name": "WhatAnime",
                         "url": "https://trace.moe/?url=%t",
                         "icon": "https://trace.moe/favicon.png"
-                    },
-                    {
-                        "name": "360 Search by image",
-                        "url": "http://st.so.com/stu?imgurl=%t"
-                    },
-                    {
-                        "name": "ZXing QRCode",
-                        "url": "https://zxing.org/w/decode?full=true&u=%t"
-                    },
-                    {
-                        "name": "ImgOps",
-                        "url": "https://imgops.com/%b"
                     }
                 ]
             },
@@ -1628,26 +1297,6 @@ switch (lang) {
                         "name": "Google scholar",
                         "url": "https://scholar.google.com/scholar?hl=zh-CN&q=%s",
                         "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACqklEQVQ4jYWT2UtUURzHL/QH1LMP9hKVNUKFWpP7TDrjU9uEo4WPWlERUbSoueSMaTWjTBCRGV3HiCsSWrTQApVSZBtZWEZSUWZkC3PPne3OzKeHK1NKy4Hfyzl8P+d3vt/fkSRJmpWSVbU9vbxbMZXJSnqZrMx3yErqmrN/r7V+Zf76jjNz5mYXSilZldtKfGBrA5sXcg7Dpg5wX/lzNV+FlmuwsRNy6r9HJFO5v9feBlaXILNWxenT+Pgtzr/W2Oc4azwalqMgLXZ29di9JMXj/xH3P4pybjDKhvYg1qMgpZfKyko3lPk0xr9PF7/4EOfTjwQAiQRcfqpjrlMZeBVjc2eI/FaQ5jlkZWs3qKHENPH7yTg5DYKKExp6DGJxcLRprHILAJr7w5hdIC1wyMquHmNj3/kQN57rALz9Eie/SZBRo/JwLAZAtRLC4jIA7r4pQHqprBS0QkaNysLdAXbKIQAiOjh9Gml7VOS7kaSooGkGwFQqKzYvWFyCgiZBbqPg3mvjRv9ABNPeANeHdSbVBOu8GvYWA9ByMcyKmQCLS5DToFLSKlDuR/kmEox+Moyt6w2TtidAUbPgyKUwZceDWI7MAFhdRgdL9quk7ghw8bGeNPXdZJzKjiCZNSpZtSp5jQKb9zeA1SUw16ms9WqcvBlhcDTG4KsYoxO/ohXhBFWng5jrVCwuQbHnN0B2vaDiRJCJqdzvvtRZfUyQ3SA4dSuCbtjC0JsY5npBYRLg9PfaPEYK14f15NA4fRpLD6jkHxKY9ga4PWKcvRyPk9toGF7sBWmR45S/pN0Y5a6BaLLdroEoGTUqy6oNc99NGk85dCHM8oMCqzuIvQ2k2XPzLAWNX9UiD9i90D0EE8Yo8GQc/A/g2QSMfIHaPsg9DMUe4/dmbrnz8CdxKwtDTtdexQAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "EBSCO",
-                        "url": "http://web.b.ebscohost.com/ehost/results?sid=8e76c941-084d-4b93-b05a-d5f182196017%40sessionmgr102&vid=1&hid=128&bquery=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACJ0lEQVQ4jZWT3UtTYRzHT+w4pzddeRFdBAbd1Z8giXtJz9mKvBDCxMqkrK57u6kEyx13zjHWIl8TEbMptaLpZMeMCgdBS8dSRC8WWAS9UJRS1j5d7AWnjuqB78UPHj58n+f7+wpFLp0il45Z1hBs7nVS0krPdoXM/YyEIpdOgaRSWt/JGZ9BvWeUOiXIUXWMxvZxGrQQTd4wTd4wrkv3sDh1LOsBYpVKaX0XPaEYmfPx6wqHlSAHLt/nlDdMZO4tyWSSHXUdmKrUXECxS0eUVIS9V3kYWQTAiCYQKlpT1itaESs9BKYWqHU/QrApuYDsYFMYnJwF4PH0G0RJxeLUKJQ1BKubbYdusvNIF2ZZzQOwKww9mcsCTJKKKKmU1PgoPzvElkoPBZK68RM3AxjRRMp++TWO6yFGns3nT2EzwIcvyzyILBB+mWD1128GJl7nvP2vgOjie6zn/Ow77+d5fInhp/P/BzCiCQSrG6GsBfsFP/1GHMHRhsX5j4BMCoWyxtaD19l1rBuzrGGWVYr3t+cH3Jmc2xijU8NU5UFwKFwZmGLPyb7sMmUBZllDKGvhbtrBxKv0ItmVlMpaqG4O8O7TN7bX3kKU1gDMskZJjY/G9nG+r/wEYPnHKg1aCMfFYaqbA6gjLwCYX/pMYdpVFmCq9LD7xG36jTg9oRgdwWm6x2L0heN0js7QOx5jcHKW3lCM0zcMxPVdyKmzdY3SFc6ptKMtJ4U/fkBXz/LD6BYAAAAASUVORK5CYII="
-                    },
-                    {
-                        "name": "WOS",
-                        "url": "http://apps.webofknowledge.com/UA_GeneralSearch.do?fieldCount=3&action=search&product=UA&search_mode=GeneralSearch&max_field_count=25&max_field_notice=Notice%3A+You+cannot+add+another+field.&input_invalid_notice=Search+Error%3A+Please+enter+a+search+term.&input_invalid_notice_limits=+%3Cbr%2F%3ENote%3A+Fields+displayed+in+scrolling+boxes+must+be+combined+with+at+least+one+other+search+field.&sa_img_alt=Select+terms+from+the+index&value(input1)=%s&value%28select1%29=TI&value%28hidInput1%29=initVoid&value%28hidShowIcon1%29=0&value%28bool_1_2%29=AND&value%28input2%29=&value%28select2%29=AU&value%28hidInput2%29=initAuthor&value%28hidShowIcon2%29=1&value%28bool_2_3%29=AND&value%28input3%29=&value%28select3%29=SO&value%28hidInput3%29=initSource&value%28hidShowIcon3%29=1&limitStatus=collapsed&expand_alt=Expand+these+settings&expand_title=Expand+these+settings&collapse_alt=Collapse+these+settings&collapse_title=Collapse+these+settings&SinceLastVisit_UTC=&SinceLastVisit_DATE=&timespanStatus=display%3A+block&timeSpanCollapsedListStatus=display%3A+none&period=Range+Selection&range=ALL&ssStatus=display%3Anone&ss_lemmatization=On&ss_query_language=&rsStatus=display%3Anone&rs_rec_per_page=10&rs_sort_by=PY.D%3BLD.D%3BVL.D%3BSO.A%3BPG.A%3BAU.A&rs_refinePanel=visibility%3Ashow",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABr0lEQVQ4jZ2TPYobQRCFvyNUMpGTjgQbGAqBEZs1i5AD4VWzBoNgF1cihB0NONyk1/mgEwxzgmFuMHMD6Sa7RxgHQ8uzI+HAFRXUT79+7xVMQjPUO/zxFyfv8ONcM3Tafw4nuHZPlxZM62lBu6dzgrsYNsWKNQcA/YAW9xyKew5xSSy/UhWfh1qx5mCKvVsS74ivz7wB2CcsrogAAiIgmqGmWP+bHuD1mbd4N/RgitVbGic4zdBwQxAQm2NxSSwfqI4/OYUZwRSrv9FohtZbGlOMckPVv9ALSP1IAxA+EsYQNUPTYPs08NS/0JcbKvIFeZgRNEM1Q53gwg1hSqIpZoqVG6roiWFGyBfk9JG+j/Te4cOMkN+SX5PLO3x+OzzmHT7NnRFETyw3VKZYviC/QDAfmE9IzwgSB+P/HXecxiic4GyOAdSPNAJy5mCsQvtEFz1RM/S451RvaeKSmIZtjnmHF5CzClMftN/pTDHN0OQDgLj6u+idD5JMyYkCUj5QFevBhcUXDnE1oBKQ5MQLop3g2h1dgnlNBZtj7e7KLYwjHVP7gy5dY8r/eY3/G38A1vO4VlociLQAAAAASUVORK5CYII="
-                    },
-                    {
-                        "name": "JSTOR",
-                        "url": "http://www.jstor.org/action/doAdvancedSearch?q0=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADl0lEQVQ4jS2RS0zbdQCA/3cvJh71ollMICN0FhpwbBlZx+Zg0NdC3/23pbQ8B91YGQOtCAOZJQrIaillLVDgJ6+BPMTJU91Bl7mwOBQQjEuGzJMHTbx8HvD+5Uu+fFLGSy/XlipVQlaohC1NKeT0TOFSZgm3MlvYUtOF+ViKMB9LEbbUdOFWZgk5TXnEKVRCTkkTkkeRMb/cEGS+sZb1T5r54sZVRpwuhq1ONsUU+6tr7C2v8jg5TtLh5uv2Bta7mllqaWDRX49kS1OKe9eqCBvP0u+8RNynI+rIp/nEcdqyT/HX4Qv+/fsfomYnd4xq4j4NAyWFDFboSJjsSLbjSjEbqKXPdpGBEi19lgJWoteZD1XRVZTD1uoyz59uM1hup18uoM9eSMSSz0CJjmGHG0lWqETCZKfPns9Mq5fuwrOETRfpNeQRNqp5srjEwdYO4zfKGasz06vPY/ZWGZ3nThHTWpBsqQqx8tF7DFYYmGnx0u8o5MPT2UwFS2jPUbI5t8Qf27vEnBbW4wG++tSPCNiZft9DTP+/YLUzyFCFHlHvYK6jgpD6FBFrAWHTeX76coXDnT169VrmbvuYD1VyS6Uk5iwiZrAiyYpMMSK7GHAXMtHkouN0FiN+MzOtpfTocvnt4fc839ohJpu569EwVFlM3GsgYslnrNSH5M7MEuELOlpU6QyU6Ih7DWwM3iTpNxPKO8mzzR85+GWXXq2GHl0uC53VDFYW06vPY+HdAJIt9S2xGAww21bK/fA1OvNOU/vKa/Ro1ISNeWx/84DD3T367UaGqi8T9+rp1qi5/urrDFqdSI40pZj2VzHR6GC2vYzlSB3JKya+TTYx0+Zh/4eHHGztcNdtZaJJRtTZWI3VE3UUEdWYkFxKlejXGmlVKYi5tEw0ygx4tIzV2bhzWc32xgN+f/yEhM9BxPIOwzUmQuocItZ8Rj1eJGuqQiwG61kIlSMCNrouFXA7921C5zL5rDifP/ee8WhqluYTGYiAlc8bZKKOIkZqTExUVx1tvN92kz7bBbo1ZxitvcLPa+tMNtSxtbzMi1/3GaupYbLJzr0PSrljOM90sIS4V0//UUKWGHN7SZQbGKoyErUU8V0iydOVNR7dmyPhKmPEb2Ej0cjoVTsfX8il48xJxhucDFncSNY33pxfvBJg1F3GbN11kg4Pw3Y3k9V+hK+SIYsT4a1gzFNBUi5lxFXGqLuMqepaplw+/gNcwmcGmhKGRAAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "Springer",
-                        "url": "http://rd.springer.com/search?query=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAuElEQVQ4jbWRsQ2EMAxFMwjFzULHJvR0GeAaKL2GV4jEANmBiorqOipf5ejH+Dg46b5kRYLv5x8niKNl3SQSC6fs/a4UvOamG0pxyrKs231A24+H8xKg7cdi1ukKjcTngEhcjBobT72SC0ADmjA6pyxNN/gApHPKEoklElcAHYJLDRpdjXaJNrL9FjCaNnrTTwEK0RfAl7gMsCBPH3eAzfYaWN5eDgnuqgLs8ySv5+Nr7fP0J8AvegOhkGr6AYHSEgAAAABJRU5ErkJggg=="
                     },
                     {
                         "name": "Wikipedia",
@@ -1663,7 +1312,7 @@ switch (lang) {
                     },
                     {
                         "name": "Google Book",
-                        "url": "https://www.google.com/search?q=%s&btnG=搜索图书&tbm=bks&tbo=1&hl=zh-CN&gws_rd=ssl"
+                        "url": "https://www.google.com/search?q=%s&tbm=bks&tbo=1&hl=en&gws_rd=ssl"
                     },
                     {
                         "name": "krugle",
@@ -1672,135 +1321,7 @@ switch (lang) {
                     },
                     {
                         "name": "npm",
-                        "url": "https://www.npmjs.org/search?q=%s",
-                        "icon": "https://static.npmjs.com/b0f1a8318363185cc2ea6a40ac23eeb2.png"
-                    }
-                ]
-            },
-            {
-                "type": "Movie",
-                "icon": "video",
-                "sites": [
-                    {
-                        "name": "Thepiratebay",
-                        "url": "https://thepiratebay.org/search/%s"
-                    },
-                    {
-                        "name": "Torrentz2",
-                        "url": "https://www.torrentz2.xyz/?q=%s"
-                    },
-                    {
-                        "name": "Torrentz2k",
-                        "url": "https://torrentz2k.xyz/search/:p{q=%s&category=all}"
-                    },
-                    {
-                        "name": "1337x.to",
-                        "url": "https://www.1377x.to/search/%s/1/"
-                    },
-                    {
-                        "name": "Torlock",
-                        "url": "https://www.torlock2.com/all/torrents/%s.html"
-                    },
-                    {
-                        "name": "TD",
-                        "url": "https://www.torrentdownloads.me/search/?search=%s"
-                    },
-                    {
-                        "name": "rarbgprx",
-                        "url": "https://rarbgprx.org/torrents.php?search=%s"
-                    },
-                    {
-                        "name": "rarbgproxy",
-                        "url": "https://rarbgproxy.org/torrents.php?search=%s"
-                    },
-                    {
-                        "name": "kickass1",
-                        "url": "https://kat.sx/search.php?q=%s",
-                        "icon": "https://kat.sx/kastatic/favicon.ico"
-                    },
-                    {
-                        "name": "kickasstorrents",
-                        "url": "https://kickasstorrents.to/usearch/%s"
-                    },
-                    {
-                        "name": "kickass1.to",
-                        "url": "https://kickass1.to/usearch/%s/"
-                    },
-                    {
-                        "name": "kat.am",
-                        "url": "https://kat.am/usearch/%s/"
-                    },
-                    {
-                        "name": "kickasstorrent.cr",
-                        "url": "https://kickasstorrent.cr/usearch/%s/"
-                    }
-                ]
-            },
-            {
-                "type": "ACG",
-                "icon": "gamepad",
-                "sites": [
-                    {
-                        "name": "nyaa.si",
-                        "url": "https://nyaa.si/?f=0&c=0_0&q=%s",
-                        "icon": "https://nyaa.si/static/favicon.png"
-                    },
-                    {
-                        "name": "Tokyotosho",
-                        "url": "https://www.tokyotosho.info/search.php?terms=%s"
-                    },
-                    {
-                        "name": "Mikan",
-                        "url": "http://mikanani.me/Home/Search?searchstr=%s"
-                    },
-                    {
-                        "name": "＊MioBT＊",
-                        "url": "http://www.miobt.com/search.php?keyword=%s",
-                        "icon": "http://www.miobt.com/images/favicon/miobt.ico"
-                    },
-                    {
-                        "name": "shana project",
-                        "url": "https://www.shanaproject.com/search/?title=%s"
-                    },
-                    {
-                        "name": "KOTOMI RSS",
-                        "url": "https://moe4sale.in/?kw=%s"
-                    },
-                    {
-                        "name": "ACG.RIP",
-                        "url": "https://acg.rip/?term=%s"
-                    }
-                ]
-            },
-            {
-                "type": "Sukebei",
-                "icon": "file",
-                "sites": [
-                    {
-                        "name": "nyaa.si",
-                        "url": "https://sukebei.nyaa.si/?f=0&c=0_0&q=%s",
-                        "icon": "data:image/png;base64,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"
-                    },
-                    {
-                        "name": "Glodls",
-                        "url": "https://glodls.to/search_results.php?search=%s"
-                    },
-                    {
-                        "name": "AniDex",
-                        "url": "https://anidex.info/?q=%s",
-                        "icon": "data:image/ico;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABWiwAAG1IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2PeQti3vsaX7niAQE3VgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2Yggdi6P85z///Qq7n/wMDZYsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOmggdh6/84zP//Sr7s/xUuongAAAAAAAAAAAAAAAAAAAAAAAAAAzI0OEpKTVF8QUNHfBkbHUsAAAAAFRy8VTaF5f81zf//Sr7v/xMoqoIAAAAAAAAAAAAAAAAAAAAAODo9RXx+gNynpJ//ubOr/6+qov+HhIH/R0lKz2Zmgdra5d3/Xrru/w8ntYIAAAAAAAAAAAAAAAAAAAAAQEJFP56dnf/t387///Ld///14f//9uL//O7Z/7ywov+iopz/dniT1R4XwF0AAAAAAAAAAAAAAAAAAAAAAAAAEJSWl9n55tH///DW///s1f//69P//+vT///u2f//+N//uaqZ/zI0NNAAAAAAAAAAAAAAAAAAAAAAAAAAAFNZX5bRx73//+vL///nyv//48T//+LC///jw///5cj//+zT//3jxf9wa2b/AQMGSwAAAAAAAAAAAAAAAAAAAAB+hYv07NfD///ft///163//9Kj///RoP//0qP//9er///euv//6cb/mIl8/xQbIH0AAAAAAAAAAAAAAAAAAAAAhI2U+u/TvP//zpn//8uW///Mmf//zZv//82a///Ll///z5z//9uu/5yJe/8ZIih+AAAAAAAAAAAAAAAAAAAAAGVweKndx7r//8mR///UqP//16///9mz///YsP//1Kj//9Gf///Ej/+AdG7/Bw0SSwAAAAAAAAAAAAAAAAAAAAABBwocrq6w5f/Kp///3rj//+XI///jx///4sX//+LB///crv/RoID/VFlc4wAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAGFrb1TCuLX/+sKl///bwf//7tv//+vV//7Tsv/apYn/eXd3/xkgJEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYmxxWKqnqN3OraL+2ayd/9Gllf+xlIr9eHp80ScvM0MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeb3+GpIiUmPV9io/uUWFokwAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//kAAP/wAAD/4AAA/8EAAPCDAADABwAAgA8AAAAfAAAADwAAAA8AAAAPAAAADwAAAB8AAIAfAADAPwAA4H8AAA=="
-                    },
-                    {
-                        "name": "AcgnX Ero",
-                        "url": "https://www.anix.moe/search.php?sort_id=0&keyword=%s"
-                    },
-                    {
-                        "name": "AniRena",
-                        "url": "https://www.anirena.com/?s=%s"
-                    },
-                    {
-                        "name": "GGBases",
-                        "url": "http://www.ggbases.com/search.so?title=%s"
+                        "url": "https://www.npmjs.org/search?q=%s"
                     }
                 ]
             },
