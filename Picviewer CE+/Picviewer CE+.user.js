@@ -23988,6 +23988,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (canPreview) {
                     if (result.type != "link" && result.src == result.imgSrc) {
                         if (result.imgAS.w <= result.imgCS.w && result.imgAS.h <= result.imgCS.h) {
+                            if (result.img && result.img.childElementCount) return false;
                             var wSize = getWindowSize();
                             if (result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
                         }
