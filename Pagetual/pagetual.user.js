@@ -7988,14 +7988,14 @@
                 }
                 try {
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
-                    let base = doc.querySelector("base");
-                    ruleParser.basePath = base ? base.href : url;
                     if (checkEval && !await checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
                         }, waitTime);
                         return;
                     } else {
+                        let base = doc.querySelector("base");
+                        ruleParser.basePath = base ? base.href : url;
                         let eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
                         if (eles && eles.length > 0) {
                             await ruleParser.hookUrl(doc);
@@ -8223,6 +8223,13 @@
                 returnFalse("Stop as timeout when emu");
                 return;
             }
+            if (checkEval && !await checkEval(iframeDoc)) {
+                checkTimes = 0;
+                setTimeout(() => {
+                    checkPage();
+                }, waitTime);
+                return;
+            }
             let eles = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true), checkItem;
             if (eles && eles.length > 0) {
                 eles = [].filter.call(eles, ele => {return ele && !compareNodeName(ele, ["style", "script", "meta"])});
@@ -8233,8 +8240,7 @@
                     checkItem = eles[0];
                 }
             }
-            if (!checkItem || (checkEval && !await checkEval(iframeDoc))) {
-                if (checkEval) checkTimes = 0;
+            if (!checkItem) {
                 setTimeout(() => {
                     checkPage();
                 }, waitTime);
@@ -8553,6 +8559,24 @@
                 }
             }, 50);
         }
+        let waitTime = 300, checkEval;
+        ruleParser.runWait((_checkEval, _waitTime) => {
+            if (_checkEval) {
+                checkEval = _checkEval;
+            }
+            if (_waitTime) {
+                waitTime = _waitTime;
+            }
+        });
+        async function checkIframe() {
+            if (checkEval && !await checkEval(iframeDoc)) {
+                setTimeout(() => {
+                    checkIframe();
+                }, waitTime);
+                return;
+            }
+            loadedHandler();
+        }
         curIframe.name = 'pagetual-iframe';
         curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
@@ -8578,7 +8602,7 @@
                     iframeDoc.head.appendChild(styleEle);
                 }
             }
-            loadedHandler();
+            checkIframe();
             iframeDoc.addEventListener('wheel', e => {
                 document.dispatchEvent(new Event('wheel'));
             }, true);
