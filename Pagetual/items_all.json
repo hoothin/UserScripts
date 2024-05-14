@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86226",
+  "data": {
+    "pageElement": "//div[@class=\"m-pager\"]/preceding-sibling::*[./preceding-sibling::*]",
+    "nextLink": "//ul[@class='m-pager-list']/li[./span]/following-sibling::li/a",
+    "url": "^https://www\\.fnn\\.jp/articles/-/\\d",
+    "exampleUrl": "https://www.fnn.jp/articles/-/652714"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "マンガ『会社をやめて馬主やります! アキコノユメヲ』 / fnnプライムオンライン",
+  "created_at": "2024-05-14T01:07:54+09:00",
+  "updated_at": "2024-05-14T01:25:52+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86223",
   "data": {
     "insertBefore": "//div[@class='width-container']/node()[last()]",
