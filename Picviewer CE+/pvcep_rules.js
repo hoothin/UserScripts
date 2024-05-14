@@ -1513,5 +1513,13 @@ var siteInfo = [
                 return img && img.src;
             }
         }
+    },
+    {
+        name:"turboimagehost",
+        url:/^https?:\/\/www\.turboimagehost\.com\//i,
+        xhr: {
+            url: ".bbc_link",
+            query: "#imageid"
+        }
     }
 ];
