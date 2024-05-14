@@ -12502,7 +12502,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
-        const imageReg = /\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib|3gpp|m4v|mkv|mp4|ogv|webm|flac|m4a|mp3|oga|ogg|opus|wav)\b/i;
+        const imageReg = /\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib|3gpp|m4v|mkv|mp4|ogv|webm|flac|m4a|mp3|oga|ogg|opus|wav)(\?|#|$)/i;
 
         const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)/i;
 
