@@ -16777,6 +16777,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             close:function(reload){
                 if(this.lockGallery)return;
+                if(this.img && this.img.parentNode) this.img.parentNode.removeChild(this.img);
                 if(this.hideBodyStyle.parentNode)
                     this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                 document.removeEventListener('keydown',this._keyDownListener,true);
