@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.15.1
+// @version              2024.5.15.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15450,7 +15450,7 @@ ImgOps | https://imgops.com/#b#`;
                 }else{
                     this.data.forEach(function(item) {
                         if(!item)return;
-                        var spanMark=self._spanMarkPool[item.imgSrc];
+                        var spanMark=self._spanMarkPool[item.src];
                         if(spanMark){
                             var naturalSize=spanMark.dataset.naturalSize,itemW=item.sizeW,itemH=item.sizeH;
                             if(naturalSize){
@@ -15481,7 +15481,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.data.forEach(function(item) {
                     if(!item)return;
                     var itemW=item.sizeW,itemH=item.sizeH;
-                    var spanMark=self._spanMarkPool[item.imgSrc];
+                    var spanMark=self._spanMarkPool[item.src];
                     if(spanMark){
                         var naturalSize=spanMark.dataset.naturalSize;
                         if(naturalSize){
@@ -15643,7 +15643,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (nodeStyle.display == "none") imgSpan.style.display = "none";
                     let popupImgWin = (i) => {
                         let imgwin=new ImgWindowC(i);
-                        self.selectViewmore(imgSpan, curNode.dataset.thumbSrc || curNode.dataset.src);
+                        self.selectViewmore(imgSpan, curNode.dataset.src);
                         if(prefs.imgWindow.overlayer.shown){
                             imgwin.blur(true);
                             self.curImgWin=imgwin;
@@ -15694,17 +15694,48 @@ ImgOps | https://imgops.com/#b#`;
                     imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '" />');
                     let img=imgSpan.querySelector("img");
                     imgSpan.addEventListener("click", function(e) {
-                        imgReady(img.dataset.src, {
-                            ready: function() {
-                                popupImgWin(this);
-                            },
-                            error:function(e){
-                                let i=document.createElement("img");
-                                i.src=curNode.dataset.thumbSrc;
-                                curNode.dataset.src=curNode.dataset.thumbSrc;
-                                popupImgWin(i);
-                            }
-                        });
+                        let loadError = e => {
+                            let i = document.createElement("img");
+                            i.src = curNode.dataset.thumbSrc;
+                            curNode.dataset.src = curNode.dataset.thumbSrc;
+                            popupImgWin(i);
+                        };
+                        let loadImg = () => {
+                            imgReady(img.dataset.src, {
+                                ready: function() {
+                                    popupImgWin(this);
+                                },
+                                error:function(e){
+                                    loadError();
+                                }
+                            });
+                        };
+                        let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
+                        if (xhr) {
+                            let xhrError = function() {
+                                dataset(node, 'xhr', 'stop');
+                                dataset(node, 'src', dataset(node, 'thumbSrc'));
+                                loadError();
+                            };
+                            xhrLoad.load({
+                                url: curNode.dataset.src,
+                                xhr: xhr,
+                                cb: function(imgSrc, imgSrcs, caption) {
+                                    if (imgSrc) {
+                                        dataset(node, 'src', imgSrc);
+                                        dataset(node, 'xhr', 'stop');
+                                        if (caption) dataset(node, 'description', caption);
+                                        img.dataset.src = imgSrc;
+                                        loadImg();
+                                    } else {
+                                        xhrError();
+                                    }
+                                },
+                                onerror: xhrError
+                            });
+                            return;
+                        }
+                        loadImg();
                     });
                     let curSrc=curNode.dataset.src;
                     let defaultDl=()=>{
@@ -15956,21 +15987,26 @@ ImgOps | https://imgops.com/#b#`;
                 this.lastLoading=src;//记住最后读取的图片
                 this.isLoading=true;//表示选择的图片正在读取
 
+                //显示读取指示器。
+                var loadingIndicator=ele.querySelector('.pv-gallery-sidebar-thumb-loading');
+                if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='block';
+
+
                 // 特殊的 xhr 方式获取
-                var xhr = dataset(ele, 'xhr');
+                var xhr = dataset(ele, 'xhr') !== 'stop' && this.getPropBySpanMark(ele, 'xhr');
                 if (xhr) {
                     var xhrError = function() {
-                        dataset(ele, 'xhr', '');
-                        dataset(ele, 'src', dataset(ele, 'thumb-src'));
+                        dataset(ele, 'xhr', 'stop');
+                        dataset(ele, 'src', dataset(ele, 'thumbSrc'));
                         self.getImg(ele);
                     };
                     xhrLoad.load({
                         url: src,
-                        xhr: JSON.parse(decodeURIComponent(xhr)),
+                        xhr: xhr,
                         cb: function(imgSrc, imgSrcs, caption) {
                             if (imgSrc) {
                                 dataset(ele, 'src', imgSrc);
-                                dataset(ele, 'xhr', '');
+                                dataset(ele, 'xhr', 'stop');
                                 if (caption) dataset(ele, 'description', caption);
                                 self.getImg(ele);
                             } else {
@@ -15998,9 +16034,6 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
 
-                //显示读取指示器。
-                var loadingIndicator=ele.querySelector('.pv-gallery-sidebar-thumb-loading');
-                if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='block';
 
 
                 if (!src) return;
@@ -16337,6 +16370,20 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 return true;
             },
+            getSrcBySpanMark: function(spanMark) {
+                let pool = this._spanMarkPool;
+                return Object.keys(pool).find(key => pool[key] === spanMark);
+            },
+            getPropBySpanMark: function(spanMark, key) {
+                let src = this.getSrcBySpanMark(spanMark);
+                if (!src) return;
+                for (let i = 0; i < this.data.length; i++) {
+                    if (this.data[i].src == src) {
+                        return this.data[i][key];
+                    }
+                }
+                return;
+            },
             _appendThumbSpans: function(data, index) { // 添加缩略图栏的 spans
                 var iStatisCopy = this.iStatisCopy;
 
@@ -16356,7 +16403,7 @@ ImgOps | https://imgops.com/#b#`;
                 // 如果是新的，则添加，否则重置并添加。
                 if (!data){
                     if(selectData){
-                        let spanMark=this._spanMarkPool[selectData.imgSrc];
+                        let spanMark=this._spanMarkPool[selectData.src];
                         if(spanMark && spanMark.dataset.naturalSize){
                             let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
                             selectData.sizeW=naturalSize.w;
@@ -16381,15 +16428,16 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 var urlReg=new RegExp(this.urlFilter);
                 var createSpanMark = item => {
-                    var spanMark=self._spanMarkPool[item.imgSrc];
+                    var spanMark=self._spanMarkPool[item.src];
                     if(!spanMark){
                         spanMark = document.createElement("span");
                         try{
                             spanMark.className="pv-gallery-sidebar-thumb-container";
+                            spanMark.dataset.index=index;
                             spanMark.dataset.type=item.type;
                             spanMark.dataset.src=item.src;
                             spanMark.dataset.srcs=item.srcs?item.srcs.join(","):"";
-                            if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
+                            //if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || (item.img ? (item.img.title || item.img.alt || "") : ""));
                             spanMark.dataset.thumbSrc=item.imgSrc;
                             let title = item.img ? (item.img.title || item.img.alt || "").slice(-80) : "";
@@ -16397,11 +16445,12 @@ ImgOps | https://imgops.com/#b#`;
                                 if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
                                 else title += '\n';
                             }
-                            spanMark.title = title + (item.src.length > 150 ? item.src.slice(0, 110) + " ... " + item.src.slice(-30) : item.src);
+                            let itemSrc = item.src.replace(/^(data[^;]+).*/, "$1...");
+                            spanMark.title = title + (itemSrc.length > 150 ? itemSrc.slice(0, 110) + " ... " + itemSrc.slice(-30) : itemSrc);
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                         }catch(e){};
-                        self._spanMarkPool[item.imgSrc] = spanMark;
+                        self._spanMarkPool[item.src] = spanMark;
                     }
                     if(spanMark.dataset.naturalSize){
                         let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
@@ -16417,7 +16466,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     thumbnails.appendChild(spanMark);
                     self.addViewmoreItem([spanMark]);
-                    if (!selectSpan && selectData && item.imgSrc == selectData.imgSrc) {
+                    if (!selectSpan && selectData && (item.src == selectData.src || item.img == selectData.img)) {
                         selectSpan = spanMark;
                         self.select(selectSpan, true);
                     }
@@ -16426,44 +16475,12 @@ ImgOps | https://imgops.com/#b#`;
                 (data || this.data).forEach(function(item) {
                     if(!item || !item.type)return;
                     iStatisCopy[item.type].count++;
-                    if(item.xhr){
-                        xhrLoad.load({
-                            url: item.src,
-                            xhr: item.xhr,
-                            cb: function(imgSrc, imgSrcs, caption, captions) {
-                                if (imgSrc) {
-                                    let result = findPic(item.img);
-                                    result.xhr = false;
-                                    result.src = imgSrc;
-                                    if (caption) result.description = caption;
-                                    createSpanMark(result);
-                                    if (imgSrcs && imgSrcs.length) {
-                                        let i = 0;
-                                        imgSrcs.forEach(src => {
-                                            if (src == imgSrc) return;
-                                            let img = document.createElement('img');
-                                            img.src = src;
-                                            let result = findPic(img);
-                                            result.xhr = false;
-                                            if (captions && captions[i]) result.description = captions[i];
-                                            else if (caption) result.description = caption;
-                                            createSpanMark(result);
-                                            i++;
-                                        })
-                                    }
-                                    self.thumbScrollbar.reset();
-                                    self.loadThumb();
-                                }
-                            }
-                        });
-                    } else {
-                        createSpanMark(item);
-                    }
+                    createSpanMark(item);
                 });
 
                 (data || this.data).forEach(function(d) {
                     if(!d)return;
-                    self._dataCache[d.imgSrc] = true;
+                    self._dataCache[d.src] = true;
                 });
 
                 //写入类别数据。
@@ -16610,9 +16627,9 @@ ImgOps | https://imgops.com/#b#`;
             },
 
             unique:function(data){
-                var imgSrc;
+                var targetSrc;
                 if(data.target){
-                    imgSrc=(data.target.img && data.target.img.src) || data.target.src;
+                    targetSrc=data.target.src;
                 }
 
                 var data_i,
@@ -16623,8 +16640,8 @@ ImgOps | https://imgops.com/#b#`;
 
                 for(var i=0,ii=data.length;i<ii;i++){
                     data_i=data[i];
-                    data_i_src=data_i.imgSrc;
-                    if (i + 1 < ii && data_i.img && data_i.img.nodeName != 'IMG' && data_i_src == data[i + 1].imgSrc) {
+                    data_i_src=data_i.src;
+                    if (i + 1 < ii && data_i.img && data_i.img.nodeName != 'IMG' && data_i_src == data[i + 1].src) {
                         data.splice(i, 1);
                         i--;
                         ii--;
@@ -16638,7 +16655,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     dataSrcs.push(data_i_src);
 
-                    if(imgSrc==data_i_src || imgSrc==data_i.src){
+                    if(targetSrc==data_i_src){
                         index=i;
                     }
                 };
@@ -17465,10 +17482,6 @@ ImgOps | https://imgops.com/#b#`;
             },
             exportImages: function () {// 导出所有图片到新窗口
                 var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]'),i;
-                //var arr = Array.prototype.map.call(nodes, function(node){
-                //    if(unsafeWindow.getComputedStyle(node).display=="none")return "";
-                //    else return '<div><img src=' + node.dataset.src + '></div>'
-                //});
 
                 var arr=[];
                 for (i = 0; i < nodes.length; ++i) {
@@ -18816,32 +18829,59 @@ ImgOps | https://imgops.com/#b#`;
             },
             waitForReady: function(ele) {
                 var self = this;
-                this.imgReady = imgReady(dataset(ele,'src'), {
-                    loadEnd: function(e) {
-                        if (self.aborted) {
-                            return;
-                        }
+                var beginLoadImg = () => {
+                    self.imgReady = imgReady(dataset(ele,'src'), {
+                        loadEnd: function(e) {
+                            if (self.aborted) {
+                                return;
+                            }
 
-                        if (e.type == 'error') {
-                            var srcs = dataset(ele, 'srcs');
-                            if (srcs) srcs = srcs.split(",");
-                            if (srcs && srcs.length > 0) {
-                                var src = srcs.shift();
-                                dataset(ele, 'srcs', srcs.join(","));
-                                if (src) {
-                                    dataset(ele, 'src', src);
-                                    self.waitForReady(ele);
-                                    return;
+                            if (e.type == 'error') {
+                                var srcs = dataset(ele, 'srcs');
+                                if (srcs) srcs = srcs.split(",");
+                                if (srcs && srcs.length > 0) {
+                                    var src = srcs.shift();
+                                    dataset(ele, 'srcs', srcs.join(","));
+                                    if (src) {
+                                        dataset(ele, 'src', src);
+                                        self.waitForReady(ele);
+                                        return;
+                                    }
                                 }
                             }
-                        }
 
-                        dataset(ele,'preloaded','true')
-                        self.container.appendChild(this);
-                        self.preload();
-                    },
-                    time:60 * 1000,//限时一分钟，否则强制结束并开始预读下一张。
-                });
+                            dataset(ele,'preloaded','true')
+                            self.container.appendChild(this);
+                            self.preload();
+                        },
+                        time:60 * 1000,//限时一分钟，否则强制结束并开始预读下一张。
+                    });
+                };
+                var xhr = dataset(ele, 'xhr') !== 'stop' && this.oriThis.getPropBySpanMark(ele, 'xhr');
+                if (xhr) {
+                    var xhrError = function() {
+                        dataset(ele, 'xhr', 'stop');
+                        dataset(ele, 'src', dataset(ele, 'thumbSrc'));
+                        beginLoadImg();
+                    };
+                    xhrLoad.load({
+                        url: dataset(ele,'src'),
+                        xhr: xhr,
+                        cb: function(imgSrc, imgSrcs, caption) {
+                            if (imgSrc) {
+                                dataset(ele, 'src', imgSrc);
+                                dataset(ele, 'xhr', 'stop');
+                                if (caption) dataset(ele, 'description', caption);
+                                beginLoadImg();
+                            } else {
+                                xhrError();
+                            }
+                        },
+                        onerror: xhrError
+                    });
+                } else {
+                    beginLoadImg();
+                }
             },
             getPreloadEle:function(){
                 if((this.max<=this.nextNumber && this.max<=this.preNumber) || (!this.nextEle && !this.preEle)){
@@ -21969,7 +22009,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.setPosition();
 
-                if (this.buttonType == 'current') {
+                if (this.buttonType == 'current' || this.buttonType == 'gallery') {
                     this.loadImg(this.data.imgSrc);
                 } else {
                     if (!this.data.xhr) {
