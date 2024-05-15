@@ -6,7 +6,7 @@
     "example": "https://blog.qixing1217.top/",
     "pageElement": "#container",
     "nextLink": "id(\"container\")/div[2]/a[@rel=\"next\"]/div"
-}，
+},
 {
     "name": "Podium Audio",
     "author": "uwuceo with help from Hoothin",
@@ -17,21 +17,21 @@
     "css": ".loading{opacity: 1;}",
     "autoClick": "div.load-more-section > a",
     "rate": 5
-}，
+},
 {
     "name": "PubMed",
     "author": "1nker",
     "url": "^https?://pubmed\\.ncbi\\.nlm\\.nih\\.gov/",
     "example": "https://pubmed.ncbi.nlm.nih.gov/?term=",
     "loadMore": "button.load-button.next-page"
-}，
+},
 {
     "name": "V2EX POST",
     "author": "jaeger",
     "url": "^https?://v2ex\\.com/t/",
     "example": "https:v2ex.com/t/967813",
     "pageElement": "#Main>.box:nth-child(4)"
-}，
+},
 {
     "name": "V2EX",
     "url": "^https?://www\\.v2ex\\.com/t/",
@@ -566,7 +566,7 @@
     "name": "無限動漫 - 漫畫閱讀",
     "author": "skofkyo",
     "example": "https://www.comicabc.com/online/new-18722.html?ch=26",
-    "url": "^https?://www\\.comicabc\\.com/online/new-\\d+\\.html(\\?ch=\\d+(-\\d+)?)?$|^https?://www\\.comicabc\\.com/ReadComic/\\d+/\\d+/\\w+\\.html",
+    "url": "^https?://(a|www)\\.(comicabc|twobili)\\.com/(ReadComic|online)",
     "pinUrl": true,
     "action": 1,
     "wait": "if(!![...doc.scripts].find(s=>s.textContent.includes('ge(e)'))){let frameCode=`let code=[...document.scripts].find(s=>s.innerHTML.includes('ge(e)')).innerHTML;let[,keyCode]=code.match(/ge\\\\([^.]+\\\\.src\\\\s?=\\\\s?([^;]+)/);let imgs=[];for(let i=1;i<=ps;i++){let code=keyCode.replace(/\\\\(pp?\\\\)/g,'('+i+')');let src=eval(code);let img=new Image();img.id='TheImg';img.src=src;imgs.push(img)}window.newImgs=imgs;`;let s=doc.createElement('script');s.textContent=frameCode;doc.body.appendChild(s);return true}else{return false}",
@@ -5391,7 +5391,7 @@
     "pageInit": "let t=doc.querySelector('#text');t.innerHTML=t.innerHTML.replace(/[<br>]{4}[⒏8８⒏⑧⑻ВbｂьＯσｏоοoＫkкｃсcｍmм．。·.]{9,10}/gi,'')",
     "pageAction": "function gax(x){let nodes=[];let results=document.evaluate(x,document,null,XPathResult.ANY_TYPE,null);let node;while(node=results.iterateNext()){nodes.push(node)}return nodes}gax(\"//*[contains(@class,'pagetual_pageBar')]\")[0].remove();let t=gax(\"//div[@id='text']\");let s=gax(\"//div[div/@id='subtitle']\");if(t.length>4){t[0].remove();s[0].remove()}",
     "css": "#text>br:nth-child(even){display:none!important}#subtitle{margin-bottom:0px!important}"
-}，
+},
 {
     "name": "無限小說 - 書籍分類",
     "author": "skofkyo",
@@ -5400,7 +5400,7 @@
     "nextLink": "li[onclick]+li>a",
     "pageElement": ".row>div.p-2",
     "replaceElement": ".row>li"
-}，
+},
 {
     "name": "UU看書網uuks.org手機版 - 閱讀",
     "author": "skofkyo",
@@ -5414,7 +5414,7 @@
     "css": "#read-page .iconback,#read-page .iconhome{display: none!important;}",
     "insert": "#read-page>.rp-switch",
     "insertPos": 1
-}，
+},
 {
     "name": "UU看書網uuks.org - 閱讀",
     "author": "skofkyo",
@@ -5429,7 +5429,7 @@
     "insertPos": 1,
     "pageBar": 0,
     "pageAction": "let gae=e=>document.querySelectorAll(e);let h=gae('.h1title');let t=gae('#contentbox');if(t.length>10){h[0].remove();t[0].remove()}"
-}，
+},
 {
     "name": "愛下電子書 - 閱讀",
     "author": "skofkyo",
@@ -5441,7 +5441,7 @@
     "replaceElement": "head>title,.page-d.page-turn,.page-d-top,.read-next,.read-pre,.read-prog-info",
     "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let t=gae('#page .page-content');if(t.length>10){t[0].remove()}",
     "css": ".page-content{margin-top:.16rem!important}.page-content h3{line-height:.20rem!important;font-size:.24rem!important;text-align:center!important}"
-}，
+},
 {
     "name": "愛下電子書 - 書籍列表",
     "author": "skofkyo",
@@ -5450,7 +5450,7 @@
     "nextLink": "a.num.current+a",
     "pageElement": ".u-list",
     "replaceElement": "div.panel+div>.pagei"
-}，
+},
 {
     "name": "Discuz Archiver",
     "example": "https://bbs.yxfanfan.com/archiver/?fid-13.html，https://bbs.yxfanfan.com/archiver/?tid-225893.html",
@@ -7339,14 +7339,14 @@
     "author": "hhhllll",
     "pageElement": "main.tm-main:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)",
     "nextLink": ".uk-pagination>.uk-active ~ li>a"
-}，
+},
 {
     "name": "KDays 论坛",
     "url": "^https?://bbs2\\.kdays\\.net/(thread|search)/",
     "pageElement": "body > div.wrapper > div.container",
     "nextLink": "li.current + li >a",
     "author": "hhhllll"
-}，
+},
 {
     "name": "MAL - Genre Search",
     "author": "lemonadeforlife",
@@ -7357,7 +7357,7 @@
     "autoLoadNum": 4,
     "pageBar": 0,
     "replaceElement": ".pagination"
-}，
+},
 {
     "name": "MAL - Advance Search",
     "author": "lemonadeforlife",
@@ -7372,7 +7372,7 @@
     "action": 2,
     "pageNum": "&show={50*($p-1)}",
     "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
-}，
+},
 {
     "name": "MAL - Top (Anime/Manga)",
     "author": "lemonadeforlife",
@@ -7381,7 +7381,7 @@
     "nextlink": "icon-top-ranking-page-bottom> .link-blue-box.next",
     "replaceElement": ".link-blue-box",
     "pageElement": ".top-ranking-table"
-}，
+},
 {
     "name": "MAL - recommendations",
     "author": "lemonadeforlife",
@@ -7392,7 +7392,7 @@
     "replaceElement": ".spaceit>span",
     "pageNum": "&show={50*($p-1)}",
     "stopSign": "let pageList=doc.querySelector('.spaceit>span').textContent;let status=pageList.match(/(\\[\\d+\\])$/);if(status!=null)return true;"
-}，
+},
 {
     "name": "MAL News",
     "author": "lemonadeforlife",
@@ -7402,7 +7402,7 @@
     "replaceElement": ".pagination",
     "pageElement": "div.news-list",
     "action": 1
-}，
+},
 {
     "name": "Торрент-трекер :: NNM-Club",
     "url": "^https?://nnmclub\\.to/",
