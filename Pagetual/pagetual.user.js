@@ -2582,13 +2582,13 @@
                     }
                 }
                 if (next2 && doubtTextReg.test(next2.innerText)) {
-                    next2 = this.verifyNext(next2, doc);
+                    next2 = this.verifyNext(next2, doc, false);
                 }
                 if (nextJs2 && doubtTextReg.test(nextJs2.innerText)) {
-                    nextJs2 = this.verifyNext(nextJs2, doc);
+                    nextJs2 = this.verifyNext(nextJs2, doc, true);
                 }
                 if (next3) {
-                    next3 = this.verifyNext(next3, doc);
+                    next3 = this.verifyNext(next3, doc, false);
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
@@ -2602,8 +2602,14 @@
             return {next:next, canSave:canSave};
         }
 
-        verifyNext(next, doc) {
+        verifyNext(next, doc, isJs) {
             if (!next) return null;
+            if (!isJs) {
+                let href = next.getAttribute("href");
+                if (href && !/\d/.test(next.getAttribute("href"))) {
+                    return null;
+                }
+            }
             if (next.previousElementSibling && compareNodeName(next.previousElementSibling, ["br"])) return null;
             let eles = [];
             if (next.innerText && next.innerText.indexOf("\n") === -1) {
