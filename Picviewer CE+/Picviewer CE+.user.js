@@ -16037,6 +16037,35 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 if (!src) return;
+                let media;
+                if (isVideoLink(src)) {
+                    media = document.createElement('video');
+                    media.style.width = 0;
+                    media.style.height = 0;
+                    media.controls = true;
+                    media.loop = true;
+                    media.autoplay = true;
+                    if (src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                } else if (isAudioLink(src)) {
+                    media = document.createElement('audio');
+                    media.controls = true;
+                    media.autoplay = true;
+                    media.volume = 1;
+                }
+                if (media) {
+                    media.src = src;
+                    var index = allLoading.indexOf(src);
+                    if (index != -1) {
+                        allLoading.splice(index,1);
+                    }
+
+                    if (src != self.lastLoading) return;
+
+                    if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display = '';
+                    if (preImgR) preImgR.abort();
+                    self.loadImg(media, ele);
+                    return;
+                }
                 this.imgReady=imgReady(src, {
                     ready:function(){
                         //从读取队列中删除自己
@@ -16049,7 +16078,7 @@ ImgOps | https://imgops.com/#b#`;
 
                         if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
                         if(preImgR)preImgR.abort();
-                        self.loadImg(this,ele);
+                        self.loadImg(this, ele);
                     },
                     loadEnd:function(e){//在loadend后开始预读。
                         //从读取队列中删除自己
@@ -16064,7 +16093,7 @@ ImgOps | https://imgops.com/#b#`;
                             if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
                             self.errorSpan=ele;
                             if(preImgR)preImgR.abort();
-                            self.loadImg(this,ele,true);
+                            self.loadImg(this, ele,true);
                         };
 
                         self.slideShow.run('loadEnd');
@@ -16085,7 +16114,7 @@ ImgOps | https://imgops.com/#b#`;
 
             },
             loadImg:function(img,relatedThumb,error){
-                if(img.nodeName.toUpperCase()!='IMG'){//先读取。
+                if(!/^(img|video|audio)$/i.test(img.nodeName)){//先读取。
                     this.getImg(img);
                     return;
                 };
