@@ -16163,6 +16163,10 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.relatedThumb=relatedThumb;
                 img.className='pv-gallery-img';
+                var thumb = dataset(relatedThumb, 'thumbSrc');
+                if (thumb) {
+                    img.style.backgroundImage = `url(${thumb})`;
+                }
 
                 if(error){
                     let relatedImg=relatedThumb.querySelector("img");
@@ -18245,6 +18249,11 @@ ImgOps | https://imgops.com/#b#`;
                     opacity:0.3;\
                     box-sizing: content-box;\
                     background-color: #282828cc;\
+                    background-position: center 0;\
+                    background-repeat: no-repeat;\
+                    background-size: cover;\
+                    -webkit-background-size: cover;\
+                    -o-background-size: cover;\
                     '+
                     (prefs.gallery.transition ? ('\
                     -webkit-transition: opacity 0.5s ease;\
