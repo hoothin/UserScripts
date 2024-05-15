@@ -1521,5 +1521,13 @@ var siteInfo = [
             url: ".bbc_link",
             query: "#imageid"
         }
+    },
+    {
+        name:"freepik",
+        url:/^https?:\/\/www\.freepik\.com\//i,
+        xhr: {
+            url: ".showcase__link",
+            query: "img[fetchpriority]"
+        }
     }
 ];
