@@ -5,7 +5,9 @@
     "url": "^https?://blog\\.qixing1217\\.top/",
     "example": "https://blog.qixing1217.top/",
     "pageElement": "#container",
-    "nextLink": "id(\"container\")/div[2]/a[@rel=\"next\"]/div"
+    "nextLink": "a.block[rel='next']",
+    "action": 1,
+    "waitElement": "!img.object-cover[src^='data']"
 },
 {
     "name": "Podium Audio",
