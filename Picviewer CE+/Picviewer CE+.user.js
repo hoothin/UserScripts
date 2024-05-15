@@ -15302,6 +15302,11 @@ ImgOps | https://imgops.com/#b#`;
             },
             showTips:function(content, time){
                 var tipsWords=this.eleMaps["tipsWords"];
+                if (!content) {
+                    tipsWords.style.opacity = 0;
+                    tipsWords.innerText = "";
+                    return;
+                }
                 tipsWords.style.opacity=0.8;
                 tipsWords.innerText=content;
                 tipsWords.style.marginLeft=-tipsWords.offsetWidth/2+"px";
@@ -15643,7 +15648,6 @@ ImgOps | https://imgops.com/#b#`;
                     if (nodeStyle.display == "none") imgSpan.style.display = "none";
                     let popupImgWin = (i) => {
                         let imgwin=new ImgWindowC(i);
-                        self.selectViewmore(imgSpan, curNode.dataset.src);
                         if(prefs.imgWindow.overlayer.shown){
                             imgwin.blur(true);
                             self.curImgWin=imgwin;
@@ -15694,6 +15698,7 @@ ImgOps | https://imgops.com/#b#`;
                     imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '" />');
                     let img=imgSpan.querySelector("img");
                     imgSpan.addEventListener("click", function(e) {
+                        self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
                             let i = document.createElement("img");
                             i.src = curNode.dataset.thumbSrc;
@@ -15701,17 +15706,21 @@ ImgOps | https://imgops.com/#b#`;
                             popupImgWin(i);
                         };
                         let loadImg = () => {
+                            self.showTips("Loading image...");
                             imgReady(img.dataset.src, {
                                 ready: function() {
+                                    self.showTips("");
                                     popupImgWin(this);
                                 },
                                 error:function(e){
+                                    self.showTips("");
                                     loadError();
                                 }
                             });
                         };
                         let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                         if (xhr) {
+                            self.showTips("Sending request...");
                             let xhrError = function() {
                                 dataset(node, 'xhr', 'stop');
                                 dataset(node, 'src', dataset(node, 'thumbSrc'));
