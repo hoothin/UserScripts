@@ -1503,7 +1503,7 @@ var siteInfo = [
         url:/^https?:\/\/(e\-|ex)hentai\.org\//i,
         xhr: {
             url: function(a, p) {
-                if (!a) return;
+                if (!a || !/blank\.gif$/.test(this.src)) return;
                 const re = /\/s\//i;
                 const m = a.href.match(re);
                 return m && a.href;
