@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1376656/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1376854/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1372505/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -22126,6 +22126,7 @@ ImgOps | https://imgops.com/#b#`;
                 box-shadow: 2px 2px 0px #666;\
                 -webkit-transition: opacity 0.15s ease-in-out;\
                 transition: opacity 0.15s ease-in-out;\
+                width: initial;\
                 }\
                 .pv-loading-container:hover {\
                 opacity: 0.9;\
@@ -23009,6 +23010,7 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             function findFile(n, url) {
+                pretreatment(n, true);
                 var path = n.src || n.href;
                 return path ? path.trim() : false;
             }
