@@ -1189,7 +1189,8 @@
                 method: 'GET',
                 timeout: 20000,
                 headers: {
-                    'accept': 'application/json,text/html'
+                    'accept': 'application/json,text/html',
+                    'Referer': url,
                 },
                 onload: function(res) {
                     let json = null;
@@ -5893,7 +5894,7 @@
 
         updateP.onclick = e => {
             updateFail = false;
-            ruleParser.rules = [];
+            //ruleParser.rules = [];
             showTips(i18n("beginUpdate"), "", 30000);
             updateRules(() => {
                 if (!updateFail) {
