@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.44
+// @version      1.9.37.45
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -6126,10 +6126,12 @@
         let allOk = true;
         let preLength = ruleParser.rules.length;
         let fetchVersion = -1;
-        async function needUpdate(url) {
+        async function needUpdate(url, id) {
             if (!/^https:\/\/hoothin\.github\.io\/|\/hoothin\/UserScripts\/.*\/Pagetual\/pagetualRules\.json/i.test(url)) {
                 return true;
             }
+            let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == id ? 1 : 0), 0);
+            if (rulesLength === 0) return true;
             if (fetchVersion >= 0) {
                 return fetchVersion > (rulesData.ruleVersion || 0);
             }
@@ -6187,7 +6189,7 @@
                 success();
             } else {
                 let rule = ruleUrls[ruleIndex--];
-                if (await needUpdate(rule.url)) {
+                if (await needUpdate(rule.url, rule.id)) {
                     ruleParser.addRuleByUrl(rule.url, rule.id, (json, err) => {
                         if (!json) {
                             allOk = false;
