@@ -22675,12 +22675,12 @@ ImgOps | https://imgops.com/#b#`;
                     var paPosi=getContentClientRect(pa);
                     if (paPosi.width > 30 && paPosi.height > 30) {
                         if (this.data.img.offsetTop != 0) {
-                            if (paPosi.height < targetPosi.height) {
+                            if (paPosi.height < targetPosi.height - 3) {
                                 targetPosi.top = paPosi.top;
                             }
                         }
                         if (this.data.img.offsetLeft != 0) {
-                            if (paPosi.width < targetPosi.width) {
+                            if (paPosi.width < targetPosi.width - 3) {
                                 targetPosi.left = paPosi.left;
                             }
                         }
