@@ -96,6 +96,65 @@ You have the option to use a standalone userscript, which allows you to manage a
 })();
 ```
 
+ <details>
+<summary><h2>Advance rule wizard</h2></summary>
+
+  There are two types of rules available:
+  + JSON (simple mode)
+
+    These rules are written in JSON format and can be imported online through [discussions](https://github.com/hoothin/UserScripts/discussions).
+    They are not limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
+    + JSON params
+      - name
+
+        `"name": "rule name"`
+
+        Name of the rule
+      - url
+
+        `"url": "^https://google\\.com"`
+        
+        Regular expression used to match the site URL.
+      - src
+
+        `"src": "^https://image\\.xx\\.com"`
+        
+        Regular expression used to match the image src
+      - r
+
+        `"r": "/(.*)\\d+/i"`
+        
+        Regular expression used to replace the image src from
+      - s
+
+        `"s": "$1"`
+        
+        Replace the image src to
+      - ext
+
+        `"ext": "previous"`
+        
+        Capture nearby image element when the mouse hovers over a non-image element.
+      - lazyAttr
+
+        `"lazyAttr": "data-lazy"`
+        
+        Lazy loaded original image URL attribute name
+      - xhr
+
+        `"xhr": { "url": ".showcase__link", "query": "img[fetchpriority]" }`
+        
+        Fetch the link above the image that matches ".showcase__link" and query the "img[fetchpriority]" on the inner page from the link.
+  + JS (full mode)
+
+    These rules are written in JavaScript object format. If you are not using a standalone userscript, they may be limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
+    + JS params
+      - all mentioned above and the function type instead of string type
+      - getImage
+      - getExtSrc
+
+ </details>
+
 ## Blank Gallery Page
 [https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 
