@@ -2884,18 +2884,19 @@
                  .search-jumper-input>.closeBtn {
                      position: absolute;
                      right: 0px;
-                     top: -39px;
-                     width: 35px;
-                     height: 35px;
+                     top: -35px;
+                     width: 30px;
+                     height: 30px;
                      vertical-align: middle;
                      overflow: hidden;
                      background: rgb(51 56 59 / 90%);
                      color: white;
                      text-align: center;
-                     line-height: 35px;
+                     line-height: 30px;
                      border-radius: 20px;
                      pointer-events: all;
                      transition: 0.25s all ease;
+                     opacity: 0.6;
                      font-size: 26px;
                      box-shadow: 0px 0px 2px rgb(0 0 0 / 80%);
                      border: 1px solid rgb(179 179 179 / 20%);
