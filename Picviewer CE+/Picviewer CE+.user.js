@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.15.2
+// @version              2024.5.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -19660,7 +19660,6 @@ ImgOps | https://imgops.com/#b#`;
                         self.remove();
                         return;
                     }
-                    //self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     self.imgWindow.style.display = "";
                     self.imgNaturalSize = {
                         h:img.naturalHeight,
@@ -20099,7 +20098,6 @@ ImgOps | https://imgops.com/#b#`;
             },
             changeData:function(result){
                 if(this.src != result.src){
-                    //this.imgWindow.classList.add("pv-pic-window-transition-all");
                     this.loaded = false;
                     this.data = result;
                     this.src = result.src;
@@ -20224,7 +20222,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-toolbar:hover {\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-container_focus>.pv-pic-window-toolbar {\
+                    .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-toolbar {\
                     display: block;\
                     }\
                     span.pv-pic-window-close {\
@@ -20247,7 +20245,7 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:red;\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-container_focus>.pv-pic-window-close {\
+                    .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-close {\
                     display: block;\
                     }\
                     span.pv-pic-window-search {\
@@ -20286,14 +20284,14 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:red;\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-container_focus>.pv-pic-window-max {\
+                    .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-max {\
                     display: block;\
                     }\
                     .pv-pic-window-search:hover {\
                     background-color:red;\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-container_focus>.pv-pic-window-search {\
+                    .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-search {\
                     display: block;\
                     }\
                     .pv-pic-window-description {\
@@ -20336,8 +20334,8 @@ ImgOps | https://imgops.com/#b#`;
                     .compare>.pv-pic-search-state{\
                     display: none;\
                     }\
-                    .pv-pic-window-container_focus .pv-pic-window-imgbox:hover~.pv-pic-window-pre,\
-                    .pv-pic-window-container_focus .pv-pic-window-imgbox:hover~.pv-pic-window-next{\
+                    .pv-pic-window-container_focus:not(.preview) .pv-pic-window-imgbox:hover~.pv-pic-window-pre,\
+                    .pv-pic-window-container_focus:not(.preview) .pv-pic-window-imgbox:hover~.pv-pic-window-next{\
                     opacity:0.3;\
                     pointer-events: all;\
                     }\
@@ -20420,7 +20418,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-search-state>.pv-icon * {\
                     pointer-events: none;\
                     }\
-                    .pv-pic-window-container_focus>.pv-pic-search-state {\
+                    .pv-pic-window-container_focus:not(.preview)>.pv-pic-search-state {\
                     opacity:0.8;\
                     }\
                     .pv-pic-window-scrollSign {\
@@ -20484,10 +20482,13 @@ ImgOps | https://imgops.com/#b#`;
                     border:none;\
                     vertical-align:middle;\
                     }\
-                    .pv-pic-window-container_focus .pv-pic-window-imgbox {\
+                    .pv-pic-window-container.preview {\
+                    pointer-events: none;\
+                    }\
+                    .pv-pic-window-container_focus:not(.preview) .pv-pic-window-imgbox {\
                     box-shadow: 0 0 6px black;\
                     }\
-                    span.pv-pic-window-container_focus .pv-pic-window-pic {\
+                    span.pv-pic-window-container_focus:not(.preview) .pv-pic-window-pic {\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
                     background-size: 20px 20px;\
                     background-position: 0 0, 10px 10px;\
@@ -20781,8 +20782,10 @@ ImgOps | https://imgops.com/#b#`;
                 if (prefs.floatBar.previewMaxSizeW && maxHeight > prefs.floatBar.previewMaxSizeH) {
                     maxHeight = prefs.floatBar.previewMaxSizeH;
                 }
-                this.zoomLevel = 0;
-                this.zoom(1);
+                if (this.zoomLevel === 1) {
+                    this.zoomLevel = 0;
+                    this.zoom(1);
+                }
 
                 let imgWindowCS = unsafeWindow.getComputedStyle(this.imgWindow);
                 let rectSize = {
@@ -20822,6 +20825,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (!this.following) {
                     clearTimeout(this.followPosTimer);
                     this.followPosTimer = setTimeout(() => {
+                        if (this.previewed) return;
                         this.following = true;
                         imgWindow.classList.add("pv-pic-window-transition-all");
                         this.followPos(this.followPosX, this.followPosY);
@@ -22344,7 +22348,7 @@ ImgOps | https://imgops.com/#b#`;
                             uniqueImgWin = new ImgWindowC(this.img, this.data, null, null, true);
                             //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
                         }
-                        uniqueImgWin.blur({target:this.data.img});
+                        //uniqueImgWin.blur({target:this.data.img});
                         if(!uniqueImgWin.loaded){
                             if(prefs.waitImgLoad){
                                 uniqueImgWin.imgWindow.style.display = "none";
@@ -22367,7 +22371,7 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             }
                         }
-                        uniqueImgWin.imgWindow.style.pointerEvents = "none";
+                        uniqueImgWin.imgWindow.classList.add("preview");
                         break;
                     case 'gallery':
                         if(!gallery){
@@ -24095,8 +24099,8 @@ ImgOps | https://imgops.com/#b#`;
                     return true;
                 } else {
                     if (uniqueImgWin && uniqueImgWin.imgWindow && !uniqueImgWin.removed) {
-                        uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                         uniqueImgWin.imgWindow.classList.remove("pv-pic-window-transition-all");
+                        uniqueImgWin.imgWindow.classList.remove("preview");
                         uniqueImgWin.previewed = true;
                         uniqueImgWin = null;
                     }
@@ -24443,9 +24447,9 @@ ImgOps | https://imgops.com/#b#`;
                         uniqueImgWin.remove();
                     }
                 }else{
-                    uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     uniqueImgWin.focus();
                     uniqueImgWin.imgWindow.classList.remove("pv-pic-window-transition-all");
+                    uniqueImgWin.imgWindow.classList.remove("preview");
                     uniqueImgWin.previewed=true;
                     uniqueImgWin = null;
                 }
