@@ -4,29 +4,48 @@ on:
     paths:
       - 'Pagetual/items_all.json'
       - 'Pagetual/pagetualRules.json'
+  workflow_run:
+    workflows: ["Collect wedata for pagetual"]
+    types:
+        - completed
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Read current version
-        id: read_version
-        run: echo "::set-output name=version::$(cat Pagetual/version)"
+      - name: Check file modification timestamps
+        id: check_file_timestamps
+        run: |
+          version_timestamp=$(git log -1 --format="%at" Pagetual/version)
+          items_all_timestamp=$(git log -1 --format="%at" Pagetual/items_all.json)
+          pagetualRules_timestamp=$(git log -1 --format="%at" Pagetual/pagetualRules.json)
+          if [[ $version_timestamp < $items_all_timestamp || $version_timestamp < $pagetualRules_timestamp ]]; then
+            version=$(cat Pagetual/version)
+          else
+            version=0
+            echo "Version file is not updated. Skipping version read."
+          fi
+          echo "VERSION=$version" >> $GITHUB_ENV
 
       - name: Increment version
+        if: env.VERSION != '0'
         id: increment_version
-        run: echo "::set-output name=version::$((${{ steps.read_version.outputs.version }} + 1))"
+        run: echo "VERSION=$((VERSION + 1))" >> $GITHUB_ENV
 
       - name: Update version file
-        run: echo "${{ steps.increment_version.outputs.version }}" > Pagetual/version
+        if: env.VERSION != '0'
+        run: echo $VERSION > Pagetual/version
 
       - name: Commit version update
+        if: env.VERSION != '0'
         run: |
           git config --local user.email "rixixi@gmail.com"
           git config --local user.name "hoothin-update"
           git add Pagetual/version
-          git commit -m "Update version of Pagetual rules to ${{ steps.increment_version.outputs.version }}"
+          git commit -m "Update version of Pagetual rules to $VERSION"
           git push https://${{ secrets.ACTION_SECRET }}@github.com/${{ github.repository }}
