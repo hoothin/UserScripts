@@ -323,6 +323,10 @@ switch (lang) {
                         "url": "https://www.google.com/searchbyimage?sbisrc=cr_1_0_0&image_url=%T"
                     },
                     {
+                        "name": "Google lens",
+                        "url": "https://www.google.com/imghp#p{sleep(500)&click([data-propagated-experiment-ids])&[name\\=\"encoded_image\"]=%i}"
+                    },
+                    {
                         "name": "二维码解码",
                         "url": "https://hoothin.com/qrdecode#p{#fileInput=%i}",
                         "icon": "https://hoothin.com/qrcode/favicon.svg"
@@ -365,10 +369,6 @@ switch (lang) {
                     {
                         "name": "二维码生成-以图搜图",
                         "url": "[\"二维码生成\"]"
-                    },
-                    {
-                        "name": "Google lens",
-                        "url": "https://www.google.com/imghp#p{click([aria-label\\=\"Search by image\"])&[name\\=\"encoded_image\"]=%i}"
                     }
                 ]
             },
@@ -1269,6 +1269,11 @@ switch (lang) {
                         "url": "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
                     },
                     {
+                        "name": "Google lens",
+                        "url": "https://www.google.com/imghp#p{sleep(500)&click([data-propagated-experiment-ids])&[name\\=\"encoded_image\"]=%i}",
+                        "description": "Search for clipboard images"
+                    },
+                    {
                         "name": "Lunapic editor",
                         "url": "https://www.lunapic.com/editor/index.php?action=url&url=%t",
                         "nobatch": true
@@ -1436,11 +1441,6 @@ switch (lang) {
                     {
                         "name": "Preview wikipedia",
                         "url": "showTips:https://en.wikipedia.org/wiki/%s\n<div style=\"max-height: 500px; margin: 5px; overflow: hidden; font-size: large; text-align: left; font-weight: initial; line-height: initial;\">\n<img style=\"max-width: 250px; margin: 0 10px;\" align=\"left\" src=\"{.infobox .image>img|src}\"/>\n{.mw-parser-output>p}\n</div>"
-                    },
-                    {
-                        "name": "Google lens",
-                        "url": "https://www.google.com/imghp#p{click([aria-label\\=\"Search by image\"])&[name\\=\"encoded_image\"]=%i}",
-                        "description": "Search for clipboard images"
                     },
                     {
                         "name": "🛠️ Copy selected（pic&link）",
