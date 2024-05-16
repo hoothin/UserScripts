@@ -2148,6 +2148,9 @@
                      color: wheat;
                      display: none;
                  }
+                 a.search-jumper-btn {
+                     background-color: #ffffff40;
+                 }
                  #search-jumper.funcKeyCall .search-jumper-btn>div {
                      line-height: ${32 * this.tilesZoom}px;
                      border-radius: ${20 * this.tilesZoom}px;
@@ -2570,7 +2573,7 @@
                      border: 1px solid rgb(179 179 179 / 10%);
                      border-radius: 28px;
                      background-color: rgb(51 56 59 / 90%);
-                     padding: 10px;
+                     padding: 5px;
                      display: none;
                      z-index: 2139999999;
                      font-size: 20px;
@@ -2632,17 +2635,17 @@
                  .search-jumper-input input:checked + label {
                      background: #3a444add;
                      color: white;
-                     font-size: 18px;
+                     font-size: 14px;
                  }
                  .search-jumper-input input#filterSitesTab:checked ~ .line {
-                     left: 25px;
+                     left: 27px;
                  }
                  .search-jumper-input input#filterSitesTab:checked ~ .content-container #filterSites {
                      opacity: 1;
                      pointer-events: all;
                  }
                  .search-jumper-input input#searchInPageTab:checked ~ .line {
-                     left: 231px;
+                     left: 233px;
                  }
                  .search-jumper-input input#searchInPageTab:checked ~ .content-container #searchInPage {
                      opacity: 1;
@@ -2650,19 +2653,19 @@
                  }
                  .search-jumper-input label {
                      display: inline-block;
-                     font-size: 18px;
-                     height: 36px;
-                     line-height: 36px;
+                     font-size: 12px;
+                     height: 32px;
+                     line-height: 32px;
                      width: 200px;
                      text-align: center;
                      background: #2a343acc;
                      color: #959595;
                      position: relative;
-                     transition: 0.25s background ease;
+                     transition: 0.25s background ease, 0.25s opacity ease;
                      cursor: pointer;
                      position: relative;
-                     top: -46px;
-                     left: 15px;
+                     top: -38px;
+                     left: 22px;
                      border-radius: 5px 5px 0 0;
                      user-select: none;
                      pointer-events: all;
@@ -2670,6 +2673,12 @@
                      white-space: nowrap;
                      overflow: hidden;
                      text-overflow: ellipsis;
+                     opacity: 0.6;
+                 }
+                 .search-jumper-input input:checked + label:hover,
+                 .search-jumper-input label:hover {
+                     background: #3a444a;
+                     opacity: 1;
                  }
                  .search-jumper-input label::after {
                      content: "";
@@ -2690,14 +2699,14 @@
                      background: #1E88E5;
                      width: 200px;
                      height: 1px;
-                     top: -1px;
+                     top: -2px;
                      left: 0;
                      transition: 0.25s ease;
                      position: absolute;
                  }
                  .inputGroup>.svgBtns {
                      right: 20px;
-                     top: 10px;
+                     top: 5px;
                      height: 35px;
                      position: absolute;
                      user-select: none;
@@ -2709,8 +2718,8 @@
                  }
                  .inputGroup>#addons {
                      position: absolute;
-                     bottom: 50px;
-                     right: 100px;
+                     bottom: 41px;
+                     right: 110px;
                      display: none;
                      flex-direction: column;
                      background: #212022;
@@ -2833,7 +2842,7 @@
                  }
                  .search-jumper-input .content-container .inputGroup {
                      position: absolute;
-                     padding: 10px;
+                     padding: 5px;
                      width: 100%;
                      top: 0;
                      left: 0;
@@ -2896,8 +2905,8 @@
                  #searchInPage>.lockWords {
                      max-width: 50%;
                      position: absolute;
-                     bottom: 8px;
-                     left: 20px;
+                     bottom: 4px;
+                     left: 16px;
                      color: white;
                      font-size: 18px;
                      display: flex;
@@ -11244,7 +11253,7 @@
             targetElement = input;
             let event = new Event('focus', { bubbles: true });
             input.dispatchEvent(event);
-            input.click && input.click();
+            input.type !== 'file' && input.click && input.click();
             let lastValue = input.value;
             if (input.type == 'file') {
                 let file = v;
