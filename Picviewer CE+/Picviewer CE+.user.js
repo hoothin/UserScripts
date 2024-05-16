@@ -19617,7 +19617,7 @@ ImgOps | https://imgops.com/#b#`;
                 var srcs, from;
                 img.onerror=function(e){
                     //setSearchState(i18n("loadNextSimilar"),img.parentNode);
-                    if(self.removed)return;
+                    if(self.removed || !self.isImg)return;
                     console.info(img.src+" "+i18n("loadError"));
                     if(!self.data)return;
                     var src;
@@ -19700,8 +19700,8 @@ ImgOps | https://imgops.com/#b#`;
                     setSearchState(img.naturalWidth + " x " + img.naturalHeight, self.imgState);
                 }
                 if (!this.isImg) {
-                    img.naturalHeight = img.videoHeight || img.scrollHeight;
-                    img.naturalWidth = img.videoWidth || img.scrollWidth;
+                    img.naturalHeight = img.videoHeight || 80;
+                    img.naturalWidth = img.videoWidth || 300;
                     setTimeout(() => {
                         img.onload();
                     }, 0);
@@ -23364,6 +23364,48 @@ ImgOps | https://imgops.com/#b#`;
                                         }
                                         self.audio = site.audio;
                                     }
+                                    if (site.getExtSrc) {
+                                        self.getExtSrc = site.getExtSrc;
+                                    }
+                                    if (site.xhr) {
+                                        let siteXhr = site.xhr;
+                                        if (siteXhr.url && !self.getExtSrc) {
+                                            self.getExtSrc = function (ele) {
+                                                let newSrc;
+                                                let a;
+                                                if (ele && ele.href) {
+                                                    a = ele;
+                                                } else {
+                                                    a = ele.parentNode;
+                                                    if (!a || !a.href) {
+                                                        a = null;
+                                                    }
+                                                }
+                                                if (siteXhr.url.test) {
+                                                    if (a && siteXhr.url.test(a.href)) {
+                                                        newSrc = a.href;
+                                                    }
+                                                } else if (typeof siteXhr.url === 'string') {
+                                                    try {
+                                                        if (a && ele.matches(siteXhr.url)) {
+                                                            newSrc = a.href;
+                                                        }
+                                                    } catch(e) {
+                                                        debug(e);
+                                                    }
+                                                } else {
+                                                    newSrc = siteXhr.url.call(ele, a);
+                                                }
+                                                if (newSrc) {
+                                                    self.xhr = siteXhr;
+                                                    return newSrc;
+                                                } else {
+                                                    self.xhr = null;
+                                                }
+                                                return newSrc;
+                                            }
+                                        }
+                                    }
                                 }
                                 self.rules.push(site);
                             }
@@ -23399,21 +23441,6 @@ ImgOps | https://imgops.com/#b#`;
                     if(rt && rt!=str)return str.replace(r, s);
                 }
                 return results;
-            },
-            getExtSrc:function(ele){
-                var newSrc,rule;
-                for(var i = 0; i < this.rules.length; i++){
-                    rule=this.rules[i];
-                    if(rule.getExtSrc){
-                        newSrc = rule.getExtSrc.call(ele);
-                    }else newSrc = null;
-                    if(newSrc && newSrc.length>0){
-                        debug(rule);
-                        break;
-                    }
-                }
-                if(newSrc && newSrc.length==0)newSrc=null;
-                return newSrc;
             },
             replaceByRule: function(src, rule, check) {
                 if (check) {
@@ -23459,7 +23486,6 @@ ImgOps | https://imgops.com/#b#`;
                 var base64Img = /^data:/i.test(img.src);
                 for (var i = 0; i < this.rules.length; i++) {
                     rule = this.rules[i];
-
                     if (rule.xhr) {
                         if (rule.xhr.url) {
                             if (rule.xhr.url.test) {
@@ -23487,7 +23513,6 @@ ImgOps | https://imgops.com/#b#`;
                             newSrc = a.href;
                         }
                     }
-
                     if (base64Img && (!rule.url || !rule.getImage)) continue;
                     if (rule.src && !toRE(rule.src).test(img.src)) continue;
                     if (rule.exclude && toRE(rule.exclude).test(img.src)) continue;
@@ -24125,6 +24150,7 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 }
 
+
                 if (target.nodeName.toUpperCase() == 'A' && imageReg.test(target.href)) {
                 } else if (target.parentNode && target.parentNode.nodeName.toUpperCase() == 'A' && imageReg.test(target.parentNode.href)) {
                     target = target.parentNode;
@@ -24253,7 +24279,7 @@ ImgOps | https://imgops.com/#b#`;
                 selectionChanging = false;
                 const selection = window.getSelection();
                 selectionStr = selection.toString();
-                if (selectionStr && imageReg.test(selectionStr)) {
+                if (selectionStr && selectionStr.length < 500 && imageReg.test(selectionStr)) {
                     const range = selection.getRangeAt(0);
                     selectionClientRect = range.getBoundingClientRect();
                 } else {
