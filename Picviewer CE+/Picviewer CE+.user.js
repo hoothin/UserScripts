@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.16.1
+// @version              2024.5.16.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12502,7 +12502,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
-        const imageReg = /\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib|3gpp|m4v|mkv|mp4|ogv|webm|flac|m4a|mp3|oga|ogg|opus|wav)(\?|#|$)/i;
+        const imageReg = /^\s*(http|ftp).*\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib|3gpp|m4v|mkv|mp4|ogv|webm|flac|m4a|mp3|oga|ogg|opus|wav)(&|\?|#|$|\s)/i;
 
         const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)/i;
 
@@ -23741,7 +23741,7 @@ ImgOps | https://imgops.com/#b#`;
         function checkPreview(e){
             let selStr;
             try {
-                selStr=document.getSelection().toString();
+                selStr = !selectionClientRect && document.getSelection().toString();
             }catch(e){}
             if (selStr) return false;
             let keyActive=(prefs.floatBar.globalkeys.type == "hold" && checkGlobalKeydown(e)) ||
@@ -24109,6 +24109,22 @@ ImgOps | https://imgops.com/#b#`;
             };
 
             if (!result && target.nodeName.toUpperCase() != 'IMG') {
+                if (selectionClientRect &&
+                    clientX > selectionClientRect.left &&
+                    clientX < selectionClientRect.left + selectionClientRect.width &&
+                    clientY > selectionClientRect.top &&
+                    clientY < selectionClientRect.top + selectionClientRect.height) {
+                    result = {
+                        src: selectionStr,
+                        type: "link",
+                        imgSrc: selectionStr,
+                        noActual:true,
+                        img: target
+                    };
+                    checkUniqueImgWin();
+                    return;
+                }
+
                 if (target.nodeName.toUpperCase() == 'A' && imageReg.test(target.href)) {
                 } else if (target.parentNode && target.parentNode.nodeName.toUpperCase() == 'A' && imageReg.test(target.parentNode.href)) {
                     target = target.parentNode;
@@ -24228,6 +24244,23 @@ ImgOps | https://imgops.com/#b#`;
                 checkFloatBar(e.target, e.type, canPreview, e.clientX, e.clientY, e.altKey);
             }, 50);
         }
+
+        var selectionClientRect, selectionStr, selectionChanging = false;
+        document.addEventListener('selectionchange', (e) => {
+            if (selectionChanging) return;
+            selectionChanging = true;
+            setTimeout(() => {
+                selectionChanging = false;
+                const selection = window.getSelection();
+                selectionStr = selection.toString();
+                if (selectionStr && imageReg.test(selectionStr)) {
+                    const range = selection.getRangeAt(0);
+                    selectionClientRect = range.getBoundingClientRect();
+                } else {
+                    selectionClientRect = null;
+                }
+            }, 300);
+        });
 
         async function input(sel, v) {
             await new Promise((resolve) => {
