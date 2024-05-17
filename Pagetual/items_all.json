@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86227",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('load_more_target')",
+    "nextLink": "//span[@aria-current='page'][number()>0]/following-sibling::a[1]",
+    "url": "^https://jp\\.cryptonews\\.com/",
+    "exampleUrl": "https://jp.cryptonews.com/news/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "jp.cryptonews.com",
+  "created_at": "2024-05-16T20:23:44+09:00",
+  "updated_at": "2024-05-16T20:23:44+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86226",
   "data": {
     "pageElement": "//div[@class=\"m-pager\"]/preceding-sibling::*[./preceding-sibling::*]",
