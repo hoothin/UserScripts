@@ -646,7 +646,7 @@ var siteInfo = [
     },
     {
         name: "推特",
-        url: /twitter\.com|pbs\.twimg\.com/,
+        url: /https:\/\/(www\.)?(x|twitter)\.com|pbs\.twimg\.com/,
         getImage: function(a, p){
             let newsrc = this.src.replace("_normal.",".").replace("_200x200.",".").replace("_mini.",".");
             if (newsrc != this.src)return newsrc;
