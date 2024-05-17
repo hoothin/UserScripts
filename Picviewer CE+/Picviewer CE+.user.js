@@ -23893,23 +23893,26 @@ ImgOps | https://imgops.com/#b#`;
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
                     var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
-                    var broEle = target.previousElementSibling, broImg;
-                    while (broEle) {
-                        if (broEle.nodeName == "IMG") broImg = broEle;
-                        else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
-                        if (getComputedStyle(broEle).position !== "absolute") break;
-                        broEle = broEle.previousElementSibling;
-                    }
-                    if (broEle == target) broEle = null;
-                    else if (!broEle) {
-                        broEle = target.nextElementSibling;
+                    var broEle, broImg;
+                    if (target.parentNode && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
+                        broEle = target.previousElementSibling;
                         while (broEle) {
                             if (broEle.nodeName == "IMG") broImg = broEle;
                             else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
-                            if (getComputedStyle(broEle).position == "absolute") break;
-                            broEle = broEle.nextElementSibling;
+                            if (getComputedStyle(broEle).position !== "absolute") break;
+                            broEle = broEle.previousElementSibling;
                         }
                         if (broEle == target) broEle = null;
+                        else if (!broEle) {
+                            broEle = target.nextElementSibling;
+                            while (broEle) {
+                                if (broEle.nodeName == "IMG") broImg = broEle;
+                                else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
+                                if (getComputedStyle(broEle).position == "absolute") break;
+                                broEle = broEle.nextElementSibling;
+                            }
+                            if (broEle == target) broEle = null;
+                        }
                     }
                     if (prefs.floatBar.listenBg && hasBg(target)) {
                         targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
@@ -24043,6 +24046,7 @@ ImgOps | https://imgops.com/#b#`;
                                     noActual:noActual,
                                     img: target
                                 };
+                                break;
                             }
                         }
                     }
