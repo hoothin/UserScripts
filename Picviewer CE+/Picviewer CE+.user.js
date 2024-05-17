@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.16.2
+// @version              2024.5.17.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14506,6 +14506,9 @@ ImgOps | https://imgops.com/#b#`;
                             target.classList.toggle('fullscreenbtn');
                             target.textContent = i18n("exitFullsc");
                             target.classList.add('fullscreenbtn');
+                            var sidebarContainer = self.eleMaps['sidebar-container'],
+                                isHidden = sidebarContainer.style.visibility == 'hidden';
+                            if (!isHidden) self.showHideBottom();
                             break;
                         case 'openPrefs':
                             openPrefs();
@@ -16302,12 +16305,12 @@ ImgOps | https://imgops.com/#b#`;
                         scaled=(scaled*100).toFixed(2) + '%';
                     }else if(prefs.gallery.fitToScreenSmall){
                         if(imgNaturalSize.h/imgNaturalSize.w >= containerSize.h/containerSize.w){
-                            let height=contentSSize.h-50;
+                            let height=contentSSize.h-10;
                             height=height<0?contentSSize.h:height;
                             imgSty.height=height + 'px';
                             scaled=height/imgNaturalSize.h;
                         }else{
-                            let width=contentSSize.w-50;
+                            let width=contentSSize.w-10;
                             width=width<0?contentSSize.w:width;
                             imgSty.width=width + 'px';
                             scaled=width/imgNaturalSize.w;
@@ -18266,6 +18269,9 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-img_zoom-in{\
                     cursor:'+support.cssCursorValue.zoomIn+';\
+                    }\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide .pv-gallery-img{\
+                    border:0px;\
                     }\
                     span.pv-gallery-sidebar-toggle{\
                     position:absolute;\
