@@ -9712,9 +9712,10 @@
                 if (data.shortcut) {
                     tipsStr += ` (${data.ctrl ? "Ctrl + " : ""}${data.shift ? "Shift + " : ""}${data.alt ? "Alt + " : ""}${data.meta ? "Meta + " : ""}${data.shortcut.replace("Key", "")})`;
                 }
-                let lastUrl, anylizing = false;
+                let lastUrl, anylizing = false, tipsShowing = false;
                 let setTips = async (target, url, again) => {
                     self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
+                    tipsShowing = false;
                     if (url) {
                         try {
                             url = url.replace(/^showTips:/, '');
@@ -9728,7 +9729,8 @@
                             }
                             if (tipsResult) {
                                 if (tipsResult != "null" && tipsResult != "No result") {
-                                    tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal;">${tipsResult}</div>`;
+                                    tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal; pointer-events: all;">${tipsResult}</div>`;
+                                    tipsShowing = true;
                                 }
                                 self.tips.style.transition = "none";
                                 self.tipsPos(target, tipsResult);
@@ -9768,8 +9770,10 @@
                     showTipsHandler(targetElement);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
-                    self.tips.style.opacity = 0;
-                    clearTimeout(self.requestShowTipsTimer);
+                    if (!tipsShowing) {
+                        self.tips.style.opacity = 0;
+                        clearTimeout(self.requestShowTipsTimer);
+                    }
                 }, false);
                 return ele;
             }
