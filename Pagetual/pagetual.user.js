@@ -3111,6 +3111,16 @@
             if (!rulesData.preload) return;
             if (this.curSiteRule.preload === 0) return;
             if (!this.nextLinkHref || this.nextLinkHref == "#") return;
+            if (this.readyStateUnComplete) return;
+            if (document.readyState !== 'complete') {
+                this.readyStateUnComplete = true;
+                let self = this;
+                window.addEventListener("load", e => {
+                    self.readyStateUnComplete = false;
+                    self.preload();
+                });
+                return;
+            }
             let self = this, url = this.nextLinkHref;
             let postParams = url.match(/#p{(.*)}$/);
             if (postParams) {
