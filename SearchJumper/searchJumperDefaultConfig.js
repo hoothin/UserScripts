@@ -223,6 +223,10 @@ switch (lang) {
                         "url": "find:%sr"
                     },
                     {
+                        "name": "百度小窗搜索",
+                        "url": "showTips:https://m.baidu.com/s?word=%s\n<iframe src=\"{url}\" style=\" width: 600px; height: 400px; \">\n</iframe>\n<style>\n.search-jumper-tips{\n    background: unset;\n    padding: 0;\n}\n</style>"
+                    },
+                    {
                         "name": "百度站内搜",
                         "url": "https://www.baidu.com/s?wd=%s%20site%3A%h&ie=utf-8"
                     },
