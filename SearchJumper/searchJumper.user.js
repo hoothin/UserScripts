@@ -1767,7 +1767,7 @@
                      pointer-events: all;
                      margin-top: -${this.scale * 25}px;
                      vertical-align: top;
-                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.6;"}
+                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.8;"}
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 1s ease, margin-left 1s, right 1s, opacity 1s, transform 1s;"}
                      user-select: none;
                      text-align: center;
@@ -2563,7 +2563,7 @@
                  .search-jumper-input {
                      width: 80%;
                      min-width: 500px;
-                     bottom: 3%;
+                     bottom: 2%;
                      left: 50%;
                      margin: 0 0 0 -40%;
                      position: fixed;
@@ -2634,6 +2634,7 @@
                  }
                  .search-jumper-input input:checked + label {
                      background: #3a444add;
+                     opacity: 0.9;
                      color: white;
                      font-size: 14px;
                  }
@@ -2705,7 +2706,7 @@
                      position: absolute;
                  }
                  .inputGroup>.svgBtns {
-                     right: 20px;
+                     right: 16px;
                      top: 5px;
                      height: 35px;
                      position: absolute;
@@ -3104,11 +3105,12 @@
                  #rightSizeChange {
                      top: 0;
                      opacity: 0;
-                     height: 55px;
-                     width: 5px;
+                     height: 45px;
+                     width: 15px;
                      position: absolute;
                      cursor: e-resize;
                      right: 0;
+                     pointer-events: all;
                  }
                  .searchJumper-hide {
                      display: none!important;
@@ -12127,19 +12129,13 @@
                     shown = false;
                     document.removeEventListener('click', clickHandler, true);
                 };
-                let mouseDownHandler = e => {
-                    if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
-                        (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
-                        searchBar.contains(e.target)) {
-                        return;
-                    }
-                    if (searchBar.bar.classList.contains("grabbing")) return;
+                function isTargetInput(target) {
                     let targetInput = false;
                     if (inputActive(document)) {
                         targetInput = true;
                     } else {
                         let contentEditable = false;
-                        let parent = e.target;
+                        let parent = target;
                         while (parent) {
                             contentEditable = parent.contentEditable == 'true';
                             if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
@@ -12151,10 +12147,17 @@
                             targetInput = true;
                         }
                     }
-                    let inputSign = false;
-                    if (!searchData.prefConfig.enableInInput) {
-                        inputSign = targetInput;
+                    return targetInput;
+                }
+                let mouseDownHandler = e => {
+                    if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
+                        (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
+                        searchBar.contains(e.target)) {
+                        return;
                     }
+                    if (searchBar.bar.classList.contains("grabbing")) return;
+                    let targetInput = isTargetInput(e.target);
+                    let inputSign = !searchData.prefConfig.enableInInput && targetInput;
                     if (inputSign && e.type === 'dblclick') return;
                     if (searchData.prefConfig.minPopup == 2) {
                         if (targetInput) {
@@ -12207,6 +12210,8 @@
                         } else {
                             setTimeout(() => {
                                 if (shown) return;
+                                targetInput = isTargetInput(e.target);
+                                inputSign = !searchData.prefConfig.enableInInput && targetInput;
                                 if (!inputSign && (
                                     (matchKey && e.button === 2) ||
                                     (moved && e.button === 0 && searchData.prefConfig.selectToShow && getSelectStr())
