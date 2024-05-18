@@ -23903,7 +23903,7 @@ ImgOps | https://imgops.com/#b#`;
                     var targetBg;
                     var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
                     var broEle, broImg;
-                    if (target.parentNode && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
+                    if (target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
                         broEle = target.previousElementSibling;
                         while (broEle) {
                             if (broEle.nodeName == "IMG") broImg = broEle;
