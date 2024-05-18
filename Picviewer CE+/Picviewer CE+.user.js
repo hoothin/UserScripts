@@ -17859,6 +17859,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-range-box>span{\
                     padding: 0 5px 0 5px;\
+                    white-space: nowrap;\
                     }\
                     .pv-gallery-range-box>input{\
                     background: white;\
@@ -18017,16 +18018,23 @@ ImgOps | https://imgops.com/#b#`;
                     box-sizing: border-box;\
                     display: initial;\
                     margin: 0 5px;\
+                    opacity: 1;\
+                    position: initial;\
                     }\
                     .pv-gallery-head-command-drop-list-item > * {\
                     vertical-align:middle;\
                     width: auto;\
+                    opacity: 1;\
+                    height: auto;\
+                    padding: 0;\
+                    margin: 0;\
                     }\
                     .pv-gallery-head-command-drop-list-item label {\
                     font-weight: normal;\
                     display:inline;\
                     font-size:unset;\
                     line-height: initial;\
+                    color: inherit;\
                     }\
                     .pv-gallery-head-command-drop-list-item label:after {\
                     display:none;\
@@ -18344,7 +18352,8 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head:hover{\
                     opacity: 1;\
                     }\
-                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide .pv-gallery-img-parent{\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide .pv-gallery-img-parent,\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide .pv-gallery-img{\
                     cursor: none;\
                     }\
                     .pv-gallery-sidebar-viewmore{\
