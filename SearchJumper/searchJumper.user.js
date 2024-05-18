@@ -7701,8 +7701,8 @@
                 } else if (this.funcKeyCall) {
                     clientX -= target.scrollWidth / 2;
                     let actualTop = clingEle.getBoundingClientRect().top;
-                    if (actualTop > viewHeight / 2) clientY -= (target.scrollHeight + eh / 2 + 10);
-                    else clientY += (eh / 2 + 10);
+                    if (actualTop > viewHeight / 2) clientY -= (target.scrollHeight + eh / 2 + 5);
+                    else clientY += (eh / 2 + 5);
                     if (clientX < 20) clientX = 20;
                     let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                     let maxLeft = viewWidth + scrollLeft - target.scrollWidth - 30;
@@ -9754,7 +9754,7 @@
                             }
                             if (tipsResult) {
                                 if (tipsResult != "null" && tipsResult != "No result") {
-                                    tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal; pointer-events: all;">${tipsResult}</div>`;
+                                    tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal; pointer-events: all; padding: 5px;"><style>.search-jumper-tips{padding:0;}</style>${tipsResult}</div>`;
                                     tipsShowing = true;
                                 }
                                 self.tips.style.transition = "none";
