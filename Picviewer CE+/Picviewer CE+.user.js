@@ -23113,7 +23113,7 @@ ImgOps | https://imgops.com/#b#`;
                 srcs, // 备用的大图地址
                 type, // 类别
                 noActual = false, //没有原图
-                imgSrc = img.src||img.currentSrc||img.dataset.lazySrc, // img 节点的 src
+                imgSrc = img.currentSrc||img.src||img.dataset.lazySrc, // img 节点的 src
                 xhr,
                 description; // 图片的注释
             var imgCStyle = unsafeWindow.getComputedStyle(img);
