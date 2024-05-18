@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.17.2
+// @version              2024.5.18.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1378192/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1378899/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1372505/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -17319,9 +17319,9 @@ ImgOps | https://imgops.com/#b#`;
                 var bgReg = /.*?url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
                 var body = getBody(document);
                 var imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
-                    if(/^img$/i.test(node.nodeName)){
+                    if (/^img$/i.test(node.nodeName)) {
                         total.push(node);
-                    }else if(/^svg$/i.test(node.nodeName)){
+                    } else if (/^svg$/i.test(node.nodeName)) {
                         if (node.clientHeight != 0 && (!node.classList || !node.classList.contains("pagetual"))) {
                             try {
                                 const xml = new XMLSerializer().serializeToString(node);
@@ -17332,7 +17332,7 @@ ImgOps | https://imgops.com/#b#`;
                                 debug(e);
                             }
                         }
-                    }else if(/^canvas$/i.test(node.nodeName)){
+                    } else if (/^canvas$/i.test(node.nodeName)) {
                         if (node.clientHeight != 0) {
                             try {
                                 if (!node.src) {
@@ -17345,6 +17345,12 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if (node.src) {
                             total.push(node);
+                        }
+                    }
+                    if (node.shadowRoot) {
+                        let imgs = node.shadowRoot.querySelectorAll('img');
+                        for (let i = 0; i < imgs.length; i++) {
+                            total.push(imgs[i]);
                         }
                     }
                     if (checkListenBg && !prefs.floatBar.listenBg) {
@@ -23542,7 +23548,7 @@ ImgOps | https://imgops.com/#b#`;
                         if (!newSrc) newSrc = img.src;
                         newSrc = this.replaceByRule(newSrc, rule);
                     }
-                    if (newSrc && newSrc.length > 0 && newSrc != img.src) {
+                    if (newSrc && newSrc.length > 0 && newSrc != (img.currentSrc || img.src)) {
                         debug(rule);
                         break;
                     } else newSrc = null;
@@ -24058,6 +24064,10 @@ ImgOps | https://imgops.com/#b#`;
                                 break;
                             }
                         }
+                    }
+                    if (!result && target.shadowRoot) {
+                        let imgs = target.shadowRoot.querySelectorAll('img');
+                        if (imgs.length === 1) target = imgs[0];
                     }
                     if (result && !/^data:/i.test(result.src)) {
                         if (matchedRule.rules.length > 0 && target.nodeName.toUpperCase() != 'IMG') {
