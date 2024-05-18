@@ -829,7 +829,7 @@ var siteInfo = [
         name: "Youtube",
         url: /youtube\.com/,
         ext: function(target) {
-            if (target.tagName == "ytd-thumbnail") {
+            if (target.tagName == "ytd-thumbnail" || target.id == "thumbnail-container") {
                 return target.querySelector("img");
             }
         },
