@@ -2094,6 +2094,11 @@
                      height: ${32 * this.tilesZoom}px;
                      min-width: ${32 * this.tilesZoom}px;
                      min-height: ${32 * this.tilesZoom}px;
+                     border-radius: ${10 * this.tilesZoom}px;
+                     filter: drop-shadow(1px 1px 3px #00000060);
+                 }
+                 #search-jumper.funcKeyCall a.search-jumper-btn {
+                     background: #f7f7f7a0;
                  }
                  a.search-jumper-btn:not(.search-jumper-word)>span {
                      position: absolute;
@@ -2121,6 +2126,7 @@
                  #search-jumper.funcKeyCall .search-jumper-btn>img {
                      width: ${32 * this.tilesZoom}px;
                      height: ${32 * this.tilesZoom}px;
+                     border-radius: unset;
                  }
                  .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
@@ -2402,7 +2408,6 @@
                      color: #ffffff!important;
                      font-family: Arial, sans-serif;
                      font-weight: 500;
-                     border-radius: ${20 * this.scale}px!important;
                      font-size: ${14 * this.scale}px;
                      line-height: ${32 * this.scale}px;
                      width: ${32 * this.scale}px;
@@ -2411,9 +2416,21 @@
                      min-height: ${32 * this.scale}px;
                      letter-spacing: 0px;
                      text-shadow: unset;
+                     text-decoration: none;
+                 }
+                 span.search-jumper-word {
+                     border-radius: ${20 * this.scale}px!important;
+                 }
+                 a.search-jumper-word>span {
+                     border-radius: ${20 * this.scale}px!important;
+                     width: ${32 * this.tilesZoom}px;
+                     height: ${32 * this.tilesZoom}px;
+                     min-width: ${32 * this.tilesZoom}px;
+                     min-height: ${32 * this.tilesZoom}px;
+                     background: white;
                  }
                  #search-jumper.funcKeyCall .search-jumper-word {
-                     border-radius: ${20 * this.tilesZoom}px!important;
+                     border-radius: ${10 * this.tilesZoom}px!important;
                      font-size: ${14 * this.tilesZoom}px;
                      line-height: ${32 * this.tilesZoom}px;
                      width: ${32 * this.tilesZoom}px;
@@ -2421,15 +2438,15 @@
                      min-width: ${32 * this.tilesZoom}px;
                      min-height: ${32 * this.tilesZoom}px;
                  }
+                 #search-jumper.funcKeyCall .search-jumper-word>span {
+                     background: unset;
+                 }
                  .search-jumper-word:hover {
                      font-weight: bold;
                      text-shadow: 0px 0px 5px #d0d0d0;
                  }
                  a.search-jumper-word {
-                     text-decoration: none;
-                     background: white;
                      color: #111111!important;
-                     filter: drop-shadow(1px 1px 3px #00000060);
                  }
                  .funcKeyCall a.search-jumper-word {
                      background: #f7f7f7a0;
@@ -2445,6 +2462,7 @@
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
+                     border-radius: ${20 * this.scale}px;
                      margin-top: unset;
                  }
                  #search-jumper.funcKeyCall .search-jumper-type img {
@@ -2506,12 +2524,6 @@
                  #search-jumper.funcKeyCall span.search-jumper-word>img {
                      width: ${20 * this.tilesZoom}px;
                      height: ${20 * this.tilesZoom}px;
-                 }
-                 .search-jumper-searchBar .search-jumper-btn.search-jumper-word:hover {
-                     background: black;
-                 }
-                 .search-jumper-searchBar a.search-jumper-btn.search-jumper-word:hover {
-                     background: white;
                  }
                  .search-jumper-btn:hover {
                      -webkit-transform:scale(1.1);
@@ -3123,6 +3135,7 @@
                      min-width: auto;
                      min-height: auto;
                      flex-shrink: 0;
+                     border-radius: 50%;
                  }
                  .search-jumper-historylist>a.search-jumper-btn>img {
                      width: 32px;
@@ -7936,7 +7949,7 @@
                             //self.bar.classList.add("minSizeMode");
                             self.bar.classList.remove("minSizeModeClose");
                         }
-                        let href = (targetElement && (targetElement.href || targetElement.src)) || location.href;
+                        let href = targetElement && (targetElement.href || targetElement.src);
                         let keyWords = getKeywords();
                         let shownSitesNum = 0;
                         siteEles.forEach((se, i) => {
@@ -7952,16 +7965,20 @@
                                     } else ele.appendChild(se);
                                 }
                             }*/
-                            let hasWordParam = wordParamReg.test(data.url);
-                            let checkKw = hasWordParam ? keyWords : href;
-                            if (checkKw && data.kwFilter) {
+                            if (data.kwFilter) {
+                                let checkKw;
+                                if (se.dataset.link) {
+                                    checkKw = href || keyWords;
+                                } else {
+                                    checkKw = se.dataset.txt ? keyWords : (href || keyWords || location.href);
+                                }
                                 let kwRe, fullMatch = data.kwFilter.match(/^\/(.*)\/(\w*)$/);
                                 if (fullMatch) {
                                     kwRe = new RegExp(fullMatch[1], fullMatch[2]);
                                 } else {
                                     kwRe = new RegExp(data.kwFilter, "i");
                                 }
-                                if (kwRe.test(checkKw)) {
+                                if (kwRe.test(checkKw || "")) {
                                     se.style.display = '';
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
@@ -8630,6 +8647,20 @@
                 }
             }
 
+            getCloneData(siteName) {
+                for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                    let typeConfig = searchData.sitesConfig[i];
+                    for (let j = 0; j < typeConfig.sites.length; j++) {
+                        let siteData = typeConfig.sites[j];
+                        if (/^\[/.test(siteData.url)) continue;
+                        if (siteData.name == siteName) {
+                            return siteData;
+                        }
+                    }
+                }
+                return null;
+            }
+
             async createSiteBtn(icon, data, openInNewTab, isBookmark, typeData) {
                 let self = this;
                 let ele = document.createElement("a");
@@ -8648,22 +8679,12 @@
                     let siteNames = JSON.parse(data.url);
                     if (siteNames.length === 1) {
                         ele.dataset.clone = true;
-                        let findSite = false;
-                        for (let i = 0; i < searchData.sitesConfig.length; i++) {
-                            if (findSite) break;
-                            let typeConfig = searchData.sitesConfig[i];
-                            for (let j = 0; j < typeConfig.sites.length; j++) {
-                                let siteData = typeConfig.sites[j];
-                                if (/^\[/.test(siteData.url)) continue;
-                                if (siteData.name == siteNames[0]) {
-                                    findSite = true;
-                                    ele.dataset.oriName = siteData.name;
-                                    data = siteData;
-                                    if (data.icon && icon !== "0") icon = data.icon;
-                                    if (data.description) description = data.description;
-                                    break;
-                                }
-                            }
+                        let cloneSite = this.getCloneData(siteNames[0]);
+                        if (cloneSite) {
+                            ele.dataset.oriName = cloneSite.name;
+                            data = cloneSite;
+                            if (data.icon && icon !== "0") icon = data.icon;
+                            if (data.description) description = data.description;
                         }
                     }
                 }
@@ -8820,12 +8841,16 @@
                         ele.dataset.target = 1;
                     } else ele.setAttribute("target", "_self");
                 }
+                let dataUrl = data.url;
+                let hasWordParam = wordParamReg.test(dataUrl);
+                if (hasWordParam) ele.dataset.txt = true;
+                if (/%[tb]\b/i.test(dataUrl)) {
+                    ele.dataset.link = true;
+                }
                 let inputString;
                 let getUrl = async (_keyWords) => {
                     self.customInput = false;
                     inputString = "";
-                    let dataUrl = data.url;
-                    let hasWordParam = wordParamReg.test(dataUrl);
                     let keywords = _keyWords || self.searchJumperInputKeyWords.value || getSelectStr();
                     if (!keywords && !draging && !self.bar.classList.contains("search-jumper-isTargetLink")) {
                         keywords = getKeywords();
@@ -9212,7 +9237,7 @@
                             }
                         }
                     }
-                    if ((targetLink || targetUrl) && !/%t\b/i.test(ele.dataset.url)) {
+                    if ((targetLink || targetUrl) && !ele.dataset.link) {
                         href = targetLink || targetUrl;
                     }
                     if (inPagePost) {
