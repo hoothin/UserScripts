@@ -761,14 +761,13 @@ var siteInfo = [
     {
         name: "Reddit",
         url: /reddit\.com|redd\.it/,
-        r: /https?:\/\/preview\.redd.it\/([^\?]+)?.*/i,
-        s: "https://i.redd.it/$1",
+        getImage: function() {
+            return this.src;
+        },
         xhr: {
             url: function(a, p) {
-                if (a) {
-                    if (a.href.indexOf("//v.redd.it/") != -1) {
-                        return a.href + '/DASHPlaylist.mpd';
-                    }
+                if (a && a.href && a.href.indexOf && a.href.indexOf("//v.redd.it/") != -1) {
+                    return a.href + '/DASHPlaylist.mpd';
                 }
             },
             query: function(html, doc, url) {
