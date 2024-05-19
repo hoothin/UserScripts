@@ -23898,7 +23898,8 @@ ImgOps | https://imgops.com/#b#`;
                         type: "rule",
                         imgSrc: nsrc,
                         noActual: true,
-                        img: target
+                        img: target,
+                        xhr: matchedRule.xhr
                     };
                 }
             }
