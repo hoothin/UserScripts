@@ -29,32 +29,32 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 
 <img src="customRule.png" height="100">
 
-``` js
+``` json
 // Match image src(no matter which site) with /pics\.dmm\.co\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
 {
-    name: "Dmm",
-    src: /pics\.dmm\.co\.jp/i,
-    r: "ps.jpg",
-    s: "pl.jpg"
+    "name": "Dmm",
+    "src": "/pics\\.dmm\\.co\\.jp/i",
+    "r": "ps.jpg",
+    "s": "pl.jpg"
 }
 ```
-``` js
+``` json
 // Match site with /xxx\.com/ and replace image url from /us\.xxx\.com\/\d+wm\//i to "previews.xxx.com/images/"
 {
-   name: "Example",
-   url: /xxx\.com/,
-   r: /us\.xxx\.com\/\d+wm\//i,
-   s: "previews.xxx.com/images/"
+   "name": "Example",
+   "url": "/xxx\\.com/",
+   "r": "/us\\.xxx\\.com/\\d+wm//i",
+   "s": "previews.xxx.com/images/"
 }
 ```
-``` js
+``` json
 //Add click-to-open for existing asiansister rule.
 {
-    name: "Asiansister",
-    clickToOpen:{
-        enabled:true,
-        preventDefault:true,
-        type:'actual'
+    "name": "Asiansister",
+    "clickToOpen": {
+        "enabled": true,
+        "preventDefault": true,
+        "type": "actual"
     }
 }
 ```
@@ -103,7 +103,7 @@ You have the option to use a standalone userscript, which allows you to manage a
   + JSON (simple mode)
 
     These rules are written in JSON format and can be imported online through [discussions](https://github.com/hoothin/UserScripts/discussions).
-    They are not limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
+    They won't limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
     + JSON params
       - name
 
