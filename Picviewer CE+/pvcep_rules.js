@@ -21,8 +21,8 @@ Licenced under the MIT license.
 xhr 為內頁圖片獲取屬性。
     1. 首先使用 xhr.url() 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁。
     2. 透過 xhr 獲取圖片。
-        2.1 其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
-        2.2 xhr.c 為圖片的文字描述，抓取方式同上
+        2.1 其中 xhr.query 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
+        2.2 xhr.caption 為圖片的文字描述，抓取方式同上
 如果鼠標指向對象非圖片，可使用 getExtSrc 生成想要的圖片地址，詳情見下方 youtube 例子
 ext 為滑鼠指向非圖片元素時抓取附近圖片元素的方式，"previous" 代表檢測上一個兄弟節點，"previous-2" 代表檢測前數第二個兄弟節點，"next" 代表檢測下一個兄弟節點
 getExtSrc 為根據非圖片元素直接獲取圖片 URL 的方法
@@ -45,8 +45,8 @@ Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/d
 xhr is used to obtain the attributes of the pictures on the inner pages. 
     1. First, use xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
     2. And get pictures through xhr.
-        2.1 xhr.q is the picture (you can For multiple, multiple will be added to the gallery) selector or function
-        2.2 xhr.c is the description of picture
+        2.1 xhr.query is the picture (you can For multiple, multiple will be added to the gallery) selector or function
+        2.2 xhr.caption is the description of picture
 If the mouse points to an object other than a picture, you can use getExtSrc to generate the desired picture url, see the youtube example below for details
 ext is the method for capturing nearby image elements when the mouse hovers over a non-image element. "previous" indicates detecting the previous sibling node, "previous-2" indicates detecting the second sibling node in reverse order, and "next" indicates detecting the next sibling node.
 getExtSrc is the method for directly obtaining the image URL based on a non-image element.
