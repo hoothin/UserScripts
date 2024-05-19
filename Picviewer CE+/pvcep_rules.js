@@ -762,6 +762,13 @@ var siteInfo = [
         name: "Reddit",
         url: /reddit\.com|redd\.it/,
         getImage: function() {
+            if (this.srcset) {
+                var srcs = this.srcset.split(/[xw],/i);
+                for (let i = 0; i < srcs.length; i++) {
+                    let srcInfo = srcs[i].trim().split(" ")[0];
+                    if (srcInfo.indexOf("?width") == -1) return srcInfo;
+                }
+            }
             return this.src;
         },
         xhr: {
