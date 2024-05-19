@@ -34487,18 +34487,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/58377",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2012-03-03T15:04:23+09:00",
   "data": {
-    "pageElement": "//div[@class='article_wrap']/p[1][following-sibling::div[@class='para_title_blue' or @class='device_box']]/following-sibling::*|//ul[@class='list']/li|//dl[@class='newslist_sky']/*|//div[@class='article_wrap'][div[@class='para_title_blue'][not(preceding-sibling::p)]]/*|id('topics')/table//tbody/tr",
-    "Stylish": "@-moz-document domain(\"hb-nippon.com\") {\r\n  [src*=\"banner\"]{display:none !important;}\r\n}",
-    "exampleUrl": "http://www.hb-nippon.com/interview/785-intvw2012/6461-20120227no92\r\nhttp://www.hb-nippon.com/column/437-baseballclub/6966-20120117no55bc\r\nhttp://www.hb-nippon.com/interview/785-intvw2012\r\nhttp://www.hb-nippon.com/column/626-tokusyu/6741-20110330no01tks\r\nhttp://www.hb-nippon.com/column/626-tokusyu/7069-20120424no06tks\r\nhttp://www.hb-nippon.com/column/1036-syakaizin/7639-20130515no01ab?page=3\r\nhttp://www.hb-nippon.com/news/52-column\r\nhttp://www.hb-nippon.com/interview/1173-intvw2014/6643-20140225no176\r\nhttp://www.hb-nippon.com/column/437-baseballclub/8348-20140313no124\r\nhttp://www.hb-nippon.com/column/437-baseballclub/9571-20150705no250?page=2\r\nhttp://www.hb-nippon.com/interview/1507-intvw2016/6932-20160409no390?page=2\r\nhttp://www.hb-nippon.com/bbs/player",
+    "pageElement": "//p[@class='post-nav-links']/preceding-sibling::*[preceding-sibling::div[contains(@class, 'share_save_container')]]|\r\n//ul[contains(concat(' ', @class, ' '), ' mvp-main-blog-wrap ')]",
+    "nextLink": "//span[contains(@class, 'current')][number()>0]/following-sibling::a[1][parent::p[@class='post-nav-links'] or not(ancestor::article)]",
     "url": "^https?://(?:www\\.)?hb-nippon\\.com/",
-    "nextLink": "//li[@class='current']/following-sibling::li[1]/a"
+    "exampleUrl": "https://www.hb-nippon.com/2024/05/05/2523048/\r\nhttps://www.hb-nippon.com/players-directory/\r\nhttps://www.hb-nippon.com/category/column/"
   },
-  "updated_at": "2020-05-19T07:26:08+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "jigendaddy_be",
   "name": "高校野球ドットコム",
-  "created_by": "jigendaddy_be"
+  "created_at": "2012-03-03T15:04:23+09:00",
+  "updated_at": "2024-05-19T08:08:28+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/58112",
