@@ -20058,7 +20058,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     imgData.xhr = null;
                     imgData.src = this.data.all[curIndex];
-                    let openType = this.actual ? "actual" : "current";
+                    let openType = "actual";
                     if (uniqueImgWin && uniqueImgWin == this) {
                         uniqueImgWin = null;
                         openType = "popup";
