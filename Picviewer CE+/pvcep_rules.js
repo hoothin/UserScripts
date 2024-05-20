@@ -1078,8 +1078,8 @@ var siteInfo = [
     {
         name: "imgur",
         src: /imgur\.com\//i,
-        r: [/h(\.[^\/]+)$/i,/maxwidth=\d+/i],
-        s: ["$1","maxwidth=99999"]
+        r: [/h(\.[^\/]+)$/i,/maxwidth=\d+/i,/b\./],
+        s: ["$1","maxwidth=99999","."]
     },
     {
         name: "dmm",
