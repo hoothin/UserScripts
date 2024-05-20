@@ -773,12 +773,19 @@ var siteInfo = [
         },
         xhr: {
             url: function(a, p) {
-                if (a && a.href && a.href.indexOf && a.href.indexOf("//v.redd.it/") != -1) {
+                if (a && a.href && /\/\/v.redd\.it\/\w+\/?$/.test(a.href)) {
                     return a.href + '/DASHPlaylist.mpd';
+                } else if (a && a.href && /^https:\/\/www\.reddit\.com\/gallery\//.test(a.href)) {
+                    return a.href;
                 }
             },
             query: function(html, doc, url) {
                 try {
+                    if (/^https:\/\/www\.reddit\.com\/gallery\//.test(url)) {
+                        return [].reduce.call(doc.querySelectorAll("figure>a"), (total, cur) => {
+                            return total.concat(cur.href);
+                        }, []);
+                    }
                     var xmlDoc = (new DOMParser()).parseFromString(html, 'application/xml');
                     var highestRes = [].slice.call(xmlDoc.querySelectorAll('Representation[frameRate]'))
                     .sort(function (r1, r2) {
