@@ -23359,7 +23359,7 @@ ImgOps | https://imgops.com/#b#`;
                                     };
                                     let reMatch = typeof site.xhr.url === "string" && site.xhr.url.match(/^\/(.*)\/(\w*)$/);
                                     if (reMatch) {
-                                        site.xhr.url = toRe(reMatch[1], reMatch[2]);
+                                        site.xhr.url = toRE(reMatch[1], reMatch[2]);
                                     }
                                 }
                                 if (site.url) {
@@ -23382,14 +23382,14 @@ ImgOps | https://imgops.com/#b#`;
                                     if (site.video) {
                                         let reMatch = typeof site.video === "string" && site.video.match(/^\/(.*)\/(\w*)$/);
                                         if (reMatch) {
-                                            site.video = toRe(reMatch[1], reMatch[2]);
+                                            site.video = toRE(reMatch[1], reMatch[2]);
                                         }
                                         self.video = site.video;
                                     }
                                     if (site.audio) {
                                         let reMatch = typeof site.audio === "string" && site.audio.match(/^\/(.*)\/(\w*)$/);
                                         if (reMatch) {
-                                            site.audio = toRe(reMatch[1], reMatch[2]);
+                                            site.audio = toRE(reMatch[1], reMatch[2]);
                                         }
                                         self.audio = site.audio;
                                     }
