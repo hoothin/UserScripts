@@ -23456,9 +23456,9 @@ ImgOps | https://imgops.com/#b#`;
             },
             replace:function(str, r, s){
                 var results=[],rt;
-                let reMatch = typeof r === "string" && r.match(/^\/(.*)\/(\w*)$/);
+                let reMatch = typeof r === "string" && r.match(/^\/(.*)\/(\w+)$/);
                 if (reMatch) {
-                    r = toRe(reMatch[1], reMatch[2]);
+                    r = toRE(reMatch[1], reMatch[2]);
                 }
                 if(Array.isArray(s)){
                     s.forEach(_s=>{
