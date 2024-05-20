@@ -190,17 +190,17 @@
                             position: relative !important;
                             z-index: auto !important;
                             opacity: 1 !important;
-                            
+
                         }
                         #playBox {
                             z-index: auto !important;
                         }
                     */
                 }).cssText,
-            
+
             },
         ];
-        
+
         // 用到的图标
         var icons = {
             // 浮动工具栏
@@ -219,9 +219,9 @@
                 restore: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo0MjFERUVEODNBNzFFMzExOTZFOUJBOUM1MDc0MDBFNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MzBCNUQyMTcyRjMxMUUzOTM2RTg4MTQyQUEyRDU1MiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MzBCNUQyMDcyRjMxMUUzOTM2RTg4MTQyQUEyRDU1MiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAyQkY0RjY0NUM3MUUzMTE5MEQ3RTAwRDBEMUUxQUQ5IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjQyMURFRUQ4M0E3MUUzMTE5NkU5QkE5QzUwNzQwMEU2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+KuIDRQAAAPpJREFUeNpi+P//PwM1ACPIIEZGRmxyc4FYCU3sHhAnk2TQwoUL34mJiQkii7169ep9fHy8EDaDmBioBEYNoqNBLEhsbyCOhnH+/v3Liq4YKrYMSWgpEG9FSUfbt29P+fnzZ9OXL18EQBICAgLszMzMTGgG/fvw4cNPEJubm/sjBwdHraen5xyMBAk0LB7InwXks+HzBlDNL6CadKAhC3CmbKBhNkCxjUAxIRyGvAPK+QMNOUIwiwANUwaKbwaKa6IZcgMo5gM05C7ReQ1oGD9QbjVQzhVqyG4gOxRoyEdScz/IMFCs9oPUAXEB0JA/+AKOOgmJWgYBBBgAo+l8rgH6VgYAAAAASUVORK5CYII=',
                 close: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDozMTNFNTRGM0VGNzJFMzExQTk3OEU1QTlDRTYyMTQxMSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo1QzU4MzJGMTg4QjkxMUUzOTk4NzlCNUFFM0FFQkRBMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo1QzU4MzJGMDg4QjkxMUUzOTk4NzlCNUFFM0FFQkRBMSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjNEMkFFNjFBOEU4OEUzMTFCNkY5QkM5REQ2QTE1QUNEIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjMxM0U1NEYzRUY3MkUzMTFBOTc4RTVBOUNFNjIxNDExIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+gwuo4wAAAahJREFUeNpi/P//PwM1ABMDtQA1XAQygwWJnwbEkUj8WUC8HE1PBBCnI/FXAPFMEANu0Pbt25WAlAOMv2bNGtm5c+e+BjL3QIVckpKSWkJDQ5WRDDrl6emJEUaVQCcug3GCg4OV/f39+4FMKyC2BLFDQkKUkbwDUlsB4zOC/MfIyAhzFdu/f//WMTExeYP4f//+/Tdx4sQLIDUFBQUGzMzMYIuBarYB1QQCXfMLFkYoBkEN4wIacBCoyQTE//37918QzcrKygw1/AxQzh5oyDfkwMYwCGqY6K9fv46ysbGpIosDxe4AxayAhrxGjzWs6Qjk5I6Ojpvo4kCxG0C538QmSHZxcfH+lJQUR3QJkJiEhAQoAtgJGcTCy8vb3NjYGCwlJcUNdfYPEAaxQWINDQ1BIDXISQfdIEZ2dvaq2traRHl5eT6oIX+A4RcOwiA2SAwkB1LDyclZBdKDYRAwOlOrqqqydHV1RWBhCDQgARgmm0AYxAaJgSRAaioqKrJAejAM2rp1q6KZmZk4kgurgAYsRYoAELsKxgepBemhTaalhmFUK48AAgwALD+0S2sZwIQAAAAASUVORK5CYII=',
             },
-            
+
         };
-        
+
         // 第一时间备份一些方法,防止被页面脚本覆盖掉
         var nativeMethods = {
             forEach: Array.prototype.forEach,
@@ -287,35 +287,35 @@
                 x: 'pageXOffset' in window ? window.pageXOffset : de.scrollLeft || body.scrollLeft,
                 y: 'pageYOffset' in window ? window.pageYOffset : de.scrollTop || body.scrollTop,
             };
-        };  
-        
+        };
+
         // 事件支持检测.
         // 比如 eventSupported('fullscreenchange', document);
         function eventSupported(eventName, elem) {
             elem = elem || document.createElement('div');
             var prefix = ['o', 'ms', 'moz', 'webkit', ''];
-            
+
             var l = prefix.length;
             var pEventName;
             var isFunction;
             var setAttr;
-            
+
             while(l --) {
                 pEventName = 'on' + prefix[l] + eventName;
-                
+
                 if (pEventName in elem) {
                     return pEventName.slice(2);
-                } else if (typeof elem.setAttribute == 'function') { // setAttribute 是元素节点的方法 
+                } else if (typeof elem.setAttribute == 'function') { // setAttribute 是元素节点的方法
                     setAttr = false;
                     if (!elem.hasAttribute(pEventName)) {
                         setAttr = true;
                         elem.setAttribute(pEventName, 'return;');
                     };
-                    
+
                     isFunction = typeof elem[pEventName] == 'function';
-                    
+
                     if (setAttr) elem.removeAttribute(pEventName);
-                    
+
                     if (isFunction) {
                         return pEventName.slice(2);
                     };
@@ -329,7 +329,7 @@
         // 在指定对象上保存数据
         var data = (function () {
             'use strict';
-            
+
             var cache = {
                 objs: [],
                 data: {},
@@ -350,7 +350,7 @@
                     return cache.data[id][key] = value;
                 };
             };
-            
+
             return data;
         })();
 
@@ -367,7 +367,7 @@
                 mouseleave : 'mouseout',
                 mouseenter : 'mouseover',
             };
-            
+
             return {
                 add : function (type, ele, callback) { //事件类型，元素，监听函数
                     if (support[type]) {
@@ -385,7 +385,7 @@
                             };
                             data(callback, 'mouseELListener', listener);
                         };
-                        
+
                         ele.addEventListener(map[type], listener, true);
                     };
                 },
@@ -411,7 +411,7 @@
                 // console.log(matched);
                 ret[matched[1]] = matched[2];
             };
-            
+
             return ret;
         };
 
@@ -419,12 +419,12 @@
         function cloneObject(obj, deep) {
             var value;
             var ret = Array.isArray(obj) ? [] : {};
-            
+
             for (var key in obj) {
                 if (!obj.hasOwnProperty(key)) continue;
-                
+
                 value = obj[key];
-                
+
                 if (value === obj) {// 引用自己
                     ret[key] = ret;
                 } else if (deep && (Array.isArray(value) || Object.prototype.toString.call(value) == '[object Object]')) {
@@ -441,7 +441,7 @@
         // 比如proSupported('requestFullscreen');
         function proSupported(proName, obj) {
             obj = obj || document.createElement("div");
-            
+
             if (proName in obj)
                 return proName;
 
@@ -536,38 +536,38 @@
             return false;
         };
 
-        
+
         // 特性支持情况
         var support = {
             MutationObserver: proSupported('MutationObserver', window),
             cssBoxSizing: cssProSupported('box-sizing'),
-            
+
             // 请求全屏
             requestFullscreen: proSupported('requestFullscreen') || proSupported('requestFullScreen'),
             // 返回当前页面是否允许全屏
             fullscreenEnabled: proSupported('fullscreenEnabled', document) || proSupported('fullScreenEnabled', document),
             // 返回当前全屏的元素，否则返回null
             fullscreenElement: proSupported('fullscreenElement', document)
-                || proSupported('fullScreenElement', document) 
+                || proSupported('fullScreenElement', document)
                 || proSupported('currentFullScreenElement', document),
             // fullscreen 事件
             fullscreenchange: eventSupported('fullscreenchange', document),
-            
+
         };
 
         // console.log(support);
-        
+
         // fx库
         var fx = (function () {
             'use strict';
-            
+
             function $(selector, context) {
                 return new init(selector, context);
             };
-            
+
 
             function init(selector, context) {
-                
+
                 if (selector instanceof HTMLElement) { // 单个 html element 节点
                     [].push.call(this, selector);
                     return this;
@@ -581,22 +581,22 @@
                             unique.push(node);
                         };
                     });
-                    
+
                     [].push.apply(this, unique);
                     return this;
                 };
-                
+
                 if (typeof selector == 'string') {// css字符串
                     if (!context || !context.nodeType || context.nodeType != 1) {// 不是元素节点的话，context指向document
                         context = document;
                     };
                     selector = context.querySelectorAll(selector); // NodeList
-                    
+
                     [].push.apply(this, selector);
                     return this;
                 };
-                
-                if (selector instanceof NodeList) {// NodeList 
+
+                if (selector instanceof NodeList) {// NodeList
                     // 去除非元素节点
                     var elems = [];
                     each(selector, function () {
@@ -604,11 +604,11 @@
                             elems.push(this);
                         };
                     });
-                    
+
                     [].push.apply(this, elems);
                     return this;
                 };
-                
+
                 if (selector instanceof HTMLCollection) { // HTMLCollection
                     [].push.apply(this, selector);
                     return this;
@@ -622,9 +622,9 @@
                     fn.call(elem);
                 });
             };
-                
+
             init.prototype = {
-                
+
                 animate: function (pros, opts) {
                     // 判断pros是否有属性
                     for (var pro in pros) {
@@ -632,30 +632,30 @@
                         break;
                     };
                     if (!pro) return this;
-                    
+
                     // 修正opts参数
                     if (!opts) {
                         opts = {};
                     };
-                    
+
                     // 动画持续时间
                     if (typeof opts.duration != 'number') {
                         opts.duration = 400;
                     };
-                    
+
                     // 动画算法
                     if (!opts.easing || !easing[opts.easing]) {
                         opts.easing = 'swing';
                     };
-                    
+
                     // 是否将动画放入队列
                     if (opts.queue !== false) {
                         opts.queue = true;
                     };
-                    
+
                     // 为每个属性指定特定的动画方法
                     opts.specialEasing = opts.specialEasing || {};
-                    
+
                     // 每个元素的所有属性动画完成之后都会调用
                     opts.complete = opts.complete  || emptyFn;
                     // 封装complete
@@ -666,14 +666,14 @@
                             $(this).dequeue();
                         };
                     };
-                    
+
                     // 每个元素的每个属性的每一步都会调用
                     opts.step = opts.step  || emptyFn;
-                
-                
+
+
                     return this[opts.queue ? 'queue' : 'each'](function () {
                         var elem = this;
-                        
+
                         // 复制pros对象
                         var prosC = cloneObject(pros);
                         // 复制opts对象
@@ -698,16 +698,16 @@
                         // 判断toggle是该执行show还是hide动画
                         if (value === 'toggle') {
                             value = isHidden ? 'show' : 'hide';
-                            
+
                             for (pro in prosC) {
                                 if (!prosC.hasOwnProperty(pro)) continue;
                                 prosC[pro] = value;
                             };
                         };
-                        
-                        
+
+
                         var style = elem.style;
-                        
+
                         var allAniData = [];
                         if (value === 'show') {// show操作
                             if (!isHidden) {
@@ -724,18 +724,18 @@
                             };
 
                             optsC.show = true;// 标记show操作
-                        
+
                         } else if (value === 'hide') {// hide操纵
                             if (isHidden) {
                                 optsC.completeW.call(elem);
                                 return;
                             };
-                            
+
                             optsC.hide = true;// 标记show操作
                         };
-                        
-                        
-                        
+
+
+
                         // 获取当前值
                         function getCur(pro) {
                             if (pro in style) {
@@ -744,7 +744,7 @@
                                 return elem[pro];
                             };
                         };
-                        
+
                         var start;// 开始
                         var end;// 结束
                         var unit;// 单位
@@ -760,10 +760,10 @@
                             if (!prosC.hasOwnProperty(pro)) continue;
 
                             value = prosC[pro];
-                            
+
                             // 备份当前值,show或者hide操作的时候最后还原样式。
                             optsC.orig[pro] = style[pro];
-                            
+
                             if (value === 'show') {
                                 start = 0;
                                 end = parseFloat(cS[pro]);
@@ -783,10 +783,10 @@
                                 if (parts) {
                                     unit = parts[3];
                                     end = parseFloat(parts[2]);
-                                    
+
                                     start = getCur(pro).toString();
                                     parts2 = start.match(reg);
-                                    
+
                                     if (parts2) {
                                         start = parseFloat(parts2[2]);
                                         unit2 = parts2[3];
@@ -795,14 +795,14 @@
                                             style[pro] = (end || 1) + unit;
                                             start = ((end || 1) / parseFloat(getCur(pro))) * start;
                                         };
-                                        
+
                                         if (parts[1]) {// +=/-=,做相对运行
                                             end = ((parts[1] == "-=" ? -1 : 1) * end) + start;
                                         };
                                     };
                                 };
                             };
-                            
+
                             if (typeof start == 'number' && typeof end == 'number' && typeof unit == 'string') {
                                 allAniData.push([elem, pro, optsC, start, end, unit]);
                                 // new FX(elem, pro, optsC).custom(start, end, unit);// 开始动画
@@ -810,39 +810,39 @@
                                 optsC.curAnim[pro] = true;
                             };
                         };
-                        
+
                         // 等所有动画数据都获取完成后才开始动画，
                         // 否则对于show之类的操作，如果width先绘制第一帧设置width为0之后，容器会发生伸缩，导致height的可能获取不正确
                         allAniData.forEach(function (data) {
                             new FX(data[0], data[1], data[2]).custom(data[3], data[4], data[5]);
                         });
-                        
+
                     });
-                
+
                 },
-                
+
                 show: function (opts) {
                     return this.animate(genFx('show', {
                         o: true,
-                        v: true, 
+                        v: true,
                         h: true,
                     }), opts);
                 },
                 hide: function (opts) {
                     return this.animate(genFx('hide', {
-                        o: true, 
-                        v: true, 
+                        o: true,
+                        v: true,
                         h: true,
                     }), opts);
                 },
                 toggle: function (opts) {
                     return this.animate(genFx('toggle', {
-                        o: true, 
-                        v: true, 
+                        o: true,
+                        v: true,
                         h: true,
                     }), opts);
                 },
-                
+
                 fadeIn: function (opts) {
                     return this.animate(genFx('show', {
                         o: true,
@@ -863,32 +863,32 @@
                         opacity: opacity,
                     }, opts);
                 },
-                
+
                 slideDown: function (opts) {
                     return this.animate(genFx('show', {
-                        v: true, 
+                        v: true,
                         o: true,
                     }), opts);
                 },
                 slideUp: function (opts) {
                     return this.animate(genFx('hide', {
-                        v: true, 
+                        v: true,
                         o: true,
                     }), opts);
                 },
                 slideToggle: function (opts) {
                     return this.animate(genFx('toggle', {
-                        v: true, 
+                        v: true,
                         o: true,
                     }), opts);
                 },
-                
+
                 // 立即停止当前动画
                 stop: function (clearQueue, jumpToEnd) {
                     if (clearQueue) {
                         this.clearQueue();
                     };
-                    
+
                     this.each(function () {
                         for (var i = timers.length - 1; i >= 0; i--) {
                             if (timers[i].elem == this) {//是当前元素的属性动画
@@ -902,13 +902,13 @@
                     if (!jumpToEnd) {
                         this.dequeue();
                     };
-                    
-                    
+
+
                     return this;
-                }, 
+                },
                 clearQueue: function () {
                     this.queue([]);
-                    
+
                     return this;
                 },
                 delay: function (duration) {
@@ -919,67 +919,67 @@
                         }, duration);
                     });
                 },
-            
-                
+
+
                 each: function (fn) {
                     each(this, fn);
-                    
+
                     return this;
                 },
                 queue: function (fn, type) {
                     type = type || 'fx';
-                    
+
                     return this.each(function () {
-                        
+
                         // 取出队列
                         var q = data(this, type + 'queue');
                         if (!q) {// 初始化
                             q = [];
                         };
-                        
-                    
+
+
                         if (typeof fn == 'function') {
                             q.push(fn);
                         } else if (Array.isArray(fn)) { // array类型，直接覆盖掉
                             q = fn;
                         };
-                        
+
                         data(this, type + 'queue', q);
-                        
+
                         if (type == 'fx' && q.length == 1) { // 如果动画队列中只有自己，立即执行
                             q[0].call(this);
                         };
-                        
+
                     });
                 },
                 dequeue: function (type) {
                     type = type || 'fx';
-                    
+
                     return this.each(function () {
                         // 取出队列
                         var q = data(this, type + 'queue');
                         if (!q) {// 初始化
                             q = [];
                         };
-                        
+
                         q.shift();// 删除第一个
-                        
+
                         data(this, type + 'queue', q);
-                        
+
                         if (q[0]) {
                             q[0].call(this);
                         };
-                        
+
                     });
                 },
             };
 
-            
+
             //对象克隆,接受{}和[]
             function cloneObject(obj, deep) {
                 var value;
                 var ret = Array.isArray(obj) ? [] : {};
-                
+
                 for (var key in obj) {
                     if (!obj.hasOwnProperty(key)) continue;
                     value = obj[key];
@@ -996,17 +996,17 @@
             function now() {
                 return Date.now();
             };
-            
+
             // 空函数
             function emptyFn() {
             };
-            
+
 
 
             // 在指定对象上保存数据
             var data = (function () {
                 'use strict';
-                
+
                 var cache = {
                     objs: [],
                     data: {},
@@ -1027,17 +1027,17 @@
                         return cache.data[id][key] = value;
                     };
                 };
-                
+
                 return data;
             })();
-            
+
 
             var timers = [];
             var aning  = null;
-            var requestAF = window.requestAnimationFrame || 
-                window.webkitRequestAnimationFrame || 
-                window.mozRequestAnimationFrame || 
-                window.msRequestAnimationFrame || 
+            var requestAF = window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
                 window.oRequestAnimationFrame;
 
             // 算法
@@ -1055,9 +1055,9 @@
                 var pros = {
                     o: ['opacity',],
                     h: ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth', 'marginLeft', 'marginRight',],
-                    v: ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth', 'marginTop', 'marginBottom',], 
+                    v: ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth', 'marginTop', 'marginBottom',],
                 };
-                
+
                 var ret = {};
                 for (var i in pros) {
                     if (!pros.hasOwnProperty(i)) continue;
@@ -1067,10 +1067,10 @@
                         });
                     };
                 };
-                
+
                 return ret;
             };
-            
+
             // 绘制动画
             function draw() {
                 for ( var i = 0, l = timers.length; i < l; i++ ) {
@@ -1088,7 +1088,7 @@
                 };
             };
 
-            
+
             // 每个属性创建一个FX实例
             function FX(elem, pro, opts) {
                 // 配置
@@ -1098,28 +1098,28 @@
                 // 动画属性
                 this.pro = pro;
             };
-            
+
             FX.off = false;// 关闭动画
-            
+
             FX.prototype = {
                 // 更新属性值
                 update: function () {
                     var pro = this.pro;
                     var elem = this.elem;
                     var opts = this.opts;
-                    
+
                     // 调用step函数，可以修改this对象
                     opts.step.call( elem, this.now, this );
-                    
+
                     var style = elem.style;
-                    
+
                     if (pro in style) {
                         if ((pro == 'height' || pro == 'width') && typeof opts.overflowX == 'undefined') {
                             opts.overflowX = style.overflowX;
                             opts.overflowY = style.overflowY;
                             style.overflow = 'hidden';
                         };
-                        
+
                         style[pro] = this.now + this.unit;
                     } else if (pro in elem) {
                         elem[pro] = this.now;
@@ -1128,14 +1128,14 @@
                 // 开启动画
                 custom: function (from, to, unit) {
                     this.startTime = now();//动画开始时间
-                    
+
                     this.start = from;//位置开始点
                     this.end = to;//位置结果点
-                    
+
                     this.unit = unit;// 单位
-                    
+
                     this.now = this.start;//位置当前点
-                    
+
                     //pos是按一定算法把时间上的比率折算到位置上的比率
                     //state是时间间隔在总的duration的比率
                     this.pos = this.state = 0;
@@ -1148,10 +1148,10 @@
                         return self.step(jumpToEnd);
                     };
                     t.elem = this.elem;//删除的时候做判断用
-                    
+
                     //timers栈是公共的，不同的元素的不同的属性step都是放在这里面。
                     timers.push(t);
-                    
+
                     if ( aning == null ) {
                         aning = true;
                         requestAF(draw);
@@ -1160,24 +1160,24 @@
                 },
                 step: function (jumpToEnd) {
                     var t = now();//运行到当前的时间
-                    
+
                     var opts = this.opts;
-                    
+
                      // 强行指定结束或当前时间大于startTime+duration
                     if (FX.off || jumpToEnd || t >= opts.duration + this.startTime ) {
                         this.now = this.end;//当前的位置为结束位置
                         this.pos = this.state = 1;//当前的state,pos的比率为1.最大。
                         this.update();//显示
-                        
+
                         //标识这个属性的动画已经完成
                         var curAnim = opts.curAnim;
                         curAnim[ this.pro ] = true;
-                        
+
                         //再一次判断是否这个元素的所有属性都已完成
                         var done = true;
                         for ( var i in curAnim ) {
                             if (!curAnim.hasOwnProperty(i)) continue;
-                            
+
                             if ( curAnim[i] !== true ) {
                                 done = false;
                                 break;
@@ -1186,7 +1186,7 @@
 
                         if ( done ) {
                             var style = this.elem.style;
-                            
+
                             if (opts.hide || opts.show) {
                                 if (opts.hide) {
                                     style.display = 'none';
@@ -1194,7 +1194,7 @@
                                         style.setProperty('display', 'none', 'important');
                                     };
                                 };
-                                
+
                                 // 还原css属性
                                 var orig = opts.orig;
                                 for (var i in orig) {
@@ -1202,21 +1202,21 @@
                                     style[i] = orig[i];
                                 };
                             };
-                        
+
                             if (typeof opts.overflowX != 'undefined') {
                                 style.overflowX = opts.overflowX;
                                 style.overflowY = opts.overflowY;
                             };
-                        
+
                             // 执行回调函数
                             opts.completeW.call( this.elem );
 
                         };
-                        
+
                         return false;
-                    }; 
-                    
-                    
+                    };
+
+
                     var n = t - this.startTime;//时间间隔
                     this.state = n / opts.duration;//时间间隔比率
 
@@ -1228,29 +1228,29 @@
 
                     // 显示
                     this.update();
-                    
+
                     return true;
-                    
+
                 },
             };
-            
-            
+
+
             return $;
-            
+
         })();
 
-        
-        
+
+
         var url = location.href;
-        
-        
+
+
         // 重新初始化插件
         function reinitPlugin(plugin) {
             // 重载flash让参数生效
             // chrome firefox 切换display none就能引发重载，ie不行。
             // chrome firefox 删除后，添加进dom引发重载，ie不行
             // chrome 切换常规流绝对定位流引发重载，ie不行
-            
+
             var pluNS = plugin.nextSibling;
             var pluPN = plugin.parentNode;
             pluPN.removeChild(plugin);
@@ -1263,7 +1263,7 @@
                     pluPN.appendChild(plugin);
                 };
             }, 20);
-            
+
 /*          var pStyle = plugin.style;
             var oSDis = pStyle.display;
             pStyle.display = 'none';
@@ -1278,7 +1278,7 @@
             // 找到的插件统统由这个函数处理
             function initializer(plugins) {
                 // console.log(plugins);
-                
+
                 plugins.forEach(function (plugin) {
 
                     // plugin是否在已插入文档中
@@ -1289,7 +1289,7 @@
                     var src;
                     var type;
                     var isObject = plugin.nodeName == 'OBJECT';
-                    
+
                     if (isObject) {
                         if (plugin.hasAttribute('data')) {
                             src = plugin.data;
@@ -1297,11 +1297,11 @@
                         if (plugin.hasAttribute('type')) {
                             type = plugin.type;
                         };
-                        
+
                         if (src === undefined || type === undefined) {
                             nativeMethods.some.call(plugin.children, function (child){
                                 if (child.nodeName != 'PARAM') return;
-                                
+
                                 var key = child.name;
                                 var value = child.value;
                                 if (/^(?:src|movie)$/i.test(key)) {
@@ -1314,7 +1314,7 @@
                                 };
                             });
                         };
-                        
+
                         type = type || '';
                     } else {// embed标签
                         src = plugin.src;
@@ -1325,7 +1325,7 @@
 
                     // 如果不存在src或者不是flash插件
                     if (!src || !/^(?:|application\/x-shockwave-flash)$/i.test(type)) return;
-                    
+
                     // 匹配到的规则
                     var matched;
                     rules.some(function (rule) {
@@ -1340,10 +1340,10 @@
                     var pFragment;
                     function addParamO(name, value) {
                         name = name.toLowerCase();
-                        
+
                         if (!nativeMethods.some.call(plugin.children, function (child) {
                             if (child.nodeName != 'PARAM') return;
-                            
+
                             if (child.name.toLowerCase() == name){
                                 if (name == 'flashvars'){
                                     child.value = gFlashVars(child.value, value);
@@ -1361,24 +1361,24 @@
                             pFragment = pFragment ? pFragment : document.createDocumentFragment();
                             pFragment.appendChild(param);
                         };
-                        
+
                     };
 
                     // 生成新的flashvars字符串
                     function gFlashVars(oValue, add) {
                         if (!oValue) return add;
                         if (!add) return oValue;
-                        
+
                         // 转成数组 ['a=1', 'b=2', 'c=']之类的形式
                         oValue = oValue.split('&');
                         add = add.split('&');
 
                         // 转成字典 {a:'1', b:'2', c:''}之类的形式
                         var oVDict = {};
-                        
+
                         function gDict(kv) {
                             if (!kv) return;
-                            
+
                             var index = kv.indexOf('=');
                             if (index == -1) {
                                 if (kv !=' ') {
@@ -1390,11 +1390,11 @@
                                 };
                             };
                         };
-                        
+
                         // 用新的值覆盖旧的值
                         oValue.forEach(gDict);
                         add.forEach(gDict);
-                        
+
                         // 转会字符串
                         var fVars = [];
                         for (var key in oVDict) {
@@ -1437,37 +1437,37 @@
                             addParamO('flashVars', fvs);
                         } else {
                             plugin.setAttribute('flashVars', gFlashVars(plugin.getAttribute('flashVars') || '', fvs));
-                            
+
                         };
                     };
 
                     if (pFragment) {
                         plugin.appendChild(pFragment);
                     };
-                    
+
 
                     // 标记已经修改
                     plugin.fvReInitialized = true;
-                    
+
                     reinitPlugin(plugin);
                 });
             };
-            
-            
+
+
             // 一些规则根据excludes强行设置enabled为false
             rules.forEach(function (rule) {
                 if (rule.hasOwnProperty('excludes') && rule.excludes.test(url)) {
                     // console.log('根据excludes禁用规则', rule);
                     rule.enabled = false;
                 };
-            
+
             });
-            
+
 
             // 先处理脚本运行前已经加载的flash
             initializer([].slice.call(document.querySelectorAll('object, embed'), 0));
-            
-            
+
+
             // 建立一个监视事件，处理后来追加的插件
             if(support.MutationObserver)
             (new window[support.MutationObserver](function (mRecords) {
@@ -1485,26 +1485,26 @@
                         if (/^(?:OBJECT|EMBED)$/.test(node.nodeName)) {
                             wPlugins.push(node);
                         };
-                        
+
                         [].push.apply(wPlugins, node.querySelectorAll('object, embed'));
-                        
+
                     });
-                    
+
                 });
 
                 // console.log(wPlugins);
-                
+
                 initializer(wPlugins);
 
             })).observe(document, {
-                childList: true, 
-                subtree: true, 
+                childList: true,
+                subtree: true,
             });
-            
-            
+
+
 
         };
-        
+
         if (prefs.allowReinitFlash) {
             // console.log(document.contentType);
             // 修复firefox标签单独请求一个flash，加载本脚本后导致不能正常加载flash的问题
@@ -1514,8 +1514,8 @@
             };
 
         };
-        
-        
+
+
     // --------------------------------------------
         // 弹出视频
         function PopVideo(video) {
@@ -1530,7 +1530,7 @@
         PopVideo.timerId = null;
         PopVideo.scrollFx = null;
         PopVideo.topVideo = null;
-        
+
 
         PopVideo.prototype = {
             lighting: true,
@@ -1539,26 +1539,60 @@
             isFullscreen: false,
             minWidth: 325,
             minHeight: 150,
-            
+
+            scale: function (e) {
+                if (e.deltaY > 0) {
+                    this.zoomLevel += -0.1;
+                    if (this.zoomLevel > 3) this.zoomLevel = 1;
+                    else if (this.zoomLevel < 0.1) this.zoomLevel = 0.1;
+                } else {
+                    this.zoomLevel += 0.1;
+                    if (this.zoomLevel < 0.5) this.zoomLevel = 1;
+                }
+                var oriSize = {
+                    h: parseInt(this.vOriStyle.height),
+                    w: parseInt(this.vOriStyle.width)
+                };
+                var afterSize = {
+                    h: oriSize.h * this.zoomLevel || 10,
+                    w: oriSize.w * this.zoomLevel || 10,
+                };
+                var controlLayerSize = {
+                    h: parseInt(this.controlLayer.style.height),
+                    w: parseInt(this.controlLayer.style.width)
+                };
+                var ratio = {
+                    x: e.offsetX / controlLayerSize.w,
+                    y: e.offsetY / controlLayerSize.h
+                };
+                this.controlLayer.style.width = afterSize.w + "px";
+                this.controlLayer.style.height = afterSize.h + "px";
+                this.controlLayer.style.top = parseInt(this.controlLayer.style.top) - (afterSize.h - controlLayerSize.h) * ratio.y + "px";
+                this.controlLayer.style.left = parseInt(this.controlLayer.style.left) - (afterSize.w - controlLayerSize.w) * ratio.x + "px";
+                e.preventDefault();
+            },
+
             init: function () {
                 this.addStyle();
-                
+
                 var self = this;
-                
+
                 var video = this.video;
                 this.vOriControls = video.controls;
                 var vNodeName = video.nodeName;
-                
+
                 // 如果是这些元素，那么pin的时候直接用fixed方式（这些元素随便调整position不会引发重载）
                 var fixedPin = /^(?:IFRAME|VIDEO|AUDIO)$/.test(vNodeName);
                 this.fixedPin = fixedPin;
-                
+
                 video.fvPopVideo = true;// 标记弹出中。
-                
+                this.zoomLevel = 1;
+                video.addEventListener("wheel", this.scale.bind(this));
+
                 // 很多网站加载flash为了兼容现代浏览器和ie，经常使用 object classid嵌套object或者embed的格式
                 var vPEIsObject;
                 var vCEIsPlugin;
-                
+
                 if (/^(?:EMBED|OBJECT)$/.test(vNodeName)) {// object,embed标签
                     if ((vPEIsObject = video.parentElement) && vPEIsObject.nodeName == 'OBJECT') {// 弹出的是被嵌套的object或者embed
                         vPEIsObject.fvPopVideo = true;
@@ -1573,17 +1607,17 @@
                 } else if(/^(?:VIDEO|AUDIO)$/.test(vNodeName)) {// html5 video,audio标签
                     video.controls = true; // 显示播放控件
                 } else {// iframe 标签
-                    
+
                 };
 
-                
+
                 // 创建创造关灯效果的黑色覆盖层
                 var fixedOverlayer = document.createElement('fvspan');
                 this.fixedOverlayer = fixedOverlayer;
                 fixedOverlayer.className = 'fv-p-v-light-off';
                 document.body.appendChild(fixedOverlayer);
 
-                
+
                 // 创建控制video缩放的控制层，放在video的下面，但是在light层的上面
                 var controlLayer = document.createElement('fvspan');
                 this.controlLayer = controlLayer;
@@ -1633,7 +1667,6 @@
                                         <option value="">原始比例</option>
                                         <option value="1.335,1">16 / 9</option>
                                         <option value=".75,1">4 / 3</option>
-                                        <option value="2,2">两倍大小</option>
                                     </select>
                                 </fvspan>
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-light" title="关灯"></fvspan>
@@ -1655,15 +1688,15 @@
                         <fvspan class="fv-p-v-control-resize-hand fv-p-v-control-resize-hand-sw"></fvspan>
                     */
                 }).innerHTML;
-                
+
                 document.body.appendChild(controlLayer);
-                
+
                 // 获取元素
                 var cTitleBar = controlLayer.querySelector('.fv-p-v-control-title-bar');
                 this.cTitleBar = cTitleBar;
-                
+
                 this.cSizeInfo = controlLayer.querySelector('.fv-p-v-control-size-info');
-                
+
                 var cCommandL = controlLayer.querySelector('.fv-p-v-control-light');
                 this.cCommandL = cCommandL;
                 var cCommandP = controlLayer.querySelector('.fv-p-v-control-pin');
@@ -1713,22 +1746,22 @@
                 // 监听标题栏的命令点击
                 cTitleBar.addEventListener('click', function (e) {
                     if (e.button != 0) return;
-                    
+
                     var target = e.target;
                     var classList = target.classList;
-                    
+
                     if (!classList.contains('fv-p-v-control-command')) return;
-                    
+
                     switch (target) {
                         case cCommandL:
                             self.toggleLight();
-                        break;                      
+                        break;
                         case cCommandP:
                             self.togglePin();
-                        break;                      
+                        break;
                         case cCommandM:
                             self.toggleMaximize();
-                        break;                      
+                        break;
                         case cCommandR:
                             self.restore();
                         break;
@@ -1748,20 +1781,20 @@
                             self.restore(true);
                         break;
                     };
-                
+
                 }, true);
-                
+
                 // 双击标题栏切换最大化和还原
                 cTitleBar.addEventListener('dblclick', function (e) {
                     if (e.button != 0) return;
-                    
+
                     var target = e.target;
                     if (target != this) return;
-                    
+
                     self.toggleMaximize();
                 }, true);
-                
-                
+
+
                 // 给resize添加监听函数
                 controlLayer.addEventListener('mousedown', function (e) {
                     if (e.button != 0) return;// 非左键
@@ -1772,7 +1805,7 @@
                     var classList = target.classList;
                     // 如果不是缩放手柄和标题栏
                     if (!classList.contains('fv-p-v-control-resize-hand') && target != cTitleBar) return;
-                    
+
                     e.preventDefault(); // 禁止拖曳的时候选中文字
 
                     // 点击时鼠标的位置，controlLayer 的长宽，top left的坐标
@@ -1785,32 +1818,33 @@
                         left: parseFloat(cLS.left),
                     };
                     var size = {
-                        height: parseFloat(cLS.height), 
+                        height: parseFloat(cLS.height),
                         width: parseFloat(cLS.width),
                     };
-                    
+
                     // 缩放处理函数
                     function reize(allowSize, allowOffset) {
-                        
+
                         function move(e) {
                             video.style.transform = "";
+                            cCommandRatio.value = "";
                             var mCoorA = {
                                 pageX: e.pageX,
                                 pageY: e.pageY,
                             };
-                            
+
 
                             var height;
                             if (allowSize.height) {
                                 var yMove = mCoorA.pageY - mCoor.pageY;
                                 height = (allowSize.hMinus ? -yMove : yMove) + size.height;
                             };
-                            
+
                             var minHeight = self.minHeight;
-                            
+
                             if (allowOffset.top) {
                                 var top = offset.top + mCoorA.pageY - mCoor.pageY;
-                                
+
                                 if (typeof height == 'number') {
                                     if (height >= minHeight) {
                                         if (top >= 0) {
@@ -1830,20 +1864,20 @@
                             } else {
                                 cLS.height =  Math.max(minHeight, height) + 'px';
                             };
-                            
-                            
-                            
+
+
+
                             var width;
                             if (allowSize.width) {
                                 var xMove = mCoorA.pageX - mCoor.pageX;
                                 width = (allowSize.wMinus ? -xMove : xMove) + size.width;
                             };
-                            
+
                             var minWidth = self.minWidth;
-                            
+
                             if (allowOffset.left) {
                                 var left = offset.left + mCoorA.pageX - mCoor.pageX;
-                                
+
                                 if (typeof width == 'number') {
                                     if (width >= minWidth) {
                                         if (left >= 0) {
@@ -1857,42 +1891,42 @@
                                         cLS.left = left - (minWidth - width) + 'px';
                                         cLS.width = minWidth  + 'px';
                                     };
-                                    
+
                                 } else { // 单纯的移动
                                     cLS.left = Math.max(0, left) + 'px';
                                 };
                             } else {
                                 cLS.width =  Math.max(minWidth, width) + 'px';
                             };
-                            
-                            
+
+
 
                         };
-                        
 
-                        
+
+
                         // 结束拖拽
                         function up() {
                             PopVideo.movingHelperStyle.disabled = true;
-                            
+
                             // 重新订一下
                             if (self.pinned) {
                                 self.beforePin();
-                                
+
                                 if (!fixedPin) {
                                     self.unpin();
                                     self.pin();
                                 };
                             };
-                            
+
                             document.removeEventListener('mousemove', move, true);
                             document.removeEventListener('mouseup', up, true);
                         };
-                        
+
                         document.addEventListener('mousemove', move, true);
                         document.addEventListener('mouseup', up, true);
                     };
-                    
+
 
                     // 移动的时候取消iframe的pointer-events，否则移动到iframe上面的时候mousemove事件检测不到。
                     PopVideo.movingHelperStyle.disabled = false;
@@ -1906,7 +1940,7 @@
                     } else if (classList.contains('fv-p-v-control-resize-hand-n')) {// 北
                         reize({
                             height: true,
-                            
+
                             hMinus: true,// 标记反向
                         }, {
                             top: true,
@@ -1919,7 +1953,7 @@
                     } else if (classList.contains('fv-p-v-control-resize-hand-w')) {// 西
                         reize({
                             width: true,
-                            
+
                             wMinus: true,// 标记反向
                         }, {
                             left: true,
@@ -1928,12 +1962,12 @@
                         reize({
                             width: true,
                         }, {
-                        });                     
+                        });
                     } else if (classList.contains('fv-p-v-control-resize-hand-nw')) {// 西北
                         reize({
                             width: true,
                             height: true,
-                            
+
                             wMinus: true,
                             hMinus: true,
                         }, {
@@ -1945,25 +1979,25 @@
                             width: true,
                             height: true,
                         }, {
-                        });                     
+                        });
                     } else if (classList.contains('fv-p-v-control-resize-hand-ne')) {// 东北
                         reize({
                             width: true,
                             height: true,
-                            
+
                             hMinus: true,
                         }, {
                             top: true,
-                        });                     
+                        });
                     } else if  (classList.contains('fv-p-v-control-resize-hand-sw')) {// 西南
                         reize({
                             width: true,
                             height: true,
-                            
+
                             wMinus: true,
                         }, {
                             left: true,
-                        });                     
+                        });
                     };
                 }, true);
 
@@ -1975,34 +2009,34 @@
                 mouseEventListener.add('mouseenter', video, this.videoEnterHandler);
                 mouseEventListener.add('mouseenter', controlLayer, this.videoEnterHandler);
 
-                
+
                 // 调整前video的位置
                 var vCCliRect = getContentClientRect(video);
                 // console.log(vCCliRect);
-                
+
                 // 控制层的大小和video保持一致
                 var cLS = controlLayer.style;
                 cLS.width = Math.max(vCCliRect.width, this.minWidth) + 'px';// 内容区域的宽度
                 cLS.height = Math.max(vCCliRect.height, this.minHeight) + 'px';// 内容区域的高度
-                
-                
+
+
                 // 为了以后还原，先保存一些需要更改的旧值
                 var vOriStyle = {};
                 this.vOriStyle = vOriStyle;
-                
+
                 var vStylePros = [
-                    'position', 'z-index', 
-                    'width', 'height', 
-                    'top', 'left', 
+                    'position', 'z-index',
+                    'width', 'height',
+                    'top', 'left',
                 ];
-                
+
                 var vS = video.style;
-                
+
                 vStylePros.forEach(function (pro) {
                     vOriStyle[pro] = [vS.getPropertyValue(pro), vS.getPropertyPriority(pro)];
                 });
                 // console.log(vOriStyle);
-                
+
 
                 // 如果是特殊站点，通过特殊规则修复兼容
                 popVideoRules.some(function (rule) {
@@ -2014,24 +2048,24 @@
                             style.textContent = rule.css;
                             var parentNode = document.head || document.documentElement;
                             parentNode.appendChild(style);
-                            
+
                             self.removePopVideoFix = function () {
                                 parentNode.removeChild(style);
                             };
                             break;
-                            
+
                         };
-                        
+
                         return true;
                     };
                 });
 
                 // 修改video样式
                 video.classList.add('fv-p-v-video');
-                
+
                 vS.setProperty('top', 0, 'important');
                 vS.setProperty('left', 0, 'important');
-                
+
                 // 用zindex提升flash层级，先设置position为relative或absolute
                 // 为避免更改position导致flash重载，不要让flash在常规流和绝对定位之间切换（chrome）
 
@@ -2041,7 +2075,7 @@
                     vS.setProperty('position', 'absolute', 'important');
                 };
 
-                
+
                 // 允许flash到最高层，不要被祖父级别的层叠上下文给限制主。 设置祖先的z-index为auto
                 // 允许调整大小，设置祖先(包含块)的overflow等于 visible
                 var ancestor = video;
@@ -2051,10 +2085,10 @@
                 var ancestors = []; //保存所有的祖先的引用
                 this.ancestors = ancestors;
                 var docBody = document.body;
-                
+
                 while ((ancestor = ancestor.parentElement) && ancestor != docBody) {
                     ancestors.push(ancestor);
-                    
+
                     ancestorData = data(ancestor, 'data');
                     if (ancestorData) {// 保存的修改之前的样式数据
                         ancestorData.count ++ ;// 多个video共用的祖先，标记+1。还原的时候，检测这个值，如果不等于1就不还原这个祖先元素的样式
@@ -2067,12 +2101,12 @@
                                 'overflow-y': [ancestorStyle.getPropertyValue('overflow-y'), ancestorStyle.getPropertyPriority('overflow-y')],
                                 'z-index': [ancestorStyle.getPropertyValue('z-index'), ancestorStyle.getPropertyPriority('z-index')],
                                 'position': [ancestorStyle.getPropertyValue('position'), ancestorStyle.getPropertyPriority('position')],
-                            },              
+                            },
                         };
 
                         // 保存
                         data(ancestor, 'data', ancestorData);
-                        
+
                         ancestorStyle.setProperty('overflow', 'visible', 'important');
                         ancestorStyle.setProperty('z-index', 'auto', 'important');
                         // 有绝对定位的父元素，改成absolute。
@@ -2081,7 +2115,7 @@
                         };
                     }
                 };
-                
+
 
                 // 注册controlLayer的监控函数，让video永远跟着走。
                 if(support.MutationObserver){
@@ -2091,16 +2125,16 @@
 
                 });
                 this.cLObserver = cLObserver;
-                
+
                 cLObserver.observe(controlLayer, {
                     attributes: true,
                     attributeFilter: ['style'],
                 });
                 }
-                
 
-                
-                
+
+
+
                 // 让控制层摆放在视频弹出前所在的位置
                 cLS.top = 0;
                 cLS.left = 0;
@@ -2108,20 +2142,20 @@
                 // 保证top不要小于0否则标题栏会到窗口外面去。
                 cLS.top = Math.max(vCCliRect.top - cLCCliRect.top, 0) + 'px';
                 cLS.left = vCCliRect.left - cLCCliRect.left + 'px';
-                
-                
+
+
                 // 一定的时间之内，同步一次位置
                 PopVideo.all.push(this);
-                
+
                 if (!PopVideo.timerId) {
                     PopVideo.timerId = setInterval(function () {
-                        
+
                         var all = PopVideo.all;
-                        
+
                         all.forEach(function (obj) {
                             obj.followControlLayer();
                         });
-                        
+
                         if (!all.length) {
                             clearInterval(PopVideo.timerId);
                             PopVideo.timerId = null;
@@ -2133,7 +2167,7 @@
                 this.wResizeListener = function () {
                     self.followControlLayer();
                 };
-                
+
                 window.addEventListener('resize', this.wResizeListener, true);
 
                 // 全屏事件监听
@@ -2141,36 +2175,36 @@
                     // 退出全屏
                     var fsE = document[support.fullscreenElement];
                     // console.log('全屏元素：', fsE);
-                    
+
                     if (!fsE) {
                         self.exitFullscreen();
                     } else if (fsE == video) {
                         self.fullscreen();
                     };
                 };
-                
+
                 document.addEventListener(support.fullscreenchange, this.fullscreenchangeListener, true);
-                
-                
+
+
                 // 提升到顶层
                 this.setZIndex();
-                
+
                 // 关灯
                 if (prefs.popVideo.lightOff.enabled) {
                     this.lightOff();
                 };
-                
+
                 // pin
                 if (prefs.popVideo.pin) {
                     this.beforePin();
                     this.pin();
                 };
-                
+
                 // 最大化
                 if (prefs.popVideo.maximize) {
                     this.maximize();
                 };
-                
+
                 if (!this.pinned) {
                     this.smoothScrollIntoView(controlLayer);
                 };
@@ -2178,14 +2212,14 @@
             exitFullscreen: function () {
                 if (!this.isFullscreen) return;
                 this.isFullscreen = false;
-                
+
                 this.setZIndex(true);
             },
             fullscreen: function () {
 
                 var video = this.video;
                 var vS = video.style;
-                
+
                 // firefox 会将全屏的元素自动fixed处理，然后拉伸
 /*              :-moz-full-screen:not(:root) {
                     -moz-box-sizing: border-box !important;
@@ -2202,15 +2236,15 @@
                     right: 0 !important;
                     top: 0 !important;
                     width: 100% !important;
-                    z-index: 2147483647 !important; 
+                    z-index: 2147483647 !important;
                 } */
-                
+
                 // chrome 只有当全屏元素是iframe的时候才会做fixed处理，并且拉伸
                 // 其他元素的时候，当元素为非绝对定位流的时候会全屏居中，绝对定位流时以屏幕左上角为原点定位
 /*              video:-webkit-full-screen {
                   width: 100%;
                   height: 100%;
-                } 
+                }
                 audio:-webkit-full-screen {
                     background-color: transparent;
                     position: relative;
@@ -2244,18 +2278,18 @@
                 vS.setProperty('height', '100%', 'important');
                 vS.setProperty('width', document.body.clientWidth+'px', 'important');
                 vS.setProperty('z-index', 2147483647, 'important');
-                
+
                 // 标记全屏状态中
-                this.isFullscreen = true; 
+                this.isFullscreen = true;
             },
 
             maximize: function () {
                 if (this.maximized) return;
                 this.maximized = true;
-                
+
                 var controlLayer = this.controlLayer;
                 controlLayer.classList.add('fv-p-v-control-layer_maximized');
-                
+
                 // 去掉滚动条
                 var style = document.createElement('style');
                 style.type = 'text/css';
@@ -2268,11 +2302,11 @@
                     */
                 }).cssText;
                 (document.head || document.documentElement).appendChild(style);
-                
+
 
                 var cLS = controlLayer.style;
                 var cBCRect = controlLayer.getBoundingClientRect();
-                
+
                 // 备份数据，等下还原用
                 this.maximizeBackup = {
                     pinned: this.pinned,// 备份之前的状态
@@ -2291,11 +2325,11 @@
                 function fitScreen() {
                     var wSize = getWindowSize();
                     cLS.height = wSize.height - 30 + 'px';
-                    cLS.width = wSize.width - 10 + 'px'; 
+                    cLS.width = wSize.width - 10 + 'px';
                 };
-                
+
                 fitScreen();
-                
+
                 // 固定
                 if (this.pinned) {
                     if (!this.fixedPin) {
@@ -2306,32 +2340,32 @@
                     this.pin();
                     this.cCommandP.classList.remove('fv-p-v-control-command-selected');
                 };
-                
+
                 this.maximizeResizeHandler = fitScreen;
                 window.addEventListener('resize', this.maximizeResizeHandler, true);
-                
+
                 this.cCommandM.classList.add('fv-p-v-control-command-selected');
-                
-                
+
+
             },
             exitMaximize: function () {
                 if (!this.maximized) return;
                 this.maximized = false;
-                
+
                 var controlLayer = this.controlLayer;
                 var cLS = controlLayer.style;
-                
+
                 controlLayer.classList.remove('fv-p-v-control-layer_maximized');
-                
+
                 var mBackup = this.maximizeBackup;
 
                 cLS.top = parseFloat(cLS.top) + mBackup.offset.top + 'px';
                 cLS.left = parseFloat(cLS.left) + mBackup.offset.left + 'px';
                 cLS.width = mBackup.width;
                 cLS.height = mBackup.height;
-                
+
                 mBackup.style.parentNode.removeChild(mBackup.style);
-                
+
                 // 还原最大化前的固定状态
                 if (mBackup.pinned) {
                     if (!this.fixedPin) {
@@ -2340,9 +2374,9 @@
                     };
                 } else {
                     this.unpin();
-                }; 
-                
-                
+                };
+
+
                 window.removeEventListener('resize', this.maximizeResizeHandler, true);
                 this.cCommandM.classList.remove('fv-p-v-control-command-selected');
             },
@@ -2357,10 +2391,10 @@
             beforePin: function () {// pin的时候确保不要pin到可视范围外面去。
                 var controlLayer = this.controlLayer;
                 var cLS = controlLayer.style;
-                
+
                 var wSize = getWindowSize();
-                
-                // 如果pin的时候，标题栏不在浏览器窗口，调整top 
+
+                // 如果pin的时候，标题栏不在浏览器窗口，调整top
                 var cLBCRect = controlLayer.getBoundingClientRect();
 
                 if (cLBCRect.top < 0) {
@@ -2368,7 +2402,7 @@
                 } else if (cLBCRect.top > wSize.height - 50) {
                     cLS.top = parseFloat(cLS.top) - (cLBCRect.top - (wSize.height - 50)) + 'px';
                 };
-                
+
                 if (cLBCRect.left < 0) {
                     cLS.left = parseFloat(cLS.left) - cLBCRect.left + 'px';
                 } else if (cLBCRect.left > wSize.width - 50) {
@@ -2383,37 +2417,37 @@
 
                 var controlLayer = this.controlLayer;
                 var cLS = controlLayer.style;
-                
+
                 // 针对iframe video audio 元素，直接设置fixed获取更好的效果
                 if (this.fixedPin) {
                     this.pinData = {}; // 备份数据
-                    
+
                     var cLBCRect = controlLayer.getBoundingClientRect();
                     cLS.position = 'fixed';
                     cLS.top = cLBCRect.top + 'px';
                     cLS.left = cLBCRect.left + 'px';
-                    
+
                     var vS = this.video.style;
-                    
+
                     this.pinData.position = vS.position;
                     vS.setProperty('position', 'fixed', 'important');
                 } else {
                     var scrolled = getScrolled();
                     var offset = {
                         top: parseFloat(cLS.top),
-                        left: parseFloat(cLS.left), 
+                        left: parseFloat(cLS.left),
                     };
-                
+
                     this.pinScrollHandler = function () {
                         var scrolledA = getScrolled();
-                        
+
                         var top = scrolledA.y - scrolled.y + offset.top;
                         cLS.top = top + 'px';
-                        
+
                         var left = scrolledA.x - scrolled.x + offset.left;
                         cLS.left = left + 'px';
                     };
-                    
+
                     window.addEventListener('scroll', this.pinScrollHandler, true);
                 };
             },
@@ -2421,12 +2455,12 @@
                 if (!this.pinned) return;
                 this.pinned = false;
                 this.cCommandP.classList.remove('fv-p-v-control-command-selected');
-                
+
                 if (this.fixedPin) {
                     var controlLayer = this.controlLayer;
                     var cLS = controlLayer.style;
                     var scrolled = getScrolled();
-                    
+
                     cLS.position = 'absolute';
                     cLS.top = parseFloat(cLS.top) + scrolled.y + 'px';
                     cLS.left = parseFloat(cLS.left) + scrolled.x + 'px';
@@ -2441,7 +2475,7 @@
                     this.cCommandP.classList[(this.maximizeBackup.pinned = !this.maximizeBackup.pinned) ? 'add' : 'remove']('fv-p-v-control-command-selected');
                     return;
                 };
-                
+
                 if (this.pinned) {
                     this.unpin();
                 } else {
@@ -2452,27 +2486,27 @@
             lightOn: function () {
                 if (this.lighting) return;
                 this.lighting = true;
-                
+
                 var lOS = this.fixedOverlayer.style;
                 lOS.opacity = 0;
 
                 this.lightOnTimerId = setTimeout(function () {
                     lOS.display = 'none';
                 }, 200);
-                
+
                 this.cCommandL.classList.remove('fv-p-v-control-command-selected');
             },
             lightOff: function () {
                 if (!this.lighting) return;
                 this.lighting = false;
-                
+
                 var lOS = this.fixedOverlayer.style;
                 lOS.display = 'block';
                 clearTimeout(this.lightOnTimerId);
                 setTimeout(function () {
                     lOS.opacity = prefs.popVideo.lightOff.opacity;
                 }, 100);
-                
+
                 this.cCommandL.classList.add('fv-p-v-control-command-selected');
             },
             toggleLight: function () {
@@ -2486,46 +2520,47 @@
             restore: function (close) {
                 // 从所有列表中删除自己
                 PopVideo.all.splice(PopVideo.all.indexOf(this), 1);
-                
+
                 var video = this.video;
-                
+                video.removeEventListener("wheel", this.scale);
+
                 this.unpin();// 解除scroll监听
 
                 this.exitMaximize();// 解除resize监听
-                
+
                 // 移除各种监听
                 this.cLObserver.disconnect();
-                
+
                 window.removeEventListener('resize', this.wResizeListener, true);
                 mouseEventListener.remove('mouseenter', video, this.videoEnterHandler);
                 document.removeEventListener(support.fullscreenchange, this.fullscreenchangeListener, true);
-                
+
                 // 移除dom
                 this.fixedOverlayer.parentNode.removeChild(this.fixedOverlayer);
                 this.controlLayer.parentNode.removeChild(this.controlLayer);
-                
+
                 // 还原video相关的domstyle;
-                
+
                 var vS = video.style;
                 video.controls = this.vOriControls;
                 var vOriStyle = this.vOriStyle;
-                
+
                 for (var pro in vOriStyle) {
                     if (!vOriStyle.hasOwnProperty(pro)) continue;
                     // console.log(pro);
                     // chrome 用setProperty覆盖style上原有的值上存在important声明的时候
                     // 设置的值也必须有important声明，否则设置不上，并且就算有important声明，setProperty传递null或空字符串时，也无法删除原值。
                     //removeProperty移除有 important声明的时候，组合值必须一个一个移除。比如 removeProperty('padding') 无效，需要单独移除每个padding
-                    
+
                     vS.removeProperty(pro);
                     vS.setProperty(pro, vOriStyle[pro][0], vOriStyle[pro][1]);
                 };
                 video.classList.remove('fv-p-v-video');
-                
-                
+
+
                 // 移除popVideo标记
                 delete video.fvPopVideo;
-                
+
                 if (this.vPEIsObject) {
                     delete this.vPEIsObject.fvPopVideo;
                 } else if (this.vCEIsPlugin) {
@@ -2535,7 +2570,7 @@
 
                 // 还原video的祖先元素们的样式
                 var ancestors = this.ancestors;
-                
+
                 ancestors.forEach(function (ancestor) {
                     var ancestorData = data(ancestor, 'data');
                     if (ancestorData.count == 1) {
@@ -2551,13 +2586,13 @@
                         ancestorData.count -- ;
                     };
                 });
-                
+
 
                 // 还原特殊修正
                 if (this.removePopVideoFix) {
                     this.removePopVideoFix();
                 };
-                
+
                 // 是否是直接关闭视频
                 if (close) {
                     new CloseVideo(video);
@@ -2565,68 +2600,68 @@
                     // 平滑滚动到视频处
                     this.smoothScrollIntoView(video);
                 };
-                
+
             },
             setZIndex: function (force) {
                 if (!force && PopVideo.topVideo == this) return;
-                
+
                 PopVideo.topVideo = this;
-                
+
                 this.fixedOverlayer.style.zIndex = PopVideo.maxIndex ++;
                 this.controlLayer.style.zIndex = PopVideo.maxIndex;
-                
+
                 this.video.style.setProperty('z-index', PopVideo.maxIndex ++, 'important');
             },
             followControlLayer: function () {
                 // 全屏状态禁止调整video的大小
                 if (this.isFullscreen) return;
-                
+
                 var video = this.video;
-                
+
                 if (!document.contains(video) || getComputedStyle(video).display == 'none') {
                     this.restore();
                     return;
                 };
-                
+
                 var controlLayer = this.controlLayer;
-                
+
                 var cLS = controlLayer.style;
                 var vS = video.style;
-                
+
                 vS.setProperty('height', cLS.height, 'important');
                 vS.setProperty('width', cLS.width, 'important');
-                
+
                 this.cSizeInfo.textContent = 'W: ' + parseFloat(cLS.width) + ' H: ' + parseFloat(cLS.height);
-                
+
                 var cLCRect = getContentClientRect(controlLayer);
                 var vCRect = getContentClientRect(video);
-                
+
                 // 使用top left 修正到和之前的位置一样
                 if (!video.style.transform) {
                     vS.setProperty('top', parseFloat(vS.top) + cLCRect.top - vCRect.top + 'px', 'important');
                     vS.setProperty('left', parseFloat(vS.left) + cLCRect.left - vCRect.left + 'px', 'important');
                 }
-                
+
             },
             smoothScrollIntoView: function (elem) {
                 if (!document.contains(elem) || getComputedStyle(elem).display == 'none') return;
-                
+
                 var eBCRect = elem.getBoundingClientRect();
                 var wSize = getWindowSize();
                 var scrolled = getScrolled();
                 var pros = {};
-                
+
                 // y轴
                 if (eBCRect.top < 0 || eBCRect.top > wSize.height) {
                     pros.scrollTop = Math.max(scrolled.y + eBCRect.top - 10, 0);
                 };
-                
+
                 // x轴
                 if (eBCRect.left < 0 || eBCRect.left > wSize.width) {
                     pros.scrollLeft = Math.max(scrolled.x + eBCRect.left - 10, 0);
                 };
-                
-                
+
+
                 var scrollFx = PopVideo.scrollFx;
                 if (!scrollFx) {
                     scrollFx = PopVideo.scrollFx = fx('html,body');
@@ -2635,17 +2670,17 @@
                 scrollFx.animate(pros,{
                     duration: 400,
                 });
-                
+
             },
 
             addStyle: function () {
                 if (PopVideo.styleAdded) return;
                 PopVideo.styleAdded = true;
-                
+
                 var style = document.createElement('style');
                 style.type = 'text/css';
                 style.id = 'flash-viewer-pop-video';
-                
+
                 style.textContent = getMStr(function () {
                     var cssText;
                     /*
@@ -2659,7 +2694,7 @@
                             visibility: hidden;
                             overflow: hidden;
                         }
-                        
+
                         .fv-p-v-video {
                             min-width: 0 !important;
                             min-height: 0 !important;
@@ -2684,7 +2719,7 @@
                             width: 100% !important;
                             height: 100% !important;
                         }
-                        
+
                         .fv-p-v-light-off {
                             position: fixed;
                             top: 0;
@@ -2719,7 +2754,7 @@
                             background-color: #535353;
                             pointer-events: all;
                         }
-                        
+
                         .fv-p-v-control-title-bar {
                             -moz-user-select: none;
                             -webkit-user-select: none;
@@ -2744,7 +2779,7 @@
                             cursor: -webkit-grabbing;
                             cursor: grabbing;
                         }
-                        
+
                         .fv-p-v-control-title-bar-left-side {
                             float: left;
                             color: #AFAFAF;
@@ -2769,7 +2804,7 @@
                             color: white;
                             background: #535353;
                         }
-                        
+
                         .fv-p-v-control-resize-hand-n {
                             height: 5px;
                             top: 0;
@@ -2830,7 +2865,7 @@
                             left: 0;
                             cursor: nesw-resize
                         }
-                        
+
                         .fv-p-v-control-command {
                             cursor: pointer;
                             display: inline-block;
@@ -2841,12 +2876,12 @@
                             background: transparent center no-repeat;
                             opacity: 0.6;
                             transition: opacity 0.2s ease-in-out;
-                            
+
                         }
                         .fv-p-v-control-command-selected {
                             background-color: #404040;
                         }
-                        
+
                         .fv-p-v-control-command:hover {
                             opacity: 1;
                         }
@@ -2866,16 +2901,16 @@
 
                         .fv-p-v-control-light {
                             background-image:url("$light$")
-                        }                       
+                        }
                         .fv-p-v-control-pin {
                             background-image:url("$pin$");
-                        }                       
+                        }
                         .fv-p-v-control-maximize {
                             background-image:url("$maximize$");
-                        }                       
+                        }
                         .fv-p-v-control-fullscreen {
                             background-image:url("$fullscreen$");
-                        }                       
+                        }
                         .fv-p-v-control-restore {
                             background-image:url("$restore$");
                         }
@@ -2890,14 +2925,14 @@
                     .replace('$fullscreen$', icons.popVideo.fullscreen)
                     .replace('$restore$', icons.popVideo.restore)
                     .replace('$close$', icons.popVideo.close);
-                
-                
+
+
                 var style2 = document.createElement('style');
                 PopVideo.movingHelperStyle = style2;
-                
+
                 style2.type = 'text/css';
                 style2.id = 'flash-viewer-pop-video-moving-helper';
-                
+
                 style2.textContent = getMStr(function () {
                     var cssText;
                     /*
@@ -2908,12 +2943,12 @@
                     */
                 }).cssText;
                 var parentEle = document.head || document.documentElement;
-                
+
                 parentEle.appendChild(style);
                 parentEle.appendChild(style2);
 
                 style2.disabled = true;// style添加到文档之后disabled属性才有效
-                
+
             },
         };
 
@@ -2928,66 +2963,66 @@
         CloseVideo.prototype = {
             init: function () {
                 this.addStyle();
-                
+
                 var plugin = this.plugin;
-            
+
                 // 如果父元素是object，那么隐藏object元素
                 var pluginP;
                 if ((pluginP = plugin.parentElement) && pluginP.nodeName == 'OBJECT') {
                     plugin = pluginP;
                 };
-                
+
                 this.plugin = plugin;
 
-                
+
                 var pCStyle = getComputedStyle(plugin);
-                
+
                 // 设置一个占位符
                 var placeholder = document.createElement('fvspan');
                 placeholder.className = 'fv-c-v-placeholder';
                 placeholder.title = "点击还原视频";
-                
+
                 placeholder.innerHTML = getMStr(function () {
                     var innerHTML;
                     /*
                     <fvspan class="fv-c-v-close" title="彻底删除这个视频"></fvspan>
                     */
                 }).innerHTML;
-                
+
 
                 // 复制样式
                 var phStyle = placeholder.style;
                 var pros = [// 尽量拆开写，浏览器对复合值的返回不一样
                     'display', 'cssFloat',
-                    'position', 'zIndex', 
-                    'top', 'bottom', 'left', 'right', 
-                    'height', 'width',  
-                    'borderTopWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderRightWidth', 
-                    'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 
-                    'marginTop', 'marginBottom', 'marginLeft', 'marginRight', 
+                    'position', 'zIndex',
+                    'top', 'bottom', 'left', 'right',
+                    'height', 'width',
+                    'borderTopWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderRightWidth',
+                    'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight',
+                    'marginTop', 'marginBottom', 'marginLeft', 'marginRight',
                     support.cssBoxSizing,
                 ];
 
                 pros.forEach(function (pro) {
                     phStyle[pro] = pCStyle[pro];
                 });
-                
+
                 // iframe,audio,video默认display inline。但是普通元素的的话inline设置height width是无效的
                 if (phStyle.display == 'inline') {
                     phStyle.display = 'inline-block';
                 };
-                
+
                 // 如果是static定位那么改成relative定位，为占位符的内部关闭按钮做包含块
                 if (phStyle.position = 'static') {
                     phStyle.position = 'relative';
                     phStyle.zIndex = 'auto';
                 };
-                
-                
+
+
                 // 监听占位符的点击操作
                 placeholder.addEventListener('click', function (e) {
                     placeholder.parentNode.removeChild(placeholder);
-                    
+
                     var target = e.target;
                     if (target == this) {//显示视频
                         plugin.classList.remove('fv-c-v-hide-plugin');
@@ -2998,7 +3033,7 @@
                         plugin.parentNode.removeChild(plugin);
                     };
                 }, true);
-                
+
                 // 插入占位符
                 var pluginNS = plugin.nextSibling;
                 var pluginP = plugin.parentNode;
@@ -3012,7 +3047,7 @@
                 var pNName = plugin.nodeName;
                 var oSrc;
                 plugin.classList.add('fv-c-v-hide-plugin');
-                
+
                 if (/^(?:VIDEO|AUDIO)$/.test(pNName)) {// video audio标签，暂停播放
                     plugin.pause();
                 } else if (pNName == 'IFRAME') {
@@ -3027,7 +3062,7 @@
                 var style = document.createElement('style');
                 style.type = 'text/css';
                 style.id = 'flash-viewer-close-video'
-                
+
                 style.textContent = getMStr(function () {
                     var cssText;
                     /*
@@ -3043,7 +3078,7 @@
                         .fv-c-v-placeholder:hover {
                             opacity: 1;
                         }
-                        
+
                         .fv-c-v-close {
                             position: absolute;
                             top: 5px;
@@ -3067,7 +3102,7 @@
                             width: 24px;
                             height: 24px;
                         }
-                        
+
                         .fv-c-v-hide-plugin {
                             display: none !important;
                         }
@@ -3076,20 +3111,20 @@
                     .replace('$video$', icons.video);
 
                 (document.head || document.documentElement).appendChild(style);
-                
+
             },
         };
-    
+
         // 浮动工具栏
         function FloatBar() {
             this.init();
         };
         FloatBar.styleAdded = false;
-        
+
         FloatBar.prototype = {
             hideDelay: 566,
             hidden: true,
-            
+
             init: function () {
                 this.addStyle();
 
@@ -3097,7 +3132,7 @@
                 var floatBar = document.createElement('fvspan');
                 this.floatBar = floatBar;
                 floatBar.id = 'fv-f-b-container';
-                
+
                 floatBar.innerHTML = getMStr(function () {
                     var innerHTML;
                     /*
@@ -3159,7 +3194,7 @@
                 nativeMethods.forEach.call(floatBar.children, function (child) {
                     var classlist = child.classList;
                     if (!classlist.contains('fv-f-b-button')) return;
-                    
+
                     var bName = butonOrder.shift();
                     if (!bName) {
                         child.style.display = 'none';
@@ -3167,7 +3202,7 @@
                     };
 
                     classlist.add('fv-f-b-button-' + bName);
-                    
+
                     var titleMap = {
                         pop: '弹出视频',
                         reload: '重载视频',
@@ -3177,16 +3212,16 @@
                         ratio: '长宽比',
                         bright: '亮度'
                     };
-                    
+
                     child.title = titleMap[bName];
-                    
+
                     // 相关命令保存在dom上
                     child.dataset.clickCommand = bName;
-                    
+
                 });
-                
+
                 document.body.appendChild(floatBar);
-                
+
                 this.downloadButton = floatBar.querySelector('.fv-f-b-button-download');
 
                 var self = this;
@@ -3215,34 +3250,34 @@
                     let ratio = e.target.value;
                     self.target.style.transform = ratio ? `scale(${ratio})` : "";
                 }, true);
-                
+
                 // 监听按钮点击
                 floatBar.addEventListener('click', function (e) {
                     if (e.button !=0) return;// 非左键点击
-                    
+
                     var plugin = self.target;
-                    
+
                     // 如果点击按钮的时候，插件被删除了，或者被隐藏了
                     if (!document.contains(plugin) || getComputedStyle(plugin).display == 'none') {
                         self.hide();
                         return;
                     };
-                    
+
                     var bName = e.target.dataset.clickCommand;
                     if (!bName) return;
                     // console.log(bName);
-                    
+
                     switch (bName) {
                         // 点击了弹出命令按钮
                         case 'pop':
                             self.hide();
-                            
+
                             new PopVideo(plugin);
                         break;
                         // 点击了重载命令按钮
                         case 'reload':
                              self.hide();
-                             
+
                              var pNName = plugin.nodeName;
                              if (/^(?:VIDEO|AUDIO)$/.test(pNName)) {// video 和 audio标签
                                 plugin.load();
@@ -3259,18 +3294,18 @@
                         // 点击了关闭命令按钮
                         case 'close':
                             self.hide();
-                            
+
                             new CloseVideo(plugin);
                         break;
                         case 'download':
                             self.hide();
-                            
+
                             window.open('http://www.flvcd.com/parse.php?kw=' + encodeURIComponent(self.downloadUrl));
                         break;
                     };
-                    
+
                 }, true);
-                
+
                 // 监听mouse进出
                 mouseEventListener.add('mouseleave', floatBar, function (e) {
                     self.hideTimerId = setTimeout(function () {
@@ -3285,10 +3320,10 @@
             show: function () {
                 if (!this.hidden) return;
                 this.hidden = false;
-                
+
                 this.setPosition();
                 this.downloadable();
-                
+
                 var fbs = this.floatBar.style;
                 fbs.display = 'block';
                 setTimeout(function () {
@@ -3298,7 +3333,7 @@
             hide: function () {
                 if (this.hidden) return;
                 this.hidden = true;
-                
+
                 var fbs = this.floatBar.style;
                 fbs.display = 'none';
                 fbs.opacity = 0;
@@ -3306,7 +3341,7 @@
             downloadable: function () {// 如果可下载，那么显示下载按钮
                 var plugin = this.target;
                 var pNName = plugin.nodeName;
-                
+
                 if (!/^(?:OBJECT|EMBED)$/.test(pNName)) {
                     this.downloadButton.style.display = 'none';
                     return;
@@ -3314,10 +3349,10 @@
 
                 function convertFVars2Obj(fVars) {
                     var ret = {};
-                    
+
                     fVars.split('&').forEach(function (item) {
                         if (!item) return;
-                        
+
                         var index = item.indexOf('=');
                         if (index == -1) {
                             if (item !=' ') {
@@ -3329,22 +3364,22 @@
                             };
                         };
                     });
-                    
+
                     return ret;
                 };
-                
+
                 var src;
                 var fVars;
-                
+
                 if (pNName == 'EMBED') {
                     src = plugin.src;
                     fVars = plugin.getAttribute('flashvars');
                 } else {// object
                     src = plugin.data;
-                    
+
                     nativeMethods.some.call(plugin.children, function (child) {
                         if (child.nodeName != 'PARAM') return;
-                        
+
                         var name = child.name.toLowerCase();
                         var value = child.value;
                         switch (name) {
@@ -3361,72 +3396,72 @@
 
                         if (src && fVars) return true;
                     });
-                    
+
                 };
-                
+
                 if (!src) {
                     this.downloadButton.style.display = 'none';
                     return;
                 };
-                
+
                 fVars = fVars || '';
-                
+
                 fVars = convertFVars2Obj(fVars);
-                
+
                 var qIndex;
                 var hIndex;
                 var qFVars;
                 var key;
-                
+
                 qIndex = src.indexOf('?');
-                
+
                 if (qIndex != -1) {
                     qIndex ++;
-                    
+
                     hIndex = src.indexOf('#');
                     hIndex = hIndex == -1 ? src.length : hIndex;
-                    
+
                     qFVars = src.slice(qIndex, hIndex);
-                    
+
                     qFVars = convertFVars2Obj(qFVars);
 
                     // 合并参数
                     for (key in fVars) {
                         if (!fVars.hasOwnProperty(key)) continue;
-                        
+
                         qFVars[key] = fVars[key];
                     };
-                    
+
                     fVars = qFVars;
                 };
 
 
                 var downloadUrl;
-                
+
                 var youkuId;
                 var qqVid;
                 var yytId;
-                
+
                 var srcOrigin = src.match(/[^:]+:\/\/[^/]+/)[0];
-                
+
                 if (/\.youku\.com/i.test(srcOrigin)) {// youku
                     if (youkuId = src.match(/\/sid\/(\w{13,})\//)) {
                         youkuId = youkuId[1];
                     } else {
                         youkuId = fVars.VideoIDS;
                     };
-                    
+
                     if (youkuId) {
                         downloadUrl = 'http://v.youku.com/v_show/id_' + youkuId + '.html';
                     };
                 } else if (/\.qq\.com/.test(srcOrigin)) {// 腾讯视频
                     qqVid = fVars.vid;
-                    
+
                     if (qqVid) {
                         downloadUrl = 'http://static.video.qq.com/TPout.swf?vid=' + qqVid;
                     };
                 } else if (/player\.yinyuetai\.com/.test(srcOrigin)) {// 音悦台
-                    
+
                     if (yytId = src.match(/^https?:\/\/player\.yinyuetai\.com\/video\/swf\/(\d+)\//)) {
                         downloadUrl = 'http://v.yinyuetai.com/video/' + yytId[1];
                     };
@@ -3435,7 +3470,7 @@
                         downloadUrl = 'http://v.yinyuetai.com/video/' + yytId;
                     };
                 };
-                
+
                 if (downloadUrl) {
                     this.downloadUrl = downloadUrl;
                     this.downloadButton.style.display = '';
@@ -3456,7 +3491,7 @@
                 var scrolled = getScrolled();
 
                 var fbs = this.floatBar.style;
-                
+
                 var setPosition = {
                     top: function () {
                         var top = targetPosi.top + scrolled.y;
@@ -3498,11 +3533,11 @@
                 setPosition[floatBarPosi[1]]();
             },
             start: function (target) {
-            
+
                 if (this.target) {
                     mouseEventListener.remove('mouseleave', this.target, this.targetLeaveHandler);
                 };
-            
+
                 this.target = target;
                 // console.log(target);
 
@@ -3590,12 +3625,12 @@
 
                 // chrome的鼠标事件发生顺序坑爹，鼠标从a进入b，a(leave) > b(enter) > a(out) > b(over)
                 // firefox a(out) > a(leave) > b(over) > b(enter)
-                
+
                 // 注册鼠标离开插件后隐藏浮动栏
                 mouseEventListener.add('mouseleave', target, targetLeaveHandler);
 
                 clearTimeout(this.hideTimerId);
-                
+
                 if (this.hidden) {
                     this.showTimerId = setTimeout(function () {
                         self.show();
@@ -3605,12 +3640,12 @@
                     this.downloadable();
                     this.setPosition();
                 };
-                
+
             },
             addStyle: function () {
                 if (FloatBar.styleAdded) return;
                 FloatBar.styleAdded = true;
-                
+
                 var style = document.createElement('style');
                 style.type = 'text/css';
                 style.id = 'flash-viewer-float-bar';
@@ -3729,8 +3764,8 @@
                             opacity: 1;
                             pointer-events: all;
                         }
-                        
-                        
+
+
                     */
                 }).cssText.replace('$close$', icons.floatBar.close)
                     .replace('$pop$', icons.floatBar.pop)
@@ -3738,9 +3773,9 @@
                     .replace('$download$', icons.floatBar.download);
 
                 (document.head || document.documentElement).appendChild(style);
-            },          
+            },
         };
-        
+
         var plugFloatBar;
         // 监控鼠标是否摸到了插件
         document.addEventListener('mouseover', function (e) {
@@ -3751,19 +3786,19 @@
                 target = video[0];
                 tNName = 'VIDEO';
             }
-            
+
             // 可弹出元素
             if (!/^(?:OBJECT|EMBED|VIDEO|AUDIO|IFRAME)$/.test(tNName)) return;
-            
+
             // console.log(target);
-            
+
             // popVideo中。
             if (target.fvPopVideo) return;
-            
+
             // 如果是插件判断是否为flash插件
             if (/^(?:OBJECT|EMBED)$/.test(tNName)) {
                 // console.log(target);
-                
+
                 if (tNName == 'EMBED') {
                     if (!/^(?:application\/x-shockwave-flash|)$/.test(target.type) || !target.src) {
                         return;
@@ -3783,59 +3818,59 @@
                     return;
                 };
             };
-            
-            
+
+
             if (!plugFloatBar) {
                 plugFloatBar = new FloatBar();
             };
-            
+
             plugFloatBar.start(target);
-            
+
         }, true);
-        
+
     };
 
-    
+
     // 如果发生通信的话，需要一个独一无二的ID
     var messageID = Math.random().toString();
-    
+
     // 把指定函数丢到真实环境中执行，规避一切脚本管理器乱七八糟的执行环境产生的奇葩Bug，
     // 特别是chrome上的那个坑爹tampermonkey。。。
     function runInPageContext(fn) {
         if (typeof fn !== 'function') {
             return;
         };
-        
+
         // 创建一个脚本插入到pageContext执行
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        
+
         // 去掉函数名，防止污染全局环境。
         var sContent = ';(' + fn.toString().replace(/[^(]+/, 'function ') + ')(' + JSON.stringify(messageID) + ');';
-        
+
         // console.log('执行的脚本实际内容\n', sContent);
-        
+
         script.textContent = sContent;
 
         // 检测html元素是否可访问
         // scriptish @run-at document-start时，html元素在第一时间不可访问
         var de = document.documentElement;
-        
+
         if (de) {
             // console.log(de.outerHTML);
-            
+
             de.appendChild(script);
             de.removeChild(script);
         } else {
             if(support.MutationObserver)
             new (window.MutationObserver || window.WebKitMutationObserver)(function (ms, observer) {
-            
+
                 var de = document.documentElement;
                 if (de) {
                     // console.log(de.outerHTML);
-                    
+
                     observer.disconnect();
-                    
+
                     de.appendChild(script);
                     de.removeChild(script);
                 };
@@ -3843,7 +3878,7 @@
                 childList: true,
             });
         };
-        
+
     };
 
     runInPageContext(contentScript);
