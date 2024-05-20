@@ -772,16 +772,42 @@ var siteInfo = [
             return this.src;
         },
         xhr: {
-            url: function(a, p) {
+            url: function(a, p, self) {
                 if (a && a.href && /\/\/v.redd\.it\/\w+\/?$/.test(a.href)) {
                     return a.href + '/DASHPlaylist.mpd';
                 } else if (a && a.href && /^https:\/\/www\.reddit\.com\/gallery\//.test(a.href)) {
                     return a.href;
+                } else if (a && a.href && /redgifs\.com\//.test(a.href)) {
+                    const apiUrl = 'https://api.redgifs.com/v2';
+                    if (!self.redgifsToken) {
+                        self.redgifsToken = "1";
+                        fetch(`${apiUrl}/auth/temporary`).then(res => res.json()).then((data) => {
+                            if (data && data.token) {
+                                self.redgifsToken = data.token;
+                            }
+                        });
+                    }
+                    return apiUrl + "/gifs/" + a.href.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
+                }
+            },
+            headers: (url, self) => {
+                if (/redgifs\.com\//.test(url)) {
+                    return { Authorization:`Bearer ${self.redgifsToken}` };
                 }
             },
             query: function(html, doc, url) {
                 try {
-                    if (/^https:\/\/www\.reddit\.com\/gallery\//.test(url)) {
+                    if (/redgifs\.com\//.test(url)) {
+                        let data;
+                        try {
+                            data = JSON.parse(html);
+                        } catch (e) {
+                            return;
+                        }
+                        if (data && data.gif) {
+                            return data.gif.urls.gif || data.gif.urls.hd;
+                        }
+                    } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(url)) {
                         return [].reduce.call(doc.querySelectorAll("figure>a"), (total, cur) => {
                             return total.concat(cur.href);
                         }, []);
