@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1379660/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1379686/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1372505/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -22931,6 +22931,7 @@ ImgOps | https://imgops.com/#b#`;
             var caches = {};
             var handleError;
             var cacheNum = 0;
+            var xhr;
 
             /**
             * @param  q  图片的选择器或函数
@@ -22941,7 +22942,7 @@ ImgOps | https://imgops.com/#b#`;
                     var iurl, iurls = [], cap, caps, doc = createDoc(html);
 
                     if(typeof q == 'function') {
-                        iurl = await q(html, doc, url);
+                        iurl = await q(html, doc, url, xhr);
                         if (iurl) {
                             if(iurl.url) {
                                 cap = iurl.cap;
@@ -22963,7 +22964,7 @@ ImgOps | https://imgops.com/#b#`;
 
                     if (c) {
                         if(typeof c == 'function') {
-                            cap = await c(html, doc);
+                            cap = await c(html, doc, url, xhr);
                         } else {
                             var cnodes = findNodes(c, doc);
                             cap = cnodes.length ? findCaption(cnodes[0]) : false;
@@ -22992,7 +22993,7 @@ ImgOps | https://imgops.com/#b#`;
                 });
             }
 
-            function downloadPage(url, post, headers, cb) {
+            async function downloadPage(url, post, headers, cb) {
                 var opts = {
                     method: 'GET',
                     url: url,
@@ -23012,6 +23013,9 @@ ImgOps | https://imgops.com/#b#`;
                     opts.headers = {'Content-Type':'application/x-www-form-urlencoded','Referer':url};
                 }
                 if (headers) {
+                    if (typeof headers == 'function') {
+                        headers = await headers(url, xhr);
+                    }
                     opts.headers = headers;
                 }
 
@@ -23052,8 +23056,9 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             _.load = function(opt) {
+                xhr = opt.xhr;
                 var info = caches[opt.url] || storage.getListItem("xhrCache", opt.url);
-                cacheNum = opt.xhr.cacheNum || 0;
+                cacheNum = xhr.cacheNum || 0;
                 if (info) {
                     opt.cb(info.iurl, info.iurls, info.cap, info.caps);
                     return;
@@ -23066,7 +23071,7 @@ ImgOps | https://imgops.com/#b#`;
                     opt.url = opt.url.replace(/#p{.*/, "");
                 }
 
-                parsePage(opt.url, opt.xhr.query || opt.xhr.q, opt.xhr.caption || opt.xhr.c, opt.xhr.post, opt.cb, opt.xhr.headers, opt.xhr.after);
+                parsePage(opt.url, xhr.query || xhr.q, xhr.caption || xhr.c, xhr.post, opt.cb, xhr.headers, xhr.after);
             };
 
             return _;
@@ -23418,7 +23423,7 @@ ImgOps | https://imgops.com/#b#`;
                                                         debug(e);
                                                     }
                                                 } else {
-                                                    newSrc = siteXhr.url.call(ele, a);
+                                                    newSrc = siteXhr.url.call(ele, a, [], siteXhr);
                                                 }
                                                 if (newSrc) {
                                                     self.xhr = siteXhr;
@@ -23525,7 +23530,7 @@ ImgOps | https://imgops.com/#b#`;
                                     debug(e);
                                 }
                             } else {
-                                newSrc = rule.xhr.url.call(target || img, a, p);
+                                newSrc = rule.xhr.url.call(target || img, a, p, rule.xhr);
                             }
                             if (newSrc) {
                                 this.xhr = rule.xhr;
