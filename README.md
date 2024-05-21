@@ -38,3 +38,6 @@
 <a href="https://github.com/hoothin/UserScripts/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=hoothin/UserScripts&max=400&columns=15" />
 </a>
+
+## Sponsors
+<a href="https://pagetual.hoothin.com/sponsors.svg"><img style="width: 100%" wmode="transparent" id="sponsors" src="https://pagetual.hoothin.com/sponsors.svg?2024.5.21"></a>
