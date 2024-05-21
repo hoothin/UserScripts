@@ -2086,6 +2086,7 @@
                      min-height: ${32 * this.scale}px;
                      text-align: center;
                      background-image: initial;
+                     filter: drop-shadow(1px 1px 3px #00000030);
                  }
                  #search-jumper.funcKeyCall .search-jumper-btn {
                      padding: ${1 * this.tilesZoom}px!important;
@@ -2153,9 +2154,6 @@
                      font-size: ${30 * this.scale}px;
                      color: wheat;
                      display: none;
-                 }
-                 a.search-jumper-btn {
-                     background-color: #ffffff40;
                  }
                  #search-jumper.funcKeyCall .search-jumper-btn>div {
                      line-height: ${32 * this.tilesZoom}px;
@@ -2447,6 +2445,7 @@
                  }
                  a.search-jumper-word {
                      color: #111111!important;
+                     background: unset;
                  }
                  .funcKeyCall a.search-jumper-word {
                      background: #f7f7f7a0;
