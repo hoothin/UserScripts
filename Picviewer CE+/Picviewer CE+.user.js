@@ -14557,11 +14557,13 @@ ImgOps | https://imgops.com/#b#`;
                             self.addImageUrls(urls);
                             break;
                         case 'operate':
-                            imgReady(self.src,{
-                                ready:function(){
-                                    new ImgWindowC(this);
-                                },
-                            });
+                            if (/img/i.test(self.img.nodeName)) {
+                                imgReady(self.src,{
+                                    ready:function(){
+                                        new ImgWindowC(this);
+                                    },
+                                });
+                            } else new ImgWindowC(self.img);
                             break;
                         case 'urlFilter':
                             filterUrl();
@@ -14929,12 +14931,21 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 eleMaps['img-parent'].addEventListener('click',function(e){//点击图片本身就行图片缩放处理
                     var target=e.target;
-                    if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
+                    if(e.button!=0 || !/^(video|img)$/i.test(target.nodeName))return;
 
                     if(imgDraged){//在拖动后触发的click事件，取消掉。免得一拖动完就立即进行的缩放。。。
                         imgDraged=false;
                         return;
                     };
+                    if (/^video$/i.test(target.nodeName)) {
+                        var fiddleWindow=new ImgWindowC(target);
+                        fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
+                            if(self.img == target){
+                                eleMaps['img-parent'].appendChild(target);
+                            }
+                        });
+                        return;
+                    }
 
                     if(target.classList.contains('pv-gallery-img_zoom-in')){//放大
                         self.fitContains=false;
@@ -14952,10 +14963,12 @@ ImgOps | https://imgops.com/#b#`;
                     }else{
                         popupFiddleWindow(target);
                     }
+                    e.preventDefault();
+                    e.stopPropagation();
                 },true);
                 eleMaps['img-parent'].addEventListener('dblclick',function(e){
                     var target=e.target;
-                    if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
+                    if(e.button!=0 || !/^img$/i.test(target.nodeName))return;
                     if (!target.classList.contains('pv-gallery-img_zoom-in') && !target.classList.contains('pv-gallery-img_zoom-out')) return;
 
                     if(imgDraged){
@@ -14963,6 +14976,8 @@ ImgOps | https://imgops.com/#b#`;
                         return;
                     };
                     popupFiddleWindow(target);
+                    e.preventDefault();
+                    e.stopPropagation();
                 },true);
 
 
@@ -16066,16 +16081,21 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (media) {
                     media.src = src;
-                    var index = allLoading.indexOf(src);
-                    if (index != -1) {
-                        allLoading.splice(index,1);
+                    let loaded = function() {
+                        var index = allLoading.indexOf(src);
+                        if (index != -1) {
+                            allLoading.splice(index,1);
+                        }
+
+                        if (src != self.lastLoading) return;
+
+                        if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display = '';
+                        if (preImgR) preImgR.abort();
+                        self.loadImg(media, ele);
+                        media.removeEventListener('loadeddata', loaded);
                     }
-
-                    if (src != self.lastLoading) return;
-
-                    if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display = '';
-                    if (preImgR) preImgR.abort();
-                    self.loadImg(media, ele);
+                    media.addEventListener('loadeddata', loaded);
+                    media.load();
                     return;
                 }
                 this.imgReady=imgReady(src, {
@@ -16136,8 +16156,8 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 var imgNaturalSize={
-                    h:img.naturalHeight,
-                    w:img.naturalWidth,
+                    h:img.naturalHeight || img.videoHeight || 100,
+                    w:img.naturalWidth || img.videoWidth || 100,
                 };
                 this.imgNaturalSize=imgNaturalSize;
 
@@ -21975,7 +21995,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(!opacity)this.imgWindow.style.opacity=0;
                 let self = this;
                 setTimeout(function(){
-                    self.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
+                    if (self.isImg) self.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
                     self.imgWindow.parentNode.removeChild(self.imgWindow);
                 },300);
 
