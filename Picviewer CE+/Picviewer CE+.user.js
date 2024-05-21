@@ -23893,7 +23893,7 @@ ImgOps | https://imgops.com/#b#`;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
                 let bg = node && nodeStyle.backgroundRepeatX != "repeat" && nodeStyle.backgroundRepeatY != "repeat" && nodeStyle.backgroundImage;
                 if (!bg || bg == "none") return false;
-                return bg.length > 200 || (node.clientWidth > prefs.floatBar.minSizeLimit.w && node.clientHeight > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^ad\s'"]/.test(bg));
+                return bg.length > 500 || (node.clientWidth > prefs.floatBar.minSizeLimit.w && node.clientHeight > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^ad\s'"]/.test(bg));
             };
             if (target.nodeName.toUpperCase() != 'IMG' && matchedRule.getExtSrc) {
                 let nsrc;
