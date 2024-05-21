@@ -1574,6 +1574,7 @@
 
             videoMouseDown: function (e) {
                 if (this.zoomLevel === 1) return;
+                e.stopPropagation();
                 let self = this, mousemoved = false;
                 let oriPos = {
                     x: parseInt(this.controlLayer.style.left),
@@ -1588,6 +1589,14 @@
                     document.removeEventListener("mousemove", mousemoveHandler);
                     if (mousemoved) {
                         e.preventDefault();
+                        e.stopPropagation();
+                    }
+                };
+                let mouseclickHandler = e => {
+                    document.removeEventListener("click", mouseclickHandler);
+                    if (mousemoved) {
+                        e.preventDefault();
+                        e.stopPropagation();
                     }
                 };
                 let mousemoveHandler = e => {
@@ -1595,8 +1604,10 @@
                     self.controlLayer.style.top = oriPos.y + (e.pageY - oriMouse.y) + "px";
                     self.controlLayer.style.left = oriPos.x + (e.pageX - oriMouse.x) + "px";
                     e.preventDefault();
+                    e.stopPropagation();
                 };
                 document.addEventListener("mouseup", mouseupHandler);
+                document.addEventListener("click", mouseclickHandler);
                 document.addEventListener("mousemove", mousemoveHandler);
             },
 
@@ -1616,7 +1627,7 @@
                 video.fvPopVideo = true;// 标记弹出中。
                 this.zoomLevel = 1;
                 video.addEventListener("wheel", this.scale.bind(this));
-                video.addEventListener("mousedown", this.videoMouseDown.bind(this));
+                video.addEventListener("mousedown", this.videoMouseDown.bind(this), true);
 
                 // 很多网站加载flash为了兼容现代浏览器和ie，经常使用 object classid嵌套object或者embed的格式
                 var vPEIsObject;
@@ -2552,7 +2563,7 @@
 
                 var video = this.video;
                 video.removeEventListener("wheel", this.scale.bind(this));
-                video.removeEventListener("mousedown", this.videoMouseDown.bind(this));
+                video.removeEventListener("mousedown", this.videoMouseDown.bind(this), true);
 
                 this.unpin();// 解除scroll监听
 
