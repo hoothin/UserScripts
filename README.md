@@ -32,7 +32,6 @@
 
 + [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/)
 
----
 ## Contributors
 
 <a href="https://github.com/hoothin/UserScripts/graphs/contributors">
