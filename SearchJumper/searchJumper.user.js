@@ -9908,43 +9908,37 @@
                             let finalData = data;
                             while (template) {
                                 let templateArr = template[1].split("|");
-                                let props = templateArr[0].split("."), value = json;
+                                let props = templateArr[0].split("."), value = json, arrayValue = null;
                                 props.shift();
                                 props.forEach(prop => {
-                                    let needCalc = prop.match(calcReg);
-                                    if (needCalc) {
-                                        let calcArr = [];
-                                        while (needCalc) {
-                                            prop = prop.replace(calcReg, "$1");
-                                            calcArr.unshift([needCalc[2], needCalc[3]]);
-                                            needCalc = prop.match(calcReg);
-                                        }
-                                        value = value[prop];
-                                        if (!value) return null;
-                                        value = parseFloat(value);
-                                        calcArr.forEach(calc => {
-                                            let param = parseFloat(calc[1]);
-                                            switch (calc[0]) {
-                                                case "+":
-                                                    value += param;
-                                                    break;
-                                                case "-":
-                                                    value -= param;
-                                                    break;
-                                                case "*":
-                                                    value *= param;
-                                                    break;
-                                                case "/":
-                                                    value /= param;
-                                                    break;
+                                    if (arrayValue) {
+                                        let tempArray = [];
+                                        for (let i = 0; i < arrayValue.length; i++) {
+                                            let curValue = arrayValue[i];
+                                            if (curValue) {
+                                                if (Array.isArray(curValue)) {
+                                                    curValue = curValue.at ? curValue.at(prop) : curValue[prop];
+                                                } else curValue = curValue[prop];
                                             }
-                                        });
-                                        value = value.toFixed(2);
+                                            tempArray.push(curValue);
+                                        }
+                                        arrayValue = tempArray;
                                     } else {
-                                        value = value[prop];
+                                        if (value) {
+                                            if (Array.isArray(value)) {
+                                                if (prop === 'all') {
+                                                    arrayValue = value;
+                                                } else {
+                                                    value = value.at ? value.at(prop) : value[prop];
+                                                }
+                                            } else value = value[prop];
+                                        }
                                         if (!value) return null;
                                     }
                                 });
+                                if (arrayValue) {
+                                    value = arrayValue.join("");
+                                }
                                 if (templateArr.length != 1) {
                                     let calcStr = templateArr[1];
                                     let needCalc = calcStr.match(calcReg);
@@ -9975,6 +9969,7 @@
                                         value = value.toFixed(2);
                                     }
                                 }
+                                if (!value) value = "";
                                 allValue.push(value);
                                 finalData = finalData.replace(template[0], value);
                                 template = finalData.match(/{(.*?)}/);
