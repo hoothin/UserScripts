@@ -1260,8 +1260,8 @@ var siteInfo = [
     {
         name: "nhentai",
         url: /nhentai\./i,
-        r: /\/\/\w+(\..*\/)(\d+)t(\.[a-z]+)$/i,
-        s: "//i$1$2$3",
+        r: [/(cdn\..*\d+)t(\.[a-z]+)$/, /\/\/\w+(\..*\/)(\d+)t(\.[a-z]+)$/i],
+        s: ["$1$2","//i$1$2$3"],
         example: "http://nhentai.net/g/113475/"
     },
     {
