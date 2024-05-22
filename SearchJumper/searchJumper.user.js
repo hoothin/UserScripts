@@ -2181,33 +2181,33 @@
                      100% {opacity: 0;}
                  }
                  @-webkit-keyframes loader-rotate {
-                   from {
-                     transform: rotate(0deg);
-                   }
-                   to {
-                     transform: rotate(360deg);
-                   }
+                   from {
+                     transform: rotate(0deg);
+                   }
+                   to {
+                     transform: rotate(360deg);
+                   }
                  }
                  @keyframes loader-rotate {
-                   from {
-                     transform: rotate(0deg);
-                   }
-                   to {
-                     transform: rotate(360deg);
-                   }
+                   from {
+                     transform: rotate(0deg);
+                   }
+                   to {
+                     transform: rotate(360deg);
+                   }
                  }
                  .search-jumper-tips>.loader {
-                     border-width: 0.25rem;
-                     border-style: solid;
-                     border-color: gainsboro gainsboro dodgerblue gainsboro;
-                     border-radius: 50%;
-                     display: block;
-                     width: 25px;
-                     float: left;
-                     height: 25px;
-                     margin-right: 10px;
-                     -webkit-animation: loader-rotate 1.5s linear infinite;
-                     animation: loader-rotate 1.5s linear infinite;
+                     border-width: 0.25rem;
+                     border-style: solid;
+                     border-color: gainsboro gainsboro dodgerblue gainsboro;
+                     border-radius: 50%;
+                     display: block;
+                     width: 25px;
+                     float: left;
+                     height: 25px;
+                     margin-right: 10px;
+                     -webkit-animation: loader-rotate 1.5s linear infinite;
+                     animation: loader-rotate 1.5s linear infinite;
                  }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
@@ -7675,8 +7675,8 @@
                     clientY += current.offsetTop;
                     current = current.offsetParent;
                 }
-                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 let arrowStyle = this.listArrow.style;
                 arrowStyle.visibility = "visible";
                 arrowStyle.opacity = 1;
@@ -7739,8 +7739,8 @@
                     clientY += current.offsetTop;
                     current = current.offsetParent;
                 }
-                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (showall) {
                     clientX -= target.scrollWidth / 2 - this.con.scrollLeft;
                     clientY += this.con.scrollTop;
@@ -7756,7 +7756,7 @@
                     if (actualTop > viewHeight / 2) clientY -= (target.scrollHeight + eh / 2 + 5);
                     else clientY += (eh / 2 + 5);
                     if (clientX < 20) clientX = 20;
-                    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+                    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                     let maxLeft = viewWidth + scrollLeft - target.scrollWidth - 30;
                     if (clientX > maxLeft) {
                         clientX = maxLeft;
@@ -8161,8 +8161,8 @@
                 }, true);
 
                 let showTimer, siteList;
-                let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
+                let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
                 let availableSize = !isMobile || (viewWidth > 600 && viewHeight > 600);
                 typeBtn.addEventListener('mouseenter', e => {
                     if (draged) {
@@ -8474,8 +8474,8 @@
                             urls.push(siteEle.href);
                         }
                     }
-                    let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
-                    let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
+                    let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                    let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
                     let numPerLine = parseInt(viewWidth / 800);
                     if (numPerLine > urls.length) numPerLine = urls.length;
                     let _width = parseInt(viewWidth / numPerLine);
@@ -9766,8 +9766,8 @@
                                     mobileMatch = match.match(/\(([^\)\|]+)\|([^\)\|]+)/);
                                 }
                             }
-                            let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
-                            let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
+                            let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                            let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
                             let showWidth = Math.min(viewWidth, 550);
                             let showHeight = Math.min(viewHeight, 800);
                             let left = viewWidth - showWidth;
@@ -10158,8 +10158,8 @@
 
             checkScroll(noIntoView, noSmooth) {
                 if (this.funcKeyCall || this.bar.style.display == "none") return;
-                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
                     if (!this.con.classList.contains("search-jumper-scroll")) {
                         this.bar.style.cssText = "";
@@ -10358,9 +10358,9 @@
                     self.con.classList.remove("search-jumper-scroll");
                     self.bar.style.cssText = "";
                     self.con.style.cssText = "";
-                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     let tileOffset = searchData.prefConfig.tileOffset || 0;
                     let clientX = e.pageX - self.bar.clientWidth / 2 - (getComputedStyle(document.documentElement).position !== 'static' ? document.documentElement.offsetLeft : 0);
                     if (clientX < 0) clientX = 5;
@@ -10476,8 +10476,8 @@
                         });
                     }, 1);
                 };
-                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 var maxSize = Math.max(self.bar.scrollWidth, self.bar.scrollHeight);
 
                 if (posX > viewWidth - maxSize) {
@@ -11965,8 +11965,8 @@
                     return;
                 }
                 grabState = 0;
-                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 let baseWidth = viewWidth / 3;
                 let baseHeight = viewHeight / 3;
                 let relX, relY, posX, posY;
