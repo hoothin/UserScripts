@@ -6447,8 +6447,7 @@
     "url": "^https://alternativeto\\.net/",
     "nextLink": "nav[aria-label='Pagination Navigation']>a",
     "action": 1,
-    "pageElement": "div.container>ol>li",
-    "pageInit": "eles.forEach(e=>{let span=e.querySelector('div>div>div>span');if(span)span.onVisible()})"
+    "pageElement": "div.container>ol>li"
 },
 {
     "name": "hirelateral",
