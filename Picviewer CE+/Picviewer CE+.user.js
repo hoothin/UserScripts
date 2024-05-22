@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.21.1
+// @version              2024.5.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14557,13 +14557,38 @@ ImgOps | https://imgops.com/#b#`;
                             self.addImageUrls(urls);
                             break;
                         case 'operate':
+                            if (self.img === null || self.img.style.display === 'none') return;
+                            let fiddleWindow;
                             if (/img/i.test(self.img.nodeName)) {
-                                imgReady(self.src,{
-                                    ready:function(){
-                                        new ImgWindowC(this);
+                                imgReady(self.src, {
+                                    ready:function() {
+                                        self.img.style.display = "none";
+                                        fiddleWindow = new ImgWindowC(this);
+                                        let targetSrc = self.src;
+                                        fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
+                                            if (self.img.style.display === "none") {
+                                                self.img.style.display = "";
+                                            }
+                                        });
                                     },
                                 });
-                            } else new ImgWindowC(self.img);
+                            } else {
+                                let target = self.img;
+                                let classNameBak = target.className;
+                                fiddleWindow = new ImgWindowC(target);
+                                self.img = null;
+                                let targetSrc = self.src;
+                                fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
+                                    if (self.img === null) {
+                                        target.style.width = "";
+                                        target.style.height = "";
+                                        target.style.opacity = 1;
+                                        eleMaps['img-parent'].appendChild(target);
+                                        self.img = target;
+                                        self.img.className = classNameBak;
+                                    }
+                                });
+                            }
                             break;
                         case 'urlFilter':
                             filterUrl();
@@ -14900,36 +14925,59 @@ ImgOps | https://imgops.com/#b#`;
                 },true);
 
                 function popupFiddleWindow(target) {
-                    if(self.hideImg && self.hideImg.parentNode){
+                    if (self.img === null || self.img.style.display === 'none') return;
+                    if (/^video$/i.test(target.nodeName)) {
+                        let classNameBak = target.className;
+                        let fiddleWindow = new ImgWindowC(target);
+                        self.img = null;
+                        fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
+                            if (self.img == null) {
+                                target.style.width = "";
+                                target.style.height = "";
+                                target.style.opacity = 1;
+                                eleMaps['img-parent'].appendChild(target);
+                                self.img = target;
+                                self.img.className = classNameBak;
+                            }
+                        });
                         return;
-                    }else{
-                        self.hideImg=target;
-                        target.style.display="none";
-                        imgReady(self.src,{
-                            ready:function(){
-                                var fiddleWindow=new ImgWindowC(this);
-                                fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
-                                    if(self.hideImg && self.hideImg.parentNode){
-                                        self.hideImg.style.display="";
-                                        self.hideImg=null;
-                                    }
-                                });
-                            },
-                            error:function(e){
-                                var t_img = document.createElement('img');
-                                t_img.src = self.img.src;
-                                var fiddleWindow = new ImgWindowC(t_img);
-                                fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
-                                    if(self.hideImg && self.hideImg.parentNode){
-                                        self.hideImg.style.display="";
-                                        self.hideImg=null;
-                                    }
-                                });
+                    }
+
+                    let listenRemove = (img) => {
+                        var fiddleWindow = new ImgWindowC(img);
+                        fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
+                            if (self.img.style.display === 'none') {
+                                self.img.style.display = "";
                             }
                         });
                     }
+                    target.style.display = "none";
+                    imgReady(self.src, {
+                        ready:function() {
+                            listenRemove(this);
+                        },
+                        error:function(e) {
+                            var t_img = document.createElement('img');
+                            t_img.src = self.img.src;
+                            listenRemove(t_img);
+                        }
+                    });
                 }
+                eleMaps['img-parent'].addEventListener('mousedown',function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                },true);
+                eleMaps['img-parent'].addEventListener('mouseup',function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                },true);
+                eleMaps['img-parent'].addEventListener('mousemove',function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                },true);
                 eleMaps['img-parent'].addEventListener('click',function(e){//点击图片本身就行图片缩放处理
+                    e.preventDefault();
+                    e.stopPropagation();
                     var target=e.target;
                     if(e.button!=0 || !/^(video|img)$/i.test(target.nodeName))return;
 
@@ -14937,15 +14985,6 @@ ImgOps | https://imgops.com/#b#`;
                         imgDraged=false;
                         return;
                     };
-                    if (/^video$/i.test(target.nodeName)) {
-                        var fiddleWindow=new ImgWindowC(target);
-                        fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e=>{
-                            if(self.img == target){
-                                eleMaps['img-parent'].appendChild(target);
-                            }
-                        });
-                        return;
-                    }
 
                     if(target.classList.contains('pv-gallery-img_zoom-in')){//放大
                         self.fitContains=false;
@@ -14963,12 +15002,12 @@ ImgOps | https://imgops.com/#b#`;
                     }else{
                         popupFiddleWindow(target);
                     }
-                    e.preventDefault();
-                    e.stopPropagation();
                 },true);
                 eleMaps['img-parent'].addEventListener('dblclick',function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
                     var target=e.target;
-                    if(e.button!=0 || !/^img$/i.test(target.nodeName))return;
+                    if(e.button!=0 || !/^(video|img)$/i.test(target.nodeName))return;
                     if (!target.classList.contains('pv-gallery-img_zoom-in') && !target.classList.contains('pv-gallery-img_zoom-out')) return;
 
                     if(imgDraged){
@@ -14976,8 +15015,6 @@ ImgOps | https://imgops.com/#b#`;
                         return;
                     };
                     popupFiddleWindow(target);
-                    e.preventDefault();
-                    e.stopPropagation();
                 },true);
 
 
@@ -15725,16 +15762,50 @@ ImgOps | https://imgops.com/#b#`;
                         };
                         let loadImg = () => {
                             self.showTips("Loading image...");
-                            imgReady(img.dataset.src, {
-                                ready: function() {
+
+                            let mode = matchedRule.getMode(img.dataset.src);
+                            let media;
+                            switch (mode) {
+                                case "video":
+                                    media = document.createElement('video');
+                                    media.style.width = 0;
+                                    media.style.height = 0;
+                                    media.controls = true;
+                                    media.loop = true;
+                                    media.autoplay = true;
+                                    if (img.dataset.src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                                    break;
+                                case "audio":
+                                    media = document.createElement('audio');
+                                    media.controls = true;
+                                    media.autoplay = true;
+                                    media.volume = 1;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (media) {
+                                media.src = img.dataset.src;
+                                let loaded = function() {
+                                    media.play();
                                     self.showTips("");
                                     popupImgWin(this);
-                                },
-                                error:function(e){
-                                    self.showTips("");
-                                    loadError();
+                                    media.removeEventListener('loadeddata', loaded);
                                 }
-                            });
+                                media.addEventListener('loadeddata', loaded);
+                                media.load();
+                            } else {
+                                imgReady(img.dataset.src, {
+                                    ready: function() {
+                                        self.showTips("");
+                                        popupImgWin(this);
+                                    },
+                                    error:function(e){
+                                        self.showTips("");
+                                        loadError();
+                                    }
+                                });
+                            }
                         };
                         let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                         if (xhr) {
