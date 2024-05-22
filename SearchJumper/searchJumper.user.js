@@ -2180,6 +2180,35 @@
                      80%  {opacity: 0;}
                      100% {opacity: 0;}
                  }
+                 @-webkit-keyframes loader-rotate {
+                   from {
+                     transform: rotate(0deg);
+                   }
+                   to {
+                     transform: rotate(360deg);
+                   }
+                 }
+                 @keyframes loader-rotate {
+                   from {
+                     transform: rotate(0deg);
+                   }
+                   to {
+                     transform: rotate(360deg);
+                   }
+                 }
+                 .search-jumper-tips>.loader {
+                     border-width: 0.25rem;
+                     border-style: solid;
+                     border-color: gainsboro gainsboro dodgerblue gainsboro;
+                     border-radius: 50%;
+                     display: block;
+                     width: 25px;
+                     float: left;
+                     height: 25px;
+                     margin-right: 10px;
+                     -webkit-animation: loader-rotate 1.5s linear infinite;
+                     animation: loader-rotate 1.5s linear infinite;
+                 }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -6774,8 +6803,13 @@
             }
 
             async refreshEngines() {
-                lastModified = searchData.lastModified;
                 if (!searchData) return;
+                if (this.refreshing) return;
+                this.refreshing = true;
+                setTimeout(() => {
+                    this.refreshing = false;
+                }, 500);
+                lastModified = searchData.lastModified;
                 this.removeBar();
                 if (searchTypes && searchTypes.length) {
                     searchTypes.forEach(type => {
@@ -9757,7 +9791,7 @@
                 }
                 let lastUrl, anylizing = false, tipsShowing = false;
                 let setTips = async (target, url, again) => {
-                    self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
+                    self.tipsPos(target, ele.dataset.name + "<br/><span class='loader'></span>Loading...");
                     tipsShowing = false;
                     if (url) {
                         try {
@@ -9791,7 +9825,7 @@
                         if (!url) return;
                         if (lastUrl === url) {
                             if (anylizing) {
-                                self.tipsPos(target, ele.dataset.name + "<br/>Loading...");
+                                self.tipsPos(target, ele.dataset.name + "<br/><span class='loader'></span>Loading...");
                             } else {
                                 setTips(target, url);
                             }
@@ -10290,7 +10324,7 @@
                 self.setFuncKeyCall(false);
                 if (firstType) {
                     if ((!searchData.prefConfig.disableAutoOpen && !searchData.prefConfig.disableTypeOpen) || _funcKeyCall) {
-                        let targetTypes = this.bar.querySelectorAll(`.search-jumper-${typeSel}:not(.notmatch)>span`);
+                        let targetTypes = this.bar.querySelectorAll(`.search-jumper-${typeSel}:not(.notmatch)>span:first-child`);
                         [].forEach.call(targetTypes, type => {
                             if (type !== firstType) {
                                 self.reopenType(type);
@@ -14276,6 +14310,9 @@
                     document.addEventListener("mousemove", dragTitleMove);
                     document.addEventListener("mouseup", dragTitleUp);
                 });
+                iconShow.onload = e => {
+                    iconShow.style.display = "";
+                }
                 let maxBtn = addFrame.querySelector("#maxBtn");
                 maxBtn.addEventListener("click", e => {
                     addFrame.classList.add("maxContent");
@@ -14726,6 +14763,7 @@
                     iconShow.src = icons[0];
                 }
             } else {
+                iconShow.style.display = "none";
                 iconShow.src = (/^(showTips:)?https?:/.test(url) ? url.split('\n')[0].replace(/\?.*/, "").replace(/^(showTips:)?(https?:\/\/[^\/]+).*/, '$2') : location.origin) + "/favicon.ico";
             }
             iconsCon.innerHTML = createHTML();
