@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.8
 // @created        2013-12-27
-// @lastUpdated    2023-8-16
+// @lastUpdated    2024-5-23
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -3829,7 +3829,26 @@
             }
 
             // 可弹出元素
-            if (!/^(?:OBJECT|EMBED|VIDEO|AUDIO|IFRAME)$/.test(tNName)) return;
+            const availableNode = /^(?:OBJECT|EMBED|VIDEO|AUDIO|IFRAME)$/i;
+            if (!availableNode.test(tNName)) {
+                target = null;
+                if (document.elementsFromPoint) {
+                    let elements = document.elementsFromPoint(e.clientX, e.clientY);
+                    let checkLen = Math.min(elements.length, 5);
+                    for (let i = 0; i < checkLen; i++) {
+                        let ele = elements[i];
+                        if (!ele) continue;
+                        if (availableNode.test(ele.nodeName)) {
+                            target = ele;
+                            tNName = ele.nodeName;
+                            break;
+                        }
+                    }
+                }
+                if (!target) {
+                    return;
+                }
+            }
 
             // console.log(target);
 
@@ -3871,6 +3890,27 @@
 
     };
 
+    var _isunsafe = null;
+    function isunsafe(){
+        if (_isunsafe === null) {
+            try {
+                let escapeHTMLPolicy;
+                let win = typeof unsafeWindow == 'undefined'? window : unsafeWindow;
+                if (win.trustedTypes && win.trustedTypes.createPolicy) {
+                    escapeHTMLPolicy = win.trustedTypes.createPolicy('fv_default', {
+                        createScript: string => string
+                    });
+                }
+                function createScript(html) {
+                    return escapeHTMLPolicy ? escapeHTMLPolicy.createScript(html) : html;
+                }
+                _isunsafe = unsafeWindow.eval(createScript("false"));
+            } catch (e) {
+                _isunsafe = true;
+            }
+        }
+        return _isunsafe;
+    }
 
     // 如果发生通信的话，需要一个独一无二的ID
     var messageID = Math.random().toString();
@@ -3880,7 +3920,11 @@
     function runInPageContext(fn) {
         if (typeof fn !== 'function') {
             return;
-        };
+        }
+        if (isunsafe()) {
+            fn();
+            return;
+        }
 
         // 创建一个脚本插入到pageContext执行
         var script = document.createElement('script');
@@ -3900,8 +3944,12 @@
         if (de) {
             // console.log(de.outerHTML);
 
-            de.appendChild(script);
-            de.removeChild(script);
+            try {
+                de.appendChild(script);
+                de.removeChild(script);
+            } catch (e) {
+                fn();
+            }
         } else {
             if(support.MutationObserver)
             new (window.MutationObserver || window.WebKitMutationObserver)(function (ms, observer) {
@@ -3911,9 +3959,12 @@
                     // console.log(de.outerHTML);
 
                     observer.disconnect();
-
-                    de.appendChild(script);
-                    de.removeChild(script);
+                    try {
+                        de.appendChild(script);
+                        de.removeChild(script);
+                    } catch (e) {
+                        fn();
+                    }
                 };
             }).observe(document, {
                 childList: true,
