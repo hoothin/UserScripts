@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.22.1
+// @version              2024.5.23.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13755,6 +13755,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
                     '<span class="pv-gallery-tipsWords"></span>'+
+                    '<span class="pv-gallery-urls-textarea"><textarea></textarea><span class="pv-gallery-head-command-close pv-gallery-urls-textarea-close"></span></span>'+
                     '</span>');
                 getBody(document).appendChild(container);
 
@@ -14229,6 +14230,12 @@ ImgOps | https://imgops.com/#b#`;
                 eleMaps['head-command-drop-list-collect'].addEventListener('keydown',function(e){
                     e.stopPropagation();
                 },true);
+                let urlsTextareaCon = container.querySelector('.pv-gallery-urls-textarea');
+                container.querySelector('.pv-gallery-urls-textarea-close').addEventListener('click', function(e){
+                    urlsTextareaCon.style.display = "";
+                }, true);
+                this.urlsTextareaCon = urlsTextareaCon;
+                this.urlsTextarea = urlsTextareaCon.querySelector('textarea');
 
 
                 var slideShow={
@@ -17705,7 +17712,12 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 });
 
-                _GM_setClipboard(urls.join("\n"));
+                let copyData = urls.join("\n");
+
+                _GM_setClipboard(copyData);
+
+                this.urlsTextarea.value = copyData;
+                this.urlsTextareaCon.style.display = "block";
 
                 if (isAlert) {
                     this.showTips(i18n("copySuccess",urls.length));
@@ -17830,10 +17842,10 @@ ImgOps | https://imgops.com/#b#`;
                      white-space: nowrap;\
                      }\
                      span.pv-gallery-sidebar-toggle-content {\
-                     font-size: 50px!important;\
+                     font-size: 40px!important;\
                      }\
                      span.pv-gallery-sidebar-toggle {\
-                     height: 50px!important;\
+                     height: 40px!important;\
                      opacity: 0.6;\
                      border-radius: 0!important;\
                      }\
@@ -18933,6 +18945,31 @@ ImgOps | https://imgops.com/#b#`;
                     width: auto !important;\
                     min-width: 10%;\
                     min-height: 10%;\
+                    }\
+                    .pv-gallery-urls-textarea {\
+                    display: none;\
+                    position: fixed;\
+                    top: 10vh;\
+                    left: 10vw;\
+                    z-index: 100;\
+                    }\
+                    .pv-gallery-urls-textarea>textarea {\
+                    width: 80vw;\
+                    height: 80vh;\
+                    border: 10px solid #272727;\
+                    background: #ffffffee;\
+                    }\
+                    span.pv-gallery-urls-textarea-close {\
+                    height: 40px;\
+                    right: -30px;\
+                    top: -30px;\
+                    background-color: #272727;\
+                    color: white;\
+                    border-radius: 50%;\
+                    cursor: pointer;\
+                    }\
+                    span.pv-gallery-urls-textarea-close:hover {\
+                    background-color: black;\
                     }\
                     .pv-gallery-vertical-align-helper{\
                     display:inline-block;\
