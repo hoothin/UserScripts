@@ -19900,8 +19900,9 @@ ImgOps | https://imgops.com/#b#`;
                 */
                 if (this.data) {
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
-                    descriptionSpan.textContent = this.data.description || '';
-                    descriptionSpan.style.display = this.data.description ? "inline" : "none";
+                    let desc = (this.data.description || '').trim();
+                    descriptionSpan.textContent = desc;
+                    descriptionSpan.style.display = desc ? "inline" : "none";
                     this.descriptionSpan = descriptionSpan;
                 }
 
