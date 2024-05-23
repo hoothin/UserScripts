@@ -6817,6 +6817,7 @@
                     });
                 }
                 searchTypes = [];
+                this.historyTypeEle = null;
                 for (let siteConfig of searchData.sitesConfig) {
                     await this.createType(siteConfig);
                 }
@@ -9444,6 +9445,14 @@
                     }
                 };
                 let clickHandler = e => {
+                    if (self.waitForShowTips) {
+                        showTipsHandler(ele, 0);
+                        if (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        return false;
+                    }
                     clicked = true;
                     if (!targetUrlData) {
                         if (e) {
@@ -9815,10 +9824,11 @@
                         } catch(e) {debug(e)}
                     }
                 };
-                let showTipsHandler = async target => {
+                let showTipsHandler = async (target, time = 1000) => {
                     if (!target) return;
                     tipsData = null;
                     clearTimeout(self.requestShowTipsTimer);
+                    self.waitForShowTips = false;
                     self.tipsPos(target, tipsStr);
                     if (showTips) {
                         let url = await getUrl();
@@ -9830,10 +9840,12 @@
                                 setTips(target, url);
                             }
                         } else {
+                            self.waitForShowTips = true;
                             self.requestShowTipsTimer = setTimeout(() => {
                                 lastUrl = url;
                                 setTips(target, url);
-                            }, 300);
+                                self.waitForShowTips = false;
+                            }, time);
                         }
                     }
                 }
@@ -9844,7 +9856,7 @@
                     self.clingPos(ele, self.tips);
                 }, false);
                 ele.addEventListener('showTips', e => {
-                    showTipsHandler(targetElement);
+                    showTipsHandler(targetElement, 0);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     if (!tipsShowing) {
