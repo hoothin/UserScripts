@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.23.1
+// @version              2024.5.23.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13755,7 +13755,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
                     '<span class="pv-gallery-tipsWords"></span>'+
-                    '<span class="pv-gallery-urls-textarea"><textarea></textarea><span class="pv-gallery-head-command-close pv-gallery-urls-textarea-close"></span></span>'+
+                    '<span class="pv-gallery-urls-textarea"><textarea></textarea><span class="pv-gallery-head-command-close pv-gallery-urls-textarea-close"></span><span class="pv-gallery-urls-textarea-download">'+prefs.icons.downloadSvgBtn+'</span></span>'+
                     '</span>');
                 getBody(document).appendChild(container);
 
@@ -14231,11 +14231,16 @@ ImgOps | https://imgops.com/#b#`;
                     e.stopPropagation();
                 },true);
                 let urlsTextareaCon = container.querySelector('.pv-gallery-urls-textarea');
+                this.urlsTextareaCon = urlsTextareaCon;
+                this.urlsTextarea = urlsTextareaCon.querySelector('textarea');
                 container.querySelector('.pv-gallery-urls-textarea-close').addEventListener('click', function(e){
                     urlsTextareaCon.style.display = "";
                 }, true);
-                this.urlsTextareaCon = urlsTextareaCon;
-                this.urlsTextarea = urlsTextareaCon.querySelector('textarea');
+                container.querySelector('.pv-gallery-urls-textarea-download').addEventListener('click', function(e){
+                    if (!self.urlsTextarea.value) return;
+                    let blob = new Blob([self.urlsTextarea.value], { type: "text/plain" });
+                    saveAs(blob, (document.title || "PicviewerCEPlus") + ".txt");
+                }, true);
 
 
                 var slideShow={
@@ -18959,17 +18964,33 @@ ImgOps | https://imgops.com/#b#`;
                     border: 10px solid #272727;\
                     background: #ffffffee;\
                     }\
-                    span.pv-gallery-urls-textarea-close {\
+                    span.pv-gallery-urls-textarea-close,\
+                    span.pv-gallery-urls-textarea-download{\
                     height: 40px;\
-                    right: -30px;\
-                    top: -30px;\
+                    right: -25px;\
+                    top: -25px;\
                     background-color: #272727;\
                     color: white;\
                     border-radius: 50%;\
                     cursor: pointer;\
                     }\
-                    span.pv-gallery-urls-textarea-close:hover {\
+                    span.pv-gallery-urls-textarea-close:hover,\
+                    span.pv-gallery-urls-textarea-download:hover {\
                     background-color: black;\
+                    }\
+                    span.pv-gallery-urls-textarea-download {\
+                    position: absolute;\
+                    left: -25px;\
+                    right: unset;\
+                    width: 40px;\
+                    display: flex;\
+                    align-items: center;\
+                    justify-content: center;\
+                    }\
+                    span.pv-gallery-urls-textarea-download>svg {\
+                    height: 15px;\
+                    width: 15px;\
+                    fill: white;\
                     }\
                     .pv-gallery-vertical-align-helper{\
                     display:inline-block;\
