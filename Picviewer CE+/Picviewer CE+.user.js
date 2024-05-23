@@ -19753,6 +19753,7 @@ ImgOps | https://imgops.com/#b#`;
                     preButton.style.display = "none";
                     nextButton.style.display = "none";
                 }
+                this.imgStateBox = container.querySelector('.pv-pic-search-state');
                 this.imgState = container.querySelector('.pv-pic-search-state>span');
                 this.preButton = container.querySelector('.pv-pic-window-pre');
                 this.nextButton = container.querySelector('.pv-pic-window-next');
@@ -19902,6 +19903,7 @@ ImgOps | https://imgops.com/#b#`;
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
                     let desc = (this.data.description || '').trim();
                     descriptionSpan.textContent = desc;
+                    this.imgStateBox.title = desc;
                     descriptionSpan.style.display = desc ? "inline" : "none";
                     this.descriptionSpan = descriptionSpan;
                 }
@@ -24687,7 +24689,6 @@ ImgOps | https://imgops.com/#b#`;
                     if (action == 'enable' || action == 'search') return;
                     if (key == prefs.floatBar.keys[action]) {
                         floatBar.open(event, action);
-                        event.stopPropagation();
                         event.preventDefault();
                         return true;
                     }
