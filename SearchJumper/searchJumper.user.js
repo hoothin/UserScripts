@@ -12905,6 +12905,7 @@
                                 _GM_notification(i18n('startCache'));
                                 cacheImgManager(true);
                             }
+                            cacheFontManager();
                         }
                     }
                     preSwitch = searchData.prefConfig.cacheSwitch;
