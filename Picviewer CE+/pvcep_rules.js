@@ -364,7 +364,7 @@ var siteInfo = [
     },
     {
         name: '网易云音乐',
-        url: 'http://music.163.com/*',
+        url: 'https://music.163.com/*',
         ext: 'previous',
         getImage: function() {
             var oldsrc = this.src;
@@ -374,7 +374,7 @@ var siteInfo = [
                     return newsrc;
                 }
             }
-            if (oldsrc.match(/(.*)\?param=\d+y\d+$/)) {
+            if (oldsrc.match(/(.*)\?param=\d+y\d+/)) {
                 return RegExp.$1;
             }
         }
