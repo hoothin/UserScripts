@@ -13755,7 +13755,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
                     '<span class="pv-gallery-tipsWords"></span>'+
-                    '<span class="pv-gallery-urls-textarea"><textarea></textarea><span class="pv-gallery-head-command-close pv-gallery-urls-textarea-close"></span><span class="pv-gallery-urls-textarea-download">'+prefs.icons.downloadSvgBtn+'</span></span>'+
+                    '<span class="pv-gallery-urls-textarea"><textarea></textarea><span class="pv-gallery-urls-textarea-close"></span><span class="pv-gallery-urls-textarea-download">'+prefs.icons.downloadSvgBtn+'</span></span>'+
                     '</span>');
                 getBody(document).appendChild(container);
 
@@ -17811,6 +17811,14 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-trigger-close:hover{\
                     background-color:#333;\
                     }\
+                    span.pv-gallery-head-command-close{\
+                    position:absolute;\
+                    top:0;\
+                    width:40px;\
+                    border-left: 1px solid #333333;\
+                    background:transparent no-repeat center;\
+                    background-image:url("'+prefs.icons.loadingCancle+'");\
+                    }\
                     @media only screen and (max-width: 600px) {\
                      .pv-gallery-maximize-container>.maximizeChild{\
                      width:calc(50vw - 5px);\
@@ -17871,6 +17879,7 @@ ImgOps | https://imgops.com/#b#`;
                      position: fixed!important;\
                      right: 0!important;\
                      height: 29px!important;\
+                     background-color: black;\
                      }\
                     }\
                     @media only screen and (min-width: 799px) {\
@@ -18011,14 +18020,6 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-head-command > *{\
                     vertical-align:middle;\
-                    }\
-                    span.pv-gallery-head-command-close{\
-                    position:absolute;\
-                    top:0;\
-                    width:40px;\
-                    border-left: 1px solid #333333;\
-                    background:transparent no-repeat center;\
-                    background-image:url("'+prefs.icons.loadingCancle+'");\
                     }\
                     .pv-gallery-head-command-slide-show-countdown{\
                     font-size:0.8em;\
@@ -18967,9 +18968,8 @@ ImgOps | https://imgops.com/#b#`;
                     span.pv-gallery-urls-textarea-close,\
                     span.pv-gallery-urls-textarea-download{\
                     height: 40px;\
-                    right: -25px;\
                     top: -25px;\
-                    background-color: #272727;\
+                    background: #272727 no-repeat center;\
                     color: white;\
                     border-radius: 50%;\
                     cursor: pointer;\
@@ -18978,10 +18978,15 @@ ImgOps | https://imgops.com/#b#`;
                     span.pv-gallery-urls-textarea-download:hover {\
                     background-color: black;\
                     }\
+                    span.pv-gallery-urls-textarea-close {\
+                    position:absolute;\
+                    right: -25px;\
+                    width:40px;\
+                    background-image:url("'+prefs.icons.loadingCancle+'");\
+                    }\
                     span.pv-gallery-urls-textarea-download {\
                     position: absolute;\
                     left: -25px;\
-                    right: unset;\
                     width: 40px;\
                     display: flex;\
                     align-items: center;\
