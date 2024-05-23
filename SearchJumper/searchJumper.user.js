@@ -2197,7 +2197,7 @@
                    }
                  }
                  .search-jumper-tips>.loader {
-                     border-width: 0.25rem;
+                     border-width: 5px;
                      border-style: solid;
                      border-color: gainsboro gainsboro dodgerblue gainsboro;
                      border-radius: 50%;
@@ -2206,6 +2206,7 @@
                      float: left;
                      height: 25px;
                      margin-right: 10px;
+                     margin-top: 5px;
                      -webkit-animation: loader-rotate 1.5s linear infinite;
                      animation: loader-rotate 1.5s linear infinite;
                  }
