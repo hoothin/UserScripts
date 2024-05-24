@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵離綫下載 - 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.39.2
+// @version      1.9.39.3
 // @author       Hoothin
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
 // @match        *://*/*
@@ -458,8 +458,9 @@
                     if(!info.loginInfo || info.loginInfo.expires < new Date().getTime()){
                         _GM_xmlhttpRequest({
                             method: 'POST',
-                            url: 'https://user.mypikpak.com/v1/auth/signin',
+                            url: 'https://user.mypikpak.com/v1/auth/token',
                             data: JSON.stringify({
+                                "grant_type": "password",
                                 "client_id": "YNxT9w7GMdWvEOKa",
                                 "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
                                 "password": info.userPass,
@@ -1528,7 +1529,7 @@
             document.body.appendChild(configContent);
             configContent.innerHTML=`
                 <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-250px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
-                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
+                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="font-size: large;position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
                     <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">${i18n("disableOnSite")}</a>
                     <div style="text-align:center;font-size: 12px;margin-top: 38px;">${i18n("urlRegexpTips")}</div>
                     <textarea id="configInput" placeholder="http:.*\\.php\\?getRes=\\d+\n\\.doc$\n\\.xls$\n\\.ppt$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
@@ -1609,6 +1610,9 @@
                             if(allHide){
                                 alert(i18n("allDisableError"));
                                 return;
+                            }else if(siteConfig.name==="PikPak"){
+                                storage.setItem("pikpakUserInfo","");
+                                alert("PikPak account has been cleared");
                             }
                         }
                         storage.setItem("eoHide"+siteConfig.name, !eoHide);
