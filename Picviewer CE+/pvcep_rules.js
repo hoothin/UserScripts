@@ -1021,6 +1021,17 @@ var siteInfo = [
         s: '$1'
     },
     {
+        name: "weibo 视频",
+        url: /^https:\/\/(www\.|s\.|m\.)?weibo\.com/,
+        getExtSrc: function() {
+            if (this.classList.contains('hoverMask')) {
+                let video = this.parentNode.firstElementChild;
+                if (video && video.nodeName == 'VIDEO') return [video.poster, video.src];
+            }
+        },
+        video: /video$/
+    },
+    {
         name: "weibo",
         r: /(\.sinaimg\.(cn|com)\/)(?:bmiddle|orj360|mw\d+)/i,
         s: '$1large'
