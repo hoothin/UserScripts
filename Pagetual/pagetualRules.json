@@ -5569,7 +5569,7 @@
     "nextLink": "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
     "pageElement": "body>style,ol#b_results>li.b_algo",
     "waitElement": [
-        "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
+        "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl,#b_results>.b_no",
         ".siteicon>div,div.rms_iac"
     ],
     "pageBar": "pageBar.className='b_pageBar'"
