@@ -3290,6 +3290,7 @@
                      -webkit-text-fill-color: initial;
                      text-shadow: initial;
                      min-width: inherit;
+                     display: inline;
                  }
                  mark.searchJumper:before,
                  a.searchJumper:before,
@@ -8988,7 +8989,7 @@
                             return str.replace(keyToReg(key, "g"), (after ? after(value.replace(/\$/g, "$$$$")) : value.replace(/\$/g, "$$$$")));
                         }
                     };
-                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:[^h]/i.test(dataUrl));
+                    let needDecode = (!/^showTips:h/i.test(dataUrl) && /^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(dataUrl));
                     let keywordsU = "", keywordsL = "", keywordsR = "", keywordsSC = "", keywordsTC = "";
                     let customReplaceKeywords = str => {
                         let _str = str;
