@@ -2210,6 +2210,10 @@
                      -webkit-animation: loader-rotate 1.5s linear infinite;
                      animation: loader-rotate 1.5s linear infinite;
                  }
+                 .search-jumper-tips>.loader+font {
+                     font-size: 25px;
+                     line-height: 40px;
+                 }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -8984,7 +8988,7 @@
                             return str.replace(keyToReg(key, "g"), (after ? after(value.replace(/\$/g, "$$$$")) : value.replace(/\$/g, "$$$$")));
                         }
                     };
-                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(dataUrl));
+                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:[^h]/i.test(dataUrl));
                     let keywordsU = "", keywordsL = "", keywordsR = "", keywordsSC = "", keywordsTC = "";
                     let customReplaceKeywords = str => {
                         let _str = str;
@@ -9801,7 +9805,7 @@
                 }
                 let lastUrl, anylizing = false, tipsShowing = false;
                 let setTips = async (target, url, again) => {
-                    self.tipsPos(target, ele.dataset.name + "<br/><span class='loader'></span><font style='font-size:25px;'>Loading...</font>");
+                    self.tipsPos(target, ele.dataset.name + "<br/><span class='loader'></span><font>Loading...</font>");
                     tipsShowing = false;
                     if (url) {
                         try {
@@ -9836,7 +9840,7 @@
                         if (!url) return;
                         if (lastUrl === url) {
                             if (anylizing) {
-                                self.tipsPos(target, ele.dataset.name + "<br/><span class='loader'></span><font style='font-size:25px;'>Loading...</font>");
+                                self.tipsPos(target, ele.dataset.name + "<br/><span class='loader'></span><font>Loading...</font>");
                             } else {
                                 setTips(target, url);
                             }
