@@ -1,10 +1,10 @@
 ⚙️[Greasemonkey scripts 油猴腳本集](https://greasyfork.org/users/8227)
 ==========================
 
-![star](https://img.shields.io/github/stars/hoothin/UserScripts)
 ![license](https://img.shields.io/badge/License-MIT-red.svg)
 ![support](https://img.shields.io/badge/Support-Chrome|Firefox|Edge-blue.svg)
 [![Visitor Badge](https://visitor-badge.laobi.icu/badge?page_id=hoothin)](mailto:rixixi@gmail.com)
+[![Twitter Follow](https://img.shields.io/twitter/follow/hoothinwang.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=hoothinwang)
 
 ---
 + [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline)
