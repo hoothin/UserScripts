@@ -29,8 +29,9 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 
 <img src="customRule.png" height="100">
 
++ Match image src(no matter which site) with /pics\\.dmm\\.co\\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
+
 ``` json
-// Match image src(no matter which site) with /pics\.dmm\.co\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
 {
     "name": "Dmm",
     "src": "/pics\\.dmm\\.co\\.jp/i",
@@ -38,8 +39,9 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
     "s": "pl.jpg"
 }
 ```
++ Match site with /xxx\.com/ and replace image url from /us\\.xxx\\.com/\d+wm\//i to "previews.xxx.com/images/"
+
 ``` json
-// Match site with /xxx\.com/ and replace image url from /us\.xxx\.com\/\d+wm\//i to "previews.xxx.com/images/"
 {
    "name": "Example",
    "url": "/xxx\\.com/",
@@ -47,8 +49,9 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
    "s": "previews.xxx.com/images/"
 }
 ```
++ Add click-to-open for existing asiansister rule.
+
 ``` json
-//Add click-to-open for existing asiansister rule.
 {
     "name": "Asiansister",
     "clickToOpen": {
