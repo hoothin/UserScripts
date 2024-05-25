@@ -21354,7 +21354,7 @@ ImgOps | https://imgops.com/#b#`;
                     } else {
                         self.imgState.style.display = "";
                     }
-                    if (afterImgSize.w < 220 || afterImgSize.h < 220) {
+                    if (afterImgSize.w < 220) {
                         self.maxButton.style.opacity = "0";
                         self.closeButton.style.opacity = "0";
                     } else {
