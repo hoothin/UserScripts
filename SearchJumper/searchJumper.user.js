@@ -1047,6 +1047,38 @@
             return doc.body || doc.querySelector('body');
         }
 
+        function clientX(e) {
+            if (e.type.indexOf('touch') === 0) {
+                return e.changedTouches ? e.changedTouches[0].clientX : 0;
+            } else {
+                return e.clientX;
+            }
+        }
+
+        function clientY(e) {
+            if (e.type.indexOf('touch') === 0) {
+                return e.changedTouches ? e.changedTouches[0].clientY : 0;
+            } else {
+                return e.clientY;
+            }
+        }
+
+        function pageX(e) {
+            if (e.type.indexOf('touch') === 0) {
+                return e.changedTouches ? e.changedTouches[0].pageX : 0;
+            } else {
+                return e.pageX;
+            }
+        }
+
+        function pageY(e) {
+            if (e.type.indexOf('touch') === 0) {
+                return e.changedTouches ? e.changedTouches[0].pageY : 0;
+            } else {
+                return e.pageY;
+            }
+        }
+
         function getAllElementsByXpath(xpath, contextNode, doc) {
             doc = doc || document;
             contextNode = contextNode || doc;
@@ -2519,6 +2551,7 @@
                      color: black;
                      white-space: normal;
                      max-width: 640px;
+                     max-width: min(80vw,640px);
                      width: max-content;
                      line-height: ${35 * this.tipsZoom}px;
                      word-break: break-all;
@@ -2529,6 +2562,7 @@
                  }
                  .search-jumper-tips * {
                      max-width: 640px;
+                     max-width: min(80vw,640px);
                  }
                  .search-jumper-searchBar>.search-jumper-type {
                      padding: 0px;
@@ -3480,7 +3514,7 @@
                         bar.classList.remove("initShow");
                     };
                     let touchHandler = e => {
-                        if (this.touched) return;
+                        if (this.touched || this.funcKeyCall) return;
                         this.touched = true;
                         bar.classList.add('disable-pointer');
                         e.stopPropagation();
@@ -9855,7 +9889,18 @@
                         }
                     }
                 }
+                let touchend = false;
+                ele.addEventListener('touchend', e => {
+                    if (showTips) {
+                        touchend = true;
+                        self.waitForShowTips = true;
+                    }
+                }, false);
                 ele.addEventListener('mouseenter', e => {
+                    if (touchend) {
+                        touchend = false;
+                        return;
+                    }
                     showTipsHandler(ele);
                 }, false);
                 ele.addEventListener('mousemove', e => {
@@ -10375,13 +10420,13 @@
                     let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     let tileOffset = searchData.prefConfig.tileOffset || 0;
-                    let clientX = e.pageX - self.bar.clientWidth / 2 - (getComputedStyle(document.documentElement).position !== 'static' ? document.documentElement.offsetLeft : 0);
+                    let clientX = pageX(e) - self.bar.clientWidth / 2 - (getComputedStyle(document.documentElement).position !== 'static' ? document.documentElement.offsetLeft : 0);
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth + scrollLeft) clientX = viewWidth + scrollLeft - self.bar.clientWidth - 20;
-                    let clientY = e.pageY;
-                    if (e.clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20 + tileOffset);
+                    let clientY = pageY(e);
+                    if (clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20 + tileOffset);
                     else clientY += (20 + tileOffset);
-                    if (e.pageX < viewWidth / 2) {
+                    if (pageX(e) < viewWidth / 2) {
                         self.bar.style.left = clientX + scrollLeft + "px";
                         self.bar.style.transformOrigin = '0 0';
                     } else {
@@ -11945,22 +11990,6 @@
             let hideTimer;
             let touchStart = false;
 
-            let clientX = e => {
-                if (e.type.indexOf('mouse') === 0) {
-                    return e.clientX;
-                } else {
-                    return e.changedTouches[0].clientX;
-                }
-            };
-
-            let clientY = e => {
-                if (e.type.indexOf('mouse') === 0) {
-                    return e.clientY;
-                } else {
-                    return e.changedTouches[0].clientY;
-                }
-            };
-
             let mouseUpHandler = e => {
                 clearTimeout(hideTimer);
                 searchBar.bar.classList.remove("grabbing");
@@ -12258,6 +12287,16 @@
                             searchBar.con.classList.add("targetInput");
                         } else searchBar.con.classList.remove("targetInput");
                     }
+                    if (e.type === "touchend") {
+                        if (searchData.prefConfig.selectToShow) {
+                            setTimeout(() => {
+                                if (getSelectStr()) {
+                                    searchBar.showInPage(true, e);
+                                } else searchBar.waitForHide(1);
+                            }, 0);
+                        }
+                        return;
+                    }
                     waitForMouse = true;
                     setTimeout(() => {
                         waitForMouse = false;
@@ -12402,6 +12441,7 @@
                 };
                 document.addEventListener('mousedown', mouseDownHandler);
                 document.addEventListener('dblclick', mouseDownHandler);
+                document.addEventListener('touchend', mouseDownHandler);
                 document.addEventListener('contextmenu', e => {
                     if (shown) e.preventDefault();
                     shown = false;
