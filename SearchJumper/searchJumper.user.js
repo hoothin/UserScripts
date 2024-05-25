@@ -9860,7 +9860,7 @@
                                     tipsResult = `<div style="font-size: initial; line-height: initial; font-weight: normal; pointer-events: all; padding: 5px;"><style>.search-jumper-tips{padding:0;}</style>${tipsResult}</div>`;
                                     tipsShowing = true;
                                 }
-                                self.tips.style.transition = "none";
+                                //self.tips.style.transition = "none";
                                 self.tipsPos(target, tipsResult);
                             }
                         } catch(e) {debug(e)}
@@ -9899,9 +9899,19 @@
                     }
                 }, false);
                 ele.addEventListener('mouseenter', e => {
-                    if (touchend) {
-                        touchend = false;
-                        return;
+                    if (showTips) {
+                        if (touchend) {
+                            touchend = false;
+                            return;
+                        }
+                        if (hasWordParam) {
+                            let keywords = self.searchJumperInputKeyWords.value || getKeywords();
+                            if (!keywords) {
+                                self.waitForShowTips = true;
+                                self.tipsPos(ele, tipsStr);
+                                return;
+                            }
+                        }
                     }
                     showTipsHandler(ele);
                 }, false);
