@@ -452,6 +452,12 @@
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
                                 }
+                            },
+                            onerror: (e) => {
+                                _GM_notification(i18n("postError") + (e.statusText||e.error));
+                            },
+                            ontimeout: (e) => {
+                                _GM_notification(i18n("postError") + (e.statusText||e.error));
                             }
                         })
                     };
@@ -490,6 +496,12 @@
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
                                 }
+                            },
+                            onerror: (e) => {
+                                _GM_notification(i18n("postError") + (e.statusText||e.error));
+                            },
+                            ontimeout: (e) => {
+                                _GM_notification(i18n("postError") + (e.statusText||e.error));
                             }
                         })
                     }else{
