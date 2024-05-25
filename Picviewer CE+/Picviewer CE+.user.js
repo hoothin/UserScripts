@@ -12467,7 +12467,7 @@ ImgOps | https://imgops.com/#b#`;
         var tprules = [
             function(a) {
                 if (this.currentSrc && !this.src) this.src = this.currentSrc;
-                var oldsrc = this.src;
+                var oldsrc = this.currentSrc || this.src;
                 var newsrc = null;
 
                 if (this.getAttribute("_src") && !this.src) {
