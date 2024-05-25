@@ -6425,6 +6425,7 @@
                 //Search in page
 
                 let expandTypeHandler = e => {
+                    e.preventDefault();
                     let typeEle = self.searchJumperExpand.parentNode;
                     if (!typeEle || !typeEle.classList.contains('not-expand')) return;
                     typeEle.classList.remove('not-expand');
@@ -6444,6 +6445,7 @@
                     }, 251);
                 }, showTimer;
                 this.searchJumperExpand.addEventListener("click", expandTypeHandler);
+                this.searchJumperExpand.addEventListener("contextmenu", expandTypeHandler);
                 if (searchData.prefConfig.overOpen) {
                     this.searchJumperExpand.addEventListener('mouseenter', e => {
                         clearTimeout(showTimer);
