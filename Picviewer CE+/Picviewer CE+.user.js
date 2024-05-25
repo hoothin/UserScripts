@@ -17855,10 +17855,10 @@ ImgOps | https://imgops.com/#b#`;
                      white-space: nowrap;\
                      }\
                      span.pv-gallery-sidebar-toggle-content {\
-                     font-size: 40px!important;\
+                     font-size: 30px!important;\
                      }\
                      span.pv-gallery-sidebar-toggle {\
-                     height: 40px!important;\
+                     height: 30px!important;\
                      opacity: 0.6;\
                      border-radius: 0!important;\
                      }\
@@ -20406,6 +20406,10 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-toolbar {\
                     display: block;\
                     }\
+                    .pv-pic-window-container:hover>.pv-pic-window-max,\
+                    .pv-pic-window-container:hover>.pv-pic-window-close{\
+                    opacity: 0.5!important;\
+                    }\
                     span.pv-pic-window-close {\
                     cursor: pointer;\
                     position: absolute;\
@@ -20422,9 +20426,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: none;\
                     z-index: 2;\
                     }\
-                    .pv-pic-window-close:hover {\
+                    .pv-pic-window-container>.pv-pic-window-close:hover {\
                     background-color:red;\
-                    opacity: 1;\
+                    opacity: 1!important;\
                     }\
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-close {\
                     display: block;\
@@ -20461,9 +20465,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: none;\
                     z-index: 2;\
                     }\
-                    .pv-pic-window-max:hover {\
+                    .pv-pic-window-container>.pv-pic-window-max:hover {\
                     background-color:red;\
-                    opacity: 1;\
+                    opacity: 1!important;\
                     }\
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-max {\
                     display: block;\
@@ -21349,6 +21353,13 @@ ImgOps | https://imgops.com/#b#`;
                         self.imgState.style.display = "none";
                     } else {
                         self.imgState.style.display = "";
+                    }
+                    if (afterImgSize.w < 220 || afterImgSize.h < 220) {
+                        self.maxButton.style.opacity = "0";
+                        self.closeButton.style.opacity = "0";
+                    } else {
+                        self.maxButton.style.opacity = "";
+                        self.closeButton.style.opacity = "";
                     }
                     if (afterImgSize.w < 100 || afterImgSize.h < 100) {
                         self.preButton.style.left = "-36px";
@@ -22391,27 +22402,33 @@ ImgOps | https://imgops.com/#b#`;
 
                 var mode = matchedRule.getMode(imgSrc);
                 var media;
-                switch (mode) {
-                    case "video":
-                        media = document.createElement('video');
-                        media.style.width = 0;
-                        media.style.height = 0;
-                        media.controls = true;
-                        media.loop = true;
-                        media.autoplay = true;
-                        if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
-                        break;
-                    case "audio":
-                        media = document.createElement('audio');
-                        media.controls = true;
-                        media.autoplay = true;
-                        media.volume = 1;
-                        break;
-                    default:
-                        media = document.createElement('img');
-                        break;
+                if (this.buttonType === 'magnifier') {
+                    media = document.createElement('img');
+                    media.src = (mode === "video" || mode === "audio") ? this.data.imgSrc : imgSrc;
+                    mode = "";
+                } else {
+                    switch (mode) {
+                        case "video":
+                            media = document.createElement('video');
+                            media.style.width = 0;
+                            media.style.height = 0;
+                            media.controls = true;
+                            media.loop = true;
+                            media.autoplay = true;
+                            if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                            break;
+                        case "audio":
+                            media = document.createElement('audio');
+                            media.controls = true;
+                            media.autoplay = true;
+                            media.volume = 1;
+                            break;
+                        default:
+                            media = document.createElement('img');
+                            break;
+                    }
+                    media.src = imgSrc;
                 }
-                media.src = imgSrc;
 
                 var opts = {
                     error: function(e) {
