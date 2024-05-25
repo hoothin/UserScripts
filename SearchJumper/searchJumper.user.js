@@ -8103,10 +8103,10 @@
                             let si = se.querySelector("img");
                             if (se.style.display != "none") {
                                 shownSitesNum++;
-                                if (si && !si.src && si.dataset.src) {
-                                    si.src = si.dataset.src;
-                                    delete si.dataset.src;
-                                }
+                            }
+                            if (si && !si.src && si.dataset.src) {
+                                si.src = si.dataset.src;
+                                delete si.dataset.src;
                             }
                         });
                         if (shownSitesNum > (searchData.prefConfig.expandTypeLength || 12) && !searchData.prefConfig.expandType) {
