@@ -24061,14 +24061,40 @@ ImgOps | https://imgops.com/#b#`;
                     if (!target) return;
                 }
             }
-            var result, hasBg = node => {
+            let bgReg = /.*url\(\s*["']?([^ad\s'"].+?)["']?\s*\)([^'"]|$)/i;
+            let bgRegLong = /^\s*url\(\s*["']?([^ad\s'"].+?)["']?\s*\)([^'"]|$)/i;
+            let result, targetBg, hasBg = node => {
                 if(node.nodeName.toUpperCase() == "HTML" || node.nodeName == "#document"){
                     return false;
                 }
+                if (node.clientWidth <= prefs.floatBar.minSizeLimit.w || node.clientHeight <= prefs.floatBar.minSizeLimit.h) {
+                    return false;
+                }
+                targetBg = "";
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
-                let bg = node && nodeStyle.backgroundRepeatX != "repeat" && nodeStyle.backgroundRepeatY != "repeat" && nodeStyle.backgroundImage;
-                if (!bg || bg == "none") return false;
-                return bg.length > 500 || (node.clientWidth > prefs.floatBar.minSizeLimit.w && node.clientHeight > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^ad\s'"]/.test(bg));
+
+                let bg = nodeStyle.backgroundRepeatX != "repeat" && nodeStyle.backgroundRepeatY != "repeat" && nodeStyle.backgroundImage;
+                if (bg && bg !== "none") {
+                    targetBg = nodeStyle.backgroundImage.match(bg.length > 500 ? bgRegLong : bgReg);
+                }
+                if (!targetBg) {
+                    nodeStyle = unsafeWindow.getComputedStyle(node, "::before");
+                    bg = nodeStyle.backgroundRepeatX != "repeat" && nodeStyle.backgroundRepeatY != "repeat" && nodeStyle.backgroundImage;
+                    if (bg && bg !== "none") {
+                        targetBg = nodeStyle.backgroundImage.match(bg.length > 500 ? bgRegLong : bgReg);
+                    }
+                }
+                if (!targetBg) {
+                    nodeStyle = unsafeWindow.getComputedStyle(node, "::after");
+                    bg = nodeStyle.backgroundRepeatX != "repeat" && nodeStyle.backgroundRepeatY != "repeat" && nodeStyle.backgroundImage;
+                    if (bg && bg !== "none") {
+                        targetBg = nodeStyle.backgroundImage.match(bg.length > 500 ? bgRegLong : bgReg);
+                    }
+                }
+                if (targetBg) {
+                    targetBg = targetBg[1].replace(/\\"/g, '"');
+                }
+                return targetBg;
             };
             if (target.nodeName.toUpperCase() != 'IMG' && matchedRule.getExtSrc) {
                 let nsrc;
@@ -24100,8 +24126,6 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (target.nodeName.toUpperCase() != 'IMG') {
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
-                    var targetBg;
-                    var bgReg = /.*url\(\s*["']?(.+?)["']?\s*\)([^'"].*|$)/i;
                     var broEle, broImg;
                     if (target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
                         broEle = target.previousElementSibling;
@@ -24124,7 +24148,6 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                     if (prefs.floatBar.listenBg && hasBg(target)) {
-                        targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
@@ -24150,7 +24173,6 @@ ImgOps | https://imgops.com/#b#`;
                     } else if (target.children.length == 1 && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
-                        targetBg = unsafeWindow.getComputedStyle(broEle).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
@@ -24170,7 +24192,6 @@ ImgOps | https://imgops.com/#b#`;
                             target = target.parentNode;
                         } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
                             target = target.parentNode;
-                            targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                             let src = targetBg, nsrc = src, noActual = true, type = "scale";
                             result = {
                                 src: nsrc,
@@ -24221,7 +24242,6 @@ ImgOps | https://imgops.com/#b#`;
                                 target = checkEle;
                                 break;
                             } else if (prefs.floatBar.listenBg && hasBg(checkEle)) {
-                                targetBg = unsafeWindow.getComputedStyle(checkEle).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                                 let src = targetBg, nsrc = src, noActual = true, type = "scale";
                                 result = {
                                     src: nsrc,
@@ -24246,7 +24266,6 @@ ImgOps | https://imgops.com/#b#`;
                                 break;
                             } else if (prefs.floatBar.listenBg && hasBg(ele)) {
                                 target = ele;
-                                targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1").replace(/\\"/g, '"');
                                 let src = targetBg, nsrc = src, noActual = true, type = "scale";
                                 result = {
                                     src: nsrc,
