@@ -1580,5 +1580,18 @@ var siteInfo = [
             url: ".showcase__link",
             query: "img[fetchpriority]"
         }
+    },
+    {
+        name: "imgtraffic",
+        r: /^(https:\/\/imgtraffic\.com\/\d+)s\//,
+        s: "$1/"
+    },
+    {
+        name: "dailymail",
+        url: /^https:\/\/(www\.)?dailymail\.co\.uk\//i,
+        xhr: {
+            url: "a[href*='/article']",
+            query: "video,img.img-share[data-src]"
+        }
     }
 ];
