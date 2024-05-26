@@ -6798,11 +6798,14 @@
            color: red;
          }
          .pagetual_pageBar a:hover>span {
-           opacity: 1;
+           opacity: 1!important;
          }
          .pagetual_pageBar span.prevScreen,
          .pagetual_pageBar span.nextScreen {
            display: block!important;
+           top: unset !important;
+           padding: unset !important;
+           opacity: 0!important;
          }
          .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -${rulesData.opacity == 1 ? 31 : 30}px!important;
@@ -6815,6 +6818,10 @@
            height: 30px;
            margin-left: calc(50% - 23px);
            display: block!important;
+         }
+         .pagetual_pageBar span.refreshRing>svg {
+           background: white;
+           border-radius: 50%;
          }
          .pagetual_pageBar a:hover>span.refreshRing {
            opacity: 0.3;
@@ -7719,6 +7726,7 @@
                 pageBar.style.lineHeight = "20px";
                 pageBar.style.boxShadow = "";
                 pageBar.style.border = "";
+                pageBar.style.width = "";
                 pageBar.style.maxWidth = "unset";
                 pageBar.style.flex = "auto";
                 let inTd = document.createElement("div");
