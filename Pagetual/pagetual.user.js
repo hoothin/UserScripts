@@ -2301,7 +2301,7 @@
         }
 
         async getPage(doc, exist) {
-            if (document.documentElement.className.indexOf('discourse') !== -1) return {};
+            if (document.documentElement.className.indexOf && document.documentElement.className.indexOf('discourse') !== -1) return {};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
@@ -5583,6 +5583,7 @@
                             break;
                         }
                     }
+                    rulesData.ruleVersion = 0;
                     storage.setItem("rulesData", rulesData);
                     ruleParser.rules = ruleParser.rules.filter(item => {return item.from != this.ruleUrl.id});
                     storage.setItem("rules", ruleParser.rules);
