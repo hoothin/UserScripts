@@ -12494,7 +12494,7 @@ ImgOps | https://imgops.com/#b#`;
                 } else if (this.srcset) {
                     var srcs = this.srcset.split(/[xw],/i), largeSize = -1;
                     srcs.forEach(srci => {
-                        let srcInfo = srci.trim().split(" "), curSize = parseInt(srcInfo[1] || 0);
+                        let srcInfo = srci.trim().split(/\s+/), curSize = parseInt(srcInfo[1] || 0);
                         if ((srcInfo[1] || !oldsrc) && curSize > largeSize) {
                             largeSize = curSize;
                             newsrc = srcInfo[0];
