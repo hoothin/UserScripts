@@ -9300,7 +9300,7 @@
                         } else {
                             let promptStr = false;
                             let getTargetUrl = () => {
-                                if (self.stopInput) return false;
+                                if (self.stopInput || showTips) return false;
                                 if (promptStr === false) {
                                     promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
                                     if (promptStr) {
@@ -10327,6 +10327,9 @@
                 this.bar.classList.remove("search-jumper-isTargetLink");
                 this.bar.classList.remove("search-jumper-isTargetPage");
                 this.bar.classList.remove("initShow");
+                this.tips.style.opacity = 0;
+                this.tips.style.display = "none";
+                this.tips.innerHTML = createHTML("");
                 setTimeout(() => {this.bar.classList.add("initShow");}, 10);
                 let typeSel = "";
                 if (selectStr) {
