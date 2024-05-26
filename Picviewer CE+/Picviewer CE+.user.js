@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1382866/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1383350/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1372505/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -19823,7 +19823,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 };
                 this.curIndex = -1;
-                if (this.data && this.data.all && this.data.all.length) {
+                if (this.data && this.data.all && this.data.all.length > 1) {
                     for (let i = 0; i < this.data.all.length; i++) {
                         if (this.data.all[i] == this.data.src) {
                             this.curIndex = i;
@@ -20198,7 +20198,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.nextButton.style.display = "none";
             },
             switchImage:async function(fw){
-                if (this.data && this.data.all && this.data.all.length) {
+                if (this.data && this.data.all && this.data.all.length > 1) {
                     let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
                     this.remove();
                     let imgData = this.data;
