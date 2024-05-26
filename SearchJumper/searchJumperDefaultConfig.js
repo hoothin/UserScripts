@@ -224,7 +224,8 @@ switch (lang) {
                     },
                     {
                         "name": "百度小窗搜索",
-                        "url": "showTips:https://m.baidu.com/s?word=%s\n<iframe src=\"{url}\" style=\" width: 600px; height: 400px; \">\n</iframe>\n<style>\n.search-jumper-tips{\n    background: unset;\n    padding: 0;\n}\n</style>"
+                        "url": "showTips:\n<iframe src=\"https://m.baidu.com/s?word=%s\" style=\" width: 600px; height: 400px; \">\n</iframe>\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 600px;\n    height: 400px;\n}\n</style>",
+                        "icon": "https://m.baidu.com/favicon.ico"
                     },
                     {
                         "name": "百度站内搜",
