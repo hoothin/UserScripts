@@ -16587,7 +16587,7 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.dataset.srcs=item.srcs?item.srcs.join(","):"";
                             //if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || (item.img ? (item.img.title || item.img.alt || "") : ""));
-                            spanMark.dataset.thumbSrc=item.imgSrc;
+                            spanMark.dataset.thumbSrc=(item.img && (item.img.currentSrc || item.img.src)) || item.imgSrc;
                             let title = item.img ? (item.img.title || item.img.alt || "").slice(-80) : "";
                             if (title) {
                                 if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
