@@ -3762,6 +3762,7 @@
                             link = reMatch[2].indexOf("l") != -1;
                         }
                         if (!showWords) showWords = word;
+                        if (self.highlightSpans[showWords]) return;
                         result.push({content: word, showWords: showWords, isRe: isRe, link: link, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup, showTips: showTips, init: init});
                         self.curWordIndex++;
                     });
@@ -5855,6 +5856,10 @@
                 this.con.classList.add("in-input");
                 this.searchInput.value = "";
                 this.contentContainer.appendChild(this.filterSites);
+                let selStr = getSelectStr();
+                if (selStr) {
+                    this.searchJumperInputKeyWords.value = selStr;
+                }
                 if (this.filterSitesTab.checked) {
                     this.con.classList.remove("in-find");
                     if (searchData.prefConfig.defaultPicker) {
@@ -5865,10 +5870,6 @@
                         this.searchJumperInputKeyWords.focus();
                         this.searchJumperInputKeyWords.select();
                     } else {
-                        let selStr = getSelectStr();
-                        if (selStr) {
-                            this.searchJumperInputKeyWords.value = selStr;
-                        }
                         this.searchInput.focus();
                     }
                     let firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
@@ -5887,7 +5888,6 @@
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.con.classList.add("in-find");
-                    let selStr = getSelectStr();
                     this.searchJumperInPageInput.focus();
                     setTimeout(() => {
                         if (selStr) {
@@ -6033,11 +6033,7 @@
                         if (isPage) {
                             siteBtn.setAttribute("target", selfTab ? "_self" : "_blank");
                         }
-                        if (!isPage || selfTab) {
-                            siteBtn.click();
-                        } else {
-                            _GM_openInTab(siteBtn.href, {active: true});
-                        }
+                        siteBtn.click();
                         if (isPage) {
                             siteBtn.setAttribute("target", siteBtn.dataset.target == 1 ? "_blank" : "_self");
                         }
@@ -6934,7 +6930,7 @@
 
             setInPageWords(inPageWords, cb) {
                 this.initInPageWords.push(inPageWords);
-                this.searchInPageTab.checked = true;
+                //this.searchInPageTab.checked = true;
                 this.con.classList.add("in-find");
                 let beginHandler = () => {
                     setTimeout(async () => {
