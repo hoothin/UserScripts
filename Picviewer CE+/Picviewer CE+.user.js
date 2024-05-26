@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1383383/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1383421/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1383389/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -15775,7 +15775,8 @@ ImgOps | https://imgops.com/#b#`;
                         let loadImg = () => {
                             self.showTips("Loading image...");
 
-                            let mode = matchedRule.getMode(img.dataset.src);
+                            let imgSrc = img.dataset.src;
+                            let mode = matchedRule.getMode(imgSrc);
                             let media;
                             switch (mode) {
                                 case "video":
@@ -15785,19 +15786,21 @@ ImgOps | https://imgops.com/#b#`;
                                     media.controls = true;
                                     media.loop = true;
                                     media.autoplay = true;
-                                    if (img.dataset.src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                                    imgSrc = imgSrc.replace(/^video:/, "");
+                                    if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                                     break;
                                 case "audio":
                                     media = document.createElement('audio');
                                     media.controls = true;
                                     media.autoplay = true;
                                     media.volume = 1;
+                                    imgSrc = imgSrc.replace(/^audio:/, "");
                                     break;
                                 default:
                                     break;
                             }
                             if (media) {
-                                media.src = img.dataset.src;
+                                media.src = imgSrc;
                                 let loaded = function() {
                                     media.play();
                                     self.showTips("");
@@ -15807,7 +15810,7 @@ ImgOps | https://imgops.com/#b#`;
                                 media.addEventListener('loadeddata', loaded);
                                 media.load();
                             } else {
-                                imgReady(img.dataset.src, {
+                                imgReady(imgSrc, {
                                     ready: function() {
                                         self.showTips("");
                                         popupImgWin(this);
@@ -16155,12 +16158,14 @@ ImgOps | https://imgops.com/#b#`;
                     media.controls = true;
                     media.loop = true;
                     media.autoplay = true;
+                    src = src.replace(/^video:/, "");
                     if (src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                 } else if (isAudioLink(src)) {
                     media = document.createElement('audio');
                     media.controls = true;
                     media.autoplay = true;
                     media.volume = 1;
+                    src = src.replace(/^audio:/, "");
                 }
                 if (media) {
                     media.src = src;
@@ -22415,6 +22420,7 @@ ImgOps | https://imgops.com/#b#`;
                             media.controls = true;
                             media.loop = true;
                             media.autoplay = true;
+                            imgSrc = imgSrc.replace(/^video:/, "");
                             if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                             break;
                         case "audio":
@@ -22422,6 +22428,7 @@ ImgOps | https://imgops.com/#b#`;
                             media.controls = true;
                             media.autoplay = true;
                             media.volume = 1;
+                            imgSrc = imgSrc.replace(/^audio:/, "");
                             break;
                         default:
                             media = document.createElement('img');
@@ -23440,7 +23447,7 @@ ImgOps | https://imgops.com/#b#`;
         const audioExtensions = new Set(['flac', 'm4a', 'mp3', 'oga', 'ogg', 'opus', 'wav']);
 
         function isVideoLink(url) {
-            if (url.indexOf('.video') !== -1)
+            if (url.indexOf('.video') !== -1 || url.indexOf('video:') === 0)
                 return true;
 
             url = url.replace(/.gif(\?width=\d*&|\?)format=mp4/, '.mp4?');
@@ -23454,6 +23461,8 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function isAudioLink(url) {
+            if (url.indexOf('.audio') !== -1 || url.indexOf('audio:') === 0)
+                return true;
             if (url.lastIndexOf('?') > 0)
                 url = url.substring(0, url.lastIndexOf('?'));
             const ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
