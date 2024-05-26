@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.45
+// @version      1.9.37.46
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -204,6 +204,7 @@
                 disableAutoScroll: "Stop Auto Scroll",
                 enableAutoScroll: "Enable Auto Scroll",
                 toggleAutoScroll: "Toggle Auto Scroll",
+                ruleRequest: "Rule Request",
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
@@ -326,6 +327,7 @@
                 disableAutoScroll: "停止自动滚动",
                 enableAutoScroll: "开启自动滚动",
                 toggleAutoScroll: "自动滚动开关",
+                ruleRequest: "适配请求",
                 page: "Page ",
                 prevPage: "上一页",
                 nextPage: "下一页",
@@ -448,6 +450,7 @@
                 disableAutoScroll: "停止自動滾動",
                 enableAutoScroll: "開啟自動滾動",
                 toggleAutoScroll: "自動滾動開關",
+                ruleRequest: "適配請求",
                 page: "Page ",
                 prevPage: "上一頁",
                 nextPage: "下一頁",
@@ -570,6 +573,7 @@
                 disableAutoScroll: "自動スクロールを停止します",
                 EnableAutoScroll: "自動スクロールを有効にする",
                 toggleAutoScroll: "自動スクロールの切り替え",
+                ruleRequest: "ルール要求",
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
@@ -692,6 +696,7 @@
                 disableAutoScroll: "Остановить автоматическую прокрутку",
                 enableAutoScroll: "Включить автопрокрутку",
                 toggleAutoScroll: "Переключить автопрокрутку",
+                ruleRequest: "Запрос правил",
                 page: "Страница ",
                 prevPage: "Предыдущая страница",
                 nextPage: "Следующая страница",
@@ -4595,6 +4600,7 @@
                 <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
                 <button id="autoScroll" class="command" title="${i18n("toggleAutoScroll")}" type="button"></button>
+                <button id="ruleRequest" class="command" title="${i18n("ruleRequest")}" type="button">${i18n("ruleRequest")}</button>
                 <div>
                   <textarea class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
@@ -4661,6 +4667,10 @@
             let addOtherProp = frame.querySelector("#addOtherProp");
             let addNextSelector = frame.querySelector("#addNextSelector");
             let addPageSelector = frame.querySelector("#addPageSelector");
+            let ruleRequestBtn = frame.querySelector("#ruleRequest");
+            ruleRequestBtn.addEventListener("click", e => {
+                _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?labels=Pagetual&template=custom-rule-request.md&title=Request%20Pagetual%20support%20for%20" + location.hostname, {active: true});
+            }, true);
             autoScrollBtn.addEventListener("click", e => {
                 self.close();
                 autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), autoScrollRate)) || 0;
