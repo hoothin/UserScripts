@@ -789,6 +789,15 @@ var siteInfo = [
                         });
                     }
                     return apiUrl + "/gifs/" + a.href.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
+                } else if (p[1] && p[1].classList.contains("search-result")) {
+                    let link = p[1].querySelector("a.search-link");
+                    if (link && link.href) {
+                        if (/\/\/v.redd\.it\/\w+\/?$/.test(link.href)) {
+                            return link.href + '/DASHPlaylist.mpd';
+                        } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(link.href)) {
+                            return link.href;
+                        }
+                    }
                 }
             },
             headers: (url, self) => {
