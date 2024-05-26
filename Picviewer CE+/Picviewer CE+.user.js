@@ -25682,7 +25682,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         });
         _GM_registerMenuCommand(i18n("ruleRequest"), () => {
-            _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?template=custom-rule-request.md&title=Request%20Picviewer%20CE%2B%20support%20for%20" + location.hostname, {active:true});
+            _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?labels=Picviewer%20CE%2B&template=custom-rule-request.md&title=Request%20Picviewer%20CE%2B%20support%20for%20" + location.hostname, {active:true});
         });
 
         function initKeyInputs() {
