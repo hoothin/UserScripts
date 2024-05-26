@@ -1593,5 +1593,13 @@ var siteInfo = [
             url: "a[href*='/article']",
             query: "video,img.img-share[data-src]"
         }
+    },
+    {
+        name: "zerochan",
+        url: /^https:\/\/(www\.)?zerochan\.net\//i,
+        xhr: {
+            url: "a.thumb",
+            query: "#large>a.preview"
+        }
     }
 ];
