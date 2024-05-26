@@ -1601,5 +1601,15 @@ var siteInfo = [
             url: "a.thumb",
             query: "#large>a.preview"
         }
+    },
+    {
+        name: "rutracker",
+        url: /^https:\/\/rutracker\.net\//i,
+        getImage: function(a) {
+            if (a && /fastpic\.ru/.test(a.href)) {
+                let matched = a.href.match(/\.(\w+)\.html(&|$)/);
+                return matched && this.src.replace("/thumb/", "/big/").replace(/\w+(\?.*|$)/, matched[1]);
+            }
+        }
     }
 ];
