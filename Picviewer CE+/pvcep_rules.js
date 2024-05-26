@@ -5,30 +5,6 @@ PVCEP - Rules for Picviewer CE+
 (c) 2021-2024 Hoothin <rixixi [at] gmail.com>
 Licenced under the MIT license.
 
-最少僅需
-{
- name: 站點名
- r: 圖片地址正則或者待替換字符串，如果是陣列則代表多個替換規則
- s: 替換目標字符串
-}
-或者
-{
- name: 站點名
- getImage(a, p): 指向圖片時的地址替換函數，a 為第一個父級A元素，p 為所有父級元素的陣列，詳情見下方例子
-}
-其他參數項按需添加即可。
-需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定 url 之後方可使用
-xhr 為內頁圖片獲取屬性。
-    1. 首先使用 xhr.url() 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁。
-    2. 透過 xhr 獲取圖片。
-        2.1 其中 xhr.query 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
-        2.2 xhr.caption 為圖片的文字描述，抓取方式同上
-如果鼠標指向對象非圖片，可使用 getExtSrc 生成想要的圖片地址，詳情見下方 youtube 例子
-ext 為滑鼠指向非圖片元素時抓取附近圖片元素的方式，"previous" 代表檢測上一個兄弟節點，"previous-2" 代表檢測前數第二個兄弟節點，"next" 代表檢測下一個兄弟節點
-getExtSrc 為根據非圖片元素直接獲取圖片 URL 的方法
-
-#####################################################################################
-
 minimum
 {
   name: site name
