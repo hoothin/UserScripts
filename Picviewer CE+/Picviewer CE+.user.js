@@ -24214,39 +24214,7 @@ ImgOps | https://imgops.com/#b#`;
                                 noActual:noActual,
                                 img: target
                             };
-                        }/*else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
-                        var imgChildren=[],availableImgs = [];
-                        [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
-                            var imgStyle=unsafeWindow.getComputedStyle(img);
-                            if(imgStyle.display != "none"){
-                                imgChildren.push(img);
-                                if(imgStyle.width > 200 || imgStyle.position != "absolute"){
-                                    availableImgs.push(img);
-                                }
-                            }
-                        });
-                        if(imgChildren.length == 1){
-                            target=imgChildren[0];
-                        }else if(availableImgs.length == 1){
-                            target=availableImgs[0];
-                        }else if(imgChildren.length == 0 && unsafeWindow.getComputedStyle(target.parentNode).position=="absolute"){
-                            imgChildren=[];availableImgs = [];
-                            [].forEach.call(target.parentNode.parentNode.querySelectorAll('img'),function(img){
-                                var imgStyle=unsafeWindow.getComputedStyle(img);
-                                if(imgStyle.display != "none"){
-                                    imgChildren.push(img);
-                                    if(imgStyle.width > 200 || imgStyle.position != "absolute"){
-                                        availableImgs.push(img);
-                                    }
-                                }
-                            });
-                            if(imgChildren.length == 1){
-                                target=imgChildren[0];
-                            }else if(availableImgs.length == 1){
-                                target=availableImgs[0];
-                            }
                         }
-                    }*/
                     }
                     if (!result) {
                         let checkEle = target;
@@ -24268,7 +24236,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         }
                     }
-                    if (!result && document.elementsFromPoint && target.nodeName.toUpperCase() != 'A') {
+                    if (!result && document.elementsFromPoint) {
                         let elements = document.elementsFromPoint(clientX, clientY);
                         let checkLen = Math.min(elements.length, 5);
                         for (let i = 0; i < checkLen; i++) {
