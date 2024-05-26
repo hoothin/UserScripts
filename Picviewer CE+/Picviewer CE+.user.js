@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1383421/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1383449/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1383389/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12463,6 +12463,8 @@ ImgOps | https://imgops.com/#b#`;
             firstEngine:"Tineye"
         };
 
+        var matchedRule,
+            _URL=location.href.slice(0, 500);
         const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
         var tprules = [
             function(a) {
@@ -12470,7 +12472,9 @@ ImgOps | https://imgops.com/#b#`;
                 var oldsrc = this.currentSrc || this.src;
                 var newsrc = null;
 
-                if (this.getAttribute("_src") && !this.src) {
+                if (matchedRule.lazyAttr) {
+                    newsrc = this.getAttribute(matchedRule.lazyAttr);
+                } else if (this.getAttribute("_src") && !this.src) {
                     newsrc = this.getAttribute("_src");
                 } else {
                     for (let i in lazyImgAttr) {
@@ -23263,9 +23267,6 @@ ImgOps | https://imgops.com/#b#`;
 
         // ------------------- run -------------------------
 
-        var matchedRule,
-            _URL=location.href.slice(0, 500);
-
         function pretreatment(img, fetchImg) {
             if (img.removeAttribute) img.removeAttribute("loading");
             if (img.nodeName.toUpperCase() != "IMG" || (!fetchImg && img.src && !/^data/.test(img.src))) return;
@@ -23670,14 +23671,16 @@ ImgOps | https://imgops.com/#b#`;
                 if (Array.isArray(rule.r)) {//r最多一层
                     for (var j = 0; j < rule.r.length; j++) {
                         var _r = rule.r[j];
-                        if (_r && _r.test && _r.test(src)) {
+                        if (_r) {
                             if (Array.isArray(rule.s)) {//s对上r最多两层
                                 var _s = rule.s[j];
                                 newSrc = this.replace(src, _r, _s);
                             } else {
                                 newSrc = this.replace(src, _r, rule.s);
                             }
-                            break;
+                            if (newSrc && newSrc.length && newSrc !== src) {
+                                break;
+                            }
                         }
                     }
                 } else {
