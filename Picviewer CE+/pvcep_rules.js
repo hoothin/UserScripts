@@ -1611,5 +1611,17 @@ var siteInfo = [
                 return matched && this.src.replace("/thumb/", "/big/").replace(/\w+(\?.*|$)/, matched[1]);
             }
         }
+    },
+    {
+        name: "rule34.paheal",
+        url: /^https:\/\/rule34\.paheal\.net\//,
+        getImage: function(a, p) {
+            let result = this.src.match(/.*\/_thumbs\/((..)(..).*)\//);
+            if (result) {
+                result = `https://r34i.paheal-cdn.net/${result[2]}/${result[3]}/${result[1]}`;
+                if (p[1] && p[1].dataset.ext === "mp4") result = "video:" + result;
+                return result;
+            }
+        }
     }
 ];
