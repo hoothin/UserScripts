@@ -19,7 +19,7 @@ Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger pict
 
 There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
 
-If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
+If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
 Need more rules for peculiar sites? feel free to pull requests or open issues.
 
