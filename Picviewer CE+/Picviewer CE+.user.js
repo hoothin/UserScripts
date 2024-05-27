@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.26.1
+// @version              2024.5.27.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12506,9 +12506,9 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
-        const imageReg = /^\s*(http|ftp).*\.(avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|png|apng|svg|svgz|webp|xbm|dib|3gpp|m4v|mkv|mp4|ogv|webm|flac|m4a|mp3|oga|ogg|opus|wav)(&|\?|#|\/?$|\s)/i;
+        const imageReg = /^\s*(http|ftp).*\.(avi|avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|a?png|svgz?|webp|xbm|dib|divx|3gpp|m3u|m4v|mkv|mp4|mpe?g|ogv|webm|flv|flac|m4a|m4b|mpa|mp3|aac|cda|oga|ogg|opus|wma|wav)(&|\?|#|\/?$|\s)/i;
 
-        const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)/i;
+        const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)|\.reddit\.com\/r\/PicviewerCE/i;
 
         //图标
         prefs.icons={
@@ -14536,7 +14536,7 @@ ImgOps | https://imgops.com/#b#`;
                             {
                                 let fileInput = document.createElement("input");
                                 fileInput.type = "file";
-                                fileInput.accept = "image/*";
+                                fileInput.accept = "image/*,video/*,audio/*";
                                 fileInput.setAttribute("multiple","");
                                 fileInput.addEventListener("change", e => {
                                     const files = e.target.files;
@@ -14545,17 +14545,29 @@ ImgOps | https://imgops.com/#b#`;
                                             let file = files.item(i);
                                             file = files[i];
                                             let src = URL.createObjectURL(file);
-                                            let img=document.createElement('img');
-                                            img.src=src;
+                                            let media, imgSrc;
+                                            if (file.type.indexOf("image") === 0) {
+                                                media = document.createElement('img');
+                                                imgSrc = src;
+                                            } else if (file.type.indexOf("audio") === 0) {
+                                                media = document.createElement('audio');
+                                                src = "audio:" + src;
+                                                imgSrc = prefs.icons.actual;//audiosvg
+                                            } else {
+                                                media = document.createElement('video');
+                                                src = "video:" + src;
+                                                imgSrc = prefs.icons.actual;//videosvg
+                                            }
+                                            media.src = imgSrc;
                                             var result = {
                                                 src: src,
                                                 type: 'force',
-                                                imgSrc: src,
+                                                imgSrc: imgSrc,
 
                                                 noActual:true,
                                                 description: '',
 
-                                                img: img
+                                                img: media
                                             };
                                             self.data.push(result);
                                             self._appendThumbSpans([result]);
@@ -16154,7 +16166,7 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 if (!src) return;
-                let media;
+                let media, mediaSrc = src;
                 if (isVideoLink(src)) {
                     media = document.createElement('video');
                     media.style.width = 0;
@@ -16162,17 +16174,17 @@ ImgOps | https://imgops.com/#b#`;
                     media.controls = true;
                     media.loop = true;
                     media.autoplay = true;
-                    src = src.replace(/^video:/, "");
+                    mediaSrc = mediaSrc.replace(/^video:/, "");
                     if (src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                 } else if (isAudioLink(src)) {
                     media = document.createElement('audio');
                     media.controls = true;
                     media.autoplay = true;
                     media.volume = 1;
-                    src = src.replace(/^audio:/, "");
+                    mediaSrc = mediaSrc.replace(/^audio:/, "");
                 }
                 if (media) {
-                    media.src = src;
+                    media.src = mediaSrc;
                     let loaded = function() {
                         var index = allLoading.indexOf(src);
                         if (index != -1) {
@@ -16241,16 +16253,29 @@ ImgOps | https://imgops.com/#b#`;
                 if(!/^(img|video|audio)$/i.test(img.nodeName)){//先读取。
                     this.getImg(img);
                     return;
-                };
+                }
 
                 if(this.img && this.img.parentNode){
                     this.img.parentNode.removeChild(this.img);
-                };
+                }
 
-                var imgNaturalSize={
-                    h:img.naturalHeight || img.videoHeight || 100,
-                    w:img.naturalWidth || img.videoWidth || 100,
-                };
+                var imgNaturalSize;
+                if (/^video$/i.test(img.nodeName)) {
+                    imgNaturalSize = {
+                        h:img.videoHeight || 200,
+                        w:img.videoWidth || 200,
+                    };
+                } else if (/^audio$/i.test(img.nodeName)) {
+                    imgNaturalSize = {
+                        h:80,
+                        w:300,
+                    };
+                } else {
+                    imgNaturalSize={
+                        h:img.naturalHeight || 100,
+                        w:img.naturalWidth || 100,
+                    };
+                }
                 this.imgNaturalSize=imgNaturalSize;
 
                 this.eleMaps['head-left-img-info-resolution'].textContent=imgNaturalSize.w + ' x ' + imgNaturalSize.h;
