@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.27.2
+// @version              2024.5.28.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14548,24 +14548,20 @@ ImgOps | https://imgops.com/#b#`;
                                             let file = files.item(i);
                                             file = files[i];
                                             let src = URL.createObjectURL(file);
-                                            let media, imgSrc;
+                                            let media;
                                             if (file.type.indexOf("image") === 0) {
                                                 media = document.createElement('img');
-                                                imgSrc = src;
                                             } else if (file.type.indexOf("audio") === 0) {
                                                 media = document.createElement('audio');
                                                 src = "audio:" + src;
-                                                imgSrc = prefs.icons.audio;
                                             } else {
                                                 media = document.createElement('video');
                                                 src = "video:" + src;
-                                                imgSrc = prefs.icons.video;
                                             }
-                                            media.src = imgSrc;
                                             var result = {
                                                 src: src,
                                                 type: 'force',
-                                                imgSrc: imgSrc,
+                                                imgSrc: src,
 
                                                 noActual:true,
                                                 description: '',
@@ -16084,7 +16080,19 @@ ImgOps | https://imgops.com/#b#`;
                     if(dataset(span_i,'thumbLoaded'))continue;//已经加载了缩略图
 
                     thumb=document.createElement('img');
-                    thumb.src=dataset(span_i,'thumbSrc') || dataset(span_i,'src') || prefs.icons.brokenImg_small;
+                    let imgSrc = dataset(span_i,'thumbSrc') || dataset(span_i,'src') || prefs.icons.brokenImg_small;
+                    let mode = matchedRule.getMode(imgSrc);
+                    switch (mode) {
+                        case "video":
+                            thumb.src = prefs.icons.video;
+                            break;
+                        case "audio":
+                            thumb.src = prefs.icons.audio;
+                            break;
+                        default:
+                            thumb.src = imgSrc;
+                            break;
+                    }
                     thumb.className='pv-gallery-sidebar-thumb';
 
                     dataset(span_i,'thumbLoaded','true');
