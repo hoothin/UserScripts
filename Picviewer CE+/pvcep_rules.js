@@ -748,6 +748,11 @@ var siteInfo = [
             }
             return this.src;
         },
+        getExtSrc: function() {
+            if (/^https?:\/\/imgur\.com(\/a)?\/\w{5,}/.test(this.href)) {
+                return this.href.replace(/^https?:\/\/imgur\.com(\/a)?\/(\w+)/, "https://i.imgur.com/$2.webp");
+            }
+        },
         xhr: {
             url: function(a, p, self) {
                 if (a && a.href && /\/\/v.redd\.it\/\w+\/?$/.test(a.href)) {
