@@ -11955,12 +11955,12 @@ Bing | https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbis
 TinEye | https://www.tineye.com/search?url=#t#
 Sogou | https://pic.sogou.com/ris?query=#t#
 360 | http://st.so.com/stu?imgurl=#t#
-WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#
 Trace Moe | https://trace.moe/?url=#t#
 KarmaDecay | http://karmadecay.com/#t#
-QRCode decode | https://zxing.org/w/decode?full=true&u=#t#
 QRCode | https://hoothin.com/qrcode/##t#
+QRdecode1 | https://zxing.org/w/decode?full=true&u=#t#
+QRdecode2 | https://hoothin.com/qrdecode/##t#
 ImgOps | https://imgops.com/#b#`;
 
     var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,GM_fetch,_GM_addStyle;
