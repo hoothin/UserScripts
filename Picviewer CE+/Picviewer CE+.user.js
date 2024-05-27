@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.27.1
+// @version              2024.5.27.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12508,6 +12508,7 @@ ImgOps | https://imgops.com/#b#`;
 
         const imageReg = /^\s*(http|ftp).*\.(avi|avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|a?png|svgz?|webp|xbm|dib|divx|3gpp|m3u|m4v|mkv|mp4|mpe?g|ogv|webm|flv|flac|m4a|m4b|mpa|mp3|aac|cda|oga|ogg|opus|wma|wav)(&|\?|#|\/?$|\s)/i;
 
+        const ruleImportHost = ["greasyfork.org", "github.com", "reddit.com"];
         const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)|\.reddit\.com\/r\/PicviewerCE/i;
 
         //图标
@@ -25766,17 +25767,26 @@ ImgOps | https://imgops.com/#b#`;
         // 注册按键
         document.addEventListener('keydown', keydown, true);
 
-        if (ruleImportUrlReg.test(location.href)) {
+        let canImport = false;
+        for (let i = 0; i < ruleImportHost.length; i++) {
+            if (location.host.indexOf(ruleImportHost[i]) !== -1) {
+                canImport = true;
+                break;
+            }
+        }
+        if (canImport) {
             document.addEventListener('click', e => {
+                if (!ruleImportUrlReg.test(location.href)) return;
                 if (/pre|code/i.test(e.target.nodeName)) {
                     let content = e.target.innerText.trim();
                     if (/"name":/.test(content) && /"(r|xhr)":/.test(content)) {
                         try {
+                            localStorage.setItem('picviewerCE.config.curTab', 4);
                             let webRule = JSON.parse(content);
                             let customRules;
                             let fieldsCustomRules = GM_config.fields.customRules;
-                            if (fieldsCustomRules.value.indexOf('"name":') !== -1) {
-                                customRules = JSON.parse(fieldsCustomRules.value);
+                            if (prefs.customRules.indexOf('"name":') !== -1) {
+                                customRules = JSON.parse(prefs.customRules);
                             } else {
                                 customRules = [];
                             }
