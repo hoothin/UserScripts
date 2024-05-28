@@ -25536,6 +25536,7 @@ ImgOps | https://imgops.com/#b#`;
                     let resetLink = doc.querySelector("#"+this.id+"_resetLink");
                     let customInput = doc.querySelector("#"+this.id+"_field_customRules");
                     customInput.style.height = "188px";
+                    customInput.setAttribute("spellcheck", "false");
                     saveBtn.textContent = i18n("saveBtn");
                     saveBtn.title = i18n("saveBtnTips");
                     saveBtn.addEventListener('click', e => {
