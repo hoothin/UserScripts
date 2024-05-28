@@ -12454,7 +12454,7 @@ ImgOps | https://imgops.com/#b#`;
             customRules:`[
     {
         "name": "Example, can be deleted safely",
-        "url": "/^$/i",
+        "url": "^https://xxx\\\\.com",
         "src": "/avatar/i",
         "r": "/\\\\?.*$/i",
         "s": ""
