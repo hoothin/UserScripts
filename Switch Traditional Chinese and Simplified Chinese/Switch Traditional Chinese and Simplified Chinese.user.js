@@ -9,8 +9,8 @@
 // @version      1.2.7.7
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體），顯示漢字對應漢語拼音，自訂任意替換文本
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体），显示汉字对应汉语拼音，自定义任意替换文本
-// @description:ja     簡繁中国語に変換
-// @description:en     Just Switch Traditional Chinese and Simplified Chinese
+// @description:ja     ウェブページ上の簡体字中国語と繁体字中国語を自由に変換し、中国語の文字にひらがなを表示し、任意の文字を置き換えることができます。
+// @description:en     Convert between simplified and traditional Chinese characters on any webpage, display the Pinyin for the Chinese characters, customize text replacement.
 // @author       hoothin
 // @match        *://*/*
 // @grant        GM_setValue
