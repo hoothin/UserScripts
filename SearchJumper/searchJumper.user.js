@@ -9410,6 +9410,7 @@
                 let clicked = false;
                 let alt, ctrl, meta, shift;
                 let action = async e => {
+                    if (e.stopPropagation) e.stopPropagation();
                     delete ele.href;
                     if (!e) e = {};
                     alt = e.altKey;
@@ -9830,6 +9831,9 @@
                 };
                 //ele.href = data.url;
                 ele.addEventListener('mousedown', action, false);
+                ele.addEventListener('mouseup', e => {
+                    if (e.stopPropagation) e.stopPropagation();
+                }, true);
                 ele.addEventListener('click', clickHandler, true);
 
                 let tipsStr = ele.dataset.name;
@@ -9889,6 +9893,7 @@
                 }
                 let touchend = false;
                 ele.addEventListener('touchend', e => {
+                    if (e.stopPropagation) e.stopPropagation();
                     if (showTips) {
                         touchend = true;
                         self.waitForShowTips = true;
