@@ -23407,6 +23407,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
 
+            if(/^IMG$/i.test(img.nodeName) && !src && iPASrc){//链接可能是一张图片...
+                if(iPASrc!=img.src && imageReg.test(iPASrc)){
+                    src=iPASrc;
+                }
+                if(src)type='scale';
+            }
+
             if(!src && !base64Img){//遍历通配规则
                 tprules.find(function(rule,index,array){
                     try{
@@ -23419,13 +23426,6 @@ ImgOps | https://imgops.com/#b#`;
                     };
                 });
                 if(src)type='tpRule';
-            }
-
-            if(/^IMG$/i.test(img.nodeName) && !src && iPASrc){//链接可能是一张图片...
-                if(iPASrc!=img.src && imageReg.test(iPASrc)){
-                    src=iPASrc;
-                }
-                if(src)type='scale';
             }
 
             if(!src || src==imgSrc){//本图片是否被缩放.
