@@ -17506,6 +17506,11 @@ ImgOps | https://imgops.com/#b#`;
                         if (node.src) {
                             total.push(node);
                         }
+                    } else if (/^a$/i.test(node.nodeName)) {
+                        if (imageReg.test(node.href)) {
+                            node.src = node.href;
+                            total.push(node);
+                        }
                     }
                     if (node.shadowRoot) {
                         let nodes = node.shadowRoot.querySelectorAll('*');
@@ -24177,7 +24182,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (target.nodeName.toUpperCase() != 'IMG') {
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var broEle, broImg;
-                    if (target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
+                    if (target.nodeName.toUpperCase() != 'A' && target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
                         broEle = target.previousElementSibling;
                         while (broEle) {
                             if (broEle.nodeName == "IMG") broImg = broEle;
