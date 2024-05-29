@@ -7,19 +7,19 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hoothinwang.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=hoothinwang)
 
 ---
-+ [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](https://pagetual.hoothin.com/) 
++ [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](https://pagetual.hoothin.com/ "Auto pager script to fetch next page automatically for infinity scroll.") 
 
-+ [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/)
++ [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/ "Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.")
 
-+ [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline)
++ [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline "Find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.")
 
-+ [Picviewer CE+ ![](https://img.shields.io/greasyfork/dt/24204) ![](https://img.shields.io/greasyfork/dd/24204)](Picviewer%20CE%2B)
++ [Picviewer CE+ ![](https://img.shields.io/greasyfork/dt/24204) ![](https://img.shields.io/greasyfork/dd/24204)](Picviewer%20CE%2B "Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically.")
 
-+ [Switch Traditional Chinese and Simplified Chinese 簡繁自由切換 ![](https://img.shields.io/greasyfork/dt/24300)](Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese)
++ [Switch Traditional Chinese and Simplified Chinese 簡繁自由切換 ![](https://img.shields.io/greasyfork/dt/24300)](Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese "Convert between simplified and traditional Chinese characters on any webpage, display the Pinyin for the Chinese characters, customize text replacement.")
 
-+ [Greasyfork Search with Sleazyfork Results include 大人的Greasyfork ![](https://img.shields.io/greasyfork/dt/23840)](Greasyfork%20Search%20with%20Sleazyfork%20Results%20include)
++ [Greasyfork Search with Sleazyfork Results include 大人的Greasyfork ![](https://img.shields.io/greasyfork/dt/23840)](Greasyfork%20Search%20with%20Sleazyfork%20Results%20include "Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then.")
 
-+ [DownloadAllContent 怠惰小說下載器 ![](https://img.shields.io/greasyfork/dt/25068) ![](https://img.shields.io/greasyfork/dd/25068)](DownloadAllContent)
++ [DownloadAllContent 怠惰小說下載器 ![](https://img.shields.io/greasyfork/dt/25068) ![](https://img.shields.io/greasyfork/dd/25068)](DownloadAllContent "Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels.")
 
 + [HGT Decode 琉神轉 ![](https://img.shields.io/greasyfork/dt/23316)](HacgGodTurn)
 
