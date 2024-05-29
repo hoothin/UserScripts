@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      SearchJumper
 // @namespace    hoothin
-// @version      1.7.87
+// @version      1.7.88
 // @description  Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.
 // @description:zh-CN  万能聚合搜索，一键切换任何搜索引擎(百度/必应/谷歌等)，支持划词右键搜索、页内关键词查找与高亮、可视化操作模拟、高级自定义等
 // @description:zh-TW  一鍵切換任意搜尋引擎，支援劃詞右鍵搜尋、頁內關鍵詞查找與高亮、可視化操作模擬、高級自定義等
@@ -4443,7 +4443,7 @@
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
                          <input name="wordStyle" placeholder="orange or #333333;color:red;" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
-                         <textarea name="wordTitle" type="text" placeholder="@popup to popup, @popup(1) to popup 1st showTips, @popup(name) to popup showTips of target engine"></textarea>
+                         <textarea name="wordTitle" type="text" placeholder="Text comment, or @popup to popup, @popup(1) to popup 1st showTips, @popup(name) to popup showTips of target engine"></textarea>
                          <div class="searchJumperModify-buttons">
                              <button id="cancel" type="button">${i18n("cancel")}</button>
                              <button id="modify" type="button">${i18n("modify")}</button>
@@ -12303,7 +12303,7 @@
                             searchBar.con.classList.add("targetInput");
                         } else searchBar.con.classList.remove("targetInput");
                     }
-                    if (e.type === "touchend") {
+                    if (e.type === "touchstart") {
                         if (searchData.prefConfig.selectToShow) {
                             setTimeout(() => {
                                 if (getSelectStr()) {
@@ -12457,7 +12457,22 @@
                 };
                 document.addEventListener('mousedown', mouseDownHandler);
                 document.addEventListener('dblclick', mouseDownHandler);
-                document.addEventListener('touchend', mouseDownHandler);
+                if (searchData.prefConfig.selectToShow) {
+                    let touchTimer, touchstartEvent;
+                    let selectionchange = e => {
+                        clearTimeout(touchTimer);
+                        touchTimer = setTimeout(() => {
+                            if (window.getSelection().toString()) {
+                                mouseDownHandler(touchstartEvent);
+                                document.removeEventListener('selectionchange', selectionchange);
+                            }
+                        }, 300);
+                    };
+                    document.addEventListener('touchstart', e => {
+                        touchstartEvent = e;
+                        document.addEventListener('selectionchange', selectionchange);
+                    });
+                }
                 document.addEventListener('contextmenu', e => {
                     if (shown) e.preventDefault();
                     shown = false;
