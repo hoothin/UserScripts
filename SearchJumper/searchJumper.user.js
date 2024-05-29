@@ -9842,7 +9842,7 @@
                 }
                 let lastUrl, anylizing = false, tipsShowing = false;
                 let setTips = async (target, url, again) => {
-                    self.tipsPos(target, "<span class='loader'></span><font>Loading...</font>");
+                    self.tipsPos(target, '<span class="loader"></span><font>Loading...</font>');
                     tipsShowing = false;
                     if (url) {
                         try {
@@ -9850,7 +9850,7 @@
                             anylizing = true;
                             let tipsResult = await self.anylizeShowTips(url, ele.dataset.name);
                             anylizing = false;
-                            if (self.tips.style.opacity == 0 || self.tips.innerHTML.indexOf(ele.dataset.name) !== 0) return;
+                            if (self.tips.style.opacity == 0 || self.tips.innerHTML.indexOf('<span class="loader">') !== 0) return;
                             if (Array && Array.isArray && Array.isArray(tipsResult)) {
                                 tipsData = tipsResult[1];
                                 tipsResult = tipsResult[0];
