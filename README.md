@@ -7,9 +7,9 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hoothinwang.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=hoothinwang)
 
 ---
-+ [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](https://pagetual.hoothin.com/ "Auto pager script to fetch next page automatically for infinity scroll.") 
++ [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](https://pagetual.hoothin.com/ "Auto pager script to fetch next page automatically for infinity scroll. Pagetual 東方永頁機 东方永页机") 
 
-+ [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/ "Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly.")
++ [SearchJumper 搜尋醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/ "Conduct searches for selected text/image effortlessly. Navigate to any search engine(Google/Bing/Custom) swiftly. SearchJumper 搜索酱 搜尋醬")
 
 + [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline "Find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.")
 
