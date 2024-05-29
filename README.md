@@ -7,13 +7,13 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hoothinwang.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=hoothinwang)
 
 ---
-+ [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline)
-
-+ [Picviewer CE+ ![](https://img.shields.io/greasyfork/dt/24204) ![](https://img.shields.io/greasyfork/dd/24204)](Picviewer%20CE%2B)
-
 + [Pagetual 東方永頁機 ![](https://img.shields.io/greasyfork/dt/438684) ![](https://img.shields.io/greasyfork/dd/438684)](https://pagetual.hoothin.com/) 
 
 + [SearchJumper 搜索醬 ![](https://img.shields.io/greasyfork/dt/445274) ![](https://img.shields.io/greasyfork/dd/445274)](https://search.hoothin.com/)
+
++ [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline)
+
++ [Picviewer CE+ ![](https://img.shields.io/greasyfork/dt/24204) ![](https://img.shields.io/greasyfork/dd/24204)](Picviewer%20CE%2B)
 
 + [Switch Traditional Chinese and Simplified Chinese 簡繁自由切換 ![](https://img.shields.io/greasyfork/dt/24300)](Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese)
 
@@ -21,7 +21,7 @@
 
 + [DownloadAllContent 怠惰小說下載器 ![](https://img.shields.io/greasyfork/dt/25068) ![](https://img.shields.io/greasyfork/dd/25068)](DownloadAllContent)
 
-+ [琉神轉 ![](https://img.shields.io/greasyfork/dt/23316)](HacgGodTurn)
++ [HGT Decode 琉神轉 ![](https://img.shields.io/greasyfork/dt/23316)](HacgGodTurn)
 
 + [Select All Checkboxes 多選框伴侶 ![](https://img.shields.io/greasyfork/dt/22587)](Select%20All%20Checkboxes)
 
