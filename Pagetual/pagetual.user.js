@@ -4076,7 +4076,7 @@
             };
 
             move.addEventListener("mousedown", mouseDownHandler, true);
-            move.addEventListener("touchstart", mouseDownHandler, true);
+            move.addEventListener("touchstart", mouseDownHandler, { passive: false, capture: true });
 
             this.frame = frame;
             this.pagenum = pagenum;
