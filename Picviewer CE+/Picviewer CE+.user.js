@@ -15801,6 +15801,7 @@ ImgOps | https://imgops.com/#b#`;
                                     media.controls = true;
                                     media.loop = true;
                                     media.autoplay = true;
+                                    media.volume = matchedRule.mute ? 0 : 1;
                                     imgSrc = imgSrc.replace(/^video:/, "");
                                     if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                                     break;
@@ -15808,7 +15809,7 @@ ImgOps | https://imgops.com/#b#`;
                                     media = document.createElement('audio');
                                     media.controls = true;
                                     media.autoplay = true;
-                                    media.volume = 1;
+                                    media.volume = matchedRule.mute ? 0 : 1;
                                     imgSrc = imgSrc.replace(/^audio:/, "");
                                     break;
                                 default:
@@ -16185,13 +16186,14 @@ ImgOps | https://imgops.com/#b#`;
                     media.controls = true;
                     media.loop = true;
                     media.autoplay = true;
+                    media.volume = matchedRule.mute ? 0 : 1;
                     mediaSrc = mediaSrc.replace(/^video:/, "");
                     if (src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                 } else if (isAudioLink(src)) {
                     media = document.createElement('audio');
                     media.controls = true;
                     media.autoplay = true;
-                    media.volume = 1;
+                    media.volume = matchedRule.mute ? 0 : 1;
                     mediaSrc = mediaSrc.replace(/^audio:/, "");
                 }
                 if (media) {
@@ -22466,6 +22468,7 @@ ImgOps | https://imgops.com/#b#`;
                             media.controls = true;
                             media.loop = true;
                             media.autoplay = true;
+                            media.volume = matchedRule.mute ? 0 : 1;
                             imgSrc = imgSrc.replace(/^video:/, "");
                             if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
                             break;
@@ -22473,7 +22476,7 @@ ImgOps | https://imgops.com/#b#`;
                             media = document.createElement('audio');
                             media.controls = true;
                             media.autoplay = true;
-                            media.volume = 1;
+                            media.volume = matchedRule.mute ? 0 : 1;
                             imgSrc = imgSrc.replace(/^audio:/, "");
                             break;
                         default:
@@ -23629,6 +23632,9 @@ ImgOps | https://imgops.com/#b#`;
                                     }
                                     if (site.getExtSrc) {
                                         self.getExtSrc = site.getExtSrc;
+                                    }
+                                    if (site.mute) {
+                                        self.mute = true;
                                     }
                                     if (site.xhr) {
                                         let siteXhr = site.xhr;
