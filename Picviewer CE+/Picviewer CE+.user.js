@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.30.1
+// @version              2024.5.30.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15804,6 +15804,7 @@ ImgOps | https://imgops.com/#b#`;
                                     media.volume = matchedRule.mute ? 0 : 1;
                                     imgSrc = imgSrc.replace(/^video:/, "");
                                     if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                                    else if (imgSrc.indexOf('.m3u8') !== -1) media.type = 'application/vnd.apple.mpegurl';
                                     break;
                                 case "audio":
                                     media = document.createElement('audio');
@@ -16189,6 +16190,7 @@ ImgOps | https://imgops.com/#b#`;
                     media.volume = matchedRule.mute ? 0 : 1;
                     mediaSrc = mediaSrc.replace(/^video:/, "");
                     if (src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                    else if (src.indexOf('.m3u8') !== -1) media.type = 'application/vnd.apple.mpegurl';
                 } else if (isAudioLink(src)) {
                     media = document.createElement('audio');
                     media.controls = true;
@@ -22471,6 +22473,7 @@ ImgOps | https://imgops.com/#b#`;
                             media.volume = matchedRule.mute ? 0 : 1;
                             imgSrc = imgSrc.replace(/^video:/, "");
                             if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
+                            else if (imgSrc.indexOf('.m3u8') !== -1) media.type = 'application/vnd.apple.mpegurl';
                             break;
                         case "audio":
                             media = document.createElement('audio');
@@ -23277,6 +23280,11 @@ ImgOps | https://imgops.com/#b#`;
             function findFile(n, url) {
                 pretreatment(n, true);
                 var path = n.src || n.href || (n.children && n.children[0] &&  n.children[0].src);
+                if (/^video$/i.test(n.nodeName)) {
+                    path = "video:" + path;
+                } else if (/^audio$/i.test(n.nodeName)) {
+                    path = "audio:" + path;
+                } else if (path.baseVal) path = path.baseVal;
                 return path ? path.trim() : false;
             }
 
@@ -23490,7 +23498,7 @@ ImgOps | https://imgops.com/#b#`;
             this.init();
         }
 
-        const videoExtensions = new Set(['3gpp', 'm4v', 'mkv', 'mp4', 'ogv', 'webm']);
+        const videoExtensions = new Set(['3gpp', 'm4v', 'mkv', 'mp4', 'ogv', 'webm', 'm3u8']);
         const audioExtensions = new Set(['flac', 'm4a', 'mp3', 'oga', 'ogg', 'opus', 'wav']);
 
         function isVideoLink(url) {
@@ -23579,7 +23587,7 @@ ImgOps | https://imgops.com/#b#`;
                     })
                 }
 
-                var self=this,r=0;
+                var self = this, r = 0, urlChecked = false;
                 self.rules=[];
                 function searchByTime(){
                     setTimeout(()=>{
@@ -23599,7 +23607,8 @@ ImgOps | https://imgops.com/#b#`;
                                         site.xhr.url = toRE(reMatch[1], reMatch[2]);
                                     }
                                 }
-                                if (site.url) {
+                                if (site.url && !urlChecked) {
+                                    urlChecked = true;
                                     if (site.css) {
                                         var style = _GM_addStyle(site.css);
                                         style.id = 'gm-picviewer-site-style';
