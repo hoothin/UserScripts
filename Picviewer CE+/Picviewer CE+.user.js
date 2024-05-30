@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.29.1
+// @version              2024.5.30.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -19926,7 +19926,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (imgNaturalSize.h && imgNaturalSize.w) {
                     container.style.background='';
-                    setSearchState(img.naturalWidth + " x " + img.naturalHeight, self.imgState);
+                    setSearchState(`<strong>${img.naturalWidth} x ${img.naturalHeight}</strong>`, self.imgState);
                 }
                 if (!this.isImg) {
                     img.naturalHeight = img.videoHeight || 80;
@@ -20608,7 +20608,6 @@ ImgOps | https://imgops.com/#b#`;
                     height: 18px;\
                     line-height: 18px;\
                     opacity:0.8;\
-                    font-size: small;\
                     transition: all 0.3s ease;\
                     user-select: none;\
                     -webkit-box-sizing: content-box;\
@@ -20617,6 +20616,8 @@ ImgOps | https://imgops.com/#b#`;
                     background: rgb(0 0 0 / 80%);\
                     max-width: 100%;\
                     overflow: hidden;\
+                    font: 13px / 1.4em "Trebuchet MS", sans-serif;\
+                    box-shadow: rgb(221, 221, 221) 0px 0px 1px inset;\
                     }\
                     .pv-pic-search-state>span {\
                     pointer-events: none;\
@@ -21664,7 +21665,7 @@ ImgOps | https://imgops.com/#b#`;
                     case 'zoom':{
                         scale=2;
                         if (this.img.naturalWidth) {
-                            setSearchState(this.img.naturalWidth + " x " + this.img.naturalHeight + " (" + parseInt(content * 100) + "%)" + (this.curIndex >=0 ? ` <b>[${this.curIndex + 1}/${this.data.all.length}]</b>` : ""), this.imgState);
+                            setSearchState(`<strong>${this.img.naturalWidth} x ${this.img.naturalHeight}</strong>` + (content !== 1 ? ` (${parseInt(content * 100)}%)` : "") + (this.curIndex >=0 ? ` <b>[${this.curIndex + 1}/${this.data.all.length}]</b>` : ""), this.imgState);
                             this.descriptionSpan && this.imgState.appendChild(this.descriptionSpan);
                         }
                     }break;
@@ -22846,6 +22847,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             start:function(data){
 
+                if (data && data.type == "link") return;
                 //读取中的图片,不显示浮动栏,调整读取图标的位置.
                 if(LoadingAnimC.all.find(function(item,index,array){
                     if (data.src == item.data.src || data.img == item.data.img) {
@@ -23631,6 +23633,7 @@ ImgOps | https://imgops.com/#b#`;
                                     if (site.xhr) {
                                         let siteXhr = site.xhr;
                                         if (siteXhr.url && !self.getExtSrc) {
+                                            self.xhrLink = true;
                                             self.getExtSrc = function (ele) {
                                                 ele = ele || this;
                                                 let newSrc;
@@ -24166,7 +24169,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     result = {
                         src: src,
-                        type: "rule",
+                        type: matchedRule.xhrLink ? "link" : "rule",
                         imgSrc: imgSrc,
                         noActual: src === imgSrc,
                         img: target,
