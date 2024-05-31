@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.5.31.2
+// @version              2024.5.31.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -21050,14 +21050,14 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
             },
-            followPos: function(posX, posY) {
+            followPos: function(posX, posY, imme) {
                 if (this.removed) return;
                 if (!prefs.floatBar.globalkeys.previewFollowMouse) return;
                 let imgWindow = this.imgWindow;
                 if (!imgWindow) return;
                 this.followPosX = posX;
                 this.followPosY = posY;
-                if (!this.following) {
+                if (!this.following && !imme) {
                     clearTimeout(this.followPosTimer);
                     this.followPosTimer = setTimeout(() => {
                         if (this.previewed) return;
@@ -21073,7 +21073,9 @@ ImgOps | https://imgops.com/#b#`;
                 let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2), padding2 = 50, left, top;//内外侧间距
                 let scrolled = prefs.imgWindow.fixed ? {x: 0, y: 0} : getScrolled();
 
-                this.initMaxSize();
+                if (imme) {
+                    imgWindow.classList.remove("pv-pic-window-transition-all");
+                } else this.initMaxSize();
 
                 if (imgWindow.offsetWidth / imgWindow.offsetHeight > wSize.w / wSize.h) {
                     //宽条，上下半屏
@@ -21871,6 +21873,13 @@ ImgOps | https://imgops.com/#b#`;
                                 let level = e.shiftKey ? (this.zoomLevel - 0.5) : (this.zoomLevel + 0.5);
                                 if (typeof level != 'undefined') {
                                     this.zoom(level, { x: 0, y: 0});
+                                }
+                                if (uniqueImgWin && uniqueImgWin == this) {
+                                    if (prefs.floatBar.globalkeys.previewFollowMouse) {
+                                        this.followPos(uniqueImgWinInitX, uniqueImgWinInitY, true);
+                                    } else {
+                                        this.center(true, true);
+                                    }
                                 }
                             };
                         }break;
@@ -22954,17 +22963,23 @@ ImgOps | https://imgops.com/#b#`;
                 let body = getBody(document);
                 let bodyStyle = unsafeWindow.getComputedStyle(body);
                 let offsetParent, bodyPosi;
-                if ((bodyStyle.position === "static") && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
-                    offsetParent = document.documentElement;
+
+                if (bodyStyle.position === "static") {
+                    if (document.documentElement.scrollLeft || document.documentElement.scrollTop) {
+                        offsetParent = document.documentElement;
+                    } else {
+                        offsetParent = body;
+                    }
+                    bodyPosi = {
+                        top: 0,
+                        bottom: windowSize.h,
+                        left: 0,
+                        right: windowSize.w
+                    };
                 } else {
                     offsetParent = body;
+                    bodyPosi = offsetParent.getBoundingClientRect();
                 }
-                bodyPosi = {
-                    top: 0,
-                    bottom: windowSize.h,
-                    left: 0,
-                    right: windowSize.w
-                };
 
 
                 var scrolled=getScrolled(offsetParent);
@@ -24031,7 +24046,7 @@ ImgOps | https://imgops.com/#b#`;
             };
         }
 
-        var canclePreCTO,uniqueImgWin,centerInterval,globalFuncEnabled=false;
+        var canclePreCTO,uniqueImgWin,centerInterval,globalFuncEnabled=false,isConfigOpen=false;
         function checkGlobalKeydown(e){
             return(!((!e.ctrlKey && e.key !== 'Control' && prefs.floatBar.globalkeys.ctrl)||
                      (!e.altKey && e.key !== 'Alt' && prefs.floatBar.globalkeys.alt)||
@@ -24041,6 +24056,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function checkPreview(e){
+            if (isConfigOpen) return false;
             let selStr;
             try {
                 selStr = !selectionClientRect && document.getSelection().toString();
@@ -24747,7 +24763,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function keydown(event) {
-            if (ImgWindowC.showing) return;
+            //if (ImgWindowC.showing) return;
             if (gallery && gallery.shown) return;
             if (inputActive(document)) {
                 return;
@@ -25555,6 +25571,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             events: {
                 open: async function(doc, win, frame) {
+                    isConfigOpen = true;
                     let saveBtn = doc.querySelector("#"+this.id+"_saveBtn");
                     let closeBtn = doc.querySelector("#"+this.id+"_closeBtn");
                     let resetLink = doc.querySelector("#"+this.id+"_resetLink");
@@ -25702,6 +25719,9 @@ ImgOps | https://imgops.com/#b#`;
                 save: function() {
                     loadPrefs();
                     storage.setItem("customLang", prefs.customLang);
+                },
+                close: function() {
+                    isConfigOpen = false;
                 }
             }
         });
