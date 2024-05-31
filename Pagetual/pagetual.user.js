@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.47
+// @version      1.9.37.48
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2385,7 +2385,8 @@
                 "a[class*=page__next]",
                 "[class*=pager]>a.next",
                 "[class*=pagination-next]>a",
-                "[class*=pagination-next]>button"
+                "[class*=pagination-next]>button",
+                "[class*=Pages]>.curr+a"
             ];
             let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
@@ -4669,9 +4670,7 @@
             let addPageSelector = frame.querySelector("#addPageSelector");
             let ruleRequestBtn = frame.querySelector("#ruleRequest");
             ruleRequestBtn.addEventListener("click", e => {
-                _GM_setClipboard(location.href);
-                showTips("URL copied. Include it when submitting an issue.", 3);
-                _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?labels=Pagetual&template=custom-rule-request.md&title=Request%20Pagetual%20support%20for%20" + location.hostname, {active: false});
+                _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?labels=Pagetual&template=custom-rule-request.md&title=Request%20Pagetual%20support%20for%20" + location.hostname + "#" + location.href, {active: true});
             }, true);
             autoScrollBtn.addEventListener("click", e => {
                 self.close();
@@ -5188,6 +5187,24 @@
     var inUpdate = false;
     var importHandler, configCon;
     function initConfig(href) {
+        if (location.hostname === "github.com") {
+            if (location.href.indexOf("https://github.com/hoothin/UserScripts/issues/new?labels=Pagetual&template=custom-rule-request.md&title=Request%20Pagetual%20support%20for%20") === 0) {
+                let issue_body = document.getElementById("issue_body");
+                if (!issue_body) return true;
+                issue_body.value = issue_body.value.replace("\n", "\n" + location.hash.slice(1) + "\n");
+                let starButton = document.createElement("a");
+                starButton.href = "https://github.com/hoothin/UserScripts#star";
+                starButton.className = "js-toggler-target rounded-left-2 btn-with-aria-count btn-sm btn";
+                starButton.innerHTML = createHTML('<svg height="16" viewBox="0 0 16 16" version="1.1" width="16" class="octicon octicon-star d-inline-block mr-2"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg><span class="d-inline">Star</span>');
+                starButton.style.float = "right";
+                document.querySelector(".Layout-main>h2").appendChild(starButton);
+                return true;
+            } else if (location.href === "https://github.com/hoothin/UserScripts#star") {
+                let starButton = document.querySelector(".starring-container:not(.on)>.unstarred>form>button");
+                if (starButton) emuClick(starButton);
+                return true;
+            }
+        }
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
             if (href.indexOf("PagetualGuide") != -1) return true;
