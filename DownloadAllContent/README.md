@@ -16,7 +16,7 @@
 + 按下 `CTRL+F9` 或點擊命令菜單
 + 按下 `SHIFT+CTRL+F9` 忽略目錄，僅下載當前頁
 
-若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)
+若是遇到下載出錯的站點，可隨意提交 issue 至 [Github](https://github.com/hoothin/UserScripts/)。請幫我點亮 Star !
 
 *對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.net/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD)。*
 
