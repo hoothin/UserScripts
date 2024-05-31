@@ -24786,7 +24786,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function keyup(event) {
-            let isFuncKey = !event.isTrusted || event.key == 'Alt' || event.key == 'Control' || event.key == 'Shift' || event.key == 'Meta';
+            let isFuncKey = !event.isTrusted || event.key == 'Alt' || event.key == 'Control' || event.key == 'Meta';
             if(isFuncKey && (prefs.floatBar.globalkeys.type == "hold" || !checkPreview(event)) && (uniqueImgWin && !uniqueImgWin.removed)){
                 clearTimeout(checkFloatBarTimer);
                 if(prefs.floatBar.globalkeys.closeAfterPreview){
