@@ -24553,7 +24553,9 @@ ImgOps | https://imgops.com/#b#`;
             if (e.type == "mousemove") {
                 if ((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)) {
                     if (canPreview) {
-                        uniqueImgWin.followPos(e.clientX, e.clientY);
+                        uniqueImgWinInitX = e.clientX;
+                        uniqueImgWinInitY = e.clientY;
+                        uniqueImgWin.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
                     } else {
                         uniqueImgWin.remove();
                     }
