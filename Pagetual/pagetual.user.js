@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.48
+// @version      1.9.37.49
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1809,7 +1809,7 @@
         }
 
         getPageElement(doc, curWin, dontFind) {
-            if (doc === document && this.docPageElement && document.documentElement.contains(this.docPageElement[0])) {
+            if (doc === document && this.docElementValid()) {
                 return this.docPageElement;
             }
             let pageElement = null;
@@ -3383,6 +3383,17 @@
             [].forEach.call(doc.querySelectorAll("img,picture>source"), img => {
                 setLazyImg(img);
             });
+        }
+
+        canListenUrlChange() {
+            if (this.curSiteRule && typeof this.curSiteRule.listenUrlChange === 'undefined' && this.docElementValid()) {
+                return false;
+            }
+            return true;
+        }
+
+        docElementValid() {
+            return (this.docPageElement && document.documentElement.contains(this.docPageElement[0]));
         }
 
         urlChanged() {
@@ -7159,6 +7170,9 @@
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             if (document.hidden) return;
+            if (!ruleParser.canListenUrlChange()) {
+                return;
+            }
             if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search) && window.location.href != ruleParser.historyUrl) {
                 checkUrlTime = 2000;
                 urlWillChange = true;
