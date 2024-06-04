@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86231",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(concat(' ', normalize-space(@class), ' '), ' article-body ')]|//div[contains(concat(' ', normalize-space(@class), ' '), ' gallery-image ')]",
+    "nextLink": "//a[contains(concat(' ', normalize-space(@class), ' '), ' --next ')]",
+    "url": "^https://shueisha\\.online/articles/",
+    "exampleUrl": "https://shueisha.online/articles/-/250383"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "altpragmatist",
+  "name": "集英社オンライン",
+  "created_at": "2024-06-03T11:08:46+09:00",
+  "updated_at": "2024-06-03T11:08:46+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86228",
   "data": {
     "insertBefore": "",
