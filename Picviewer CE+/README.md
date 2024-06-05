@@ -90,7 +90,7 @@ You have the option to use a standalone userscript, which allows you to manage a
             },
             {
                 name: "rule2",
-                url: /^https://xxx\.com\//,
+                url: /^https:\/\/xxx\.com\//,
                 r: /us\.xxx\.com\/\d+wm\//i,
                 s: "previews.xxx.com/images/"
             }
