@@ -44,7 +44,7 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
 ``` json
 {
    "name": "Example",
-   "url": "/xxx\\.com/",
+   "url": "^https://xxx\\.com/",
    "r": "/us\\.xxx\\.com/\\d+wm//i",
    "s": "previews.xxx.com/images/"
 }
@@ -90,7 +90,7 @@ You have the option to use a standalone userscript, which allows you to manage a
             },
             {
                 name: "rule2",
-                url: /xxx\.com/,
+                url: /^https://xxx\.com\//,
                 r: /us\.xxx\.com\/\d+wm\//i,
                 s: "previews.xxx.com/images/"
             }
