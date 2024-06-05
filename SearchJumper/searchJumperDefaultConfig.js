@@ -341,6 +341,10 @@ switch (lang) {
                         "url": "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
                     },
                     {
+                        "name": "一键抠图",
+                        "url": "https://www.remove.bg/zh/upload#p{sleep(500)&body=%i}"
+                    },
+                    {
                         "name": "WhatAnime",
                         "url": "https://trace.moe/?url=%T",
                         "icon": "https://trace.moe/favicon.png"
@@ -1280,6 +1284,10 @@ switch (lang) {
                     {
                         "name": "Google translate image",
                         "url": "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
+                    },
+                    {
+                        "name": "Remove bg",
+                        "url": "https://www.remove.bg/upload#p{sleep(500)&body=%i}"
                     },
                     {
                         "name": "Google lens",
