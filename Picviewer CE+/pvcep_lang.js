@@ -1,7 +1,7 @@
 const langData = [ 
 {
     name: "Arabic",
-    match: ["ar"],
+    match: ["ar", "ar-AE", "ar-BH", "ar-DZ", "ar-EG", "ar-IQ", "ar-JO", "ar-KW", "ar-LB", "ar-LY", "ar-MA", "ar-OM", "ar-QA", "ar-SA", "ar-SY", "ar-TN", "ar-YE"],
     lang: {
         // Translated by Prankster 199 (vfggf95565).
         saveBtn: "حفظ",
