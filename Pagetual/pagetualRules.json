@@ -7388,7 +7388,8 @@
     "example": "https://myanimelist.net/topanime.php",
     "nextlink": "icon-top-ranking-page-bottom> .link-blue-box.next",
     "replaceElement": ".link-blue-box",
-    "pageElement": ".top-ranking-table"
+    "pageElement": ".top-ranking-table",
+    "action": 1
 },
 {
     "name": "MAL - recommendations",
