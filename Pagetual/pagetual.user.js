@@ -112,6 +112,7 @@
     const lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
     const langData = [
         {
+            //Translated by Prankster 199 (vfggf95565).
             name: "Arabic",
             match: ["ar"],
             lang: {
@@ -2511,6 +2512,7 @@
                 "[class*=pager]>a.next",
                 "[class*=pagination-next]>a",
                 "[class*=pagination-next]>button",
+                "[class*=page--current]+li>a",
                 "[class*=Pages]>.curr+a"
             ];
             let next = await this.querySelectorList(body, selectorList, doc.defaultView);
