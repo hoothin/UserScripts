@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
 // @require              https://update.greasyfork.org/scripts/438080/1384302/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1389914/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1389981/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
