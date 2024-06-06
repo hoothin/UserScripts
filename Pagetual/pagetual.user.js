@@ -2513,7 +2513,8 @@
                 "[class*=pagination-next]>a",
                 "[class*=pagination-next]>button",
                 "[class*=page--current]+li>a",
-                "[class*=Pages]>.curr+a"
+                "[class*=Pages]>.curr+a",
+                ".page>em+a"
             ];
             let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
