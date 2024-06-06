@@ -771,7 +771,7 @@ const langData = [
 },
 {
     name: "正體中文",
-    match: ["zh-TW", "zh-HK", "zh-MO"],
+    match: ["zh", "zh-TW", "zh-HK", "zh-MO"],
     lang: {
         saveBtn: "確定",
         saveName: "保存圖片名",

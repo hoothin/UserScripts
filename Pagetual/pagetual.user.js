@@ -485,7 +485,7 @@
         },
         {
             name: "正體中文",
-            match: ["zh-TW", "zh-HK"],
+            match: ["zh", "zh-TW", "zh-HK"],
             lang: {
                 enableDebug: "調試模式，輸出信息至控制台",
                 updateNotification: "規則更新后提示",
