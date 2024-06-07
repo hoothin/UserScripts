@@ -24,7 +24,6 @@
                 let dataPreloaded = doc.getElementById('data-preloaded');
                 if (!dataPreloaded) return;
                 dataPreloaded = JSON.parse(JSON.parse(dataPreloaded.dataset.preloaded)["topic_" + commentLink.href.match(/\d+/)[0]]).post_stream.posts;
-                console.log(dataPreloaded);
                 let posts = document.createElement("ul");
                 posts.style.maxHeight = '100vh';
                 posts.style.overflow = 'auto';
