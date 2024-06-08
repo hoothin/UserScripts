@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.6.2
+// @version              2024.6.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -20591,6 +20591,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container>span.pv-pic-search-state:hover{\
                     overflow:visible;\
                     background:none;\
+                    box-shadow:none;\
                     }\
                     .pv-pic-window-container>span.pv-pic-search-state:hover>span{\
                     opacity: 0;\
@@ -20758,23 +20759,23 @@ ImgOps | https://imgops.com/#b#`;
                     box-shadow: inset 0 21px 0 rgba(255,255,255,0.3) ,inset 0 -21px 0 rgba(0,0,0,0.3);\
                     border-left:2px solid #1771FF;\
                     }\
-                    span.pv-pic-window-tb-hand {\
-                    background-image: url("'+prefs.icons.hand+'");\
+                    .pv-pic-window-toolbar span.pv-pic-window-tb-hand {\
+                    background-image: url("'+prefs.icons.hand+'")!important;\
                     }\
-                    span.pv-pic-window-tb-rotate {\
-                    background-image: url("'+prefs.icons.rotate+'");\
+                    .pv-pic-window-toolbar span.pv-pic-window-tb-rotate {\
+                    background-image: url("'+prefs.icons.rotate+'")!important;\
                     }\
-                    span.pv-pic-window-tb-zoom {\
-                    background-image: url("'+prefs.icons.zoom+'");\
+                    .pv-pic-window-toolbar span.pv-pic-window-tb-zoom {\
+                    background-image: url("'+prefs.icons.zoom+'")!important;\
                     }\
-                    span.pv-pic-window-tb-flip-horizontal {\
-                    background-image: url("'+prefs.icons.flipHorizontal+'");\
+                    .pv-pic-window-toolbar span.pv-pic-window-tb-flip-horizontal {\
+                    background-image: url("'+prefs.icons.flipHorizontal+'")!important;\
                     }\
-                    span.pv-pic-window-tb-flip-vertical {\
-                    background-image: url("'+prefs.icons.flipVertical+'");\
+                    .pv-pic-window-toolbar span.pv-pic-window-tb-flip-vertical {\
+                    background-image: url("'+prefs.icons.flipVertical+'")!important;\
                     }\
-                    span.pv-pic-window-tb-compare {\
-                    background-image: url("'+prefs.icons.compare+'");\
+                    .pv-pic-window-toolbar span.pv-pic-window-tb-compare {\
+                    background-image: url("'+prefs.icons.compare+'")!important;\
                     }\
                     .pv-pic-window-tb-tool-badge-container {\
                     display: block;\
@@ -22837,22 +22838,22 @@ ImgOps | https://imgops.com/#b#`;
                     margin-right: 4px;\
                     }\
                     #pv-float-bar-container .pv-float-bar-button-actual {\
-                    background-image:url("'+ prefs.icons.actual +'");\
+                    background-image:url("'+ prefs.icons.actual +'")!important;\
                     }\
                     #pv-float-bar-container .pv-float-bar-button-search {\
-                    background-image:url("'+ prefs.icons.search +'");\
+                    background-image:url("'+ prefs.icons.search +'")!important;\
                     }\
                     #pv-float-bar-container .pv-float-bar-button-gallery {\
-                    background-image:url("'+ prefs.icons.gallery +'");\
+                    background-image:url("'+ prefs.icons.gallery +'")!important;\
                     }\
                     #pv-float-bar-container .pv-float-bar-button-current {\
-                    background-image:url("'+ prefs.icons.current +'");\
+                    background-image:url("'+ prefs.icons.current +'")!important;\
                     }\
                     #pv-float-bar-container .pv-float-bar-button-magnifier {\
-                    background-image:url("'+ prefs.icons.magnifier +'");\
+                    background-image:url("'+ prefs.icons.magnifier +'")!important;\
                     }\
                     #pv-float-bar-container .pv-float-bar-button-download {\
-                    background-image:url("'+ prefs.icons.download +'");\
+                    background-image:url("'+ prefs.icons.download +'")!important;\
                     }\
                     ');
             },
