@@ -1,0 +1,27 @@
+{
+    "title": "Sites data",
+    "description": "Object containing site config",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "title": "Site Name",
+                "description": "The site's name.",
+                "examples": [
+                    "Google"
+                ],
+                "type": "string"
+            },
+            "url": {
+                "title": "Site Url",
+                "description": "The Regexp of site's url.",
+                "examples": [
+                    "^https:\/\/google\\.com\/"
+                ],
+                "type": "string"
+            }
+        },
+        "required": ["name", "url"]
+    }
+}

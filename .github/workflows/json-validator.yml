@@ -1,0 +1,21 @@
+name: Validate JSON
+
+on:
+  pull_request:
+    paths:
+      - 'Pagetual/pagetualRules.json'
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: json-yaml-validate
+        uses: GrantBirki/json-yaml-validate@v3.0.0
+        id: json-yaml-validate
+        with:
+          json_schema: Pagetual/pagetual.schema.json
+          files: |
+            Pagetual/pagetualRules.json
