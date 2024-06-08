@@ -20017,7 +20017,8 @@
 {
   "resource_url": "http://wedata.net/items/77646",
   "data": {
-    "pageElement": "//div[@class=\"sd-main\"]//*[./a[@title]]",
+    "pageElement": "//div[@class=\"sd-main\"]//*[./div/a[@title]]",
+    "comment": "最後のアイテム内に継ぎ足されていたのを修正",
     "nextLink": "//a[@rel='next']",
     "url": "^https://speakerdeck\\.com/.+",
     "exampleUrl": "https://speakerdeck.com/p/all"
@@ -20026,7 +20027,7 @@
   "created_by": "Tanookirby",
   "name": "Speaker Deck",
   "created_at": "2015-11-08T03:43:39+09:00",
-  "updated_at": "2022-01-27T09:39:14+09:00"
+  "updated_at": "2024-06-07T22:14:23+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77643",
