@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.8.1
+// @version              2024.6.8.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,8 +46,8 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1384302/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1389981/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/438080/1391020/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/440698/1391048/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -12389,6 +12389,8 @@ ImgOps | https://imgops.com/#b#`;
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
                 backgroundColor: 'rgba(20,20,20,0.75)',
                 formatConversion: "webp>png",
+                aria2Host: "http://localhost:6800",
+                aria2Token: "",
                 sidebarToggle: true, // 是否显示隐藏按钮
                 transition:true,//大图片区的动画。
                 preload:true,//对附近的图片进行预读。
@@ -13649,6 +13651,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip"," " + prefs.gallery.editSite + " ")+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="postImagesToAria2" title="'+i18n("post2Aria2")+'">'+i18n("post2Aria2")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
@@ -14407,12 +14410,38 @@ ImgOps | https://imgops.com/#b#`;
 
                 prefs.gallery.scrollEndAndLoad = !!storage.getListItem("scrollEndAndLoad", location.hostname);
                 eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
-                var srcSplit,downloading=false;
+                let srcSplit, downloading=false, saveParams;
+                function getSaveParams() {
+                    let nodes = self.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                    let saveParams = [],saveIndex=0;
+                    [].forEach.call(nodes, function(node){
+                        if(unsafeWindow.getComputedStyle(node).display!="none"){
+                            saveIndex++;
+                            if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
+                            else {
+                                srcSplit=node.dataset.src || '';
+                            }
+                            let title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
+                            title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
+                            title = getRightSaveName(srcSplit, title, prefs.saveName);
+                            let picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
+                            let host = hostArr[hostArr.length-2];
+                            saveParams.push([node.dataset.src, picName]);
+                            if (node.dataset.srcs) {
+                                node.dataset.srcs.split(",").forEach(src => {
+                                    saveParams.push([src, picName]);
+                                });
+                            }
+                            //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
+                        }
+                    });
+                    return saveParams;
+                }
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',function(e){
                     if(e.button!=0)return;//左键
-                    var target=e.target;
-                    var command=dataset(target,'command');
+                    let target=e.target;
+                    let command=dataset(target,'command');
                     if(!command)return;
                     switch(command){
                         case 'openInNewWindow':{
@@ -14429,9 +14458,9 @@ ImgOps | https://imgops.com/#b#`;
                                 self.showTips(i18n("inCollection"));
                                 return;
                             };
-                            var relatedThumb=self.relatedThumb;
-                            var index=arrayFn.indexOf.call(self.imgSpans,relatedThumb);
-                            var targetImg=self.data[index].img;
+                            let relatedThumb=self.relatedThumb;
+                            let index=arrayFn.indexOf.call(self.imgSpans,relatedThumb);
+                            let targetImg=self.data[index].img;
 
                             if(targetImg){
                                 if(!document.documentElement.contains(targetImg) || unsafeWindow.getComputedStyle(targetImg).display=='none'){//图片不存在文档中，或者隐藏了。
@@ -14470,32 +14499,36 @@ ImgOps | https://imgops.com/#b#`;
                         case 'exportImages':
                             self.exportImages();
                             break;
+                        case 'postImagesToAria2':
+                            if (!prefs.gallery.aria2Host) {
+                                self.showTips("Configure aria2 first!", 1000);
+                                return;
+                            }
+                            saveParams = getSaveParams();
+                            [].forEach.call(saveParams, function(param){
+                                _GM_xmlhttpRequest({
+                                    method: 'POST',
+                                    url: prefs.gallery.aria2Host + "/jsonrpc",
+                                    data: JSON.stringify({
+                                        params: [
+                                            "token:" + (prefs.gallery.aria2Token || ""),
+                                            [param[0]],
+                                            {"out": param[1]}
+                                        ],
+                                        jsonrpc: "2.0",
+                                        method: "aria2.addUri",
+                                        id: Math.random()
+                                    }),
+                                    onload: function(d) {
+                                    }
+                                });
+                            });
+                            self.showTips("Completed!", 1000);
+                            break;
                         case 'downloadImage':
                             if(downloading)break;
                             downloading=true;
-                            var nodes = self.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
-                            var saveParams = [],saveIndex=0;
-                            [].forEach.call(nodes, function(node){
-                                if(unsafeWindow.getComputedStyle(node).display!="none"){
-                                    saveIndex++;
-                                    if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
-                                    else {
-                                        srcSplit=node.dataset.src || '';
-                                    }
-                                    var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
-                                    title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
-                                    title = getRightSaveName(srcSplit, title, prefs.saveName);
-                                    var picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
-                                    var host = hostArr[hostArr.length-2];
-                                    saveParams.push([node.dataset.src, picName]);
-                                    if (node.dataset.srcs) {
-                                        node.dataset.srcs.split(",").forEach(src => {
-                                            saveParams.push([src, picName]);
-                                        });
-                                    }
-                                    //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
-                                }
-                            });
+                            saveParams = getSaveParams();
                             self.batchDownload(saveParams, ()=>{
                                 downloading=false;
                                 self.showTips("Completed!", 1000);
@@ -14579,7 +14612,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             break;
                         case 'addImageUrls':
-                            var urls = window.prompt(i18n('addImageUrls') + ": White space to split multi-image, '[01-09]' to generate nine urls from 01 to 09, '$http://xxx' to fetch images from page","https://xxx.xxx/pic-[20-99].jpg https://xxx.xxx/pic-[01-10].png");
+                            let urls = window.prompt(i18n('addImageUrls') + ": White space to split multi-image, '[01-09]' to generate nine urls from 01 to 09, '$http://xxx' to fetch images from page","https://xxx.xxx/pic-[20-99].jpg https://xxx.xxx/pic-[01-10].png");
                             if (!urls) return;
                             self.addImageUrls(urls);
                             break;
@@ -14742,7 +14775,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
                 addWheelEvent(eleMaps['body'],function(e){//wheel事件
-                    if(e.deltaZ!=0)return;//z轴
+                    if(e.deltaZ!=0 || e.target.nodeName=="TEXTAREA")return;//z轴
                     if(eleMaps['sidebar-toggle'].style.visibility == 'hidden')return;
                     var target=e.target;
                     //e.preventDefault();
@@ -19014,6 +19047,7 @@ ImgOps | https://imgops.com/#b#`;
                     height: 80vh;\
                     border: 10px solid #272727;\
                     background: #ffffffee;\
+                    color: black;\
                     }\
                     span.pv-gallery-urls-textarea-close,\
                     span.pv-gallery-urls-textarea-download{\
@@ -25332,6 +25366,17 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("formatConversion"),
                     type: 'textarea',
                     "default": prefs.gallery.formatConversion || ''
+                },
+                'gallery.aria2Host': {
+                    label: i18n("aria2Host"),
+                    type: 'text',
+                    className: 'order',
+                    "default": prefs.gallery.aria2Host || 'http://localhost:6800'
+                },
+                'gallery.aria2Token': {
+                    label: i18n("aria2Token"),
+                    type: 'text',
+                    "default": prefs.gallery.aria2Token || ''
                 },
                 'gallery.scaleSmallSize': {
                     label: i18n("galleryScaleSmallSize1"),
