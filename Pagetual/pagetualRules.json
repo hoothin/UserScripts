@@ -4,7 +4,7 @@
     "author": "dyzer",
     "url": "^https?://u2\\.dmhy\\.org/torrents\\.php",
     "example": "https://u2.dmhy.org/torrents.php",
-    "pageElement": "body > table.mainouter > tbody > tr:nth-of-type(2) > td.outer > table.main > tbody > tr > td.embedded",
+    "pageElement": "body > table.mainouter > tbody > tr:nth-of-type(2) > td.outer > table.main > tbody > tr > td.embedded"
 },
 {
     "name": "Qi Xing Blog | 一个互联网角落的秘密基地~🥳",
