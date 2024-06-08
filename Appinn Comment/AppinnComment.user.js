@@ -27,7 +27,7 @@
                 if (!dataPreloaded) return;
                 dataPreloaded = JSON.parse(JSON.parse(dataPreloaded.dataset.preloaded)["topic_" + commentLink.href.match(/\d+/)[0]]).post_stream.posts;
                 let posts = document.createElement("ul");
-                posts.style.maxHeight = '100vh';
+                posts.style.maxHeight = '90vh';
                 posts.style.overflow = 'auto';
                 posts.style.margin = '0';
                 let title = document.createElement("h3");
