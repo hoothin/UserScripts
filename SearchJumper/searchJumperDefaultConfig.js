@@ -342,7 +342,7 @@ switch (lang) {
                     },
                     {
                         "name": "一键抠图",
-                        "url": "https://www.remove.bg/zh/upload#p{sleep(500)&body=%i}"
+                        "url": "https://www.remove.bg/zh/upload#p{sleep(1000)&body=%i}"
                     },
                     {
                         "name": "WhatAnime",
@@ -1287,7 +1287,7 @@ switch (lang) {
                     },
                     {
                         "name": "Remove bg",
-                        "url": "https://www.remove.bg/upload#p{sleep(500)&body=%i}"
+                        "url": "https://www.remove.bg/upload#p{sleep(1000)&body=%i}"
                     },
                     {
                         "name": "Google lens",
