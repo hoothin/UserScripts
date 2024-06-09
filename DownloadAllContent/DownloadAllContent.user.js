@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.5
+// @version      2.8.3.6
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -816,11 +816,11 @@ if (window.top != window.self) {
     function saveContent() {
         if (win.downloadAllContentSaveAsZip && saveAsZip) {
             win.downloadAllContentSaveAsZip(rCats, i18n.info.replace("#t#", location.href), content => {
-                saveAs(content, document.title + ".zip");
+                saveAs(content, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".zip");
             });
         } else {
             var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, document.title + ".txt");
+            saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".txt");
         }
     }
 
@@ -843,7 +843,7 @@ if (window.top != window.self) {
                 txt += '\n\n'+cat;
             });
             var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, document.title+".md");
+            saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".md");
         }
     }
 
