@@ -7420,5 +7420,14 @@
     "pageElement": ".leftnav+td>*",
     "pageAction": "eles.forEach(ele=>{let portalImg=ele.querySelector('var.portalImg');if(!portalImg)return;portalImg.innerHTML=`<img border='0' width='256' align='left' style='margin-bottom:8px;margin-right:8px;' title='pic' src='${portalImg.title}'>`})",
     "action": 0
+},
+{
+    "name": "Linux Mint Forums",
+    "url": "^https://forums\\.linuxmint\\.com",
+    "example": "https://forums.linuxmint.com/https://forums.linuxmint.com/viewforum.php?f=225&sid=68c4b0d85f3ce4c5f9d925204808e035",
+    "nextlink": "div[class$='bar-top'] > .pagination > ul > li[class='arrow next'] > a",
+    "replaceElement": "div[class$='bar-bottom'] > .pagination",
+    "pageElement": "div[class='forumbg'] > .inner> ul[class='topiclist topics']",
+    "action": 1
 }
 ]
