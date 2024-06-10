@@ -7390,7 +7390,7 @@
     "nextlink": "icon-top-ranking-page-bottom> .link-blue-box.next",
     "replaceElement": ".link-blue-box",
     "pageElement": ".top-ranking-table",
-    "action": 1
+    "action": 2
 },
 {
     "name": "MAL - recommendations",
