@@ -51,6 +51,13 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 ]
 ```
 
+ <details>
+<summary><h3>Pagetual User-defined rules</h3></summary>
+     <a href="https://github.com/TerenceCK/pagetualRules/blob/main/happymh.json">TerenceCK</a><br>
+     <a href="https://github.com/JPLiu/TestFiles/blob/main/UserScripts/Pagetual/Liu's-Pagetual-Rule.json">JPLiu</a><br>
+     <a href="https://github.com/skofkyo/AutoPager/blob/main/pagetualRules_EX.json">skofkyo</a>
+ </details>
+
 name
 --
 Name of the target site
