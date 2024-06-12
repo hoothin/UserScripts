@@ -113,8 +113,8 @@ switch (lang) {
                     },
                     {
                         "name": "谷歌图片",
-                        "url": "https://www.google.com/search?q=%s&tbm=isch",
-                        "match": "www\\.google\\..*tbm=isch"
+                        "url": "https://www.google.com/search?q=%s&udm=2",
+                        "match": "www\\.google\\..*udm=2"
                     },
                     {
                         "name": "图片聚合搜索",
@@ -207,7 +207,7 @@ switch (lang) {
                         "name": "Google",
                         "url": "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
                         "keywords": "textarea[name='q']",
-                        "match": "https://www\\.google\\..*/search(?!.*tbm=isch)"
+                        "match": "https://www\\.google\\..*/search((?!udm=2).)*$"
                     },
                     {
                         "name": "📄  复制",
@@ -780,7 +780,7 @@ switch (lang) {
                     {
                         "name": "Google",
                         "url": "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
-                        "match": "https://www\\.google\\..*/search",
+                        "match": "https://www\\.google\\..*/search((?!udm=2).)*$",
                         "charset": "utf-8",
                         "keywords": "textarea[name='q']",
                         "shortcut": "g",
@@ -789,7 +789,7 @@ switch (lang) {
                     {
                         "name": "Google advanced",
                         "url": "https://www.google.com/search?q=%s%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{Limit lang/zh-CN/zh-TW/zh-ALL/JA/EN,&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_ja/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
-                        "match": "https://www\\.google\\..*/search",
+                        "match": "https://www\\.google\\..*/search((?!udm=2).)*$",
                         "hideNotMatch": true
                     },
                     {
@@ -850,8 +850,8 @@ switch (lang) {
                 "sites": [
                     {
                         "name": "Google image",
-                        "url": "https://www.google.com/search?q=%s&tbm=isch",
-                        "match": "www\\.google\\..*tbm=isch"
+                        "url": "https://www.google.com/search?q=%s&udm=2",
+                        "match": "www\\.google\\..*udm=2"
                     },
                     {
                         "name": "Bing image",
