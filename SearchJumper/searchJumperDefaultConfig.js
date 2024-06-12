@@ -6,6 +6,45 @@ switch (lang) {
     case "zh-SG":
         sitesConfig = [
             {
+                "type": "搜索",
+                "icon": "search",
+                "description": "搜索引擎主分类",
+                "sites": [
+                    {
+                        "name": "百度",
+                        "url": "https://www.baidu.com/s?wd=%s&ie=utf-8",
+                        "keywords": "(?:wd|word)=(.*?)(&|$)",
+                        "match": "https?://(www|m)\\.baidu\\.com/.*(wd|word)=",
+                        "shortcut": "KeyB",
+                        "alt": true
+                    },
+                    {
+                        "name": "百度高级搜索",
+                        "url": "https://www.baidu.com/s?wd=%s%input{请输入限制文件类型, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{请输入限制日期/过去一小时/过去一天/过去一周/过去一个月/过去一年,&gpc=stf%3D%date{/1000-3600}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-86400}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-604800}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-2592000}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-31536000}%2C%date{/1000}%7Cstftype%3D1}",
+                        "match": "https://www\\.baidu\\.com/(s|baidu)",
+                        "nobatch": true,
+                        "hideNotMatch": true,
+                        "openInNewTab": false
+                    },
+                    {
+                        "name": "必应",
+                        "url": "https://www.bing.com/search?q=%s",
+                        "match": "^https://(www|cn|global)\\.bing\\.com/search"
+                    },
+                    {
+                        "name": "360",
+                        "url": "https://www.so.com/s?ie=utf-8&q=%s",
+                        "match": "(www|m)\\.so\\.com/s\\?.*[&\\?]q="
+                    },
+                    {
+                        "name": "搜狗",
+                        "url": "https://www.sogou.com/web?query=%s",
+                        "keywords": "(?:query|keyword)=(.*?)(&|$)",
+                        "match": "(www|wap|m)\\.sogou\\.com/(web|web/searchList\\.jsp).*(query|keyword)="
+                    }
+                ]
+            },
+            {
                 "type": "百科",
                 "icon": "book-open-reader",
                 "sites": [
@@ -93,45 +132,6 @@ switch (lang) {
                         "name": "ChatGPT搜索GIF",
                         "url": "https://poe.com/ChatGPT#p{sleep(1000)&[class*\\='ChatMessageInputContainer'] textarea=hey ChatGPT. hope you're having a great day. From now on you will respond to anything I say with the perfect gif response. Once you know what gif you want to use, compile the most accurate and perfect search phrase that will result in the specific gif you want to send. respond with url: \" Sure, I'm happy to help you!\\n http://scythe-spot-carpenter.glitch.me/search?search_term\\=<SEARCH+PHRASE>.gif \n%s&click(button[class*\\='ChatMessageSendButton_sendButton'])}",
                         "openInNewTab": true
-                    }
-                ]
-            },
-            {
-                "type": "搜索",
-                "icon": "search",
-                "description": "搜索引擎主分类",
-                "sites": [
-                    {
-                        "name": "百度",
-                        "url": "https://www.baidu.com/s?wd=%s&ie=utf-8",
-                        "keywords": "(?:wd|word)=(.*?)(&|$)",
-                        "match": "https?://(www|m)\\.baidu\\.com/.*(wd|word)=",
-                        "shortcut": "KeyB",
-                        "alt": true
-                    },
-                    {
-                        "name": "百度高级搜索",
-                        "url": "https://www.baidu.com/s?wd=%s%input{请输入限制文件类型, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{请输入限制日期/过去一小时/过去一天/过去一周/过去一个月/过去一年,&gpc=stf%3D%date{/1000-3600}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-86400}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-604800}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-2592000}%2C%date{/1000}%7Cstftype%3D1/&gpc=stf%3D%date{/1000-31536000}%2C%date{/1000}%7Cstftype%3D1}",
-                        "match": "https://www\\.baidu\\.com/(s|baidu)",
-                        "nobatch": true,
-                        "hideNotMatch": true,
-                        "openInNewTab": false
-                    },
-                    {
-                        "name": "必应",
-                        "url": "https://www.bing.com/search?q=%s",
-                        "match": "^https://(www|cn|global)\\.bing\\.com/search"
-                    },
-                    {
-                        "name": "360",
-                        "url": "https://www.so.com/s?ie=utf-8&q=%s",
-                        "match": "(www|m)\\.so\\.com/s\\?.*[&\\?]q="
-                    },
-                    {
-                        "name": "搜狗",
-                        "url": "https://www.sogou.com/web?query=%s",
-                        "keywords": "(?:query|keyword)=(.*?)(&|$)",
-                        "match": "(www|wap|m)\\.sogou\\.com/(web|web/searchList\\.jsp).*(query|keyword)="
                     }
                 ]
             },
@@ -774,6 +774,77 @@ switch (lang) {
     default:
         sitesConfig = [
             {
+                "type": "Search",
+                "icon": "search",
+                "sites": [
+                    {
+                        "name": "Google",
+                        "url": "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
+                        "match": "https://www\\.google\\..*/search",
+                        "charset": "utf-8",
+                        "keywords": "textarea[name='q']",
+                        "shortcut": "g",
+                        "alt": true
+                    },
+                    {
+                        "name": "Google advanced",
+                        "url": "https://www.google.com/search?q=%s%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{Limit lang/zh-CN/zh-TW/zh-ALL/JA/EN,&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_ja/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
+                        "match": "https://www\\.google\\..*/search",
+                        "hideNotMatch": true
+                    },
+                    {
+                        "name": "SearX",
+                        "url": "https://searx.be/search?q=%s"
+                    },
+                    {
+                        "name": "You",
+                        "url": "https://you.com/search?q=%s",
+                        "icon": "https://you.com/favicon/favicon-32x32.png"
+                    },
+                    {
+                        "name": "Bing",
+                        "url": "https://www.bing.com/search?q=%s",
+                        "match": "^https://(www|cn|global)\\.bing\\.com/search"
+                    },
+                    {
+                        "name": "DuckDuckGo",
+                        "url": "https://duckduckgo.com/?q=%s"
+                    },
+                    {
+                        "name": "Yahoo",
+                        "url": "https://search.yahoo.com/search;?p=%s"
+                    },
+                    {
+                        "name": "Yandex",
+                        "url": "https://yandex.com/search/?text=%s"
+                    },
+                    {
+                        "name": "Baidu",
+                        "url": "https://www.baidu.com/s?wd=%s&ie=utf-8",
+                        "keywords": "(?:wd|word)=(.*?)(&|$)",
+                        "match": "https?://(www|m)\\.baidu\\.com/.*(wd|word)="
+                    },
+                    {
+                        "name": "Startpage",
+                        "url": "https://www.startpage.com/sp/search?query=%s",
+                        "icon": "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
+                    },
+                    {
+                        "name": "Qwant",
+                        "url": "https://www.qwant.com/?q=%s"
+                    },
+                    {
+                        "name": "Ecosia",
+                        "url": "https://www.ecosia.org/search?method=index&q=%s",
+                        "icon": "https://cdn-static.ecosia.org/static/icons/favicon.ico"
+                    },
+                    {
+                        "name": "Brave",
+                        "url": "https://search.brave.com/search?q=%s"
+                    }
+                ]
+            },
+            {
                 "type": "Image",
                 "icon": "image",
                 "sites": [
@@ -1005,70 +1076,6 @@ switch (lang) {
                     {
                         "name": "1688",
                         "url": "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
-                    }
-                ]
-            },
-            {
-                "type": "Search",
-                "icon": "search",
-                "sites": [
-                    {
-                        "name": "Google",
-                        "url": "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
-                        "match": "https://www\\.google\\..*/search",
-                        "charset": "utf-8",
-                        "keywords": "textarea[name='q']",
-                        "shortcut": "g",
-                        "alt": true
-                    },
-                    {
-                        "name": "Google advanced",
-                        "url": "https://www.google.com/search?q=%s%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{Limit lang/zh-CN/zh-TW/zh-ALL/JA/EN,&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_ja/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
-                        "match": "https://www\\.google\\..*/search",
-                        "hideNotMatch": true
-                    },
-                    {
-                        "name": "SearX",
-                        "url": "https://searx.be/search?q=%s"
-                    },
-                    {
-                        "name": "You",
-                        "url": "https://you.com/search?q=%s",
-                        "icon": "https://you.com/favicon/favicon-32x32.png"
-                    },
-                    {
-                        "name": "Bing",
-                        "url": "https://www.bing.com/search?q=%s"
-                    },
-                    {
-                        "name": "DuckDuckGo",
-                        "url": "https://duckduckgo.com/?q=%s"
-                    },
-                    {
-                        "name": "Yahoo",
-                        "url": "https://search.yahoo.com/search;?p=%s"
-                    },
-                    {
-                        "name": "Yandex",
-                        "url": "https://yandex.com/search/?text=%s"
-                    },
-                    {
-                        "name": "Startpage",
-                        "url": "https://www.startpage.com/sp/search?query=%s",
-                        "icon": "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
-                    },
-                    {
-                        "name": "Qwant",
-                        "url": "https://www.qwant.com/?q=%s"
-                    },
-                    {
-                        "name": "Ecosia",
-                        "url": "https://www.ecosia.org/search?method=index&q=%s",
-                        "icon": "https://cdn-static.ecosia.org/static/icons/favicon.ico"
-                    },
-                    {
-                        "name": "Brave",
-                        "url": "https://search.brave.com/search?q=%s"
                     }
                 ]
             },
