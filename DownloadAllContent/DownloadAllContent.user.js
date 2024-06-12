@@ -272,6 +272,7 @@ if (window.top != window.self) {
                 downloadCustomShortcut:"自定义下载"
             };
             break;
+        case "zh":
         case "zh-TW":
         case "zh-HK":
             i18n={
@@ -315,6 +316,66 @@ if (window.top != window.self) {
                 downloadShortcut:"下載章節",
                 downloadSingleShortcut:"下載單頁",
                 downloadCustomShortcut:"自設下載"
+            };
+            break;
+        case "ar":
+        case "ar-AE":
+        case "ar-BH":
+        case "ar-DZ":
+        case "ar-EG":
+        case "ar-IQ":
+        case "ar-JO":
+        case "ar-KW":
+        case "ar-LB":
+        case "ar-LY":
+        case "ar-MA":
+        case "ar-OM":
+        case "ar-QA":
+        case "ar-SA":
+        case "ar-SY":
+        case "ar-TN":
+        case "ar-YE":
+            i18n={
+                fetch: "تحميل",
+                info: "المصدر: #t#\nتم تنزيل الـ TXT بواسطة 'DownloadAllContent'",
+                error: "فشل في تحميل الفصل الحالي",
+                downloading: "......%s تحميل<br>صفحات متبقية %s صفحات تم تحميلها، هناك %s",
+                complete: "صفحات في المجموع %s اكتمل! حصلت على",
+                del: "لتجاهل CSS تعيين محددات",
+                custom: "تحميل مخصص",
+                customInfo: "لروابط الفصول sss إدخال الروابط أو محددات",
+                reSort: "إعادة الترتيب حسب العنوان",
+                reSortUrl: "إعادة الترتيب حسب الروابط",
+                setting: "فتح الإعدادات",
+                searchRule: "قاعدة البحث",
+                abort: "إيقاف",
+                save: "حفظ",
+                saveAsMd: "Markdown حفظ كـ",
+                downThreadNum: "تعيين عدد الخيوط للتحميل",
+                customTitle: "تخصيص عنوان الفصل، إدخال المحدد في الصفحة الداخلية",
+                reSortDefault: "الترتيب الافتراضي حسب الموقع في الصفحة",
+                reverseOrder: "عكس ترتيب الفصول",
+                saveBtn: "حفظ الإعدادات",
+                saveOk: "تم الحفظ",
+                nextPage: "التحقق من الصفحة التالية في الفصل",
+                nextPageReg: "مخصص للصفحة التالية RegExp",
+                retainImage: "الاحتفاظ بعنوان الصورة إذا كانت هناك صور في النص",
+                minTxtLength: "المحاولة مرة أخرى عندما يكون طول المحتوى أقل من هذا",
+                showFilterList: "عرض نافذة التصفية والترتيب قبل التحميل",
+                ok: "موافق",
+                close: "إغلاق",
+                dacSortByPos: "الترتيب حسب الموقع",
+                dacSortByUrl: "الترتيب حسب الرابط",
+                dacSortByName: "الترتيب حسب الاسم",
+                reverse: "عكس الاختيار",
+                dacUseIframe: "لتحميل المحتوى (بطيء) iframe استخدام",
+                dacSaveAsZip: "zip حفظ كـ",
+                dacSetCustomRule: "تعديل القواعد",
+                dacAddUrl: "إضافة فصل",
+                dacStartDownload: "تحميل المحدد",
+                downloadShortcut: "تحميل الفصل",
+                downloadSingleShortcut: "تحميل صفحة واحدة",
+                downloadCustomShortcut: "تحميل مخصص"
             };
             break;
         default:
@@ -458,14 +519,14 @@ if (window.top != window.self) {
                         <div class="fun">
                             <input id="dacConfirmRule" value="${i18n.ok}" type="button"/>
                             <input id="dacCustomClose" value="${i18n.close}" type="button"/>
-                        </div>
+			            </div>
                     </div>
                     <div class="sort">
                         <input id="dacSortByPos" value="${i18n.dacSortByPos}" type="button"/>
                         <input id="dacSortByUrl" value="${i18n.dacSortByUrl}" type="button"/>
                         <input id="dacSortByName" value="${i18n.dacSortByName}" type="button"/>
                         <input id="reverse" value="${i18n.reverse}" type="button"/>
-                    </div>
+			        </div>
                     <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
                     <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><span><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></span> <span style="display:${win.downloadAllContentSaveAsZip ? "inline" : "none"}"><input id="dacSaveAsZip" type="checkbox" checked="checked"/><label for="dacSaveAsZip"> ${i18n.dacSaveAsZip}</label></span></p>
                     <div class="fun">
@@ -473,7 +534,7 @@ if (window.top != window.self) {
                         <input id="dacAddUrl" value="${i18n.dacAddUrl}" type="button"/>
                         <input id="dacStartDownload" value="${i18n.dacStartDownload}" type="button"/>
                         <input id="dacLinksClose" value="${i18n.close}" type="button"/>
-                    </div>
+			        </div>
                 </div>`);
             let dacSortByPos = filterListContainer.querySelector("#dacSortByPos");
             let dacSortByUrl = filterListContainer.querySelector("#dacSortByUrl");
