@@ -6,7 +6,7 @@
 // @version      1.3.19
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
-// @description:ja     Random Sexy Pictures Parser
+// @description:ja     ランダムセクシー画像パーサー
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
 // @match        https://api.nyan.xyz/httpapi/sexphoto*
