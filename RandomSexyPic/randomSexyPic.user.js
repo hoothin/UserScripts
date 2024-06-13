@@ -183,6 +183,7 @@ if (window.top != window.self) {
                      "https://3650000.xyz/api/?type=json&mode=2&num=6",
                      "https://3650000.xyz/api/?type=json&mode=3&num=6",
                      "https://3650000.xyz/api/?type=json&mode=5&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=6&num=6",
                      "https://3650000.xyz/api/?type=json&mode=7&num=6",
                      "https://3650000.xyz/api/?type=json&mode=8&num=6",
                      "https://3650000.xyz/api/?type=json&mode=9&num=6"],
@@ -215,8 +216,8 @@ if (window.top != window.self) {
                     ["Weibo","1"],
                     ["Instagram","2"],
                     ["Cosplay","3"],
-                    ["Nsfw","66"],
                     ["Mtcos","5"],
+                    ["Mtcos2","6"],
                     ["Legs","7"],
                     ["MoreCoser","8"],
                     ["Tuwan","9"]
