@@ -1,4 +1,4 @@
-[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.53](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
+[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.54](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
@@ -52,7 +52,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 ```
 
  <details>
-<summary><h3>Pagetual User-defined rules</h3></summary>
+<summary><h3>Pagetual User-defined rules cases</h3></summary>
      <a href="https://github.com/TerenceCK/pagetualRules/blob/main/happymh.json">TerenceCK</a><br>
      <a href="https://github.com/JPLiu/TestFiles/blob/main/UserScripts/Pagetual/Liu's-Pagetual-Rule.json">JPLiu</a><br>
      <a href="https://github.com/skofkyo/AutoPager/blob/main/pagetualRules_EX.json">skofkyo</a>

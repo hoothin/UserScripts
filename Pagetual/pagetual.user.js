@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.53
+// @version      1.9.37.54
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2192,12 +2192,15 @@
                             ele = img;
                         }
                     }
-                    self.curSiteRule.pageElement = geneSelector(ele);
                     let childrenEnd = self.checkTargetChildren(ele, curWin, articleNum, curHeight);
                     if (childrenEnd) {
-                        self.curSiteRule.pageElement += childrenEnd;
+                        self.curSiteRule.pageElement = geneSelector(ele) + childrenEnd;
                         ele = ele.children;
                     } else {
+                        if (ele.scrollHeight === 0 && ele.parentNode.children.length === 1) {
+                            ele = ele.parentNode;
+                        }
+                        self.curSiteRule.pageElement = geneSelector(ele);
                         ele = [ele];
                     }
                     debug(self.curSiteRule.pageElement, 'Page element');
@@ -2209,6 +2212,7 @@
                     while (posEle && !posEle.offsetParent) {
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
+                    if (posEle && posEle.scrollHeight === 0 && posEle.lastElementChild) posEle = posEle.lastElementChild;
                     let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
                         debug("Stop as too long between next & page element, try to enable Force-Join mode.");
@@ -5048,7 +5052,7 @@
                 delete this.editTemp.type;
                 delete this.editTemp.updatedAt;
             }
-            if (this.selectorInput.value && !this.frame.classList.contains("showDetail")) {
+            if (this.selectorInput.value && (!this.frame.classList.contains("showDetail") || !this.editTemp || !this.editTemp.pageElement)) {
                 if (this.foundEle && this.foundEle.length === 1) {
                     let foundEleRect = this.foundEle[0].getBoundingClientRect();
                     if (foundEleRect.height < 100) {
@@ -5109,7 +5113,7 @@
         }
 
         fillTempRuleTextarea() {
-            if (!this.frame.classList.contains("showDetail")) this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
+            if (!this.frame.classList.contains("showDetail") || !this.editTemp || !this.editTemp.pageElement) this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
         }
 
         setSelectorDiv(selector) {
