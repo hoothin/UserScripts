@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.8.2
+// @version              2024.6.13.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14339,7 +14339,7 @@ ImgOps | https://imgops.com/#b#`;
                     },
                 };
 
-                slideShow.setCountdown(slideShow.opts.interval);;
+                slideShow.setCountdown(slideShow.opts.interval);
                 this.slideShow=slideShow;
 
                 let filterIcon = container.querySelector(".pv-gallery-head-left-filter-icon");
@@ -14520,6 +14520,9 @@ ImgOps | https://imgops.com/#b#`;
                                         id: Math.random()
                                     }),
                                     onload: function(d) {
+                                    },
+                                    onerror: function(e) {
+                                        self.showTips("Error! Check aria2 setting!", 1000);
                                     }
                                 });
                             });
@@ -15197,7 +15200,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 batchDlBtn.onclick=function(e){
                     checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                    if(checkBoxs.length<1)checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");;
+                    if(checkBoxs.length<1)checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
 
                     var saveParams = [],saveIndex=0;
                     [].forEach.call(checkBoxs, function(node){
@@ -19048,6 +19051,7 @@ ImgOps | https://imgops.com/#b#`;
                     border: 10px solid #272727;\
                     background: #ffffffee;\
                     color: black;\
+                    text-wrap: nowrap;\
                     }\
                     span.pv-gallery-urls-textarea-close,\
                     span.pv-gallery-urls-textarea-download{\
