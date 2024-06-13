@@ -177,16 +177,15 @@ if (window.top != window.self) {
         "3650000.xyz":{
             include: /\/api\/\?type=json/i,
             name:"3650000",
-            url:"https://3650000.xyz/api/?type=json&mode=7&num=15",
-            luckyUrl:["https://3650000.xyz/api/?type=json&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=1&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=2&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=3&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=66&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=5&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=7&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=8&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=9&num=15"],
+            url:"https://3650000.xyz/api/?type=json&mode=7&num=6",
+            luckyUrl:["https://3650000.xyz/api/?type=json&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=1&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=2&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=3&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=5&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=7&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=8&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=9&num=6"],
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
