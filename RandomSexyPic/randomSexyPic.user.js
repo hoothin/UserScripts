@@ -79,7 +79,7 @@ if (window.top != window.self) {
             }
         },
         "api.nyan.xyz":{
-            hide: false,
+            hide: true,
             include: /httpapi\/sexphoto/i,
             name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=10",
