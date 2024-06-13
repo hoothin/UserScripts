@@ -122,11 +122,11 @@ if (window.top != window.self) {
             }
         },
         "buyersShow":{
-            include: /api\/(rand|tao|mjx1)/i,
+            include: /api\/(rand|tao|mjx1|taobaoBuyerShow)/i,
             name:"Taobao Buyers Show",
             urls:["https://api.uomg.com/api/rand.img3?format=json&num=15",
-                 "https://api.vvhan.com/api/tao?type=json&num=15",
-                 "https://www.hlapi.cn/api/mjx1?type=json&num=15"],
+                 "https://api.suxun.site/api/tao?type=json&num=15",
+                 "https://api.03c3.cn/api/taobaoBuyerShow?type=json&num=15"],
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
@@ -238,7 +238,9 @@ if (window.top != window.self) {
         "api.uomg.com":"buyersShow",
         "api.vvhan.com":"buyersShow",
         "www.hlapi.cn":"buyersShow",
-        "api.ghser.com":"buyersShow"
+        "api.ghser.com":"buyersShow",
+        "api.03c3.cn":"buyersShow",
+        "api.suxun.site":"buyersShow"
     };
     var customRule=GM_getValue("RSPrules") || {};
     var customRuleArr=[];
