@@ -2214,14 +2214,14 @@
                     return ele;
                 }
                 pageElement = checkElement(body);
-                if (pageElement && pageElement.length > 0 && self.initNext) {
+                if (doc === document && pageElement && pageElement.length > 0 && self.initNext) {
                     let posEle = pageElement[pageElement.length - 1];
                     while (posEle && !posEle.offsetParent) {
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
                     if (posEle && posEle.scrollHeight === 0 && posEle.lastElementChild) posEle = posEle.lastElementChild;
                     let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
-                    if (doc === document && lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
+                    if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
                         debug("Stop as too long between next & page element, try to enable Force-Join mode.");
                         isPause = true;
                         pageElement = [];
