@@ -1053,7 +1053,8 @@
     }
 
     function getElementByXpath(xpath, doc, contextNode) {
-        doc = doc || document;
+        if (doc && doc.ownerDocument) doc = doc.ownerDocument;
+        doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         try {
             let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
@@ -1065,7 +1066,8 @@
     }
 
     function getAllElementsByXpath(xpath, contextNode, doc) {
-        doc = doc || document;
+        if (doc && doc.ownerDocument) doc = doc.ownerDocument;
+        doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         var result = [];
         try {
@@ -2398,7 +2400,7 @@
             for (let i = 0; i < list.length; i++) {
                 await sleep(1);
                 let sel = list[i];
-                let result = source.querySelectorAll(sel);
+                let result = getAllElements(sel, source);
                 if (result.length > 0) {
                     if (defaultView) {
                         for (let i = result.length - 1; i >= 0; i--) {
@@ -2523,7 +2525,9 @@
                 "[class*=pagination-next]>button",
                 "[class*=page--current]+li>a",
                 "[class*=Pages]>.curr+a",
-                ".page>em+a"
+                ".page>em+a",
+                '//button[contains(@class, "Page")][text()="Next"]',
+                '//button[contains(@class, "page")][text()="next"]'
             ];
             let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
@@ -8925,7 +8929,7 @@
                 if (curPage === 1) {
                     if (ruleParser.curSiteRule.pinUrl) {
                         setTimeout(() => {isLoading = false;}, 500);
-                    } else if (tryTimes++ < 3) {
+                    } else if (tryTimes++ < 5) {
                         setTimeout(() => {isLoading = false;}, 1000);
                     } else {
                         ruleParser.findNoNext();
