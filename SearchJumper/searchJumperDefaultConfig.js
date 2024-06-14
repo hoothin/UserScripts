@@ -570,7 +570,8 @@ switch (lang) {
                     },
                     {
                         "name": "🔗 链接预览",
-                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 600px;\n    height: 400px;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
+                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>",
+                        "description": "需要配合扩展“Ignore X-Frame headers”使用"
                     },
                     {
                         "name": "打开链接",
@@ -1198,7 +1199,7 @@ switch (lang) {
                     },
                     {
                         "name": "🔗 Preview link",
-                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 600px;\n    height: 400px;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
+                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
                     },
                     {
                         "name": "Copy target svg to base64",
