@@ -2221,7 +2221,7 @@
                     }
                     if (posEle && posEle.scrollHeight === 0 && posEle.lastElementChild) posEle = posEle.lastElementChild;
                     let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
-                    if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
+                    if (doc === document && lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
                         debug("Stop as too long between next & page element, try to enable Force-Join mode.");
                         isPause = true;
                         pageElement = [];
