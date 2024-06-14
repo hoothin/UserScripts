@@ -730,10 +730,21 @@ switch (lang) {
             {
                 "type": "AI",
                 "icon": "robot",
+                "selectTxt": true,
+                "openInNewTab": 1,
                 "sites": [
                     {
+                        "name": "解释以下内容-秘塔",
+                        "url": "https://metaso.cn/#p{textarea.search-consult-textarea=请解释以下内容\n`%s`&click(button.send-arrow-button)}"
+                    },
+                    {
+                        "name": "解释以下内容-Gemini",
+                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=请解释以下内容\n`%s`} ",
+                        "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
+                    },
+                    {
                         "name": "Bard",
-                        "url": "https://bard.google.com/chat#p{.ql-editor.textarea=%s}",
+                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
@@ -1355,6 +1366,36 @@ switch (lang) {
                     {
                         "name": "npm",
                         "url": "https://www.npmjs.org/search?q=%s"
+                    }
+                ]
+            },
+            {
+                "type": "AI",
+                "icon": "robot",
+                "selectTxt": true,
+                "openInNewTab": 1,
+                "sites": [
+                    {
+                        "name": "Explain the following-Gemini",
+                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=Explain the following content please\n`%s`} ",
+                        "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
+                    },
+                    {
+                        "name": "Bard",
+                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}",
+                        "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
+                    },
+                    {
+                        "name": "Poe - Sage AI Chat",
+                        "url": "https://poe.com/#p{sleep(2000)&[class*\\=ChatMessageInputContainer]>textarea=%s&click([class*\\=ChatMessageSendButton])}"
+                    },
+                    {
+                        "name": "ChatGPT",
+                        "url": "https://chat.openai.com/#p{#prompt-textarea=%s&click(#prompt-textarea+button)}"
+                    },
+                    {
+                        "name": "Futurepedia - Find The Best AI Tools & Software",
+                        "url": "https://www.futurepedia.io/#p{input[name\\=q]=%s&click(button[type\\=submit]:not([disabled]))}"
                     }
                 ]
             },
