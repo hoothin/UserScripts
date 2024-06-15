@@ -1,4 +1,4 @@
-# 🏞️ Picviewer CE+
+# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
 
 > Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
