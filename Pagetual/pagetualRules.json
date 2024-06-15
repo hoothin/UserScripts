@@ -5473,7 +5473,10 @@
     "name": "Yandex",
     "url": "^https?://yandex\\.(com|ru)/search/",
     "pageElement": "#search-result>li",
-    "pageElementCss": "content-visibility:visible"
+    "pageElementCss": "content-visibility:visible",
+    "css": "inIframe:.HeaderDesktop{display:none;}",
+    "action": 2,
+    "fitWidth": false
 },
 {
     "name": "yandex web search mobile",
