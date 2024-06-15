@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.56
+// @version      1.9.37.57
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2641,7 +2641,7 @@
                     }
                     if (!this.verifyElement(aTag)) continue;
                     if (aTag.dataset && aTag.dataset.preview) continue;
-                    let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
+                    let availableHref = aTag.href && aTag.href.length < 250 && !/^(javascript:|#)/.test(aTag.href);
                     if (availableHref && /next\-?(page)?$|\/video\/|\/vod\/play\//i.test(aTag.href)) continue;
                     if (compareNodeName(aTag.parentNode, ["blockquote"])) continue;
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
@@ -2690,8 +2690,9 @@
                     }
                     if (urlWillChange) continue;
                     if (!next4 && availableHref) {
-                        if (aTag.href.indexOf(location.hostname) === -1) continue;
-                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?").toLowerCase();
+                        let aHref = aTag.href.indexOf("http") === 0 ? aTag.href : this.canonicalUri(aTag.href);
+                        if (aHref.indexOf(location.hostname) === -1) continue;
+                        let _aHref = aHref.replace("?&", "?").replace("index.php?", "?");
                         if (preStr || afterStr) {
                             let _aHrefTrim = _aHref;
                             if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
@@ -2699,8 +2700,8 @@
                             if (_aHrefTrim == pageNum + 1) {
                                 next4 = aTag;
                             }
-                        } else if (this.curUrl !== aTag.href) {
-                            _aHref = _aHref.replace(/\.s?html?$/i, "");
+                        } else if (this.curUrl !== aHref) {
+                            _aHref = _aHref.replace(/\.s?html?$/i, "").toLowerCase();
                             if (_aHref.indexOf(_url) !== -1) {
                                 let pageTwoMatch = _aHref.replace(_url, "").match(pageTwoReg);
                                 if (pageTwoMatch) {
