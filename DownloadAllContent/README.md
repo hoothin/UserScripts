@@ -7,7 +7,7 @@
 腳本會自動檢索頁面中的主要內容並下載（<del>省得複製完gal攻略還要手動逐條刪除「某某某13級頭銜水龍王發表於X年X月X日來自XX客戶端」</del>）。
 如果位於小說目錄頁會遍歷所有章節並排序拼接後存為TXT文檔。
 
-[![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts)
+[![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts#StarMe) ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
 
 ---
 
