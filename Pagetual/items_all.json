@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86233",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' browsetableinside ')]/ul",
+    "nextLink": "//a[contains(@class, 'active')][number()>0]/following-sibling::a[1]",
+    "url": "^https://xxxclub\\.(cc|to)/",
+    "exampleUrl": "https://xxxclub.cc/torrents/browse/0/\r\nhttps://xxxclub.to/torrents/browse/1/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "XXXClub",
+  "created_at": "2024-06-14T19:18:16+09:00",
+  "updated_at": "2024-06-14T19:18:16+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86231",
   "data": {
     "insertBefore": "",
@@ -10230,18 +10245,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/82190",
-  "name": "FRaU",
-  "created_by": "t_f_m",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2019-06-24T20:28:25+09:00",
   "data": {
-    "exampleUrl": "https://gendai.ismedia.jp/articles/-/65430",
-    "url": "^https://gendai\\.ismedia\\.jp/articles/-/",
     "pageElement": "//div[@class=\"articleBody\"]",
-    "insertBefore": "",
-    "nextLink": "//div[@class=\"nextpageTitle\"]/a"
+    "nextLink": "//div[@class=\"nextpageTitle\"]/a",
+    "url": "^https://gendai\\.media/articles/-/",
+    "exampleUrl": "https://gendai.media/articles/-/65430"
   },
-  "created_at": "2019-06-24T20:28:25+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
+  "name": "FRaU",
+  "created_at": "2019-06-24T20:28:25+09:00",
+  "updated_at": "2024-06-15T08:37:58+09:00"
 },
 {
   "data": {
