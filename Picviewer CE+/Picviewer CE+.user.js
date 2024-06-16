@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.16.1
+// @version              2024.6.16.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -24271,6 +24271,7 @@ ImgOps | https://imgops.com/#b#`;
                         };
                     }
                 } else if (target.nodeName.toUpperCase() != 'IMG') {
+                    let found = false;
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var broEle, broImg;
                     if (target.nodeName.toUpperCase() != 'A' && target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
@@ -24302,8 +24303,10 @@ ImgOps | https://imgops.com/#b#`;
                             noActual:noActual,
                             img: target
                         };
+                        found = true;
                     } else if (broImg) {
                         target = broImg;
+                        found = true;
                     } else if (target.nodeName.toUpperCase() == 'CANVAS') {
                         let src = target.src || target.dataset.src;
                         if (src) {
@@ -24315,9 +24318,11 @@ ImgOps | https://imgops.com/#b#`;
                                 noActual:noActual,
                                 img: target
                             };
+                            found = true;
                         }
                     } else if (target.children.length == 1 && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
+                        found = true;
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
@@ -24327,6 +24332,7 @@ ImgOps | https://imgops.com/#b#`;
                             noActual:noActual,
                             img: target
                         };
+                        found = true;
                     } else if (target.parentNode) {
                         let imgs;
                         if (target.nodeName == 'A') {
@@ -24334,8 +24340,10 @@ ImgOps | https://imgops.com/#b#`;
                         }
                         if (imgs && imgs.length == 1) {
                             target = imgs[0];
+                            found = true;
                         } else if (target.parentNode.nodeName.toUpperCase() == 'IMG') {
                             target = target.parentNode;
+                            found = true;
                         } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
                             target = target.parentNode;
                             let src = targetBg, nsrc = src, noActual = true, type = "scale";
@@ -24346,14 +24354,16 @@ ImgOps | https://imgops.com/#b#`;
                                 noActual:noActual,
                                 img: target
                             };
+                            found = true;
                         }
                     }
-                    if (!result) {
+                    if (!found) {
                         let checkEle = target;
                         while(checkEle && checkEle.children.length === 1) {
                             checkEle = checkEle.children[0];
                             if (checkEle.nodeName === "IMG") {
                                 target = checkEle;
+                                found = true;
                                 break;
                             } else if (prefs.floatBar.listenBg && hasBg(checkEle)) {
                                 let src = targetBg, nsrc = src, noActual = true, type = "scale";
@@ -24364,11 +24374,24 @@ ImgOps | https://imgops.com/#b#`;
                                     noActual:noActual,
                                     img: checkEle
                                 };
+                                found = true;
                                 break;
                             }
                         }
                     }
-                    if (!result && document.elementsFromPoint) {
+                    if (!found && target.children && target.children[0] && target.children[0].nodeName.toUpperCase() == 'IMG') {
+                        let img = target.children[0];
+                        while (img.nextElementSibling && img.nextElementSibling.nodeName.toUpperCase() == 'IMG') {
+                            img = img.nextElementSibling;
+                        }
+                        let rect = img.getBoundingClientRect();
+
+                        if (clientY >= rect.top && clientY <= rect.bottom && clientX >= rect.left  &&  clientX <= rect.right) {
+                            target = img;
+                            found = true;
+                        }
+                    }
+                    if (!found && document.elementsFromPoint) {
                         let elements = document.elementsFromPoint(clientX, clientY);
                         let checkLen = Math.min(elements.length, 5);
                         for (let i = 0; i < checkLen; i++) {
@@ -24377,6 +24400,7 @@ ImgOps | https://imgops.com/#b#`;
                             if (/img/i.test(ele.nodeName)) {
                                 target = ele;
                                 result = null;
+                                found = true;
                                 break;
                             } else if (prefs.floatBar.listenBg && hasBg(ele)) {
                                 target = ele;
@@ -24388,11 +24412,12 @@ ImgOps | https://imgops.com/#b#`;
                                     noActual:noActual,
                                     img: target
                                 };
+                                found = true;
                                 break;
                             }
                         }
                     }
-                    if (!result && target.shadowRoot) {
+                    if (!found && target.shadowRoot) {
                         let imgs = target.shadowRoot.querySelectorAll('img');
                         if (imgs.length === 1) target = imgs[0];
                     }
