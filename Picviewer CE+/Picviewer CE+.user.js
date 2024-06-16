@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.13.1
+// @version              2024.6.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16434,7 +16434,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var img=this.img;
 
-                if(!img || !img.classList)return;
+                if(!img || !img.classList || !img.parentNode)return;
                 img.classList.remove('pv-gallery-img_zoom-in');
                 img.classList.remove('pv-gallery-img_zoom-out');
 
@@ -17520,10 +17520,21 @@ ImgOps | https://imgops.com/#b#`;
                     } else if (/^svg$/i.test(node.nodeName)) {
                         if (node.clientHeight != 0 && (!node.classList || !node.classList.contains("pagetual"))) {
                             try {
-                                const xml = new XMLSerializer().serializeToString(node);
-                                const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(xml)))}`;
-                                node.src = ImgBase64;
-                                total.push(node);
+                                let images = node.querySelectorAll('image');
+                                if (images.length) {
+                                    arrayFn.forEach.call(images, function(image){
+                                        let src = image.href && image.href.baseVal;
+                                        if (src) {
+                                            image.src = canonicalUri(src, image.ownerDocument.URL, image.ownerDocument.baseURI);
+                                            total.push(image);
+                                        }
+                                    });
+                                } else {
+                                    const xml = new XMLSerializer().serializeToString(node);
+                                    const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(xml)))}`;
+                                    node.src = ImgBase64;
+                                    total.push(node);
+                                }
                             } catch(e) {
                                 debug(e);
                             }
