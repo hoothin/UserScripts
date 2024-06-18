@@ -1,4 +1,4 @@
-[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.59](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
+[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.60](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
@@ -90,6 +90,20 @@ detail: The configuration item to be changed
 > For example:
 ```
 window.postMessage({ action: 'config', command: 'patetual', detail: {enableWhiteList: true} }, '*');
+```
+
+3. **Click load more button**
+
+> Please send the following message body:
+```
+command: "pagetual"
+action: "loadMore"
+detail: null by default, 0 for unlimited checking load more button, -1 to stop
+```
+
+> For example:
+```
+window.postMessage({ action: 'loadMore', command: 'patetual', detail: 0 }, '*');
 ```
 + **Receive messages**
 
