@@ -13,6 +13,7 @@
 (function() {
     'use strict';
 
+    const enable1024sDelay = false;
     const defaultReply = "1024 感謝分享";
     var helper = {
         addCss: function(css) {
@@ -189,6 +190,7 @@
                     quickReply.attr('title', replyStr + "（右击修改）");
                     var formTitle = $("form td.h>b").text();
                     function setCountdown() {
+                        if (!enable1024sDelay) return;
                         quickReply.attr("disabled", true);
                         quickReply.css("background", "initial");
                         var leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
@@ -297,7 +299,7 @@
                                     let rushTimes = 5;
                                     let rushTimer = setInterval(() => {
                                         if (--rushTimes > 0) {
-                                            requestRush(300);
+                                            requestRush(100);
                                         } else {
                                             clearInterval(rushTimer);
                                             rushReply.val("搶簽結束");
@@ -305,7 +307,9 @@
                                     }, 5);
                                 } else {
                                     if (reachRushMinute) {
-                                        if (date.getSeconds() > 57) {
+                                        if (date.getSeconds() == 59) {
+                                            checkRush(1);
+                                        } else if (date.getSeconds() > 57) {
                                             checkRush(5);
                                         } else if (date.getSeconds() > 50) {
                                             checkRush(500);
@@ -321,7 +325,7 @@
                                 }
                             }, timeGap);
                         }
-                        rushReply.insertAfter( "form .btn" );
+                        rushReply.insertAfter( "form .btn:last-child" );
                         rushReply.click(function() {
                             checkRush(5000);
                             rushReply.attr("disabled", true);
