@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.18.1
+// @version              2024.6.18.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -20501,15 +20501,19 @@ ImgOps | https://imgops.com/#b#`;
                     -moz-user-select: -moz-none;\
                     user-select: none;\
                     }\
-                    .pv-pic-window-toolbar:hover {\
-                    opacity: 1;\
-                    }\
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-toolbar {\
                     display: block;\
                     }\
-                    .pv-pic-window-container:hover>.pv-pic-window-max,\
-                    .pv-pic-window-container:hover>.pv-pic-window-close{\
-                    opacity: 0.5!important;\
+                    .pv-pic-window-container:hover>.pv-pic-window-max.insert,\
+                    .pv-pic-window-container:hover>.pv-pic-window-close.insert{\
+                    opacity: 0.1!important;\
+                    }\
+                    .pv-pic-window-container:hover>.pv-pic-window-toolbar.insert{\
+                    opacity: 0.1;\
+                    }\
+                    .pv-pic-window-toolbar:hover,\
+                    .pv-pic-window-container>.pv-pic-window-toolbar.insert:hover{\
+                    opacity: 1;\
                     }\
                     span.pv-pic-window-close {\
                     cursor: pointer;\
@@ -20526,10 +20530,6 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:#1771FF;\
                     display: none;\
                     z-index: 2;\
-                    }\
-                    .pv-pic-window-container>.pv-pic-window-close:hover {\
-                    background-color:red;\
-                    opacity: 1!important;\
                     }\
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-close {\
                     display: block;\
@@ -20566,7 +20566,10 @@ ImgOps | https://imgops.com/#b#`;
                     display: none;\
                     z-index: 2;\
                     }\
-                    .pv-pic-window-container>.pv-pic-window-max:hover {\
+                    .pv-pic-window-container>.pv-pic-window-max:hover,\
+                    .pv-pic-window-container>.pv-pic-window-close:hover,\
+                    .pv-pic-window-container>.pv-pic-window-max.insert:hover,\
+                    .pv-pic-window-container>.pv-pic-window-close.insert:hover {\
                     background-color:red;\
                     opacity: 1!important;\
                     }\
@@ -21004,6 +21007,7 @@ ImgOps | https://imgops.com/#b#`;
                 function keepSI(obj,offsetDirection,defaultValue, out){
                     var objRect=obj.getBoundingClientRect();
                     var objStyle=obj.style;
+                    var insert=false;
 
                     while(offsetDirection.length){
                         var oD=offsetDirection[0];
@@ -21048,9 +21052,10 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                                 break;
                         }
+                        insert=insert||newValue!==oDV;
                         objStyle[oD]=newValue + 'px';
-
                     }
+                    insert ? obj.classList.add("insert") : obj.classList.remove("insert");
                 }
 
                 keepSI(this.closeButton,['top','right'],[-22,0]);
