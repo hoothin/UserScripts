@@ -2743,7 +2743,7 @@
             }
             if (!next) {
                 let isApp = !!body.querySelector("main#app");
-                let aTags = body.querySelectorAll("a,button,[type='button']");
+                let aTags = body.querySelectorAll("a,button,[type='button'],.btn-action");
                 for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
                     if (i % 100 === 0) {
