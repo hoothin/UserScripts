@@ -58,6 +58,58 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
      <a href="https://github.com/skofkyo/AutoPager/blob/main/pagetualRules_EX.json">skofkyo</a>
  </details>
 
+ <details>
+<summary>
+<h3>Call functionality from other extensions</h3>
+</summary>
+
+1. **Immediately load next page**
+
+> Please send the following message body:
+```
+command: "pagetual"
+action: "nextPage"
+detail: The number of pages to turn, 0 for unlimited, -1 to stop
+```
+
+> For example:
+```
+window.postMessage({ action: 'nextPage', command: 'patetual', detail: 5 }, '*');
+```
+
+2. **Set configuration**
+
+> Please send the following message body:
+```
+command: "pagetual"
+action: "config"
+detail: The configuration item to be changed
+```
+
+> For example:
+```
+window.postMessage({ action: 'config', command: 'patetual', detail: {enableWhiteList: true} }, '*');
+```
++ **Receive messages**
+
+> When the next page is inserted, the following message body will be sent:
+```
+{
+  action: 'insert',
+  command: 'patetual'
+}
+```
+
+> When the last page has been reached, the following message body will be sent:
+```
+{
+  action: 'lastPage',
+  command: 'patetual'
+}
+```
+
+ </details>
+
 name
 --
 Name of the target site

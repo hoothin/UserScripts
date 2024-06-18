@@ -3192,7 +3192,7 @@
                         if (rulesData.lastPageTips) {
                             showTips(i18n("lastPage"), "", 800);
                         }
-                        window.postMessage({
+                        _unsafeWindow.postMessage({
                             action: "lastPage",
                             command: 'pagetual'
                         }, '*');
@@ -4005,7 +4005,7 @@
                 }
             }
             isLoading = false;
-            window.postMessage({
+            _unsafeWindow.postMessage({
                 action: "insert",
                 command: 'pagetual'
             }, '*');
@@ -6226,7 +6226,7 @@
         let dbClick2StopMetaInput = createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
         let dbClick2StopKeyInput = createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
-        let otherConfigPage = (rulesData.configPage || configPage[0]) != location.href;
+        let otherConfigPage = (rulesData.configPage || configPage[0]) != location.href.replace(/#.*/, "");
         if (!otherConfigPage) {
             setConfigPageInput.parentNode.parentNode.style.display = "none";
         }
@@ -7522,7 +7522,7 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
-        window.removeEventListener('message', messageHandler, true);
+        _unsafeWindow.removeEventListener('message', messageHandler, true);
         let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
         if (ruleParser.curSiteRule.smart) {
             loadingMore = false;
@@ -7584,7 +7584,7 @@
             }
             return true;
         }
-        window.addEventListener('message', messageHandler, true);
+        _unsafeWindow.addEventListener('message', messageHandler, true);
         scrollHandler = e => {
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {});
@@ -8463,7 +8463,7 @@
         function returnFalse(log) {
             if (curPage > 1) {
                 if (rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
-                window.postMessage({
+                _unsafeWindow.postMessage({
                     action: "lastPage",
                     command: 'pagetual'
                 }, '*');
@@ -9112,7 +9112,7 @@
                         showTips(i18n("lastPage"), "", 800);
                     }
                     showedLastPageTips = true;
-                    window.postMessage({
+                    _unsafeWindow.postMessage({
                         action: "lastPage",
                         command: 'pagetual'
                     }, '*');
