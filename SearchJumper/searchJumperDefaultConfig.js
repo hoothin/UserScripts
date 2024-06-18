@@ -461,77 +461,6 @@ switch (lang) {
                 ]
             },
             {
-                "type": "辅助工具",
-                "icon": "list-alt",
-                "selectTxt": true,
-                "selectImg": true,
-                "selectAudio": true,
-                "selectVideo": true,
-                "selectLink": true,
-                "selectPage": true,
-                "openInNewTab": true,
-                "sites": [
-                    {
-                        "name": "手机号码聚合搜索",
-                        "url": "[\"360\",\"搜狗\"]",
-                        "icon": "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCABAAEADASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAMIAgcBBQYE/8QAMxAAAQMDAgIIBAYDAAAAAAAAAQIDBAAFEQYSByEIEzFBUWFxgRQyUmIVIzNCkbFyoeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AsPSlKBSlKBSo2X2pDfWR3UPI+ptYUP5FSUClKUCo33kRo7j7ytrbSCtZxnAAyf8AQqSsHWkPtLacGUOJKFehGD/dBU2+9JPV0nVZmWFbUK0tL/Kgusoc61Hi4rGcn7SMd3jVotPXpjUel7deY6drU+KiQEZzt3JyU+xyPaqFXSzvWvUsuzyilp6NKVGWpw4CSle3JPh31efQ2mjo/QtrsJkiUuExtU8OxaiSo4+3KiB5YoNbWXTvC3VE5Y4cXuTp2+N5KfgH3WHQR4su8lp8QO6vWaT1beIepTozXoZ/GOrL0C4sJ2s3NodpA/a4O9Pr79XJjwuLFsukOdZ3dPaxsTiercKwXojpG5paHU43IVjs/wCGun1FepWqeAto10W+rvtifbmBSU7T1rboaeH+Khzx2dlBuqlRsPIkR232vkdQFp9CMj+6koFKUoKxdJPh29DvA1pbGSqJL2t3AJH6ToGErPkoADP1D7hXp+CfGy33GzxdNatmIiXGKgMxpT6tqJKBySkqPILA5c/m5d9bvmQ41whPRJzDciM+gtutOp3JWk8iCO8VWriJ0bJ8OS7cNAH4yIolRtzqwHmvJCjyWPI4V60G/NSa40zo8sDUl4jQFyRlpC8qUseOEgnHn2V9tl1BZdRRS/YbnDuLKcbjGdSvbnxA5j3FUKvFrvNrkiPfYc2I80OrCJba0FIHcN3d6VtLo22K+yuIyLzBS41aYbbiJrx5Id3IIS0PqO7ary258MhbalKUClKUClKUGDrTb7ex9CXUH9riQofwa4ZYajtBqO0hptPYhtISB7CpKUClKUH/2Q=="
-                    },
-                    {
-                        "name": "🧮  计算器",
-                        "url": "calculator://"
-                    },
-                    {
-                        "name": "🔎  Everything搜索",
-                        "url": "ES://%s"
-                    },
-                    {
-                        "name": "🦊  打开火狐",
-                        "url": "FirefoxURL-308046B0AF4A39CB://%u"
-                    },
-                    {
-                        "name": "⏰  时钟",
-                        "url": "ms-clock://"
-                    },
-                    {
-                        "name": "✂️  屏幕截图",
-                        "url": "ms-screenclip://"
-                    },
-                    {
-                        "name": "☑️  ToDo",
-                        "url": "ms-todo://",
-                        "description": "微软To-Do"
-                    },
-                    {
-                        "name": "📓  Onenote",
-                        "url": "onenote://"
-                    },
-                    {
-                        "name": "⌨️  VSCode",
-                        "url": "vscode://%u"
-                    },
-                    {
-                        "name": "提取文本中链接并打开",
-                        "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^\\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\")"
-                    },
-                    {
-                        "name": "⭐ 查找当前Favicon",
-                        "url": "javascript:let ico=document.querySelector(\"link[rel='shortcut icon'],link[rel='icon']\");if(ico)window.open(ico.href, \"_blank\");else window.open(location.origin + \"/favicon.ico\", \"_blank\")"
-                    },
-                    {
-                        "name": "🛠️ 扩展",
-                        "url": "chrome://extensions/"
-                    },
-                    {
-                        "name": "🐞 远程调试",
-                        "url": "chrome://inspect/#devices"
-                    },
-                    {
-                        "name": "🔖 书签管理器",
-                        "url": "chrome://bookmarks/"
-                    }
-                ]
-            },
-            {
                 "type": "当前网页",
                 "icon": "list",
                 "selectLink": true,
@@ -709,6 +638,77 @@ switch (lang) {
                     {
                         "name": "WebCite",
                         "url": "https://webcitation.org/query?url=%u"
+                    }
+                ]
+            },
+            {
+                "type": "辅助工具",
+                "icon": "list-alt",
+                "selectTxt": true,
+                "selectImg": true,
+                "selectAudio": true,
+                "selectVideo": true,
+                "selectLink": true,
+                "selectPage": true,
+                "openInNewTab": true,
+                "sites": [
+                    {
+                        "name": "手机号码聚合搜索",
+                        "url": "[\"360\",\"搜狗\"]",
+                        "icon": "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCABAAEADASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAMIAgcBBQYE/8QAMxAAAQMDAgIIBAYDAAAAAAAAAQIDBAAFEQYSByEIEzFBUWFxgRQyUmIVIzNCkbFyoeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AsPSlKBSlKBSo2X2pDfWR3UPI+ptYUP5FSUClKUCo33kRo7j7ytrbSCtZxnAAyf8AQqSsHWkPtLacGUOJKFehGD/dBU2+9JPV0nVZmWFbUK0tL/Kgusoc61Hi4rGcn7SMd3jVotPXpjUel7deY6drU+KiQEZzt3JyU+xyPaqFXSzvWvUsuzyilp6NKVGWpw4CSle3JPh31efQ2mjo/QtrsJkiUuExtU8OxaiSo4+3KiB5YoNbWXTvC3VE5Y4cXuTp2+N5KfgH3WHQR4su8lp8QO6vWaT1beIepTozXoZ/GOrL0C4sJ2s3NodpA/a4O9Pr79XJjwuLFsukOdZ3dPaxsTiercKwXojpG5paHU43IVjs/wCGun1FepWqeAto10W+rvtifbmBSU7T1rboaeH+Khzx2dlBuqlRsPIkR232vkdQFp9CMj+6koFKUoKxdJPh29DvA1pbGSqJL2t3AJH6ToGErPkoADP1D7hXp+CfGy33GzxdNatmIiXGKgMxpT6tqJKBySkqPILA5c/m5d9bvmQ41whPRJzDciM+gtutOp3JWk8iCO8VWriJ0bJ8OS7cNAH4yIolRtzqwHmvJCjyWPI4V60G/NSa40zo8sDUl4jQFyRlpC8qUseOEgnHn2V9tl1BZdRRS/YbnDuLKcbjGdSvbnxA5j3FUKvFrvNrkiPfYc2I80OrCJba0FIHcN3d6VtLo22K+yuIyLzBS41aYbbiJrx5Id3IIS0PqO7ary258MhbalKUClKUClKUGDrTb7ex9CXUH9riQofwa4ZYajtBqO0hptPYhtISB7CpKUClKUH/2Q=="
+                    },
+                    {
+                        "name": "🧮  计算器",
+                        "url": "calculator://"
+                    },
+                    {
+                        "name": "🔎  Everything搜索",
+                        "url": "ES://%s"
+                    },
+                    {
+                        "name": "🦊  打开火狐",
+                        "url": "FirefoxURL-308046B0AF4A39CB://%u"
+                    },
+                    {
+                        "name": "⏰  时钟",
+                        "url": "ms-clock://"
+                    },
+                    {
+                        "name": "✂️  屏幕截图",
+                        "url": "ms-screenclip://"
+                    },
+                    {
+                        "name": "☑️  ToDo",
+                        "url": "ms-todo://",
+                        "description": "微软To-Do"
+                    },
+                    {
+                        "name": "📓  Onenote",
+                        "url": "onenote://"
+                    },
+                    {
+                        "name": "⌨️  VSCode",
+                        "url": "vscode://%u"
+                    },
+                    {
+                        "name": "提取文本中链接并打开",
+                        "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^\\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\")"
+                    },
+                    {
+                        "name": "⭐ 查找当前Favicon",
+                        "url": "javascript:let ico=document.querySelector(\"link[rel='shortcut icon'],link[rel='icon']\");if(ico)window.open(ico.href, \"_blank\");else window.open(location.origin + \"/favicon.ico\", \"_blank\")"
+                    },
+                    {
+                        "name": "🛠️ 扩展",
+                        "url": "chrome://extensions/"
+                    },
+                    {
+                        "name": "🐞 远程调试",
+                        "url": "chrome://inspect/#devices"
+                    },
+                    {
+                        "name": "🔖 书签管理器",
+                        "url": "chrome://bookmarks/"
                     }
                 ]
             },
