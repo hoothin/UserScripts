@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.58
+// @version      1.9.37.59
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3188,7 +3188,15 @@
             }
             if (nextLink) {
                 if (!this.checkStopSign(nextLink, doc)) {
-                    if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
+                    if (curPage > 1) {
+                        if (rulesData.lastPageTips) {
+                            showTips(i18n("lastPage"), "", 800);
+                        }
+                        window.postMessage({
+                            action: "lastPage",
+                            command: 'pagetual'
+                        }, '*');
+                    }
                     return null;
                 }
                 if (this.curSiteRule.action == 3) {
@@ -3997,6 +4005,10 @@
                 }
             }
             isLoading = false;
+            window.postMessage({
+                action: "insert",
+                command: 'pagetual'
+            }, '*');
             return true;
         }
     }
@@ -7500,7 +7512,7 @@
         return scrollH - scrolly - windowHeight;
     }
 
-    let scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
+    let scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler, messageHandler;
     function initListener () {
         document.removeEventListener('scroll', scrollHandler, true);
         document.removeEventListener('wheel', scrollHandler, true);
@@ -7510,6 +7522,7 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
+        window.removeEventListener('message', messageHandler, true);
         let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
         if (ruleParser.curSiteRule.smart) {
             loadingMore = false;
@@ -7545,6 +7558,33 @@
                 nextPage();
             }
         };
+        messageHandler = e => {
+            if (e.data.command === 'pagetual') {
+                let action = e.data.action;
+                let detail = e.data.detail;
+                switch (action) {
+                    case "config":
+                        if (!detail || typeof detail !== 'object') return;
+                        rulesData = {
+                            ...rulesData,
+                            ...detail
+                        }
+                        storage.setItem("rulesData", rulesData);
+                        break;
+                    case "nextPage":
+                        if (detail === "" || detail === null) return;
+                        detail = parseInt(detail) || 0;
+                        if (loadNowNum != detail) {
+                            loadNowNum = detail;
+                        }
+                        autoLoadNum = detail;
+                        nextPage();
+                        break;
+                }
+            }
+            return true;
+        }
+        window.addEventListener('message', messageHandler, true);
         scrollHandler = e => {
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {});
@@ -8423,6 +8463,10 @@
         function returnFalse(log) {
             if (curPage > 1) {
                 if (rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
+                window.postMessage({
+                    action: "lastPage",
+                    command: 'pagetual'
+                }, '*');
             } else {
                 sideController.remove();
             }
@@ -9063,9 +9107,15 @@
                     } else {
                         ruleParser.findNoNext();
                     }
-                } else if (rulesData.lastPageTips && !showedLastPageTips) {
-                    showTips(i18n("lastPage"), "", 800);
+                } else if (!showedLastPageTips) {
+                    if (rulesData.lastPageTips) {
+                        showTips(i18n("lastPage"), "", 800);
+                    }
                     showedLastPageTips = true;
+                    window.postMessage({
+                        action: "lastPage",
+                        command: 'pagetual'
+                    }, '*');
                 }
                 return;
             }
