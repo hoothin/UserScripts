@@ -13,7 +13,7 @@
 (function() {
     'use strict';
 
-    const enable1024sDelay = false;
+    const enable1024sDelay = true;
     const defaultReply = "1024 感謝分享";
     var helper = {
         addCss: function(css) {
