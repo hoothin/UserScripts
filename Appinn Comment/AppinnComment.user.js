@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Appinn comment
+// @name         小众软件评论显示
 // @namespace    hoothin
 // @version      2024-06-08
 // @description  将小众软件论坛的评论内容显示在主站对应页面下部
