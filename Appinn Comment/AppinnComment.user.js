@@ -1,8 +1,10 @@
 // ==UserScript==
-// @name         小众软件评论显示
+// @name         Appinn comment
+// @name:zh-CN   小众软件评论显示
 // @namespace    hoothin
 // @version      2024-06-08
-// @description  将小众软件论坛的评论内容显示在主站对应页面下部
+// @description  Display the comments from the Appinn forum on the bottom of the corresponding page on the main site.
+// @description:zh-CN  将小众软件论坛的评论内容显示在主站对应页面下部
 // @author       hoothin
 // @match        https://www.appinn.com/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
