@@ -238,7 +238,7 @@ switch (lang) {
                     },
                     {
                         "name": "发送到手机",
-                        "url": "https://s.hoothin.com/#p{wait(x-peer)&call(document.querySelector('x-peer').dispatchEvent(new Event('contextmenu')))&#textInput=%s&click(#textInput+div>button)}",
+                        "url": "https://s.hoothin.com/#p{wait(x-peer)&rclick(x-peer)&#textInput=%s&click(#textInput+div>button)}",
                         "icon": "https://s.hoothin.com/images/favicon-96x96.png",
                         "description": "自动发送选中文字到第一个匹配的设备"
                     },
@@ -281,7 +281,7 @@ switch (lang) {
                     {
                         "name": "🔗  打开文字链接",
                         "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^ \\w\\-_\\.~!\\*';:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/.*([ :：]|^)(1[a-z0-9]{22,}).*?\\b([a-z0-9]{4}\\b|$).*/i,\"https://pan.baidu.com/s/$1?pwd=$2\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
-                        "kwFilter": "\\w.*[\\.点。].*\\w|1[a-zA-Z0-9]{22,}",
+                        "kwFilter": "\\w\\S*\\.\\S*\\w|\\w.*[点。].*\\w|1[a-zA-Z0-9]{22,}",
                         "description": "支持类似“pan点baidu。com😄河蟹”以及“1bP23pzUpIV4CMuoMjOfxFA提取码:prt4”的分享链接",
                         "nobatch": true
                     },
@@ -467,12 +467,6 @@ switch (lang) {
                 "selectPage": true,
                 "openInNewTab": true,
                 "sites": [
-                    {
-                        "name": "小众软件评论",
-                        "url": "showTips:%t \n<style>\n#topic-title, #post_1, footer, header, .meta{\n display: none;\n}\n#main-outlet {\n  padding: 20px;\n  text-align: left;\n}\na {\n color: gray;\n}\n.crawler-post-meta {\n font-size: 12px;\n}\naside.quote {\n    margin: 10px 0px 0px 20px;\n    font-style: italic;\n}\nimg {\n    max-height: 200px;\n    width: auto;\n}\naside.onebox {\n    font-size: small;\n    border: 1px solid;\n    border-radius: 10px;\n    padding: 10px;\n    margin: 5px;\n}\n#main-outlet {\n    max-height: 800px;\n    overflow: auto;\n    pointer-events: all;\n}\n</style>\n{noscript[data-path]|innerHTML}",
-                        "icon": "https://www.appinn.com/favicon.ico",
-                        "kwFilter": "https://meta\\.appinn\\.net/t/topic/"
-                    },
                     {
                         "name": "⏬ BBDown",
                         "url": "SearchJumper-BBDown://%u",
@@ -1125,7 +1119,7 @@ switch (lang) {
                     {
                         "name": "🔗  Open text link",
                         "url": "%sr.replace(/。/g,\".\").replace(/[^ \\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
-                        "kwFilter": "\\w.*[\\.。].*\\w|1[a-zA-Z0-9]{22,}",
+                        "kwFilter": "\\w\\S*\\.\\S*\\w|\\w.*[点。].*\\w|1[a-zA-Z0-9]{22,}",
                         "nobatch": true
                     },
                     {
@@ -1475,7 +1469,7 @@ switch (lang) {
                     },
                     {
                         "name": "📱 Send to phone",
-                        "url": "https://s.hoothin.com/#p{wait(x-peer)&call(document.querySelector('x-peer').dispatchEvent(new Event('contextmenu')))&#textInput=%s&click(#textInput+div>button)}",
+                        "url": "https://s.hoothin.com/#p{wait(x-peer)&rclick(x-peer)&#textInput=%s&click(#textInput+div>button)}",
                         "icon": "https://s.hoothin.com/images/favicon-96x96.png"
                     },
                     {
