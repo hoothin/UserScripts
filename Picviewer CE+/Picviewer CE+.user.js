@@ -18212,6 +18212,7 @@ ImgOps | https://imgops.com/#b#`;
                     resize:both;\
                     width:auto;\
                     height:auto;\
+                    background: white;\
                     }\
                     .pv-gallery-head-command-drop-list-item_disabled{\
                     color:#757575;\
