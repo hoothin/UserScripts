@@ -553,105 +553,6 @@ switch (lang) {
                 ]
             },
             {
-                "type": "News",
-                "icon": "newspaper",
-                "sites": [
-                    {
-                        "name": "Google News",
-                        "url": "https://news.google.com/search?q=%s&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
-                        "icon": "https://www.google.com/favicon.ico"
-                    },
-                    {
-                        "name": "CNN",
-                        "url": "https://edition.cnn.com/search/?q=%s"
-                    },
-                    {
-                        "name": "BBC",
-                        "url": "https://www.bbc.co.uk/search?q=%s"
-                    }
-                ]
-            },
-            {
-                "type": "Translate",
-                "icon": "language",
-                "sites": [
-                    {
-                        "name": "DeepL",
-                        "url": "https://www.deepl.com/translator#*/en/%s",
-                        "icon": "https://www.deepl.com/img/favicon/favicon_96.png"
-                    },
-                    {
-                        "name": "Google translate",
-                        "url": "https://translate.google.com/?text=%s",
-                        "match": "translate\\.google\\.com.*\\btext="
-                    },
-                    {
-                        "name": "Bing translate",
-                        "url": "http://www.bing.com/dict/search?q=%s"
-                    },
-                    {
-                        "name": "Forvo",
-                        "url": "https://www.forvo.com/search/%s"
-                    },
-                    {
-                        "name": "Translate with ChatGPT",
-                        "url": "https://poe.com/ChatGPT#p{sleep(1000)&[class*\\='ChatMessageInputContainer'] textarea=Please help me to translate \\`%s\\` to English, please return only translated content not include the origin text&click(button[class*\\='ChatMessageSendButton_sendButton'])}"
-                    }
-                ]
-            },
-            {
-                "type": "Develop",
-                "icon": "code",
-                "sites": [
-                    {
-                        "name": "MDN",
-                        "url": "https://developer.mozilla.org/zh-CN/search?q=%s"
-                    },
-                    {
-                        "name": "Stackoverflow",
-                        "url": "https://stackoverflow.com/search?q=%s"
-                    },
-                    {
-                        "name": "Can I Use",
-                        "url": "http://caniuse.com/#search=%s",
-                        "icon": "https://caniuse.com/img/favicon-128.png"
-                    },
-                    {
-                        "name": "GitHub",
-                        "url": "https://github.com/search?utf8=✓&q=%s",
-                        "match": "https://github\\.com/search\\?.*&q="
-                    },
-                    {
-                        "name": "W3c",
-                        "url": "http://www.runoob.com/?s=%s"
-                    },
-                    {
-                        "name": "GreasyFork",
-                        "url": "https://greasyfork.org/zh-CN/scripts?q=%s&utf8=✓"
-                    },
-                    {
-                        "name": "Gen RegExp by AI",
-                        "url": "https://poe.com/ChatGPT#p{sleep(1000)&textarea[class^\\='ChatMessageInput']=Can you help me to write a RegExp which can detect %input{Target,Email address/Phone number} on `%s`&click([class^\\='ChatMessageInputView_sendButton']>button)}",
-                        "openInNewTab": true
-                    }
-                ]
-            },
-            {
-                "type": "Wiki",
-                "icon": "book-open-reader",
-                "sites": [
-                    {
-                        "name": "Wikipedia",
-                        "url": "http://en.wikipedia.org/wiki/%s",
-                        "description": "The largest and most-read reference work in history.#wiki"
-                    },
-                    {
-                        "name": "Quora",
-                        "url": "https://www.quora.com/search?q=%s"
-                    }
-                ]
-            },
-            {
                 "type": "Social",
                 "icon": "users",
                 "sites": [
@@ -662,62 +563,6 @@ switch (lang) {
                     {
                         "name": "Facebook",
                         "url": "https://www.facebook.com/search/results.php?q=%s"
-                    }
-                ]
-            },
-            {
-                "type": "APP",
-                "icon": "archive",
-                "sites": [
-                    {
-                        "name": "Play",
-                        "url": "https://play.google.com/store/search?q=%s"
-                    },
-                    {
-                        "name": "Coolapk",
-                        "url": "https://www.coolapk.com/search?q=%s"
-                    },
-                    {
-                        "name": "Apkpure",
-                        "url": "https://apkpure.com/cn/search?q=%s"
-                    },
-                    {
-                        "name": "APKMirror",
-                        "url": "https://www.apkmirror.com/?s=%s"
-                    },
-                    {
-                        "name": "Chrome Store",
-                        "url": "https://chrome.google.com/webstore/search/%s",
-                        "icon": "https://www.google.com/images/icons/product/chrome_web_store-32.png"
-                    }
-                ]
-            },
-            {
-                "type": "Music",
-                "icon": "music",
-                "sites": [
-                    {
-                        "name": "Jango",
-                        "url": "https://www.jango.com/music/%s"
-                    },
-                    {
-                        "name": "QQ Music",
-                        "url": "https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=song&w=%s"
-                    }
-                ]
-            },
-            {
-                "type": "Shopping",
-                "icon": "shopping-cart",
-                "sites": [
-                    {
-                        "name": "Amazon",
-                        "url": "http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s",
-                        "icon": "https://www.amazon.cn/favicon.ico"
-                    },
-                    {
-                        "name": "1688",
-                        "url": "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
                     }
                 ]
             },
@@ -862,65 +707,6 @@ switch (lang) {
                 ]
             },
             {
-                "type": "Web cache",
-                "icon": "clock-rotate-left",
-                "selectPage": true,
-                "openInNewTab": true,
-                "sites": [
-                    {
-                        "name": "Wayback Machine all",
-                        "url": "https://web.archive.org/web/*/%u",
-                        "icon": "https://web.archive.org/_static/images/archive.ico"
-                    },
-                    {
-                        "name": "Wayback Machine",
-                        "url": "https://web.archive.org/web/%u",
-                        "icon": "https://web.archive.org/_static/images/archive.ico"
-                    },
-                    {
-                        "name": "Google cache",
-                        "url": "https://webcache.googleusercontent.com/search?q=cache:%u"
-                    },
-                    {
-                        "name": "Google cache text",
-                        "url": "https://webcache.googleusercontent.com/search?strip=1&q=cache:%u"
-                    },
-                    {
-                        "name": "Bing cache",
-                        "url": "https://www.bing.com/search?q=url:%u&go=Search&qs=bs&form=QBRE#p{click(ol#b_results li.b_algo:first-of-type div.b_attribution a.trgr_icon)&open(ol#b_results li.b_algo:first-of-type div.b_attribution a[href*\\=\"cc.bingj.com/cache\"])}"
-                    },
-                    {
-                        "name": "Archive.is",
-                        "url": "https://archive.is/newest/%u"
-                    },
-                    {
-                        "name": "Archive.is all",
-                        "url": "https://archive.is/%u"
-                    },
-                    {
-                        "name": "Memento",
-                        "url": "http://timetravel.mementoweb.org/memento/0/%u",
-                        "icon": "http://mementoweb.org/static/css/images/timetravel_logo_20x20.png"
-                    },
-                    {
-                        "name": "Megalodon",
-                        "url": "https://megalodon.jp/?url=%u"
-                    },
-                    {
-                        "name": "Yahoo cache",
-                        "url": "https://search.yahoo.com/search?p=url:%u#p{open(#results li:first-of-type a[href*\\=\"cc.bingj.com/cache\"], #results li:first-of-type a[href*\\=\"cc.bingj.com%2fcache\"])}"
-                    },
-                    {
-                        "name": "Ghostarchive",
-                        "url": "https://ghostarchive.org/search?term=%u"
-                    },
-                    {
-                        "name": "WebCite",
-                        "url": "https://webcitation.org/query?url=%u"
-                    }
-                ]
-            },
-            {
                 "type": "Search by image",
                 "icon": "eye",
                 "selectImg": true,
@@ -961,42 +747,6 @@ switch (lang) {
                         "name": "WhatAnime",
                         "url": "https://trace.moe/?url=%t",
                         "icon": "https://trace.moe/favicon.png"
-                    }
-                ]
-            },
-            {
-                "type": "Scholar",
-                "icon": "graduation-cap",
-                "sites": [
-                    {
-                        "name": "Google scholar",
-                        "url": "https://scholar.google.com/scholar?hl=zh-CN&q=%s",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACqklEQVQ4jYWT2UtUURzHL/QH1LMP9hKVNUKFWpP7TDrjU9uEo4WPWlERUbSoueSMaTWjTBCRGV3HiCsSWrTQApVSZBtZWEZSUWZkC3PPne3OzKeHK1NKy4Hfyzl8P+d3vt/fkSRJmpWSVbU9vbxbMZXJSnqZrMx3yErqmrN/r7V+Zf76jjNz5mYXSilZldtKfGBrA5sXcg7Dpg5wX/lzNV+FlmuwsRNy6r9HJFO5v9feBlaXILNWxenT+Pgtzr/W2Oc4azwalqMgLXZ29di9JMXj/xH3P4pybjDKhvYg1qMgpZfKyko3lPk0xr9PF7/4EOfTjwQAiQRcfqpjrlMZeBVjc2eI/FaQ5jlkZWs3qKHENPH7yTg5DYKKExp6DGJxcLRprHILAJr7w5hdIC1wyMquHmNj3/kQN57rALz9Eie/SZBRo/JwLAZAtRLC4jIA7r4pQHqprBS0QkaNysLdAXbKIQAiOjh9Gml7VOS7kaSooGkGwFQqKzYvWFyCgiZBbqPg3mvjRv9ABNPeANeHdSbVBOu8GvYWA9ByMcyKmQCLS5DToFLSKlDuR/kmEox+Moyt6w2TtidAUbPgyKUwZceDWI7MAFhdRgdL9quk7ghw8bGeNPXdZJzKjiCZNSpZtSp5jQKb9zeA1SUw16ms9WqcvBlhcDTG4KsYoxO/ohXhBFWng5jrVCwuQbHnN0B2vaDiRJCJqdzvvtRZfUyQ3SA4dSuCbtjC0JsY5npBYRLg9PfaPEYK14f15NA4fRpLD6jkHxKY9ga4PWKcvRyPk9toGF7sBWmR45S/pN0Y5a6BaLLdroEoGTUqy6oNc99NGk85dCHM8oMCqzuIvQ2k2XPzLAWNX9UiD9i90D0EE8Yo8GQc/A/g2QSMfIHaPsg9DMUe4/dmbrnz8CdxKwtDTtdexQAAAABJRU5ErkJggg=="
-                    },
-                    {
-                        "name": "Wikipedia",
-                        "url": "https://en.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch"
-                    },
-                    {
-                        "name": "Internet Archive",
-                        "url": "https://archive.org/search.php?query=%s"
-                    },
-                    {
-                        "name": "Scholar",
-                        "url": "http://scholar.google.com/scholar?hl=zh-CN&q=%s&btnG=&lr="
-                    },
-                    {
-                        "name": "Google Book",
-                        "url": "https://www.google.com/search?q=%s&tbm=bks&tbo=1&hl=en&gws_rd=ssl"
-                    },
-                    {
-                        "name": "krugle",
-                        "url": "http://opensearch.krugle.org/document/search/#query=%s",
-                        "icon": "https://opensearch.krugle.org/media/images/favicon.ico"
-                    },
-                    {
-                        "name": "npm",
-                        "url": "https://www.npmjs.org/search?q=%s"
                     }
                 ]
             },
