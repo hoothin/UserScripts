@@ -1626,5 +1626,13 @@ var siteInfo = [
         url: /^https:\/\/hentaigifz\.com/,
         r: /-thumbnail.*/,
         s: ".gif"
+    },
+    {
+        name: "porngifmag",
+        url: /^https:\/\/porngifmag\.com/,
+        xhr: {
+            url: ".thumb-image>a",
+            query: ".single-image>img"
+        }
     }
 ];
