@@ -539,34 +539,6 @@ switch (lang) {
                 ]
             },
             {
-                "type": "Video",
-                "icon": "video",
-                "sites": [
-                    {
-                        "name": "Youtube",
-                        "url": "https://www.youtube.com/results?search_query=%s"
-                    },
-                    {
-                        "name": "Niconico",
-                        "url": "http://www.nicovideo.jp/search/%s"
-                    }
-                ]
-            },
-            {
-                "type": "Social",
-                "icon": "users",
-                "sites": [
-                    {
-                        "name": "Twitter",
-                        "url": "https://twitter.com/search?q=%s"
-                    },
-                    {
-                        "name": "Facebook",
-                        "url": "https://www.facebook.com/search/results.php?q=%s"
-                    }
-                ]
-            },
-            {
                 "type": "Search in page",
                 "icon": "sitemap",
                 "selectTxt": true,
