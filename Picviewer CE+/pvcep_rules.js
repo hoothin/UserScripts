@@ -1620,5 +1620,11 @@ var siteInfo = [
         lazyAttr: "data-a-hires",
         r: [/(_AC_|_CR0).*\./, /._SY\d+\_?/],
         s: ["", ""]
+    },
+    {
+        name: "hentaigifz",
+        url: /^https:\/\/hentaigifz\.com/,
+        r: /-thumbnail.*/,
+        s: ".gif"
     }
 ];
