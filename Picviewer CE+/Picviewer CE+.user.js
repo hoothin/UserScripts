@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.20.2
+// @version              2024.6.20.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14412,7 +14412,7 @@ ImgOps | https://imgops.com/#b#`;
                 eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
                 let srcSplit, downloading=false, saveParams;
                 function getSaveParams() {
-                    let nodes = self.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                    let nodes = self.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)');
                     let saveParams = [],saveIndex=0;
                     [].forEach.call(nodes, function(node){
                         if(unsafeWindow.getComputedStyle(node).display!="none"){
@@ -15439,8 +15439,13 @@ ImgOps | https://imgops.com/#b#`;
                 var self=this;
                 if(prefs.gallery.downloadWithZip){
                     self.showTips(i18n("galleryDownloadWithZipAlert"), 100000);
-                    var zip = new JSZip(),downloaded=0;
-                    var fileName = document.title + ".zip";
+                    var zip,downloaded=0, pdf=!!unsafeWindow.pvcepimg2pdf;
+                    var fileName = document.title + (pdf ? ".pdf" : ".zip");
+                    if (pdf) {
+                        zip = new unsafeWindow.pvcepimg2pdf(fileName);
+                    } else {
+                        zip = new JSZip();
+                    }
                     var len = saveParams.length;
                     function downloadOne(imgSrc, imgName){
                         let crosHandler = imgSrc => {
@@ -15455,9 +15460,11 @@ ImgOps | https://imgops.com/#b#`;
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 1000000);
                                 if(downloaded == len){
-                                    self.showTips("Begin compress to ZIP...", 100000);
+                                    self.showTips(`Begin compress to ${pdf ? 'PDF' : 'ZIP'}...`, 100000);
                                     zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
-                                        saveAs(content, fileName);
+                                        if (content) {
+                                            saveAs(content, fileName);
+                                        }
                                         callback();
                                     })
                                 }
@@ -15474,9 +15481,11 @@ ImgOps | https://imgops.com/#b#`;
                                     zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
                                     downloaded++;
                                     if(downloaded == len){
-                                        self.showTips("Begin compress to ZIP...", 100000);
+                                        self.showTips(`Begin compress to ${pdf ? 'PDF' : 'ZIP'}...`, 100000);
                                         zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
-                                            saveAs(content, fileName);
+                                            if (content) {
+                                                saveAs(content, fileName);
+                                            }
                                             callback();
                                         })
                                     }
@@ -15730,6 +15739,7 @@ ImgOps | https://imgops.com/#b#`;
                 var topP=document.createElement('p');
                 topP.className="pv-top-banner";
                 topP.innerHTML=createHTML(img.naturalWidth+' x '+img.naturalHeight);
+                topP.title=dlSpan.title;
                 var checkBox=document.createElement('input');
                 checkBox.type="checkbox";
                 let self=this;
@@ -15751,7 +15761,7 @@ ImgOps | https://imgops.com/#b#`;
                     checkBox.click();
                 };
                 imgSpan.appendChild(topP);
-                imgSpan.appendChild(checkBox);
+                imgSpan.insertBefore(checkBox, imgSpan.firstChild);
                 imgSpan.appendChild(dlSpan);
             },
             addViewmoreItem: function(nodes) {
@@ -16698,6 +16708,11 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.title = title + (itemSrc.length > 150 ? itemSrc.slice(0, 110) + " ... " + itemSrc.slice(-30) : itemSrc);
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
+                            spanMark.addEventListener('contextmenu', function(e) {
+                                spanMark.classList.toggle("ignore");
+                                e.preventDefault();
+                                e.stopPropagation();
+                            });
                         }catch(e){};
                         self._spanMarkPool[item.src] = spanMark;
                     }
@@ -17758,7 +17773,7 @@ ImgOps | https://imgops.com/#b#`;
                 }, 300);
             },
             exportImages: function () {// 导出所有图片到新窗口
-                var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]'),i;
+                var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)'),i;
 
                 var arr=[];
                 for (i = 0; i < nodes.length; ++i) {
@@ -17828,7 +17843,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
             copyImages: function(isAlert) {
-                var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)');
                 var urls = [];
                 [].forEach.call(nodes, function(node){
                     if(unsafeWindow.getComputedStyle(node).display!="none"){
@@ -18716,6 +18731,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container>.maximizeChild:hover img {\
                     transform: scale3d(1.1, 1.1, 1.1);\
                     filter: brightness(1.1) !important;\
+                    opacity: 1;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize>.maximizeChild:hover img {\
                     transform: translateY(-50%) scale3d(1.1, 1.1, 1.1);\
@@ -18733,6 +18749,7 @@ ImgOps | https://imgops.com/#b#`;
                     word-break: break-all;\
                     display: inline;\
                     margin: 0 auto;\
+                    transition:all 0.2s;\
                     }\
                     .pv-gallery-maximize-container span>p.pv-bottom-banner{\
                     bottom: 0;\
@@ -18753,7 +18770,10 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     }\
                     .pv-gallery-maximize-container span:hover>p{\
-                    opacity: 1;\
+                    opacity: 1!important;\
+                    }\
+                    .pv-gallery-maximize-container span>p:hover{\
+                    background: #000000cc;\
                     }\
                     .pv-gallery-maximize-container span>p.pv-bottom-banner:hover{\
                     color:red;\
@@ -18762,12 +18782,20 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container span>input{\
                     position: absolute;\
                     top: 2px;\
+                    z-index:1;\
                     width: 20px;\
                     height: 20px;\
                     opacity: 0;\
                     left: 0;\
                     display: inline;\
                     cursor: pointer;\
+                    }\
+                    .pv-gallery-maximize-container.checked img,\
+                    .pv-gallery-maximize-container.checked p{\
+                    opacity: 0.3;\
+                    }\
+                    .pv-gallery-maximize-container.checked input:checked+img {\
+                    opacity: 1;\
                     }\
                     .pv-gallery-maximize-container.checked span>input{\
                     opacity: 1;\
@@ -19018,6 +19046,9 @@ ImgOps | https://imgops.com/#b#`;
                     left:0;\
                     -webkit-transition:all 0.2s ease-in-out;\
                     transition:all 0.2s ease-in-out;\
+                    }\
+                    span.pv-gallery-sidebar-thumb-container.ignore {\
+                    opacity: 0.5;\
                     }\
                     .pv-gallery-sidebar-thumbnails-container-h  .pv-gallery-sidebar-thumb-container {\
                     margin:0 2px;\
