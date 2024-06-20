@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.20.3
+// @version              2024.6.20.4
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16685,6 +16685,7 @@ ImgOps | https://imgops.com/#b#`;
                     this._dataCache = {};
                     this.eleMaps['maximize-container'].innerHTML = createHTML("");
                 }
+                var self = this;
                 var urlReg=new RegExp(this.urlFilter);
                 var createSpanMark = item => {
                     var spanMark=self._spanMarkPool[item.src];
@@ -16709,9 +16710,23 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                             spanMark.addEventListener('contextmenu', function(e) {
-                                spanMark.classList.toggle("ignore");
                                 e.preventDefault();
                                 e.stopPropagation();
+                                spanMark.classList.toggle("ignore");
+                                if ((e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) && self.lastMark && self.lastMark !== spanMark && self.lastMark.parentNode === spanMark.parentNode) {
+                                    const children = Array.from(thumbnails.children);
+                                    let current;
+                                    if (children.indexOf(self.lastMark) < children.indexOf(spanMark)) {
+                                        current = self.lastMark.nextElementSibling;
+                                    } else {
+                                        current = spanMark.nextElementSibling;
+                                    }
+                                    while (current !== null && current !== self.lastMark && current !== spanMark) {
+                                        current.classList.toggle("ignore");
+                                        current = current.nextElementSibling;
+                                    }
+                                }
+                                self.lastMark = spanMark;
                             });
                         }catch(e){};
                         self._spanMarkPool[item.src] = spanMark;
@@ -19935,7 +19950,11 @@ ImgOps | https://imgops.com/#b#`;
                         debug(self);
                         return;
                     }
-                    downloadImg(self.img.src, (self.data.img.title || self.data.img.alt), prefs.saveName);
+                    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+                        _GM_openInTab(self.img.src, {active:false});
+                    } else {
+                        downloadImg(self.img.src, (self.data.img.title || self.data.img.alt), prefs.saveName);
+                    }
                 });
 
                 //关闭
