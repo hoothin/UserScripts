@@ -18,14 +18,16 @@
     'use strict';
     async function blobToDataURL(blob) {
         return new Promise((resolve) => {
-            var a = new FileReader();
-            a.readAsDataURL(blob);
-            a.onload = function (e) {
-                resolve(e.target.result);
-            };
-            a.onerror = function (e) {
-                resolve(null);
-            };
+            setTimeout(() => {
+                var a = new FileReader();
+                a.readAsDataURL(blob);
+                a.onload = function (e) {
+                    resolve(e.target.result);
+                };
+                a.onerror = function (e) {
+                    resolve(null);
+                };
+            }, 0);
         });
     }
 

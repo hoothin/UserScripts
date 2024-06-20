@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.20.4
+// @version              2024.6.20.5
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15802,17 +15802,6 @@ ImgOps | https://imgops.com/#b#`;
                                             targetImgSpan.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
                                             setTimeout(() => {targetImgSpan.scrollIntoView({block: "center", inline: "nearest"})}, 300);
                                             self.canScroll=true;
-                                            /*imgReady(targetImgSpan.querySelector("img").src,{
-                                                        ready:function(){
-                                                            self.curImgWin.remove(true);
-                                                            let imgwin=new ImgWindowC(this);
-                                                            imgwin.blur(true);
-                                                            self.curImgWin.imgWindow.style.opacity=0;
-                                                            self.curImgWin=imgwin;
-                                                            self.curImgSpan=targetImgSpan;
-                                                            self.canScroll=true;
-                                                        }
-                                                    });*/
                                         }else{
                                             self.canScroll=true;
                                         }
@@ -15977,7 +15966,7 @@ ImgOps | https://imgops.com/#b#`;
                     viewmoreBar.innerHTML = createHTML('✖');
                     viewmoreBar.parentNode.classList.add("showmore");//.backgroundColor = "#2a2a2a";
 
-                    var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                    var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)');
                     this.addViewmoreItem(nodes);
                     this.bricksInstance.pack();
                     this.bricksInstance.resize(true);
