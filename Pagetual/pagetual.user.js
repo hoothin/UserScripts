@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.60
+// @version      1.9.37.61
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1282,7 +1282,7 @@
                     let classList = ele.classList;
                     for (let i = 0; i < classList.length; i++) {
                         let c = classList[i];
-                        if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
+                        if (c !== 'scrolling' && /^[a-z_][\w\-_]*$/.test(c) && !/\d{4,}/.test(c)) {
                             className += '.' + c;
                         }
                     }
@@ -1310,7 +1310,7 @@
                             let classList = prevE.classList;
                             for (let i = 0; i < classList.length; i++) {
                                 let c = classList[i];
-                                if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
+                                if (c !== 'scrolling' && /^[a-z_][\w\-_]*$/.test(c) && !/\d{4,}/.test(c)) {
                                     className += '.' + c;
                                 }
                             }
