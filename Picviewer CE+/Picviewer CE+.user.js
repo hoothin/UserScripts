@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.20.1
+// @version              2024.6.20.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1397271/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1397366/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1391048/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -16183,12 +16183,31 @@ ImgOps | https://imgops.com/#b#`;
                     xhrLoad.load({
                         url: src,
                         xhr: xhr,
-                        cb: function(imgSrc, imgSrcs, caption) {
+                        cb: function(imgSrc, imgSrcs, caption, captions) {
                             if (imgSrc) {
                                 dataset(ele, 'src', imgSrc);
                                 dataset(ele, 'xhr', 'stop');
                                 if (caption) dataset(ele, 'description', caption);
                                 self.getImg(ele);
+                                if (imgSrcs && imgSrcs.length) {
+                                    let i = 0;
+                                    imgSrcs.forEach(src => {
+                                        if (src == imgSrc) return;
+                                        let img = document.createElement('img');
+                                        img.src = src;
+                                        let cap = captions && captions[i] ? captions[i] : caption;
+                                        imgReady(img,{
+                                            ready:function(){
+                                                let result = findPic(img);
+                                                if (cap) result.description = cap;
+                                                self.data.push(result);
+                                                self._appendThumbSpans([result]);
+                                                self.loadThumb();
+                                            }
+                                        });
+                                        i++;
+                                    })
+                                }
                             } else {
                                 xhrError();
                             }
@@ -16682,6 +16701,7 @@ ImgOps | https://imgops.com/#b#`;
                         }catch(e){};
                         self._spanMarkPool[item.src] = spanMark;
                     }
+                    spanMark.dataset.xhr='';
                     if(spanMark.dataset.naturalSize){
                         let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
                         item.sizeW=naturalSize.w;
@@ -19195,12 +19215,31 @@ ImgOps | https://imgops.com/#b#`;
                     xhrLoad.load({
                         url: dataset(ele,'src'),
                         xhr: xhr,
-                        cb: function(imgSrc, imgSrcs, caption) {
+                        cb: function(imgSrc, imgSrcs, caption, captions) {
                             if (imgSrc) {
                                 dataset(ele, 'src', imgSrc);
                                 dataset(ele, 'xhr', 'stop');
                                 if (caption) dataset(ele, 'description', caption);
                                 beginLoadImg();
+                                if (imgSrcs && imgSrcs.length) {
+                                    let i = 0;
+                                    imgSrcs.forEach(src => {
+                                        if (src == imgSrc) return;
+                                        let img = document.createElement('img');
+                                        img.src = src;
+                                        let cap = captions && captions[i] ? captions[i] : caption;
+                                        imgReady(img,{
+                                            ready:function(){
+                                                let result = findPic(img);
+                                                if (cap) result.description = cap;
+                                                self.oriThis.data.push(result);
+                                                self.oriThis._appendThumbSpans([result]);
+                                                self.oriThis.loadThumb();
+                                            }
+                                        });
+                                        i++;
+                                    })
+                                }
                             } else {
                                 xhrError();
                             }
