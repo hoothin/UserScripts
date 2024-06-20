@@ -23,6 +23,7 @@ If you are glad to assist with the translation, please [🌐edit this file](http
 
 Need more rules for peculiar sites? feel free to pull requests or open issues.
 
+[Picviewer CE+ PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon) After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
 
 ## 🔧 Custom [Rules Example](pvcep_rules.js):
 **💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.**
