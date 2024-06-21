@@ -29,10 +29,11 @@ Need more rules for peculiar sites? feel free to pull requests or open issues.
   
   For example, if there is a website with images from `xxx.com/1.jpg` to `xxx.com/99.jpg`, you can use this addon to generate a beautiful PDF e-book as follows:
 1. Open the gallery by pressing Ctrl + g
-2. In the `Command` menu, find and click "Add image"
+2. In the `Command` menu, find and click `Add image`
 3. Input `xxx.com/[1-99].jpg`
 4. Right-click in the thumbnail frame below to ignore any unwanted images
 5. Click `Download all shown` in the `Command` menu
+
 This way, you'll get a beautifully created PDF e-book.
  </details>
 
