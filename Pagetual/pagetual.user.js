@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.61
+// @version      1.9.37.62
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5750,7 +5750,7 @@
                   margin-bottom: 0px;
                  }
                  #configCon #saveBtn {
-                  margin-bottom: -40px;
+                  margin-bottom: -30px;
                  }
                  #configCon.showSave #saveBtn {
                   margin-bottom: 0px;
@@ -6940,28 +6940,35 @@
             onload: async function(res) {
                 if (isPause) return callback(false);
                 var doc = null, response = res.response;
-                let preCode = ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
+                try {
+                    doc = document.implementation.createHTMLDocument('');
+                    doc.documentElement.innerHTML = response;
+                } catch (e) {
+                    debug('parse error:' + e.toString());
+                }
+                let pageElement = null;
+                let preCode = ruleParser.curSiteRule.pagePre;
                 if (preCode) {
                     try {
+                        let preResult;
                         if (typeof preCode == 'function') {
-                            response = preCode(response);
+                            preResult = await preCode(response, doc);
                         } else if (preCode.length == 2) {
-                            response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
+                            preResult = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
                         } else {
-                            response = Function("response",'"use strict";' + preCode)(response);
+                            preResult = await new AsyncFunction("response", "doc", '"use strict";' + preCode)(response, doc);
+                        }
+                        if (preResult) {
+                            if (typeof preResult === "string") {
+                                doc.documentElement.innerHTML = preResult;
+                            } else pageElement = preResult;
                         }
                     } catch(e) {
                         debug(e);
                     }
                 }
-                try {
-                    doc = document.implementation.createHTMLDocument('');
-                    doc.documentElement.innerHTML = response;
-                    let base = doc.querySelector("base");
-                    ruleParser.basePath = base ? base.href : url;
-                } catch (e) {
-                    debug('parse error:' + e.toString());
-                }
+                let base = doc.querySelector("base");
+                ruleParser.basePath = base ? base.href : url;
                 if (charsetValid && !ruleHeaders) {
                     let equiv = doc.querySelector('[http-equiv="Content-Type"]');
                     if (equiv && equiv.content) {
@@ -6972,7 +6979,9 @@
                         }
                     }
                 }
-                let pageElement = ruleParser.getPageElement(doc);
+                if (pageElement === null) {
+                    pageElement = ruleParser.getPageElement(doc);
+                }
                 if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
                     debug(res.status + " " + url, "Error status");
                     return callback(false);
@@ -8394,9 +8403,29 @@
                         }, waitTime);
                         return;
                     } else {
+                        let preCode = ruleParser.curSiteRule.pagePre, eles = null;
+                        if (preCode) {
+                            try {
+                                let preResult;
+                                if (typeof preCode == 'function') {
+                                    preResult = await preCode(doc.documentElement.innerHTML, doc);
+                                } else if (preCode.length == 2) {
+                                    preResult = doc.documentElement.innerHTML.replace(new RegExp(preCode[0], "gi"), preCode[1]);
+                                } else {
+                                    preResult = await new AsyncFunction("response", "doc", '"use strict";' + preCode)(doc.documentElement.innerHTML, doc);
+                                }
+                                if (preResult) {
+                                    if (typeof preResult === "string") {
+                                        doc.documentElement.innerHTML = preResult;
+                                    } else eles = preResult;
+                                }
+                            } catch(e) {
+                                debug(e);
+                            }
+                        }
                         let base = doc.querySelector("base");
                         ruleParser.basePath = base ? base.href : url;
-                        let eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
+                        if (eles === null) eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
                         if (eles && eles.length > 0) {
                             await ruleParser.hookUrl(doc);
                             await callback(doc, eles);
