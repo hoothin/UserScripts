@@ -18621,7 +18621,7 @@ ImgOps | https://imgops.com/#b#`;
                     color:#a1a1a1;\
                     white-space:nowrap;\
                     cursor:pointer;\
-                    z-index:1;\
+                    z-index: 2;\
                     display:none;\
                     height: 30px;\
                     width:30px;\
@@ -18637,6 +18637,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container+p{\
                     position: fixed;\
                     width: 100%;\
+                    z-index: 2;\
                     text-align: center;\
                     pointer-events: none;\
                     margin-bottom: 45px;\
