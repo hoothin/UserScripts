@@ -4277,7 +4277,7 @@
 
             bottom.addEventListener("click", e => {
                 if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                    changeStop(true);
+                    changeStop(true, true);
                 }
                 let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 getBody(document).scrollTop = scrollH || 9999999;
@@ -4290,14 +4290,14 @@
             let removeTimer;
             move.addEventListener("click", e => {
                 if (!moving) {
-                    changeStop(!isPause);
+                    changeStop(!isPause, true);
                 }
             }, true);
             move.addEventListener("dblclick", e => {
                 clearTimeout(removeTimer);
                 document.removeEventListener("mousemove", mouseMoveHandler, true);
                 document.removeEventListener("mouseup", mouseUpHandler, true);
-                changeStop(!isPause);
+                changeStop(!isPause, true);
                 if (isPause) {
                     ruleParser.hideAddedElements();
                 } else {
@@ -6856,11 +6856,11 @@
                     if (forceState == 1) {
                         forceState = 0;
                         showTips(i18n("enableSiteTips"));
-                        changeStop(false);
+                        changeStop(false, true);
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true);
+                        changeStop(true, true);
                         sideController.remove();
                     }
                     setListData("forceState", location.host, forceState);
@@ -7318,7 +7318,7 @@
     var tipsWords = document.createElement("div");
     tipsWords.className = "pagetual_tipsWords";
 
-    function changeStop(stop) {
+    function changeStop(stop, save) {
         isPause = stop;
         [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
             if (isPause) {
@@ -7329,7 +7329,7 @@
         });
         if (!isPause) ruleParser.showAddedElements();
         manualPause = isPause;
-        if (sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
+        if (save && sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
     }
 
     function changeHideBar(hide) {
@@ -7679,7 +7679,7 @@
                         changeHideBar(!isHideBar);
                     }
                     if (!rulesData.hideBarButNoStop) {
-                        changeStop(!isPause);
+                        changeStop(!isPause, true);
                         showTips(i18n(isPause ? "disable" : "enable"));
                     }
                     if (!isPause) {
@@ -7711,11 +7711,11 @@
                     if (forceState == 1) {
                         forceState = 0;
                         showTips(i18n("enableSiteTips"));
-                        changeStop(false);
+                        changeStop(false, true);
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true);
+                        changeStop(true, true);
                         sideController.remove();
                     }
                     if (!ruleParser.curSiteRule.url) {
@@ -8145,7 +8145,7 @@
         });
         downSpan.addEventListener("click", e => {
             if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                changeStop(true);
+                changeStop(true, true);
             }
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
@@ -8155,7 +8155,7 @@
             e.stopPropagation();
         });
         pageBar.addEventListener("click", e => {
-            changeStop(!isPause);
+            changeStop(!isPause, true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
         });
         ruleParser.insertElement(pageBar);
