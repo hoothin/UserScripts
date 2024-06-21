@@ -23250,6 +23250,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
                 if (buttonType === 'download' && !this.data.xhr) {
+                    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
                     downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     return;
                 } else {
