@@ -6796,7 +6796,8 @@
 {
     "name": "Ru.Board",
     "url": "^https?://forum\\.ru-board\\.com/",
-    "nextLink": "table .small>b+a"
+    "nextLink": "table .small>b+a",
+    "exclude": "table.tb"
 },
 {
     "name": "Ru.Board",
