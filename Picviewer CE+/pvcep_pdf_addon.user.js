@@ -3,7 +3,7 @@
 // @name:zh-CN   Picviewer CE+ PDF 扩展
 // @name:zh-TW   Picviewer CE+ PDF 擴充
 // @namespace    https://github.com/hoothin/UserScripts
-// @version      2024-06-21
+// @version      2024-06-22
 // @description  Batch Download as PDF instead of ZIP
 // @description:zh-CN   取代 ZIP， 打包下载时下载为 PDF
 // @description:zh-TW   取代 ZIP， 打包下載時下載為 PDF
