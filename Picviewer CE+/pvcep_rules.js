@@ -1634,5 +1634,21 @@ var siteInfo = [
             url: ".thumb-image>a",
             query: ".single-image>img"
         }
+    },
+    {
+        name: "postimg host",
+        src: /^https:\/\/i\.postimg\.cc/,
+        xhr: {
+            url: "a[href^='https://postimg.cc/']",
+            query: "#main-image"
+        }
+    },
+    {
+        name: "postimg",
+        url: /^https:\/\/postimg\.cc/,
+        xhr: {
+            url: ".thumb>a",
+            query: "#main-image"
+        }
     }
 ];
