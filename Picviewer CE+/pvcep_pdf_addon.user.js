@@ -73,7 +73,7 @@
         if (disabled) {
             _unsafeWindow.pvcepimg2pdf = null;
         } else _unsafeWindow.pvcepimg2pdf = img2pdf;
-        registerId = GM_registerMenuCommand(disabled ? "Enable addon" : "Disable addon", () => {
+        registerId = GM_registerMenuCommand(disabled ? "❌ Disabled" : "✅ Enabled", () => {
             GM_unregisterMenuCommand(registerId);
             disabled = !disabled;
             GM_setValue("pvcep_pdf_disabled", disabled);
