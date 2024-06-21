@@ -24,6 +24,17 @@ If you are glad to assist with the translation, please [🌐edit this file](http
 Need more rules for peculiar sites? feel free to pull requests or open issues.
 
 [Picviewer CE+ PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon) After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
+ <details>
+<summary>Make a PDF e-book with this addon</summary>
+  
+  For example, if there is a website with images from `xxx.com/1.jpg` to `xxx.com/99.jpg`, you can use this addon to generate a beautiful PDF e-book as follows:
+1. Open the gallery by pressing Ctrl + g
+2. In the `Command` menu, find and click "Add image"
+3. Input `xxx.com/[1-99].jpg`
+4. Right-click in the thumbnail frame below to ignore any unwanted images
+5. Click `Download all shown` in the `Command` menu
+This way, you'll get a beautifully created PDF e-book.
+ </details>
 
 ## 🔧 Custom [Rules Example](pvcep_rules.js):
 **💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.**
