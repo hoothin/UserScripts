@@ -15,6 +15,10 @@
 
 + View long image by scroll
 
+## Usage
+
+Hover your mouse over any image and click the icons on the float bar.
+
 Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger picture when hovering over images or links.
 
 There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
