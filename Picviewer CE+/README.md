@@ -142,9 +142,9 @@ You have the option to use a standalone userscript, which allows you to manage a
         Regular expression used to match the image src
       - r
 
-        `"r": "/(.*)\\d+/i"`
+        `"r": "/(.*)\\d+/i"` or `"r": "thumb"`
         
-        Regular expression used to replace the image src from
+        Simple string or regular expression used to replace the image src from
       - s
 
         `"s": "$1"`
