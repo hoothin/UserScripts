@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.22.4
+// @version              2024.6.22.5
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -20634,7 +20634,7 @@ ImgOps | https://imgops.com/#b#`;
                     opacity: 0.5;\
                     border:none;\
                     padding:0;\
-                    padding-top:2px;\
+                    padding-top:2px!important;\
                     background-color:#1771FF;\
                     display: none;\
                     z-index: 2;\
@@ -20669,7 +20669,7 @@ ImgOps | https://imgops.com/#b#`;
                     border:none;\
                     border-right: 1px solid #868686;\
                     padding:0;\
-                    padding-top:2px;\
+                    padding-top:2px!important;\
                     background-color:#1771FF;\
                     display: none;\
                     z-index: 2;\
@@ -20694,8 +20694,8 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-description {\
                     display: none;\
                     background: yellow;\
-                    margin: 0 -5px 0 15px;\
-                    padding: 3px;\
+                    margin: 0 -5px 0 15px!important;\
+                    padding: 3px!important;\
                     color: black;\
                     text-shadow: 0 0 0px black;\
                     }\
@@ -20784,7 +20784,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-search-state>span {\
                     pointer-events: none;\
-                    padding: 1px 5px;\
+                    padding: 1px 5px!important;\
                     white-space: nowrap;\
                     overflow: hidden;\
                     }\
@@ -20899,7 +20899,7 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-box-sizing:content-box;\
                     height: 24px;\
                     width: 24px;\
-                    padding: 12px 8px 6px 6px;\
+                    padding: 12px 8px 6px 6px!important;\
                     margin:0;\
                     display: block;\
                     background: transparent no-repeat center;\
@@ -20974,7 +20974,7 @@ ImgOps | https://imgops.com/#b#`;
                     display:block;\
                     line-height:1.5;\
                     text-align:center;\
-                    padding:10px;\
+                    padding:10px!important;\
                     cursor:pointer;\
                     border: none;\
                     border-right: 2px solid transparent;\
