@@ -1,4 +1,4 @@
-# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
+# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe) 🗨️[Reddit](https://www.reddit.com/r/PicviewerCE)
 
 > Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
@@ -122,7 +122,7 @@ You have the option to use a standalone userscript, which allows you to manage a
   There are two types of rules available:
   + JSON (simple mode)
 
-    These rules are written in JSON format and can be imported online through [discussions](https://github.com/hoothin/UserScripts/discussions).
+    These rules are written in JSON format and can be imported online through [Discussions](https://github.com/hoothin/UserScripts/discussions) or [Reddit](https://www.reddit.com/r/PicviewerCE).
     They won't limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
     + JSON params
       - name
