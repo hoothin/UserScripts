@@ -1650,5 +1650,17 @@ var siteInfo = [
             url: ".thumb>a",
             query: "#main-image"
         }
+    },
+    {
+        name: "imagebam",
+        src: /^https:\/\/thumbs\d*\.imagebam\.com\//,
+        xhr: {
+            url: function(a, p) {
+                let imageId = this.src.match(/\/(\w+)\_\w\./);
+                if (!imageId) return null;
+                return `https://www.imagebam.com/view/${imageId[1]}`;
+            },
+            query: ".main-image"
+        }
     }
 ];
