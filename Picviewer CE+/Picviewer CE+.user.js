@@ -13767,7 +13767,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-tipsWords"></span>'+
                     '<span class="pv-gallery-urls-textarea"><textarea></textarea><span class="pv-gallery-urls-textarea-close"></span><span class="pv-gallery-urls-textarea-download">'+prefs.icons.downloadSvgBtn+'</span></span>'+
                     '</span>');
-                getBody(document).appendChild(container);
+                document.documentElement.appendChild(container);
 
                 let bricksInstance = Bricks({
                     container: ".pv-gallery-maximize-container",
