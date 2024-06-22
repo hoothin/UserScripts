@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.21.3
+// @version              2024.6.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1397893/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1398555/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1391048/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -15435,15 +15435,19 @@ ImgOps | https://imgops.com/#b#`;
                 //console.debug(meta);
                 this.showTips(parseInt(meta.percent)+"% Compress "+(meta.currentFile||""), 100000);
             },
-            batchDownload:function(saveParams, callback){
-                var self=this;
-                if(prefs.gallery.downloadWithZip){
+            batchDownload: function(saveParams, callback) {
+                var self = this;
+                if (prefs.gallery.downloadWithZip) {
                     self.showTips(i18n("galleryDownloadWithZipAlert"), 100000);
-                    var zip,downloaded=0, pdf=!!unsafeWindow.pvcepimg2pdf;
-                    var fileName = document.title + (pdf ? ".pdf" : ".zip");
-                    if (pdf) {
-                        zip = new unsafeWindow.pvcepimg2pdf(fileName);
+                    var zip, downloaded = 0, ext, packName = document.title;
+                    if (unsafeWindow.pvcepPackAddon) {
+                        packName += "." + unsafeWindow.pvcepPackAddon.ext;
+                        zip = new unsafeWindow.pvcepPackAddon.pack(packName);
+                    } else if (!!unsafeWindow.pvcepimg2pdf) {
+                        packName += ".pdf";
+                        zip = new unsafeWindow.pvcepimg2pdf(packName);
                     } else {
+                        packName += ".zip";
                         zip = new JSZip();
                     }
                     var len = saveParams.length;
@@ -15460,10 +15464,10 @@ ImgOps | https://imgops.com/#b#`;
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 1000000);
                                 if(downloaded == len){
-                                    self.showTips(`Begin compress to ${pdf ? 'PDF' : 'ZIP'}...`, 100000);
+                                    self.showTips(`Begin compress to ${packName}...`, 100000);
                                     zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                         if (content) {
-                                            saveAs(content, fileName);
+                                            saveAs(content, packName);
                                         }
                                         callback();
                                     })
@@ -15481,10 +15485,10 @@ ImgOps | https://imgops.com/#b#`;
                                     zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
                                     downloaded++;
                                     if(downloaded == len){
-                                        self.showTips(`Begin compress to ${pdf ? 'PDF' : 'ZIP'}...`, 100000);
+                                        self.showTips(`Begin compress to ${packName}...`, 100000);
                                         zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                             if (content) {
-                                                saveAs(content, fileName);
+                                                saveAs(content, packName);
                                             }
                                             callback();
                                         })
@@ -23722,22 +23726,6 @@ ImgOps | https://imgops.com/#b#`;
                         console.log(e);
                     }
                 }
-                if (unsafeWindow.pvcepRules && Array.isArray(unsafeWindow.pvcepRules)) {
-                    unsafeWindow.pvcepRules.forEach(rule => {
-                        rule.custom = true;
-                        let hasRule = false;
-                        for (let s = 0; s < siteInfo.length; s++) {
-                            if (siteInfo[s].name == rule.name) {
-                                hasRule = true;
-                                for (let si in rule) {
-                                    siteInfo[s][si] = rule[si];
-                                }
-                                break;
-                            }
-                        }
-                        if (!hasRule) siteInfo.unshift(rule);
-                    })
-                }
 
                 var self = this, r = 0, urlChecked = false;
                 self.rules=[];
@@ -23855,7 +23843,25 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     },1);
                 }
-                searchByTime();
+                setTimeout(() => {
+                    if (unsafeWindow.pvcepRules && Array.isArray(unsafeWindow.pvcepRules)) {
+                        unsafeWindow.pvcepRules.forEach(rule => {
+                            rule.custom = true;
+                            let hasRule = false;
+                            for (let s = 0; s < siteInfo.length; s++) {
+                                if (siteInfo[s].name == rule.name) {
+                                    hasRule = true;
+                                    for (let si in rule) {
+                                        siteInfo[s][si] = rule[si];
+                                    }
+                                    break;
+                                }
+                            }
+                            if (!hasRule) siteInfo.unshift(rule);
+                        })
+                    }
+                    searchByTime();
+                }, 1);
             },
             replace:function(str, r, s){
                 var results=[],rt;
