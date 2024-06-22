@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.22.2
+// @version              2024.6.22.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14594,14 +14594,13 @@ ImgOps | https://imgops.com/#b#`;
                                                 media = document.createElement('video');
                                                 src = "video:" + src;
                                             }
+                                            media.title = file.name;
                                             var result = {
                                                 src: src,
                                                 type: 'force',
                                                 imgSrc: src,
-
                                                 noActual:true,
-                                                description: '',
-
+                                                description: file.name,
                                                 img: media
                                             };
                                             self.data.push(result);
@@ -15319,31 +15318,45 @@ ImgOps | https://imgops.com/#b#`;
 
                 container.style.display='none';
 
-                container.addEventListener("drop", e => {
+                let allData = new Map();
+                container.addEventListener("drop", async e => {
                     e.preventDefault();
                     self.eleMaps['img-parent'].style.pointerEvents = "";
                     container.style.filter = "";
-                    var files = e.dataTransfer.files;
+                    var files = [...e.dataTransfer.items].map(
+                        item => item.getAsFileSystemHandle()
+                    );
                     if (files.length) {
-                        for (var i = 0; i < files.length; i++) {
-                            let file = files.item(i);
-                            file = files[i];
-                            let src = URL.createObjectURL(file);
-                            let img=document.createElement('img');
-                            img.src=src;
-                            var result = {
-                                src: src,
-                                type: 'force',
-                                imgSrc: src,
-
-                                noActual:true,
-                                description: '',
-
-                                img: img
-                            };
-                            self.data.push(result);
-                            self._appendThumbSpans([result]);
+                        async function handle(items, dir = "") {
+                            for await (let item of items) {
+                                let name = item.name;
+                                let path = dir + "/" + name;
+                                if (allData.has(path)) continue;
+                                if (item.kind === "directory") {
+                                    allData.set(path, true);
+                                    await handle(item.values(), path);
+                                } else if (item.kind === "file") {
+                                    let file = await item.getFile();
+                                    if (!file.type.match(/image.*/)) continue;
+                                    allData.set(path, true);
+                                    let src = URL.createObjectURL(file);
+                                    let img=document.createElement('img');
+                                    img.src=src;
+                                    img.title=path;
+                                    var result = {
+                                        src: src,
+                                        type: 'force',
+                                        imgSrc: src,
+                                        noActual:true,
+                                        description: path,
+                                        img: img
+                                    };
+                                    self.data.push(result);
+                                    self._appendThumbSpans([result]);
+                                }
+                            }
                         }
+                        await handle(files);
                         self.loadThumb();
                     }
                 });
@@ -16698,7 +16711,7 @@ ImgOps | https://imgops.com/#b#`;
                                 if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
                                 else title += '\n';
                             }
-                            let itemSrc = item.src.replace(/^(data[^;]+).*/, "$1...");
+                            let itemSrc = item.src.replace(/^blob:.*/, "").replace(/^(data[^;]+).*/, "$1...");
                             spanMark.title = title + (itemSrc.length > 150 ? itemSrc.slice(0, 110) + " ... " + itemSrc.slice(-30) : itemSrc);
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
