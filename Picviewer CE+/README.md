@@ -21,12 +21,13 @@ Hover your mouse over any image and click the icons on the float bar.
 
 Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger picture when hovering over images or links.
 
-There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
+> There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
+> 
+> If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
+> 
+> Need more rules for peculiar sites? feel free to pull requests or open issues.
 
-If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
-
-Need more rules for peculiar sites? feel free to pull requests or open issues.
-
+## PDF Addon
 [Picviewer CE+ PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon) After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
  <details>
 <summary>Make a PDF e-book with this addon</summary>
@@ -174,7 +175,7 @@ You have the option to use a standalone userscript, which allows you to manage a
 ## Blank Gallery Page
 [https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 
-*A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
+> *A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
 You can drag and drop folders or videos/audios/images into this gallery to get an electronic slideshow to view them.
 
