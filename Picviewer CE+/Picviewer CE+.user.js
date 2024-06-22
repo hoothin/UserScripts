@@ -18751,6 +18751,7 @@ ImgOps | https://imgops.com/#b#`;
                     transform: scale3d(1, 1, 1);\
                     cursor: zoom-in;\
                     min-height: 88px;\
+                    border-radius: 10px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover img {\
                     transform: scale3d(1.1, 1.1, 1.1);\
