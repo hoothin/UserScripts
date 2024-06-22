@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.22.3
+// @version              2024.6.22.4
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15337,19 +15337,27 @@ ImgOps | https://imgops.com/#b#`;
                                     await handle(item.values(), path);
                                 } else if (item.kind === "file") {
                                     let file = await item.getFile();
-                                    if (!file.type.match(/image.*/)) continue;
                                     allData.set(path, true);
                                     let src = URL.createObjectURL(file);
-                                    let img=document.createElement('img');
-                                    img.src=src;
-                                    img.title=path;
+                                    let media;
+                                    if (file.type.indexOf("image") === 0) {
+                                        media = document.createElement('img');
+                                    } else if (file.type.indexOf("audio") === 0) {
+                                        media = document.createElement('audio');
+                                        src = "audio:" + src;
+                                    } else if (file.type.indexOf("video") === 0) {
+                                        media = document.createElement('video');
+                                        src = "video:" + src;
+                                    } else continue;
+                                    media.src = src;
+                                    media.title = path;
                                     var result = {
                                         src: src,
                                         type: 'force',
                                         imgSrc: src,
                                         noActual:true,
                                         description: path,
-                                        img: img
+                                        img: media
                                     };
                                     self.data.push(result);
                                     self._appendThumbSpans([result]);
