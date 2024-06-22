@@ -8,6 +8,8 @@
 + 可自定義用語轉換詞典
 + 可透過通配符自定義生效網址，達成在不同網域套用不同用語詞典的效果
 
+[**Ch'ü Tsê-t'ien 的簡繁用語轉換配置文件**](https://hoothin.github.io/UserScripts/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/%E7%B0%A1%E7%B9%81%E8%BD%89%E6%8F%9B%20by%20Ch'%C3%BC%20Ts%C3%AA-t'ien.json) 下載此檔案后在`自訂簡繁用語轉換`旁點擊按鈕匯入即可
+
 我創建了一個sc2tc數組，裡面是一簡多繁的對照，有興趣的朋友可以修改並分享至[GITHUB](https://github.com/hoothin/UserScripts/blob/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js)。
 
 如果你只是有更好的繁簡對照表，也歡迎提交給我。
