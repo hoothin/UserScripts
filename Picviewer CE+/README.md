@@ -180,13 +180,14 @@ You have the option to use a standalone userscript, which allows you to manage a
 
 *A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
+You can drag and drop folders or videos/audios/images into this gallery to get an electronic slideshow to view them.
+
 Include `mode=`*`1`* to open gallery in view-more mode.<br/>
 Add `imgs=`*`http://xxx/xxx.jpg`* to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
 For example: 
 ```url
 https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?mode=0&imgs=http://xxx/xxx[01-99].jpg
 ```
-Just easily drag and drop your local images into the gallery to view them.
 
 <img src='https://v2fy.com/asset/063_picviewer_ce/72723103-d911ce00-3bba-11ea-9541-0be746977dbc.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/72767872-7eb35480-3c30-11ea-814d-ce4678c81089.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/73130353-c4598e00-4031-11ea-810e-9498677a40d1.gif' width=325>
 
