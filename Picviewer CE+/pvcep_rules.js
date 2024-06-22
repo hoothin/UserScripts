@@ -1662,5 +1662,12 @@ var siteInfo = [
             },
             query: ".main-image"
         }
+    },
+    {
+        name: "MAL Anime/Manga Search",
+        url: /^https:\/\/myanimelist\.net\/(anime|manga)\.php\?cat=(anime|manga).+/,
+        src: /^https:\/\/cdn\.myanimelist\.net/,
+        r: /\/r\/(\d+x\d+)(\/images\/(anime|manga)\/\d+\/\d+)\.webp.+/,
+        s: "$2l.jpg"
     }
 ];
