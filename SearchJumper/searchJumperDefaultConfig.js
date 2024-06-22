@@ -430,7 +430,7 @@ switch (lang) {
                     },
                     {
                         "name": "Google advanced",
-                        "url": "https://www.google.com/search?q=%s%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{Limit lang/zh-CN/zh-TW/zh-ALL/JA/EN,&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_ja/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
+                        "url": "https://www.google.com/search?q=%sr.replace(/ \\w+:.*/,\"\")%input{In site/Reddit/Engadget, site:reddit.com/ site:engadget.com}%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf/ filetype:txt}%input{Limit lang/Japanese/zh-CN/zh-TW/ZH/EN,&lr=lang_ja/&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
                         "match": "https://www\\.google\\..*/search((?!udm=2).)*$",
                         "hideNotMatch": true
                     },
