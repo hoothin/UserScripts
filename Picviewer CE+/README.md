@@ -1,4 +1,4 @@
-# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
+# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe) 🗨️[Reddit](https://www.reddit.com/r/PicviewerCE)
 
 > Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
@@ -94,25 +94,21 @@ You have the option to use a standalone userscript, which allows you to manage a
 
 (function() {
     'use strict';
-    window.pvcepRules = window.pvcepRules || [];
-    window.pvcepRules.push(
-        ...
-        [
-            //Delete these two example rules and add your own.
-            {
-                name: "rule1",
-                src: /pics\.dmm\.co\.jp/i,
-                r: "ps.jpg",
-                s: "pl.jpg"
-            },
-            {
-                name: "rule2",
-                url: /^https:\/\/xxx\.com\//,
-                r: /us\.xxx\.com\/\d+wm\//i,
-                s: "previews.xxx.com/images/"
-            }
-        ]
-    );
+    window.pvcepRules = (window.pvcepRules || []).concat([
+         //Delete these two example rules and add your own.
+         {
+             name: "rule1",
+             src: /pics\.dmm\.co\.jp/i,
+             r: "ps.jpg",
+             s: "pl.jpg"
+         },
+         {
+             name: "rule2",
+             url: /^https:\/\/xxx\.com\//,
+             r: /us\.xxx\.com\/\d+wm\//i,
+             s: "previews.xxx.com/images/"
+         }
+    ]);
 })();
 ```
 
@@ -122,7 +118,7 @@ You have the option to use a standalone userscript, which allows you to manage a
   There are two types of rules available:
   + JSON (simple mode)
 
-    These rules are written in JSON format and can be imported online through [discussions](https://github.com/hoothin/UserScripts/discussions).
+    These rules are written in JSON format and can be imported online through [Discussions](https://github.com/hoothin/UserScripts/discussions) or [Reddit](https://www.reddit.com/r/PicviewerCE).
     They won't limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
     + JSON params
       - name
@@ -142,9 +138,9 @@ You have the option to use a standalone userscript, which allows you to manage a
         Regular expression used to match the image src
       - r
 
-        `"r": "/(.*)\\d+/i"`
+        `"r": "/(.*)\\d+/i"` or `"r": "thumb"`
         
-        Regular expression used to replace the image src from
+        Simple string or regular expression used to replace the image src from
       - s
 
         `"s": "$1"`
@@ -187,6 +183,8 @@ Add `imgs=`*`http://xxx/xxx.jpg`* to import images. ` ` to split multi-image, `[
 For example: 
 ```url
 https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?mode=0&imgs=http://xxx/xxx[01-99].jpg
+or
+https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html?mode=0&imgs=${encodeURIComponent(IMG1 + ' ' + IMG2)}
 ```
 
 <img src='https://v2fy.com/asset/063_picviewer_ce/72723103-d911ce00-3bba-11ea-9541-0be746977dbc.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/72767872-7eb35480-3c30-11ea-814d-ce4678c81089.gif' width=325><img src='https://v2fy.com/asset/063_picviewer_ce/73130353-c4598e00-4031-11ea-810e-9498677a40d1.gif' width=325>
