@@ -1,16 +1,16 @@
-+ 默認自動切換至用戶所使用的默認語言
-+ `Ctrl + F8` 切換 **簡體中文** 與 **正體中文**（若輸入框為活動控件則只轉換輸入框内文字，框選文字時僅轉換對應文字且不會記憶）
-+ 使用命令菜單中的 「繁簡切換【Ctrl + F8】」 可於當前網域禁用轉換
-+ 切換后會保存當前網站語言選擇
-+ 轉換頁面中所有的文字內容、描述字符、提示文字、標題等
-+ 支援在漢字上方顯示對應的漢語拼音字母
-+ 支援彈幕，以及動態插入的元素。
-+ 可自定義用語轉換詞典
-+ 可透過通配符自定義生效網址，達成在不同網域套用不同用語詞典的效果
++ 預設會自動切換至使用者所使用的預設語言。
++ 按下 `Ctrl + F8` 可在簡體中文與繁體中文之間切換（如果輸入框為活動控制項,則只有輸入框內的文字會被轉換;選取文字時,只有對應的文字會被轉換,且不會被記憶）。
++ 使用命令選單中的「繁簡切換【Ctrl + F8】」功能可在當前網域禁用轉換。
++ 切換語言後,會儲存目前網站的語言選擇。
++ 可轉換頁面中所有的文字內容、描述字元、提示文字、標題等。
++ 支援在漢字上方顯示對應的漢語拼音字母。
++ 支援彈幕,以及動態插入的元素。
++ 可自訂用語轉換詞典。
++ 可透過通配符自訂生效網址,以在不同網域套用不同的用語詞典。
 
 [**Ch'ü Tsê-t'ien 的簡繁用語轉換配置文件**](https://hoothin.github.io/UserScripts/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/%E7%B0%A1%E7%B9%81%E8%BD%89%E6%8F%9B%20by%20Ch'%C3%BC%20Ts%C3%AA-t'ien.json) 下載此檔案后在`自訂簡繁用語轉換`旁點擊按鈕匯入即可
 
-我創建了一個sc2tc數組，裡面是一簡多繁的對照，有興趣的朋友可以修改並分享至[GITHUB](https://github.com/hoothin/UserScripts/blob/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js)。
+我建立了一個 sc2tc 陣列,其中包含了簡體中文到繁體中文的對照表。有興趣的朋友可以修改並分享至[GITHUB](https://github.com/hoothin/UserScripts/blob/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js)。
 
 如果你只是有更好的繁簡對照表，也歡迎提交給我。
 
