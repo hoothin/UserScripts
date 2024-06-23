@@ -3,10 +3,10 @@
 // @name:en            Kill Baidu AD
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            1.22
-// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，并防止反复
+// @version            1.23
+// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，刪除百家号
 // @description:en     Just Kill Baidu AD
-// @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，並防止反復
+// @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
 // @author             hoothin
 // @include            http*://www.baidu.com/*
 // @include            http*://m.baidu.com/*
@@ -75,10 +75,25 @@
         var list=document.querySelectorAll("#content_left>div,#content_left>table");
         for(i=0;i<list.length;i++){
             let item = list[i];
+            let mu = item.getAttribute("mu");
+            if (mu) {
+                if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
+                    item.remove();
+                    continue;
+                } else {
+                    let link = item.querySelector("a[href*='www.baidu.com/link']");
+                    if (link) link.href = mu;
+                }
+            }
             let s = item.getAttribute("style");
             if (s && /display:(table|block)\s!important/.test(s)) {
                 item.remove();
             }else{
+                let baozhang = item.querySelector("[data-baodata]");
+                if (baozhang) {
+                    item.remove();
+                    continue;
+                }
                 var span=item.querySelector("div>span");
                 if(span && span.innerHTML=="广告"){
                     item.remove();
@@ -127,10 +142,25 @@
             return;
         }
         if(ele.parentNode && ele.parentNode.id=="content_left" && (ele.nodeName=="DIV" || ele.nodeName=="TABLE")){
+            let mu = ele.getAttribute("mu");
+            if (mu) {
+                if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
+                    ele.remove();
+                    return;
+                } else {
+                    let link = ele.querySelector("a[href*='www.baidu.com/link']");
+                    if (link) link.href = mu;
+                }
+            }
             let s = ele.getAttribute("style");
             if (s && /display:(table|block)\s!important/.test(s)) {
                 ele.remove();
             }else{
+                let baozhang = ele.querySelector("[data-baodata]");
+                if (baozhang) {
+                    ele.remove();
+                    return;
+                }
                 var span=ele.querySelector("div>span");
                 if(span && span.innerHTML=="广告"){
                     ele.remove();
