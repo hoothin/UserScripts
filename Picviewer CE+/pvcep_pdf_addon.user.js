@@ -3,7 +3,7 @@
 // @name:zh-CN   Picviewer CE+ PDF 扩展
 // @name:zh-TW   Picviewer CE+ PDF 擴充
 // @namespace    https://github.com/hoothin/UserScripts
-// @version      2024-06-22
+// @version      2024-06-23
 // @description  Batch Download as PDF instead of ZIP
 // @description:zh-CN   取代 ZIP， 打包下载时下载为 PDF
 // @description:zh-TW   取代 ZIP， 打包下載時下載為 PDF
@@ -53,12 +53,16 @@
                     fileName = this.fileList[0][0];
                     blob = this.fileList[0][1];
                 }
-                let dataUrl = await blobToDataURL(blob);
-                const imgProps = pdf.getImageProperties(dataUrl);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                pdf.addImage(dataUrl, blob.type, 0, 0, pdfWidth, pdfHeight);
-                progress({percent: (key + 1) / fileLength * 100, currentFile: fileName});
+                try {
+                    let dataUrl = await blobToDataURL(blob);
+                    const imgProps = pdf.getImageProperties(dataUrl);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                    pdf.addImage(dataUrl, blob.type, 0, 0, pdfWidth, pdfHeight);
+                    progress({percent: (key + 1) / fileLength * 100, currentFile: fileName});
+                } catch(e) {
+                    console.log(e);
+                }
                 if (key + 1 < fileLength) {
                     pdf.addPage();
                 }
