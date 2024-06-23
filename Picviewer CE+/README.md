@@ -52,7 +52,7 @@ This way, you'll get a beautifully created PDF e-book.
 ``` json
 {
     "name": "Dmm",
-    "src": "/pics\\.dmm\\.co\\.jp/i",
+    "src": "pics\\.dmm\\.co\\.jp",
     "r": "ps.jpg",
     "s": "pl.jpg"
 }
