@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.23.2
+// @version              2024.6.23.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12414,7 +12414,7 @@ ImgOps | https://imgops.com/#b#`;
                 searchData:defaultSearchData,
                 downloadWithZip:true,
                 autoOpenViewmore:false,
-                downloadGap:0
+                downloadGap:1
             },
 
             imgWindow:{// 图片窗相关设置
@@ -14411,15 +14411,46 @@ ImgOps | https://imgops.com/#b#`;
                 prefs.gallery.scrollEndAndLoad = !!storage.getListItem("scrollEndAndLoad", location.hostname);
                 eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
                 let srcSplit, downloading=false, saveParams;
-                function getSaveParams() {
+                async function getSaveParams() {
                     let nodes = self.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)');
                     let saveParams = [],saveIndex=0;
-                    [].forEach.call(nodes, function(node){
-                        if(unsafeWindow.getComputedStyle(node).display!="none"){
+                    for (const node of nodes) {
+                        if (unsafeWindow.getComputedStyle(node).display !== "none") {
                             saveIndex++;
+
+                            let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
+                            if (xhr) {
+                                self.showTips("Sending request...");
+                                await new Promise(resolve => {
+                                    setTimeout(() => {
+                                        let xhrError = function() {
+                                            dataset(node, 'xhr', 'stop');
+                                            dataset(node, 'src', dataset(node, 'thumbSrc'));
+                                            resolve();
+                                        };
+                                        xhrLoad.load({
+                                            url: node.dataset.src,
+                                            xhr: xhr,
+                                            cb: function(imgSrc, imgSrcs, caption) {
+                                                if (imgSrc) {
+                                                    dataset(node, 'src', imgSrc);
+                                                    dataset(node, 'xhr', 'stop');
+                                                    if (caption) dataset(node, 'description', caption);
+                                                    resolve();
+                                                } else {
+                                                    xhrError();
+                                                }
+                                            },
+                                            onerror: xhrError
+                                        });
+                                    }, prefs.gallery.downloadGap || 0);
+                                });
+                            }
+
+
                             if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
                             else {
-                                srcSplit=node.dataset.src || '';
+                                srcSplit = node.dataset.src || '';
                             }
                             let title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
                             title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
@@ -14434,11 +14465,11 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                         }
-                    });
+                    }
                     return saveParams;
                 }
                 //命令下拉列表的点击处理
-                eleMaps['head-command-drop-list-others'].addEventListener('click',function(e){
+                eleMaps['head-command-drop-list-others'].addEventListener('click',async function(e){
                     if(e.button!=0)return;//左键
                     let target=e.target;
                     let command=dataset(target,'command');
@@ -14504,7 +14535,7 @@ ImgOps | https://imgops.com/#b#`;
                                 self.showTips("Configure aria2 first!", 1000);
                                 return;
                             }
-                            saveParams = getSaveParams();
+                            saveParams = await getSaveParams();
                             [].forEach.call(saveParams, function(param){
                                 _GM_xmlhttpRequest({
                                     method: 'POST',
@@ -14531,7 +14562,7 @@ ImgOps | https://imgops.com/#b#`;
                         case 'downloadImage':
                             if(downloading)break;
                             downloading=true;
-                            saveParams = getSaveParams();
+                            saveParams = await getSaveParams();
                             self.batchDownload(saveParams, ()=>{
                                 downloading=false;
                                 self.showTips("Completed!", 1000);
@@ -15197,17 +15228,28 @@ ImgOps | https://imgops.com/#b#`;
                     let mainImgWin=new ImgWindowC(mainImg);
                     mainImgWin.compare(imgSrcs);
                 };
-                batchDlBtn.onclick=function(e){
+                batchDlBtn.onclick=async function(e){
                     checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
                     if(checkBoxs.length<1)checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
 
                     var saveParams = [],saveIndex=0;
-                    [].forEach.call(checkBoxs, function(node){
+                    for (const node of checkBoxs) {
                         let conItem=node.parentNode;
                         if(conItem.style.display=="none")return;
                         saveIndex++;
 
-                        let imgSrc=conItem.querySelector("img").src;
+                        if (conItem.dataset.xhr) {
+                            await new Promise((resolve) => {
+                                let getxhroverHandler = e => {
+                                    conItem.removeEventListener('getxhrover', getxhroverHandler);
+                                    resolve();
+                                };
+                                conItem.addEventListener('getxhrover', getxhroverHandler);
+                                conItem.dispatchEvent(new Event('getxhr'));
+                            });
+                        }
+
+                        let imgSrc=conItem.querySelector("img").dataset.src || conItem.querySelector("img").src;
                         let title=node.nextElementSibling.title;
                         title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
                         title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
@@ -15219,7 +15261,7 @@ ImgOps | https://imgops.com/#b#`;
                         title = getRightSaveName(srcSplit, title, prefs.saveName);
                         var picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title || title == document.title ? "" : "-" + title);
                         saveParams.push([imgSrc, picName]);
-                    });
+                    }
                     self.batchDownload(saveParams, ()=>{
                         self.showTips("Completed!", 1000);
                     });
@@ -15472,7 +15514,7 @@ ImgOps | https://imgops.com/#b#`;
                         zip = new JSZip();
                     }
                     var len = saveParams.length;
-                    function downloadOne(imgSrc, imgName){
+                    function downloadOne(imgSrc, imgName, over){
                         let crosHandler = imgSrc => {
                             urlToBlob(imgSrc, blob=>{
                                 if (blob && blob.size>58) {
@@ -15483,6 +15525,7 @@ ImgOps | https://imgops.com/#b#`;
                                     zip.file(fileName, blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
+                                over && over();
                                 self.showTips("Downloading "+downloaded+"/"+len, 1000000);
                                 if(downloaded == len){
                                     self.showTips(`Begin compress to ${packName}...`, 100000);
@@ -15505,6 +15548,7 @@ ImgOps | https://imgops.com/#b#`;
                                 canvas.toBlob(blob=>{
                                     zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
                                     downloaded++;
+                                    over && over();
                                     if(downloaded == len){
                                         self.showTips(`Begin compress to ${packName}...`, 100000);
                                         zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
@@ -15521,11 +15565,23 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                     if(prefs.gallery.downloadGap > 0){
-                        let downIntv=setInterval(()=>{
-                            let saveParam=saveParams.shift();
-                            if(!saveParam)clearInterval(downIntv);
-                            else downloadOne(saveParam[0], saveParam[1]);
-                        },prefs.gallery.downloadGap);
+                        let waitToDownloadOne = () => {
+                            setTimeout(() => {
+                                let saveParam = saveParams && saveParams.shift();
+                                if (!saveParam) clearInterval(downIntv);
+                                else downloadOne(saveParam[0], saveParam[1], waitToDownloadOne);
+                            }, prefs.gallery.downloadGap);
+                        };
+                        let threadNum = 10;
+                        let downIntv = setInterval(() => {
+                            if (threadNum-- === 0) {
+                                clearInterval(downIntv);
+                                return;
+                            }
+                            let saveParam = saveParams && saveParams.shift();
+                            if (!saveParam) clearInterval(downIntv);
+                            else downloadOne(saveParam[0], saveParam[1], waitToDownloadOne);
+                        }, prefs.gallery.downloadGap);
                     }else{
                         for(let i=0; i<len; i++){
                             downloadOne(saveParams[i][0], saveParams[i][1]);
@@ -15553,7 +15609,6 @@ ImgOps | https://imgops.com/#b#`;
                 download5Times();
             },
             changeMinView:function(){
-                var urlReg=new RegExp(this.urlFilter);
                 var sizeInputH=this.sizeInputH;
                 var sizeInputW=this.sizeInputW;
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
@@ -15839,7 +15894,44 @@ ImgOps | https://imgops.com/#b#`;
                     imgSpan.className = "maximizeChild";
                     imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '" />');
                     let img=imgSpan.querySelector("img");
-                    imgSpan.addEventListener("click", function(e) {
+                    let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
+                    let getXhr = async () => {
+                        let result = await new Promise((resolve) => {
+                            let xhrError = function() {
+                                dataset(node, 'xhr', 'stop');
+                                dataset(node, 'src', dataset(node, 'thumbSrc'));
+                                resolve(null);
+                            };
+                            xhrLoad.load({
+                                url: curNode.dataset.src,
+                                xhr: xhr,
+                                cb: function(imgSrc, imgSrcs, caption) {
+                                    if (imgSrc) {
+                                        dataset(node, 'src', imgSrc);
+                                        dataset(node, 'xhr', 'stop');
+                                        if (caption) dataset(node, 'description', caption);
+                                        img.dataset.src = imgSrc;
+                                        resolve(imgSrc);
+                                    } else {
+                                        xhrError();
+                                    }
+                                },
+                                onerror: xhrError
+                            });
+                        });
+                        imgSpan.removeEventListener('getxhr', getXhrHandler);
+                        delete imgSpan.dataset.xhr;
+                        imgSpan.dispatchEvent(new Event('getxhrover'));
+                        return result;
+                    };
+                    let getXhrHandler = e => {
+                        getXhr();
+                    };
+                    if (xhr) {
+                        imgSpan.dataset.xhr = true;
+                        imgSpan.addEventListener('getxhr', getXhrHandler);
+                    }
+                    imgSpan.addEventListener("click", async function(e) {
                         self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
                             let i = document.createElement("img");
@@ -15850,7 +15942,7 @@ ImgOps | https://imgops.com/#b#`;
                         let loadImg = () => {
                             self.showTips("Loading image...");
 
-                            let imgSrc = img.dataset.src;
+                            let imgSrc = dataset(node, 'src');
                             let mode = matchedRule.getMode(imgSrc);
                             let media;
                             switch (mode) {
@@ -15902,28 +15994,16 @@ ImgOps | https://imgops.com/#b#`;
                         let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                         if (xhr) {
                             self.showTips("Sending request...");
-                            let xhrError = function() {
-                                dataset(node, 'xhr', 'stop');
-                                dataset(node, 'src', dataset(node, 'thumbSrc'));
+                            let imgSrc = await getXhr();
+                            if (imgSrc) {
+                                loadImg();
+                            } else {
                                 loadError();
-                            };
-                            xhrLoad.load({
-                                url: curNode.dataset.src,
-                                xhr: xhr,
-                                cb: function(imgSrc, imgSrcs, caption) {
-                                    if (imgSrc) {
-                                        dataset(node, 'src', imgSrc);
-                                        dataset(node, 'xhr', 'stop');
-                                        if (caption) dataset(node, 'description', caption);
-                                        img.dataset.src = imgSrc;
-                                        loadImg();
-                                    } else {
-                                        xhrError();
-                                    }
-                                },
-                                onerror: xhrError
-                            });
+                            }
                             return;
+                        } else {
+                            imgSpan.removeEventListener('getxhr', getXhrHandler);
+                            delete imgSpan.dataset.xhr;
                         }
                         loadImg();
                     });
@@ -16700,7 +16780,6 @@ ImgOps | https://imgops.com/#b#`;
                     this.eleMaps['maximize-container'].innerHTML = createHTML("");
                 }
                 var self = this;
-                var urlReg=new RegExp(this.urlFilter);
                 var createSpanMark = item => {
                     var spanMark=self._spanMarkPool[item.src];
                     if(!spanMark){
