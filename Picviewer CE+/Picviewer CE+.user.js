@@ -16824,7 +16824,7 @@ ImgOps | https://imgops.com/#b#`;
                         }catch(e){};
                         self._spanMarkPool[item.src] = spanMark;
                     }
-                    spanMark.dataset.xhr='';
+                    //spanMark.dataset.xhr='';
                     if(spanMark.dataset.naturalSize){
                         let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
                         item.sizeW=naturalSize.w;
