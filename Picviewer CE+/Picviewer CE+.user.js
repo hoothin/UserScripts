@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.23.3
+// @version              2024.6.23.4
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
 // @require              https://update.greasyfork.org/scripts/438080/1398739/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1391048/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1399329/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -13622,6 +13622,10 @@ ImgOps | https://imgops.com/#b#`;
                     '<input id="pv-gallery-head-command-drop-list-item-slide-show-backward" data-prefs="backward" type="checkbox" />'+
                     '<label for="pv-gallery-head-command-drop-list-item-slide-show-backward">'+i18n("slideBack")+'　　　</label>'+
                     '</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item">'+
+                    '<input id="pv-gallery-head-command-drop-list-item-slide-show-random" data-prefs="random" type="checkbox" />'+
+                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-random">'+i18n("slideRandom")+'　　　</label>'+
+                    '</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item"  title="'+i18n("slideWaitTip")+'">'+
                     '<input id="pv-gallery-head-command-drop-list-item-slide-show-wait" data-prefs="wait" type="checkbox" checked="checked" />'+
                     '<label for="pv-gallery-head-command-drop-list-item-slide-show-wait">'+i18n("slideWait")+'</label>'+
@@ -14260,6 +14264,7 @@ ImgOps | https://imgops.com/#b#`;
                         backward:false,
                         skipErrorImg:true,
                         run:false,
+                        random:false
                     },
                     //timing:
                     //select(选中下一个图片后（缩略图栏选中了），还没开始读取大图（一般选中后，延时200ms开始读取大图）),
@@ -14300,7 +14305,7 @@ ImgOps | https://imgops.com/#b#`;
 
                     },
                     getEle:function(){
-                        return self.getThumSpan(this.opts.backward, null, true);
+                        return self.getThumSpan(this.opts.backward, null, true, this.opts.random);
                     },
                     go:function(){
                         this.stop();//停止上次的。
@@ -16138,23 +16143,34 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
 
-            getThumSpan:function(previous, relatedTarget, loop){
+            getThumSpan:function(previous, relatedTarget, loop, random){
                 var ret;
                 var rt = relatedTarget || this.selected;
                 if(!rt)return;
-                while((rt=previous ? rt.previousElementSibling : rt.nextElementSibling)){
-                    if(rt.clientWidth!=0){
-                        ret=rt;
-                        break;
-                    }
-                }
-                if (loop && !ret) {
-                    rt = (relatedTarget || this.selected).parentNode;
-                    rt = previous ? rt.lastElementChild : rt.firstElementChild;
-                    while ((rt = previous ? rt.previousElementSibling : rt.nextElementSibling)) {
-                        if (rt.clientWidth != 0) {
+                if (random) {
+                    if (rt.clientWidth === 0) return;
+                    let sibling = rt.parentNode.children;
+                    while (rt = sibling[Math.floor(Math.random() * sibling.length)]) {
+                        if (rt.clientWidth !== 0) {
                             ret = rt;
                             break;
+                        }
+                    }
+                } else {
+                    while((rt=previous ? rt.previousElementSibling : rt.nextElementSibling)){
+                        if(rt.clientWidth!=0){
+                            ret=rt;
+                            break;
+                        }
+                    }
+                    if (loop && !ret) {
+                        rt = (relatedTarget || this.selected).parentNode;
+                        rt = previous ? rt.lastElementChild : rt.firstElementChild;
+                        while ((rt = previous ? rt.previousElementSibling : rt.nextElementSibling)) {
+                            if (rt.clientWidth != 0) {
+                                ret = rt;
+                                break;
+                            }
                         }
                     }
                 }
