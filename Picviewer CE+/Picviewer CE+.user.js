@@ -18022,7 +18022,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding: 0;\
                     margin: 0;\
                     border: none;\
-                    z-index:'+prefs.imgWindow.zIndex+';\
+                    z-index:'+(prefs.imgWindow.zIndex - 1)+';\
                     background-color: transparent;\
                     display: initial;\
                     }\
