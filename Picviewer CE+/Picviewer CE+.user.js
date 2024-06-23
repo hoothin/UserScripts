@@ -19828,7 +19828,7 @@ ImgOps | https://imgops.com/#b#`;
             this.img = img;
             this.actual = !!actual;
             this.src = data?data.src:img.src;
-            this.data = data;
+            this.data = data || findPic(img);
             this.initPos = initPos || false;
             this.preview = !!preview;
             this.isImg = this.img.nodeName.toUpperCase() == 'IMG';
@@ -20757,6 +20757,8 @@ ImgOps | https://imgops.com/#b#`;
                     overflow:visible;\
                     background:none;\
                     box-shadow:none;\
+                    opacity: 1;\
+                    height: 30px;\
                     }\
                     .pv-pic-window-container>span.pv-pic-search-state:hover>span{\
                     opacity: 0;\
