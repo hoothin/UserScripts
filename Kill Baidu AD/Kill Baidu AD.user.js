@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name               百度广告(首尾推广及右侧广告)清理
-// @name:en            Kill Baidu AD
+// @name               Kill Baidu AD
+// @name:zh-CN         百度广告(首尾推广及右侧广告)清理
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            1.23.1
-// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，刪除百家号
-// @description:en     Just Kill Baidu AD
+// @version            1.23.2
+// @description        Kill Baidu AD
+// @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，刪除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
 // @author             hoothin
 // @match              *://www.baidu.com/*
@@ -17,8 +17,6 @@
 // @compatible         firefox 测试通过
 // @compatible         opera 未测试
 // @compatible         safari 未测试
-// @contributionURL    https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
-// @contributionAmount 1
 // ==/UserScript==
 
 (function() {
@@ -124,15 +122,23 @@
         }
     }
 
-    function clearAD() {
-        if (!document.querySelectorAll) return;
-        var mAds = document.querySelectorAll(".ec_wise_ad,.ec_youxuan_card,.page-banner"), i;
-        for (i = 0; i < mAds.length; i++) {
-            var mAd = mAds[i];
+    function removeEcAd(ele) {
+        var mAds = ele.querySelectorAll(".ec_wise_ad,.ec_youxuan_card,.page-banner");
+        for (let i = 0; i < mAds.length; i++) {
+            let mAd = mAds[i];
             mAd.remove();
         }
+        var baiduapp = ele.querySelector("#copyright+div");
+        if (baiduapp && baiduapp.querySelector("[ref='open']")) {
+            baiduapp.remove();
+        }
+    }
+
+    function clearAD() {
+        if (!document.querySelectorAll) return;
+        removeEcAd(document);
         var list = document.querySelectorAll("#content_left>div,#content_left>table");
-        for (i = 0; i < list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             let item = list[i];
             checkLeftItem(item);
         }
@@ -166,6 +172,7 @@
                 }
             }
         } else {
+            removeEcAd(ele);
             let eles = ele.querySelectorAll("#content_left>div,#content_left>table");
             [].forEach.call(eles, e => {clearOneAD(e)});
         }
