@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name               Kill Baidu AD
+// @name               百度广告(首尾推广及右侧广告)清理
 // @name:zh-CN         百度广告(首尾推广及右侧广告)清理
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
 // @version            1.23.2
-// @description        Just Kill Baidu AD
+// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，刪除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，刪除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
 // @author             hoothin
