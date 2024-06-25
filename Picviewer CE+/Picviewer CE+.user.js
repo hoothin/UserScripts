@@ -24538,7 +24538,7 @@ ImgOps | https://imgops.com/#b#`;
                             };
                             found = true;
                         }
-                    } else if (target.children.length == 1 && target.children[0].nodeName == "IMG") {
+                    } else if (target.children.length == 1 && !target.innerText.trim() && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
                         found = true;
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
@@ -24577,7 +24577,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if (!found) {
                         let checkEle = target;
-                        while(checkEle && checkEle.children.length === 1) {
+                        while(checkEle && !checkEle.innerText.trim() && checkEle.children.length === 1) {
                             checkEle = checkEle.children[0];
                             if (checkEle.nodeName === "IMG") {
                                 target = checkEle;
