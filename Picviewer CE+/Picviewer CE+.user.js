@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.23.4
+// @version              2024.6.25.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -20381,7 +20381,8 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.imgWindow.backgroundColor){
                     this.imgWindow.style.backgroundColor=prefs.imgWindow.backgroundColor;
                 }
-                getBody(document).appendChild(container);
+
+                document.documentElement.appendChild(container);
 
                 this.rotatedRadians=0;//已经旋转的角度
                 this.zoomLevel=0;
@@ -25410,6 +25411,11 @@ ImgOps | https://imgops.com/#b#`;
                     },
                     "default": prefs.floatBar.globalkeys.type
                 },
+                'floatBar.globalkeys.invertInitShow': {
+                    label: i18n("initShow"),
+                    type: 'checkbox',
+                    "default": prefs.floatBar.globalkeys.invertInitShow
+                },
                 'floatBar.globalkeys.closeAfterPreview': {
                     label: i18n("closeAfterPreview"),
                     type: 'checkbox',
@@ -25430,11 +25436,6 @@ ImgOps | https://imgops.com/#b#`;
                     after: ' '+i18n("px"),
                     "default": prefs.previewMaxSizeH || 0,
                     line: 'end',
-                },
-                'floatBar.globalkeys.invertInitShow': {
-                    label: i18n("initShow"),
-                    type: 'checkbox',
-                    "default": prefs.floatBar.globalkeys.invertInitShow
                 },
                 'floatBar.globalkeys.previewFollowMouse': {
                     label: i18n("previewFollowMouse"),
@@ -26191,6 +26192,7 @@ ImgOps | https://imgops.com/#b#`;
             }
             document.head.appendChild(configStyle);
             GM_config.open();
+            document.documentElement.appendChild(GM_config.frame);
 
             setTimeout(()=>{
                 if (GM_config.frame && GM_config.frame.contentDocument.body.innerHTML === "") {
