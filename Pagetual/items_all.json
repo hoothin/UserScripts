@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86234",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(concat(' ',@class,' '),' layout-book-section ')]",
+    "nextLink": "//li[contains(concat(' ',@class,' '),' to-next ')]/a",
+    "url": "^https://comic-boost\\.com/",
+    "exampleUrl": "https://comic-boost.com/genre/\r\nhttps://comic-boost.com/tag/%E7%95%B0%E4%B8%96%E7%95%8C"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "comic boost 検索・一覧系",
+  "created_at": "2024-06-24T22:04:17+09:00",
+  "updated_at": "2024-06-24T22:04:17+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86233",
   "data": {
     "insertBefore": "",
@@ -76,8 +91,8 @@
 {
   "resource_url": "http://wedata.net/items/86223",
   "data": {
-    "insertBefore": "//div[@class='width-container']/node()[last()]",
     "pageElement": "//div[@class='book-product-wrapper']",
+    "insertBefore": "//div[@class='width-container']/node()[last()]",
     "nextLink": "//li[contains(concat(' ',@class,' '),' to-next ')]/a",
     "url": "^https://comic-boost\\.com/content/",
     "exampleUrl": "https://comic-boost.com/content/00050001"
@@ -86,7 +101,7 @@
   "created_by": "t_f_m'",
   "name": "comic boost",
   "created_at": "2024-04-23T03:06:24+09:00",
-  "updated_at": "2024-04-23T03:06:24+09:00"
+  "updated_at": "2024-06-24T22:05:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86219",
