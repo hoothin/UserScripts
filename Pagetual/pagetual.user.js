@@ -5476,22 +5476,25 @@
         let scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
 
         let scrollTarget, body = getBody(document);
-        if (document.documentElement.scrollTop) {
+        let checkOverflow = ele => {
+            return ele.scrollHeight !== ele.clientHeight && getComputedStyle(ele).overflowY !== "hidden";
+        };
+        if (document.documentElement.scrollTop || checkOverflow(document.documentElement)) {
             scrollTarget = document.documentElement;
-        } else if (body.scrollTop) {
+        } else if (body.scrollTop || checkOverflow(body)) {
             scrollTarget = body;
         } else {
             let tempEle;
             let img = body.querySelector('img');
             if (img) {
                 tempEle = img;
-                while (tempEle && (tempEle.scrollHeight === tempEle.clientHeight || getComputedStyle(tempEle).overflowY === "hidden")) {
+                while (tempEle && !checkOverflow(tempEle)) {
                     tempEle = tempEle.parentNode;
                 }
             }
             if (!tempEle && document.activeElement) {
                 let tempEle = document.activeElement;
-                while (tempEle && (tempEle.scrollHeight === tempEle.clientHeight || getComputedStyle(tempEle).overflowY === "hidden")) {
+                while (tempEle && !checkOverflow(tempEle)) {
                     tempEle = tempEle.parentNode;
                 }
             }
