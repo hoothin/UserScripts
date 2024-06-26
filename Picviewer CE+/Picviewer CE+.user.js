@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.25.2
+// @version              2024.6.26.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1398739/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1400550/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1399329/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -18846,7 +18846,7 @@ ImgOps | https://imgops.com/#b#`;
                     background-position: 0 0, 10px 10px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild.selected{\
-                    border: 5px solid #ff0000;\
+                    border: 5px solid #ff000050;\
                     }\
                     .pv-gallery-maximize-container img{\
                     max-width: 100%;\
@@ -18854,7 +18854,7 @@ ImgOps | https://imgops.com/#b#`;
                     transform: scale3d(1, 1, 1);\
                     cursor: zoom-in;\
                     min-height: 88px;\
-                    border-radius: 10px;\
+                    border-radius: 20px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover img {\
                     transform: scale3d(1.1, 1.1, 1.1);\
@@ -24089,7 +24089,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (rule.getImage) {
                         newSrc = rule.getImage.call(target || img, a, p, rule);
                     } else newSrc = null;
-                    if (!base64Img && rule.r) {
+                    if (!base64Img && rule.r && img.src) {
                         if (!newSrc) newSrc = img.src;
                         newSrc = this.replaceByRule(newSrc, rule);
                     }
@@ -24467,11 +24467,31 @@ ImgOps | https://imgops.com/#b#`;
                         imgSrc = nsrc[0];
                         src = nsrc[1];
                     }
+                    if (!matchedRule.xhrLink) {
+                        let imgPN = target;
+                        let imgPA, imgPE = [];
+                        do {
+                            if (imgPN.nodeName.toUpperCase() == 'A') {
+                                imgPA = imgPN;
+                                break;
+                            }
+                        } while (imgPN = imgPN.parentElement);
+                        imgPN = target;
+                        while (imgPN = imgPN.parentElement) {
+                            if (imgPN.nodeName.toUpperCase() == 'BODY') {
+                                break;
+                            } else {
+                                imgPE.push(imgPN);
+                            }
+                        }
+                        src = matchedRule.getImage(target, imgPA, imgPE) || src;
+                    }
+                    let noActual = src === imgSrc;
                     result = {
                         src: src,
-                        type: matchedRule.xhrLink && !targetBg ? "link" : "rule",
+                        type: matchedRule.xhrLink && noActual ? "link" : "rule",
                         imgSrc: imgSrc,
-                        noActual: src === imgSrc,
+                        noActual: noActual,
                         img: target,
                         xhr: matchedRule.xhr
                     };
@@ -24543,7 +24563,7 @@ ImgOps | https://imgops.com/#b#`;
                             };
                             found = true;
                         }
-                    } else if (target.children.length == 1 && !target.innerText.trim() && target.children[0].nodeName == "IMG") {
+                    } else if (target.children.length == 1 && !(target.textContent && target.textContent.trim()) && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
                         found = true;
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
@@ -24582,7 +24602,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if (!found) {
                         let checkEle = target;
-                        while(checkEle && !checkEle.innerText.trim() && checkEle.children.length === 1) {
+                        while(checkEle && !(checkEle.textContent && checkEle.textContent.trim()) && checkEle.children.length === 1) {
                             checkEle = checkEle.children[0];
                             if (checkEle.nodeName === "IMG") {
                                 target = checkEle;
@@ -24648,8 +24668,8 @@ ImgOps | https://imgops.com/#b#`;
                         if (matchedRule.rules.length > 0 && target.nodeName.toUpperCase() != 'IMG') {
                             let src = result.src, img = {src: src}, type, imgSrc = src;
                             try {
-                                var imgPN=target;
-                                var imgPA,imgPE=[];
+                                let imgPN=target;
+                                let imgPA,imgPE=[];
                                 while(imgPN=imgPN.parentElement){
                                     if(imgPN.nodeName.toUpperCase()=='A'){
                                         imgPA=imgPN;
@@ -24664,7 +24684,7 @@ ImgOps | https://imgops.com/#b#`;
                                         imgPE.push(imgPN);
                                     }
                                 }
-                                var newSrc = matchedRule.getImage(img, imgPA, imgPE, target);
+                                let newSrc = matchedRule.getImage(img, imgPA, imgPE, target);
                                 if (newSrc && imgSrc != newSrc) {
                                     let srcs, description;
                                     src = newSrc;
