@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.63
+// @version      1.9.37.64
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2139,7 +2139,7 @@
                 if (!body) return null;
                 let bodyHeight = parseInt(body.offsetHeight || body.scrollHeight);
                 let curHeight = bodyHeight, curWidth = 0;
-                let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                 let windowWidth = window.innerWidth || document.documentElement.clientWidth;
                 let needCheckNext = (doc == document && this.initNext), nextLeftPos = 0;
                 if (needCheckNext && this.initNext.getBoundingClientRect) {
@@ -3150,8 +3150,8 @@
                                     let scrollHeight = video.scrollHeight || video.offsetHeight;
                                     if (compareNodeName(video, ["iframe"])) {
                                     } else if (scrollWidth > 100 && scrollHeight > 100) {
-                                        let winWidth = window.innerWidth || document.documentElement.clientWidth;
-                                        let winHeight = window.innerHeight || document.documentElement.clientHeight;
+                                        let winWidth = window.innerWidth || document.documentElement.clientWidth;
+                                        let winHeight = window.innerHeight || document.documentElement.clientHeight;
                                         if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
                                             debug("Disable when large media found");
                                         } else {
@@ -5474,13 +5474,38 @@
         }
         let devicePixelRatio = window.devicePixelRatio;
         let scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
+
+        let scrollTarget, body = getBody(document);
+        if (document.documentElement.scrollTop) {
+            scrollTarget = document.documentElement;
+        } else if (body.scrollTop) {
+            scrollTarget = body;
+        } else {
+            let tempEle;
+            let img = body.querySelector('img');
+            if (img) {
+                tempEle = img;
+                while (tempEle && (tempEle.scrollHeight === tempEle.clientHeight || getComputedStyle(tempEle).overflowY === "hidden")) {
+                    tempEle = tempEle.parentNode;
+                }
+            }
+            if (!tempEle && document.activeElement) {
+                let tempEle = document.activeElement;
+                while (tempEle && (tempEle.scrollHeight === tempEle.clientHeight || getComputedStyle(tempEle).overflowY === "hidden")) {
+                    tempEle = tempEle.parentNode;
+                }
+            }
+            if (tempEle) scrollTarget = tempEle;
+        }
+        scrollTarget = scrollTarget || document.documentElement;
+
         autoScrollInterval = setInterval(() => {
             if (isPause) return;
             if (devicePixelRatio !== window.devicePixelRatio) {
                 devicePixelRatio = window.devicePixelRatio;
                 scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
             }
-            window.scroll(window.scrollX, window.scrollY + scrollRange);
+            scrollTarget.scrollTop += scrollRange;
         }, parseInt(1000 / autoScroll));
     }
 
@@ -7343,22 +7368,22 @@
         });
     }
 
-    function isInViewPort(element) {
+    function isInViewPort(element) {
         if (!getBody(document).contains(element)) return false;
-        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-        const {
+        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        const {
             top,
             right,
             bottom,
             left,
-        } = element.getBoundingClientRect();
+        } = element.getBoundingClientRect();
 
-        return (
-            top >= 0 &&
-            left >= 0 &&
-            right <= viewWidth + 1 &&
-            top <= viewHeight * rate &&
+        return (
+            top >= 0 &&
+            left >= 0 &&
+            right <= viewWidth + 1 &&
+            top <= viewHeight * rate &&
             isVisible(element, _unsafeWindow)
         );
     }
@@ -7369,22 +7394,22 @@
         for (let i = 0; i < pageBars.length; i++) {
             let pageBar = pageBars[i];
             if (!pageBar || !getBody(document).contains(pageBar)) continue;
-            let {
+            let {
                 top,
                 right,
                 bottom,
                 left,
-            } = pageBar.getBoundingClientRect();
+            } = pageBar.getBoundingClientRect();
             if (top > 500) {
                 nextBar = pageBar;
                 preBar = (i - 1 >= 0 ? pageBars[i - 1] : null);
                 if (pageBar && getBody(document).contains(pageBar)) {
-                    let {
+                    let {
                         top,
                         right,
                         bottom,
                         left,
-                    } = pageBar.getBoundingClientRect();
+                    } = pageBar.getBoundingClientRect();
                     if (top < -500) {
                         preBar = pageBar;
                     } else preBar = (i - 2 >= 0 ? pageBars[i - 2] : null);
@@ -8816,20 +8841,20 @@
     var scrollingToResize = false;
 
     function isTouchViewPort(element) {
-        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-        const {
+        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        const {
             top,
             right,
             bottom,
             left,
-        } = element.getBoundingClientRect();
+        } = element.getBoundingClientRect();
 
-        return (
-            top < viewHeight &&
-            left < viewWidth &&
-            right > 0 &&
-            bottom > 0
+        return (
+            top < viewHeight &&
+            left < viewWidth &&
+            right > 0 &&
+            bottom > 0
         );
     }
 
