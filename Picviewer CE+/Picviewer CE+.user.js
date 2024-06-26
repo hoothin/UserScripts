@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.26.1
+// @version              2024.6.26.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15156,7 +15156,7 @@ ImgOps | https://imgops.com/#b#`;
                     var targetP;
                     if(!dataset(target,'src') && (targetP=target.parentNode) && !dataset(targetP,'src'))return;
 
-                    self.select(targetP? targetP : target);
+                    self.select(targetP || target, false, true);
                 },false);
 
                 //点击读取错误的图片占位符重新读取
@@ -16182,9 +16182,9 @@ ImgOps | https://imgops.com/#b#`;
                 this.select(this.getThumSpan(true));
             },
             selectNext:function(){
-                this.select(this.getThumSpan());
+                this.select(this.getThumSpan(), false, true);
             },
-            select:function(ele,noTransition){
+            select:function(ele, noTransition, checkEnd){
                 if(!ele || this.selected==ele)return;
                 if(this.selected){
                     this.selected.classList.remove(this.selectedClassName);
@@ -16194,7 +16194,7 @@ ImgOps | https://imgops.com/#b#`;
                 ele.classList.add('pv-gallery-sidebar-thumb_selected');
 
                 this.selected=ele;
-                this.arrowVisib();
+                this.arrowVisib(checkEnd);
 
                 var self=this;
                 clearTimeout(this.loadImgTimer);
@@ -17587,7 +17587,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
             },
-            arrowVisib:function(){//当当前选择元素的前面或者后面没有元素的时候隐藏控制箭头
+            arrowVisib:function(checkEnd){//当当前选择元素的前面或者后面没有元素的时候隐藏控制箭头
 
                 var icps=this.eleMaps['img-controler-pre'].style;
                 var icns=this.eleMaps['img-controler-next'].style;
@@ -17605,7 +17605,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 // 最后几张图片，滚到底部添加新的图片
-                if (nextSpan && prefs.gallery.scrollEndAndLoad && this._isLastSpan(nextSpan)) {
+                if (prefs.gallery.scrollEndAndLoad && checkEnd && (!nextSpan || this._isLastSpan(nextSpan))) {
                     this.scrollToEndAndReload();
                 }
 
@@ -17878,24 +17878,49 @@ ImgOps | https://imgops.com/#b#`;
             scrollToEndAndReload: function() {// 滚动主窗口到最底部，然后自动重载库的图片
                 if (this.isScrollToEndAndReloading) return;
                 this.isScrollToEndAndReloading = true;
+                var scrollTarget;
+                if (document.documentElement.scrollTop) {
+                    scrollTarget = document.documentElement;
+                } else if (getBody(document).scrollTop) {
+                    scrollTarget = getBody(document);
+                } else if (this.data && this.data.length) {
+                    let tempEle;
+                    for (let i = 0; i < this.data.length; i++) {
+                        tempEle = this.data[i].img;
+                        if (tempEle && tempEle.parentNode) {
+                            break;
+                        }
+                    }
+                    if (tempEle) {
+                        while (tempEle && (tempEle.scrollHeight === tempEle.clientHeight || unsafeWindow.getComputedStyle(tempEle).overflowY === "hidden")) {
+                            tempEle = tempEle.parentNode;
+                        }
+                    }
+                    if (tempEle) scrollTarget = tempEle;
+                }
+                scrollTarget = scrollTarget || document.documentElement;
                 var self = this;
                 setTimeout(() => {
                     self.isScrollToEndAndReloading = false;
-                    var des=document.documentElement.style;
-                    des.overflow='';
+                    var des = document.documentElement.style;
+                    des.overflow = '';
                     document.head.appendChild(self.hideScrollStyle);
-                    window.scrollTo(0, 9999999);
-                    setTimeout(() => {
-                        des.overflow='hidden';
-                        document.head.removeChild(self.hideScrollStyle);
-                    }, 0);
-
-                    clearTimeout(self.reloadTimeout);
-                    self.reloadTimeout = setTimeout(function(){
-                        // self.reload();
-                        self.reloadNew();
-                        self.loadThumb();
-                    }, 1000);
+                    let scrollIntv = setInterval(function() {
+                        let scrollTop = scrollTarget.scrollTop;
+                        scrollTarget.scrollTop += 500;
+                        if (scrollTop === scrollTarget.scrollTop) {
+                            clearInterval(scrollIntv);
+                            setTimeout(() => {
+                                des.overflow = 'hidden';
+                                document.head.removeChild(self.hideScrollStyle);
+                            }, 0);
+                            clearTimeout(self.reloadTimeout);
+                            self.reloadTimeout = setTimeout(function() {
+                                self.reloadNew();
+                                self.loadThumb();
+                            }, 1000);
+                        }
+                    }, 1);
                 }, 300);
             },
             exportImages: function () {// 导出所有图片到新窗口
@@ -24657,6 +24682,21 @@ ImgOps | https://imgops.com/#b#`;
                                 };
                                 found = true;
                                 break;
+                            } else if (ele.nodeName.toUpperCase() == 'CANVAS') {
+                                let src = ele.src || ele.dataset.src;
+                                if (src) {
+                                    target = ele;
+                                    let nsrc = src, noActual = true, type = "scale";
+                                    result = {
+                                        src: nsrc,
+                                        type: type,
+                                        imgSrc: src,
+                                        noActual:noActual,
+                                        img: target
+                                    };
+                                    found = true;
+                                    break;
+                                }
                             }
                         }
                     }
