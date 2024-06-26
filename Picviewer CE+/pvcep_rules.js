@@ -1636,6 +1636,20 @@ var siteInfo = [
         }
     },
     {
+        name: "behance",
+        url: /^https:\/\/www\.behance\.net/,
+        xhr: {
+            url: "a[href^='/gallery/']",
+            query: "img[class^='ImageElement-image']"
+        },
+        getExtSrc: function() {
+            if (this.className && this.className.indexOf && this.className.indexOf("ProjectCoverNeue-link") !== -1) {
+                let img = this.parentNode.parentNode.querySelector("picture>img");
+                if (img) return img.src;
+            }
+        }
+    },
+    {
         name: "postimg host",
         src: /^https:\/\/i\.postimg\.cc/,
         xhr: {
