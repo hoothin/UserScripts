@@ -213,8 +213,8 @@
             .cos-col[style*="width:33"],.cos-col[style*="width:25"],.c-span3,.c-span4,.c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"] {
                 display: none;
             }
-            .new-pmd .c-span9 {
-                width: 100%;
+            .new-pmd .c-span9,.cos-col[style*="width:33"]+div,.cos-col[style*="width:25"]+div {
+                width: 100%!important;
             }
             a,a:active,#content_right a {
                 color: rgb(51,51,51);
