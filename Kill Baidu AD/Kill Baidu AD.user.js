@@ -210,8 +210,11 @@
             #wrapper_wrapper {
                 background: rgba(228, 228, 228, 0.29);
             }
-            .c-span3,.c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"] {
+            .cos-col[style*="width:33"],.cos-col[style*="width:25"],.c-span3,.c-span4,.c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"] {
                 display: none;
+            }
+            .new-pmd .c-span9 {
+                width: 100%;
             }
             a,a:active,#content_right a {
                 color: rgb(51,51,51);
