@@ -3,7 +3,7 @@
 // @name:zh-CN         百度广告(首尾推广及右侧广告)清理
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            1.23.6
+// @version            1.23.7
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，删除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，移除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
@@ -70,6 +70,29 @@
         });
     }
 
+    function checkMobileItem(item) {
+        let mu = item.dataset.log;
+        if (mu) {
+            try {
+                mu = JSON.parse(mu).mu;
+            } catch (e) {
+                return;
+            }
+        }
+        if (!mu) return;
+        if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
+            item.remove();
+            return;
+        } else {
+            let title = item.querySelector('[data-module="title"]');
+            let isBlack = checkBlackList(mu, title && title.innerText);
+            if (isBlack) {
+                item.remove();
+                return;
+            }
+        }
+    }
+
     function checkLeftItem(item) {
         let mu = item.getAttribute("mu");
         if (mu) {
@@ -77,7 +100,7 @@
                 item.remove();
                 return;
             } else {
-                let title = item.querySelector("h3");
+                let title = item.querySelector('h3');
                 let isBlack = checkBlackList(mu, title && title.innerText);
                 if (isBlack) {
                     item.remove();
@@ -145,6 +168,11 @@
         var baiduapp = ele.querySelector("#copyright+div");
         if (baiduapp && baiduapp.querySelector("[ref='open']")) {
             baiduapp.remove();
+        }
+        var list = ele.querySelectorAll(ele.id === "results" ? ".result" : "#results>.result");
+        for (let i = 0; i < list.length; i++) {
+            let item = list[i];
+            checkMobileItem(item);
         }
     }
 
