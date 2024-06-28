@@ -3,19 +3,22 @@
 // @name:zh-CN         百度广告(首尾推广及右侧广告)清理
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            1.23.3
+// @version            1.23.4
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，删除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，移除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
 // @author             hoothin
 // @match              *://www.baidu.com/*
 // @match              *://m.baidu.com/*
+// @match              *://greasyfork.org/*/scripts/24192-*
 // @grant              GM_xmlhttpRequest
 // @grant              GM_addStyle
 // @grant              GM_getValue
 // @grant              GM_setValue
+// @grant              GM_openInTab
 // @grant              GM_registerMenuCommand
 // @grant              GM_unregisterMenuCommand
+// @connect            *
 // @run-at             document-start
 // @license            MIT License
 // @compatible         chrome 测试通过
@@ -26,7 +29,7 @@
 
 (function() {
     'use strict';
-    var MO = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver, killBaijiaType = 1, killRight, killRightStyle, killRightRegister, hidePicture, hidePictureStyle, hidePictureRegister;
+    var MO = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver, killBaijiaType = 1, killRight, killRightStyle, killRightRegister, hidePicture, hidePictureStyle, hidePictureRegister, blackList;
     if (MO) {
         var observer = new MO(function(records) {
             records.map(function(record) {
@@ -74,6 +77,12 @@
                 item.remove();
                 return;
             } else {
+                let title = item.querySelector("h3");
+                let isBlack = checkBlackList(mu, title && title.innerText);
+                if (isBlack) {
+                    item.remove();
+                    return;
+                }
                 let link = item.querySelector("a[href*='www.baidu.com/link']");
                 if (link) link.href = mu;
             }
@@ -230,6 +239,91 @@
             `);
         }
     }
+
+    function checkBlackList(url, title) {
+        if (!blackList || !blackList.forEach) return false;
+        for (let i = 0; i < blackList.length; i++) {
+            try {
+                let isBlack = checkBlack(url, title, blackList[i]);
+                if (isBlack) return true;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        return false;
+    }
+
+    function checkBlack(url, title, pattern) {
+        if (!pattern || !pattern.trim() || pattern.indexOf("#") === 0 || pattern.indexOf("!") === 0 || pattern.indexOf(" ") === 0 || pattern.indexOf("Update") === 0) return false;
+        if (pattern.indexOf("/") === 0) {
+            let match = pattern.match(/^\/(.*)\/(\w*)$/);
+            if (match) {
+                return new RegExp(match[1], match[2]).test(url);
+            }
+        }
+        if (pattern.indexOf("title") === 0) {
+            let match = pattern.replace("title", "").trim();
+            if (match.indexOf("/") === 0) {
+                match = match.match(/^\/(.*)\/(\w*)$/);
+                if (match) {
+                    return new RegExp(match[1], match[2]).test(title);
+                }
+            } else if (match.indexOf("=~") === 0) {
+                match = match.match(/^=~\s*\/(.*)\/(\w*)$/);
+                if (match) {
+                    return new RegExp(match[1], match[2]).test(title);
+                }
+            } else if (match.indexOf("=") === 0) {
+                match = match.match(/^=\s*"(.*)"$/);
+                if (match) {
+                    return title === match[1];
+                }
+            } else if (match.indexOf("^=") === 0) {
+                match = match.match(/^\^=\s*"(.*)"$/);
+                if (match) {
+                    return title.indexOf(match[1]) === 0;
+                }
+            } else if (match.indexOf("$=") === 0) {
+                match = match.match(/^\$=\s*"(.*)"$/);
+                if (match) {
+                    return title.endsWith(match[1]);
+                }
+            } else if (match.indexOf("*=") === 0) {
+                match = match.match(/^\*=\s*"(.*)"$/);
+                if (match) {
+                    return title.indexOf(match[1]) !== -1;
+                }
+            }
+        }
+        return matchPattern(url, pattern);
+    }
+
+    function matchPattern(url, pattern) {
+        if (pattern === '<all_urls>') {
+            return true;
+        }
+        let match = pattern.match(/^(\*|[\w-]+):\/{2,3}(?:(\*|\*\.[^/*]+|[^/*]+)\/)?(.*)$/);
+        if (!match) return false;
+        const [, scheme, host, path] = match
+        const urlScheme = url.split(':')[0];
+        const urlParam = new URL(url);
+        if (scheme === '*' || urlScheme === scheme) {
+            if (host !== '*') {
+                const urlHost = urlParam.hostname;
+                if (host.startsWith('*')) {
+                    const hostPattern = host.slice(2);
+                    if (!urlHost.endsWith(hostPattern)) return false;
+                } else {
+                    if (urlHost !== host) return false;
+                }
+            }
+            const urlPath = urlParam.pathname + urlParam.search;
+            const pathRegex = new RegExp(`^${path.replace(/([\.\?])/g, '\\$1').replace(/\*/g, '.*')}$`);
+            return pathRegex.test(urlPath);
+        }
+        return false;
+    }
+
     function registerMenuCommand() {
         initCss();
         hidePictureRegister = GM_registerMenuCommand(hidePicture ? "✅ 恢复图片" : "❌ 隐藏图片", () => {
@@ -250,7 +344,88 @@
     try {
         killRight = !!GM_getValue("killRight");
         hidePicture = !!GM_getValue("hidePicture");
+        blackList = GM_getValue("blackList") || [];
+        if (location.host === "greasyfork.org") {
+            let parent = document.querySelector('#additional-info');
+            let baseCon = document.createElement('div');
+            baseCon.style.margin = '20px';
+            parent.insertBefore(baseCon, parent.children[0]);
+            let checkIndex = 0;
+            let createCheckbox = (name, defaultValue) => {
+                let box = document.createElement('div');
+                let checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = defaultValue;
+                let id = 'stcnsc-checkbox' + checkIndex++;
+                checkbox.id = id;
+                let label = document.createElement('label');
+                label.setAttribute('for', id);
+                label.innerText = name;
+                box.appendChild(checkbox);
+                box.appendChild(label);
+                baseCon.appendChild(box);
+                return checkbox;
+            };
+            let hidePictureInput = createCheckbox('隐藏图片', hidePicture);
+            let killRightInput = createCheckbox('隐藏右边栏并多列显示', killRight);
+            let importInput = document.createElement('textarea');
+            importInput.placeholder = '订阅 uBlacklist 规则：如 https://git.io/ublacklist';
+            importInput.style.width = '100%';
+            importInput.style.marginBottom = '10px';
+            baseCon.appendChild(importInput);
+            let blackListInput = document.createElement('textarea');
+            blackListInput.placeholder = '*://*.12345.cn/*\n*://*.54321.com/*\n一行一条';
+            blackListInput.style.width = '100%';
+            blackListInput.style.minHeight = "60px";
+            blackListInput.value = blackList.join("\n");
+            baseCon.appendChild(blackListInput);
+            function saveBlackList() {
+                GM_setValue("blackList", blackList);
+            }
+            let saveBtn = document.createElement('button');
+            saveBtn.innerText = '保存';
+            saveBtn.style.display = 'block';
+            saveBtn.style.fontSize = 'x-large';
+            saveBtn.style.fontWeight = 'bold';
+            saveBtn.style.pointerEvents = 'all';
+            saveBtn.style.cursor = 'pointer';
+            saveBtn.addEventListener("click", function(e) {
+                hidePicture = hidePictureInput.checked;
+                killRight = killRightInput.checked;
+                GM_setValue("hidePicture", hidePicture);
+                GM_setValue("killRight", killRight);
+                if (importInput.value) {
+                    alert("读取规则中……");
+                    let importUrls = importInput.value.trim().split("\n");
+                    importUrls.forEach(url => {
+                        url = url && url.trim();
+                        if (!url) return;
+                        GM_xmlhttpRequest({
+                            url: url,
+                            onload: function(res) {
+                                let result = res.response || res.responseText;
+                                if (!result) return;
+                                blackList = blackList.concat(result.split("\n"));
+                                blackList = blackList.filter((value, index) => blackList.indexOf(value) === index);
+                                saveBlackList();
+                                blackListInput.value = blackList.join("\n");
+                            }
+                        });
+                    });
+                } else if (blackListInput.value) {
+                    blackList = blackListInput.value.split("\n");
+                    saveBlackList();
+                }
+                alert("设置完毕");
+            });
+            baseCon.appendChild(saveBtn);
+            baseCon.appendChild(document.createElement("hr"));
+            return;
+        }
         registerMenuCommand();
+        GM_registerMenuCommand("🔧 打开设置页", () => {
+            GM_openInTab("https://greasyfork.org/scripts/24192", {active: true});
+        });
     } catch(e) {}
     if (document.readyState == "complete" || document.readyState == "interactive") {
         clearAD();
