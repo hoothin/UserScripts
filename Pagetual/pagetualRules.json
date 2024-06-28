@@ -5841,7 +5841,23 @@
     "url": "^https?://www\\.baidu\\.com/(s|baidu)\\b.",
     "pageBarTop": 75,
     "replaceElement": "#page",
+    "exclude": ".AC-style-logo,.killRight",
+    "wait": 500
+},
+{
+    "name": "Baidu",
+    "insertPos": 1,
+    "nextLink": [
+        "//*[@id=\"page\"]/div/a[contains(text(),'下')]",
+        "//*[@id=\"page\"]/div/a[contains(text(),'上')]"
+    ],
+    "pageElement": "//*[@id=\"content_style\"]|//*[@id=\"content_left\"]",
+    "pageNum": "&pn={10*($p-1)}",
+    "url": "^https?://www\\.baidu\\.com/(s|baidu)\\b.",
+    "pageBar": 0,
+    "replaceElement": "#page",
     "exclude": ".AC-style-logo",
+    "include": ".killRight",
     "wait": 500
 },
 {
