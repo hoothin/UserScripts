@@ -232,14 +232,14 @@
     }
     function registerMenuCommand() {
         initCss();
-        hidePictureRegister = GM_registerMenuCommand(hidePicture ? "❌ 恢复图片" : "✅ 隐藏图片", () => {
+        hidePictureRegister = GM_registerMenuCommand(hidePicture ? "✅ 恢复图片" : "❌ 隐藏图片", () => {
             GM_unregisterMenuCommand(killRightRegister);
             GM_unregisterMenuCommand(hidePictureRegister);
             hidePicture = !hidePicture;
             GM_setValue("hidePicture", hidePicture);
             registerMenuCommand();
         });
-        killRightRegister = GM_registerMenuCommand(killRight ? "❌ 恢复右边栏与布局" : "✅ 隐藏右边栏并多列显示", () => {
+        killRightRegister = GM_registerMenuCommand(killRight ? "✅ 恢复右边栏与布局" : "❌ 隐藏右边栏并多列显示", () => {
             GM_unregisterMenuCommand(killRightRegister);
             GM_unregisterMenuCommand(hidePictureRegister);
             killRight = !killRight;
