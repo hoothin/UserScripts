@@ -254,6 +254,7 @@
     }
 
     function checkBlack(url, title, pattern) {
+        pattern = pattern && pattern.replace(/\s*#.*/, "");
         if (!pattern || !pattern.trim() || pattern.indexOf("#") === 0 || pattern.indexOf("!") === 0 || pattern.indexOf(" ") === 0 || pattern.indexOf("Update") === 0) return false;
         if (pattern.indexOf("/") === 0) {
             let match = pattern.match(/^\/(.*)\/(\w*)$/);
