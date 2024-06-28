@@ -263,6 +263,7 @@ if (window.top != window.self) {
                 dacSortByName:"按章节名排序",
                 reverse:"反选",
                 dacUseIframe:"使用 iframe 后台加载内容（慢速）",
+                dacBatchDownload: "分批下载 (用于绕过网站的反爬虫)",
                 dacSaveAsZip:"下载为 zip",
                 dacSetCustomRule:"修改规则",
                 dacAddUrl:"添加章节",
@@ -309,6 +310,7 @@ if (window.top != window.self) {
                 dacSortByName:"依章節名排序",
                 reverse:"反選",
                 dacUseIframe:"使用 iframe 背景載入內容（慢速）",
+                dacBatchDownload: "分批下載 (用於繞過網站的反爬蟲)",
                 dacSaveAsZip:"下載為 zip",
                 dacSetCustomRule:"修改規則",
                 dacAddUrl:"新增章節",
@@ -369,6 +371,7 @@ if (window.top != window.self) {
                 dacSortByName: "الترتيب حسب الاسم",
                 reverse: "عكس الاختيار",
                 dacUseIframe: "لتحميل المحتوى (بطيء) iframe استخدام",
+                dacBatchDownload: "Download in batches (used to bypass anti-scraping on websites)",
                 dacSaveAsZip: "zip حفظ كـ",
                 dacSetCustomRule: "تعديل القواعد",
                 dacAddUrl: "إضافة فصل",
@@ -413,6 +416,7 @@ if (window.top != window.self) {
                 dacSortByName:"Sort by name",
                 reverse:"Reverse selection",
                 dacUseIframe: "Use iframe to load content (slow)",
+                dacBatchDownload: "Download in batches (used to bypass anti-scraping on websites)",
                 dacSaveAsZip: "Save as zip",
                 dacSetCustomRule:"Modify rules",
                 dacAddUrl:"Add Chapter",
@@ -423,8 +427,8 @@ if (window.top != window.self) {
             };
             break;
     }
-    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false;
-    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer;
+    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false,batchDownload=false;
+    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,dacBatchDownload,shadowContainer;
 
     const escapeHTMLPolicy = (win.trustedTypes && win.trustedTypes.createPolicy) ? win.trustedTypes.createPolicy('dac_default', {
         createHTML: (string, sink) => string
@@ -528,7 +532,7 @@ if (window.top != window.self) {
                         <input id="reverse" value="${i18n.reverse}" type="button"/>
 			        </div>
                     <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
-                    <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><span><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></span> <span style="display:${win.downloadAllContentSaveAsZip ? "inline" : "none"}"><input id="dacSaveAsZip" type="checkbox" checked="checked"/><label for="dacSaveAsZip"> ${i18n.dacSaveAsZip}</label></span></p>
+                    <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><span><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></span> <span><input id="dacBatchDownload" type="checkbox"/><label for="dacBatchDownload">${i18n.dacBatchDownload}</label></span> <span style="display:${win.downloadAllContentSaveAsZip ? "inline" : "none"}"><input id="dacSaveAsZip" type="checkbox" checked="checked"/><label for="dacSaveAsZip"> ${i18n.dacSaveAsZip}</label></span></p>
                     <div class="fun">
                         <input id="dacSetCustomRule" value="${i18n.dacSetCustomRule}" type="button"/>
                         <input id="dacAddUrl" value="${i18n.dacAddUrl}" type="button"/>
@@ -550,6 +554,7 @@ if (window.top != window.self) {
             let dacFilterBg = filterListContainer.querySelector("#dacFilterBg");
             let dacSaveAsZip = filterListContainer.querySelector("#dacSaveAsZip");
             dacUseIframe = filterListContainer.querySelector("#dacUseIframe");
+            dacBatchDownload = filterListContainer.querySelector("#dacBatchDownload")
             dacSaveAsZip.onchange = e => {
                 saveAsZip = dacSaveAsZip.checked;
             };
@@ -658,7 +663,8 @@ if (window.top != window.self) {
             dacStartDownload.onclick = e => {
                 let linkList = [].slice.call(dacLinksCon.querySelectorAll("input:checked+.dacLink"));
                 useIframe = !!dacUseIframe.checked;
-                indexDownload(linkList, true);
+                batchDownload = !!dacBatchDownload.checked;
+                indexDownload(linkList, true,batchDownload);
             };
             dacLinksClose.onclick = e => {
                 filterListContainer.style.display = "none";
@@ -795,6 +801,7 @@ if (window.top != window.self) {
             createLinkItem(a);
         });
         dacUseIframe.checked = useIframe;
+        dacBatchDownload.checked = batchDownload;
         document.body.appendChild(shadowContainer);
     }
 
@@ -918,8 +925,10 @@ if (window.top != window.self) {
             charsetValid = false;
         }
     } else charsetValid = false;
-    function indexDownload(aEles, noSort){
-        if(aEles.length<1)return;
+    function indexDownload(aEles, noSort,batchDownload){
+        if(aEles.length<1) {
+            return;
+        }
         initTxtDownDiv();
         if(!noSort) {
             if(GM_getValue("contentSort")){
@@ -958,8 +967,26 @@ if (window.top != window.self) {
         }
         var insertSigns=[];
         // var j=0,rCats=[];
-        var downIndex=0,downNum=0,downOnce=function(wait){
-            if(downNum>=aEles.length)return;
+        var downIndex=0,downNum=0
+        var downOnce = function(wait,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval){
+            if(downNum>=aEles.length) {
+                return;
+            }
+            // NOTE: if enable batch download
+            if (downloadSleepInterval != 0) {
+                if (wait != 0 && downloadLimit) {
+                    // NOTE: if prev status is limited
+                    // set unlimited
+                    wait = 0;
+                    downloadLimit = false;
+                } else if(wait == 0 && downloadCnt == downloadBarrier) {
+                    downloadCnt = 0;
+                    downloadLimit = true;
+                    wait = downloadSleepInterval;
+                }
+            }
+
+            downloadCnt += 1;
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
             let request=(aTag, curIndex)=>{
@@ -1058,11 +1085,13 @@ if (window.top != window.self) {
                                 }, Math.random() * 500 + validTimes * 1000);
                                 return;
                             }
-                            if (wait) {
+                            if (wait != 0) {
                                 setTimeout(() => {
-                                    downOnce(wait);
+                                    downOnce(wait,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                                 }, wait);
-                            } else downOnce();
+                                return;
+                            }
+                            downOnce(0,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                         },
                         onerror: function(e) {
                             console.warn("error:", e, aTag.href);
@@ -1075,11 +1104,13 @@ if (window.top != window.self) {
                             downIndex++;
                             downNum++;
                             processDoc(curIndex, aTag, null, ` NETWORK ERROR: ${(e.response||e.responseText)} from: ${aTag.href} `);
-                            if (wait) {
+                            if (wait != 0) {
                                 setTimeout(() => {
-                                    downOnce(wait);
+                                    downOnce(wait,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                                 }, wait);
-                            } else downOnce();
+                                return
+                            }
+                            downOnce(0,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                         },
                         ontimeout: function(e) {
                             console.warn("timeout: times="+(tryTimes+1)+" url="+aTag.href);
@@ -1093,11 +1124,13 @@ if (window.top != window.self) {
                             downIndex++;
                             downNum++;
                             processDoc(curIndex, aTag, null, ` TIMEOUT: ${aTag.href} `);
-                            if (wait) {
+                            if (wait != 0) {
                                 setTimeout(() => {
-                                    downOnce(wait);
+                                    downOnce(wait,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                                 }, wait);
-                            } else downOnce();
+                                return
+                            }
+                            downOnce(0,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                         }
                     });
                 };
@@ -1187,11 +1220,13 @@ if (window.top != window.self) {
                                     }, 1000);
                                     return;
                                 }
-                                if (wait) {
+                                if (wait != 0) {
                                     setTimeout(() => {
-                                        downOnce(wait);
+                                        downOnce(wait,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                                     }, wait);
-                                } else downOnce();
+                                    return;
+                                }
+                                downOnce(0,downloadCnt,downloadLimit,downloadBarrier,downloadSleepInterval);
                             } catch(e) {
                                 console.debug("Stop as cors");
                             }
@@ -1309,15 +1344,34 @@ if (window.top != window.self) {
         if (useIframe && downThreadNum > 5) {
             downThreadNum = 5;
         }
+
+        // NOTE: sleep once every 100 downloads
+        const downloadCntLimit = 100;
+        // NOTE: 120 seconds
+        const downloadSleepTime = 120*1000;
+
         if (downThreadNum > 0) {
             for (var i = 0; i < downThreadNum; i++) {
-                downOnce();
-                if (downIndex >= aEles.length - 1 || downIndex >= downThreadNum - 1) break;
-                else downIndex++;
+                var limit = downloadCntLimit/downThreadNum;
+                if (limit < 1) {
+                    limit = 1;
+                }
+                var sleepTime = 0;
+                if (batchDownload) {
+                    sleepTime = downloadSleepTime;
+                }
+                downOnce(0,0,false,limit,sleepTime);
+                if (downIndex >= aEles.length - 1 || downIndex >= downThreadNum - 1) {
+                    break;
+                }
+                downIndex++;
             }
         } else {
-            downOnce(-downThreadNum * 1000);
-            if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) downIndex++;
+            // NOTE: single thread always disable batch download
+            downOnce(-downThreadNum * 1000,0,false,downloadCntLimit,0);
+            if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) {
+                downIndex++;
+            }
         }
 
         /*for(let i=0;i<aEles.length;i++){
