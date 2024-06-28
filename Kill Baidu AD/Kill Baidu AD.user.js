@@ -11,6 +11,10 @@
 // @match              *://www.baidu.com/*
 // @match              *://m.baidu.com/*
 // @match              *://greasyfork.org/*/scripts/24192-*
+// @exclude            *://m.baidu.com
+// @exclude            *://m.baidu.com/
+// @exclude            *://www.baidu.com
+// @exclude            *://www.baidu.com/
 // @grant              GM_xmlhttpRequest
 // @grant              GM_addStyle
 // @grant              GM_getValue
