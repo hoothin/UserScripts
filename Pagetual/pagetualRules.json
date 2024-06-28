@@ -5841,7 +5841,7 @@
     "url": "^https?://www\\.baidu\\.com/(s|baidu)\\b.",
     "pageBarTop": 75,
     "replaceElement": "#page",
-    "exclude": ".AC-style-logo,.killRight",
+    "exclude": ".AC-style-logo,.killRight,a.new-nextpage-only,a.new-nextpage",
     "wait": 500
 },
 {
@@ -5856,7 +5856,7 @@
     "url": "^https?://www\\.baidu\\.com/(s|baidu)\\b.",
     "pageBar": 0,
     "replaceElement": "#page",
-    "exclude": ".AC-style-logo",
+    "exclude": ".AC-style-logo,a.new-nextpage-only,a.new-nextpage",
     "include": ".killRight",
     "wait": 500
 },
