@@ -402,7 +402,7 @@
                 baseCon.appendChild(box);
                 return checkbox;
             };
-            let hidePictureInput = createCheckbox('隐藏图片', hidePicture);
+            let hidePictureInput = createCheckbox('隐藏图片并简化样式', hidePicture);
             let killRightInput = createCheckbox('隐藏右边栏并多列显示', killRight);
             let importInput = document.createElement('textarea');
             importInput.placeholder = '订阅 uBlacklist 规则：如 https://git.io/ublacklist';
