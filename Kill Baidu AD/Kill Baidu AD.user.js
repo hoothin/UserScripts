@@ -251,6 +251,9 @@
             #wrapper_wrapper {
                 background: rgba(228, 228, 228, 0.29);
             }
+            #container.sam_newgrid .c-container .t a, #container.sam_newgrid .c-container .c-title a {
+                text-decoration: auto;
+            }
             #result_logo {
                 opacity: 0.75;
             }
