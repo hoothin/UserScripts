@@ -6987,7 +6987,7 @@
                         } else {
                             preResult = await new AsyncFunction("response", "doc", '"use strict";' + preCode)(response, doc);
                         }
-                        if (preResult) {
+                        if (typeof preResult !== "undefined") {
                             if (typeof preResult === "string") {
                                 doc.documentElement.innerHTML = preResult;
                             } else pageElement = preResult;
@@ -8443,7 +8443,7 @@
                                 } else {
                                     preResult = await new AsyncFunction("response", "doc", '"use strict";' + preCode)(doc.documentElement.innerHTML, doc);
                                 }
-                                if (preResult) {
+                                if (typeof preResult !== "undefined") {
                                     if (typeof preResult === "string") {
                                         doc.documentElement.innerHTML = preResult;
                                     } else eles = preResult;
