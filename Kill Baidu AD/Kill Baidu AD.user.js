@@ -251,6 +251,9 @@
             #wrapper_wrapper {
                 background: rgba(228, 228, 228, 0.29);
             }
+            #result_logo {
+                opacity: 0.75;
+            }
             .cos-col[style*="width:33"],.cos-col[style*="width:25"],.c-span3,.c-span4,.c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"] {
                 display: none;
             }
@@ -359,7 +362,7 @@
 
     function registerMenuCommand() {
         initCss();
-        hidePictureRegister = GM_registerMenuCommand(hidePicture ? "✅ 恢复图片" : "❌ 隐藏图片", () => {
+        hidePictureRegister = GM_registerMenuCommand(hidePicture ? "✅ 恢复图片与样式" : "❌ 隐藏图片并简化样式", () => {
             GM_unregisterMenuCommand(killRightRegister);
             GM_unregisterMenuCommand(hidePictureRegister);
             hidePicture = !hidePicture;
