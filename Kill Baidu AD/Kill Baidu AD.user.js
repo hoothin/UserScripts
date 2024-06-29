@@ -2,11 +2,13 @@
 // @name               百度广告(首尾推广及右侧广告)清理
 // @name:zh-CN         百度广告(首尾推广及右侧广告)清理
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
+// @name:en            Kill Baidu AD
 // @namespace          hoothin
 // @version            1.23.7
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，删除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，移除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
+// @description:en     Just Kill Baidu AD
 // @author             hoothin
 // @match              *://www.baidu.com/*
 // @match              *://m.baidu.com/*
@@ -251,7 +253,8 @@
             #wrapper_wrapper {
                 background: rgba(228, 228, 228, 0.29);
             }
-            #container.sam_newgrid .c-container .t a, #container.sam_newgrid .c-container .c-title a {
+            #container.sam_newgrid .c-container .t a, #container.sam_newgrid .c-container .c-title a,
+            #container.sam_newgrid .c-container .t a em, #container.sam_newgrid .c-container .c-title a em {
                 text-decoration: auto;
             }
             #result_logo {
