@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.6
+// @version      2.8.3.7
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -220,12 +220,12 @@ if (window.top != window.self) {
     'use strict';
     var indexReg=/^(\w.*)?PART\b|^Prologue|^(\w.*)?Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*[·言章]|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]|^(\d|\s|\.)*[第（]?\s*[\d〇零一二两三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/^\s*(下一[页頁张張]|next\s*page|次のページ)/i;
-    var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
+    var lang=navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
     var processFunc, nextPageFunc;
-    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-    var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
+    const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
+    var win=(typeof unsafeWindow=='undefined'?window:unsafeWindow);
     switch (lang){
         case "zh-CN":
         case "zh-SG":
@@ -245,8 +245,9 @@ if (window.top != window.self) {
                 abort:"跳过此章",
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
-                downThreadNum:"设置同时下载的线程数",
+                downThreadNum:"设置同时下载的线程数，负数为单线程下载间隔",
                 customTitle:"自定义章节标题，输入内页文字对应选择器",
+                maxDlPerMin:"每分钟最大下载数",
                 reSortDefault:"默认按页面中位置排序章节",
                 reverseOrder:"反转章节排序",
                 saveBtn:"保存设置",
@@ -291,8 +292,9 @@ if (window.top != window.self) {
                 abort:"跳過此章",
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
-                downThreadNum:"設置同時下載的綫程數",
+                downThreadNum:"設置同時下載的綫程數，負數為單線程下載間隔",
                 customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
+                maxDlPerMin:"每分鐘最大下載數",
                 reSortDefault:"預設依頁面中位置排序章節",
                 reverseOrder:"反轉章節排序",
                 saveBtn:"儲存設定",
@@ -353,6 +355,7 @@ if (window.top != window.self) {
                 saveAsMd: "Markdown حفظ كـ",
                 downThreadNum: "تعيين عدد الخيوط للتحميل",
                 customTitle: "تخصيص عنوان الفصل، إدخال المحدد في الصفحة الداخلية",
+                maxDlPerMin:"الحد الأقصى لعدد التنزيلات في الدقيقة",
                 reSortDefault: "الترتيب الافتراضي حسب الموقع في الصفحة",
                 reverseOrder: "عكس ترتيب الفصول",
                 saveBtn: "حفظ الإعدادات",
@@ -395,8 +398,9 @@ if (window.top != window.self) {
                 abort:"Abort",
                 save:"Save",
                 saveAsMd:"Save as Markdown",
-                downThreadNum:"Set threadNum for download",
+                downThreadNum:"Set threadNum for download, negative means interval of single thread",
                 customTitle: "Customize the chapter title, enter the selector on inner page",
+                maxDlPerMin:"Maximum number of downloads per minute",
                 reSortDefault: "Default sort by position in the page",
                 reverseOrder:"Reverse chapter ordering",
                 saveBtn:"Save Setting",
@@ -519,14 +523,14 @@ if (window.top != window.self) {
                         <div class="fun">
                             <input id="dacConfirmRule" value="${i18n.ok}" type="button"/>
                             <input id="dacCustomClose" value="${i18n.close}" type="button"/>
-			            </div>
+                        </div>
                     </div>
                     <div class="sort">
                         <input id="dacSortByPos" value="${i18n.dacSortByPos}" type="button"/>
                         <input id="dacSortByUrl" value="${i18n.dacSortByUrl}" type="button"/>
                         <input id="dacSortByName" value="${i18n.dacSortByName}" type="button"/>
                         <input id="reverse" value="${i18n.reverse}" type="button"/>
-			        </div>
+                    </div>
                     <div id="dacLinksCon" style="max-height: calc(80vh - 100px); min-height: 100px; display: grid; grid-template-columns: auto auto; width: 100%; overflow: auto; white-space: nowrap;"></div>
                     <p style="margin: 5px; text-align: center; font-size: 14px; height: 20px;"><span><input id="dacUseIframe" type="checkbox"/><label for="dacUseIframe"> ${i18n.dacUseIframe}</label></span> <span style="display:${win.downloadAllContentSaveAsZip ? "inline" : "none"}"><input id="dacSaveAsZip" type="checkbox" checked="checked"/><label for="dacSaveAsZip"> ${i18n.dacSaveAsZip}</label></span></p>
                     <div class="fun">
@@ -534,7 +538,7 @@ if (window.top != window.self) {
                         <input id="dacAddUrl" value="${i18n.dacAddUrl}" type="button"/>
                         <input id="dacStartDownload" value="${i18n.dacStartDownload}" type="button"/>
                         <input id="dacLinksClose" value="${i18n.close}" type="button"/>
-			        </div>
+                    </div>
                 </div>`);
             let dacSortByPos = filterListContainer.querySelector("#dacSortByPos");
             let dacSortByUrl = filterListContainer.querySelector("#dacSortByUrl");
@@ -809,7 +813,7 @@ if (window.top != window.self) {
         document.body.appendChild(shadowContainer);
         let shadow = shadowContainer.attachShadow({ mode: "open" });
         shadow.appendChild(txtDownContent);
-        txtDownContent.innerHTML=createHTML(`
+        txtDownContent.innerHTML = createHTML(`
             <style>
             #txtDownContent>div{
               font-size:16px;
@@ -945,10 +949,13 @@ if (window.top != window.self) {
             }
         }
         rCats=[];
+        const minute=60000;
         var minTxtLength=GM_getValue("minTxtLength") || 100;
         var customTitle=GM_getValue("customTitle");
         var disableNextPage=!!GM_getValue("disableNextPage");
         var customNextPageReg=GM_getValue("nextPageReg");
+        var maxDlPerMin=GM_getValue("maxDlPerMin") || 0;
+        var dlCount=0;
         if (customNextPageReg) {
             try {
                 innerNextPage = new RegExp(customNextPageReg);
@@ -960,6 +967,21 @@ if (window.top != window.self) {
         // var j=0,rCats=[];
         var downIndex=0,downNum=0,downOnce=function(wait){
             if(downNum>=aEles.length)return;
+            if(maxDlPerMin){
+                if(dlCount===-1){
+                    setTimeout(() => {
+                        downOnce(wait);
+                    }, minute);
+                    return;
+                }else if(dlCount>=maxDlPerMin){
+                    dlCount=-1;
+                    setTimeout(() => {
+                        dlCount=0;
+                        downOnce(wait);
+                    }, minute);
+                    return;
+                }else dlCount++;
+            }
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
             let request=(aTag, curIndex)=>{
@@ -1319,19 +1341,6 @@ if (window.top != window.self) {
             downOnce(-downThreadNum * 1000);
             if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) downIndex++;
         }
-
-        /*for(let i=0;i<aEles.length;i++){
-            let aTag=aEles[i];
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: aTag.href,
-                overrideMimeType:"text/html;charset="+document.charset,
-                onload: function(result) {
-                    var doc = getDocEle(result.responseText);
-                    processDoc(i, aTag, doc);
-                }
-            });
-        }*/
     }
 
     function canonicalUri(src, baseUrl) {
@@ -1996,6 +2005,9 @@ if (window.top != window.self) {
         downloadShortcutInput.setAttribute("readonly", "true");
         downloadSingleShortcutInput.setAttribute("readonly", "true");
         downloadCustomShortcutInput.setAttribute("readonly", "true");
+        downloadShortcutInput.style.cursor = "cell";
+        downloadSingleShortcutInput.style.cursor = "cell";
+        downloadCustomShortcutInput.style.cursor = "cell";
         let keydonwHandler = e => {
             if (e.key) {
                 if (e.key == "Backspace") {
@@ -2014,6 +2026,7 @@ if (window.top != window.self) {
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
         let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
+        let maxDlPerMin = createOption(i18n.maxDlPerMin, GM_getValue("maxDlPerMin") || "0", "number");
         let customTitle = createOption(i18n.customTitle, GM_getValue("customTitle") || "");
         customTitle.setAttribute("placeHolder", "title");
         let minTxtLength = createOption(i18n.minTxtLength, GM_getValue("minTxtLength") || "100", "number");
@@ -2026,10 +2039,10 @@ if (window.top != window.self) {
         reSortUrl.name = "sort";
         contentSort.name = "sort";
         let reverse = createOption(i18n.reverseOrder, !!GM_getValue("reverse"), "checkbox");
-        let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
         let disableNextPage = !!GM_getValue("disableNextPage");
         let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
         let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
+        let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
         nextPageReg.setAttribute("placeHolder", "^\\s*(下一[页頁张張]|next\\s*page|次のページ)");
         if (disableNextPage) {
             nextPageReg.parentNode.style.display = "none";
@@ -2043,8 +2056,9 @@ if (window.top != window.self) {
         insertPos.parentNode.insertBefore(saveBtn, insertPos);
         saveBtn.onclick = e => {
             GM_setValue("selectors", delSelector.value || "");
-            GM_setValue("downThreadNum", downThreadNum.value || 20);
-            GM_setValue("minTxtLength", minTxtLength.value || 100);
+            GM_setValue("downThreadNum", parseInt(downThreadNum.value || 20));
+            GM_setValue("maxDlPerMin", parseInt(maxDlPerMin.value || 20));
+            GM_setValue("minTxtLength", parseInt(minTxtLength.value || 100));
             GM_setValue("customTitle", customTitle.value || "");
             if (reSortUrl.checked) {
                 GM_setValue("contentSortUrl", true);
@@ -2071,15 +2085,6 @@ if (window.top != window.self) {
 
     function setDel(){
         GM_openInTab(configPage + "#操作說明", {active: true});
-        /*var selValue=GM_getValue("selectors");
-        var selectors=prompt(i18n.del,selValue?selValue:"");
-        GM_setValue("selectors",selectors);
-        selValue=GM_getValue("downThreadNum");
-        var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
-        GM_setValue("downThreadNum",downThreadNum);
-        var sortByUrl=window.confirm(i18n.reSortUrl);
-        GM_setValue("contentSortUrl",sortByUrl);
-        if(!sortByUrl)GM_setValue("contentSort",window.confirm(i18n.reSort));*/
     }
 
     function checkKey(shortcut1, shortcut2) {

@@ -24,6 +24,8 @@
 
 [怠惰小説下載器 ZIP 擴充](https://greasyfork.org/scripts/476943) 下載時分章節保存 TXT 並打包為 ZIP
 
+[圖片驗證碼辨識](https://github.com/hoothin/ImgCodeCheck) 開啟保留內文圖片的網址後配合以上 ZIP 腳本與此項目自動辨識圖片文字，詳閱[愛發電](https://afdian.net/p/c7fc3abc8e8411ee9b1852540025c377)
+
 ## 怠惰心法
 <del>名喚怠惰，實為勤勉</del>
 此功共有七層，以第一層最易，第七層最難。
