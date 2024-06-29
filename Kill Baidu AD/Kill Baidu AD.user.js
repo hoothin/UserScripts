@@ -382,80 +382,91 @@
         hidePicture = !!GM_getValue("hidePicture");
         blackList = GM_getValue("blackList") || [];
         if (location.host === "greasyfork.org") {
-            let parent = document.querySelector('#additional-info');
-            let baseCon = document.createElement('div');
-            baseCon.style.margin = '20px';
-            parent.insertBefore(baseCon, parent.children[0]);
-            let checkIndex = 0;
-            let createCheckbox = (name, defaultValue) => {
-                let box = document.createElement('div');
-                let checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = defaultValue;
-                let id = 'stcnsc-checkbox' + checkIndex++;
-                checkbox.id = id;
-                let label = document.createElement('label');
-                label.setAttribute('for', id);
-                label.innerText = name;
-                box.appendChild(checkbox);
-                box.appendChild(label);
-                baseCon.appendChild(box);
-                return checkbox;
-            };
-            let hidePictureInput = createCheckbox('隐藏图片并简化样式', hidePicture);
-            let killRightInput = createCheckbox('隐藏右边栏并多列显示', killRight);
-            let importInput = document.createElement('textarea');
-            importInput.placeholder = '订阅 uBlacklist 规则：如 https://git.io/ublacklist';
-            importInput.style.width = '100%';
-            importInput.style.marginBottom = '10px';
-            baseCon.appendChild(importInput);
-            let blackListInput = document.createElement('textarea');
-            blackListInput.placeholder = '*://*.12345.cn/*\n*://*.54321.com/*\n一行一条';
-            blackListInput.style.width = '100%';
-            blackListInput.style.minHeight = "60px";
-            blackListInput.value = blackList.join("\n");
-            baseCon.appendChild(blackListInput);
-            function saveBlackList() {
-                GM_setValue("blackList", blackList);
-            }
-            let saveBtn = document.createElement('button');
-            saveBtn.innerText = '保存';
-            saveBtn.style.display = 'block';
-            saveBtn.style.fontSize = 'x-large';
-            saveBtn.style.fontWeight = 'bold';
-            saveBtn.style.pointerEvents = 'all';
-            saveBtn.style.cursor = 'pointer';
-            saveBtn.addEventListener("click", function(e) {
-                hidePicture = hidePictureInput.checked;
-                killRight = killRightInput.checked;
-                GM_setValue("hidePicture", hidePicture);
-                GM_setValue("killRight", killRight);
-                if (importInput.value) {
-                    alert("读取规则中……");
-                    let importUrls = importInput.value.trim().split("\n");
-                    importUrls.forEach(url => {
-                        url = url && url.trim();
-                        if (!url) return;
-                        GM_xmlhttpRequest({
-                            url: url,
-                            onload: function(res) {
-                                let result = res.response || res.responseText;
-                                if (!result) return;
-                                blackList = blackList.concat(result.split("\n"));
-                                blackList = blackList.filter((value, index) => blackList.indexOf(value) === index);
-                                saveBlackList();
-                                blackListInput.value = blackList.join("\n");
-                            }
-                        });
-                    });
-                } else {
-                    blackList = blackListInput.value.split("\n");
-                    saveBlackList();
+            function initConfig() {
+                let parent = document.querySelector('#additional-info');
+                let baseCon = document.createElement('div');
+                baseCon.style.margin = '20px';
+                parent.insertBefore(baseCon, parent.children[0]);
+                let checkIndex = 0;
+                let createCheckbox = (name, defaultValue) => {
+                    let box = document.createElement('div');
+                    let checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = defaultValue;
+                    let id = 'stcnsc-checkbox' + checkIndex++;
+                    checkbox.id = id;
+                    let label = document.createElement('label');
+                    label.setAttribute('for', id);
+                    label.innerText = name;
+                    box.appendChild(checkbox);
+                    box.appendChild(label);
+                    baseCon.appendChild(box);
+                    return checkbox;
+                };
+                let hidePictureInput = createCheckbox('隐藏图片并简化样式', hidePicture);
+                let killRightInput = createCheckbox('隐藏右边栏并多列显示', killRight);
+                let importInput = document.createElement('textarea');
+                importInput.placeholder = '订阅 uBlacklist 规则：如 https://git.io/ublacklist';
+                importInput.style.width = '100%';
+                importInput.style.marginBottom = '10px';
+                baseCon.appendChild(importInput);
+                let blackListInput = document.createElement('textarea');
+                blackListInput.placeholder = '*://*.12345.cn/*\n*://*.54321.com/*\n一行一条';
+                blackListInput.style.width = '100%';
+                blackListInput.style.minHeight = "60px";
+                blackListInput.value = blackList.join("\n");
+                baseCon.appendChild(blackListInput);
+                function saveBlackList() {
+                    GM_setValue("blackList", blackList);
                 }
-                alert("设置完毕");
-            });
-            baseCon.appendChild(saveBtn);
-            baseCon.appendChild(document.createElement("hr"));
+                let saveBtn = document.createElement('button');
+                saveBtn.innerText = '保存';
+                saveBtn.style.display = 'block';
+                saveBtn.style.fontSize = 'x-large';
+                saveBtn.style.fontWeight = 'bold';
+                saveBtn.style.pointerEvents = 'all';
+                saveBtn.style.cursor = 'pointer';
+                saveBtn.addEventListener("click", function(e) {
+                    hidePicture = hidePictureInput.checked;
+                    killRight = killRightInput.checked;
+                    GM_setValue("hidePicture", hidePicture);
+                    GM_setValue("killRight", killRight);
+                    if (importInput.value) {
+                        alert("读取规则中……");
+                        let importUrls = importInput.value.trim().split("\n");
+                        importUrls.forEach(url => {
+                            url = url && url.trim();
+                            if (!url) return;
+                            GM_xmlhttpRequest({
+                                url: url,
+                                onload: function(res) {
+                                    let result = res.response || res.responseText;
+                                    if (!result) return;
+                                    blackList = blackList.concat(result.split("\n"));
+                                    blackList = blackList.filter((value, index) => blackList.indexOf(value) === index);
+                                    saveBlackList();
+                                    blackListInput.value = blackList.join("\n");
+                                }
+                            });
+                        });
+                    } else {
+                        blackList = blackListInput.value.split("\n");
+                        saveBlackList();
+                    }
+                    alert("设置完毕");
+                });
+                baseCon.appendChild(saveBtn);
+                baseCon.appendChild(document.createElement("hr"));
+            }
+            if (document.readyState == "complete") {
+                initConfig();
+            } else {
+                document.addEventListener("readystatechange", e => {
+                    if (document.readyState == "complete") {
+                        initConfig();
+                    }
+                });
+            }
             return;
         }
         registerMenuCommand();
