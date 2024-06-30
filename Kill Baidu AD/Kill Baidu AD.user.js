@@ -458,6 +458,10 @@
                                     blackList = blackList.filter((value, index) => blackList.indexOf(value) === index);
                                     saveBlackList();
                                     blackListInput.value = blackList.join("\n");
+                                },
+                                onerror: function(e) {
+                                    console.log(e);
+                                    alert("网络错误，导入失败");
                                 }
                             });
                         });
