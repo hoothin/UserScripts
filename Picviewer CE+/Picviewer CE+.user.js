@@ -26013,9 +26013,9 @@ ImgOps | https://imgops.com/#b#`;
                                         },
                                         {
                                             node: "a",
-                                            text: "Star Me on Github",
+                                            text: "Star Me on Github🐱",
                                             attr: {
-                                                href: "https://github.com/hoothin/UserScripts#StarMe",
+                                                href: "https://github.com/hoothin/UserScripts",
                                                 target: "_blank"
                                             }
                                         },
@@ -26194,9 +26194,6 @@ ImgOps | https://imgops.com/#b#`;
             if (viewMore == "1") {
                 gallery.maximizeSidebar();
             }
-        } else if (location.hostname == "github.com" && location.href == "https://github.com/hoothin/UserScripts#StarMe") {
-            let starButton = document.querySelector(".starring-container:not(.on)>.unstarred>form>button");
-            if (starButton) emuClick(starButton);
         } else if (prefs.gallery.autoOpenSites) {
             var sitesArr=prefs.gallery.autoOpenSites.split("\n");
             for(let s=0;s<sitesArr.length;s++){
