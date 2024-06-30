@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://github.com/hoothin/UserScripts"><img src="https://img.shields.io/badge/License-MIT-red.svg" alt="license"></a>
   <a href="https://github.com/hoothin/UserScripts"><img src="https://img.shields.io/badge/Support-Chrome|Firefox|Edge-blue.svg" alt="Support"></a>
-  <a href="mailto:rixixi@gmail.com"><img src="https://img.shields.io/badge/Contact-gmail-blue.svg" alt="Contact"></a>
-  <a href="https://twitter.com/intent/follow?screen_name=hoothinwang"><img src="https://img.shields.io/twitter/follow/hoothinwang.svg?style=flat&label=Follow&logo=x" alt="twitter"></a>
+  <a href="https://twitter.com/intent/follow?screen_name=hoothinwang"><img src="https://img.shields.io/twitter/follow/hoothinwang.svg?style=flat&label=Follow&logo=x&color=555555" alt="twitter"></a>
+  <a href="mailto:rixixi@gmail.com"><img src="https://img.shields.io/badge/Contact-gmail-yellow.svg" alt="Contact"></a>
 </p>
 
 ---
