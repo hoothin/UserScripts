@@ -4,7 +4,7 @@
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @name:en            Kill Baidu AD
 // @namespace          hoothin
-// @version            1.23.7
+// @version            1.23.8
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，删除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，移除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
@@ -253,17 +253,23 @@
             #wrapper_wrapper {
                 background: rgba(228, 228, 228, 0.29);
             }
-            #container.sam_newgrid .c-container .t a, #container.sam_newgrid .c-container .c-title a,
-            #container.sam_newgrid .c-container .t a em, #container.sam_newgrid .c-container .c-title a em {
-                text-decoration: auto;
+            #content_left .cos-color-bg-page {
+                background-color: unset;
+            }
+            #container a,
+            #container a em {
+                text-decoration: auto!important;
             }
             #result_logo {
                 opacity: 0.75;
             }
-            .cos-col[style*="width:33"],.cos-col[style*="width:25"],.c-span3,.c-span4,.c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"] {
+            .cos-col[style*="width:33"],.cos-col[style*="width:25"],#content_left .c-span2,#content_left .c-span3,#content_left .c-span4,#content_left .c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"],.sc-image-rounded-tl-base>.cos-row>.cos-col:first-child {
                 display: none;
             }
-            .new-pmd .c-span9,.cos-col[style*="width:33"]+div,.cos-col[style*="width:25"]+div {
+            #wrapper>.result-molecule.new-pmd {
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            }
+            .new-pmd .c-span9,.new-pmd .c-span6,.new-pmd .c-span10,.cos-col[style*="width:33"]+div,.cos-col[style*="width:25"]+div,.sc-image-rounded-tl-base>.cos-row>.cos-col:first-child+div {
                 width: 100%!important;
             }
             a,a:active,#content_right a {
