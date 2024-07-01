@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.1.1
+// @version              2024.7.1.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -20994,6 +20994,12 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-scroll>.pv-pic-window-max {\
                     display: none;\
                     }\
+                    .pv-pic-window-black>.pv-pic-window-imgbox>img {\
+                    background: black!important;\
+                    }\
+                    .pv-pic-window-white>.pv-pic-window-imgbox>img {\
+                    background: white!important;\
+                    }\
                     .transition-transform{\
                     transition: transform 0.3s ease;\
                     }\
@@ -22282,6 +22288,16 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
+                        if (!this.moving) {
+                            if (this.imgWindow.classList.contains("pv-pic-window-black")) {
+                                this.imgWindow.classList.remove("pv-pic-window-black");
+                                this.imgWindow.classList.add("pv-pic-window-white");
+                            } else if (this.imgWindow.classList.contains("pv-pic-window-white")) {
+                                this.imgWindow.classList.remove("pv-pic-window-white");
+                            } else {
+                                this.imgWindow.classList.add("pv-pic-window-black");
+                            }
+                        }
                         this.moving=false;
                         if(e.ctrlKey && e.target.nodeName.toUpperCase()=='IMG'){
                             e.preventDefault();
