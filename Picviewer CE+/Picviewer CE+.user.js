@@ -22288,7 +22288,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
-                        if (!this.moving) {
+                        if (selectedTool === "hand" && !this.moving) {
                             if (this.imgWindow.classList.contains("pv-pic-window-black")) {
                                 this.imgWindow.classList.remove("pv-pic-window-black");
                                 this.imgWindow.classList.add("pv-pic-window-white");
