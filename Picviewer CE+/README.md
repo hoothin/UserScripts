@@ -45,7 +45,7 @@ This way, you'll get a beautifully created PDF e-book.
 ## 🔧 Custom [Rules Example](pvcep_rules.js):
 **💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.net/a/hoothin) to keep my scripts always up to date.**
 
-<img src="customRule.png" height="100">
+<a href="https://github.com/hoothin/UserScripts/raw/master/Picviewer%20CE%2B/customRule.png"><img src="customRule.png" height="100"></a>
 
 + Match image src(no matter which site) with /pics\\.dmm\\.co\\.jp/i and replace image url from "ps.jpg" to "pl.jpg"
 
