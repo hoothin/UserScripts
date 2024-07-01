@@ -20647,6 +20647,7 @@ ImgOps | https://imgops.com/#b#`;
                     box-shadow: 0 0 10px 5px rgba(0,0,0,0.35);\
                     box-sizing: content-box;\
                     display: initial;\
+                    background: #00000080;\
                     }\
                     .pv-pic-window-container span {\
                     background-image: initial;\
@@ -22307,6 +22308,7 @@ ImgOps | https://imgops.com/#b#`;
                     case 'touchstart':{
                         if(!this.focused){//如果没有focus，先focus
                             this.focus();
+                            this.moving=true;
                             this.keepScreenInside();
                         };
 
