@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.7
+// @version      2.8.3.8
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -428,7 +428,7 @@ if (window.top != window.self) {
             break;
     }
     var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false;
-    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer;
+    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer,downTxtShadowContainer;
 
     const escapeHTMLPolicy = (win.trustedTypes && win.trustedTypes.createPolicy) ? win.trustedTypes.createPolicy('dac_default', {
         createHTML: (string, sink) => string
@@ -515,7 +515,7 @@ if (window.top != window.self) {
             filterListContainer = document.createElement("div");
             filterListContainer.id = "filterListContainer";
             filterListContainer.innerHTML = createHTML(`
-                <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 99998; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
+                <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 2147483646; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
                 <div id="filterListBody">
                     <div class="dacCustomRule">
                     ${i18n.custom}
@@ -771,7 +771,7 @@ if (window.top != window.self) {
                     left: 50%;
                     top: 10%;
                     margin-left: -300px;
-                    z-index: 99998;
+                    z-index: 2147483646;
                     background-color: #ffffff;
                     border: 1px solid #afb3b6;
                     border-radius: 10px;
@@ -805,27 +805,28 @@ if (window.top != window.self) {
     function initTxtDownDiv() {
         if (txtDownContent) {
             txtDownContent.style.display = "";
+            document.body.appendChild(downTxtShadowContainer);
             return;
         }
         txtDownContent = document.createElement("div");
         txtDownContent.id = "txtDownContent";
-        let shadowContainer = document.createElement("div");
-        document.body.appendChild(shadowContainer);
-        let shadow = shadowContainer.attachShadow({ mode: "open" });
+        downTxtShadowContainer = document.createElement("div");
+        document.body.appendChild(downTxtShadowContainer);
+        let shadow = downTxtShadowContainer.attachShadow({ mode: "open" });
         shadow.appendChild(txtDownContent);
         txtDownContent.innerHTML = createHTML(`
             <style>
             #txtDownContent>div{
               font-size:16px;
               color:#333333;
-              width:362px;
+              width:342px;
               height:110px;
               position:fixed;
               left:50%;
               top:50%;
               margin-top:-25px;
-              margin-left:-191px;
-              z-index:100000;
+              margin-left:-171px;
+              z-index:2147483647;
               background-color:#ffffff;
               border:1px solid #afb3b6;
               border-radius:10px;
@@ -884,7 +885,7 @@ if (window.top != window.self) {
                 saveAs(content, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".zip");
             });
         } else {
-            var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".txt");
         }
     }
