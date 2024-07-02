@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.1.2
+// @version              2024.7.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -17719,7 +17719,14 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     } else if (/^a$/i.test(node.nodeName)) {
                         if (imageReg.test(node.href)) {
-                            node.src = node.href;
+                            let src = node.href;
+                            if (/[&\?]url\=/.test(src)) {
+                                src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
+                                try {
+                                    src = decodeURIComponent(src);
+                                } catch (e) {}
+                            }
+                            node.src = src;
                             linkMedias.push(node);
                         }
                     }
@@ -23758,6 +23765,12 @@ ImgOps | https://imgops.com/#b#`;
             if(/^IMG$/i.test(img.nodeName) && !src && iPASrc){//链接可能是一张图片...
                 if(iPASrc!=img.src && imageReg.test(iPASrc)){
                     src=iPASrc;
+                    if (/[&\?]url\=/.test(src)) {
+                        src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
+                        try {
+                            src = decodeURIComponent(src);
+                        } catch (e) {}
+                    }
                 }
                 if(src)type='scale';
             }
@@ -24844,10 +24857,17 @@ ImgOps | https://imgops.com/#b#`;
                     target = null;
                 }
                 if (target) {
+                    let src = target.href;
+                    if (/[&\?]url\=/.test(src)) {
+                        src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
+                        try {
+                            src = decodeURIComponent(src);
+                        } catch (e) {}
+                    }
                     result = {
-                        src: target.href,
+                        src: src,
                         type: "link",
-                        imgSrc: target.href,
+                        imgSrc: src,
                         noActual:true,
                         img: target,
                         description: target.title
