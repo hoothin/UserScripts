@@ -163,6 +163,10 @@ switch (lang) {
                         "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
                     },
                     {
+                        "name": "🔒 base64加密",
+                        "url": "paste:%be"
+                    },
+                    {
                         "name": "📺 预览视频",
                         "url": "showTips:\n<video loop autoplay src=\"%s\">\n<a href=\"%s\" download=\"%s\">Download video</a>\n</video>",
                         "kwFilter": "^http.*\\.(3gpp|m4v|mkv|mp4|ogv|webm)\\b"
@@ -598,6 +602,10 @@ switch (lang) {
                         "name": "🔓 Decode base64",
                         "url": "showTips:\n📋 <span data-copy style=\"user-select: all;\">%bd</span>",
                         "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
+                    },
+                    {
+                        "name": "🔒 base64加密",
+                        "url": "paste:%be"
                     },
                     {
                         "name": "📺 Preview video",
