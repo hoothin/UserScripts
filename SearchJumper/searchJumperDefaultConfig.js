@@ -292,11 +292,6 @@ switch (lang) {
                         "icon": "https://nd-static.bdstatic.com/m-static/v20-main/favicon-main.ico"
                     },
                     {
-                        "name": "短网址生成",
-                        "url": "https://cui.la#p{#url=%u}",
-                        "icon": "https://cui.la/content/151952ahk56ovvoqhnv557.png.icon.png"
-                    },
-                    {
                         "name": "分享到微博",
                         "url": "https://service.weibo.com/share/share.php?url=%u&title=%n",
                         "nobatch": true
