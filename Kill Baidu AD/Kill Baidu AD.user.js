@@ -269,7 +269,7 @@
             #result_logo {
                 opacity: 0.75;
             }
-            .cos-col[style*="width:33"],.cos-col[style*="width:25"],#content_left .c-span2,#content_left .c-span3,#content_left .c-span4,#content_left .c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"],.sc-image-rounded-tl-base>.cos-row>.cos-col:first-child {
+            .cos-col[style*="width:33"],.cos-col[style*="width:25"],#content_left .c-span2,#content_left .c-span3,#content_left .c-span4,#content_left .c-span6>.c-img,[tpl="short_video"],[data-module="gp-peopleintro-img-click"],div[class^="img-container"],[data-module="normal-img"],[role="img"],.c-gap-inner-y-img,div[class*="only-multi-image"],.sc-image-rounded-tl-base>.cos-row>.cos-col:first-child,[class^="image-content"] {
                 display: none;
             }
             #wrapper>.result-molecule.new-pmd {
@@ -285,9 +285,11 @@
                 color: #4E6EF2!important;
             }
             .c-container.result[tpl], .result-op.c-container[tpl], .result-op.xpath-log.new-pmd[tpl] {
-                padding-top: 0px;
                 padding-bottom: 25px;
                 border-bottom: 1px solid rgba(211, 211, 211, 0.63);
+            }
+            .sc-image {
+                background-image: none !important;
             }
             `);
         }
