@@ -158,6 +158,11 @@ switch (lang) {
                         "kwFilter": "^https?://."
                     },
                     {
+                        "name": "🔓 解码 base64",
+                        "url": "showTips:\n📋 <span data-copy>%bd</span>",
+                        "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
+                    },
+                    {
                         "name": "📺 预览视频",
                         "url": "showTips:\n<video loop autoplay src=\"%s\">\n<a href=\"%s\" download=\"%s\">Download video</a>\n</video>",
                         "kwFilter": "^http.*\\.(3gpp|m4v|mkv|mp4|ogv|webm)\\b"
@@ -588,6 +593,11 @@ switch (lang) {
                         "name": "↩️ Short link restore",
                         "url": "showTips:%s\n{url}",
                         "kwFilter": "^https?://."
+                    },
+                    {
+                        "name": "🔓 Decode base64",
+                        "url": "showTips:\n📋 <span data-copy>%bd</span>",
+                        "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
                     },
                     {
                         "name": "📺 Preview video",
