@@ -5622,6 +5622,7 @@
     "nextLink": "a[class*='filterProps-Styled-Component'][aria-disabled='false']:last-child",
     "wait": 500,
     "fitWidth": false,
+    "listenUrlChange": true,
     "css": "@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
 },
 {
