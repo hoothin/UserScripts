@@ -604,7 +604,7 @@ switch (lang) {
                         "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
                     },
                     {
-                        "name": "🔒 base64加密",
+                        "name": "🔒 Encode base64",
                         "url": "paste:%be"
                     },
                     {
