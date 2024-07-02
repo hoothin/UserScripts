@@ -159,7 +159,7 @@ switch (lang) {
                     },
                     {
                         "name": "🔓 解码 base64",
-                        "url": "showTips:\n📋 <span data-copy>%bd</span>",
+                        "url": "showTips:\n📋 <span data-copy style=\"user-select: all;\">%bd</span>",
                         "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
                     },
                     {
@@ -596,7 +596,7 @@ switch (lang) {
                     },
                     {
                         "name": "🔓 Decode base64",
-                        "url": "showTips:\n📋 <span data-copy>%bd</span>",
+                        "url": "showTips:\n📋 <span data-copy style=\"user-select: all;\">%bd</span>",
                         "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
                     },
                     {
