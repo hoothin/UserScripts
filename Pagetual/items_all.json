@@ -12017,17 +12017,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/82017",
-  "name": "アルファポリス Web小説 エピソード",
-  "created_by": "usefulpocket",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-11-11T22:52:29+09:00",
   "data": {
-    "exampleUrl": "https://www.alphapolis.co.jp/novel/638137573/992069999/episode/423049",
-    "url": "^https://(www\\.)?alphapolis\\.co\\.jp/novel/*",
-    "pageElement": "//div[id(\"main\")]/div[contains(@class,\"novel-body\")]",
-    "nextLink": "//div[id(\"main\")]/div[contains(@class,\"episode-navigation\")][2]/a[contains(@class,\"next\")]"
+    "pageElement": "id('main')/div[contains(@class, 'novel-body')]",
+    "nextLink": "//a[contains(concat(' ', @class, ' '), ' next ')]",
+    "url": "^https://(www\\.)?alphapolis\\.co\\.jp/novel/\\d+",
+    "exampleUrl": "https://www.alphapolis.co.jp/novel/638137573/992069999/episode/423049"
   },
-  "created_at": "2018-11-11T22:46:12+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "usefulpocket",
+  "name": "アルファポリス Web小説 エピソード",
+  "created_at": "2018-11-11T22:46:12+09:00",
+  "updated_at": "2024-07-02T20:39:29+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82011",
