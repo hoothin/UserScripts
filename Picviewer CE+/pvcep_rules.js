@@ -492,10 +492,10 @@ var siteInfo = [
         name: "greasyfork",
         url: /(greasyfork|sleazyfork)\.org/,
         getImage: function() {
-            if(this.parentNode.nodeName=="A" && /amazonaws\.com/.test(this.parentNode.href)){
+            if(this.parentNode && this.parentNode.nodeName=="A" && /amazonaws\.com/.test(this.parentNode.href)){
                 return this.parentNode.href;
             }
-            return this.src.replace(/\/thumb\//i,"/original/").replace(/\/thumbnails\//i,"/").replace(/(\/forum\/uploads\/userpics\/.*\/)n([^\/]+)$/,"$1p$2");
+            return this.src && this.src.replace(/\/thumb\//i,"/original/").replace(/\/thumbnails\//i,"/").replace(/(\/forum\/uploads\/userpics\/.*\/)n([^\/]+)$/,"$1p$2");
         }
     },
     {
@@ -626,7 +626,8 @@ var siteInfo = [
         description: ["./..", "aria-label"],
         getImage: function(a, p){
             let newsrc = this.src.replace("_normal.",".").replace("_200x200.",".").replace("_mini.",".").replace("_bigger.",".").replace(/_x\d+\./,".");
-            if (newsrc != this.src)return newsrc;
+            if (newsrc != this.src) return newsrc;
+            if (/\.svg$/.test(newsrc)) return;
             newsrc=newsrc.replace(/\?format=/i, ".").replace(/\&name=/i, ":").replace(/\.(?=[^\.\/]*$)/, "?format=").replace( /(:large|:medium|:small|:orig|:thumb|:[\dx]+)/i, "");
             if (newsrc != this.src) {
                 if (a && a.role == 'link') {
