@@ -13,11 +13,14 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 <table>
     <tr>
-        <th colspan="4">Buy me a coffee if you get help💞</th>
+        <th colspan="5">Buy me a coffee if you get help💞</th>
     </tr>
     <tr>
-        <td><a href="https://paypal.me/hoothin"><img src="https://www.paypal.me/favicon.ico"><br>PayPal</a></td><td><a href="https://ko-fi.com/hoothin"><img src="https://ko-fi.com/favicon-32x32.png"><br>Ko-fi</a></td><td><a href="https://afdian.net/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></td>
-        <td rowspan="4"><img src="https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg" alt="donate"></td>
+        <td><a href="https://paypal.me/hoothin"><img src="https://www.paypal.me/favicon.ico"><br>PayPal</a></td>
+        <td><a href="https://ko-fi.com/hoothin"><img src="https://ko-fi.com/favicon-32x32.png"><br>Ko-fi</a></td>
+        <td><a href="https://afdian.net/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></td>
+        <td rowspan="4" width="50%"><img src="https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg" alt="donate"></td>
+        <td rowspan="4" width="25%"><img alt="reward" src="https://s2.loli.net/2024/07/04/1CIsVfT9rxjKwRU.jpg"></td>
     </tr>
     <tr>
         <th colspan="3">💬<a href="https://discord.com/invite/keqypXC6wD">Join our Discord</a></th>
@@ -29,7 +32,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="3">Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>
     </tr>
     <tr>
-        <th colspan="4"><a href="https://pagetual.hoothin.com/sponsors.svg"><img style="" wmode="transparent" id="sponsors" src="https://pagetual.hoothin.com/sponsors.svg?2023.12.9"></a></th>
+        <th colspan="5"><a href="https://pagetual.hoothin.com/sponsors.svg"><img style="" wmode="transparent" id="sponsors" src="https://pagetual.hoothin.com/sponsors.svg?2023.12.9"></a></th>
     </tr>
 </table>
 
