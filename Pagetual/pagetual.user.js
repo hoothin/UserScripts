@@ -45,6 +45,7 @@
 // @grant        GM.deleteValue
 // @grant        GM.info
 // @grant        GM.setClipboard
+// @homepage     https://github.com/hoothin/UserScripts/tree/master/Pagetual
 // @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
