@@ -14325,7 +14325,7 @@
   "resource_url": "http://wedata.net/items/81586",
   "data": {
     "pageElement": "//section[@data-test-id='mainline']/div[.//article]",
-    "insertBefore": "//div[@class='pagination']",
+    "insertBefore": "//div[contains(concat(' ', @class, ' '), ' mainline__footer ')]",
     "nextLink": "//a[@data-test-id='next-button']",
     "url": "^https://www\\.ecosia\\.org/search\\?",
     "exampleUrl": "https://www.ecosia.org/search?q=hallo"
@@ -14334,7 +14334,7 @@
   "created_by": "WolframH",
   "name": "Ecosia.org Search",
   "created_at": "2017-10-06T02:06:47+09:00",
-  "updated_at": "2023-10-18T21:08:00+09:00"
+  "updated_at": "2024-07-07T14:03:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81585",
