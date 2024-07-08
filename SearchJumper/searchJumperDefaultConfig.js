@@ -126,7 +126,7 @@ switch (lang) {
                     },
                     {
                         "name": "💲美元转人民币",
-                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\\D/g,'')} RMB</i>",
+                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/g,'')} RMB</i>",
                         "kwFilter": "\\d\\$|\\$\\d",
                         "nobatch": true
                     },
@@ -554,7 +554,7 @@ switch (lang) {
                     },
                     {
                         "name": "💲USD to RMB",
-                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\\D/,'')} RMB</i>",
+                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/,'')} RMB</i>",
                         "kwFilter": "\\d\\$|\\$\\d"
                     },
                     {
