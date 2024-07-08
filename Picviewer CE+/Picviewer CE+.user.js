@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.5.1
+// @version              2024.7.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -13615,7 +13615,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-slide-show">'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("slideGapTip")+'">'+
-                    '<input data-prefs="interval" step="1" min="1" type="number" value="5" />'+
+                    '<input class="pv-gallery-head-command-drop-list-slide-show-interval" data-prefs="interval" step="1" min="1" type="number" value="5" />'+
                     '<span>'+i18n("slideGap")+'</span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item"  title="'+i18n("slideBackTip")+'">'+
@@ -13918,6 +13918,7 @@ ImgOps | https://imgops.com/#b#`;
                     'head-command-drop-list-others',
                     'head-command-drop-list-share',
                     'head-command-drop-list-slide-show',
+                    'head-command-drop-list-slide-show-interval',
                     'head-command-drop-list-collect',
                     'head-command-drop-list-search',
 
@@ -14257,9 +14258,10 @@ ImgOps | https://imgops.com/#b#`;
                 }, true);
 
 
+                let defaultSlideShowInterval = storage.getItem('slideShowInterval') || 5000;
                 var slideShow={
                     opts:{
-                        interval:5000,
+                        interval:defaultSlideShowInterval,
                         wait:true,
                         backward:false,
                         skipErrorImg:true,
@@ -14321,6 +14323,11 @@ ImgOps | https://imgops.com/#b#`;
                         this.countdownTimer=setInterval(function(){
                             _self.setCountdown(interval - (Date.now()-startTime));
                         },100);
+
+                        if (interval && interval !== defaultSlideShowInterval) {
+                            defaultSlideShowInterval = interval;
+                            storage.setItem('slideShowInterval', interval);
+                        }
                     },
                     stop:function(){
                         this.setCountdown(this.opts.interval);
@@ -14346,6 +14353,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 slideShow.setCountdown(slideShow.opts.interval);
                 this.slideShow=slideShow;
+                eleMaps['head-command-drop-list-slide-show-interval'].value = parseInt(slideShow.opts.interval / 1000) || 5;
 
                 let filterIcon = container.querySelector(".pv-gallery-head-left-filter-icon");
                 function filterUrl() {
