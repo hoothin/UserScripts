@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.68
+// @version      1.9.37.69
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2725,6 +2725,17 @@
             }
             if (!next) {
                 await sleep(1);
+                cur = body.querySelector(".paginator td strong");
+                if (cur) {
+                    while (cur && !compareNodeName(cur, ["td"])) {
+                        cur = cur.parentNode;
+                    }
+                    next = cur && cur.nextElementSibling;
+                    if (next) next = next.querySelector("a");
+                }
+            }
+            if (!next) {
+                await sleep(1);
                 let pageDivs = body.querySelectorAll("[class*=pagination],[class*=Pagination]");
                 if (pageDivs && pageDivs.length) {
                     for (let i = pageDivs.length - 1; i >= 0; i--) {
@@ -3211,7 +3222,8 @@
                     if (href && nextLink.getAttribute) {
                         let _href = nextLink.getAttribute("href");
                         if (_href) {
-                            if (_href.charAt(0) === "#" || _href === "?"){
+                            let realHref = _href.replace(location.href, "");
+                            if (realHref.charAt(0) === "#" || realHref === "?"){
                                 href = "#";
                             } else {
                                 href = _href;
