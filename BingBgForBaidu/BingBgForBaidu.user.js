@@ -170,7 +170,7 @@
     input.addEventListener('input', inputHandler);
     GM_xmlhttpRequest({
         method: 'GET',
-        url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
+        url: "https://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
         onload: function(result) {
             var jsonData=null;
             try {
