@@ -6723,7 +6723,7 @@
                 setTimeout(() => {
                     storage.getItem("rulesData", data => {
                         if (data.firstRun === false) {
-                            _GM_openInTab(firstRunPage, {active: true});
+                            _GM_openInTab(firstRunPage, {active: lang !== 'zh-CN'});
                         }
                     });
                 }, 100);
