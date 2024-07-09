@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.69
+// @version      1.9.37.70
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -9085,6 +9085,7 @@
                     iframeDoc.head.appendChild(styleEle);
                 }
             }
+            curIframe.style.height = "";
             checkIframe();
             iframeDoc.addEventListener('wheel', e => {
                 document.dispatchEvent(new Event('wheel'));
@@ -9284,7 +9285,12 @@
                                 createPageBar(nextLink);
                                 checkAutoLoadNum();
                             }, true);
-                        } else loadPageOver();
+                        } else {
+                            loadPageOver();
+                            if (autoLoadNum >= 0) {
+                                setTimeout(() => nextPage(), 2000);
+                            }
+                        }
                     });
                 } else {
                     if (!isJs) {
@@ -9296,7 +9302,12 @@
                             if (eles) {
                                 createPageBar(nextLink);
                                 checkAutoLoadNum();
-                            } else loadPageOver();
+                            } else {
+                                loadPageOver();
+                                if (autoLoadNum >= 0) {
+                                    setTimeout(() => nextPage(), 2000);
+                                }
+                            }
                         });
                     } else {
                         emuPage((doc, eles) => {
@@ -9309,7 +9320,12 @@
                                     createPageBar(nextLink);
                                     checkAutoLoadNum();
                                 }, true);
-                            } else loadPageOver();
+                            } else {
+                                loadPageOver();
+                                if (autoLoadNum >= 0) {
+                                    setTimeout(() => nextPage(), 2000);
+                                }
+                            }
                         });
                     }
                 }
