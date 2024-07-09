@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.70
+// @version      1.9.37.71
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3722,7 +3722,7 @@
             this.historyUrl = "";
             this.possibleCheck = 0;
             let base = document.querySelector("base");
-            this.basePath = base ? base.href : location.href;
+            this.basePath = (base && base.href) || location.href;
             this.getRule(async () => {
                 if (self.curSiteRule.sideController === true || (self.curSiteRule.sideController !== false && rulesData.sideController)) {
                     isPause = manualPause;
@@ -7026,7 +7026,7 @@
                     }
                 }
                 let base = doc.querySelector("base");
-                ruleParser.basePath = base ? base.href : url;
+                ruleParser.basePath = (base && base.href) || url;
                 if (charsetValid && !ruleHeaders) {
                     let equiv = doc.querySelector('[http-equiv="Content-Type"]');
                     if (equiv && equiv.content) {
@@ -8485,7 +8485,7 @@
                             }
                         }
                         let base = doc.querySelector("base");
-                        ruleParser.basePath = base ? base.href : url;
+                        ruleParser.basePath = (base && base.href) || url;
                         if (eles === null) eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
                         if (eles && eles.length > 0) {
                             await ruleParser.hookUrl(doc);
