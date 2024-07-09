@@ -75,7 +75,12 @@ This way, you'll get a beautifully created PDF e-book.
     "clickToOpen": {
         "enabled": true,
         "preventDefault": true,
-        "type": "actual"
+        "type": "actual",
+        "button": 0,
+        "alt": false,
+        "ctrl": false,
+        "shift": false,
+        "meta": false
     }
 }
 ```
