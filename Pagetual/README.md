@@ -36,24 +36,6 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
     </tr>
 </table>
 
-
-[Rules example](https://pagetual.hoothin.com/en/rule.html)
-==
-``` json
-[
-  {
-    "name":"beauty",
-    "url":"^https://www\\.jpmn-demo\\.com/",
-    "pageElement":"p>img"
-  },
-  {
-    "name":"Expreview",
-    "url":"^https://www\\.expreview-demo\\.com/",
-    "loadMore":"span.load"
-  }
-]
-```
-
  <details>
 <summary><h3>Pagetual User-defined rules cases</h3></summary>
      
@@ -128,6 +110,23 @@ window.postMessage({ action: 'loadMore', command: 'patetual', detail: 0 }, '*');
 ```
 
  </details>
+
+[Rules example](https://pagetual.hoothin.com/en/rule.html)
+==
+``` json
+[
+  {
+    "name":"beauty",
+    "url":"^https://www\\.jpmn-demo\\.com/",
+    "pageElement":"p>img"
+  },
+  {
+    "name":"Expreview",
+    "url":"^https://www\\.expreview-demo\\.com/",
+    "loadMore":"span.load"
+  }
+]
+```
 
 name
 --
