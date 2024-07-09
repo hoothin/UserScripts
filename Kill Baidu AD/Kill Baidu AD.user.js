@@ -4,7 +4,7 @@
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @name:en            Kill Baidu AD
 // @namespace          hoothin
-// @version            1.23.9
+// @version            1.23.10
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，删除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，移除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
@@ -285,7 +285,12 @@
                 color: #4E6EF2!important;
             }
             .c-container.result[tpl], .result-op.c-container[tpl], .result-op.xpath-log.new-pmd[tpl] {
-                padding-bottom: 25px;
+                box-shadow: 0 2px 5px 0px rgba(0, 0, 0, .1);
+                padding: 16px;
+                box-sizing: content-box;
+            }
+            .c-container.result[tpl] h3, .result-op.c-container[tpl] h3, .result-op.xpath-log.new-pmd[tpl] h3 {
+                padding-bottom: 10px;
                 border-bottom: 1px solid rgba(211, 211, 211, 0.63);
             }
             .sc-image {
