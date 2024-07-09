@@ -6930,7 +6930,16 @@
                 startAutoScroll();
 
 
-                if (initConfig(href)) return;
+                if (initConfig(href)) {
+                    document.addEventListener("click", e => {
+                        if (e.target && typeof e.target.dataset.pagetualPicker !== 'undefined') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            picker.start();
+                        }
+                    });
+                    return;
+                }
                 pageReady = true;
                 if (forceState == 1) return;
                 let now = new Date().getTime();
