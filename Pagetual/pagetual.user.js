@@ -5565,7 +5565,7 @@
             }
         }
         if (!isGuidePage) {
-            if (href.indexOf("PagetualGuide") != -1 || location.hostname === "pagetual.hoothin.com") isGuidePage = true;
+            if (location.hostname === "hoothin.github.io" || location.hostname === "pagetual.hoothin.com") isGuidePage = true;
         }
         configCon = document.getElementById("configCon");
         if (configCon) {
@@ -5710,7 +5710,9 @@
             };
             [].forEach.call(document.querySelectorAll('pre[name=pagetual],pre[name=user-content-pagetual]'), pre => {
                 let importBtn = createImportBtn(pre);
-                pre.style.display = "";
+                if (rulesData.uninited) {
+                    pre.style.display = "";
+                }
             });
             click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
             if (click2import) click2import.innerText = i18n("click2ImportRule");
@@ -6723,7 +6725,7 @@
                 setTimeout(() => {
                     storage.getItem("rulesData", data => {
                         if (data.firstRun === false) {
-                            _GM_openInTab(firstRunPage, {active: lang !== 'zh-CN'});
+                            _GM_openInTab(firstRunPage, {active: true});
                         }
                     });
                 }, 100);
