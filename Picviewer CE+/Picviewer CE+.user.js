@@ -21002,6 +21002,7 @@ ImgOps | https://imgops.com/#b#`;
                     overflow-x: hidden;\
                     overscroll-behavior: contain;\
                     -ms-scroll-chaining: contain;\
+                    scrollbar-color: initial;\
                     }\
                     .pv-pic-window-scroll>.pv-pic-window-scrollSign {\
                     display: block;\
