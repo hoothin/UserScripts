@@ -1184,7 +1184,7 @@
         doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         try {
-            let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            let result = doc.evaluate(xpath, contextNode, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null);
             return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
