@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.71
+// @version      1.9.37.72
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -61,7 +61,6 @@
 
 (function() {
     'use strict';
-
     const pauseVideo = () => {
         setTimeout(() => {
             [].forEach.call(document.querySelectorAll("video"), video => {
@@ -112,9 +111,8 @@
     const noRuleTest = false;
     const lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
     const langData = [
-        {   // |-----------------------------------------------------------------------|
-            // |english translation update by github.com/https433, admin@abby0666.xyz. |
-            // |-----------------------------------------------------------------------|
+        {
+            // English translation update by github.com/https433, admin@abby0666.xyz.
             name: "English",
             match: ["en"],
             lang: {
@@ -238,7 +236,7 @@
             }
         },
         {
-            //Translated by SrKalopsia (srkalopsia@gmail.com).
+            // Translated by SrKalopsia (srkalopsia@gmail.com).
             name: "Español",
             match: ["es", "es-ES"],
             lang: {
@@ -362,7 +360,7 @@
             }
         },
         {
-            //Translated by Prankster 199 (vfggf95565).
+            // Translated by Prankster 199 (vfggf95565).
             name: "Arabic",
             match: ["ar", "ar-AE", "ar-BH", "ar-DZ", "ar-EG", "ar-IQ", "ar-JO", "ar-KW", "ar-LB", "ar-LY", "ar-MA", "ar-OM", "ar-QA", "ar-SA", "ar-SY", "ar-TN", "ar-YE"],
             lang: {
@@ -1165,7 +1163,7 @@
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
     const firstRunPage = "https://pagetual.hoothin.com/firstRun";
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
-    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
+    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)|^https:\/\/pagetual\.hoothin\.com\/.*firstRun\.html/i;
     const allOfBody = "body>*";
     const mainSel = ["article,.article","[role=main],main,.main,#main","#results"];
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
@@ -5554,10 +5552,6 @@
             }
         }
         let isGuidePage = checkGuidePage(href);
-        if (!isGuidePage) {
-            if (href.indexOf("PagetualGuide") != -1) return true;
-            if (location.hostname === "pagetual.hoothin.com") return true;
-        }
 
         var click2import, importUrlPres;
 
@@ -5569,6 +5563,9 @@
                     break;
                 }
             }
+        }
+        if (!isGuidePage) {
+            if (href.indexOf("PagetualGuide") != -1 || location.hostname === "pagetual.hoothin.com") isGuidePage = true;
         }
         configCon = document.getElementById("configCon");
         if (configCon) {
@@ -5713,7 +5710,10 @@
             };
             [].forEach.call(document.querySelectorAll('pre[name=pagetual],pre[name=user-content-pagetual]'), pre => {
                 let importBtn = createImportBtn(pre);
+                pre.style.display = "";
             });
+            click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
+            if (click2import) click2import.innerText = i18n("click2ImportRule");
             if (!importHandler) {
                 importHandler = e => {
                     if (compareNodeName(e.target, ["pre"])) {
@@ -5804,8 +5804,6 @@
                   margin-bottom: 0px;
                  }
                 `);
-                click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
-                if (click2import) click2import.innerText = i18n("click2ImportRule")
                 configCon = document.querySelector(".markdown-body,.theme-default-content");
                 if (!configCon) {
                     setTimeout(() => {
@@ -5848,8 +5846,8 @@
                     }
                     lastPos = newPos;
                 });
-            } else return false;
-        } else return false;
+            } else return isGuidePage;
+        } else return isGuidePage;
         let ruleBarInsertPos = document.createTextNode(' ');
         configCon.appendChild(ruleBarInsertPos);
         class Rulebar {
