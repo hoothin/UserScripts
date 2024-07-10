@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.72
+// @version      1.9.37.73
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1182,8 +1182,19 @@
         doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         try {
-            let result = doc.evaluate(xpath, contextNode, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null);
-            return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            let xpathNode = (s, d, n) => {
+                let result = d.evaluate(s, n, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null);
+                return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            };
+            let selSplit = xpath.split(" >> ");
+            if (selSplit.length === 2) {
+                let ele = xpathNode(selSplit[0], doc, contextNode);
+                if (ele && ele.shadowRoot) {
+                    return xpathNode(selSplit[1], ele.shadowRoot, ele.shadowRoot);
+                }
+            } else {
+                return xpathNode(xpath, doc, contextNode);
+            }
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
         }
@@ -1218,6 +1229,10 @@
 
     function getAllElements(sel, doc, contextNode) {
         try {
+            if (sel.indexOf(" >> ") !== -1) {
+                let result = getElement(sel, doc, contextNode);
+                return result && [result];
+            }
             if (!isXPath(sel)) {
                 return doc.querySelectorAll(sel);
             }
@@ -1230,19 +1245,26 @@
     function getElement(sel, doc, contextNode, bySort) {
         try {
             if (!isXPath(sel)) {
+                let checkShadow = s => {
+                    let selSplit = s.split(" >> ");
+                    if (selSplit.length === 2) {
+                        let ele = doc.querySelector(selSplit[0]);
+                        return ele && ele.shadowRoot && ele.shadowRoot.querySelector(selSplit[1]);
+                    } else return doc.querySelector(s);
+                };
                 if (!bySort) {
-                    return doc.querySelector(sel);
+                    return checkShadow(sel);
                 } else {
                     let selArr = sel.split(",");
                     try {
                         for (let i = 0; i < selArr.length; i++) {
-                            let ele = doc.querySelector(selArr[i].trim());
+                            let ele = checkShadow(selArr[i].trim());
                             if (ele) {
                               return ele;
                             }
                         }
                     } catch(e) {
-                        return doc.querySelector(sel);
+                        return checkShadow(sel);
                     }
                     return null;
                 }
@@ -5177,7 +5199,7 @@
                 }, 100);
             };
             this.clickHandler = e => {
-                if (!self.showSign) return;
+                if (!self.showSign || !e.isTrusted) return;
                 if (self.inPicker) {
                     e.stopPropagation();
                     e.preventDefault();
@@ -6609,7 +6631,7 @@
         while(loopable && visible) {
             el = el.parentNode;
 
-            if(el && !compareNodeName(el, ["body"])) {
+            if(el && el.nodeType === 1 && !compareNodeName(el, ["body"])) {
                 visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
             }else {
                 loopable = false;
@@ -7407,7 +7429,6 @@
     }
 
     function isInViewPort(element) {
-        if (!getBody(document).contains(element)) return false;
         const viewWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewHeight = window.innerHeight || document.documentElement.clientHeight;
         const {

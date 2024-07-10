@@ -293,6 +293,11 @@
                 padding-bottom: 10px;
                 border-bottom: 1px solid rgba(211, 211, 211, 0.63);
             }
+            .c-group-wrapper {
+                box-shadow: unset;
+                margin-left: unset;
+                margin-right: unset;
+            }
             .sc-image {
                 background-image: none !important;
             }
