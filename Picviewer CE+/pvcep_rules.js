@@ -1684,5 +1684,11 @@ var siteInfo = [
         src: /^https:\/\/cdn\.myanimelist\.net/,
         r: /\/r\/(\d+x\d+)(\/images\/(anime|manga)\/\d+\/\d+)\.webp.+/,
         s: "$2l.jpg"
+    },
+    {
+        name: "afdiancdn",
+        url: /^https:\/\/afdian\.net\//,
+        r: "/(w/\\d+/)?h/\\d+/i",
+        s: ""
     }
 ];
