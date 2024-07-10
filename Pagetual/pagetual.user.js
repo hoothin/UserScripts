@@ -5715,7 +5715,10 @@
                 }
             });
             click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
-            if (click2import) click2import.innerText = i18n("click2ImportRule");
+            if (click2import) {
+                click2import.innerText = i18n("click2ImportRule");
+                click2import.style.display = rulesData.uninited ? "block" : "none";
+            }
             if (!importHandler) {
                 importHandler = e => {
                     if (compareNodeName(e.target, ["pre"])) {
@@ -5825,7 +5828,6 @@
                         importUrlPre.style.display = rulesData.uninited ? "block" : "none";
                     });
                 }
-                if (click2import) click2import.style.display = rulesData.uninited ? "block" : "none";
                 let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
                 if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
                 let rulesExample = document.querySelector("#user-content-rules-example+a,#rules-example>a");
