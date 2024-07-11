@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.75
+// @version      1.9.37.76
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -822,7 +822,7 @@
                 forceStateDisable: "このステーションでのページめくりを無効にする",
                 autoScrollRate: "スクロール速度 (1~1000)",
                 disableAutoScroll: "自動スクロールを停止します",
-                EnableAutoScroll: "自動スクロールを有効にする",
+                enableAutoScroll: "自動スクロールを有効にする",
                 toggleAutoScroll: "自動スクロールの切り替え",
                 ruleRequest: "ルール要求",
                 page: "Page ",
@@ -5547,7 +5547,7 @@
         scrollTarget = scrollTarget || document.documentElement;
 
         autoScrollInterval = setInterval(() => {
-            if (isPause) return;
+            if (isPause && !urlChanging) return;
             if (devicePixelRatio !== window.devicePixelRatio) {
                 devicePixelRatio = window.devicePixelRatio;
                 scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
@@ -7918,7 +7918,7 @@
             loadmoreBtn = getElement(btnSel, doc, null, true);
         }
         if (!loadmoreBtn) {
-            let buttons = doc.querySelectorAll("input,button,a,div[onclick]");
+            let buttons = getBody(doc).querySelectorAll("input,button,a,div[onclick]");
             for (let i = 0; i < buttons.length; i++) {
                 let button = buttons[i];
                 if (!button.innerText || button.innerText.length > 20) continue;
