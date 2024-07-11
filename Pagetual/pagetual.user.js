@@ -1709,7 +1709,7 @@
 
         async getRule(callback) {
             var href = location.href.slice(0, 500);
-            if(noRuleTest) {
+            if (noRuleTest) {
                 this.curSiteRule = {};
                 this.curSiteRule.url = href;
                 this.curSiteRule.smart = true;
@@ -1858,7 +1858,10 @@
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
                 if (!rule || !rule.url || !rule.smart) continue;
-                if (href == rule.url) {
+                if (href === rule.url) {
+                    setRule(rule);
+                    return;
+                } else if (rule.listenUrlChange === false && href.replace(/[^\/]+$/, "") === rule.url) {
                     setRule(rule);
                     return;
                 }
@@ -1876,7 +1879,11 @@
                         if (checkRule(rule)) return;
                     }
                     if (end >= self.rules.length) {
-                        setRule({url: href, smart: true});
+                        if (document.documentElement && document.documentElement.className && document.documentElement.className.indexOf && document.documentElement.className.indexOf('discourse') !== -1) {
+                            setRule({url: href.replace(/[^\/]+$/, ""), smart: true, nextLink: 0, listenUrlChange: false});
+                        } else {
+                            setRule({url: href, smart: true});
+                        }
                         return;
                     } else {
                         searchByTime();
@@ -2594,7 +2601,6 @@
         }
 
         async getPage(doc, exist) {
-            if (document.documentElement.className.indexOf && document.documentElement.className.indexOf('discourse') !== -1) return {};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
