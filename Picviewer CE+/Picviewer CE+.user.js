@@ -18878,8 +18878,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: inline-block;\
                     vertical-align: middle;\
                     text-align: center;\
-                    background-color: rgba(40, 40, 40, 0.8);\
+                    background-color: rgba(40, 40, 40, 0.5);\
                     border: 5px solid #000000;\
+                    font-size: 0px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover{\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
