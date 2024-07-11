@@ -33211,7 +33211,7 @@
 {
   "resource_url": "http://wedata.net/items/62666",
   "data": {
-    "pageElement": "//div[contains(concat(' ',@class,' '),' tweet_box ')]/div[not(@id)]",
+    "pageElement": "//section[contains(concat(' ',@class,' '),' tweet_box ')]/div[not(@id)]",
     "insertBefore": "id('hidden_tweet_box')/following-sibling::node()[1]",
     "nextLink": "//link[@rel='next']",
     "url": "^https?://togetter\\.com/li/",
@@ -33221,7 +33221,7 @@
   "created_by": "t_f_m",
   "name": "Togetter 個別記事",
   "created_at": "2012-08-08T11:21:17+09:00",
-  "updated_at": "2022-11-21T16:25:59+09:00"
+  "updated_at": "2024-07-10T16:59:14+09:00"
 },
 {
   "name": "Staffさん。",
