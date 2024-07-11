@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.73
+// @version      1.9.37.74
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1186,7 +1186,7 @@
                 let result = d.evaluate(s, n, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null);
                 return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
             };
-            let selSplit = xpath.split(" >> ");
+            let selSplit = xpath.split(" =>> ");
             if (selSplit.length === 2) {
                 let ele = xpathNode(selSplit[0], doc, contextNode);
                 if (ele && ele.shadowRoot) {
@@ -1229,7 +1229,7 @@
 
     function getAllElements(sel, doc, contextNode) {
         try {
-            if (sel.indexOf(" >> ") !== -1) {
+            if (sel.indexOf(" =>> ") !== -1) {
                 let result = getElement(sel, doc, contextNode);
                 return result && [result];
             }
@@ -1246,7 +1246,7 @@
         try {
             if (!isXPath(sel)) {
                 let checkShadow = s => {
-                    let selSplit = s.split(" >> ");
+                    let selSplit = s.split(" =>> ");
                     if (selSplit.length === 2) {
                         let ele = doc.querySelector(selSplit[0]);
                         return ele && ele.shadowRoot && ele.shadowRoot.querySelector(selSplit[1]);
