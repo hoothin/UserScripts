@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.77
+// @version      1.9.37.78
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -363,126 +363,125 @@
             // Translated by Prankster 199 (vfggf95565).
             name: "Arabic",
             match: ["ar", "ar-AE", "ar-BH", "ar-DZ", "ar-EG", "ar-IQ", "ar-JO", "ar-KW", "ar-LB", "ar-LY", "ar-MA", "ar-OM", "ar-QA", "ar-SA", "ar-SY", "ar-TN", "ar-YE"],
+            encode: true, // In Firefox, Arabic characters may cause issues.
             lang: {
-                enableDebug: "تمكين تصحيح الأخطاء",
-                updateNotification: "إشعار بعد تحديث القواعد",
-                disable: "معطل",
-                disableSite: "تبديل حالة التعطيل/التفعيل للموقع",
-                disableSiteTips: "معطل على هذا الموقع",
-                enableSiteTips: "مفعل على هذا الموقع",
-                enable: "مفعل",
-                toTop: "إلى الأعلى",
-                toBottom: "إلى الأسفل",
-                current: "الصفحة الحالية",
-                forceIframe: "إجبار على الانضمام للصفحة التالية",
-                cancelForceIframe: "إلغاء الانضمام القسري",
-                configure: "إعداد",
-                firstUpdate: "انقر هنا لتفعيل القواعد لأول مرة",
-                update: "تحديث القواعد عبر الإنترنت",
-                click2update: "انقر لتحديث القواعد من الرابط الآن",
-                loadNow: "تحميل التالي تلقائيًا",
-                loadConfirm: "كم عدد الصفحات التي ترغب تحميلها؟ (0 يعني لانهائي)",
-                noNext: "لم يتم العثور على رابط الصفحة التالية، يرجى إنشاء قاعدة جديدة",
-                passSec: "تم التحديث منذ #t# ثانية",
-                passMin: "تم التحديث منذ #t# دقيقة",
-                passHour: "تم التحديث منذ #t# ساعة",
-                passDay: "تم التحديث منذ #t# يوم",
-                cantDel: "لا يمكن حذف القواعد المدمجة",
-                confirmDel: "هل أنت متأكد من حذف هذه القاعدة؟",
-                updateSucc: "تم التحديث بنجاح",
-                beginUpdate: "بدأ التحديث، يرجى الانتظار لحظة",
-                customUrls: "استيراد رابط قاعدة Pagetual أو AutoPagerize، رابط واحد لكل سطر",
-                customRules: "إدخال القواعد المخصصة. <a href='#t#'>✍️ساهم بالقواعد</a>",
-                save: "حفظ",
-                /* From the creator hoothin :
-                "Shojo Now Loading..." is a meme that refers to the game loading text in the Japanese Touhou (東方) game series. */
-                loadingText: "جارٍ التحميل...",
-                opacity: "الشفافية",
-                opacityPlaceholder: "0: إخفاء الفاصل",
-                hideBar: "إخفاء الفاصل التصفحي",
-                hideBarButNoStop: "إخفاء، لكن لا تتوقف",
-                dbClick2Stop: "انقر مزدوج على المساحة الفارغة للإيقاف",
-                sortTitle: "يتم تفعيل الفرز بعد التحديث التالي للقواعد",
-                autoRun: "تمكين تلقائي (وضع القائمة السوداء)",
-                autoLoadNum: "عدد صفحات التحميل المسبق",
-                turnRate: "الانتقال للصفحة التالية عندما تكون المسافة أقل من 【X】 مرات ارتفاع الصفحة من التذييل",
-                inputPageNum: "أدخل رقم الصفحة للانتقال",
-                enableHistory: "كتابة سجل التصفح بعد تحويل الصفحة",
-                enableHistoryAfterInsert: "كتابة سجل التصفح فورًا بعد الدمج، أو بعد التصفح",
-                contentVisibility: "التنقل التلقائي لرؤية المحتوى, لتحسين أداء العرض",
-                initRun: "الانتقال بين الصفحات فور الفتح",
-                preload: "تحميل الصفحة التالية مسبقًا لتسريع الأداء",
-                click2ImportRule: "انقر لاستيراد رابط القواعد الأساسية، ثم انتظر حتى يكتمل التحديث",
-                forceAllBody: "دمج كامل الصفحة كإطار؟",
-                openInNewTab: "فتح الروابط الإضافية في علامة تبويب جديدة",
-                importSucc: "تم الاستيراد بنجاح",
-                import: "استيراد",
-                editCurrent: "تحرير القاعدة للحالية",
-                editBlacklist: "تحرير عناوين القائمة السوداء، سطر بسطر، دعم؟ * للرموز المتحركة",
-                upBtnImg: "أيقونة العودة إلى الأعلى",
-                downBtnImg: "أيقونة الانتقال إلى الأسفل",
-                sideControllerIcon: "أيقونة الشريط الجانبي",
-                loadingTextTitle: "تحميل النص",
-                dbClick2StopCtrl: "مفتاح Ctrl",
-                dbClick2StopAlt: "مفتاح Alt",
-                dbClick2StopShift: "مفتاح Shift",
-                dbClick2StopMeta: "مفتاح Meta",
-                dbClick2StopKey: "مفاتيح الاختصار",
-                pageElementCss: "نمط مخصص لعناصر الصفحة الرئيسية",
-                customCss: "مخصص بالكامل CSS نمط",
-                firstAlert: "لم تستورد القاعدة الأساسية بعد، يرجى اختيار القاعدة المناسبة للاستيراد",
-                picker: "محدد عناصر الصفحة Pagetual",
-                closePicker: "إغلاق محدد Pagetual",
-                pickerPlaceholder: "محدد العناصر، اتركه فارغًا إذا كنت لا تعرف",
-                pickerCheck: "تحقق من المحدد ونسخ",
-                switchSelector: "انقر للتبديل بين العناصر",
-                gotoEdit: "اذهب لتحرير القاعدة بالمحدد الحالي",
-                manualMode: "تعطيل الدمج/الربط، واستخدام مفتاح الاتجاه الأيمن يدويًا للتمرير، واستخدام مفتاح السهم الأيسر للرجوع",
-                clickMode: "تعطيل الدمج/الربط، عند التمرير إلى نهاية الصفحة، سيتم النقر تلقائيًا على الصفحة التالية",
-                pageBarMenu: "انقر على مركز شريط الصفحة لفتح قائمة التحديد",
-                nextSwitch: "تبديل الرابط التالي",
-                arrowToScroll: "انقر على مفتاح السهم الأيمن للتمرير التالي ومفتاح السهم الأيسر للتمرير السابق",
-                sideController: "عرض شريط التحكم في التصفح الترقيم في الشريط الجانبي",
-                sideControllerScroll: "تبديل التمرير",
-                sideControllerAlways: "عرض دائمًا",
-                hideLoadingIcon: "إخفاء رمز التحميل",
-                hideBarArrow: "إخفاء سهم شريط الصفحة",
-                duplicate: "تم تثبيت Pagetual مكرر، تحقق من مدير النصوص البرمجية الخاص بك!",
-                forceStateIframe: "تضمين الصفحة بالكامل كإطار",
-                forceStateDynamic: "تحميل المحتوى الديناميكي عبر الإطار",
-                forceStateDisable: "تعطيل تحويل الصفحات على هذا الموقع",
-                autoScrollRate: "سرعة التمرير (1~1000)",
-                disableAutoScroll: "إيقاف التمرير التلقائي",
-                enableAutoScroll: "تمكين التمرير التلقائي",
-                toggleAutoScroll: "تبديل التمرير التلقائي",
-                ruleRequest: "طلب قاعدة",
-                page: "صفحة ",
-                prevPage: "الصفحة السابقة",
-                nextPage: "الصفحة التالية",
-                errorRulesMustBeArray: "يجب أن تكون القواعد مصفوفة!",
-                errorJson: "خطأ في JSON، تحقق مرة أخرى!",
-                editSuccess: "تم التحرير بنجاح",
-                errorWrongUrl: "عنوان URL خاطئ، تحقق مرة أخرى!",
-                errorAlreadyExists: "موجود بالفعل!",
-                settingsSaved: "تم حفظ الإعدادات، قم بالتحديث لعرض",
-                iframe: "إطار",
-                dynamic: "ديناميكي",
-                reloadPage: "اكتمل التحرير، إعادة تحميل الصفحة الآن؟",
-                copied: "تم النسخ",
-                noValidContent: "لم يتم الكشف عن محتوى صالح، قد يكون الإجراء Captcha مطلوبًا، انقر لعرض",
-                outOfDate: "النص البرمجي قديم، قم بالتحديث إلى الإصدار الأحدث في الوقت المناسب!",
-                hideBarTips: "إخفاء شريط التحكم في التصفح الترقيم ، والتبديل لوضع كامل الصفحة",
-                setConfigPage: "تعيين الصفحة الحالية كصفحة الإعداد الافتراضية",
-                wedata2github: "تغيير عنوان الويب داتا إلى العنوان البديل المرآة, في مستودع جيت هاب",
-                addOtherProp: "إضافة خاصية قاعدة",
-                addNextSelector: "إضافة محتوى المحدد كـ nextLink",
-                addPageSelector: "إضافة محتوى المحدد كـ pageElement",
-                propName: "أدخل اسم خاصية القاعدة",
-                propValue: "أدخل قيمة خاصية القاعدة",
-                customFirst: "تجاهل ذاكرة التخزين المؤقت للقواعد المخصصة المحلية",
-                rulesExample: "مثال على القواعد",
-                lastPage: "تم الوصول إلى الصفحة الأخيرة",
-                lastPageTips: "عرض تلميحات عند الوصول إلى الصفحة الأخيرة"
+                enableDebug: "%D8%AA%D9%85%D9%83%D9%8A%D9%86%20%D8%AA%D8%B5%D8%AD%D9%8A%D8%AD%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1",
+                updateNotification: "%D8%A5%D8%B4%D8%B9%D8%A7%D8%B1%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                disable: "%D9%85%D8%B9%D8%B7%D9%84",
+                disableSite: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%AD%D8%A7%D9%84%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B9%D8%B7%D9%8A%D9%84/%D8%A7%D9%84%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D9%84%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                disableSiteTips: "%D9%85%D8%B9%D8%B7%D9%84%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                enableSiteTips: "%D9%85%D9%81%D8%B9%D9%84%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                enable: "%D9%85%D9%81%D8%B9%D9%84",
+                toTop: "%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B9%D9%84%D9%89",
+                toBottom: "%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B3%D9%81%D9%84",
+                current: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9",
+                forceIframe: "%D8%A5%D8%AC%D8%A8%D8%A7%D8%B1%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D8%A7%D9%86%D8%B6%D9%85%D8%A7%D9%85%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9",
+                cancelForceIframe: "%D8%A5%D9%84%D8%BA%D8%A7%D8%A1%20%D8%A7%D9%84%D8%A7%D9%86%D8%B6%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%82%D8%B3%D8%B1%D9%8A",
+                configure: "%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF",
+                firstUpdate: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%87%D9%86%D8%A7%20%D9%84%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D9%84%D8%A3%D9%88%D9%84%20%D9%85%D8%B1%D8%A9",
+                update: "%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%B9%D8%A8%D8%B1%20%D8%A7%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA",
+                click2update: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%A2%D9%86",
+                loadNow: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%D9%8B%D8%A7",
+                loadConfirm: "%D9%83%D9%85%20%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D9%8A%20%D8%AA%D8%B1%D8%BA%D8%A8%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%D9%87%D8%A7%D8%9F%20(0%20%D9%8A%D8%B9%D9%86%D9%8A%20%D9%84%D8%A7%D9%86%D9%87%D8%A7%D8%A6%D9%8A)",
+                noNext: "%D9%84%D9%85%20%D9%8A%D8%AA%D9%85%20%D8%A7%D9%84%D8%B9%D8%AB%D9%88%D8%B1%20%D8%B9%D9%84%D9%89%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%D8%8C%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%A5%D9%86%D8%B4%D8%A7%D8%A1%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9",
+                passSec: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D8%AB%D8%A7%D9%86%D9%8A%D8%A9",
+                passMin: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D8%AF%D9%82%D9%8A%D9%82%D8%A9",
+                passHour: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D8%B3%D8%A7%D8%B9%D8%A9",
+                passDay: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D9%8A%D9%88%D9%85",
+                cantDel: "%D9%84%D8%A7%20%D9%8A%D9%85%D9%83%D9%86%20%D8%AD%D8%B0%D9%81%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D9%85%D8%AF%D9%85%D8%AC%D8%A9",
+                confirmDel: "%D9%87%D9%84%20%D8%A3%D9%86%D8%AA%20%D9%85%D8%AA%D8%A3%D9%83%D8%AF%20%D9%85%D9%86%20%D8%AD%D8%B0%D9%81%20%D9%87%D8%B0%D9%87%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%D8%9F",
+                updateSucc: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A8%D9%86%D8%AC%D8%A7%D8%AD",
+                beginUpdate: "%D8%A8%D8%AF%D8%A3%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%D8%8C%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%B8%D8%A7%D8%B1%20%D9%84%D8%AD%D8%B8%D8%A9",
+                customUrls: "%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20Pagetual%20%D8%A3%D9%88%20AutoPagerize%D8%8C%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D9%88%D8%A7%D8%AD%D8%AF%20%D9%84%D9%83%D9%84%20%D8%B3%D8%B7%D8%B1",
+                customRules: "%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D9%85%D8%AE%D8%B5%D8%B5%D8%A9.%20%3Ca%20href='#t#'%3E%E2%9C%8D%EF%B8%8F%D8%B3%D8%A7%D9%87%D9%85%20%D8%A8%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%3C/a%3E",
+                save: "%D8%AD%D9%81%D8%B8",
+                loadingText: "%D8%AC%D8%A7%D8%B1%D9%8D%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84...",
+                opacity: "%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%D9%8A%D8%A9",
+                opacityPlaceholder: "0:%20%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%A7%D9%84%D9%81%D8%A7%D8%B5%D9%84",
+                hideBar: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%A7%D9%84%D9%81%D8%A7%D8%B5%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%D9%8A",
+                hideBarButNoStop: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%D8%8C%20%D9%84%D9%83%D9%86%20%D9%84%D8%A7%20%D8%AA%D8%AA%D9%88%D9%82%D9%81",
+                dbClick2Stop: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%85%D8%B2%D8%AF%D9%88%D8%AC%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D8%AD%D8%A9%20%D8%A7%D9%84%D9%81%D8%A7%D8%B1%D8%BA%D8%A9%20%D9%84%D9%84%D8%A5%D9%8A%D9%82%D8%A7%D9%81",
+                sortTitle: "%D9%8A%D8%AA%D9%85%20%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B1%D8%B2%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%20%D9%84%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                autoRun: "%D8%AA%D9%85%D9%83%D9%8A%D9%86%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%20(%D9%88%D8%B6%D8%B9%20%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D9%85%D8%A9%20%D8%A7%D9%84%D8%B3%D9%88%D8%AF%D8%A7%D8%A1)",
+                autoLoadNum: "%D8%B9%D8%AF%D8%AF%20%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%B3%D8%A8%D9%82",
+                turnRate: "%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D8%B9%D9%86%D8%AF%D9%85%D8%A7%20%D8%AA%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%81%D8%A9%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20%E3%80%90X%E3%80%91%20%D9%85%D8%B1%D8%A7%D8%AA%20%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D8%AA%D8%B0%D9%8A%D9%8A%D9%84",
+                inputPageNum: "%D8%A3%D8%AF%D8%AE%D9%84%20%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%84%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84",
+                enableHistory: "%D9%83%D8%AA%D8%A7%D8%A8%D8%A9%20%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%AD%D9%88%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                enableHistoryAfterInsert: "%D9%83%D8%AA%D8%A7%D8%A8%D8%A9%20%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D9%81%D9%88%D8%B1%D9%8B%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC%D8%8C%20%D8%A3%D9%88%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD",
+                contentVisibility: "%D8%A7%D9%84%D8%AA%D9%86%D9%82%D9%84%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%20%D9%84%D8%B1%D8%A4%D9%8A%D8%A9%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89,%20%D9%84%D8%AA%D8%AD%D8%B3%D9%8A%D9%86%20%D8%A3%D8%AF%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6",
+                initRun: "%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%81%D9%88%D8%B1%20%D8%A7%D9%84%D9%81%D8%AA%D8%AD",
+                preload: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D9%85%D8%B3%D8%A8%D9%82%D9%8B%D8%A7%20%D9%84%D8%AA%D8%B3%D8%B1%D9%8A%D8%B9%20%D8%A7%D9%84%D8%A3%D8%AF%D8%A7%D8%A1",
+                click2ImportRule: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9%D8%8C%20%D8%AB%D9%85%20%D8%A7%D9%86%D8%AA%D8%B8%D8%B1%20%D8%AD%D8%AA%D9%89%20%D9%8A%D9%83%D8%AA%D9%85%D9%84%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB",
+                forceAllBody: "%D8%AF%D9%85%D8%AC%20%D9%83%D8%A7%D9%85%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%83%D8%A5%D8%B7%D8%A7%D8%B1%D8%9F",
+                openInNewTab: "%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D9%8A%D8%A9%20%D9%81%D9%8A%20%D8%B9%D9%84%D8%A7%D9%85%D8%A9%20%D8%AA%D8%A8%D9%88%D9%8A%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9",
+                importSucc: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D8%A8%D9%86%D8%AC%D8%A7%D8%AD",
+                import: "%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF",
+                editCurrent: "%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%84%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9",
+                editBlacklist: "%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%B9%D9%86%D8%A7%D9%88%D9%8A%D9%86%20%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D9%85%D8%A9%20%D8%A7%D9%84%D8%B3%D9%88%D8%AF%D8%A7%D8%A1%D8%8C%20%D8%B3%D8%B7%D8%B1%20%D8%A8%D8%B3%D8%B7%D8%B1%D8%8C%20%D8%AF%D8%B9%D9%85%D8%9F%20*%20%D9%84%D9%84%D8%B1%D9%85%D9%88%D8%B2%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%B1%D9%83%D8%A9",
+                upBtnImg: "%D8%A3%D9%8A%D9%82%D9%88%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D9%88%D8%AF%D8%A9%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B9%D9%84%D9%89",
+                downBtnImg: "%D8%A3%D9%8A%D9%82%D9%88%D9%86%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B3%D9%81%D9%84",
+                sideControllerIcon: "%D8%A3%D9%8A%D9%82%D9%88%D9%86%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AC%D8%A7%D9%86%D8%A8%D9%8A",
+                loadingTextTitle: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%86%D8%B5",
+                dbClick2StopCtrl: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Ctrl",
+                dbClick2StopAlt: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Alt",
+                dbClick2StopShift: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Shift",
+                dbClick2StopMeta: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Meta",
+                dbClick2StopKey: "%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%20%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%D8%B5%D8%A7%D8%B1",
+                pageElementCss: "%D9%86%D9%85%D8%B7%20%D9%85%D8%AE%D8%B5%D8%B5%20%D9%84%D8%B9%D9%86%D8%A7%D8%B5%D8%B1%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9",
+                customCss: "%D9%85%D8%AE%D8%B5%D8%B5%20%D8%A8%D8%A7%D9%84%D9%83%D8%A7%D9%85%D9%84%20CSS%20%D9%86%D9%85%D8%B7",
+                firstAlert: "%D9%84%D9%85%20%D8%AA%D8%B3%D8%AA%D9%88%D8%B1%D8%AF%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9%20%D8%A8%D8%B9%D8%AF%D8%8C%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%A7%D8%AE%D8%AA%D9%8A%D8%A7%D8%B1%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A9%20%D9%84%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF",
+                picker: "%D9%85%D8%AD%D8%AF%D8%AF%20%D8%B9%D9%86%D8%A7%D8%B5%D8%B1%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20Pagetual",
+                closePicker: "%D8%A5%D8%BA%D9%84%D8%A7%D9%82%20%D9%85%D8%AD%D8%AF%D8%AF%20Pagetual",
+                pickerPlaceholder: "%D9%85%D8%AD%D8%AF%D8%AF%20%D8%A7%D9%84%D8%B9%D9%86%D8%A7%D8%B5%D8%B1%D8%8C%20%D8%A7%D8%AA%D8%B1%D9%83%D9%87%20%D9%81%D8%A7%D8%B1%D8%BA%D9%8B%D8%A7%20%D8%A5%D8%B0%D8%A7%20%D9%83%D9%86%D8%AA%20%D9%84%D8%A7%20%D8%AA%D8%B9%D8%B1%D9%81",
+                pickerCheck: "%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%88%D9%86%D8%B3%D8%AE",
+                switchSelector: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D9%84%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%B9%D9%86%D8%A7%D8%B5%D8%B1",
+                gotoEdit: "%D8%A7%D8%B0%D9%87%D8%A8%20%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A8%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A",
+                manualMode: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC/%D8%A7%D9%84%D8%B1%D8%A8%D8%B7%D8%8C%20%D9%88%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%A7%D8%AA%D8%AC%D8%A7%D9%87%20%D8%A7%D9%84%D8%A3%D9%8A%D9%85%D9%86%20%D9%8A%D8%AF%D9%88%D9%8A%D9%8B%D8%A7%20%D9%84%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%D8%8C%20%D9%88%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%D8%A7%D9%84%D8%A3%D9%8A%D8%B3%D8%B1%20%D9%84%D9%84%D8%B1%D8%AC%D9%88%D8%B9",
+                clickMode: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC/%D8%A7%D9%84%D8%B1%D8%A8%D8%B7%D8%8C%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A5%D9%84%D9%89%20%D9%86%D9%87%D8%A7%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%D8%8C%20%D8%B3%D9%8A%D8%AA%D9%85%20%D8%A7%D9%84%D9%86%D9%82%D8%B1%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%D9%8B%D8%A7%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9",
+                pageBarMenu: "%D8%A7%D9%86%D9%82%D8%B1%20%D8%B9%D9%84%D9%89%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%84%D9%81%D8%AA%D8%AD%20%D9%82%D8%A7%D8%A6%D9%85%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AF",
+                nextSwitch: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A",
+                arrowToScroll: "%D8%A7%D9%86%D9%82%D8%B1%20%D8%B9%D9%84%D9%89%20%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%D8%A7%D9%84%D8%A3%D9%8A%D9%85%D9%86%20%D9%84%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%20%D9%88%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%D8%A7%D9%84%D8%A3%D9%8A%D8%B3%D8%B1%20%D9%84%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%B3%D8%A7%D8%A8%D9%82",
+                sideController: "%D8%B9%D8%B1%D8%B6%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A7%D9%84%D8%AA%D8%B1%D9%82%D9%8A%D9%85%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AC%D8%A7%D9%86%D8%A8%D9%8A",
+                sideControllerScroll: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1",
+                sideControllerAlways: "%D8%B9%D8%B1%D8%B6%20%D8%AF%D8%A7%D8%A6%D9%85%D9%8B%D8%A7",
+                hideLoadingIcon: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%B1%D9%85%D8%B2%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                hideBarArrow: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%B3%D9%87%D9%85%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                duplicate: "%D8%AA%D9%85%20%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA%20Pagetual%20%D9%85%D9%83%D8%B1%D8%B1%D8%8C%20%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D9%86%20%D9%85%D8%AF%D9%8A%D8%B1%20%D8%A7%D9%84%D9%86%D8%B5%D9%88%D8%B5%20%D8%A7%D9%84%D8%A8%D8%B1%D9%85%D8%AC%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%83!",
+                forceStateIframe: "%D8%AA%D8%B6%D9%85%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A8%D8%A7%D9%84%D9%83%D8%A7%D9%85%D9%84%20%D9%83%D8%A5%D8%B7%D8%A7%D8%B1",
+                forceStateDynamic: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A7%D9%84%D8%AF%D9%8A%D9%86%D8%A7%D9%85%D9%8A%D9%83%D9%8A%20%D8%B9%D8%A8%D8%B1%20%D8%A7%D9%84%D8%A5%D8%B7%D8%A7%D8%B1",
+                forceStateDisable: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%AA%D8%AD%D9%88%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                autoScrollRate: "%D8%B3%D8%B1%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20(1~1000)",
+                disableAutoScroll: "%D8%A5%D9%8A%D9%82%D8%A7%D9%81%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
+                enableAutoScroll: "%D8%AA%D9%85%D9%83%D9%8A%D9%86%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
+                toggleAutoScroll: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
+                ruleRequest: "%D8%B7%D9%84%D8%A8%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                page: "%D8%B5%D9%81%D8%AD%D8%A9%20",
+                prevPage: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B3%D8%A7%D8%A8%D9%82%D8%A9",
+                nextPage: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9",
+                errorRulesMustBeArray: "%D9%8A%D8%AC%D8%A8%20%D8%A3%D9%86%20%D8%AA%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D9%85%D8%B5%D9%81%D9%88%D9%81%D8%A9!",
+                errorJson: "%D8%AE%D8%B7%D8%A3%20%D9%81%D9%8A%20JSON%D8%8C%20%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89!",
+                editSuccess: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%A8%D9%86%D8%AC%D8%A7%D8%AD",
+                errorWrongUrl: "%D8%B9%D9%86%D9%88%D8%A7%D9%86%20URL%20%D8%AE%D8%A7%D8%B7%D8%A6%D8%8C%20%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89!",
+                errorAlreadyExists: "%D9%85%D9%88%D8%AC%D9%88%D8%AF%20%D8%A8%D8%A7%D9%84%D9%81%D8%B9%D9%84!",
+                settingsSaved: "%D8%AA%D9%85%20%D8%AD%D9%81%D8%B8%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%D8%A7%D8%AA%D8%8C%20%D9%82%D9%85%20%D8%A8%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%84%D8%B9%D8%B1%D8%B6",
+                iframe: "%D8%A5%D8%B7%D8%A7%D8%B1",
+                dynamic: "%D8%AF%D9%8A%D9%86%D8%A7%D9%85%D9%8A%D9%83%D9%8A",
+                reloadPage: "%D8%A7%D9%83%D8%AA%D9%85%D9%84%20%D8%A7%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%D8%8C%20%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A2%D9%86%D8%9F",
+                copied: "%D8%AA%D9%85%20%D8%A7%D9%84%D9%86%D8%B3%D8%AE",
+                noValidContent: "%D9%84%D9%85%20%D9%8A%D8%AA%D9%85%20%D8%A7%D9%84%D9%83%D8%B4%D9%81%20%D8%B9%D9%86%20%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%B5%D8%A7%D9%84%D8%AD%D8%8C%20%D9%82%D8%AF%20%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%A5%D8%AC%D8%B1%D8%A7%D8%A1%20Captcha%20%D9%85%D8%B7%D9%84%D9%88%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D8%B9%D8%B1%D8%B6",
+                outOfDate: "%D8%A7%D9%84%D9%86%D8%B5%20%D8%A7%D9%84%D8%A8%D8%B1%D9%85%D8%AC%D9%8A%20%D9%82%D8%AF%D9%8A%D9%85%D8%8C%20%D9%82%D9%85%20%D8%A8%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D8%AF%D8%AB%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%88%D9%82%D8%AA%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8!",
+                hideBarTips: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A7%D9%84%D8%AA%D8%B1%D9%82%D9%8A%D9%85%20%D8%8C%20%D9%88%D8%A7%D9%84%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D9%84%D9%88%D8%B6%D8%B9%20%D9%83%D8%A7%D9%85%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                setConfigPage: "%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9%20%D9%83%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%20%D8%A7%D9%84%D8%A7%D9%81%D8%AA%D8%B1%D8%A7%D8%B6%D9%8A%D8%A9",
+                wedata2github: "%D8%AA%D8%BA%D9%8A%D9%8A%D8%B1%20%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D9%88%D9%8A%D8%A8%20%D8%AF%D8%A7%D8%AA%D8%A7%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%B1%D8%A2%D8%A9,%20%D9%81%D9%8A%20%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%20%D8%AC%D9%8A%D8%AA%20%D9%87%D8%A7%D8%A8",
+                addOtherProp: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D8%AE%D8%A7%D8%B5%D9%8A%D8%A9%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                addNextSelector: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%83%D9%80%20nextLink",
+                addPageSelector: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%83%D9%80%20pageElement",
+                propName: "%D8%A3%D8%AF%D8%AE%D9%84%20%D8%A7%D8%B3%D9%85%20%D8%AE%D8%A7%D8%B5%D9%8A%D8%A9%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                propValue: "%D8%A3%D8%AF%D8%AE%D9%84%20%D9%82%D9%8A%D9%85%D8%A9%20%D8%AE%D8%A7%D8%B5%D9%8A%D8%A9%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                customFirst: "%D8%AA%D8%AC%D8%A7%D9%87%D9%84%20%D8%B0%D8%A7%D9%83%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AE%D8%B2%D9%8A%D9%86%20%D8%A7%D9%84%D9%85%D8%A4%D9%82%D8%AA%20%D9%84%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D9%85%D8%AE%D8%B5%D8%B5%D8%A9%20%D8%A7%D9%84%D9%85%D8%AD%D9%84%D9%8A%D8%A9",
+                rulesExample: "%D9%85%D8%AB%D8%A7%D9%84%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                lastPage: "%D8%AA%D9%85%20%D8%A7%D9%84%D9%88%D8%B5%D9%88%D9%84%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9",
+                lastPageTips: "%D8%B9%D8%B1%D8%B6%20%D8%AA%D9%84%D9%85%D9%8A%D8%AD%D8%A7%D8%AA%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D9%88%D8%B5%D9%88%D9%84%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9"
             }
         },
         {
@@ -988,6 +987,11 @@
             let lang = langData[i];
             if (lang && lang.match.indexOf(la) !== -1) {
                 i18nData = lang.lang;
+                if (lang.encode) {
+                    for (let k in i18nData) {
+                        i18nData[k] = decodeURI(i18nData[k]);
+                    }
+                }
                 break;
             }
         }
@@ -1170,7 +1174,7 @@
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false, loadNowNum = 5, autoScrollRate = 50;
-    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
+    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false, hidePageBar = false;
     var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
     function getBody(doc) {
@@ -3753,6 +3757,7 @@
                 if (self.curSiteRule.sideController === true || (self.curSiteRule.sideController !== false && rulesData.sideController)) {
                     isPause = manualPause;
                 }
+                hidePageBar = rulesData.opacity == 0 || self.curSiteRule.pageBar === 0;
                 if (typeof(self.curSiteRule.rate) !== "undefined") {
                     rate = self.curSiteRule.rate;
                 }
@@ -7983,7 +7988,7 @@
         } else {
             bottomGap = 1000;
         }
-        if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
+        if (hidePageBar) return null;
         url = url.replace(/#p{.*/, "");
         let example = (ruleParser.curSiteRule.insertPos == 2 || ruleParser.curSiteRule.insertPos == "in") ? insert.children[0] : (insert.parentNode.children[0] || insert);
         while (example && (compareNodeName(example, ["script", "style"]) || example.className == "pagetual_pageBar")) {
@@ -8256,6 +8261,18 @@
         ruleParser.insertElement(pageBar);
         ruleParser.runPageBar(pageBar);
 
+        pageBar.addEventListener("click", e => {
+            changeStop(!isPause, true);
+            pageBar.title = i18n(isPause ? "enable" : "disable");
+        });
+        try {
+            let observer = new IntersectionObserver(entries => {
+                if (entries[0].intersectionRatio > 0) {
+                    sideController.pagenum.innerHTML = createHTML(localPage);
+                }
+            });
+            observer.observe(pageBar);
+        } catch(e) {}
         return pageBar;
     }
 
