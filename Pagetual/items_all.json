@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86235",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='c-arrows']/preceding-sibling::ul[@class='l-list']",
+    "nextLink": "descendant::a[contains(@class,'next')][last()]",
+    "url": "^https://footwearnews\\.com/",
+    "exampleUrl": "https://footwearnews.com/page/2/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "Footwear News",
+  "created_at": "2024-07-14T08:28:01+09:00",
+  "updated_at": "2024-07-14T08:28:01+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86234",
   "data": {
     "insertBefore": "",
@@ -26638,16 +26653,16 @@
 {
   "resource_url": "http://wedata.net/items/74923",
   "data": {
-    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|//section[@class='pmc-u-margin-tb-1']//*[div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]",
+    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|//section[@class='pmc-u-margin-tb-1']//*[div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|id('main')/article[@id]",
     "nextLink": "descendant::a[contains(@class,'next')][last()]|//div[@class='nav-previous']/a|//div[contains(@class,'more-stories')]/a[contains(@class,'a-icon-right-arrow')]",
-    "url": "^https?://.*(?:bollywoodlife|deadline|footwearnews)\\.com",
-    "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/ https://www.bollywoodlife.com/ https://footwearnews.com/page/2/"
+    "url": "^https?://.*(?:bollywoodlife|deadline)\\.com",
+    "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/ https://www.bollywoodlife.com/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
   "name": "PMC Brands",
   "created_at": "2014-06-26T02:58:29+09:00",
-  "updated_at": "2023-10-27T05:46:11+09:00"
+  "updated_at": "2024-07-14T08:26:58+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74912",
@@ -41893,18 +41908,18 @@
   "created_by": "zumlin"
 },
 {
-  "name": "Filehippo - Latest Software Updates",
-  "data": {
-    "url": "^https://.*filehippo\\.com/.",
-    "pageElement": "//ul[@class='list-programs mb-m']/li|//div[contains(concat(' ', @class, ' '), ' post-item ')]",
-    "exampleUrl": "https://filehippo.com/latest\r\nhttps://filehippo.com/jp/latest/\r\nhttps://news.filehippo.com/blog/",
-    "nextLink": "//link[@rel='next']|//a[@class='next']"
-  },
-  "created_by": "zumlin",
   "resource_url": "http://wedata.net/items/32964",
-  "created_at": "2010-05-22T20:42:22+09:00",
+  "data": {
+    "pageElement": "//ul[@class='list-programs mb-m']/li|//div[contains(concat(' ', @class, ' '), ' post-item ') and contains(@class, 'type-post')]",
+    "nextLink": "//link[@rel='next']|//a[@class='next']",
+    "url": "^https://(\\w+\\.)?filehippo\\.com/.",
+    "exampleUrl": "https://filehippo.com/latest\r\nhttps://filehippo.com/jp/latest/\r\nhttps://news.filehippo.com/blog/"
+  },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2020-03-09T03:59:45+09:00"
+  "created_by": "zumlin",
+  "name": "Filehippo - Latest Software Updates",
+  "created_at": "2010-05-22T20:42:22+09:00",
+  "updated_at": "2024-07-14T07:50:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/32962",
@@ -49829,17 +49844,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/2665",
-  "name": "PC Magazine",
   "data": {
+    "pageElement": "//ul[contains(concat(' ', @class, ' '), ' pagination ')]/preceding-sibling::div[@class='w-full']",
+    "nextLink": "//a[@rel='next']",
     "url": "^https://(www\\.)?pcmag\\.com/.",
-    "pageElement": "//div[@class='w-full']",
-    "exampleUrl": "https://www.pcmag.com/picks",
-    "nextLink": "//a[@rel='next']"
+    "exampleUrl": "https://www.pcmag.com/picks\r\nhttps://www.pcmag.com/categories/system-utilities"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "triptoy",
+  "name": "PC Magazine",
   "created_at": "2008-09-28T15:17:02+09:00",
-  "updated_at": "2020-04-01T11:20:18+09:00"
+  "updated_at": "2024-07-14T07:48:12+09:00"
 },
 {
   "name": "FREESPOT",
@@ -52712,19 +52727,19 @@
   "updated_at": "2020-03-27T13:28:06+09:00"
 },
 {
-  "name": "Hatena Bookmark News",
-  "updated_at": "2008-05-23T21:42:58+09:00",
-  "created_by": "os0x",
-  "resource_url": "http:\/\/wedata.net\/items\/834",
-  "database_resource_url": "http:\/\/wedata.net\/databases\/AutoPagerize",
+  "resource_url": "http://wedata.net/items/834",
   "data": {
-    "pageElement": "\/\/div[@class=\"entry\"][position()!=1]",
-    "insertBefore": "\/\/h3[@class=\"main-navi\"]",
-    "url": "^http:\/\/labs\\.ceek\\.jp\/hbnews\/.",
-    "nextLink": "\/\/h3[@class=\"main-navi\"]\/a[last()]",
-    "exampleUrl": "http:\/\/labs.ceek.jp\/hbnews\/list.cgi"
+    "pageElement": "//div[@class=\"entry\"]",
+    "insertBefore": "//h3[@class=\"main-navi\"]",
+    "nextLink": "//h3[@class=\"main-navi\"]/a[last()]",
+    "url": "^http://labs\\.ceek\\.jp/hbnews/.",
+    "exampleUrl": "http://labs.ceek.jp/hbnews/list.cgi"
   },
-  "created_at": "2008-04-20T20:46:01+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "os0x",
+  "name": "Hatena Bookmark News",
+  "created_at": "2008-04-20T20:46:01+09:00",
+  "updated_at": "2024-07-14T07:45:37+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/832",
