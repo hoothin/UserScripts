@@ -8265,14 +8265,16 @@
             changeStop(!isPause, true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
         });
-        try {
-            let observer = new IntersectionObserver(entries => {
-                if (entries[0].intersectionRatio > 0) {
-                    sideController.pagenum.innerHTML = createHTML(localPage);
-                }
-            });
-            observer.observe(pageBar);
-        } catch(e) {}
+        if (sideController.inited) {
+            try {
+                let observer = new IntersectionObserver(entries => {
+                    if (entries[0].intersectionRatio > 0) {
+                        sideController.pagenum.innerHTML = createHTML(localPage);
+                    }
+                });
+                observer.observe(pageBar);
+            } catch(e) {}
+        }
         return pageBar;
     }
 
