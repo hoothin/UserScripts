@@ -279,7 +279,7 @@
                 width: 100%!important;
             }
             a,a:active,#content_right a {
-                color: rgb(51,51,51);
+                color: rgb(80,80,80);
             }
             em {
                 color: #4E6EF2!important;
