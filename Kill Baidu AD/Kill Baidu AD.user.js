@@ -304,6 +304,9 @@
             .wrapper_new #head.no-box-shadow, .wrapper_new #head.no-box-shadow.s_down {
                 background: rgb(255 255 255 / 80%);
             }
+            [class*=card-shadow] {
+                box-shadow: unset!important;
+            }
             `);
         }
     }
