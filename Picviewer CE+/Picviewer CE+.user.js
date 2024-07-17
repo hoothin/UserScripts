@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.15.1
+// @version              2024.7.17.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -14481,6 +14481,46 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return saveParams;
                 }
+                self.openImages = () => {
+                    let fileInput = document.createElement("input");
+                    fileInput.type = "file";
+                    fileInput.accept = "image/*,video/*,audio/*";
+                    fileInput.setAttribute("multiple","");
+                    fileInput.addEventListener("change", e => {
+                        const files = e.target.files;
+                        if (files.length) {
+                            for (var i = 0; i < files.length; i++) {
+                                let file = files.item(i);
+                                file = files[i];
+                                let src = URL.createObjectURL(file);
+                                let media;
+                                if (file.type.indexOf("image") === 0) {
+                                    media = document.createElement('img');
+                                } else if (file.type.indexOf("audio") === 0) {
+                                    media = document.createElement('audio');
+                                    src = "audio:" + src;
+                                } else {
+                                    media = document.createElement('video');
+                                    src = "video:" + src;
+                                }
+                                media.title = file.name;
+                                var result = {
+                                    src: src,
+                                    type: 'force',
+                                    imgSrc: src,
+                                    noActual:true,
+                                    description: file.name,
+                                    img: media
+                                };
+                                self.data.push(result);
+                                self._appendThumbSpans([result]);
+                            }
+                            self.loadThumb();
+                            self.changeSizeInputReset();
+                        }
+                    }, false);
+                    fileInput.click();
+                };
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',async function(e){
                     if(e.button!=0)return;//左键
@@ -14616,46 +14656,7 @@ ImgOps | https://imgops.com/#b#`;
                             self.maximizeSidebar();
                             break;
                         case 'openImages':
-                            {
-                                let fileInput = document.createElement("input");
-                                fileInput.type = "file";
-                                fileInput.accept = "image/*,video/*,audio/*";
-                                fileInput.setAttribute("multiple","");
-                                fileInput.addEventListener("change", e => {
-                                    const files = e.target.files;
-                                    if (files.length) {
-                                        for (var i = 0; i < files.length; i++) {
-                                            let file = files.item(i);
-                                            file = files[i];
-                                            let src = URL.createObjectURL(file);
-                                            let media;
-                                            if (file.type.indexOf("image") === 0) {
-                                                media = document.createElement('img');
-                                            } else if (file.type.indexOf("audio") === 0) {
-                                                media = document.createElement('audio');
-                                                src = "audio:" + src;
-                                            } else {
-                                                media = document.createElement('video');
-                                                src = "video:" + src;
-                                            }
-                                            media.title = file.name;
-                                            var result = {
-                                                src: src,
-                                                type: 'force',
-                                                imgSrc: src,
-                                                noActual:true,
-                                                description: file.name,
-                                                img: media
-                                            };
-                                            self.data.push(result);
-                                            self._appendThumbSpans([result]);
-                                        }
-                                        self.loadThumb();
-                                        self.changeSizeInputReset();
-                                    }
-                                }, false);
-                                fileInput.click();
-                            }
+                            self.openImages();
                             break;
                         case 'addImageUrls':
                             let urls = window.prompt(i18n('addImageUrls') + ": White space to split multi-image, '[01-09]' to generate nine urls from 01 to 09, '$http://xxx' to fetch images from page","https://xxx.xxx/pic-[20-99].jpg https://xxx.xxx/pic-[01-10].png");
@@ -15905,8 +15906,25 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     };
                     imgSpan.className = "maximizeChild";
-                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '" />');
-                    let img=imgSpan.querySelector("img");
+                    let innerHTML = "";
+                    let thumbSrc = dataset(node, 'thumbSrc');
+                    let mode = matchedRule.getMode(thumbSrc);
+                    switch (mode) {
+                        case "video":
+                            let extra = "";
+                            if (thumbSrc.indexOf('.mkv') !== -1) extra = 'type="video/mp4"';
+                            else if (thumbSrc.indexOf('.m3u8') !== -1) extra = 'type="application/vnd.apple.mpegurl"';
+                            innerHTML = '<video data-src="' + dataset(node, 'src') + '" muted controls loop src="' + thumbSrc.replace(/^video:/, "") + '" ' + extra + ' ></video>';
+                            break;
+                        case "audio":
+                            innerHTML = '<img data-src="' + dataset(node, 'src') + '" src="' + prefs.icons.video + '" />';
+                            break;
+                        default:
+                            innerHTML = '<img data-src="' + dataset(node, 'src') + '" src="' + thumbSrc + '" />';
+                            break;
+                    }
+                    imgSpan.innerHTML = createHTML(innerHTML);
+                    let img=imgSpan.querySelector("img,video");
                     let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                     let getXhr = async () => {
                         let result = await new Promise((resolve) => {
@@ -15945,6 +15963,8 @@ ImgOps | https://imgops.com/#b#`;
                         imgSpan.addEventListener('getxhr', getXhrHandler);
                     }
                     imgSpan.addEventListener("click", async function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
                         self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
                             let i = document.createElement("img");
@@ -16019,7 +16039,7 @@ ImgOps | https://imgops.com/#b#`;
                             delete imgSpan.dataset.xhr;
                         }
                         loadImg();
-                    });
+                    }, true);
                     let curSrc=curNode.dataset.src;
                     let defaultDl=()=>{
                         self.addDlSpan(img, imgSpan, curNode, e=>{
@@ -16074,6 +16094,9 @@ ImgOps | https://imgops.com/#b#`;
                     this.closeViewMore();
                     this.bricksInstance.resize(false);
                 }else{
+                    if (this.img && this.img.pause) {
+                        this.img.pause();
+                    }
                     maximizeContainer.style.minHeight = "100%";
                     maximizeContainer.parentNode.style.display = "block";
                     document.head.appendChild(this.hideBodyStyle);
@@ -16384,6 +16407,9 @@ ImgOps | https://imgops.com/#b#`;
                     mediaSrc = mediaSrc.replace(/^audio:/, "");
                 }
                 if (media) {
+                    if (this.eleMaps['sidebar-toggle'].style.visibility == 'hidden') {
+                        media.autoplay = false;
+                    }
                     media.src = mediaSrc;
                     let loaded = function() {
                         var index = allLoading.indexOf(src);
@@ -26246,6 +26272,11 @@ ImgOps | https://imgops.com/#b#`;
             if (viewMore == "1") {
                 gallery.maximizeSidebar();
             }
+            gallery.gallery.addEventListener('click', e => {
+                if (gallery.data.length === 0) {
+                    gallery.openImages();
+                }
+            }, true);
         } else if (prefs.gallery.autoOpenSites) {
             var sitesArr=prefs.gallery.autoOpenSites.split("\n");
             for(let s=0;s<sitesArr.length;s++){
