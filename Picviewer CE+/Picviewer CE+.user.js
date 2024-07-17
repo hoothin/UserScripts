@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.17.1
+// @version              2024.7.17.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -17864,6 +17864,18 @@ ImgOps | https://imgops.com/#b#`;
                 var imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
                     return anylizeEle(total, node);
                 }, []);
+                [].forEach.call(document.head.querySelectorAll("link[rel='shortcut icon'],link[rel='icon'],link[rel='fluid-icon'],link[rel='apple-touch-icon']"), node => {
+                    if (imageReg.test(node.href)) {
+                        node.src = node.href;
+                        linkMedias.push(node);
+                    }
+                });
+                [].forEach.call(document.head.querySelectorAll('meta[itemprop="image"]'), node => {
+                    if (imageReg.test(node.content)) {
+                        node.src = node.content;
+                        linkMedias.push(node);
+                    }
+                });
                 imgs = imgs.reverse().concat(linkMedias.reverse());
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
