@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.79
+// @version      1.9.37.80
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3935,6 +3935,9 @@
             }
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
+            if (sideController.inited) {
+                sideController.frame.classList.add("loading");
+            }
         }
 
         insertElement(ele) {
@@ -4134,6 +4137,26 @@
              #pagetual-sideController #pagetual-sideController-move > svg:hover {
                  transform: scale(1.2);
              }
+             #pagetual-sideController.minSize.loading #pagetual-sideController-move::before {
+                 content: '';
+                 position: absolute;
+                 width: 34px;
+                 height: 34px;
+                 background-color: #1a232a;
+                 background-repeat: no-repeat;
+                 background-position: 0 0;
+                 background-image: conic-gradient(transparent, #a8efff, transparent 30%);
+                 -webkit-animation: rotate 4s linear infinite;
+                 animation: rotate 4s linear infinite;
+                 z-index: -1;
+                 margin: -2px;
+                 border-radius: 50%;
+             }
+             @keyframes rotate {
+                 100% {
+                     transform: rotate(1turn);
+                 }
+             }
              #pagetual-sideController.minSize #pagetual-sideController-move > svg {
                  background: white;
                  opacity: 0;
@@ -4168,7 +4191,7 @@
                  pointer-events: none;
              }
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
-                 opacity: 0.8;
+                 opacity: 1;
              }
              #pagetual-sideController:hover {
                  opacity: 1;
@@ -9225,6 +9248,9 @@
                     nextPage();
                 }
             }, 1);
+        }
+        if (sideController.inited) {
+            sideController.frame.classList.remove("loading");
         }
     }
 
