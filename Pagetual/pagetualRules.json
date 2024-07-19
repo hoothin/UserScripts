@@ -6190,7 +6190,7 @@
     "pageElement": "//div[@id='main']/form",
     "nextLink": "//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
     "sleep": 1000,
-    "pageNum": "page-{$p}.html"
+    "pageNum": "-page-{$p}.html"
 },
 {
     "name": "魂+列表页",
@@ -6200,7 +6200,7 @@
     "pageElement": "//tr[@align='center']",
     "nextLink": "//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
     "sleep": 1000,
-    "pageNum": "page-{$p}.html"
+    "pageNum": "-page-{$p}.html"
 },
 {
     "name": "动漫啦",
