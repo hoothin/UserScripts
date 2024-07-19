@@ -6187,7 +6187,7 @@
     "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
     "action": 1,
     "type": 0,
-    "pageElement": "//div[@id='main']/form",
+    "pageElement": "//div[@id='main']/form[1]",
     "nextLink": "//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
     "sleep": 1000,
     "pageNum": "-page-{$p}.html"
