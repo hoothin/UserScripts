@@ -3047,6 +3047,19 @@
             return pageNum === url ? defaultPage : (pageNum.length > 4 ? defaultPage : pageNum);
         }
 
+        reachedLastPage() {
+            if (rulesData.lastPageTips) {
+                showTips(i18n("lastPage"), "", 800);
+            }
+            _unsafeWindow.postMessage({
+                action: "lastPage",
+                command: 'pagetual'
+            }, '*');
+            if (sideController.inited) {
+                sideController.frame.classList.add("end");
+            }
+        }
+
         async getNextLink(doc, exist) {
             let nextLink = null, page, href;
             let getNextLinkByForm = (form, submitBtn, n) => {
@@ -3235,13 +3248,7 @@
             if (nextLink) {
                 if (!this.checkStopSign(nextLink, doc)) {
                     if (curPage > 1) {
-                        if (rulesData.lastPageTips) {
-                            showTips(i18n("lastPage"), "", 800);
-                        }
-                        _unsafeWindow.postMessage({
-                            action: "lastPage",
-                            command: 'pagetual'
-                        }, '*');
+                        this.reachedLastPage();
                     }
                     return null;
                 }
@@ -4105,8 +4112,11 @@
                  user-select: none;
                  z-index: 2147483646!important;
                  padding: 0!important;
-                 opacity: 0.35;
+                 opacity: 0.5;
                  transition: opacity .5s ease, background .5s, box-shadow .5s;
+             }
+             #pagetual-sideController.end {
+                 opacity: 0.3;
              }
              #pagetual-sideController * {
                  font-weight: bold;
@@ -4146,8 +4156,8 @@
                  background-repeat: no-repeat;
                  background-position: 0 0;
                  background-image: conic-gradient(transparent, #a8efff, transparent 30%);
-                 -webkit-animation: rotate 4s linear infinite;
-                 animation: rotate 4s linear infinite;
+                 -webkit-animation: rotate 1s linear infinite;
+                 animation: rotate 1s linear infinite;
                  z-index: -1;
                  margin: -2px;
                  border-radius: 50%;
@@ -4408,7 +4418,7 @@
                     initY = (clientY(e) - 83 + 83) / windowHeight * 100;
                     this.frame.style.top = `calc(${initY}% - 83px)`;
                     this.frame.style.left = `calc(${initX}% - 40px)`;
-                } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 20) {
+                } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 5) {
                     moving = true;
                     clearTimeout(removeTimer);
                 }
@@ -7771,6 +7781,11 @@
                     targetY = -1;
                 }
             }
+            if (curScroll <= 20 && curScroll > 0) {
+                if (sideController.inited) {
+                    sideController.pagenum.innerHTML = createHTML("1");
+                }
+            }
         };
         dblclickHandler = e => {
             if (forceState == 1 || compareNodeName(e.target, ["input", "textarea", "select", "a", "button", "svg", "use", "img", "path"])) return;
@@ -8641,11 +8656,7 @@
         let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
             if (curPage > 1) {
-                if (rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
-                _unsafeWindow.postMessage({
-                    action: "lastPage",
-                    command: 'pagetual'
-                }, '*');
+                ruleParser.reachedLastPage();
             } else {
                 sideController.remove();
             }
@@ -9291,14 +9302,8 @@
                         ruleParser.findNoNext();
                     }
                 } else if (!showedLastPageTips) {
-                    if (rulesData.lastPageTips) {
-                        showTips(i18n("lastPage"), "", 800);
-                    }
+                    ruleParser.reachedLastPage();
                     showedLastPageTips = true;
-                    _unsafeWindow.postMessage({
-                        action: "lastPage",
-                        command: 'pagetual'
-                    }, '*');
                 }
                 return;
             }
