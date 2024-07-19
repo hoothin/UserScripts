@@ -26284,7 +26284,7 @@ ImgOps | https://imgops.com/#b#`;
             if (viewMore == "1") {
                 gallery.maximizeSidebar();
             }
-            gallery.gallery.addEventListener('click', e => {
+            gallery.eleMaps['img-container'].addEventListener('click', e => {
                 if (gallery.data.length === 0) {
                     gallery.openImages();
                 }
