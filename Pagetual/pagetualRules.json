@@ -3450,7 +3450,7 @@
     "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c), #img",
     "replaceElement": ".ptt,.ptb,.sn,.searchnav",
     "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}",
-    "pageInit": "doc.getElementById('img').setAttribute('onerror','setTimeout(()=>{this.src=this.src},2000)');"
+    "pageInit": "let img=doc.getElementById('img');img&&img.setAttribute('onerror','setTimeout(()=>{this.src=this.src},3000)');"
 },
 {
     "name": "177 漫画/xxiav - 圖片",
@@ -6179,7 +6179,8 @@
     "name": "魂+",
     "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
     "action": 1,
-    "sleep": 1000
+    "sleep": 1000,
+    "exclude": "//div[@id='main']/form|//tr[@align='center']"
 },
 {
     "name": "魂+阅读页",
