@@ -52,7 +52,7 @@ switch (lang) {
                 "sites": [
                     {
                         "name": "关注我的公众号",
-                        "url": "https://mp.weixin.qq.com/s?__biz=MzkxMjY1NjkzNQ==&mid=2247483662&idx=1&sn=faf637ec27d15fe02522ff0c6cd4957e",
+                        "url": "https://mp.weixin.qq.com/s/ldpYIQGfveILJK_VabIBQA",
                         "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico",
                         "description": "打开配置页删除此项"
                     },
