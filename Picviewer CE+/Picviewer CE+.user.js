@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.20.1
+// @version              2024.7.20.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -14481,11 +14481,15 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return saveParams;
                 }
-                self.openImages = () => {
+                self.openImages = (e) => {
                     let fileInput = document.createElement("input");
                     fileInput.type = "file";
                     fileInput.accept = "image/*,video/*,audio/*";
-                    fileInput.setAttribute("multiple","");
+                    fileInput.setAttribute("multiple", "");
+                    if (e && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
+                        fileInput.setAttribute("directory", "");
+                        fileInput.setAttribute("webkitdirectory", "");
+                    }
                     fileInput.addEventListener("change", e => {
                         const files = e.target.files;
                         if (files.length) {
@@ -14499,10 +14503,10 @@ ImgOps | https://imgops.com/#b#`;
                                 } else if (file.type.indexOf("audio") === 0) {
                                     media = document.createElement('audio');
                                     src = "audio:" + src;
-                                } else {
+                                } else if (file.type.indexOf("video") === 0) {
                                     media = document.createElement('video');
                                     src = "video:" + src;
-                                }
+                                } else continue;
                                 media.title = file.name;
                                 var result = {
                                     src: src,
@@ -14656,7 +14660,7 @@ ImgOps | https://imgops.com/#b#`;
                             self.maximizeSidebar();
                             break;
                         case 'openImages':
-                            self.openImages();
+                            self.openImages(e);
                             break;
                         case 'addImageUrls':
                             let urls = window.prompt(i18n('addImageUrls') + ": White space to split multi-image, '[01-09]' to generate nine urls from 01 to 09, '$http://xxx' to fetch images from page","https://xxx.xxx/pic-[20-99].jpg https://xxx.xxx/pic-[01-10].png");
@@ -18118,6 +18122,7 @@ ImgOps | https://imgops.com/#b#`;
                     font-size: 14px;\
                     display: initial;\
                     flex-direction: row;\
+                    user-select: none;\
                     }\
                     /*点击还原的工具条*/\
                     span.pv-gallery-maximize-trigger{\
@@ -18158,6 +18163,18 @@ ImgOps | https://imgops.com/#b#`;
                     background:transparent no-repeat center;\
                     background-image:url("'+prefs.icons.loadingCancle+'");\
                     }\
+                    .pv-gallery-maximize-container+p{\
+                    position: fixed;\
+                    width: 100%;\
+                    z-index: 2;\
+                    text-align: center;\
+                    pointer-events: none;\
+                    margin-bottom: 45px;\
+                    left: 0;\
+                    bottom: 0;\
+                    opacity: 0;\
+                    transition: all .3s ease;\
+                    }\
                     @media only screen and (max-width: 600px) {\
                      .pv-gallery-maximize-container>.maximizeChild{\
                      width:calc(50vw - 5px);\
@@ -18194,10 +18211,10 @@ ImgOps | https://imgops.com/#b#`;
                      white-space: nowrap;\
                      }\
                      span.pv-gallery-sidebar-toggle-content {\
-                     font-size: 30px!important;\
+                     font-size: 25px!important;\
                      }\
                      span.pv-gallery-sidebar-toggle {\
-                     height: 30px!important;\
+                     height: 25px!important;\
                      opacity: 0.6;\
                      border-radius: 0!important;\
                      }\
@@ -18205,14 +18222,17 @@ ImgOps | https://imgops.com/#b#`;
                      opacity: 0!important;\
                      }\
                      .pv-gallery-maximize-container{\
-                     margin-top: 200px;\
+                     margin-top: 30px;\
                      }\
                      .pv-gallery-sidebar-viewmore.showmore{\
-                     transform: scale(3.5);\
-                     bottom: 50px;\
+                     transform: scale(1.5);\
+                     bottom: 10px;\
                      }\
                      .pv-gallery-maximize-container span>p{\
-                     opacity: 0.6;\
+                     opacity: 0.3;\
+                     }\
+                     .pv-gallery-maximize-container+p{\
+                     opacity: 0.2;\
                      }\
                      span.pv-gallery-head-command-close {\
                      position: fixed!important;\
@@ -18834,18 +18854,6 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-viewmore:hover{\
                     opacity: 1;\
                     background-color:#000000;\
-                    }\
-                    .pv-gallery-maximize-container+p{\
-                    position: fixed;\
-                    width: 100%;\
-                    z-index: 2;\
-                    text-align: center;\
-                    pointer-events: none;\
-                    margin-bottom: 45px;\
-                    left: 0;\
-                    bottom: 0;\
-                    opacity: 0;\
-                    transition: all .3s ease;\
                     }\
                     .pv-gallery-maximize-container+p:hover,.pv-gallery-maximize-container.checked+p:hover{\
                     opacity: 1;\
@@ -26284,9 +26292,20 @@ ImgOps | https://imgops.com/#b#`;
             if (viewMore == "1") {
                 gallery.maximizeSidebar();
             }
-            gallery.eleMaps['img-container'].addEventListener('click', e => {
-                if (gallery.data.length === 0) {
-                    gallery.openImages();
+            let imgCon = gallery.eleMaps['img-content'], waitingDouble = false, openImageTimer;
+            imgCon.addEventListener('click', e => {
+                if (e.target == imgCon) {
+                    clearTimeout(openImageTimer);
+                    if (waitingDouble) {
+                        waitingDouble = false;
+                        gallery.openImages({altKey: true});
+                        return;
+                    }
+                    waitingDouble = true;
+                    openImageTimer = setTimeout(() => {
+                        waitingDouble = false;
+                        gallery.openImages(e);
+                    }, 300);
                 }
             }, true);
         } else if (prefs.gallery.autoOpenSites) {
