@@ -2290,7 +2290,7 @@
                                 }
                             }
                             if (h < minHeight) {
-                                if (!needCheckNext || h < (windowHeight>>1)) {
+                                if (!needCheckNext || h < (minHeight>>1)) {
                                     continue;
                                 }
                                 if (!ele.contains(self.initNext)) {
