@@ -12280,7 +12280,7 @@ ImgOps | https://imgops.com/#b#`;
         urlToBlob(url, (blob, ext) => {
             if(blob){
                 try {
-                    saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
+                    saveAs(blob, getRightSaveName(url, name, type, ext));
                 } catch(e) {
                     _GM_download(url, name, type);
                     if (errCb) errCb();
