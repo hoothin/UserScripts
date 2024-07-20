@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.20.5
+// @version              2024.7.20.6
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12029,6 +12029,7 @@ ImgOps | https://imgops.com/#b#`;
                     method: (option && option.method) || 'GET',
                     url: url.trim(),
                     data: (option && option.body) || '',
+                    cookie: cookie,
                     headers: (option && option.headers) || {
                         referer: url,
                         origin: url,
@@ -12225,6 +12226,7 @@ ImgOps | https://imgops.com/#b#`;
         };
         img.src = dataurl;
     }
+    var cookie;
     function urlToBlob(url, cb, forcePng, tryTimes = 0) {
         tryTimes++;
         if (tryTimes > 3) {
@@ -12240,6 +12242,7 @@ ImgOps | https://imgops.com/#b#`;
                 referer: location.href,
                 accept: "*/*"
             },
+            cookie: cookie,
             onload: function(d) {
                 let blob = d.response;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
@@ -13659,6 +13662,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="postImagesToAria2" title="'+i18n("post2Aria2")+'">'+i18n("post2Aria2")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="cookie">Cookie</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item">'+
@@ -14628,6 +14632,9 @@ ImgOps | https://imgops.com/#b#`;
                             break;
                         case 'copyImages':
                             self.copyImages(true);
+                            break;
+                        case 'cookie':
+                            cookie = prompt("Set Cookie", cookie || "");
                             break;
                         case 'scrollToEndAndReload':
                             var checkbox = target.parentNode.querySelector("input");
@@ -17398,6 +17405,7 @@ ImgOps | https://imgops.com/#b#`;
                     method: 'GET',
                     url: url,
                     headers:{"Referer": + url},
+                    cookie: cookie,
                     overrideMimeType:"text/html;charset="+document.charset,
                     onload: function(d) {
                         let html = document.implementation.createHTMLDocument('');
