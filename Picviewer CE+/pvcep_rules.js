@@ -1690,5 +1690,11 @@ var siteInfo = [
         url: /^https:\/\/afdian\.net\//,
         r: "/(w/\\d+/)?h/\\d+/i",
         s: ""
+    },
+    {
+        name: "携程",
+        url: /^https:\/\/(www\.|m\.)?ctrip\.com/,
+        r: /_(C|D)_\d[^\.]*/i,
+        s: ""
     }
 ];
