@@ -5508,13 +5508,14 @@
         "id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
         "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
     ],
-    "pageElement": "id('rso')",
-    "action": 2,
+    "pageElement": "id('rso')|id('main')//style|//head//style",
+    "action": 1,
     "pageNum": "&start={10*($p-1)}",
     "pageBarTop": 55,
     "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
     "replaceElement": "[role='navigation']>[role='presentation']",
-    "css": "ol>li{display: inline-flex;}inIframe:#searchform{display:none;}"
+    "css": "ol>li{display: inline-flex;}inIframe:#searchform,[data-l]{display:none;}",
+    "surround": "shadowDom"
 },
 {
     "name": "Google Trends",

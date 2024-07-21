@@ -4037,18 +4037,31 @@
                     collection.appendChild(newEle)
                     newEles.push(newEle);
                 });
+                let css = this.curSiteRule.css;
+                let addCss = (parent) => {
+                    if (css) {
+                        let cssArr = css.split("inIframe:");
+                        if (cssArr && cssArr.length == 2) {
+                            let styleEle = document.createElement("style");
+                            styleEle.innerHTML = cssArr[1];
+                            parent.appendChild(styleEle);
+                        }
+                    }
+                };
                 if (this.curSiteRule.surround === "iframe") {
                     let ele = document.createElement("iframe");
                     ele.style.border = "unset";
                     ele.style.maxWidth = "100%";
                     ele.style.width = "100vw";
-                    ele.style.height = "1000vh";
                     self.insertElement(ele);
                     try {
                         let doc = ele.contentDocument || ele.contentWindow.document;
                         doc.body.appendChild(collection);
                         ele.style.width = doc.body.scrollWidth + "px";
                         ele.style.height = doc.body.scrollHeight + "px";
+                        doc.documentElement.style.overflow = "hidden";
+                        doc.body.style.overflow = "hidden";
+                        addCss(doc.body);
                     } catch(e) {
                         console.log(e);
                     }
@@ -4057,6 +4070,7 @@
                     self.insertElement(ele);
                     let shadowRoot = ele.attachShadow({ mode: "open" });
                     shadowRoot.appendChild(collection);
+                    addCss(shadowRoot);
                 } else {
                     self.insertElement(collection);
                 }
