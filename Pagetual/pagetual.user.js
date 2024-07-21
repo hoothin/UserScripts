@@ -4037,7 +4037,29 @@
                     collection.appendChild(newEle)
                     newEles.push(newEle);
                 });
-                self.insertElement(collection);
+                if (this.curSiteRule.surround === "iframe") {
+                    let ele = document.createElement("iframe");
+                    ele.style.border = "unset";
+                    ele.style.maxWidth = "100%";
+                    ele.style.width = "100vw";
+                    ele.style.height = "1000vh";
+                    self.insertElement(ele);
+                    try {
+                        let doc = ele.contentDocument || ele.contentWindow.document;
+                        doc.body.appendChild(collection);
+                        ele.style.width = doc.body.scrollWidth + "px";
+                        ele.style.height = doc.body.scrollHeight + "px";
+                    } catch(e) {
+                        console.log(e);
+                    }
+                } else if (this.curSiteRule.surround === "shadowDom") {
+                    let ele = document.createElement("div");
+                    self.insertElement(ele);
+                    let shadowRoot = ele.attachShadow({ mode: "open" });
+                    shadowRoot.appendChild(collection);
+                } else {
+                    self.insertElement(collection);
+                }
             }
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
