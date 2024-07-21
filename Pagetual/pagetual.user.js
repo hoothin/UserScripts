@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.80
+// @version      1.9.37.81
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4361,7 +4361,7 @@
 
             bottom.addEventListener("click", e => {
                 if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                    changeStop(true, true);
+                    changeStop(true);
                 }
                 let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 getBody(document).scrollTop = scrollH || 9999999;
@@ -7817,7 +7817,7 @@
                         changeHideBar(!isHideBar);
                     }
                     if (!rulesData.hideBarButNoStop) {
-                        changeStop(!isPause, true);
+                        changeStop(!isPause);
                         showTips(i18n(isPause ? "disable" : "enable"));
                     }
                     if (!isPause) {
@@ -8283,7 +8283,7 @@
         });
         downSpan.addEventListener("click", e => {
             if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                changeStop(true, true);
+                changeStop(true);
             }
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
@@ -8299,10 +8299,6 @@
         ruleParser.insertElement(pageBar);
         ruleParser.runPageBar(pageBar);
 
-        pageBar.addEventListener("click", e => {
-            changeStop(!isPause, true);
-            pageBar.title = i18n(isPause ? "enable" : "disable");
-        });
         if (sideController.inited) {
             try {
                 let observer = new IntersectionObserver(entries => {
