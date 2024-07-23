@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.83
+// @version      1.9.37.84
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2010,7 +2010,7 @@
         getValidSize(ele, win) {
             if (!win) return {h: 0, w: 0};
             let eleStyle = win.getComputedStyle(ele);
-            if (!ele.offsetParent && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
+            if (!ele.offsetParent && eleStyle.display !== "contents" && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
                 return {h: 0, w: 0};
             }
             if (ele.children && ele.children.length === 1 && (ele.offsetWidth === 0 || ele.offsetHeight === 0)) {
@@ -2235,7 +2235,7 @@
                         }
                         if (compareNodeName(curNode, ["canvas", "nav"])) continue;
                         let curStyle = curWin.getComputedStyle(curNode);
-                        if (!curNode.offsetParent && (curStyle.position !== "fixed" || curStyle.opacity === 0)) {
+                        if (!curNode.offsetParent && curStyle.display !== "contents" && (curStyle.position !== "fixed" || curStyle.opacity === 0)) {
                             continue;
                         }
                         if (!compareNodeName(curNode, ["img"]) && curNode.querySelector('img') === null && /^\s*$/.test(curNode.innerText)) continue;
