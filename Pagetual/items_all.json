@@ -51590,16 +51590,16 @@
 {
   "resource_url": "http://wedata.net/items/1857",
   "data": {
-    "pageElement": "id(\"article-body-inner\")/*",
+    "pageElement": "//div[contains(concat(' ', normalize-space(@class), ' '), ' article-body-inner ')]|id('article-body-inner')",
     "nextLink": "//*[@class=\"next\"]/a",
     "url": "^https?://(www\\.)?toyokeizai\\.net/articles/",
-    "exampleUrl": "http://toyokeizai.net/articles/-/11744"
+    "exampleUrl": "https://toyokeizai.net/articles/-/11744"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "takotako",
   "name": "東洋経済オンライン article",
   "created_at": "2008-06-27T13:44:17+09:00",
-  "updated_at": "2022-01-24T15:33:30+09:00"
+  "updated_at": "2024-07-23T00:49:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/1855",
