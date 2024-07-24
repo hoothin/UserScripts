@@ -3879,13 +3879,13 @@
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
                 if (self.nextLinkHref) {
                     sideController.setup();
-                    if (sideController.inited) {
-                        sideController.frame.classList.add("loading");
-                    }
                     if (initRun && initRun != false) {
                         setTimeout(() => {
                             nextPage();
                         }, 300);
+                        if (sideController.inited) {
+                            sideController.frame.classList.add("loading");
+                        }
                     }
                 }
             });
