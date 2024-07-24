@@ -8372,14 +8372,21 @@
         return pageBar;
     }
 
-    async function waitForElement(sel, doc) {
+    async function waitForElement(sel, doc, maxTime) {
         if (!sel) return null;
         return new Promise((resolve) => {
+            let passedTime = 0;
             let checkInv = setInterval(() => {
                 let result = getElement(sel, doc, null, true);
                 if (result) {
                     clearInterval(checkInv);
                     resolve(result);
+                } else if (maxTime) {
+                    passedTime += 100;
+                    if (passedTime >= maxTime) {
+                        clearInterval(checkInv);
+                        resolve(result);
+                    }
                 }
             }, 100);
         });
@@ -8712,6 +8719,10 @@
     var emuIframe, lastActiveUrl, orgContent, meetCors = false;
     function emuPage(callback) {
         let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false, checkNext = 0;
+        let activeClass = "active";
+        if (typeof ruleParser.curSiteRule.activeClass !== 'undefined') {
+            activeClass = ruleParser.curSiteRule.activeClass;
+        }
         function returnFalse(log) {
             if (curPage > 1) {
                 ruleParser.reachedLastPage();
@@ -8730,7 +8741,6 @@
             if (!iframeDoc) return;
             let inputs = document.querySelectorAll("input:not([type=button],[type=image],[type=reset],[type=submit])");
             let selectOptions = document.querySelectorAll("select>option");
-            let actives = document.querySelectorAll(".active");
             [...inputs].forEach(input => {
                 let sel = geneSelector(input, true, true);
                 let mirrorEle = iframeDoc.querySelector(sel);
@@ -8745,14 +8755,17 @@
                 mirrorEle.selected = !!selected;
                 mirrorEle.parentNode.dispatchEvent(new Event('change'));
             });
-            for (let active of actives) {
-                let sel = geneSelector(active, true, true).replace(".active", "");
-                let mirrorEle = iframeDoc.querySelector(sel);
-                if (!mirrorEle || mirrorEle.classList.contains("active")) {
-                    continue;
+            if (activeClass) {
+                let actives = document.querySelectorAll("." + activeClass);
+                for (let active of actives) {
+                    let sel = geneSelector(active, true, true).replace("." + activeClass, "");
+                    let mirrorEle = await waitForElement(sel, iframeDoc, 5000);
+                    if (!mirrorEle || mirrorEle.classList.contains(activeClass)) {
+                        continue;
+                    }
+                    emuClick(mirrorEle);
+                    await sleep(300);
                 }
-                emuClick(mirrorEle);
-                await sleep(500);
             }
         }
         async function checkPage() {
@@ -9001,11 +9014,11 @@
                         if (iframeDoc && refreshByClickSel) {
                             let clickBtn = await waitForElement(refreshByClickSel, iframeDoc);
                             await sleep(500);
-                            cloneStatus();
+                            await cloneStatus();
                             emuClick(clickBtn, iframeDoc);
                             await sleep(500);
                         } else {
-                            cloneStatus();
+                            await cloneStatus();
                             await sleep(500);
                         }
                     }
