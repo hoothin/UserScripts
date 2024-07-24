@@ -262,7 +262,7 @@
             #content_left .cos-color-bg-page {
                 background-color: unset;
             }
-            #head,
+            #head:not(.s-skin-hasbg),
             [tpl="app/head-tab"] {
                 background: #f7f7f7;
             }
