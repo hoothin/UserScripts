@@ -8892,7 +8892,7 @@
                     preContent = checkInner;
                     setTimeout(() => {
                         checkPage();
-                    }, 500);
+                    }, ruleParser.curSiteRule.smart ? 1000 : 500);
                 } else if (changed) {
                     checkTimes = 0;
                     if (orgContent == preContent && (ruleParser.curSiteRule.smart || ruleParser.curSiteRule.stopSame)) {
