@@ -3897,9 +3897,6 @@
                         setTimeout(() => {
                             nextPage();
                         }, 300);
-                        if (sideController.inited) {
-                            sideController.frame.classList.add("loading");
-                        }
                     }
                 }
             });
@@ -8729,10 +8726,11 @@
                 emuIframe = null;
             }
         }
-        function cloneStatus() {
+        async function cloneStatus() {
             if (!iframeDoc) return;
             let inputs = document.querySelectorAll("input:not([type=button],[type=image],[type=reset],[type=submit])");
             let selectOptions = document.querySelectorAll("select>option");
+            let actives = document.querySelectorAll(".active");
             [...inputs].forEach(input => {
                 let sel = geneSelector(input, true, true);
                 let mirrorEle = iframeDoc.querySelector(sel);
@@ -8747,6 +8745,15 @@
                 mirrorEle.selected = !!selected;
                 mirrorEle.parentNode.dispatchEvent(new Event('change'));
             });
+            for (let active of actives) {
+                let sel = geneSelector(active, true, true).replace(".active", "");
+                let mirrorEle = iframeDoc.querySelector(sel);
+                if (!mirrorEle || mirrorEle.classList.contains("active")) {
+                    continue;
+                }
+                emuClick(mirrorEle);
+                await sleep(500);
+            }
         }
         async function checkPage() {
             if (isPause) return loadPageOver();
@@ -8996,6 +9003,9 @@
                             await sleep(500);
                             cloneStatus();
                             emuClick(clickBtn, iframeDoc);
+                            await sleep(500);
+                        } else {
+                            cloneStatus();
                             await sleep(500);
                         }
                     }
@@ -9398,7 +9408,9 @@
         if (pvGallery && pvGallery.style.display !== "none") return;
         let insert = ruleParser.getInsert();
         if (insert) {
-            if (curPage === 1) initView();
+            if (curPage === 1) {
+                initView();
+            }
             /*if (curPage == 1) {
                 window.postMessage({
                     command: 'pagetual.insert'
@@ -9415,6 +9427,10 @@
             isLoading = true;
             if (curPage !== 1 || !isJs || !ruleParser.curSiteRule.smart) {
                 ruleParser.beginLoading(loadingDiv);
+            } else {
+                if (sideController.inited) {
+                    sideController.frame.classList.add("loading");
+                }
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
             setTimeout(() => {
