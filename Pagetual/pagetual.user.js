@@ -3819,7 +3819,15 @@
                 } else if (self.curSiteRule && self.curSiteRule.url.length > 13) {
                     self.addToHpRules();
                 }
-                let css = self.curSiteRule.css || rulesData.customCss;
+                let css;
+                if (rulesData.customCss && self.curSiteRule.css) {
+                    let globalCssArr = rulesData.customCss.split("inIframe:");
+                    let ruleCssArr = self.curSiteRule.css.split("inIframe:");
+                    let mainCss = globalCssArr[0] + ruleCssArr[0], inCss = (globalCssArr[1] || "") + (ruleCssArr[1] || "");
+                    css = mainCss + (inCss ? ("inIframe:" + inCss) : "");
+                } else {
+                    css = self.curSiteRule.css || rulesData.customCss;
+                }
                 if (css) {
                     let cssArr = css.split("inIframe:");
                     if (cssArr && cssArr.length) {
@@ -9242,7 +9250,15 @@
                 callback(false);
                 return;
             }
-            let css = ruleParser.curSiteRule.css || rulesData.customCss;
+            let css;
+            if (rulesData.customCss && ruleParser.curSiteRule.css) {
+                let globalCssArr = rulesData.customCss.split("inIframe:");
+                let ruleCssArr = ruleParser.curSiteRule.css.split("inIframe:");
+                let mainCss = globalCssArr[0] + ruleCssArr[0], inCss = (globalCssArr[1] || "") + (ruleCssArr[1] || "");
+                css = mainCss + (inCss ? ("inIframe:" + inCss) : "");
+            } else {
+                css = ruleParser.curSiteRule.css || rulesData.customCss;
+            }
             if (css) {
                 let cssArr = css.split("inIframe:");
                 if (cssArr && cssArr.length > 1) {
