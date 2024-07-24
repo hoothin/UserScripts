@@ -262,6 +262,10 @@
             #content_left .cos-color-bg-page {
                 background-color: unset;
             }
+            #head,
+            [tpl="app/head-tab"] {
+                background: #f7f7f7;
+            }
             #container a,
             #container a em {
                 text-decoration: auto!important;
@@ -302,7 +306,7 @@
                 background-image: none !important;
             }
             .wrapper_new #head.no-box-shadow, .wrapper_new #head.no-box-shadow.s_down {
-                background: rgb(255 255 255 / 80%);
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
             }
             [class*=card-shadow] {
                 box-shadow: unset!important;
