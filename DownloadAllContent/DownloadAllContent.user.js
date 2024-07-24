@@ -1350,7 +1350,6 @@ if (window.top != window.self) {
             }
         } else {
             downOnce(-downThreadNum * 1000);
-            if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) downIndex++;
         }
     }
 
