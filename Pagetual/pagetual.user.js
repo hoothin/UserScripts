@@ -3879,6 +3879,9 @@
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
                 if (self.nextLinkHref) {
                     sideController.setup();
+                    if (sideController.inited) {
+                        sideController.frame.classList.add("loading");
+                    }
                     if (initRun && initRun != false) {
                         setTimeout(() => {
                             nextPage();
@@ -8740,7 +8743,9 @@
                 return;
             }
             getBody(iframeDoc).scrollTop = 9999999;
-            iframeDoc.documentElement.scrollTop = 9999999;
+            if (iframeDoc.documentElement) {
+                iframeDoc.documentElement.scrollTop = 9999999;
+            }
 
             let waitTime = 200, checkEval;
             ruleParser.runWait((_checkEval, _waitTime) => {
