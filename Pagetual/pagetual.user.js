@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.84
+// @version      1.9.37.85
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1655,7 +1655,9 @@
                 if (!include) {
                     if (doc !== document) {
                         getBody(doc).scrollTop = 9999999;
-                        doc.documentElement.scrollTop = 9999999;
+                        if (doc.documentElement) {
+                            doc.documentElement.scrollTop = 9999999;
+                        }
                     }
                     return false;
                 }
@@ -2381,7 +2383,12 @@
                     while (posEle && !posEle.offsetParent) {
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
-                    if (posEle && posEle.scrollHeight === 0 && posEle.lastElementChild) posEle = posEle.lastElementChild;
+                    if (posEle && posEle.lastElementChild) {
+                        if (posEle.scrollHeight === 0) posEle = posEle.lastElementChild;
+                        else if (posEle.lastElementChild.offsetTop > 500) {
+                            posEle = posEle.lastElementChild;
+                        }
+                    }
                     let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
                         debug("Stop as too long between next & page element, try to enable Force-Join mode.");
@@ -2833,7 +2840,7 @@
                             }
                             if (!next4) {
                                 if (!next2) {
-                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^(»|>>)$/.test(innerText)) {
+                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older|next.chap/i.test(aTag.className) || /^(»|>>)$/.test(innerText)) {
                                         if (isJs) {
                                             if (!nextJs2) nextJs2 = aTag;
                                         } else {
@@ -8618,7 +8625,9 @@
                             await callback(doc, eles);
                         } else if (pageEleTryTimes++ < 100) {
                             getBody(doc).scrollTop = 9999999;
-                            doc.documentElement.scrollTop = 9999999;
+                            if (doc.documentElement) {
+                                doc.documentElement.scrollTop = 9999999;
+                            }
                             setTimeout(() => {
                                 checkIframe();
                             }, waitTime);
@@ -8688,7 +8697,7 @@
 
     var emuIframe, lastActiveUrl, orgContent, meetCors = false;
     function emuPage(callback) {
-        let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
+        let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false, checkNext = 0;
         function returnFalse(log) {
             if (curPage > 1) {
                 ruleParser.reachedLastPage();
@@ -8730,6 +8739,8 @@
                 returnFalse("Stop as cors");
                 return;
             }
+            getBody(iframeDoc).scrollTop = 9999999;
+            iframeDoc.documentElement.scrollTop = 9999999;
 
             let waitTime = 200, checkEval;
             ruleParser.runWait((_checkEval, _waitTime) => {
@@ -8876,6 +8887,7 @@
                 }
                 if (orgPage != checkItem || checkInner != preContent) {
                     changed = true;
+                    checkNext = 0;
                     orgPage = checkItem;
                     preContent = checkInner;
                     setTimeout(() => {
@@ -8888,6 +8900,14 @@
                     } else {
                         orgContent = preContent;
                         await ruleParser.hookUrl(iframeDoc);
+                        if (!nextLink || !nextLink.offsetParent) {
+                            nextLink = await ruleParser.getNextLink(iframeDoc, true);
+                        }
+                        if (!nextLink && ++checkNext < 5) {
+                            setTimeout(() => {
+                                checkPage();
+                            }, waitTime);
+                        }
                         callback(iframeDoc, eles);
                     }
                 } else {
