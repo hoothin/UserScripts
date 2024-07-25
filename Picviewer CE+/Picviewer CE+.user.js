@@ -23785,8 +23785,8 @@ ImgOps | https://imgops.com/#b#`;
                 imgCStyle = {height:sh, width:sw};
             }
             var imgCS={
-                h: parseFloat(imgCStyle.height)||img.height||img.offsetHeight,
-                w: parseFloat(imgCStyle.width)||img.width||img.offsetWidth,
+                h: parseFloat(imgCStyle.height)||img.height||img.offsetHeight||1,
+                w: parseFloat(imgCStyle.width)||img.width||img.offsetWidth||1,
             };
             var imgAS={//实际尺寸。
                 h:img.naturalHeight > 1 ? img.naturalHeight : imgCS.h,
