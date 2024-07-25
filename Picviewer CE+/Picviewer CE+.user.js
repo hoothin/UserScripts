@@ -16552,17 +16552,19 @@ ImgOps | https://imgops.com/#b#`;
                         this.imgError=true;
                         this.img.style.display='none';
                         this.eleMaps['img_broken'].style.display='inline-block';
+                        dataset(relatedThumb,'naturalSize',JSON.stringify({w: 0, h: 0}));
                     }else{
                         var srcs=dataset(relatedThumb, 'srcs');
                         if(srcs && srcs.length>0)srcs=srcs.split(",");
                         var self=this;
                         this.img.onload=function(){
-                            var imgNaturalSize={
+                            imgNaturalSize={
                                 h:this.naturalHeight,
                                 w:this.naturalWidth,
                             };
 
                             self.imgNaturalSize=imgNaturalSize;
+                            dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
                             self.fitToScreen();
                         }
                         if(srcs && srcs.length>0){
@@ -23784,10 +23786,21 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 imgCStyle = {height:sh, width:sw};
             }
-            var imgCS={
-                h: parseFloat(imgCStyle.height)||img.height||img.offsetHeight||1,
-                w: parseFloat(imgCStyle.width)||img.width||img.offsetWidth||1,
+            var imgCS = {
+                h: parseFloat(imgCStyle.height) || img.height || img.offsetHeight,
+                w: parseFloat(imgCStyle.width) || img.width || img.offsetWidth,
             };
+            if (imgCS.h === 0 && imgCS.w === 0) {
+                for (let i = 0; i < imgPE.length; i++) {
+                    if (imgPE[i].offsetHeight) {
+                        imgCS = {
+                            h: imgPE[i].offsetHeight,
+                            w: imgPE[i].offsetWidth
+                        };
+                        break;
+                    }
+                }
+            }
             var imgAS={//实际尺寸。
                 h:img.naturalHeight > 1 ? img.naturalHeight : imgCS.h,
                 w:img.naturalWidth > 1 ? img.naturalWidth : imgCS.w,
