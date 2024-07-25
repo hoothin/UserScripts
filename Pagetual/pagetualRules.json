@@ -7242,12 +7242,6 @@
     "enable": 0
 },
 {
-    "name": "检测到AC百度就不运行",
-    "url": ".",
-    "pageElement": ".AC-style-logo",
-    "enable": 0
-},
-{
     "name": "pan.baidu",
     "url": "^https?://.*pan\\.baidu\\.com",
     "enable": 0
