@@ -3742,7 +3742,7 @@
         }
 
         checkClickHref() {
-            if (this.curSiteRule.smart && !this.linkHasHref(this.nextLinkEle)) {
+            if (this.curSiteRule.smart && this.nextLinkEle && !this.linkHasHref(this.nextLinkEle)) {
                 this.urlChanged();
                 isPause = true;
                 if (!this.nextLinkHref) isLoading = false;
