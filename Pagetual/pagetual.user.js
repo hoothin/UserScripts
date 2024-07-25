@@ -4314,6 +4314,7 @@
              }
              #pagetual-sideController.minSize #pagetual-sideController-move {
                  pointer-events: all;
+                 height: 30px;
              }
              #pagetual-sideController.minSize .pagetual-sideController-btn {
                  opacity: 0;
@@ -7195,7 +7196,7 @@
                     pageElement = ruleParser.getPageElement(doc);
                 }
                 if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
-                    debug(res.status + " " + url, "Error status");
+                    debug(res.status + " " + url + " " + response, "Error status");
                     if (!ruleParser.curSiteRule.smart || !xhrFailed) {
                         xhrFailed = true;
                         return callback(false);
