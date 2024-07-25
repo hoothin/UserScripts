@@ -7668,7 +7668,8 @@
         var checkFunc = () => {
             if (forceState == 1) return;
             if (checkClickedEle) {
-                if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
+                if (typeof ruleParser.curSiteRule.refreshByClick !== "undefined") {
+                } else if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
                     if (compareNodeName(checkClickedEle, ["a", "button"])) {
                         clickedSth = true;
                     } else {
