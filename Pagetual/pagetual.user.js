@@ -3919,7 +3919,7 @@
                             nextPage();
                         }, 300);
                     }
-                }
+                } else isPause = false;
             });
         }
 
