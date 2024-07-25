@@ -312,9 +312,9 @@
             [class*=card-shadow] {
                 box-shadow: unset!important;
             }
-            #wrapper #content_left .op-soft-title a:after, #wrapper #content_left .result a:after, #wrapper #content_left .result-op a:after, #wrapper #content_left > .c-container a:after, #wrapper #content_left .op-soft-title a:visited:after, #wrapper #content_left .result a:visited:after, #wrapper #content_left .result-op a:visited:after, #wrapper #content_left > .c-container a:visited:after {
+            #wrapper #content_left .op-soft-title h3>a:after, #wrapper #content_left .result h3>a:after, #wrapper #content_left .result-op h3>a:after, #wrapper #content_left > .c-container h3>a:after, #wrapper #content_left .op-soft-title a:visited:after, #wrapper #content_left .result h3>a:visited:after, #wrapper #content_left .result-op h3>a:visited:after, #wrapper #content_left > .c-container h3>a:visited:after {
                 content: "";
-                position: initial;
+                position: relative;
                 border-bottom: 2px solid #3075d0;
                 bottom: -2px;
                 display: block;
