@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.85
+// @version      1.9.37.86
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1173,7 +1173,7 @@
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-s", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
-    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false, loadNowNum = 5, autoScrollRate = 50;
+    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, loadNowNum = 5, autoScrollRate = 50;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false, hidePageBar = false;
     var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
@@ -2558,7 +2558,7 @@
         }
 
         linkHasHref(link) {
-            return link.href && link.href.replace && !this.hrefIsJs(link.href);
+            return link && link.href && link.href.replace && !this.hrefIsJs(link.href);
         }
 
         hrefIsJs(href) {
@@ -2590,7 +2590,7 @@
                     return false;
                 }
                 if (e.className) {
-                    if (/slick|slide|gallery|disabled\s*$/i.test(e.className)) {
+                    if (/slick|slide|carousel|gallery|disabled\s*$/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
@@ -2599,7 +2599,7 @@
                     }
                 }
                 let ariaLabel = e.getAttribute("aria-label");
-                if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) return false;
+                if (ariaLabel && /slick|slide|carousel|gallery/i.test(ariaLabel)) return false;
                 return true;
             };
             if (!ele) return false;
@@ -3204,7 +3204,7 @@
                     }
                     if (doc === document) {
                         if (!this.linkHasHref(nextLink)) {
-                            if ((clickedSth && this.curSiteRule.smart) || !isVisible(nextLink, _unsafeWindow)) {
+                            if (!isVisible(nextLink, _unsafeWindow)) {
                                 this.nextLinkHref = false;
                                 return null;
                             }
@@ -3741,8 +3741,26 @@
             return true;
         }
 
+        checkClickHref() {
+            if (this.curSiteRule.smart && !this.linkHasHref(this.nextLinkEle)) {
+                this.urlChanged();
+                isPause = true;
+                if (!this.nextLinkHref) isLoading = false;
+            }
+        }
+
         docElementValid() {
-            return (this.docPageElement && document.documentElement.contains(this.docPageElement[0]));
+            if (!this.docPageElement || this.docPageElement.length == 0) return false;
+            let checkEle;
+            if (this.docPageElement.length == 1) {
+                checkEle = this.docPageElement[0];
+            } else {
+                checkEle = this.docPageElement[Math.floor(this.docPageElement.length / 2)];
+            }
+            if (checkEle.children.length) {
+                checkEle = checkEle.children[Math.floor(checkEle.children.length / 2)];
+            }
+            return document.documentElement.contains(checkEle);
         }
 
         urlChanged() {
@@ -7642,6 +7660,7 @@
         var checkUrlTime = 100;
         var checkUrlTimer;
         var checkClickedEle = null;
+        var clickedSth = false;
         var checkFunc = () => {
             if (forceState == 1) return;
             if (checkClickedEle) {
@@ -7661,7 +7680,10 @@
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             if (document.hidden) return;
-            if (!ruleParser.canListenUrlChange()) {
+            if (clickedSth) {
+                ruleParser.checkClickHref();
+                clickedSth = false;
+            } else if (!ruleParser.canListenUrlChange()) {
                 return;
             }
             if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search) && window.location.href != ruleParser.historyUrl) {

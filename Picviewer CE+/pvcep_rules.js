@@ -1619,7 +1619,7 @@ var siteInfo = [
         name: "amazon",
         url: /^https?:\/\/www\.amazon\.com\//,
         lazyAttr: "data-a-hires",
-        r: [/(_AC_|_CR0).*\./, /._SY\d+\_?/],
+        r: [/_?(_AC_|_CR0).*\./, /\._S.\d+\_?/],
         s: ["", ""]
     },
     {
