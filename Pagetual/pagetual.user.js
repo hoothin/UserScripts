@@ -3751,16 +3751,19 @@
 
         docElementValid() {
             if (!this.docPageElement || this.docPageElement.length == 0) return false;
-            let checkEle;
-            if (this.docPageElement.length == 1) {
-                checkEle = this.docPageElement[0];
-            } else {
-                checkEle = this.docPageElement[Math.floor(this.docPageElement.length / 2)];
+            if (!this.checkPageEle) {
+                let ele;
+                if (this.docPageElement.length == 1) {
+                    ele = this.docPageElement[0];
+                } else {
+                    ele = this.docPageElement[Math.floor(this.docPageElement.length / 2)];
+                }
+                if (ele.children.length) {
+                    ele = ele.children[Math.floor(ele.children.length / 2)];
+                }
+                this.checkPageEle = ele;
             }
-            if (checkEle.children.length) {
-                checkEle = checkEle.children[Math.floor(checkEle.children.length / 2)];
-            }
-            return document.documentElement.contains(checkEle);
+            return document.documentElement.contains(this.checkPageEle);
         }
 
         urlChanged() {
