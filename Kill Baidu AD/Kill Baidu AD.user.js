@@ -245,7 +245,7 @@
                 width: calc(100% - 150px);
             }
             #container.sam_newgrid #content_left {
-                column-width: 560px;
+                column-width: 590px;
                 width: 100%;
             }
             #content_left .result-op, #content_left .result {
