@@ -312,7 +312,7 @@
             [class*=card-shadow] {
                 box-shadow: unset!important;
             }
-            #wrapper #content_left .op-soft-title h3>a:after, #wrapper #content_left .result h3>a:after, #wrapper #content_left .result-op h3>a:after, #wrapper #content_left > .c-container h3>a:after, #wrapper #content_left .op-soft-title a:visited:after, #wrapper #content_left .result h3>a:visited:after, #wrapper #content_left .result-op h3>a:visited:after, #wrapper #content_left > .c-container h3>a:visited:after {
+            #wrapper #content_left .op-soft-title h3>a:after, #wrapper #content_left .result h3>a:after, #wrapper #content_left .result-op h3>a.sc-link:after, #wrapper #content_left > .c-container h3>a:after, #wrapper #content_left .op-soft-title a:visited:after, #wrapper #content_left .result h3>a:visited:after, #wrapper #content_left .result-op h3>a.sc-link:visited:after, #wrapper #content_left > .c-container h3>a:visited:after {
                 content: "";
                 position: relative;
                 border-bottom: 2px solid #3075d0;
@@ -322,7 +322,7 @@
                 width: 0;
                 transition: width 300ms, left 300ms;
             }
-            #wrapper #content_left .op-soft-title a:hover:after, #wrapper #content_left .result a:hover:after, #wrapper #content_left .result-op a:hover:after, #wrapper #content_left > .c-container a:hover:after, #wrapper #content_left .op-soft-title a:visited:hover:after, #wrapper #content_left .result a:visited:hover:after, #wrapper #content_left .result-op a:visited:hover:after, #wrapper #content_left > .c-container a:visited:hover:after {
+            #wrapper #content_left .op-soft-title a:hover:after, #wrapper #content_left .result a:hover:after, #wrapper #content_left .result-op a.sc-link:hover:after, #wrapper #content_left > .c-container a:hover:after, #wrapper #content_left .op-soft-title a:visited:hover:after, #wrapper #content_left .result a:visited:hover:after, #wrapper #content_left .result-op a.sc-link:visited:hover:after, #wrapper #content_left > .c-container a:visited:hover:after {
                 left: 0;
                 width: 100%;
                 transition: width 300ms;
