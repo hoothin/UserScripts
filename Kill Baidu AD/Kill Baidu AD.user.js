@@ -327,7 +327,7 @@
                 width: 100%;
                 transition: width 300ms;
             }
-            #wrapper #content_left > .c-container:hover, #wrapper #content_left > .result:hover, #wrapper #content_left > .result-op:hover, #wrapper #content_left > .c-container:hover article {
+            #wrapper #content_left > .c-container:hover, #wrapper #content_left > .result:hover, #wrapper #content_left > .result-op:hover {
                 box-shadow: 0 2px 10px 1px rgba(0, 0, 0, .3);
             }
             `);
