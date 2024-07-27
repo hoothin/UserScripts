@@ -1,6 +1,9 @@
 簡繁自由切換
 ===
-切換簡體中文與正體中文
+> 切換簡體中文與正體中文
+
+[![NPM](https://img.shields.io/npm/v/switch-chinese.svg)](https://www.npmjs.com/package/switch-chinese) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://www.npmjs.com/package/switch-chinese)
+
 
 演示
 ---
