@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Convert between simplified and traditional Chinese characters",
   "main": "stcasc.lib.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoothin/UserScripts.git#master"
