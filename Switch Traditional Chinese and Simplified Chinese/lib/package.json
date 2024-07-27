@@ -1,0 +1,27 @@
+{
+  "name": "switch-chinese",
+  "version": "1.0.0",
+  "description": "Convert between simplified and traditional Chinese characters",
+  "main": "stcasc.lib.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoothin/UserScripts.git#master"
+  },
+  "keywords": [
+    "Switch",
+    "Traditional",
+    "Chinese",
+    "Simplified",
+    "简体中文",
+    "繁体中文",
+    "簡體中文",
+    "繁體中文",
+    "正體中文"
+  ],
+  "author": "Hoothin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hoothin/UserScripts/issues"
+  },
+  "homepage": "https://github.com/hoothin/UserScripts/tree/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/lib"
+}
