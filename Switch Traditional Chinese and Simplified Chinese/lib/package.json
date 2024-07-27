@@ -1,6 +1,6 @@
 {
   "name": "switch-chinese",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert between simplified and traditional Chinese characters",
   "main": "stcasc.lib.js",
   "type": "module",

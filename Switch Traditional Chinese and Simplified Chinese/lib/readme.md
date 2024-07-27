@@ -13,6 +13,8 @@ alert(stcasc.traditionalized("香烟 香烟袅袅 烟雾里 里长面子 吃干�
 //香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮
 ```
 
++ 透過 npm 安裝
+
 ``` 
 npm install switch-chinese
 import Stcasc from 'switch-chinese';
