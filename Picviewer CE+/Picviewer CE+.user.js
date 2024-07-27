@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.27.1
+// @version              2024.7.27.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
 // @require              https://update.greasyfork.org/scripts/438080/1416490/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1410982/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1417682/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -12104,7 +12104,8 @@ ImgOps | https://imgops.com/#b#`;
         if (name) name = name.split("\n")[0].replace(/.*?\/\/[^\/]+\//, "").replace(/\?.*/, "");
         if (!url.replace) url = "";
         url = url.replace(/.*?\/\/[^\/]+\//, "");
-        let nameFromUrl = url.replace(/.*\/([^\/\?]+?)\.\w{2,5}(\?|@|$).*/, "$1") || "";
+        let nameFromUrl = url.match(/.*([^\/\?\=\&]+)\.\w{2,5}(\?|@|$).*/, "$1");
+        nameFromUrl = nameFromUrl ? nameFromUrl[1] : "";
         if (/\=&/.test(nameFromUrl)) {
             nameFromUrl = "";
         } else {
@@ -12179,7 +12180,7 @@ ImgOps | https://imgops.com/#b#`;
         urlToBlob(url, (blob, ext) => {
             if(blob){
                 try {
-                    saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
+                    saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " + getRightSaveName(url, name, type, ext));
                 } catch(e) {
                     console.log(e);
                 }
@@ -12187,7 +12188,7 @@ ImgOps | https://imgops.com/#b#`;
         });
     } : (url, name, type) => {
         url = canonicalUri(url);
-        name = document.title + " - " + getRightSaveName(url, name, type);
+        name = document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " + getRightSaveName(url, name, type);
         let urlSplit = ["", ""];
         if (url.split) {
             urlSplit = url.split("/");
@@ -12272,21 +12273,6 @@ ImgOps | https://imgops.com/#b#`;
             },
             ontimeout: function(){
                 urlToBlob(url, cb, forcePng, tryTimes);
-            }
-        });
-    }
-    function downloadImg(url, name, type, errCb) {
-        urlToBlob(url, (blob, ext) => {
-            if(blob){
-                try {
-                    saveAs(blob, getRightSaveName(url, name, type, ext));
-                } catch(e) {
-                    _GM_download(url, name, type);
-                    if (errCb) errCb();
-                }
-            }else{
-                _GM_download(url, name, type);
-                if (errCb) errCb();
             }
         });
     }
@@ -12765,6 +12751,22 @@ ImgOps | https://imgops.com/#b#`;
                 }
             });
             unsafeWindow.URL.createObjectURL = createObjectURLProxy;
+        }
+
+        function downloadImg(url, name, type, errCb) {
+            urlToBlob(url, (blob, ext) => {
+                if(blob){
+                    try {
+                        saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                    } catch(e) {
+                        _GM_download(url, name, type);
+                        if (errCb) errCb();
+                    }
+                }else{
+                    _GM_download(url, name, type);
+                    if (errCb) errCb();
+                }
+            });
         }
 
         function getBlob(url) {
@@ -16054,7 +16056,7 @@ ImgOps | https://imgops.com/#b#`;
                     let defaultDl=()=>{
                         self.addDlSpan(img, imgSpan, curNode, e=>{
                             e.stopPropagation();
-                            _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
+                            downloadImg(curNode.dataset.src, curNode.title, prefs.saveName);
                             return true;
                         });
                     };
@@ -26038,6 +26040,11 @@ ImgOps | https://imgops.com/#b#`;
                     },
                     "default": (prefs.saveName || 0),
                     title: i18n("saveNameTip"),
+                },
+                'saveNameAddTitle': {
+                    label: i18n("saveNameAddTitle"),
+                    type: 'checkbox',
+                    "default": !!prefs.saveNameAddTitle
                 },
                 'debug': {
                     label: i18n("debug"),
