@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.86
+// @version      1.9.37.87
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1172,6 +1172,7 @@
     const mainSel = ["article,.article","[role=main],main,.main,#main","#results"];
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
+    const prevReg = new RegExp("\u005e\u005c\u0073\u002a\u0028\u005b\u4e0a\u524d\u9996\u5c3e\u005d\u007c\u0070\u0072\u0065\u0076\u0069\u006f\u0075\u0073\u007c\u0065\u006e\u0064\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-s", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, loadNowNum = 5, autoScrollRate = 50;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false, hidePageBar = false;
@@ -2571,11 +2572,10 @@
                 let sel = list[i];
                 let result = getAllElements(sel, source);
                 if (result.length > 0) {
-                    if (defaultView) {
-                        for (let i = result.length - 1; i >= 0; i--) {
-                            let ele = result[i];
-                            if (isVisible(ele, defaultView)) return ele;
-                        }
+                    for (let i = result.length - 1; i >= 0; i--) {
+                        let ele = result[i];
+                        if (prevReg.test(ele.innerText)) continue;
+                        if (!defaultView || isVisible(ele, defaultView)) return ele;
                     }
                     return result[result.length - 1];
                 }
@@ -2703,7 +2703,6 @@
             if (!next) {
                 await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
-                const prevReg = /^\s*([上前首尾]|previous)/i;
                 for (i = 0; i < nexts.length; i++) {
                     let n = nexts[i];
                     if (this.verifyElement(n) && this.linkHasHref(n) && !prevReg.test(n.innerText.trim())) {
@@ -2755,7 +2754,7 @@
             }
             if (!next) {
                 await sleep(1);
-                let pageDiv = body.querySelector(".pagination");
+                let pageDiv = body.querySelector(".pagination,.pagination-list");
                 if (pageDiv) {
                     cur = pageDiv.querySelector("[class*=current],.page-selected");
                     if (cur) next = cur.parentNode.nextElementSibling;
@@ -8960,7 +8959,7 @@
                     preContent = checkInner;
                     setTimeout(() => {
                         checkPage();
-                    }, ruleParser.curSiteRule.smart ? 1000 : 500);
+                    }, 500);
                 } else if (changed) {
                     checkTimes = 0;
                     if (orgContent == preContent && (ruleParser.curSiteRule.smart || ruleParser.curSiteRule.stopSame)) {
