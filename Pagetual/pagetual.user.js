@@ -2693,6 +2693,7 @@
                 "body [class*=pagination-next]>button",
                 "body [class*=page--current]+li>a",
                 "body [class*=Pages]>.curr+a",
+                "body [class*=page]>.cur+a",
                 "body [class*=pagination] [class*=next]",
                 ".page>em+a",
                 "[name*=nextPage]",
