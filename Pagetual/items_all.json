@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86239",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5']",
+    "nextLink": "//span[@class='relative z-0 inline-flex shadow-sm']/a[last()]",
+    "url": "^https://missav\\.com/",
+    "exampleUrl": "https://missav.com/ja/search/%E4%B8%80%E4%B9%8B%E7%80%AC%E3%81%99%E3%81%9A"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "blekai",
+  "name": "MISSAV",
+  "created_at": "2024-08-02T17:07:28+09:00",
+  "updated_at": "2024-08-02T17:07:28+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86238",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='act-video-list']",
+    "nextLink": "//div[@class='pagination']/b/a[last()]",
+    "url": "^https://www.minnano-av\\.com/",
+    "exampleUrl": ""
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "blekai",
+  "name": "みんなのAV.com",
+  "created_at": "2024-08-02T16:30:50+09:00",
+  "updated_at": "2024-08-02T16:30:50+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86237",
   "data": {
     "insertBefore": "",
