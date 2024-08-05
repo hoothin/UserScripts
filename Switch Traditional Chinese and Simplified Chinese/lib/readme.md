@@ -12,7 +12,7 @@
 ``` js
 import Stcasc from './stcasc.lib.js';
 let stcasc = Stcasc();
-alert(stcasc.traditionalized("香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发"));
+console.log(stcasc.traditionalized("香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发"));
 //香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮
 ```
 
