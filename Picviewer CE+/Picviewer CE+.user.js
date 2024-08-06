@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.7.27.3
+// @version              2024.8.6.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
 // @require              https://update.greasyfork.org/scripts/438080/1416490/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1417682/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/440698/1422852/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -13568,7 +13568,14 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
                     '<div class="pv-gallery-range-box"><input type="range" id="minsizeW" min="0" max="100" value="0" title="Width" /> <span id="minsizeWSpan">0px</span> '+
-                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height" /> <span id="minsizeHSpan">0px</span></div>'+
+                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height" /> <span id="minsizeHSpan">0px</span>'+
+                    '<select id="pinSize">'+
+                    '<option value="" disabled selected>'+i18n("size")+'</option>'+
+                    '<option value="0">'+i18n("all")+'</option>'+
+                    '<option value="512x512">'+i18n("bigSize")+'</option>'+
+                    '<option value="0-256x0-256">'+i18n("iconSize")+'</option>'+
+                    '</select>'+
+                    '</div>'+
                     '<span class="pv-gallery-head-left-lock-icon" title="'+i18n("lockSizeTip")+'"></span>'+
                     '<span class="pv-gallery-head-left-filter-icon" title="'+i18n("urlFilterTip")+'"></span>'+
                     '</span>'+
@@ -13816,32 +13823,65 @@ ImgOps | https://imgops.com/#b#`;
                 this.hideBodyStyle=hideBodyStyle;
                 hideBodyStyle.textContent=`body>*:not([class^="pv-"]) img,body>img{display:none}`;
 
-                var sizeInputH=container.querySelector("#minsizeH");
-                var sizeInputW=container.querySelector("#minsizeW");
+                var sizeInputH = container.querySelector("#minsizeH");
+                var sizeInputW = container.querySelector("#minsizeW");
                 this.sizeInputH = sizeInputH;
                 this.sizeInputW = sizeInputW;
-                sizeInputW.oninput=function(){self.changeMinView();};
-                sizeInputH.oninput=function(){self.changeMinView();};
-                container.querySelector("#minsizeWSpan").onclick=function(){
-                    var minsizeW=window.prompt("Width:",sizeInputW.value);
-                    if(!minsizeW)return;
-                    sizeInputW.value=minsizeW;
+                sizeInputW.oninput = function(){self.changeMinView();};
+                sizeInputH.oninput = function(){self.changeMinView();};
+                container.querySelector("#minsizeWSpan").onclick = function(){
+                    var minsizeW = window.prompt("Width:",sizeInputW.value);
+                    if (!minsizeW) return;
+                    sizeInputW.value = minsizeW;
                     self.changeMinView();
                 };
-                container.querySelector("#minsizeHSpan").onclick=function(){
-                    var minsizeH=window.prompt("Height:",sizeInputH.value);
-                    if(!minsizeH)return;
-                    sizeInputH.value=minsizeH;
+                container.querySelector("#minsizeHSpan").onclick = function(){
+                    var minsizeH = window.prompt("Height:",sizeInputH.value);
+                    if (!minsizeH) return;
+                    sizeInputH.value = minsizeH;
                     self.changeMinView();
                 };
-                var headMaxLock=container.querySelector(".pv-gallery-head-left-lock-icon");
-                headMaxLock.onclick=function(){
-                    if(self.lockMaxSize){
-                        self.lockMaxSize=null;
+                var pinSize = container.querySelector("#pinSize");
+                pinSize.addEventListener('change', function(e) {
+                    let arr = e.target.value.split("x");
+                    if (arr.length !== 2) {
+                        self.lockMaxSize = null;
+                        sizeInputH.value = 0;
+                        sizeInputW.value = 0;
                         self.changeMinView();
-                        headMaxLock.style.filter="";
-                        headMaxLock.title=i18n("lockSizeTip");
-                    }else{
+                        headMaxLock.style.filter = "";
+                        headMaxLock.title = i18n("lockSizeTip");
+                        return;
+                    }
+                    let wArr = arr[0].split("-");
+                    let hArr = arr[1].split("-");
+                    let minW = parseInt(wArr[0]);
+                    let maxW = parseInt(wArr[1] || 0);
+                    let minH = parseInt(hArr[0]);
+                    let maxH = parseInt(hArr[1] || 0);
+                    sizeInputH.value = minH;
+                    sizeInputW.value = minW;
+                    if (maxW && maxH) {
+                        self.lockMaxSize = {w: maxW, h: maxH};
+                        headMaxLock.style.filter = "brightness(5)";
+                        headMaxLock.title = maxW + " x " + maxH;
+                    } else {
+                        self.lockMaxSize = null;
+                        headMaxLock.style.filter = "";
+                        headMaxLock.title = i18n("lockSizeTip");
+                    }
+                    self.changeMinView();
+                });
+                this.pinSize = pinSize;
+                this.sizeMap = {};
+                var headMaxLock = container.querySelector(".pv-gallery-head-left-lock-icon");
+                headMaxLock.onclick = function() {
+                    if (self.lockMaxSize) {
+                        self.lockMaxSize = null;
+                        self.changeMinView();
+                        headMaxLock.style.filter = "";
+                        headMaxLock.title = i18n("lockSizeTip");
+                    } else {
                         var maxsizeW, maxsizeH;
                         maxsizeW = window.prompt("Max Width:", sizeInputW.max);
                         if(maxsizeW) {
@@ -15657,6 +15697,14 @@ ImgOps | https://imgops.com/#b#`;
                         var spanMark=self._spanMarkPool[item.src];
                         if(spanMark && !spanMark.dataset.naturalSize && item.naturalWidth && item.naturalHeight){
                             spanMark.dataset.naturalSize=JSON.stringify({w:item.naturalWidth,h:item.naturalHeight});
+                            let key = item.naturalWidth + "x" + item.naturalHeight;
+                            self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                            if (self.sizeMap[key] === 2) {
+                                let option = document.createElement("option");
+                                option.innerText = key;
+                                option.value = item.naturalWidth + "-" + item.naturalWidth + "x" + item.naturalHeight + "-" + item.naturalHeight;
+                                self.pinSize.appendChild(option);
+                            }
                         }
                         if(!self.filterImage(item.naturalWidth || item.sizeW, item.naturalHeight || item.sizeH, item.src)){
                             item.parentNode.style.display="none";
@@ -16546,6 +16594,7 @@ ImgOps | https://imgops.com/#b#`;
                     img.style.backgroundImage = `url(${thumb})`;
                 }
 
+                var self=this;
                 if(error){
                     let relatedImg=relatedThumb.querySelector("img");
                     if(!relatedImg)return;
@@ -16557,7 +16606,6 @@ ImgOps | https://imgops.com/#b#`;
                     }else{
                         var srcs=dataset(relatedThumb, 'srcs');
                         if(srcs && srcs.length>0)srcs=srcs.split(",");
-                        var self=this;
                         this.img.onload=function(){
                             imgNaturalSize={
                                 h:this.naturalHeight,
@@ -16566,6 +16614,14 @@ ImgOps | https://imgops.com/#b#`;
 
                             self.imgNaturalSize=imgNaturalSize;
                             dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
+                            let key = imgNaturalSize.w + "x" + imgNaturalSize.h;
+                            self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                            if (self.sizeMap[key] === 2) {
+                                let option = document.createElement("option");
+                                option.innerText = key;
+                                option.value = imgNaturalSize.w + "-" + imgNaturalSize.w + "x" + imgNaturalSize.h + "-" + imgNaturalSize.h;
+                                self.pinSize.appendChild(option);
+                            }
                             self.fitToScreen();
                         }
                         if(srcs && srcs.length>0){
@@ -16583,6 +16639,14 @@ ImgOps | https://imgops.com/#b#`;
                     this.eleMaps['img_broken'].style.display='';
                     if(!dataset(relatedThumb,'naturalSize')){
                         dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
+                        let key = imgNaturalSize.w + "x" + imgNaturalSize.h;
+                        self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                        if (self.sizeMap[key] === 2) {
+                            let option = document.createElement("option");
+                            option.innerText = key;
+                            option.value = imgNaturalSize.w + "-" + imgNaturalSize.w + "x" + imgNaturalSize.h + "-" + imgNaturalSize.h;
+                            self.pinSize.appendChild(option);
+                        }
                     };
                 };
 
@@ -16849,6 +16913,20 @@ ImgOps | https://imgops.com/#b#`;
                     if(!spanMark){
                         spanMark = document.createElement("span");
                         try{
+                            if (item.img.naturalHeight && item.img.naturalWidth) {
+                                spanMark.dataset.naturalSize = JSON.stringify({
+                                    h: item.img.naturalHeight,
+                                    w: item.img.naturalWidth,
+                                });
+                                let key = item.img.naturalWidth + "x" + item.img.naturalHeight;
+                                self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                                if (self.sizeMap[key] === 2) {
+                                    let option = document.createElement("option");
+                                    option.innerText = key;
+                                    option.value = item.img.naturalWidth + "-" + item.img.naturalWidth + "x" + item.img.naturalHeight + "-" + item.img.naturalHeight;
+                                    self.pinSize.appendChild(option);
+                                }
+                            }
                             spanMark.className="pv-gallery-sidebar-thumb-container";
                             spanMark.dataset.index=index;
                             spanMark.dataset.type=item.type;
@@ -17879,7 +17957,7 @@ ImgOps | https://imgops.com/#b#`;
                 var imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
                     return anylizeEle(total, node);
                 }, []);
-                [].forEach.call(document.head.querySelectorAll("link[rel='shortcut icon'],link[rel='icon'],link[rel='fluid-icon'],link[rel='apple-touch-icon']"), node => {
+                [].forEach.call(document.head.querySelectorAll("link[rel*='icon']"), node => {
                     if (imageReg.test(node.href)) {
                         node.src = node.href;
                         linkMedias.push(node);
@@ -18352,6 +18430,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: inline-flex;\
                     justify-content: center;\
                     align-items: center;\
+                    }\
+                    .pv-gallery-range-box>#pinSize{\
+                    margin: 0 5px;\
                     }\
                     .pv-gallery-range-box>span{\
                     padding: 0 5px 0 5px;\
@@ -19456,7 +19537,21 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             }
 
-                            dataset(ele,'preloaded','true')
+                            dataset(ele,'preloaded','true');
+                            if (!dataset(ele,'naturalSize') && this.naturalHeight && this.naturalWidth) {
+                                dataset(ele,'naturalSize', JSON.stringify({
+                                    h: this.naturalHeight,
+                                    w: this.naturalWidth,
+                                }));
+                                let key = this.naturalWidth + "x" + this.naturalHeight;
+                                self.oriThis.sizeMap[key] = (self.oriThis.sizeMap[key] || 0) + 1;
+                                if (self.oriThis.sizeMap[key] === 2) {
+                                    let option = document.createElement("option");
+                                    option.innerText = key;
+                                    option.value = this.naturalWidth + "-" + this.naturalWidth + "x" + this.naturalHeight + "-" + this.naturalHeight;
+                                    self.oriThis.pinSize.appendChild(option);
+                                }
+                            }
                             self.container.appendChild(this);
                             self.preload();
                         },
@@ -23775,6 +23870,9 @@ ImgOps | https://imgops.com/#b#`;
                 xhr,
                 description; // 图片的注释
             var imgCStyle = unsafeWindow.getComputedStyle(img);
+            if (/^link$/i.test(img.nodeName)) {
+                imgCStyle = {height:64, width:64};
+            }
             if (!/IMG/i.test(img.nodeName) && imgCStyle && imgCStyle.backgroundImage && imgCStyle.backgroundImage != "none") {
                 let sh = imgCStyle.height, sw = imgCStyle.width;
                 if (!img.offsetWidth) sw = 10;
@@ -26204,7 +26302,7 @@ ImgOps | https://imgops.com/#b#`;
                                             node: "a",
                                             text: "爱发电",
                                             attr: {
-                                                href: "https://afdian.net/@hoothin",
+                                                href: "https://afdian.com/@hoothin",
                                                 target: "_blank"
                                             }
                                         }
