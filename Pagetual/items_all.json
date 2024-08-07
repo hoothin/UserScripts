@@ -121,17 +121,16 @@
 {
   "resource_url": "http://wedata.net/items/86228",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[@class='c-content-item']",
+    "pageElement": "//div[@class='p-content']/div[.//img]",
     "nextLink": "//a[@rel='next']",
-    "url": "^https?://filmarks\\.com/",
-    "exampleUrl": "https://filmarks.com/users/dpandaramu/clips"
+    "url": "^https://filmarks\\.com/users/",
+    "exampleUrl": "https://filmarks.com/users/dpandaramu/clips\r\nhttps://filmarks.com/users/dpandaramu/followers"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "shaolon",
-  "name": "filmak clips",
+  "name": "filmarks /users/",
   "created_at": "2024-05-23T14:24:20+09:00",
-  "updated_at": "2024-05-23T14:24:20+09:00"
+  "updated_at": "2024-08-06T22:08:35+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86227",
