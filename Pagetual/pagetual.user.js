@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.88
+// @version      1.9.37.89
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2650,6 +2650,7 @@
                 ".curPage+a",
                 ".nextPage",
                 ".pagination-next>a",
+                ".pagination>.active+a",
                 "a[data-pagination=next]",
                 ".pageButtonsCurrent+a",
                 "a[class*=nextpage]",
@@ -4076,7 +4077,7 @@
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
                     if (!compareNodeName(newEle, ["style", "script"])) self.visibilityItems.push(newEle);
-                    collection.appendChild(newEle)
+                    collection.appendChild(newEle);
                     newEles.push(newEle);
                 });
                 let css = this.curSiteRule.css;
@@ -4435,8 +4436,8 @@
             }, true);
 
             top.addEventListener("click", e => {
-                getBody(document).scrollTop=0;
-                document.documentElement.scrollTop=0;
+                getBody(document).scrollTop = 0;
+                document.documentElement.scrollTop = 0;
                 e.preventDefault();
                 e.stopPropagation();
             }, true);
@@ -6393,7 +6394,7 @@
         let hideLoadingIconInput = createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon != false);
         let initRunInput = createCheckbox(i18n("initRun"), rulesData.initRun != false);
         let autoLoadNumInput = createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
-        let preloadInput = createCheckbox(i18n("preload"), rulesData.preload != false);
+        let preloadInput = createCheckbox(i18n("preload"), rulesData.preload);
         let rateInput = createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number", true);
         let dbClick2StopInput = createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput = createCheckbox(i18n("manualMode"), rulesData.manualMode);
@@ -6967,7 +6968,7 @@
                     rulesData.initRun = true;
                 }
                 if (typeof(rulesData.preload) == "undefined") {
-                    rulesData.preload = true;
+                    rulesData.preload = false;
                 }
                 if (typeof(rulesData.customFirst) == "undefined") {
                     rulesData.customFirst = false;
