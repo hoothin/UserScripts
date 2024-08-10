@@ -10,7 +10,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.89
+// @version      1.9.37.90
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -8766,14 +8766,18 @@
             }
         }
         async function cloneStatus() {
-            if (!iframeDoc) return;
+            if (!iframeDoc || ruleParser.curSiteRule.cloneStatus === false) return;
             let inputs = document.querySelectorAll("input:not([type=button],[type=image],[type=reset],[type=submit])");
             let selectOptions = document.querySelectorAll("select>option");
             [...inputs].forEach(input => {
                 let sel = geneSelector(input, true, true);
                 let mirrorEle = iframeDoc.querySelector(sel);
                 if (!mirrorEle) return;
-                emuInput(mirrorEle, input.value);
+                if (mirrorEle.type === "checkbox" || mirrorEle.type === "radio") {
+                    mirrorEle.checked = !!input.checked;
+                } else {
+                    emuInput(mirrorEle, input.value);
+                }
             });
             [...selectOptions].forEach(option => {
                 let sel = geneSelector(option, true, true);
@@ -8781,7 +8785,9 @@
                 if (!mirrorEle) return;
                 let selected = option.selected;
                 mirrorEle.selected = !!selected;
-                mirrorEle.parentNode.dispatchEvent(new Event('change'));
+                if (selected) {
+                    mirrorEle.parentNode.dispatchEvent(new Event('change'));
+                }
             });
             if (activeClass) {
                 let actives = document.querySelectorAll("." + activeClass);
