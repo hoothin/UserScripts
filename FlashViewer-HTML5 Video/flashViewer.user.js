@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.8
 // @created        2013-12-27
-// @lastUpdated    2024-5-23
+// @lastUpdated    2024-8-10
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -248,6 +248,20 @@
                 height: bottom - top,
             };
         };
+
+
+        var escapeHTMLPolicy;
+        if (window.trustedTypes && window.trustedTypes.createPolicy) {
+            escapeHTMLPolicy=window.trustedTypes.createPolicy('pvcep_default', {
+                createHTML: (string, sink) => string,
+                createScriptURL: string => string,
+                createScript: string => string
+            });
+        }
+
+        function createHTML(html){
+            return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+        }
 
         //获取窗口大小.
         function getWindowSize() {
@@ -1663,7 +1677,7 @@
                 this.controlLayer = controlLayer;
                 controlLayer.className = 'fv-p-v-control-layer';
 
-                controlLayer.innerHTML = getMStr(function () {
+                controlLayer.innerHTML = createHTML(getMStr(function () {
                     var innerHTML;
                     /*
                         <fvspan class="fv-p-v-control-title-bar">
@@ -1727,7 +1741,7 @@
                         <fvspan class="fv-p-v-control-resize-hand fv-p-v-control-resize-hand-se"></fvspan>
                         <fvspan class="fv-p-v-control-resize-hand fv-p-v-control-resize-hand-sw"></fvspan>
                     */
-                }).innerHTML;
+                }).innerHTML);
 
                 document.body.appendChild(controlLayer);
 
@@ -3023,12 +3037,12 @@
                 placeholder.className = 'fv-c-v-placeholder';
                 placeholder.title = "点击还原视频";
 
-                placeholder.innerHTML = getMStr(function () {
+                placeholder.innerHTML = createHTML(getMStr(function () {
                     var innerHTML;
                     /*
                     <fvspan class="fv-c-v-close" title="彻底删除这个视频"></fvspan>
                     */
-                }).innerHTML;
+                }).innerHTML);
 
 
                 // 复制样式
@@ -3174,7 +3188,7 @@
                 this.floatBar = floatBar;
                 floatBar.id = 'fv-f-b-container';
 
-                floatBar.innerHTML = getMStr(function () {
+                floatBar.innerHTML = createHTML(getMStr(function () {
                     var innerHTML;
                     /*
                         <fvspan class="fv-f-b-button"></fvspan>
@@ -3224,7 +3238,7 @@
                           </select>
                         </fvspan>
                     */
-                }).innerHTML;
+                }).innerHTML);
 
                 var butonOrder = prefs.floatBar.butonOrder.slice(0);
                 butonOrder.push('download');
