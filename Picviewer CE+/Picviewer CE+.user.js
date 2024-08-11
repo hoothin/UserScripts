@@ -65,8 +65,8 @@
 
 if (window.top != window.self) {
     try {
-        if (window.top.location.origin !== window.self.location.origin) {
-            if (window.self.innerWidth < 250 || window.self.innerHeight < 250) {
+        if (window.self.innerWidth < 250 || window.self.innerHeight < 250) {
+            if (window.top.location.origin !== window.self.location.origin) {
                 return;
             }
         }
