@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.8.13.1
+// @version              2024.8.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -65,10 +65,8 @@
 
 if (window.top != window.self) {
     try {
-        if (window.self.innerWidth < 250 || window.self.innerHeight < 250) {
-            if (window.top.location.origin !== window.self.location.origin) {
-                return;
-            }
+        if ((window.self.innerWidth && window.self.innerWidth < 250) || (window.self.innerHeight && window.self.innerHeight < 250)) {
+            return;
         }
     } catch(e) {
         return;
@@ -26825,6 +26823,22 @@ ImgOps | https://imgops.com/#b#`;
         switchSearch();
     }
 
-    init2();
+    if (window.top != window.self) {
+        if (window.self.innerWidth === 0 && window.self.innerHeight === 0) {
+            if (document.readyState !== "complete") {
+                window.addEventListener('load', e => {
+                    setTimeout(() => {
+                        if (window.self.innerWidth > 250 && window.self.innerHeight > 250) {
+                            init2();
+                        }
+                    }, 500);
+                });
+            }
+        } else {
+            init2();
+        }
+    } else {
+        init2();
+    }
 
 })(this,window,document,(typeof unsafeWindow=='undefined'? window : unsafeWindow));
