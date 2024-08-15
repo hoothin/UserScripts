@@ -8141,6 +8141,9 @@
         }
         if (rulesData.arrowToScroll) {
             keyupHandler = e => {
+                if (e.shiftKey || e.ctrlKey || e.altKey) {
+                    return;
+                }
                 if (document.activeElement &&
                     (compareNodeName(document.activeElement, ["input", "textarea"]) ||
                      document.activeElement.contentEditable == 'true')) {
