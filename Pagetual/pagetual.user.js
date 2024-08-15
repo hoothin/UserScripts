@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.91
+// @version      1.9.37.92
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3574,17 +3574,45 @@
             return true;
         }
 
+        preloadOneImg(src) {
+            return new Promise(resolve => {
+                let img = document.createElement('img');
+                img.src = src;
+                this.preloadDiv.appendChild(img);
+                if (img.complete) resolve('complete');
+                else {
+                    img.onload = e => {
+                        resolve('load');
+                    };
+                    img.onerror = e => {
+                        resolve('error');
+                    };
+                }
+            }).then(e => {
+                let src = this.unCheckedImgs.shift();
+                if (src) {
+                    this.preloadOneImg(src);
+                }
+                return e;
+            });
+        }
+
         preloadImageHandler() {
             if (this.preloadingImage || !this.unCheckedImgs.length) return;
             this.preloadingImage = true;
-            setTimeout(() => {
+            let src = this.unCheckedImgs.shift(), i = 0, promiseList = [];
+
+            while(src) {
+                promiseList.push(this.preloadOneImg(src));
+                if (++i > 5) {
+                    break;
+                } else {
+                    src = this.unCheckedImgs.shift();
+                }
+            }
+            Promise.all(promiseList).then(e => {
                 this.preloadingImage = false;
-                this.preloadImageHandler();
-            }, 10);
-            let iSrc = this.unCheckedImgs.shift();
-            let img = document.createElement('img');
-            img.src = iSrc;
-            this.preloadDiv.appendChild(img);
+            });
         }
 
         preload() {
