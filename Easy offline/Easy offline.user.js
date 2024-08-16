@@ -1501,9 +1501,6 @@
                             if(allHide){
                                 alert(i18n("allDisableError"));
                                 return;
-                            }else if(siteConfig.name==="PikPak"){
-                                storage.setItem("pikpakUserInfo","");
-                                alert("PikPak account has been cleared");
                             }
                         }
                         storage.setItem("eoHide"+siteConfig.name, !eoHide);

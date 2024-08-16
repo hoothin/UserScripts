@@ -101,6 +101,12 @@
 
         return user_agent_parts.join(" ");
     }
+    document.addEventListener("click", function(e) {
+        if (e.target && e.target.getAttribute && e.target.getAttribute("name") === "pikpak" && e.target.parentNode.id === "icons") {
+            GM_setValue("pikpakUserInfo", "");
+            alert("PikPak account has been cleared");
+        }
+    });
     var _unsafeWindow = (typeof unsafeWindow === 'undefined') ? window : unsafeWindow;
     if (!_unsafeWindow.eoAddons) _unsafeWindow.eoAddons = {};
     _unsafeWindow.eoAddons.pikpak = {
