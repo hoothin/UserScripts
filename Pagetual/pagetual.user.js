@@ -7984,6 +7984,7 @@
             return true;
         }
         _unsafeWindow.addEventListener('message', messageHandler, true);
+        let foundLoadMore = false, scrolling = false;
         scrollHandler = e => {
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {});
@@ -7995,21 +7996,29 @@
             if (!loadingMore) {
                 loadmoreBtn = getLoadMore(document, loadmoreBtn);
                 if (loadmoreBtn) {
+                    foundLoadMore = true;
                     checkLoadMoreTimes = 0;
                     if (isInViewPort(loadmoreBtn)) {
                         emuClick(loadmoreBtn);
                         loadingMore = true;
-                        setTimeout(() => {loadingMore = false}, 200);
+                        setTimeout(() => {loadingMore = false}, 300);
                     }
                 } else {
                     loadingMore = true;
-                    if (!ruleParser.curSiteRule.smart || checkLoadMoreTimes++ < 3) {
-                        setTimeout(() => {loadingMore = false}, 200);
-                    } else {
+                    if (!ruleParser.curSiteRule.smart) {
+                        setTimeout(() => {loadingMore = false}, 300);
+                    } else if (checkLoadMoreTimes++ < 10) {
+                        setTimeout(() => {loadingMore = false}, 500);
+                    } else if (foundLoadMore) {
                         setTimeout(() => {loadingMore = false}, 1000);
                     }
                 }
             }
+            if (scrolling) return;
+            scrolling = true;
+            setTimeout(() => {
+                scrolling = false;
+            }, 100);
             if (!isLoading && !stopScroll) {
                 checkScrollReach();
             }
