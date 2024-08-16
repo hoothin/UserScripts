@@ -96,10 +96,10 @@
         riliLink.onmouseenter=function(){
             clearTimeout(t);
                 $(iframe).show(200);
-                iframeDoc.scrollTop(137);
+                iframeDoc.scrollTop(153);
                 iframeDoc.scrollLeft(150);
                 iframe.width=592;
-                iframe.height=702;
+                iframe.height=665;
         };
         riliLink.onmouseleave=function(){
             clearTimeout(t);
