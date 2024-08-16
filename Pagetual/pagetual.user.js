@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.92
+// @version      1.9.37.93
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -8041,16 +8041,16 @@
                     return;
                 }
             }
-            if (!compareNodeName(e.target, ["body"]) && !e.target.classList.contains('pagetual_pageBar')) {
+            if (!e.target.classList.contains('pagetual_pageBar')) {
                 try {
                     let selection = window.getSelection();
-                    let selStr = selection.toString().trim();
-                    if (!selStr) {
+                    let selObj = selection.toString();
+                    if (!selObj) {
                         selection = selection.getRangeAt(0);
-                        selStr = selection && selection.cloneContents().children[0];
-                        if (selStr && !compareNodeName(selStr, ["img"])) selStr = false;
+                        selObj = selection && selection.cloneContents().children[0];
+                        if (selObj && !compareNodeName(selObj, ["img"])) selObj = false;
                     }
-                    if (selStr) {
+                    if (selObj) {
                         return;
                     }
                 } catch (e) {}
@@ -8123,7 +8123,8 @@
             manualModeKeyHandler = e => {
                 if (document.activeElement &&
                     (compareNodeName(document.activeElement, ["input", "textarea"]) ||
-                     document.activeElement.contentEditable == 'true')) {
+                     document.activeElement.contentEditable == 'true' ||
+                     window.getSelection().toString())) {
                     return;
                 }
                 if (e.keyCode == 39) {
@@ -8143,7 +8144,8 @@
             keyupHandler = e => {
                 if (document.activeElement &&
                     (compareNodeName(document.activeElement, ["input", "textarea"]) ||
-                     document.activeElement.contentEditable == 'true')) {
+                     document.activeElement.contentEditable == 'true' ||
+                     window.getSelection().toString())) {
                     return;
                 }
                 if (e.keyCode == 39) {
