@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.93
+// @version      1.9.37.94
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5318,6 +5318,10 @@
                 editTemp[propName] = propValue;
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
             }, true);
+            addOtherProp.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0], {active: true});
+            }, true);
             addNextSelector.addEventListener("click", e => {
                 let editTemp = self.getTempRule();
                 if (!editTemp) return;
@@ -5327,6 +5331,10 @@
                 }
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
             }, true);
+            addNextSelector.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0].replace("rule.html", "rules/nextLink.html"), {active: true});
+            }, true);
             addPageSelector.addEventListener("click", e => {
                 let editTemp = self.getTempRule();
                 if (!editTemp) return;
@@ -5335,6 +5343,10 @@
                     editTemp.pageElement = selector;
                 }
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
+            }, true);
+            addPageSelector.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0].replace("rule.html", "rules/pageElement.html"), {active: true});
             }, true);
             showDetailBtn.addEventListener("click", e => {
                 frame.classList.toggle("showDetail");
@@ -5399,7 +5411,7 @@
                 if (moving) {
                     moving = false;
                 } else {
-                    _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                    _GM_openInTab(configPage[0], {active: true});
                 }
                 document.removeEventListener("mousemove", moveHanlder, true);
                 title.removeEventListener("mouseup", upHanlder, true);
@@ -6869,7 +6881,7 @@
                         title: "Pagetual rules updated",
                         onclick: (event) => {
                             event.preventDefault();
-                            _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                            _GM_openInTab(configPage[0], {active: true});
                         }
                     });
                 }
