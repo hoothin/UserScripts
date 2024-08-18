@@ -14470,16 +14470,16 @@
 {
   "resource_url": "http://wedata.net/items/81579",
   "data": {
-    "pageElement": "//article/section/div[2]",
+    "pageElement": "//article/section/div[contains(@class, 'kijiwrap')]",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://kinmaweb\\.jp/archives/",
-    "exampleUrl": "https://kinmaweb.jp/archives/70121"
+    "exampleUrl": "https://kinmaweb.jp/archives/70121 https://kinmaweb.jp/archives/70121/2"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "キンマweb",
   "created_at": "2017-09-30T13:23:47+09:00",
-  "updated_at": "2022-01-01T17:05:39+09:00"
+  "updated_at": "2024-08-18T08:03:14+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81578",
