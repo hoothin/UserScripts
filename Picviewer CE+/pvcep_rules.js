@@ -30,16 +30,12 @@ getExtSrc is the method for directly obtaining the image URL based on a non-imag
 var siteInfo = [
     {
         name: "google 图片搜索",
-
         //網址例子 ( 方便測試和查看 )
         example: "http://www.google.com.hk/search?q=firefox&tbm=isch",
-
         //是否啟用
         enabled: true,
-
         //站點正則，匹配站點url該條規則才會生效
         url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&(tbm=isch|udm=2)/,
-
         //鼠標點擊直接打開（僅當高級規則的getImage()或者r/s替換有返回值的時候生效）
         clickToOpen: {
             enabled: false,
@@ -51,12 +47,11 @@ var siteInfo = [
             meta: false,//是否需要按下meta鍵
             type: 'actual',//默認的打開方式: 'actual'(彈出,原始圖片) 'magnifier'(放大鏡) 'current'(彈出,當前圖片)
         },
-
-        //獲取圖片實際地址的處理函數,
-        //this 為當前鼠標懸浮圖片的引用,
-        //第一個參數為當前圖片的父元素中第一個a元素(可能不存在)
-        //第二個參數為保存當前圖片所有父元素的數組
         getImage: function(a) {
+            //獲取圖片實際地址的處理函數,
+            //this 為當前鼠標懸浮圖片的引用,
+            //第一個參數為當前圖片的父元素中第一個a元素(可能不存在)
+            //第二個參數為保存當前圖片所有父元素的數組
             if(!a) return;
             let jsaction = a.getAttribute("jsaction");
             if (a.href.match(/imgurl=(.*?)&/i)) {
@@ -77,7 +72,6 @@ var siteInfo = [
                 }
             }
         }
-
         // 自定義樣式
         // css: '',
 
