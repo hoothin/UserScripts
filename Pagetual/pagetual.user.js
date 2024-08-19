@@ -4158,7 +4158,7 @@
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
             if (sideController.inited) {
-                sideController.frame.classList.add("loading");
+                sideController.frame.classList.add("pagetual-sideController-loading");
             }
         }
 
@@ -4411,8 +4411,8 @@
                  margin: -2px;
                  border-radius: 50%;
              }
-             #pagetual-sideController.minSize.loading #pagetual-sideController-move::before {
-                 background-image: conic-gradient(transparent, #a8efff, transparent 30%);
+             #pagetual-sideController.minSize.pagetual-sideController-loading #pagetual-sideController-move::before {
+                 background-image: conic-gradient(transparent, #a8efff, transparent 50%);
                  -webkit-animation: siderotate 1s linear infinite;
                  animation: siderotate 1s linear infinite;
              }
@@ -9600,7 +9600,7 @@
             }, 1);
         }
         if (sideController.inited) {
-            sideController.frame.classList.remove("loading");
+            sideController.frame.classList.remove("pagetual-sideController-loading");
         }
     }
 
@@ -9674,7 +9674,7 @@
                 ruleParser.beginLoading(loadingDiv);
             } else {
                 if (sideController.inited) {
-                    sideController.frame.classList.add("loading");
+                    sideController.frame.classList.add("pagetual-sideController-loading");
                 }
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
