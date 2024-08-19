@@ -7232,6 +7232,12 @@
     "pageElement": "main.site-main > div.row.posts-wrapper"
 },
 {
+    "name": "投稿列表 pixivFANBOX",
+    "url": "^https?://[^\\.]+\\.fanbox\\.cc/",
+    "example": "https://ffxivinitiala.fanbox.cc/posts",
+    "waitElement": "!.gaaMeK,img[class^=LazyImage]:not([src]),[class^=LazyImage__LoadingIcon]"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
