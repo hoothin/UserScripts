@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.95
+// @version      1.9.37.96
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1289,7 +1289,7 @@
             storage.setItem(list, listData);
         });
     }
-    const isMobile = ('ontouchstart' in document.documentElement);
+    const isMobile = ('ontouchstart' in document.documentElement && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const configPage = [`https://pagetual.hoothin.com/${lang === 'zh-CN' ? 'cn/' : ''}rule.html`,
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
@@ -4578,7 +4578,12 @@
                 nextPage();
             }, true);
 
+            let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
             pre.addEventListener("click", e => {
+                if (manualMode) {
+                    history.back();
+                    return;
+                }
                 let prePageBar = getPageBar().preBar;
                 if (prePageBar) {
                     scrollToPageBar(prePageBar);
@@ -4589,7 +4594,20 @@
                 }
             }, true);
 
-            next.addEventListener("click", e => {
+            next.addEventListener("click", async e => {
+                if (manualMode) {
+                    let nextLink = ruleParser.nextLinkHref;
+                    if (!nextLink) return;
+                    let isJs = ruleParser.hrefIsJs(nextLink);
+                    if (isJs) {
+                        let nextBtn = ruleParser.nextLinkEle;
+                        if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document, true);
+                        if (nextBtn) emuClick(nextBtn);
+                    } else {
+                        window.location.href = nextLink;
+                    }
+                    return;
+                }
                 let pageBarObj = getPageBar();
                 let nextPageBar = pageBarObj.nextBar;
                 if (nextPageBar) {
@@ -4705,8 +4723,6 @@
                 document.addEventListener("mouseup", mouseUpHandler, true);
                 document.addEventListener("touchmove", mouseMoveHandler, true);
                 document.addEventListener("touchend", mouseUpHandler, true);
-                e.stopPropagation();
-                e.preventDefault();
             };
 
             move.addEventListener("mousedown", mouseDownHandler, true);
@@ -4733,7 +4749,9 @@
             if (this.frame.parentNode) return;
             getBody(document).appendChild(this.frame);
             clearTimeout(this.hideTimer);
-            this.frame.classList.add("minSize");
+            if (!isMobile) {
+                this.frame.classList.add("minSize");
+            }
         }
 
         remove() {
