@@ -1599,7 +1599,8 @@
         if(!link){
             if(targetA) link=targetA.href;
             else link=prompt(i18n("inputLink"),"magnet:?xt=urn:btih:");
-        }else{
+        }
+        if(link){
             init();
             showDiskIcons(link.trim(),mouseEve.pageY-10,mouseEve.pageX-10);
         }
