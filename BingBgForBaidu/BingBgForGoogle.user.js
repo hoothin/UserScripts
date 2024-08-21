@@ -3,7 +3,7 @@
 // @name:zh-CN   谷Bing图
 // @name:zh-TW   谷Bing圖
 // @namespace    hoothin
-// @version      0.1
+// @version      0.2
 // @description     Just change the background image of Google homepage to Bing
 // @description:zh-CN  给谷歌首页换上 Bing 的背景图
 // @description:zh-TW  給 Google 首頁換上 Bing 的背景圖
@@ -203,6 +203,8 @@
 // @match      *://www.google.co.zm/*
 // @match      *://www.google.co.zw/*
 // @match      *://www.google.cat/*
+// @downloadURL https://update.greasyfork.org/scripts/503741/BingBgForGoogle.user.js
+// @updateURL https://update.greasyfork.org/scripts/503741/BingBgForGoogle.meta.js
 // ==/UserScript==
 
 (function() {
@@ -211,11 +213,11 @@
     let LinkPa = document.querySelector("[data-ogbl]");
     if (!LinkPa) return;
     let bingBgLink = document.createElement("a");
-    bingBgLink.className = "gb_y";
+    bingBgLink.className = LinkPa.firstChild.firstChild.className;
     bingBgLink.target = "_blank";
     bingBgLink.innerText = "Bing Bg";
     let linkDiv = document.createElement("div");
-    linkDiv.className = "gb_z gb_A";
+    linkDiv.className = LinkPa.firstChild.className;
     linkDiv.appendChild(bingBgLink);
     LinkPa.appendChild(linkDiv);
     let skinContainer = document.body;
