@@ -8260,7 +8260,7 @@
         }, 1);
     }
 
-    const loadmoreReg = /^\s*((点击)?(加载更多|继续加载)|(點擊)?(加載更多|繼續加載)|load\s*more( comments)?|もっと読み込む)[\.…▼\s]*$/i;
+    const loadmoreReg = /^\s*((点击)?(加载更多|继续加载)|(點擊)?(加載更多|繼續加載)|load\s*more|もっと読み込む)[\.…▼\s]*$/i;
     const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
