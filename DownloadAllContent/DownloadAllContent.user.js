@@ -1906,7 +1906,7 @@ if (window.top != window.self) {
             if (signs == "→↓←↑") {
                 e.stopPropagation();
                 e.preventDefault();
-                fetch(false);
+                startCustom();
             }
         }, false);
     }
@@ -2158,7 +2158,7 @@ if (window.top != window.self) {
 
     function startCustom() {
         var customRules = GM_getValue("DACrules_" + document.domain);
-        var urls = window.prompt(i18n.customInfo, customRules ? customRules : "https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+        var urls = window.prompt(i18n.customInfo + ":\nhttps://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html", customRules || "");
         if (urls) {
             customDown(urls);
         }
