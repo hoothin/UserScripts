@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.96
+// @version      1.9.37.97
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4809,6 +4809,10 @@
               cursor: pointer;
               margin: 3px;
               font-size: larger;
+              max-width: 200px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
              }
              #pagetual-nextSwitch>.group>span:hover {
               color: red;
@@ -6174,6 +6178,7 @@
                 let insertPos = configCon.querySelector("hr,#jsoneditor");
                 configCon = document.createElement("div");
                 configCon.id = "configCon";
+                configCon.classList.add("showSave");
                 insertPos.parentNode.insertBefore(configCon, insertPos);
 
                 importUrlPres = document.querySelectorAll("pre[name='user-content-pagetual'],pre[name='pagetual']");
@@ -7664,7 +7669,8 @@
            -webkit-transition:opacity 0.3s ease-in-out 0s;
            transition:opacity 0.3s ease-in-out 0s;
            pointer-events: none;
-           word-break: break-all;
+           word-break: break-word;
+           text-align: center;
          }
          .pagetual_tipsWords>a {
            color: #ffffff;
