@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.11
+// @version      2.8.3.12
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -246,6 +246,7 @@ if (window.top != window.self) {
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
                 downThreadNum:"设置同时下载的线程数，负数为单线程下载间隔",
+                enableTouch:"在移动端按→↓←↑的方向滑动屏幕画正方形立即开始下载",
                 customTitle:"自定义章节标题，输入内页文字对应选择器",
                 maxDlPerMin:"每分钟最大下载数",
                 reSortDefault:"默认按页面中位置排序章节",
@@ -293,6 +294,7 @@ if (window.top != window.self) {
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
                 downThreadNum:"設置同時下載的綫程數，負數為單線程下載間隔",
+                enableTouch:"在行動端按→↓←↑的方向滑動螢幕畫方立即開始下載",
                 customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
                 maxDlPerMin:"每分鐘最大下載數",
                 reSortDefault:"預設依頁面中位置排序章節",
@@ -354,6 +356,7 @@ if (window.top != window.self) {
                 save: "حفظ",
                 saveAsMd: "Markdown حفظ كـ",
                 downThreadNum: "تعيين عدد الخيوط للتحميل",
+                enableTouch:"On the mobile device, slide the screen in the direction of →↓←↑ to draw a square will start downloading immediately",
                 customTitle: "تخصيص عنوان الفصل، إدخال المحدد في الصفحة الداخلية",
                 maxDlPerMin:"الحد الأقصى لعدد التنزيلات في الدقيقة",
                 reSortDefault: "الترتيب الافتراضي حسب الموقع في الصفحة",
@@ -399,6 +402,7 @@ if (window.top != window.self) {
                 save:"Save",
                 saveAsMd:"Save as Markdown",
                 downThreadNum:"Set threadNum for download, negative means interval of single thread",
+                enableTouch:"On the mobile device, slide the screen in the direction of →↓←↑ to draw a square will start downloading immediately",
                 customTitle: "Customize the chapter title, enter the selector on inner page",
                 maxDlPerMin:"Maximum number of downloads per minute",
                 reSortDefault: "Default sort by position in the page",
@@ -1859,6 +1863,54 @@ if (window.top != window.self) {
     var downloadSingleShortcut = GM_getValue("downloadSingleShortcut") || {ctrlKey: true, shiftKey: true, altKey: false, metaKey: false, key: 'F9'};
     var downloadCustomShortcut = GM_getValue("downloadCustomShortcut") || {ctrlKey: true, shiftKey: false, altKey: true, metaKey: false, key: 'F9'};
 
+    var enableTouch = GM_getValue("enableTouch");
+    if (enableTouch) {
+        const minLength = 256, tg = 0.5, atg = 2;
+        var lastX, lastY, signs, lastSign;
+        function tracer(e) {
+            let curX = e.changedTouches[0].clientX, curY = e.changedTouches[0].clientY;
+            let distanceX = curX - lastX, distanceY = curY - lastY;
+            let distance = distanceX * distanceX + distanceY * distanceY;
+            if (distance > minLength) {
+                lastX = curX;
+                lastY = curY;
+                let direction = "";
+                let slope = Math.abs(distanceY / distanceX);
+                if (slope > atg) {
+                    if (distanceY > 0) {
+                        direction = "↓";
+                    } else {
+                        direction = "↑";
+                    }
+                } else if (slope < tg) {
+                    if (distanceX > 0) {
+                        direction = "→";
+                    } else {
+                        direction = "←";
+                    }
+                }
+                if (direction && lastSign != direction) {
+                    signs += direction;
+                    lastSign = direction;
+                }
+            }
+        }
+        document.addEventListener("touchstart", function(e) {
+            lastX = e.changedTouches[0].clientX;
+            lastY = e.changedTouches[0].clientY;
+            lastSign = signs = "";
+            document.addEventListener("touchmove", tracer, false);
+        }, false);
+        document.addEventListener("touchend", function(e) {
+            document.removeEventListener("touchmove", tracer, false);
+            if (signs == "→↓←↑") {
+                e.stopPropagation();
+                e.preventDefault();
+                fetch(false);
+            }
+        }, false);
+    }
+
     if (location.origin + location.pathname == configPage) {
         let exampleNode = document.getElementById("example");
         if (!exampleNode) return;
@@ -2033,6 +2085,7 @@ if (window.top != window.self) {
         downloadShortcutInput.addEventListener("keydown", keydonwHandler);
         downloadSingleShortcutInput.addEventListener("keydown", keydonwHandler);
         downloadCustomShortcutInput.addEventListener("keydown", keydonwHandler);
+        let enableTouchInput = createOption(i18n.enableTouch, !!enableTouch, "checkbox");
 
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
@@ -2082,6 +2135,7 @@ if (window.top != window.self) {
                 GM_setValue("contentSort", false);
             }
             GM_setValue("reverse", reverse.checked);
+            GM_setValue("enableTouch", enableTouchInput.checked);
             GM_setValue("retainImage", retainImage.checked);
             GM_setValue("showFilterList", showFilterList.checked);
             GM_setValue("disableNextPage", !nextPage.checked);
