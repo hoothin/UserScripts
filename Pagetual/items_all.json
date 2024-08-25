@@ -5799,17 +5799,17 @@
 {
   "resource_url": "http://wedata.net/items/85609",
   "data": {
-    "insertBefore": "id('entry')/div[div[@class='pager']]",
     "pageElement": "id('entry')/div[(@class='block' and not(.//p[@class='hdg'])) or .//div[@class='thumb']]",
+    "insertBefore": "id('entry')/div[div[@class='pager']]",
     "nextLink": "//div[@class='pager']//a[@class='btn' and span/i[contains(concat(' ', @class, ' '), ' fa-arrow-right ')]]",
-    "url": "^https://www.chunichi.co.jp/article/.+?",
-    "exampleUrl": ""
+    "url": "^https://www\\.chunichi\\.co\\.jp/article/\\d+",
+    "exampleUrl": "https://www.chunichi.co.jp/article/947611/1"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "htsign00",
   "name": "中日新聞",
   "created_at": "2021-02-13T15:46:27+09:00",
-  "updated_at": "2021-02-13T15:46:27+09:00"
+  "updated_at": "2024-08-25T08:37:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85606",
@@ -26204,14 +26204,14 @@
     "pageElement": "//div[starts-with(@id, 'zone-twilight')]//div[@class='zone__content']",
     "comment": "記事の取りこぼし修正。記事に css: order があるため zone__content を取得。",
     "nextLink": "//a[@rel='next']",
-    "url": "^https?://www\\.huffingtonpost\\.jp/",
-    "exampleUrl": "https://www.huffingtonpost.jp/news/"
+    "url": "^https?://www\\.huffingtonpost(\\.co)?\\.\\w{2}/",
+    "exampleUrl": "https://www.huffingtonpost.jp/news/\r\nhttps://www.huffingtonpost.co.uk/news/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "ハフィントンポスト",
   "created_at": "2014-08-02T12:33:40+09:00",
-  "updated_at": "2023-08-08T20:47:56+09:00"
+  "updated_at": "2024-08-25T08:34:17+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74999",
@@ -33337,18 +33337,18 @@
   "created_at": "2012-08-02T02:15:15+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/62561",
   "data": {
-    "pageElement": "//main//div[@class=\"l-artlst001\"]|//main//*[./div[@class=\"wrp lv2\"]][.//div[@class=\"thumb\"] and not(.//ul)]",
+    "pageElement": "//main//div[@class=\"cmp-thmb001 pt-20 pb-20\" or @class=\"l-artlst001\"]",
     "nextLink": "descendant::li[contains(@class,\"is-active\")][1]/following-sibling::li[1]/a",
-    "url": "^https://(www\\.)?chunichi\\.co\\.jp/(chuspo|tags)/",
-    "exampleUrl": "https://www.chunichi.co.jp/tags/tag_shimenlink/ https://www.chunichi.co.jp/chuspo/dragons/draban/"
+    "url": "^https://www\\.chunichi\\.co\\.jp/",
+    "exampleUrl": "https://www.chunichi.co.jp/tags/tag_shimenlink/ https://www.chunichi.co.jp/chuspo/dragons/draban/\r\nhttps://www.chunichi.co.jp/tags/yourdigital/yourdigital_repo"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
-  "resource_url": "http://wedata.net/items/62561",
   "name": "中日スポーツ-日付別記事一覧系",
   "created_at": "2012-07-29T13:47:10+09:00",
-  "updated_at": "2021-02-18T10:42:29+09:00"
+  "updated_at": "2024-08-25T08:37:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/62559",
@@ -48717,17 +48717,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/26590",
-  "name": "写真素材 [フォトライブラリー]",
-  "created_by": "クリト",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2016-02-09T08:26:08+09:00",
   "data": {
-    "exampleUrl": "http://www.photolibrary.jp/search/?p=%B3%D8%B9%BB",
-    "url": "^https?://(?:www\\.)?photolibrary\\.jp/search/",
-    "pageElement": "//ul[@class='pList pListLarge']/li[.//@class='photo']",
-    "nextLink": "//span[@class='next']//a"
+    "pageElement": "//ul[@class='pList pListLarge']/li[.//*[contains(@class, 'photo')]]",
+    "nextLink": "//span[@class='next']//a",
+    "url": "^https?://(?:www\\.)?photolibrary\\.jp/",
+    "exampleUrl": "https://www.photolibrary.jp/search/?p=%B3%D8%B9%BB\r\nhttps://www.photolibrary.jp/newarrival/\r\nhttps://www.photolibrary.jp/cat/cooking_1.html"
   },
-  "created_at": "2009-01-06T22:50:33+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "クリト",
+  "name": "写真素材 [フォトライブラリー]",
+  "created_at": "2009-01-06T22:50:33+09:00",
+  "updated_at": "2024-08-25T08:35:31+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/26587",
