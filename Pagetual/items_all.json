@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86244",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[starts-with(@id, 'zone-twilight')]//div[@class='zone__content']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://www\\.huffpost\\.com/",
+    "exampleUrl": "https://www.huffpost.com/news/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "HuffPost",
+  "created_at": "2024-08-31T07:10:48+09:00",
+  "updated_at": "2024-08-31T07:10:48+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86242",
   "data": {
     "insertBefore": "",
