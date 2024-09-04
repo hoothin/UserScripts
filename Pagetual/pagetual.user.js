@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.97
+// @version      1.9.37.98
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2667,7 +2667,7 @@
                 let contentVisibility = this.curSiteRule.contentVisibility || rulesData.contentVisibility;
                 if (!contentVisibility && !pageElementCss) return;
                 [].forEach.call(pageElement, (ele, i) => {
-                    if (!compareNodeName(ele, ["link", "meta", "style", "script"])) {
+                    if (!compareNodeName(ele, ["link", "meta", "style", "script", "title"])) {
                         if (pageElementCss) {
                             if (pageElementCss !== '0' && !ele.dataset.pagetualPageElement) {
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
@@ -3734,7 +3734,7 @@
                 if (pageElement && pageElement.length > 0) {
                     let pEIndex = pageElement.length - 1;
                     let pELast = pageElement[pEIndex];
-                    while(pELast && compareNodeName(pELast, ["link", "meta", "style", "script"])) {
+                    while(pELast && compareNodeName(pELast, ["link", "meta", "style", "script", "title"])) {
                         pEIndex--;
                         pELast = pageElement[pEIndex];
                     }
@@ -7271,7 +7271,7 @@
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true, true);
+                        changeStop(true);
                         sideController.remove();
                     }
                     setListData("forceState", location.host, forceState);
@@ -7477,6 +7477,7 @@
                 if (!isJs) {
                     let inForce = (forceState == 2 || forceState == 3);
                     _GM_registerMenuCommand(i18n(inForce ? "cancelForceIframe" : "forceIframe"), () => {
+                        changeStop(false, true);
                         if (inForce) {
                             setListData("forceState", location.host, "");
                         } else {
@@ -9182,7 +9183,7 @@
                 } else {
                     checkInner = checkItem.innerHTML;
                 }
-                if (orgPage != checkItem || checkInner != preContent) {
+                if (checkInner != preContent) {
                     changed = true;
                     checkNext = 0;
                     orgPage = checkItem;
