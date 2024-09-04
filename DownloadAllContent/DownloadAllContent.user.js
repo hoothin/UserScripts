@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.12
+// @version      2.8.3.13
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -340,48 +340,49 @@ if (window.top != window.self) {
         case "ar-TN":
         case "ar-YE":
             i18n={
-                fetch: "تحميل",
-                info: "المصدر: #t#\nتم تنزيل الـ TXT بواسطة 'DownloadAllContent'",
-                error: "فشل في تحميل الفصل الحالي",
-                downloading: "......%s تحميل<br>صفحات متبقية %s صفحات تم تحميلها، هناك %s",
-                complete: "صفحات في المجموع %s اكتمل! حصلت على",
-                del: "لتجاهل CSS تعيين محددات",
-                custom: "تحميل مخصص",
-                customInfo: "لروابط الفصول sss إدخال الروابط أو محددات",
-                reSort: "إعادة الترتيب حسب العنوان",
-                reSortUrl: "إعادة الترتيب حسب الروابط",
-                setting: "فتح الإعدادات",
-                searchRule: "قاعدة البحث",
-                abort: "إيقاف",
-                save: "حفظ",
-                saveAsMd: "Markdown حفظ كـ",
-                downThreadNum: "تعيين عدد الخيوط للتحميل",
-                enableTouch:"On the mobile device, slide the screen in the direction of →↓←↑ to draw a square will start downloading immediately",
-                customTitle: "تخصيص عنوان الفصل، إدخال المحدد في الصفحة الداخلية",
-                maxDlPerMin:"الحد الأقصى لعدد التنزيلات في الدقيقة",
-                reSortDefault: "الترتيب الافتراضي حسب الموقع في الصفحة",
-                reverseOrder: "عكس ترتيب الفصول",
-                saveBtn: "حفظ الإعدادات",
-                saveOk: "تم الحفظ",
-                nextPage: "التحقق من الصفحة التالية في الفصل",
-                nextPageReg: "مخصص للصفحة التالية RegExp",
-                retainImage: "الاحتفاظ بعنوان الصورة إذا كانت هناك صور في النص",
-                minTxtLength: "المحاولة مرة أخرى عندما يكون طول المحتوى أقل من هذا",
-                showFilterList: "عرض نافذة التصفية والترتيب قبل التحميل",
-                ok: "موافق",
-                close: "إغلاق",
-                dacSortByPos: "الترتيب حسب الموقع",
-                dacSortByUrl: "الترتيب حسب الرابط",
-                dacSortByName: "الترتيب حسب الاسم",
-                reverse: "عكس الاختيار",
-                dacUseIframe: "لتحميل المحتوى (بطيء) iframe استخدام",
-                dacSaveAsZip: "zip حفظ كـ",
-                dacSetCustomRule: "تعديل القواعد",
-                dacAddUrl: "إضافة فصل",
-                dacStartDownload: "تحميل المحدد",
-                downloadShortcut: "تحميل الفصل",
-                downloadSingleShortcut: "تحميل صفحة واحدة",
-                downloadCustomShortcut: "تحميل مخصص"
+                encode: true,
+                fetch: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                info: "%D8%A7%D9%84%D9%85%D8%B5%D8%AF%D8%B1:%20#t#%0A%D8%AA%D9%85%20%D8%AA%D9%86%D8%B2%D9%8A%D9%84%20%D8%A7%D9%84%D9%80%20TXT%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20'DownloadAllContent'",
+                error: "%D9%81%D8%B4%D9%84%20%D9%81%D9%8A%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B5%D9%84%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A",
+                downloading: "......%25s%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%3Cbr%3E%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%85%D8%AA%D8%A8%D9%82%D9%8A%D8%A9%20%25s%20%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%AA%D9%85%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%D9%87%D8%A7%D8%8C%20%D9%87%D9%86%D8%A7%D9%83%20%25s",
+                complete: "%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%25s%20%D8%A7%D9%83%D8%AA%D9%85%D9%84!%20%D8%AD%D8%B5%D9%84%D8%AA%20%D8%B9%D9%84%D9%89",
+                del: "%D9%84%D8%AA%D8%AC%D8%A7%D9%87%D9%84%20CSS%20%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D9%85%D8%AD%D8%AF%D8%AF%D8%A7%D8%AA",
+                custom: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D9%85%D8%AE%D8%B5%D8%B5",
+                customInfo: "%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%81%D8%B5%D9%88%D9%84%20sss%20%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7%20%D8%A3%D9%88%20%D9%85%D8%AD%D8%AF%D8%AF%D8%A7%D8%AA",
+                reSort: "%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%B9%D9%86%D9%88%D8%A7%D9%86",
+                reSortUrl: "%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7",
+                setting: "%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%D8%A7%D8%AA",
+                searchRule: "%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A8%D8%AD%D8%AB",
+                abort: "%D8%A5%D9%8A%D9%82%D8%A7%D9%81",
+                save: "%D8%AD%D9%81%D8%B8",
+                saveAsMd: "Markdown%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
+                downThreadNum: "%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AE%D9%8A%D9%88%D8%B7%20%D9%84%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                enableTouch: "On%20the%20mobile%20device,%20slide%20the%20screen%20in%20the%20direction%20of%20%E2%86%92%E2%86%93%E2%86%90%E2%86%91%20to%20draw%20a%20square%20will%20start%20downloading%20immediately",
+                customTitle: "%D8%AA%D8%AE%D8%B5%D9%8A%D8%B5%20%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D9%81%D8%B5%D9%84%D8%8C%20%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%AE%D9%84%D9%8A%D8%A9",
+                maxDlPerMin: "%D8%A7%D9%84%D8%AD%D8%AF%20%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D9%89%20%D9%84%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AA%D9%86%D8%B2%D9%8A%D9%84%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AF%D9%82%D9%8A%D9%82%D8%A9",
+                reSortDefault: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%A7%D9%84%D8%A7%D9%81%D8%AA%D8%B1%D8%A7%D8%B6%D9%8A%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                reverseOrder: "%D8%B9%D9%83%D8%B3%20%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%A7%D9%84%D9%81%D8%B5%D9%88%D9%84",
+                saveBtn: "%D8%AD%D9%81%D8%B8%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%D8%A7%D8%AA",
+                saveOk: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AD%D9%81%D8%B8",
+                nextPage: "%D8%A7%D9%84%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%81%D8%B5%D9%84",
+                nextPageReg: "%D9%85%D8%AE%D8%B5%D8%B5%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20RegExp",
+                retainImage: "%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%81%D8%A7%D8%B8%20%D8%A8%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A5%D8%B0%D8%A7%20%D9%83%D8%A7%D9%86%D8%AA%20%D9%87%D9%86%D8%A7%D9%83%20%D8%B5%D9%88%D8%B1%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%86%D8%B5",
+                minTxtLength: "%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D9%88%D9%84%D8%A9%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89%20%D8%B9%D9%86%D8%AF%D9%85%D8%A7%20%D9%8A%D9%83%D9%88%D9%86%20%D8%B7%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20%D9%87%D8%B0%D8%A7",
+                showFilterList: "%D8%B9%D8%B1%D8%B6%20%D9%86%D8%A7%D9%81%D8%B0%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                ok: "%D9%85%D9%88%D8%A7%D9%81%D9%82",
+                close: "%D8%A5%D8%BA%D9%84%D8%A7%D9%82",
+                dacSortByPos: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                dacSortByUrl: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B7",
+                dacSortByName: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%A7%D8%B3%D9%85",
+                reverse: "%D8%B9%D9%83%D8%B3%20%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%D9%8A%D8%A7%D8%B1",
+                dacUseIframe: "%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89%20(%D8%A8%D8%B7%D9%8A%D8%A1)%20iframe%20%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85",
+                dacSaveAsZip: "zip%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
+                dacSetCustomRule: "%D8%AA%D8%B9%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                dacAddUrl: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%81%D8%B5%D9%84",
+                dacStartDownload: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF",
+                downloadShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B5%D9%84",
+                downloadSingleShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%B5%D9%81%D8%AD%D8%A9%20%D9%88%D8%A7%D8%AD%D8%AF%D8%A9",
+                downloadCustomShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D9%85%D8%AE%D8%B5%D8%B5"
             };
             break;
         default:
@@ -430,6 +431,13 @@ if (window.top != window.self) {
                 downloadCustomShortcut:"Custom download"
             };
             break;
+    }
+    if (i18n.encode) {
+        for (let k in i18n) {
+            if (k != "encode") {
+                i18n[k] = decodeURI(i18n[k]);
+            }
+        }
     }
     var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false;
     var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer,downTxtShadowContainer;
