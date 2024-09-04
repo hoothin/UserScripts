@@ -2890,7 +2890,8 @@
                 if (pageDiv) {
                     cur = pageDiv.querySelector("li>b,li>strong");
                     if (cur) next = cur.parentNode.nextElementSibling;
-                    if (next) next = next.querySelector("a");
+                    if (next && next.nodeName === cur.parentNode.nodeName) next = next.querySelector("a");
+                    else next = null;
                 }
             }
             if (!next) {
@@ -2904,7 +2905,8 @@
                 if (pageDiv) {
                     cur = pageDiv.querySelector("[class*=current],.page-selected");
                     if (cur) next = cur.parentNode.nextElementSibling;
-                    if (next) next = next.querySelector("a");
+                    if (next && next.nodeName === cur.parentNode.nodeName) next = next.querySelector("a");
+                    else next = null;
                 }
             }
             if (!next) {
