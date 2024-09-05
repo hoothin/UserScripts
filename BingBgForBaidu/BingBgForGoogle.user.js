@@ -3,7 +3,7 @@
 // @name:zh-CN   谷Bing图
 // @name:zh-TW   谷Bing圖
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description     Just change the background image of Google homepage to Bing
 // @description:zh-CN  给谷歌首页换上 Bing 的背景图
 // @description:zh-TW  給 Google 首頁換上 Bing 的背景圖
@@ -12,6 +12,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
 // @grant        unsafeWindow
 // @connect      global.bing.com
 // @connect      cn.bing.com
@@ -230,9 +231,9 @@
      -o-background-size: cover;
     }
     #gb{
-     background-color: rgb(32 33 36 / 50%)!important;
+     background-color: unset!important;
     }
-    [role="contentinfo"]{
+    [role="navigation"],[role="contentinfo"]{
      background-color: rgb(32 33 36 / 50%)!important;
     }
     #gb *,[role="contentinfo"] *{
@@ -282,6 +283,38 @@
             } catch (e) {
                 console.log(e);
             }
+        }
+    });
+    let blurStyle;
+    function createBlur() {
+        if (!blurStyle) {
+            blurStyle = document.createElement("style");
+            blurStyle.innerText = `
+             body::before{
+              content: " ";
+              display: block;
+              position: absolute;
+              left: 0;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              background: inherit;
+              filter: blur(5px);
+              z-index: -1;
+             }`;
+        }
+        document.head.appendChild(blurStyle);
+    }
+    if (GM_getValue("blur")) {
+        createBlur();
+    }
+    GM_registerMenuCommand("Change blur", () => {
+        if (blurStyle && blurStyle.parentNode) {
+            GM_setValue("blur", false);
+            blurStyle.parentNode.removeChild(blurStyle);
+        } else {
+            GM_setValue("blur", true);
+            createBlur();
         }
     });
 })();
