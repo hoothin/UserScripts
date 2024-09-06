@@ -8164,7 +8164,7 @@
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true, true);
+                        changeStop(true);
                         sideController.remove();
                     }
                     if (!ruleParser.curSiteRule.url) {
@@ -8606,7 +8606,7 @@
             e.stopPropagation();
         });
         pageBar.addEventListener("click", e => {
-            changeStop(!isPause, true);
+            changeStop(!isPause);
             pageBar.title = i18n(isPause ? "enable" : "disable");
         });
         ruleParser.insertElement(pageBar);
