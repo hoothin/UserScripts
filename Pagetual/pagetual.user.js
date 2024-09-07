@@ -2801,6 +2801,7 @@
                 "li.page-current+li>a",
                 "[class^=pag] a[rel=next]",
                 "[class^=Pag] [aria-label=next]",
+                "[class^=Pag] [aria-label=Next]",
                 "[aria-label='Next Page']",
                 "[aria-label='Next page']",
                 "[aria-label$='next page']",
