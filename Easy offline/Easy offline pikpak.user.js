@@ -9,6 +9,7 @@
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
 // @grant        GM_notification
+// @grant        unsafeWindow
 // @run-at       document-start
 // @require      https://unpkg.com/crypto-js@4.2.0/crypto-js.js
 // @connect      user.mypikpak.com
