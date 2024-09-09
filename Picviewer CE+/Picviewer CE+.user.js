@@ -24824,8 +24824,6 @@ ImgOps | https://imgops.com/#b#`;
                         let imgs;
                         if (target.nodeName == 'A') {
                             imgs = target.querySelectorAll('img');
-                        } else if (target.shadowRoot) {
-                            imgs = target.shadowRoot.querySelectorAll('img');
                         }
                         if (imgs && imgs.length == 1) {
                             target = imgs[0];
@@ -24886,7 +24884,7 @@ ImgOps | https://imgops.com/#b#`;
                         for (let i = 0; i < checkLen; i++) {
                             let ele = elements[i];
                             if (!ele) continue;
-                            if (/img/i.test(ele.nodeName)) {
+                            if (/^img$/i.test(ele.nodeName)) {
                                 target = ele;
                                 result = null;
                                 found = true;
