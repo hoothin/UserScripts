@@ -24824,6 +24824,8 @@ ImgOps | https://imgops.com/#b#`;
                         let imgs;
                         if (target.nodeName == 'A') {
                             imgs = target.querySelectorAll('img');
+                        } else if (target.shadowRoot) {
+                            imgs = target.shadowRoot.querySelectorAll('img');
                         }
                         if (imgs && imgs.length == 1) {
                             target = imgs[0];
