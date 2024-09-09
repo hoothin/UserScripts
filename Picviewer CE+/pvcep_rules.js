@@ -740,6 +740,8 @@ var siteInfo = [
                     let srcInfo = srcs[i].trim().split(" ")[0];
                     if (srcInfo.indexOf("?width") == -1) return srcInfo;
                 }
+            } else if (/^https?:\/\/preview\./.test(this.src)){
+                return this.src.replace("preview", "i").replace(/\?.*/, "");
             }
             return this.src;
         },
