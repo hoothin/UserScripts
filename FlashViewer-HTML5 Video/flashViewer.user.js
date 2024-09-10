@@ -3091,7 +3091,7 @@
 
                 // 插入占位符
                 var pluginNS = plugin.nextSibling;
-                var pluginP = plugin.parentNode;
+                pluginP = plugin.parentNode;
                 if (pluginNS) {
                     pluginP.insertBefore(placeholder, pluginNS);
                 } else {
@@ -3884,13 +3884,13 @@
                         };
                     };
                 };
+            };
 
-                // 如果flash太小，一般不是引用视频，不出现工具栏
-                var cCRect = getContentClientRect(target);
-                if (!(cCRect.width >= prefs.floatBar.minSizeLimit.width && cCRect.height >= prefs.floatBar.minSizeLimit.height)) {
-                    // console.log(cCRect);
-                    return;
-                };
+            // 如果flash太小，一般不是引用视频，不出现工具栏
+            var cCRect = getContentClientRect(target);
+            if (!(cCRect.width >= prefs.floatBar.minSizeLimit.width && cCRect.height >= prefs.floatBar.minSizeLimit.height)) {
+                // console.log(cCRect);
+                return;
             };
 
 
