@@ -157,6 +157,10 @@ switch (lang) {
                         "url": "paste:%be"
                     },
                     {
+                        "name": "📎 批量替换选中文字",
+                        "url": "paste:%sr.replace(/%input{请输入匹配正则}/g,\"%input{请输入替换字符串}\")"
+                    },
+                    {
                         "name": "📺 预览视频",
                         "url": "showTips:\n<video loop autoplay src=\"%s\">\n<a href=\"%s\" download=\"%s\">Download video</a>\n</video>",
                         "kwFilter": "^http.*\\.(3gpp|m4v|mkv|mp4|ogv|webm)\\b"
@@ -596,6 +600,10 @@ switch (lang) {
                     {
                         "name": "🔒 Encode base64",
                         "url": "paste:%be"
+                    },
+                    {
+                        "name": "📎 Batch replace selected text",
+                        "url": "paste:%sr.replace(/%input{regular expression}/g,\"%input{replacement string}\")"
                     },
                     {
                         "name": "📺 Preview video",
