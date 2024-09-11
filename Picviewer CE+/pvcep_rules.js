@@ -1578,7 +1578,7 @@ var siteInfo = [
         url: /^https:\/\/(www\.)?dailymail\.co\.uk\//i,
         xhr: {
             url: "a[href*='/article']",
-            query: "video,img.img-share"
+            query: "video,img.img-share,[data-testid='image-component']>img"
         }
     },
     {
