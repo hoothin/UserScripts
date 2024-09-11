@@ -1,5 +1,13 @@
 [
 {
+    "name": "精易论坛 - 手机版 - Powered by Discuz!",
+    "url": "^https?://bbs\\.125\\.la/",
+    "example": "https://bbs.125.la/forum.php?mod=forumdisplay&fid=98&mobile=2",
+    "nextLink": "#page > div.threadlist > div.page > a:nth-of-type(3)",
+    "pageElement": "body > div.mm-page.mm-slideout > div.threadlist > div.threadlist > ul",
+    "action": 1
+},
+ {
     "name": "u2dmhy 种子页面",
     "author": "dyzer",
     "url": "^https?://u2\\.dmhy\\.org/torrents\\.php",
