@@ -2907,9 +2907,19 @@
                 let pageDiv = body.querySelector(".pagination,.pagination-list");
                 if (pageDiv) {
                     cur = pageDiv.querySelector("[class*=current],.page-selected");
-                    if (cur) next = cur.parentNode.nextElementSibling;
-                    if (next && next.nodeName === cur.parentNode.nodeName) next = next.querySelector("a");
-                    else next = null;
+                    if (cur) {
+                        next = cur.parentNode.nextElementSibling;
+                        if (next && next.nodeName === cur.parentNode.nodeName) next = next.querySelector("a");
+                        else next = null;
+                    } else {
+                        if (!pageDiv.querySelector("a")) {
+                            cur = pageDiv.querySelector("[class*=current],[class*=active]");
+                            if (cur) {
+                                jsNext = cur.nextElementSibling;
+                                if (jsNext && jsNext.nodeName !== cur.nodeName) jsNext = null;
+                            }
+                        }
+                    }
                 }
             }
             if (!next) {
