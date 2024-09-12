@@ -10,7 +10,7 @@ assignees: ''
 ---
 
 **The url of site**
-The example urls of site. ⚠**Do not paste only domain without pathname**⚠.
+The example urls of site. ⚠**Do not paste only domain without pathname, or I'll close the issue without explanation**⚠.
 
 **Is your request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
