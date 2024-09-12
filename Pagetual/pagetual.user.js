@@ -2210,7 +2210,9 @@
                         return ">*";
                     } else {
                         let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                        if ((curStyle.display === 'flex' && curStyle.flexDirection.indexOf("row") === 0 && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && curStyle.display !== "table-cell" && (rulesData.opacity !== 0 || hasText) && !pf)) {
+                        if (compareNodeName(middleChild, ["br"]) && hasText) {
+                            return "";
+                        } else if ((curStyle.display === 'flex' && curStyle.flexDirection.indexOf("row") === 0 && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && curStyle.display !== "table-cell" && (rulesData.opacity !== 0 || hasText) && !pf)) {
                             return "";
                         } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
                             return "";
@@ -2219,7 +2221,7 @@
                         }
                     }
                 }
-            } else if (pf || curStyle.position === "absolute") {
+            } else if (ele.children.length && (pf || curStyle.position === "absolute")) {
                 return ">*";
             }
             return "";
