@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.99
+// @version      1.9.37.100
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -127,6 +127,7 @@
                 disableSiteTips: "Disabled on this site.",
                 enableSiteTips: "Enabled on this site.",
                 enable: "✅Enable automatic page turning",
+                tempActive: "Temporarily active",
                 toTop: "Back to Top.",
                 toBottom: "Go to Bottom.",
                 current: "Current Page.",
@@ -251,6 +252,7 @@
                 disableSiteTips: "Desabilitado neste site.",
                 enableSiteTips: "Ativado neste site.",
                 enable: "✅Ativar rolagem automática de página.",
+                tempActive: "Temporariamente ativo",
                 toTop: "Voltar ao Topo.",
                 toBottom: "Ir para o Rodapé.",
                 current: "Página Atual.",
@@ -375,6 +377,7 @@
                 disableSiteTips: "Desactivado en este sitio",
                 enableSiteTips: "Activado en este sitio",
                 enable: "✅Habilitar",
+                tempActive: "Temporalmente activo",
                 toTop: "Ir al inicio",
                 toBottom: "Ir al final",
                 current: "Página actual",
@@ -500,6 +503,7 @@
                 disableSiteTips: "%D9%85%D8%B9%D8%B7%D9%84%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
                 enableSiteTips: "%D9%85%D9%81%D8%B9%D9%84%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
                 enable: "%D9%85%D9%81%D8%B9%D9%84",
+                tempActive: "%D9%86%D8%B4%D8%B7%20%D9%85%D8%A4%D9%82%D8%AA%D8%A7",
                 toTop: "%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B9%D9%84%D9%89",
                 toBottom: "%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B3%D9%81%D9%84",
                 current: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9",
@@ -623,6 +627,7 @@
                 disableSiteTips: "已在此站禁用",
                 enableSiteTips: "已在此站启用",
                 enable: "✅启用自动翻页",
+                tempActive: "临时启用翻页",
                 toTop: "回到顶部",
                 toBottom: "前往页尾",
                 current: "当前页",
@@ -746,6 +751,7 @@
                 disableSiteTips: "已在此站禁用",
                 enableSiteTips: "已在此站啟用",
                 enable: "✅啟用自動翻頁",
+                tempActive: "臨時啟用翻頁",
                 toTop: "回到頂部",
                 toBottom: "前往頁尾",
                 current: "當前頁",
@@ -869,6 +875,7 @@
                 disableSiteTips: "このサイトで既に無効になっています",
                 enableSiteTips: "このサイトで既に有効になっています",
                 enable: "✅ページめくりを有効にする",
+                tempActive: "一時的にアクティブ",
                 toTop: "トップに戻る",
                 toBottom: "ページの下部に移動",
                 current: "現在のページ",
@@ -992,6 +999,7 @@
                 disableSiteTips: "Выключено для этого сайта",
                 enableSiteTips: "Включено для этого сайта",
                 enable: "✅Включить",
+                tempActive: "Временно активен",
                 toTop: "Наверх",
                 toBottom: "Вниз",
                 current: "Текущая страница",
@@ -7293,9 +7301,30 @@
                     if (!ruleParser.curSiteRule.url) {
                         setTimeout(() => {
                             location.reload();
-                        }, 500);
+                        }, 300);
                     }
                 });
+                if (forceState == 1) {
+                    let tempActive = await getListData("tempActive", location.host + location.pathname);
+                    if (tempActive) {
+                        setListData("tempActive", location.host + location.pathname, "");
+                        forceState = 0;
+                    } else {
+                        _GM_registerMenuCommand(i18n("tempActive"), () => {
+                            if (forceState == 1) {
+                                forceState = 0;
+                                showTips(i18n("enableSiteTips"));
+                                changeStop(false, true);
+                                setListData("tempActive", location.host + location.pathname, true);
+                                if (!ruleParser.curSiteRule.url) {
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 100);
+                                }
+                            }
+                        });
+                    }
+                }
                 _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
                     autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), autoScrollRate)) || 0;
                     autoScroll = parseInt(autoScroll) || 0;
