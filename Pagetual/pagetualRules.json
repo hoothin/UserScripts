@@ -3237,7 +3237,7 @@
     "url": "^https?://(jable\\.tv|fs1\\.app)/",
     "action": 0,
     "refreshByClick": "[data-action='ajax']",
-    "nextLinkByJs": "let checked=doc.querySelector('.container li.active>a,.container li:has(>.active)+li>a');let blockId=checked.dataset.blockId;let parameters=checked.dataset.parameters;let[sortBy,from]=parameters.split(';');sortBy=sortBy.replace('sort_by:','');from=from.replace('from:','');let searchParams=new URLSearchParams({mode:'async',function:'get_block',block_id:blockId,sort_by:sortBy,from:from});return'?'+searchParams;",
+    "nextLinkByJs": "let checked=doc.querySelector('.container li.active>a,.container li:has(>.active)+li>a');let blockId=checked.dataset.blockId;let parameters=checked.dataset.parameters.replace(/.*;sort_by:/, '');let[sortBy,from]=parameters.split(';');sortBy=sortBy.replace('sort_by:','');from=from.replace('from:','');let searchParams=new URLSearchParams({mode:'async',function:'get_block',block_id:blockId,sort_by:sortBy,from:from});return'?'+searchParams;",
     "pageElement": "section>.row",
     "replaceElement": ".pagination",
     "pageAction": "let ps=[...document.querySelectorAll('section>.row')];let last=ps.at(-1);last.querySelectorAll('.img-box>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');let img=a.querySelector('img');let src=img.dataset.preview;$(v).attr({loop:'',autoplay:'',src:src});$(v).css({position:'absolute',left:'0',top:'0',width:img.offsetWidth+'px',height:img.offsetHeight+'px',background:'#000000',visibility:'visible'});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})",
