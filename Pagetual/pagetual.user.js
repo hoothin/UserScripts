@@ -11,7 +11,7 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.100
+// @version      1.9.37.101
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2941,6 +2941,7 @@
                 "[aria-label$='next page']",
                 ".pagination-nav__item--next>a",
                 "a.pageright",
+                ".pager__next>a",
                 ".page-numbers.current+a",
                 "a.page-numbers.next",
                 "body [class*=pagination] li.active+span+li>a",
@@ -5498,7 +5499,7 @@
                     author = propValue;
                     storage.setItem("author", propValue);
                 }
-                let editTemp = self.getTempRule();
+                let editTemp = self.getTempRule(false, true);
                 if (!editTemp) return;
                 editTemp[propName] = propValue;
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
@@ -5508,7 +5509,7 @@
                 _GM_openInTab(configPage[0], {active: true});
             }, true);
             addNextSelector.addEventListener("click", e => {
-                let editTemp = self.getTempRule();
+                let editTemp = self.getTempRule(false, true);
                 if (!editTemp) return;
                 let selector = self.selectorInput.value;
                 if (selector) {
@@ -5521,7 +5522,7 @@
                 _GM_openInTab(configPage[0].replace("rule.html", "rules/nextLink.html"), {active: true});
             }, true);
             addPageSelector.addEventListener("click", e => {
-                let editTemp = self.getTempRule();
+                let editTemp = self.getTempRule(false, true);
                 if (!editTemp) return;
                 let selector = self.selectorInput.value;
                 if (selector) {
@@ -5537,7 +5538,7 @@
                 frame.classList.toggle("showDetail");
             }, true);
             saveDetailBtn.addEventListener("click", e => {
-                let editTemp = self.getTempRule(true);
+                let editTemp = self.getTempRule(true, true);
                 if (tempRule.value && !editTemp) {
                     return;
                 }
@@ -5645,7 +5646,7 @@
                 self.setSelectorDiv(selector);
             });
             editBtn.addEventListener("click", e => {
-                rulesData.editTemp = self.getTempRule();
+                rulesData.editTemp = self.getTempRule(false, true);
                 storage.setItem("rulesData", rulesData);
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
             });
@@ -5691,7 +5692,7 @@
             };
         }
 
-        getTempRule(detail) {
+        getTempRule(detail, noFill) {
             if (this.tempRule.value) {
                 try {
                     this.editTemp = JSON.parse(this.tempRule.value);
@@ -5723,13 +5724,22 @@
                 delete this.editTemp.type;
                 delete this.editTemp.updatedAt;
             }
-            if (this.selectorInput.value && (!this.frame.classList.contains("showDetail") || !this.editTemp || !this.editTemp.pageElement)) {
-                if (this.foundEle && this.foundEle.length === 1) {
-                    let foundEleRect = this.foundEle[0].getBoundingClientRect();
-                    if (foundEleRect.height < 100) {
-                        showTips("Next Link", "", 500);
-                        this.editTemp.nextLink = this.selectorInput.value;
-                        return this.editTemp;
+            if (!noFill && this.selectorInput.value && (!this.frame.classList.contains("showDetail") || !this.editTemp || !this.editTemp.pageElement)) {
+                if (this.foundEle) {
+                    if (this.foundEle.length === 1) {
+                        let foundEleRect = this.foundEle[0].getBoundingClientRect();
+                        if (foundEleRect.height < 100) {
+                            showTips("Next Link", "", 500);
+                            this.editTemp.nextLink = this.selectorInput.value;
+                            return this.editTemp;
+                        }
+                    } else if (this.foundEle.length <= 3) {
+                        let foundEleRect = this.foundEle[0].getBoundingClientRect();
+                        if (foundEleRect.height < 30) {
+                            showTips("Next Link", "", 500);
+                            this.editTemp.nextLink = this.selectorInput.value;
+                            return this.editTemp;
+                        }
                     }
                 }
                 showTips("Page Element", "", 500);
