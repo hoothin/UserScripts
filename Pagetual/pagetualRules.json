@@ -3385,6 +3385,13 @@
     "replaceElement": ".navigation, #miniThumbContainer"
 },
 {
+    "name": "nhentai - Free Hentai Manga, Doujinshi and Adult Comics",
+    "url": "^https?://nhentai\\.website/g/",
+    "example": "https://nhentai.website/g/514378/70/",
+    "preload": 0,
+    "action": 3
+},
+{
     "name": "Danbooru",
     "author": "skofkyo",
     "example": "danbooru.donmai.us，e621.net",
@@ -3971,6 +3978,21 @@
     "pageElement": ".uk-animation-slide-bottom-small",
     "replaceElement": ".nav-links",
     "pageInit": "doc.querySelectorAll('.media-content.scrollLoading:not(.ojbk)').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.xurl}')`;div.classList.add('ojbk');div.removeAttribute('data-xurl')})"
+},
+{
+    "name": "ACG - 🏠 西普拉斯驿站|小西驿站 - 数码,音乐,ACG论坛",
+    "url": "^https?://post\\.cplus8\\.com/",
+    "example": "https://post.cplus8.com/t/acg",
+    "pageElement": ".DiscussionList-discussions>li",
+    "nextLink": "//li[button[contains(@class, 'Button--primary') and @data-page]]/following-sibling::li[1]/button[@data-page]"
+},
+{
+    "name": "韩漫天堂漫画",
+    "url": "^https?://\\w+\\.npdn\\.top/chapter/",
+    "example": "https://w226.npdn.top/chapter/yirenzhixia/101661.html",
+    "nextLink": "#mainControlNext",
+    "action": 2,
+    "pageElement": "body > div.main > ul"
 },
 {
     "name": "YouJizz",
@@ -5562,6 +5584,15 @@
     "url": "^https://www\\.linuxfromscratch\\.org",
     "pageElement": "body>*",
     "css": "div.sect1{position:static;overflow-wrap: break-word;}div.navheader{position: relative;}"
+},
+{
+    "name": "Форум",
+    "url": "^https?://www\\.linux\\.org\\.ru/forum/",
+    "example": "https://www.linux.org.ru/forum/linux-hardware/16844066",
+    "nextLink": "strong+a,a[rel='next']",
+    "pinUrl": true,
+    "pageElement": "article",
+    "include": ".nav>.page-number"
 },
 {
     "name": "Standards DOC",
@@ -7209,6 +7240,26 @@
     "nextLink": ".Orion-DiscussionListPagination > a.Button.Button--icon.hasIcon:last-child",
     "action": 3,
     "pageElement": "ul.DiscussionList-discussions>li"
+},
+{
+    "name": "All Discussions - Orion Public Issue Tracker",
+    "url": "^https?://orionfeedback\\.org/(\\?|$)",
+    "example": "https://orionfeedback.org/?page=3",
+    "action": 3
+},
+{
+    "name": "骑砍中亚",
+    "url": "^https?://h5\\.shaoniandream\\.com/pages/chapter/",
+    "example": "https://h5.shaoniandream.com/pages/chapter/index?bookid=1866",
+    "nextLink": "//uni-view[text()=\"下一章\"]"
+},
+{
+    "name": "挥剑诗篇",
+    "url": "^https?://hlib\\.cc/s/",
+    "example": "https://hlib.cc/s/7301114",
+    "nextLink": ".btn.active~a",
+    "pageElement": ".col-lg-9 .list-group-item",
+    "action": 0
 },
 {
     "name": "Sanfoundry",
