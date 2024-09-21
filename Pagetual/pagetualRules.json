@@ -5671,11 +5671,10 @@
     "pageElement": "#searchResultBox"
 },
 {
-    "name": "Startpage",
-    "url": "^https://www\\.startpage\\.com/",
-    "pageElement": "section.w-gl>div.w-gl__result",
-    "nextLink": "button.next",
-    "action": 0
+    "name": "Startpage Search Results",
+    "url": "^https?://www\\.startpage\\.com/",
+    "example": "https://www.startpage.com/sp/search?query=pagetual",
+    "nextLink": "#main > div.pagination-container > div.pagination > form[aria-label='page Next'] > button"
 },
 {
     "name": "图书书目检索",
