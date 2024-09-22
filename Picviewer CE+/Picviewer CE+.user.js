@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.9.11.2
+// @version              2024.9.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -20749,41 +20749,82 @@ ImgOps | https://imgops.com/#b#`;
                     if (data.src && /^data:/.test(data.src) && data.src.length < 250) return false;
                     return true;
                 };
-                for (let i = 0; i < allData.length; i++) {
-                    let imgData = allData[i];
-                    if (imgData.img == this.data.img) {
-                        if (fw) {
-                            if (i != allData.length - 1) {
-                                i++;
-                                imgData = allData[i];
-                                while (!validData(imgData, this.data.src)) {
+                if (this.data.img) {
+                    for (let i = 0; i < allData.length; i++) {
+                        let imgData = allData[i];
+                        if (imgData.img == this.data.img) {
+                            if (fw) {
+                                if (i != allData.length - 1) {
                                     i++;
-                                    if (i == allData.length) return;
                                     imgData = allData[i];
+                                    while (!validData(imgData, this.data.src)) {
+                                        i++;
+                                        if (i == allData.length) return;
+                                        imgData = allData[i];
+                                    }
+                                    if (imgData && imgData.img) {
+                                        let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
+                                        this.remove();
+                                        new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
+                                    }
                                 }
-                                if (imgData && imgData.img) {
-                                    let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
-                                    this.remove();
-                                    new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
+                            } else {
+                                if (i != 0) {
+                                    i--;
+                                    imgData = allData[i];
+                                    while (!validData(imgData, this.data.src)) {
+                                        i--;
+                                        if (i == -1) return;
+                                        imgData = allData[i];
+                                    }
+                                    if (imgData) {
+                                        let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
+                                        this.remove();
+                                        new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
+                                    }
                                 }
                             }
-                        } else {
-                            if (i != 0) {
-                                i--;
-                                imgData = allData[i];
-                                while (!validData(imgData, this.data.src)) {
-                                    i--;
-                                    if (i == -1) return;
-                                    imgData = allData[i];
+                            return;
+                        }
+                    }
+                    if (this.data.img.src) {
+                        for (let i = 0; i < allData.length; i++) {
+                            let imgData = allData[i];
+                            if (imgData.img && imgData.img.src == this.data.img.src) {
+                                if (fw) {
+                                    if (i != allData.length - 1) {
+                                        i++;
+                                        imgData = allData[i];
+                                        while (!validData(imgData, this.data.src)) {
+                                            i++;
+                                            if (i == allData.length) return;
+                                            imgData = allData[i];
+                                        }
+                                        if (imgData && imgData.img) {
+                                            let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
+                                            this.remove();
+                                            new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
+                                        }
+                                    }
+                                } else {
+                                    if (i != 0) {
+                                        i--;
+                                        imgData = allData[i];
+                                        while (!validData(imgData, this.data.src)) {
+                                            i--;
+                                            if (i == -1) return;
+                                            imgData = allData[i];
+                                        }
+                                        if (imgData) {
+                                            let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
+                                            this.remove();
+                                            new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
+                                        }
+                                    }
                                 }
-                                if (imgData) {
-                                    let initPos = prefs.imgWindow.switchStoreLoc ? {left: this.imgWindow.style.left, top: this.imgWindow.style.top} : false;
-                                    this.remove();
-                                    new LoadingAnimC(imgData, (this.actual ? "actual" : "current"), false, true, initPos);
-                                }
+                                return;
                             }
                         }
-                        return;
                     }
                 }
             },
@@ -25422,6 +25463,7 @@ ImgOps | https://imgops.com/#b#`;
         function createEleFromJson(json) {
             let collection = document.createDocumentFragment();
             json.forEach(data => {
+                if (/^script/i.test(data.node)) return;
                 let ele = document.createElement(data.node);
                 if (data.text) {
                     ele.innerText = data.text;
