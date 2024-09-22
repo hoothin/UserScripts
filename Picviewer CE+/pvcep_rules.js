@@ -152,6 +152,7 @@ var siteInfo = [
         },
         xhr: {
             url: function(a, p) {
+                if (!this.src) return null;
                 let pid = this.src.match(/\.baidu\.com\/forum\/w.*\/(\w+)\./);
                 if (!pid) return null;
                 pid = pid[1];
