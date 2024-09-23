@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1445525/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1452374/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -25470,6 +25470,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (data.attr) {
                     Object.keys(data.attr).forEach(key => {
+                        if (/^on/i.test(key)) return;
                         ele.setAttribute(key, data.attr[key]);
                     });
                 }
