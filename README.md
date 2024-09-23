@@ -1,4 +1,4 @@
-<h1 align="center">⚙️<a href="https://greasyfork.org/users/8227">Greasemonkey scripts 油猴腳本集</a></h1>
+<h1 align="center">⚙️<a href="https://greasyfork.org/users/8227">Greasemonkey scripts</a></h1>
 
 <p align="center">
   <a href="https://twitter.com/intent/follow?screen_name=hoothinwang"><img src="https://img.shields.io/twitter/follow/hoothinwang.svg?style=flat&label=Follow&logo=x&color=555555" alt="twitter"></a>
