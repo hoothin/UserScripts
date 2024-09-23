@@ -285,6 +285,11 @@ switch (lang) {
                         "openInNewTab": true
                     },
                     {
+                        "name": "便宜服务器",
+                        "url": "https://my.racknerd.com/aff.php?aff=12390",
+                        "description": "性价比最高的服务器，2刀一个月"
+                    },
+                    {
                         "name": "二维码生成",
                         "url": "https://hoothin.com/qrcode#%U",
                         "icon": "https://hoothin.com/qrcode/favicon.svg"
@@ -658,6 +663,11 @@ switch (lang) {
                     {
                         "name": "🔗 Preview link",
                         "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
+                    },
+                    {
+                        "name": "Cheap VPS",
+                        "url": "https://my.racknerd.com/aff.php?aff=12390",
+                        "description": "Most cost-effective server, $2 per month"
                     },
                     {
                         "name": "Copy target svg to base64",
