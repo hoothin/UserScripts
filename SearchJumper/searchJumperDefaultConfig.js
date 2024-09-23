@@ -290,6 +290,11 @@ switch (lang) {
                         "description": "性价比最高的服务器，2刀一个月"
                     },
                     {
+                        "name": "稳定服务器vultr",
+                        "url": "https://www.vultr.com/?ref=7427668",
+                        "description": "老牌 VPS 服务商，5刀一个月。胜在稳定"
+                    },
+                    {
                         "name": "二维码生成",
                         "url": "https://hoothin.com/qrcode#%U",
                         "icon": "https://hoothin.com/qrcode/favicon.svg"
@@ -668,6 +673,11 @@ switch (lang) {
                         "name": "Cheap VPS",
                         "url": "https://my.racknerd.com/aff.php?aff=12390",
                         "description": "Most cost-effective server, $2 per month"
+                    },
+                    {
+                        "name": "Stable VPS",
+                        "url": "https://www.vultr.com/?ref=7427668",
+                        "description": "Veteran VPS provider, $5 per month, wins in stability"
                     },
                     {
                         "name": "Copy target svg to base64",
