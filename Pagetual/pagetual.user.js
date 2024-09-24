@@ -10,6 +10,29 @@
 // @name:es      Pagetual
 // @name:fr      Pagetual
 // @name:it      Pagetual
+// @name:id      Pagetual
+// @name:ug      Pagetual
+// @name:ar      Pagetual
+// @name:he      Pagetual
+// @name:th      Pagetual
+// @name:nb      Pagetual
+// @name:sv      Pagetual
+// @name:sr      Pagetual
+// @name:sk      Pagetual
+// @name:hu      Pagetual
+// @name:ro      Pagetual
+// @name:fi      Pagetual
+// @name:el      Pagetual
+// @name:eo      Pagetual
+// @name:bg      Pagetual
+// @name:cs      Pagetual
+// @name:vi      Pagetual
+// @name:pl      Pagetual
+// @name:uk      Pagetual
+// @name:tr      Pagetual
+// @name:nl      Pagetual
+// @name:da      Pagetual
+// @name:fr-CA   Pagetual
 // @namespace    hoothin
 // @version      1.9.37.101
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
@@ -23,6 +46,29 @@
 // @description:es     Carga automática de las siguientes páginas web paginadas e inserción en la página actual. Admite miles de sitios web sin ninguna regla.
 // @description:fr     Chargement automatique des pages Web paginées suivantes et insertion dans la page en cours. Prend en charge des milliers de sites Web sans aucune règle.
 // @description:it     Caricamento automatico delle pagine Web impaginate successive e inserimento nella pagina corrente. Supporta migliaia di siti web senza alcuna regola.
+// @description:id     Pengambilan otomatis halaman web yang dipaginasi berikutnya dan penyisipan ke halaman saat ini untuk pengguliran tak terbatas. Mendukung ribuan situs web tanpa aturan apa pun.
+// @description:ug     Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
+// @description:ar     Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
+// @description:he     Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
+// @description:th     ดึงหน้าเว็บแบบแบ่งหน้าถัดไปโดยอัตโนมัติและแทรกลงในหน้าปัจจุบันเพื่อเลื่อนแบบไม่มีที่สิ้นสุด รองรับเว็บไซต์หลายพันแห่งโดยไม่มีกฎเกณฑ์ใดๆ
+// @description:nb     Henter automatisk neste paginerte nettsider og setter inn på gjeldende side for uendelig rulling. Støtt tusenvis av nettsider uten noen regel.
+// @description:sv     Hämtar automatiskt nästa paginerade webbsidor och infogar på aktuell sida för oändlig rullning. Stöd tusentals webbplatser utan några regler.
+// @description:sr     Аутоматско преузимање следећих пагинираних веб страница и уметање у тренутну страницу за бесконачно померање. Подржите хиљаде веб локација без икаквог правила.
+// @description:sk     Samodejno pridobivanje naslednjih paginiranih spletnih strani in vstavljanje v trenutno stran za neskončno drsenje. Podprite na tisoče spletnih mest brez pravil.
+// @description:hu     A következő oldalszámozott weboldalak automatikus lekérése és beszúrása az aktuális oldalra a végtelen görgetés érdekében. Több ezer webhely támogatása szabály nélkül.
+// @description:ro     Preluare automată a următoarelor pagini web paginate și inserare în pagina curentă pentru defilare infinită. Suportă mii de site-uri web fără nicio regulă.
+// @description:fi     Hakee automaattisesti seuraavat sivutetut verkkosivut ja lisäämällä nykyiselle sivulle loputonta vieritystä. Tukee tuhansia web-sivustoja ilman sääntöjä.
+// @description:el     Αυτόματη ανάκτηση επόμενων σελιδοποιημένων ιστοσελίδων και εισαγωγή στην τρέχουσα σελίδα για άπειρη κύλιση. Υποστηρίξτε χιλιάδες ιστοσελίδες χωρίς κανένα κανόνα.
+// @description:eo     Aŭtomate alportado de sekvaj paĝigitaj retpaĝoj kaj enmetado en nunan paĝon por senfina movo. Subtenu milojn da retejoj sen ajna regulo.
+// @description:bg     Автоматично извличане на следващите уеб страници с пагиниране и вмъкване в текущата страница за безкрайно превъртане. Поддържайте хиляди уеб сайтове без никакви правила.
+// @description:cs     Automatické načítání dalších stránkovaných webových stránek a vkládání do aktuální stránky pro nekonečné posouvání. Podporujte tisíce webových stránek bez jakýchkoli pravidel.
+// @description:vi     Tự động tìm các trang web được phân trang tiếp theo và chèn vào trang hiện tại để cuộn vô hạn. Hỗ trợ hàng ngàn trang web mà không cần bất kỳ quy tắc nào.
+// @description:pl     Automatyczne pobieranie kolejnych stron internetowych z podziałem na strony i wstawianie ich do bieżącej strony w celu nieskończonego przewijania. Obsługa tysięcy stron internetowych bez żadnej reguły.
+// @description:uk     Автоматичне отримання наступних веб-сторінок із розбивкою на сторінки та вставка на поточну сторінку для нескінченного прокручування. Підтримка тисяч веб-сайтів без будь-яких правил.
+// @description:tr     Sonraki sayfalı web sayfalarını otomatik olarak getirme ve sonsuz kaydırma için geçerli sayfaya ekleme. Hiçbir kural olmadan binlerce web sitesini destekleyin.
+// @description:nl     Automatisch ophalen van volgende gepagineerde webpagina's en invoegen in huidige pagina voor oneindig scrollen. Ondersteun duizenden websites zonder enige regel.
+// @description:da     Automatisk hentning af næste paginerede websider og indsættelse på nuværende side for uendelig rulning. Støt tusindvis af websteder uden nogen regler.
+// @description:fr-CA  Récupération automatique des pages Web paginées suivantes et insertion dans la page actuelle pour un défilement infini. Prise en charge de milliers de sites Web sans aucune règle.
 // @author       hoothin
 // @license      MPL-2.0
 // @match        *://*/*
@@ -52,6 +98,7 @@
 // @connect      wedata.net
 // @connect      githubusercontent.com
 // @connect      ghproxy.com
+// @connect      ghp.ci
 // @connect      hoothin.github.io
 // @run-at       document-end
 // @connect      *
