@@ -6252,6 +6252,13 @@
     "insertPos": 2
 },
 {
+    "name": "Fur Affinity",
+    "url": "^https?://www\\.furaffinity\\.net/(?:browse|msg/submissions|(?:favorites|gallery|scraps)/[^/]+)/",
+    "pageElement": "//section[@class='gallery s-200 ']/*",
+    "nextLink": "//form[@name='replyform']/button[@value='Next']",
+    "action": 0
+},
+{
     "name": "bookmarkearth",
     "action": 0,
     "url": "^https://www\\.bookmarkearth\\.com(?:/?$|/page\\?currentPage=)",
