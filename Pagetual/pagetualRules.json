@@ -5817,7 +5817,7 @@
         "a.prev"
     ],
     "pageNum": "\\-\\d+\\-{$p}\\.html",
-    "pageElement": "div#threadlist form",
+    "pageElement": "div#threadlist>div>form",
     "replaceElement": "#pgt div.pg"
 },
 {
