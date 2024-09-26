@@ -11,9 +11,6 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @name:id      Pagetual
-// @name:ug      Pagetual
-// @name:ar      Pagetual
-// @name:he      Pagetual
 // @name:th      Pagetual
 // @name:nb      Pagetual
 // @name:sv      Pagetual
@@ -34,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.102
+// @version      1.9.37.103
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -47,9 +44,6 @@
 // @description:fr     Chargement automatique des pages Web paginées suivantes et insertion dans la page en cours. Prend en charge des milliers de sites Web sans aucune règle.
 // @description:it     Caricamento automatico delle pagine Web impaginate successive e inserimento nella pagina corrente. Supporta migliaia di siti web senza alcuna regola.
 // @description:id     Pengambilan otomatis halaman web yang dipaginasi berikutnya dan penyisipan ke halaman saat ini untuk pengguliran tak terbatas. Mendukung ribuan situs web tanpa aturan apa pun.
-// @description:ug     Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
-// @description:ar     Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
-// @description:he     Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:th     ดึงหน้าเว็บแบบแบ่งหน้าถัดไปโดยอัตโนมัติและแทรกลงในหน้าปัจจุบันเพื่อเลื่อนแบบไม่มีที่สิ้นสุด รองรับเว็บไซต์หลายพันแห่งโดยไม่มีกฎเกณฑ์ใดๆ
 // @description:nb     Henter automatisk neste paginerte nettsider og setter inn på gjeldende side for uendelig rulling. Støtt tusenvis av nettsider uten noen regel.
 // @description:sv     Hämtar automatiskt nästa paginerade webbsidor och infogar på aktuell sida för oändlig rullning. Stöd tusentals webbplatser utan några regler.
@@ -2410,6 +2404,7 @@
             if (doc === document && this.docElementValid()) {
                 return this.docPageElement;
             }
+            if (!curWin) curWin = doc.defaultView;
             let pageElement = null;
             let self = this;
             let body = getBody(doc);
@@ -2452,8 +2447,8 @@
                         pageElement = null;
                     } else if (curWin && curWin !== _unsafeWindow) {
                         let parent = pageElement[0].parentNode;
-                        let loading = parent.querySelector('[class*=loading]');
-                        if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
+                        let loading = parent.querySelector('[class*=loading],[class*=Loader]');
+                        if (loading && loading.offsetParent && loading.offsetHeight > (parent.childElementCount === 1 ? parent.firstElementChild.offsetHeight : parent.offsetHeight)>>2) {
                             pageElement = null;
                         } else {
                             loading = parent.querySelector('[class*=skeleton-item]');
@@ -2562,8 +2557,12 @@
                             break;
                         }
                         if (compareNodeName(curNode, ["canvas", "nav"])) continue;
+                        if (curNode.getAttribute("aria-hidden") == "true") continue;
                         let curStyle = curWin.getComputedStyle(curNode);
-                        if (!curNode.offsetParent && curStyle.display !== "contents" && (curStyle.position !== "fixed" || curStyle.opacity === 0)) {
+                        if (curStyle.opacity === "0") {
+                            continue;
+                        }
+                        if (!curNode.offsetParent && curStyle.display !== "contents" && curStyle.position !== "fixed") {
                             continue;
                         }
                         if (!compareNodeName(curNode, ["img"]) && curNode.querySelector('img') === null && /^\s*$/.test(curNode.innerText)) continue;
@@ -3919,7 +3918,9 @@
                 }
                 this.insert = getElement(insertSel, document, null, true);
             } else {
-                this.docPageElement = null;
+                if (this.docPageElement && this.docPageElement.length && !document.documentElement.contains(this.docPageElement[0])) {
+                    this.docPageElement = null;
+                }
                 let pageElement = this.getPageElement(document, _unsafeWindow);
                 if (this.curSiteRule.smart && this.nextLinkHref == "#" && this.curSiteRule.pageElement === 'body') {
                     debug("Stop as jsNext & whole body");
