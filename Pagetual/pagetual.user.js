@@ -7287,16 +7287,10 @@
             if (rulesData.lang) {
                 setLang(rulesData.lang);
             }
-            if (rulesData.firstRun) {
+            if (rulesData.firstRun && storage.supportCrossSave()) {
                 rulesData.firstRun = false;
                 storage.setItem("rulesData", rulesData);
-                setTimeout(() => {
-                    storage.getItem("rulesData", data => {
-                        if (data.firstRun === false) {
-                            _GM_openInTab(firstRunPage, {active: true});
-                        }
-                    });
-                }, 100);
+                _GM_openInTab(firstRunPage, {active: true});
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
