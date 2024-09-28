@@ -2987,6 +2987,7 @@
                 "[aria-label$='next page']",
                 ".pagination-nav__item--next>a",
                 "a.pageright",
+                ".pager_on+a.pager",
                 ".pager__next>a",
                 ".page-numbers.current+a",
                 "a.page-numbers.next",
