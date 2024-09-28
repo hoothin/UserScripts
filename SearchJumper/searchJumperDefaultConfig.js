@@ -400,7 +400,7 @@ switch (lang) {
                     },
                     {
                         "name": "Futurepedia - Find The Best AI Tools & Software",
-                        "url": "https://www.futurepedia.io/#p{input[name\\=q]=%s&click(button[type\\=submit]:not([disabled]))}"
+                        "url": "https://www.futurepedia.io/search?search=%s"
                     }
                 ]
             },
@@ -779,7 +779,7 @@ switch (lang) {
                     },
                     {
                         "name": "Futurepedia - Find The Best AI Tools & Software",
-                        "url": "https://www.futurepedia.io/#p{input[name\\=q]=%s&click(button[type\\=submit]:not([disabled]))}"
+                        "url": "https://www.futurepedia.io/search?search=%s"
                     }
                 ]
             },
