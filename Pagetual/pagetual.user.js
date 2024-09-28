@@ -2473,9 +2473,12 @@
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
             }
-            if (this.curSiteRule.smart && pageElement && pageElement.length > 0 && compareNodeName(pageElement[0], ["tr"])) {
-                let mainTr = this.insert.parentNode.querySelectorAll('tr'), mainTdNum = 0, newTdNum = 0;
-                mainTr = mainTr[mainTr.length - 1];
+            if (this.insert && this.curSiteRule.smart && pageElement && pageElement.length > 0 && compareNodeName(pageElement[0], ["tr"])) {
+                let mainTr = this.insert.parentNode.lastElementChild, mainTdNum = 0, newTdNum = 0;
+                while (mainTr && !compareNodeName(mainTr, ["tr"])) {
+                    if (!mainTr.previousElementSibling) break;
+                    mainTr = mainTr.previousElementSibling;
+                }
                 [].forEach.call(mainTr.children, el => {
                     if (compareNodeName(el, ["td", "th"])) {
                         mainTdNum += el.colSpan || 1;
@@ -3907,6 +3910,7 @@
 
         getInsert(refresh) {
             if (refresh) {
+                this.docPageElement = null;
                 this.insert = null;
             }
             if (this.insert && this.insert.parentNode && document.documentElement.contains(this.insert)) {
