@@ -26,13 +26,15 @@ import Stcasc from 'switch-chinese';
 + 轉正體中文
 
 ``` js
-stcasc.traditionalized("中文");
+stcasc.traditionalized("简体中文");
+//簡體中文
 ```
 
 + 轉簡體中文
 
 ``` js
-stcasc.simplized("中文");
+stcasc.simplized("正體中文");
+//正体中文
 ```
 
 + 添加快取
