@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.105
+// @version      1.9.37.106
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4116,7 +4116,7 @@
         }
 
         checkClickHref() {
-            if (this.curSiteRule.smart && this.nextLinkEle && (!this.linkHasHref(this.nextLinkEle) || this.nextLinkEle.target !== "_blank")) {
+            if (this.curSiteRule.smart && this.nextLinkEle && !this.linkHasHref(this.nextLinkEle)) {
                 this.urlChanged();
                 isPause = true;
                 if (!this.nextLinkHref) isLoading = false;
@@ -8126,7 +8126,7 @@
             } else if (!ruleParser.canListenUrlChange()) {
                 return;
             }
-            if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search) && window.location.href != ruleParser.historyUrl) {
+            if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search || window.location.hash.indexOf("#!") === 0) && window.location.href != ruleParser.historyUrl) {
                 checkUrlTime = 2000;
                 urlWillChange = true;
                 var e = new Event('pagetual_pushState');
