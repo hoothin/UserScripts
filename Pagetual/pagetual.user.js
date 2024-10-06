@@ -3271,6 +3271,7 @@
             }
             if (next && next.classList && (next.classList.contains("results-more") || next.classList.contains("no"))) next = null;
             if (next && next.hasAttribute && next.hasAttribute("disabled")) next = null;
+            if (next && next.offsetHeight && next.offsetHeight > 200) next = null;
             if (next && next.parentNode.href && compareNodeName(next.parentNode, ["a"])) next = next.parentNode;
             return {next:next, canSave:canSave};
         }
