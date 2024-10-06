@@ -9784,6 +9784,9 @@
             iframeDoc.addEventListener('wheel', e => {
                 document.dispatchEvent(new Event('wheel'));
             }, true);
+            window.addEventListener("scroll", e => {
+                curIframe.contentWindow.dispatchEvent(new Event('scroll'));
+            });
         });
         let checkTimes = 0, findPageEle = false;
         let forceRefresh = e => {
