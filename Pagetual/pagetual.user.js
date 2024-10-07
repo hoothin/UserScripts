@@ -8643,15 +8643,6 @@
             touched = false;
             getBody(document).removeEventListener('touchstart', touchBodyHandler, { passive: false, capture: false });
         };
-        pageText.addEventListener("touchstart", e => {
-            if (touched) return;
-            touched = true;
-            pageText.style.pointerEvents = 'none';
-            setTimeout(() => {
-                pageText.style.pointerEvents = 'all';
-            }, 250);
-            getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
-        }, { passive: false, capture: false });
         if (ruleParser.nextTitle) {
             pageText.innerHTML = createHTML(ruleParser.nextTitle + " ");
             pageText.title = ruleParser.nextTitle;
@@ -8752,6 +8743,16 @@
                 e.preventDefault();
                 picker.start();
             }, true);
+        } else {
+            pageText.addEventListener("touchstart", e => {
+                if (touched) return;
+                touched = true;
+                pageText.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    pageText.style.pointerEvents = 'all';
+                }, 250);
+                getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
+            }, { passive: false, capture: false });
         }
         pageBar.appendChild(downSpan);
         if (forceState == 2) {
