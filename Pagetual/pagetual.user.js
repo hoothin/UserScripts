@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.107
+// @version      1.9.37.108
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4117,11 +4117,15 @@
         }
 
         checkClickHref() {
-            if (this.curSiteRule.smart && this.nextLinkEle && !this.linkHasHref(this.nextLinkEle)) {
+            if (this.nextLinkHref === '#') {
                 this.urlChanged();
                 isPause = true;
                 if (!this.nextLinkHref) isLoading = false;
             }
+        }
+
+        needCheckClick(ele) {
+            return !picker.contains(ele) && this.nextLinkHref === '#';
         }
 
         docElementValid() {
@@ -5138,6 +5142,7 @@
              }
              #pagetual-picker {
               position: fixed;
+              max-width: 80vw;
               top: 10px;
               left: calc(50% - 178px);
               background: aliceblue;
@@ -5639,11 +5644,11 @@
             let initX = 0, initY = 0, initPos = {x: 0, y: 0};
             let moveHanlder = e => {
                 if (moving) {
-                    frame.style.left = e.clientX - initX + "px";
-                    frame.style.top = e.clientY - initY + "px";
+                    frame.style.left = clientX(e) - initX + "px";
+                    frame.style.top = clientY(e) - initY + "px";
                     e.stopPropagation();
                     e.preventDefault();
-                } else if(Math.abs(e.clientX - initPos.x) + Math.abs(e.clientY - initPos.y) > 20) {
+                } else if(Math.abs(clientX(e) - initPos.x) + Math.abs(clientY(e) - initPos.y) > 20) {
                     moving = true;
                 }
             };
@@ -5659,12 +5664,25 @@
                 e.preventDefault();
             };
             title.addEventListener("mousedown", e => {
+                e.preventDefault();
+                e.stopPropagation();
                 initPos = {x: e.clientX, y: e.clientY};
                 initX = e.clientX - parseInt(getComputedStyle(frame).left);
                 initY = e.clientY - parseInt(getComputedStyle(frame).top);
                 document.addEventListener("mousemove", moveHanlder, true);
                 title.addEventListener("mouseup", upHanlder, true);
-            });
+            }, { passive: false, capture: false });
+
+            title.addEventListener('touchstart', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                initPos = {x: clientX(e), y: clientY(e)};
+                initX = initPos.x - parseInt(getComputedStyle(frame).left);
+                initY = initPos.y - parseInt(getComputedStyle(frame).top);
+                document.addEventListener("touchmove", moveHanlder, true);
+                title.addEventListener('touchend', upHanlder, false);
+            }, { passive: false, capture: false });
+
             frame.addEventListener("mouseenter", e => {
                 if (!self.showSign || moving) return;
                 if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
@@ -5744,6 +5762,10 @@
                 selectorInput.value = selector;
                 self.setSelectorDiv(selector);
             };
+        }
+
+        contains(ele) {
+            return this.frame && this.frame.contains(ele);
         }
 
         getTempRule(detail, noFill) {
@@ -8112,11 +8134,8 @@
             if (checkClickedEle) {
                 if (typeof ruleParser.curSiteRule.refreshByClick !== "undefined") {
                 } else if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
-                    if (compareNodeName(checkClickedEle, ["a", "button"])) {
+                    if (compareNodeName(checkClickedEle, ["a", "button"]) && ruleParser.needCheckClick(checkClickedEle)) {
                         clickedSth = true;
-                    } else {
-                        let targetStyle = _unsafeWindow.getComputedStyle(checkClickedEle);
-                        if (targetStyle.cursor == "pointer") clickedSth = true;
                     }
                 }
                 checkClickedEle = null;
@@ -8147,7 +8166,7 @@
         checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
 
         document.addEventListener("click", e => {
-            if (!checkClickedEle) {
+            if (e.isTrusted && !checkClickedEle) {
                 checkClickedEle = e.target;
                 checkUrlTime = 300;
                 clearTimeout(checkUrlTimer);
@@ -8875,6 +8894,26 @@
         });
     }
 
+    async function waitForElements(sel, doc, maxTime) {
+        if (!sel) return null;
+        return new Promise((resolve) => {
+            let passedTime = 0;
+            let checkInv = setInterval(() => {
+                let result = getAllElements(sel, doc, null, true);
+                if (result && result.length) {
+                    clearInterval(checkInv);
+                    resolve(result);
+                } else if (maxTime) {
+                    passedTime += 100;
+                    if (passedTime >= maxTime) {
+                        clearInterval(checkInv);
+                        resolve(result);
+                    }
+                }
+            }, 100);
+        });
+    }
+
     async function clickAction(sel, doc) {
         let btn = await waitForElement(sel, doc);
         emuClick(btn, doc);
@@ -9048,6 +9087,22 @@
         event = new Event('change', { bubbles: true });
         input.dispatchEvent(event);
         return result;
+    }
+
+    function clientX(e) {
+        if (e.type.indexOf('touch') === 0) {
+            return e.changedTouches ? e.changedTouches[0].clientX : 0;
+        } else {
+            return e.clientX;
+        }
+    }
+
+    function clientY(e) {
+        if (e.type.indexOf('touch') === 0) {
+            return e.changedTouches ? e.changedTouches[0].clientY : 0;
+        } else {
+            return e.clientY;
+        }
     }
 
     var failFromIframe = 0;
@@ -9501,10 +9556,12 @@
                     } else {
                         let refreshByClickSel = ruleParser.curSiteRule.refreshByClick;
                         if (iframeDoc && refreshByClickSel) {
-                            let clickBtn = await waitForElement(refreshByClickSel, iframeDoc);
+                            let clickBtn = await waitForElements(refreshByClickSel, iframeDoc);
                             await sleep(500);
                             await cloneStatus();
-                            emuClick(clickBtn, iframeDoc);
+                            if (clickBtn.length === 1) {
+                                emuClick(clickBtn[0], iframeDoc);
+                            }
                             await sleep(500);
                         } else {
                             await cloneStatus();
@@ -9923,7 +9980,12 @@
             }*/
             let isJs = ruleParser.curSiteRule.action == 3 || ruleParser.hrefIsJs(nextLink);
             if (!isJs) {
-                emuIframe = null;
+                if (emuIframe) {
+                    if (emuIframe.parentNode) {
+                        emuIframe.parentNode.removeChild(emuIframe);
+                    }
+                    emuIframe = null;
+                }
                 lastActiveUrl = nextLink;
                 if (location.protocol === "https:" && /^http:/.test(nextLink)) {
                     nextLink = nextLink.replace(/^http/, "https");
