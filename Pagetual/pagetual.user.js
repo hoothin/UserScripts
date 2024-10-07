@@ -4125,7 +4125,7 @@
         }
 
         needCheckClick(ele) {
-            return !picker.contains(ele) && this.nextLinkHref === '#';
+            return this.nextLinkHref === '#' && !picker.contains(ele) && ele.parentNode && ele.parentNode.className !== 'pagetual_pageBar';
         }
 
         docElementValid() {
@@ -8134,7 +8134,7 @@
             if (checkClickedEle) {
                 if (typeof ruleParser.curSiteRule.refreshByClick !== "undefined") {
                 } else if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
-                    if (compareNodeName(checkClickedEle, ["a", "button"]) && ruleParser.needCheckClick(checkClickedEle)) {
+                    if (compareNodeName(checkClickedEle, ["a", "button"]) && checkClickedEle.target !== "_blank" && ruleParser.needCheckClick(checkClickedEle)) {
                         clickedSth = true;
                     }
                 }
@@ -8743,14 +8743,14 @@
                     }
                     nextEle.src = nextEle.src;
                 }
-            });
+            }, true);
         } else if (rulesData.pageBarMenu) {
             pageText.addEventListener("click", e => {
                 e.stopPropagation();
                 if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
                 picker.start();
-            });
+            }, true);
         }
         pageBar.appendChild(downSpan);
         if (forceState == 2) {
