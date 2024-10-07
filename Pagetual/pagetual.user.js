@@ -227,7 +227,7 @@
                 pageElementCss: "Custom style for main page elements",
                 customCss: "Custom complete css",
                 firstAlert: "You have not imported the base rule, please select the appropriate rule to import",
-                picker: "Pagetual page element picker",
+                picker: "Pagetual element picker",
                 closePicker: "Close Pagetual picker",
                 pickerPlaceholder: "Element selector, (Advanced users only, leave blank otherwise)",
                 pickerCheck: "Check selector and copy",
@@ -5167,6 +5167,7 @@
               min-height: unset;
              }
              #pagetual-picker>.title {
+              max-width: 100%;
               margin: -5px 45px 10px 45px;
               font-size: 20px;
               font-weight: bold;
@@ -8649,6 +8650,8 @@
             setTimeout(() => {
                 pageText.style.pointerEvents = 'all';
             }, 250);
+            e.preventDefault();
+            e.stopPropagation();
             getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
         }, { passive: false, capture: false });
         if (ruleParser.nextTitle) {
