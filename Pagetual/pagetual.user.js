@@ -8650,8 +8650,6 @@
             setTimeout(() => {
                 pageText.style.pointerEvents = 'all';
             }, 250);
-            e.preventDefault();
-            e.stopPropagation();
             getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
         }, { passive: false, capture: false });
         if (ruleParser.nextTitle) {
