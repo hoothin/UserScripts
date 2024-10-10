@@ -3026,6 +3026,7 @@
                 "body [class*=Pages]>.curr+a",
                 "body [class*=page]>.cur+a",
                 "body [class*=pagination] [class*=next]",
+                "body [class*=pagination] [class*=arrow-right]",
                 ".page>em+a",
                 "[name*=nextPage]",
                 '//button[contains(@class, "Page")][text()="Next"]',
