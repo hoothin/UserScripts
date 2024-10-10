@@ -7110,7 +7110,7 @@
 },
 {
     "name": "Google cse",
-    "url": "^(https://www\\.lukol\\.com|https://www\\.searchcraigslist\\.net|https://cse\\.google\\.com.*&gsc\\.q=)",
+    "url": "^(https://www\\.lukol\\.com|https://www\\.searchcraigslist\\.net)|&gsc\\.q=",
     "pageElement": ".gsc-expansionArea>.gsc-result",
     "nextLink": ".gsc-cursor-current-page+div",
     "wait": 500
