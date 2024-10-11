@@ -295,6 +295,11 @@ switch (lang) {
                         "description": "老牌 VPS 服务商，5刀一个月。胜在稳定"
                     },
                     {
+                        "name": "便宜域名",
+                        "url": "https://www.namesilo.com/domain/search-domains?rid=44fb284bf",
+                        "description": "比阿里云便宜，可以用支付宝支付"
+                    },
+                    {
                         "name": "二维码生成",
                         "url": "https://hoothin.com/qrcode#%U",
                         "icon": "https://hoothin.com/qrcode/favicon.svg"
@@ -678,6 +683,11 @@ switch (lang) {
                         "name": "Stable VPS",
                         "url": "https://www.vultr.com/?ref=7427668",
                         "description": "Veteran VPS provider, $5 per month, wins in stability"
+                    },
+                    {
+                        "name": "Cheap Domain",
+                        "url": "https://www.namesilo.com/domain/search-domains?rid=44fb284bf",
+                        "description": "Buy Website Domain Name"
                     },
                     {
                         "name": "Copy target svg to base64",
