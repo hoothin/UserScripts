@@ -24631,7 +24631,7 @@ ImgOps | https://imgops.com/#b#`;
             if (isConfigOpen) return false;
             let selStr;
             try {
-                selStr = !selectionClientRect && document.getSelection().toString();
+                selStr = !selectionClientRect && selectionStr;
             }catch(e){}
             if (selStr) return false;
             let keyActive=(prefs.floatBar.globalkeys.type == "hold" && checkGlobalKeydown(e)) ||
@@ -25206,10 +25206,10 @@ ImgOps | https://imgops.com/#b#`;
                 } else {
                     if (!canPreview) return;
                     let target = e.target;
-                    if (target.nodeName.toUpperCase() == "PICTURE"){
+                    if (target.nodeName == "PICTURE"){
                         target = target.querySelector("img") || target;
                     }
-                    if (target.nodeName.toUpperCase() != 'IMG') return;
+                    if (target.nodeName != 'IMG') return;
                 }
             }
             if (!initMouse) return;
