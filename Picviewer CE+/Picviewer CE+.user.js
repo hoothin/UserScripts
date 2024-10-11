@@ -21111,7 +21111,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     span.pv-pic-search-state {\
-                    top: -18px;\
+                    top: -21px;\
                     left: 0px;\
                     display: block;\
                     position: absolute;\
@@ -24033,6 +24033,9 @@ ImgOps | https://imgops.com/#b#`;
                 }else{
                     src=imgSrc;
                     type='force';
+                    if (img.nodeName == "A") {
+                        description = img.title || img.alt || img.innerText;
+                    }
                 }
             }
 
