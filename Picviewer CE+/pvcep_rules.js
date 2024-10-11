@@ -224,11 +224,6 @@ var siteInfo = [
         name:"bilibili",
         enabled:true,
         url:/^https?:\/\/[^.]+\.bilibili.com/i,
-        ext: function(target) {
-            if(target && target.parentNode){
-                return target.parentNode.querySelector("img");
-            }
-        },
         r: /\d+_\d+\/|\d+_x\d+\.jpg$|@\d+w_\d+h.*\.webp$|_\d+x\d+\.jpg$/i,
         s: ""
     },
