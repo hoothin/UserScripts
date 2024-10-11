@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.9.22.1
+// @version              2024.10.11.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12493,7 +12493,7 @@ ImgOps | https://imgops.com/#b#`;
                     });
                 }
 
-                return oldsrc != newsrc ? newsrc : null;
+                return oldsrc != canonicalUri(newsrc) ? newsrc : null;
             }
         ];
 
@@ -22781,6 +22781,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         }, true);
 
+        var lastPopupLoading;
         // 载入动画
         function LoadingAnimC(data, buttonType, waitImgLoad, openInTopWindow, initPos) {
             if (LoadingAnimC.all.find(function(item, index, array) {
@@ -22788,6 +22789,12 @@ ImgOps | https://imgops.com/#b#`;
                     return true;
                 }
             })) return false;
+            if (buttonType === "popup") {
+                if (lastPopupLoading) {
+                    lastPopupLoading.cancel();
+                }
+                lastPopupLoading = this;
+            }
             this.args = arrayFn.slice.call(arguments, 0);
             if (data.src != data.imgSrc && !data.srcs) {
                 data.srcs = [data.imgSrc];
@@ -22833,8 +22840,7 @@ ImgOps | https://imgops.com/#b#`;
                 container.addEventListener('click',function(e){
                     var tcl=e.target.classList;
                     if(tcl.contains('pv-loading-cancle')){
-                        self.imgReady && self.imgReady.abort();
-                        self.remove();
+                        self.cancel();
                     }else if(tcl.contains('pv-loading-retry')){
                         self.remove();
                         new LoadingAnimC(self.args[0],self.args[1],self.args[2],self.args[3]);
@@ -22968,6 +22974,10 @@ ImgOps | https://imgops.com/#b#`;
                     this.loadingAnim.parentNode.removeChild(this.loadingAnim);
                     LoadingAnimC.all.splice(LoadingAnimC.all.indexOf(this),1);
                 };
+            },
+            cancel:function(){
+                this.imgReady && this.imgReady.abort();
+                this.remove();
             },
             error:function(msg,img,e){
                 if(msg)debug(msg);
