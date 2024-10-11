@@ -12104,7 +12104,7 @@ ImgOps | https://imgops.com/#b#`;
         if (name) name = name.split("\n")[0].replace(/.*?\/\/[^\/]+\//, "").replace(/\?.*/, "").replace(/^data:.*/, "");
         if (!url.replace || url.indexOf("data:") === 0) url = "";
         url = url.replace(/.*?\/\/[^\/]+\//, "");
-        let nameFromUrl = url.match(/.*([^\/\?\=\&]+)\.\w{2,5}(\?|@|$).*/, "$1");
+        let nameFromUrl = url.match(/.*?([^\/\?\=\&]+)\.\w{2,5}(\?|@|$).*/, "$1");
         nameFromUrl = nameFromUrl ? nameFromUrl[1] : "";
         if (/\=&/.test(nameFromUrl)) {
             nameFromUrl = "";
@@ -12142,7 +12142,7 @@ ImgOps | https://imgops.com/#b#`;
                 name = (nameFromUrl || name || "image").substr(-80);
                 break;
         }
-        return name.replace(/.*\/([^\/\?]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
+        return name.replace(/.*?\/([^\/\?]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
     }
 
     function canonicalUri(src, href, basePath) {
