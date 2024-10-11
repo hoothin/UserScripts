@@ -25048,7 +25048,7 @@ ImgOps | https://imgops.com/#b#`;
             var checkUniqueImgWin = function() {
                 if (canPreview) {
                     if (result.type != "link" && result.type != "rule" && result.src == result.imgSrc) {
-                        if (result.imgAS.w <= result.imgCS.w && result.imgAS.h <= result.imgCS.h) {
+                        if (result.imgAS.w < result.imgCS.w * 1.2 && result.imgAS.h < result.imgCS.h * 1.2) {
                             if (result.img && result.img.childElementCount) return false;
                             var wSize = getWindowSize();
                             if (result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
