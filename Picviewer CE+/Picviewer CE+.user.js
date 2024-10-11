@@ -20856,7 +20856,7 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-transition: opacity 0.2s ease-out;\
                     transition: opacity 0.1s ease-out;\
                     overscroll-behavior: none;\
-                    box-shadow: 0 0 10px 5px rgba(0,0,0,0.35);\
+                    box-shadow: 0 0 6px 2px rgba(0,0,0,0.35);\
                     box-sizing: content-box;\
                     display: initial;\
                     background: #00000080;\
@@ -21048,6 +21048,7 @@ ImgOps | https://imgops.com/#b#`;
                     position: absolute;\
                     border: 10px solid transparent;\
                     margin-left: -22px;\
+                    top: -1px;\
                     border-right-color: yellow;\
                     }\
                     span.pv-pic-window-pre,\
@@ -21110,7 +21111,7 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     }\
                     span.pv-pic-search-state {\
-                    top: -21px;\
+                    top: -18px;\
                     left: 0px;\
                     display: block;\
                     position: absolute;\
@@ -21128,7 +21129,6 @@ ImgOps | https://imgops.com/#b#`;
                     max-width: 100%;\
                     overflow: hidden;\
                     font: 13px / 1.4em "Trebuchet MS", sans-serif;\
-                    box-shadow: rgb(221, 221, 221) 0px 0px 1px inset;\
                     }\
                     .pv-pic-search-state>span {\
                     pointer-events: none;\
@@ -25107,7 +25107,7 @@ ImgOps | https://imgops.com/#b#`;
                         imgSrc: src,
                         noActual:true,
                         img: target,
-                        description: target.title
+                        description: target.title || target.innerText
                     };
                     checkUniqueImgWin();
                 }
@@ -25198,7 +25198,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (canPreview) {
                         uniqueImgWinInitX = e.clientX;
                         uniqueImgWinInitY = e.clientY;
-                        uniqueImgWin.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
+                        uniqueImgWin.followPos(uniqueImgWinInitX, uniqueImgWinInitY, true);
                     } else {
                         uniqueImgWin.remove();
                     }
