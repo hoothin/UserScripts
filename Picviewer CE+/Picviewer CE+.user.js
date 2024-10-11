@@ -24934,7 +24934,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if (!found && document.elementsFromPoint) {
                         let elements = document.elementsFromPoint(clientX, clientY);
-                        let checkLen = Math.min(elements.length, 5);
+                        let checkLen = Math.min(elements.length, 10);
                         for (let i = 0; i < checkLen; i++) {
                             let ele = elements[i];
                             if (!ele) continue;
