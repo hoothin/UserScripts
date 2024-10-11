@@ -23401,7 +23401,9 @@ ImgOps | https://imgops.com/#b#`;
             },
             start:function(data){
 
-                if (data && data.type == "link") return;
+                if (data && data.type == "link") {
+                    data.hide = true;
+                }
                 //读取中的图片,不显示浮动栏,调整读取图标的位置.
                 if(LoadingAnimC.all.find(function(item,index,array){
                     if (data.src == item.data.src || data.img == item.data.img) {
@@ -25086,6 +25088,12 @@ ImgOps | https://imgops.com/#b#`;
                         img: target
                     };
                     checkUniqueImgWin();
+
+                    if (!floatBar) {
+                        floatBar = new FloatBarC();
+                    }
+                    floatBar.start(result);
+
                     return;
                 }
 
@@ -25113,6 +25121,11 @@ ImgOps | https://imgops.com/#b#`;
                         description: target.title || target.innerText
                     };
                     checkUniqueImgWin();
+
+                    if (!floatBar) {
+                        floatBar = new FloatBarC();
+                    }
+                    floatBar.start(result);
                 }
                 return;
             }
