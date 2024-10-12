@@ -2473,28 +2473,6 @@
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
             }
-            if (this.insert && this.curSiteRule.smart && pageElement && pageElement.length > 0 && compareNodeName(pageElement[0], ["tr"])) {
-                let mainTr = this.insert.parentNode.lastElementChild, mainTdNum = 0, newTdNum = 0;
-                while (mainTr && !compareNodeName(mainTr, ["tr"])) {
-                    if (!mainTr.previousElementSibling) break;
-                    mainTr = mainTr.previousElementSibling;
-                }
-                [].forEach.call(mainTr.children, el => {
-                    if (compareNodeName(el, ["td", "th"])) {
-                        mainTdNum += el.colSpan || 1;
-                    }
-                });
-                [].forEach.call(pageElement[0].children, el => {
-                    if (compareNodeName(el, ["td", "th"])) {
-                        newTdNum += el.colSpan || 1;
-                    }
-                });
-                if (mainTdNum !== newTdNum) {
-                    this.curSiteRule.pageElement = this.curSiteRule.pageElement.replace(/> *table.*/, ">table");
-                    this.getInsert(true);
-                    return this.getPageElement(doc, curWin, dontFind);
-                }
-            }
             if ((this.curSiteRule.smart || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length == 0) && curWin && !dontFind) {
                 if (!body) return null;
                 let bodyHeight = parseInt(body.offsetHeight || body.scrollHeight);
@@ -2730,6 +2708,32 @@
                     }
                 }
                 //if(pageElement)this.saveCurSiteRule();
+            }
+            if (this.insert && this.curSiteRule.smart && pageElement && pageElement.length > 0 && compareNodeName(this.insert.parentNode, ["tbody", "table"])) {
+                let mainTr = this.insert.parentNode.lastElementChild, mainTdNum = 0, newTdNum = 0;
+                while (mainTr && !compareNodeName(mainTr, ["tr"])) {
+                    if (!mainTr.previousElementSibling) break;
+                    mainTr = mainTr.previousElementSibling;
+                }
+                if (mainTr) {
+                    [].forEach.call(mainTr.children, el => {
+                        if (compareNodeName(el, ["td", "th"])) {
+                            mainTdNum += el.colSpan || 1;
+                        }
+                    });
+                    if (compareNodeName(pageElement[0], ["tr"])) {
+                        [].forEach.call(pageElement[0].children, el => {
+                            if (compareNodeName(el, ["td", "th"])) {
+                                newTdNum += el.colSpan || 1;
+                            }
+                        });
+                    }
+                    if (mainTdNum !== newTdNum) {
+                        this.curSiteRule.pageElement = this.curSiteRule.pageElement.replace(/> *table.*/, ">table");
+                        this.getInsert(true);
+                        return this.getPageElement(doc, curWin, dontFind);
+                    }
+                }
             }
 
             if (doc !== document) {
