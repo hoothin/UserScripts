@@ -21635,6 +21635,7 @@ ImgOps | https://imgops.com/#b#`;
                         this.followPosTimer = setTimeout(() => {
                             this.following = false;
                             this.followPos(this.followPosX, this.followPosY);
+                            imgWindow.classList.add("pv-pic-window-transition-all");
                         }, 250);
                     } else {
                         imgWindow.classList.remove("pv-pic-window-transition-all");
