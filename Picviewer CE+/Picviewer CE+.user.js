@@ -20522,6 +20522,10 @@ ImgOps | https://imgops.com/#b#`;
 
                 if(prefs.imgWindow.zoom.mouseWheelZoom){//是否使用鼠标缩放
                     addWheelEvent(container,function(e){//滚轮缩放
+                        if (e.target && (e.target.className == "pv-pic-window-next" || e.target.className == "pv-pic-window-pre")) {
+                            e.preventDefault && e.preventDefault();
+                            return;
+                        }
                         self.imgWindowEventHandler(e);
                     },false);
                 };
