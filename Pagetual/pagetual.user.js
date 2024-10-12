@@ -3193,7 +3193,7 @@
                                     }
                                 }
                                 if (!isApp && !next3 && !isJs) {
-                                    if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(aTag.textContent) && aTag.parentNode.hasAttribute && !aTag.parentNode.hasAttribute("jsaction")) {
+                                    if (/^(next\s*(»|>>|>|›|→|❯|\d+)?|&gt;|▶|>|›|→|❯)\s*$/i.test(aTag.textContent) && aTag.parentNode.hasAttribute && !aTag.parentNode.hasAttribute("jsaction")) {
                                         next3 = aTag;
                                     }
                                 }
@@ -3292,7 +3292,7 @@
             }
             if (eles.length >= 2 && eles[0].href !== eles[1].href) {
                 next = null;
-            } else if (doc === document) {
+            } else if (doc === document && next.offsetParent) {
                 let left = getElementLeft(next);
                 if (left < 20 || (document.documentElement.scrollWidth > 500 && left < 250)) {
                     next = null;
