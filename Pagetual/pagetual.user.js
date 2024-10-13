@@ -1308,7 +1308,7 @@
         if (enableDebug) {
             console.log(
                 `%c【Pagetual v.${_GM_info.script.version}】 ${title ? title : 'debug'}:`,
-                'color: yellow;font-size: large;font-weight: bold;background-color: darkblue;',
+                'color: yellow;font-size: large;font-weight: bold;background-color: darkblue;border-radius: 10px;text-shadow: 1px 1px 3px black;padding: 5px;',
                 str
             );
         }
