@@ -1346,9 +1346,15 @@ var siteInfo = [
                 try {
                     const o = JSON.parse(html);
                     const items0 = o.items[0];
+                    const videos = items0.video_versions;
                     const images = items0.image_versions2;
                     const carousel = items0.carousel_media;
-                    if (carousel) {
+                    if (videos) {
+                        const videoUrl = videos[0].url + '.video';
+                        let videoAudioSubtitlesUrl = videoUrl;
+                        const caption = (items0.caption ? items0.caption.text : (items0.accessibility_caption ? items0.accessibility_caption : items0.user.full_name));
+                        return {url: [videoUrl], cap: caption};
+                    } else if (carousel) {
                         let gallery = [];
                         const caption = (items0.caption ? items0.caption.text : (items0.accessibility_caption ? items0.accessibility_caption : items0.user.full_name));
                         carousel.map(c => { gallery.push(c.video_versions ? c.video_versions[0].url : c.image_versions2.candidates[0].url); });
