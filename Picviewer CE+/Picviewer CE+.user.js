@@ -15056,6 +15056,8 @@ ImgOps | https://imgops.com/#b#`;
 
                     var moveFiredCount=0;
                     var moveHandler=function(e){
+                        e.preventDefault();
+                        e.stopPropagation();
                         moveFiredCount++;
                         if(moveFiredCount<2){//给个缓冲。。
                             return;
@@ -21715,6 +21717,8 @@ ImgOps | https://imgops.com/#b#`;
                     imgWStyle.top=oriOffset.top + (e.pageY || e.touches[0].pageY)-mouseCoor.y +'px';
                     self.keepScreenInside();
                     self.moving=true;
+                    e.preventDefault();
+                    e.stopPropagation();
                 };
                 var mouseupHandler=function(){
                     e.preventDefault();
@@ -23490,14 +23494,17 @@ ImgOps | https://imgops.com/#b#`;
                 var targetPosi = getContentClientRect(this.data.img);
                 var pa = this.data.img.parentNode;
                 if (pa && pa.scrollHeight > 30 && pa.scrollWidth > 30) {
-                    var paPosi=getContentClientRect(pa);
+                    var paPosi=pa.getBoundingClientRect();
                     if (paPosi.width > 30 && paPosi.height > 30) {
-                        if (this.data.img.offsetTop != 0) {
+                        const style = unsafeWindow.getComputedStyle(this.data.img);
+                        const matrix = new DOMMatrixReadOnly(style.transform);
+                        let translateX = matrix.m41, translateY = matrix.m42;
+                        if (translateY || this.data.img.offsetTop != 0) {
                             if (paPosi.height < targetPosi.height - 3) {
                                 targetPosi.top = paPosi.top;
                             }
                         }
-                        if (this.data.img.offsetLeft != 0) {
+                        if (translateX || this.data.img.offsetLeft != 0) {
                             if (paPosi.width < targetPosi.width - 3) {
                                 targetPosi.left = paPosi.left;
                             }
