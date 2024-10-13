@@ -1615,7 +1615,7 @@ var siteInfo = [
     },
     {
         name: "amazon",
-        url: /^https?:\/\/www\.amazon\.com\//,
+        url: /^https?:\/\/www\.amazon\./,
         lazyAttr: "data-a-hires",
         r: [/_?(_AC_|_CR0).*\./, /\._S.\d+\_?/],
         s: ["", ""]
