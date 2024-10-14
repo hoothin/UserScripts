@@ -1627,6 +1627,12 @@ var siteInfo = [
         s: ".gif"
     },
     {
+        name: "Bangumi",
+        url: /^https:\/\/bgm\.tv\//,
+        r: "/c/",
+        s: "/l/"
+    },
+    {
         name: "porngifmag",
         url: /^https:\/\/porngifmag\.com/,
         xhr: {
