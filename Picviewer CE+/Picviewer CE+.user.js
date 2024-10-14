@@ -20220,7 +20220,8 @@ ImgOps | https://imgops.com/#b#`;
                     '<span></span>'+prefs.icons.downloadSvgBtn+
                     '</span>');
 
-                container.firstChild.appendChild(img);
+                let imgbox=container.firstChild;
+                imgbox.appendChild(img);
 
                 this.imgWindow=container;
 
@@ -20509,6 +20510,20 @@ ImgOps | https://imgops.com/#b#`;
                     e.preventDefault();
                 },false);
 
+                let hideToolbarTimer;
+                imgbox.addEventListener('mousemove',function(e){
+                    e.preventDefault();
+                    clearTimeout(hideToolbarTimer);
+                    container.classList.remove("hideToolbar");
+                    hideToolbarTimer = setTimeout(() => {
+                        container.classList.add("hideToolbar");
+                    }, 800);
+                },false);
+                imgbox.addEventListener('mouseleave',function(e){
+                    e.preventDefault();
+                    clearTimeout(hideToolbarTimer);
+                    container.classList.remove("hideToolbar");
+                },false);
 
                 container.addEventListener('mousedown',function(e){//当按下的时，执行平移，缩放，旋转操作
                     self.imgWindowEventHandler(e);
@@ -20529,6 +20544,11 @@ ImgOps | https://imgops.com/#b#`;
                             return;
                         }
                         self.imgWindowEventHandler(e);
+                        clearTimeout(hideToolbarTimer);
+                        container.classList.remove("hideToolbar");
+                        hideToolbarTimer = setTimeout(() => {
+                            container.classList.add("hideToolbar");
+                        }, 800);
                     },false);
                 };
 
@@ -20960,13 +20980,6 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-window-toolbar {\
                     display: block;\
                     }\
-                    .pv-pic-window-container:hover>.pv-pic-window-max.insert,\
-                    .pv-pic-window-container:hover>.pv-pic-window-close.insert{\
-                    opacity: 0.1!important;\
-                    }\
-                    .pv-pic-window-container:hover>.pv-pic-window-toolbar.insert{\
-                    opacity: 0.1;\
-                    }\
                     .pv-pic-window-toolbar:hover,\
                     .pv-pic-window-container>.pv-pic-window-toolbar.insert:hover{\
                     opacity: 1;\
@@ -21083,6 +21096,17 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container_focus:not(.preview)>.pv-pic-search-state {\
                     opacity:0.8;\
                     }\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-window-imgbox{\
+                    cursor: none;\
+                    }\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-search-state,\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-window-toolbar,\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-window-max,\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-window-close,\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-window-pre,\
+                    .pv-pic-window-container_focus.hideToolbar>.pv-pic-window-next{\
+                    opacity:0!important;\
+                    }\
                     .pv-pic-window-container_focus:not(.preview) .pv-pic-window-imgbox:hover~.pv-pic-window-pre,\
                     .pv-pic-window-container_focus:not(.preview) .pv-pic-window-imgbox:hover~.pv-pic-window-next{\
                     opacity:0.3;\
@@ -21093,10 +21117,9 @@ ImgOps | https://imgops.com/#b#`;
                     opacity:1;\
                     pointer-events: all;\
                     }\
-                    .pv-pic-window-container:hover>.pv-pic-search-state{\
+                    .pv-pic-window-container_focus:hover>.pv-pic-search-state{\
                     border-radius: 0 0 8px 0;\
                     top: 0px;\
-                    opacity:0.5;\
                     pointer-events: all;\
                     }\
                     .pv-pic-window-container>.pv-pic-window-pre:hover~span.pv-pic-search-state,\
