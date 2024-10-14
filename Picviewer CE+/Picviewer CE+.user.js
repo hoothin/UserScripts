@@ -21097,6 +21097,7 @@ ImgOps | https://imgops.com/#b#`;
                     border-radius: 0 0 8px 0;\
                     top: 0px;\
                     opacity:0.5;\
+                    pointer-events: all;\
                     }\
                     .pv-pic-window-container>.pv-pic-window-pre:hover~span.pv-pic-search-state,\
                     .pv-pic-window-container>.pv-pic-window-next:hover~span.pv-pic-search-state{\
@@ -21134,6 +21135,7 @@ ImgOps | https://imgops.com/#b#`;
                     max-width: 100%;\
                     overflow: hidden;\
                     font: 13px / 1.4em "Trebuchet MS", sans-serif;\
+                    pointer-events: none;\
                     }\
                     .pv-pic-search-state>span {\
                     pointer-events: none;\
@@ -24069,7 +24071,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 noActual:noActual,
                 xhr: xhr,
-                description: description || img.title || img.alt || '',
+                description: description || img.title || img.alt || (img.parentNode && img.parentNode.title) || '',
 
                 img: img,                  // 处理的图片
                 imgPA: imgPA,              // 图片的第一个父a元素
