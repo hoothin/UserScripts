@@ -20510,7 +20510,9 @@ ImgOps | https://imgops.com/#b#`;
                     e.preventDefault();
                 },false);
 
-                let hideToolbarTimer;
+                let hideToolbarTimer = setTimeout(() => {
+                    container.classList.add("hideToolbar");
+                }, 800);
                 imgbox.addEventListener('mousemove',function(e){
                     e.preventDefault();
                     clearTimeout(hideToolbarTimer);
