@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.108
+// @version      1.9.37.109
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3553,38 +3553,36 @@
                         parent = parent.parentNode;
                     }
                     if (doc === document) {
-                        if (!this.linkHasHref(nextLink)) {
-                            if (!isVisible(nextLink, _unsafeWindow)) {
-                                this.nextLinkHref = false;
-                                return null;
-                            }
-                            let video = document.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
-                            if (video) {
-                                if (video.offsetParent && video.name !== 'pagetual-iframe') {
-                                    let scrollWidth = video.scrollWidth || video.offsetWidth;
-                                    let scrollHeight = video.scrollHeight || video.offsetHeight;
-                                    if (compareNodeName(video, ["iframe"])) {
-                                    } else if (scrollWidth > 100 && scrollHeight > 100) {
-                                        let winWidth = window.innerWidth || document.documentElement.clientWidth;
-                                        let winHeight = window.innerHeight || document.documentElement.clientHeight;
-                                        if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
-                                            debug("Disable when large media found");
-                                        } else {
-                                            video = null;
-                                        }
+                        if (!this.linkHasHref(nextLink) && !isVisible(nextLink, _unsafeWindow)) {
+                            this.nextLinkHref = false;
+                            return null;
+                        }
+                        let video = document.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+                        if (video) {
+                            if (video.offsetParent && video.name !== 'pagetual-iframe') {
+                                let scrollWidth = video.scrollWidth || video.offsetWidth;
+                                let scrollHeight = video.scrollHeight || video.offsetHeight;
+                                if (compareNodeName(video, ["iframe"])) {
+                                } else if (scrollWidth > 100 && scrollHeight > 100) {
+                                    let winWidth = window.innerWidth || document.documentElement.clientWidth;
+                                    let winHeight = window.innerHeight || document.documentElement.clientHeight;
+                                    if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
+                                        debug("Disable when large media found");
                                     } else {
                                         video = null;
                                     }
                                 } else {
                                     video = null;
                                 }
+                            } else {
+                                video = null;
                             }
-                            if (video) {
-                                isPause = true;
-                                this.clearAddedElements();
-                                this.nextLinkHref = false;
-                                return null;
-                            }
+                        }
+                        if (video) {
+                            isPause = true;
+                            this.clearAddedElements();
+                            this.nextLinkHref = false;
+                            return null;
                         }
 
                         let nextLinkCs = _unsafeWindow.getComputedStyle(nextLink);
