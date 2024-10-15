@@ -3620,7 +3620,7 @@
                                 mouseDown = true;
                                 lastRate = target.playbackRate;
                                 speedUpTimer = setTimeout(() => {
-                                    target.playbackRate = 3;
+                                    target.playbackRate = 5;
                                     target.play();
                                 }, 500);
                                 lastPos = e.clientX;
@@ -3637,7 +3637,6 @@
                             mouseDown = false;
                         }, true);
                         target.addEventListener('mousemove', function (e) {
-                            clearTimeout(speedUpTimer);
                             if (!mouseDown) return;
                             if (!mouseMoving) {
                                 if (Math.abs(e.clientX - lastPos) > 10) {
@@ -3645,6 +3644,7 @@
                                 }
                                 return;
                             }
+                            clearTimeout(speedUpTimer);
                             target.playbackRate = lastRate;
                             target.pause();
                             target.currentTime += (e.clientX - lastPos) / 5;
