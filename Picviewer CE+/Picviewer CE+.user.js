@@ -13382,10 +13382,12 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 function loadHandler(e){
+                    if(aborted)return;
                     go('load',e);
                 };
 
                 function errorHandler(e){
+                    if(aborted)return;
                     go('error',e);
                 };
 
@@ -22770,9 +22772,11 @@ ImgOps | https://imgops.com/#b#`;
                 this.blur(true);
                 if(!opacity)this.imgWindow.style.opacity=0;
                 let self = this;
-                setTimeout(function(){
-                    if (self.isImg) self.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
-                    self.imgWindow.parentNode.removeChild(self.imgWindow);
+                setTimeout(() => {
+                    if (this.removed) {
+                        if (self.isImg) self.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
+                        self.imgWindow.parentNode.removeChild(self.imgWindow);
+                    }
                 },300);
 
                 if (!this.preview) {
