@@ -20513,7 +20513,9 @@ ImgOps | https://imgops.com/#b#`;
                 },false);
 
                 let hideToolbarTimer = setTimeout(() => {
-                    container.classList.add("hideToolbar");
+                    if (this !== uniqueImgWin) {
+                        container.classList.add("hideToolbar");
+                    }
                 }, 800);
                 imgbox.addEventListener('mousemove',function(e){
                     e.preventDefault();
