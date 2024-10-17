@@ -1629,7 +1629,7 @@ var siteInfo = [
     {
         name: "Bangumi",
         url: /^https:\/\/bgm\.tv\//,
-        r: "/c/",
+        r: ["/c/","/m/"],
         s: "/l/"
     },
     {
