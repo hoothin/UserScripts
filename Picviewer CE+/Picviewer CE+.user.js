@@ -12729,7 +12729,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         const blobUrlMap = new Map();
-        if (!envir.firefox) {
+        try {
             const drawImageProxy = new Proxy(unsafeWindow.CanvasRenderingContext2D.prototype.drawImage, {
                 apply: function (target, thisArg, argumentsList) {
                     let image = argumentsList[0];
@@ -12751,7 +12751,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
             });
             unsafeWindow.URL.createObjectURL = createObjectURLProxy;
-        }
+        } catch(e) {}
 
         function downloadImg(url, name, type, errCb) {
             urlToBlob(url, (blob, ext) => {
@@ -23531,13 +23531,13 @@ ImgOps | https://imgops.com/#b#`;
                     if (paPosi.width > 30 && paPosi.height > 30) {
                         const style = unsafeWindow.getComputedStyle(this.data.img);
                         const matrix = new DOMMatrixReadOnly(style.transform);
-                        let translateX = matrix.m41, translateY = matrix.m42;
-                        if (translateY || this.data.img.offsetTop != 0) {
+                        let translateX = matrix.m41, translateY = matrix.m42, scaleX = matrix.m11, scaleY = matrix.m22;
+                        if (translateY || this.data.img.offsetTop != 0 || (scaleY && scaleY !== 1)) {
                             if (paPosi.height < targetPosi.height - 3) {
                                 targetPosi.top = paPosi.top;
                             }
                         }
-                        if (translateX || this.data.img.offsetLeft != 0) {
+                        if (translateX || this.data.img.offsetLeft != 0 || (scaleX && scaleX !== 1)) {
                             if (paPosi.width < targetPosi.width - 3) {
                                 targetPosi.left = paPosi.left;
                             }
