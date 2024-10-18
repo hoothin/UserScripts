@@ -24053,7 +24053,7 @@ ImgOps | https://imgops.com/#b#`;
                         } catch (e) {}
                     }
                 }
-                if(src)type='scale';
+                if(src)type='tpRule';
             }
 
             if(!src && !base64Img){//遍历通配规则
@@ -25192,7 +25192,7 @@ ImgOps | https://imgops.com/#b#`;
                     result.imgAS = sizeInfo;
                     result.imgCS = sizeInfo;
                 }
-                if (prefs.floatBar.showWithRules && result.type == "rule") {
+                if (prefs.floatBar.showWithRules && (result.type == "rule" || result.type == "tpRule")) {
                 } else if (!(result.imgAS.w == result.imgCS.w && result.imgAS.h == result.imgCS.h)) {//如果不是两者完全相等,那么被缩放了.
                     if (prefs.floatBar.sizeLimitOr) {
                         if (result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w) {//最小限定判断.
