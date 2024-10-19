@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵離綫下載 - 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.40
+// @version      1.9.41
 // @author       Hoothin
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
 // @match        *://*/*
@@ -428,190 +428,190 @@
     var disableUrl=[".torrentkitty.","bt.box.n0808.com"];
     var manageLinksLang={};
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
+    var config={};
+    switch (lang){
+        case "zh-CN":
+        case "zh-SG":
+            config={
+                configure:"全载设置",
+                yyw:"115网盘",
+                baidu:"百度网盘",
+                furk:"Furk网盘",
+                seedr:"Seedr网盘",
+                pcloud:"Pcloud网盘",
+                xunlei:"迅雷离线",
+                xunleipan:"迅雷网盘",
+                xiaomi:"小米路由器",
+                weiyun:"腾讯微云",
+                bitqiu:"比特球",
+                apiv:"九秒云播",
+                torrent:"Itorrents种子下载",
+                btcache:"Btcache.me种子下载",
+                enable:"启用",
+                disable:"禁用",
+                addIcon:"添加站点",
+                settingTitle:"全载",
+                urlRegexpTips:"自定义需要启用一键下载的链接正则，一行一条",
+                disableOnSite:"已于此站点禁用，点击启用",
+                bdPathTips:"不需要加'我的网盘/全部文件'",
+                bdPathTitle:"度盘存储路径：",
+                settingMouseOver:"仅当鼠标经过时显示图标",
+                settingBtn:"设置",
+                allDisableError:"不能全部禁用！",
+                siteRuleSetOK:"设置成功，刷新生效",
+                setOK:"设置成功",
+                regExpError:"含有无效正则，请重新输入",
+                addSiteRuleTitle:"自定义新增图标规则，一行一条",
+                siteRulePlaceholder:"站点 @@ 站名 @@ 下载链接正则 @@ 图标base64 @@ 图标背景颜色 @@ 是否隐藏图标\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值，${reg}用正则提取，$text代表链接文本，$title代表链接title\n\n可用//注释规则\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                inputLink:"输入需要离线下载的链接：",
+                importOrNot:"是否导入规则？",
+                importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
+                importOver:"规则导入完毕!",
+                postOver:"发送成功，返回消息：",
+                copyOver:"复制成功！",
+                postError:"发送失败，错误内容：",
+                importCustomSame:"存在同名规则，是否覆盖？",
+                copyLinks:"嗅探下载资源",
+                noLinks:"当前页面没有资源！",
+                userName:"请输入用户账号",
+                userPass:"请输入用户密码",
+                seekKey:"嗅探快捷键："
+            };
+            manageLinksLang={
+                copyAll:"全部复制",
+                copySel:"复制选中",
+                addTips:"%i代表递增 %n代表文件名",
+                sortByName:"按文件名排序",
+                sortByUrl:"按网址排序",
+                sortByType:"按扩展名排序",
+                preHolder:"批量前缀",
+                nextHolder:"批量后缀",
+                closeBtn:"关闭",
+                typeHead:"类型："
+            };
+            break;
+        case "zh-TW":
+        case "zh-HK":
+        case "zh-MO":
+            config={
+                configure:"全載設置",
+                yyw:"115網盤",
+                baidu:"百度網盤",
+                furk:"Furk網盤",
+                seedr:"Seedr網盤",
+                pcloud:"Pcloud網盤",
+                xunlei:"迅雷離線",
+                xunleipan:"迅雷網盤",
+                xiaomi:"小米路由器",
+                weiyun:"騰訊微雲",
+                bitqiu:"比特球",
+                apiv:"九秒雲播",
+                torrent:"Itorrents種子下載",
+                btcache:"Btcache.me種子下載",
+                enable:"啟用",
+                disable:"禁用",
+                addIcon:"添加站點",
+                settingTitle:"全載",
+                urlRegexpTips:"自定義需要啟用一鍵下載的連結正則，一行一條",
+                disableOnSite:"已於此站點禁用，點擊啟用",
+                bdPathTips:"不需要加'我的網盤/全部文件'",
+                bdPathTitle:"度盤存儲路徑：",
+                settingMouseOver:"僅當滑鼠經過時顯示圖標",
+                settingBtn:"設置",
+                allDisableError:"不能全部禁用！",
+                siteRuleSetOK:"設置成功，刷新生效",
+                setOK:"設置成功",
+                regExpError:"含有無效正則，請重新輸入",
+                addSiteRuleTitle:"自定義新增圖標規則，一行一條",
+                siteRulePlaceholder:"站點 @@ 站名 @@ 下載鏈接正則 @@ 圖標base64 @@ 圖標背景顏色 @@ 是否隱藏圖標\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值，${reg}用正则提取，$text代表連結文本，$title代表連結title\n\n可用//注釋規則\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                inputLink:"輸入需要離線下載的連結：",
+                importOrNot:"是否導入規則？",
+                importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
+                importOver:"規則導入完畢!",
+                postOver:"發送成功，返回消息：",
+                copyOver:"複製成功！",
+                postError:"發送失敗，錯誤内容：",
+                importCustomSame:"存在同名規則，是否覆蓋？",
+                copyLinks:"嗅探下載資源",
+                noLinks:"當前頁面沒有資源！",
+                userName:"請輸入用戶賬號",
+                userPass:"請輸入用戶密碼",
+                seekKey:"嗅探快捷鍵："
+            };
+            manageLinksLang={
+                copyAll:"全部複製",
+                copySel:"複製選中",
+                addTips:"%i代表遞增 %n代表文件名",
+                sortByName:"按文件名排序",
+                sortByUrl:"按網址排序",
+                sortByType:"按擴展名排序",
+                preHolder:"批量前綴",
+                nextHolder:"批量後綴",
+                closeBtn:"關閉",
+                typeHead:"類型："
+            };
+            break;
+        default:
+            config={
+                configure:"Easy-Offline Configure",
+                yyw:"115",
+                baidu:"BaiduPan",
+                furk:"Furk",
+                seedr:"Seedr",
+                pcloud:"Pcloud",
+                xunlei:"Xunlei",
+                xunleipan:"XunleiPan",
+                xiaomi:"MiWifi",
+                weiyun:"Weiyun",
+                bitqiu:"bitqiu",
+                apiv:"Apiv Online play",
+                torrent:"Torrent download in itorrent.org",
+                btcache:"Torrent download in btcache.me",
+                enable:"Enable ",
+                disable:"Disable ",
+                addIcon:"Add new site",
+                settingTitle: "Easy Offline",
+                urlRegexpTips: "Customize the Link Regexp, one per line",
+                disableOnSite: "Disabled currently, click to enable",
+                bdPathTips: "No need to add'/all files'",
+                bdPathTitle: "Path of BDpan:",
+                settingMouseOver: "Display the icon only when the mouse passes over",
+                settingBtn: "Save",
+                allDisableError: "Cannot disable all!",
+                siteRuleSetOK: "Set successfully, refresh takes effect",
+                setOK: "Set successfully",
+                regExpError: "Contains invalid regularity, please re-enter",
+                addSiteRuleTitle: "Customize new icon rules, one per line",
+                siteRulePlaceholder: "site @@ sitename @@ link regexp @@ icon base64 @@ icon background color @@ hide icon\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link, ${reg} for regexp result on link, $text for link text, $title for link title\n\nUse // to comment rule\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                inputLink: "Enter the link that needs to be downloaded with this:",
+                importOrNot:"Do you want to import rules?",
+                importCustomAlert:"Ok to add rule，Cancel to cover rule",
+                importOver:"Rules import over!",
+                postOver:"Post over, return: ",
+                copyOver:"Copy over!",
+                postError:"Fail in post, error: ",
+                importCustomSame:"Rule exists, overwritten?",
+                copyLinks:"Seek downloadable links",
+                noLinks:"No links！",
+                userName:"Input user name",
+                userPass:"Input user pass",
+                seekKey:"Seek key: "
+            };
+            manageLinksLang={
+                copyAll: "Copy all",
+                copySel: "Copy selected",
+                addTips: "%i means increment, %n means file name",
+                sortByName: "Sort by name",
+                sortByUrl: "Sort by URL",
+                sortByType: "Sort by type",
+                preHolder: "Batch Prefix",
+                nextHolder: "Batch Suffix",
+                closeBtn: "Close",
+                typeHead: "Type:"
+            };
+            break;
+    }
     var i18n=(name)=>{
-        var config={};
-        switch (lang){
-            case "zh-CN":
-            case "zh-SG":
-                config={
-                    configure:"全载设置",
-                    yyw:"115网盘",
-                    baidu:"百度网盘",
-                    furk:"Furk网盘",
-                    seedr:"Seedr网盘",
-                    pcloud:"Pcloud网盘",
-                    xunlei:"迅雷离线",
-                    xunleipan:"迅雷网盘",
-                    xiaomi:"小米路由器",
-                    weiyun:"腾讯微云",
-                    bitqiu:"比特球",
-                    apiv:"九秒云播",
-                    torrent:"Itorrents种子下载",
-                    btcache:"Btcache.me种子下载",
-                    enable:"启用",
-                    disable:"禁用",
-                    addIcon:"添加站点",
-                    settingTitle:"全载",
-                    urlRegexpTips:"自定义需要启用一键下载的链接正则，一行一条",
-                    disableOnSite:"已于此站点禁用，点击启用",
-                    bdPathTips:"不需要加'我的网盘/全部文件'",
-                    bdPathTitle:"度盘存储路径：",
-                    settingMouseOver:"仅当鼠标经过时显示图标",
-                    settingBtn:"设置",
-                    allDisableError:"不能全部禁用！",
-                    siteRuleSetOK:"设置成功，刷新生效",
-                    setOK:"设置成功",
-                    regExpError:"含有无效正则，请重新输入",
-                    addSiteRuleTitle:"自定义新增图标规则，一行一条",
-                    siteRulePlaceholder:"站点 @@ 站名 @@ 下载链接正则 @@ 图标base64 @@ 图标背景颜色 @@ 是否隐藏图标\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值，${reg}用正则提取，$text代表链接文本，$title代表链接title\n\n可用//注释规则\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@^magnet@@data:image/png;base64,AAA@@ffffff",
-                    inputLink:"输入需要离线下载的链接：",
-                    importOrNot:"是否导入规则？",
-                    importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
-                    importOver:"规则导入完毕!",
-                    postOver:"发送成功，返回消息：",
-                    copyOver:"复制成功！",
-                    postError:"发送失败，错误内容：",
-                    importCustomSame:"存在同名规则，是否覆盖？",
-                    copyLinks:"嗅探下载资源",
-                    noLinks:"当前页面没有资源！",
-                    userName:"请输入用户账号",
-                    userPass:"请输入用户密码",
-                    seekKey:"嗅探快捷键："
-                };
-                manageLinksLang={
-                    copyAll:"全部复制",
-                    copySel:"复制选中",
-                    addTips:"%i代表递增 %n代表文件名",
-                    sortByName:"按文件名排序",
-                    sortByUrl:"按网址排序",
-                    sortByType:"按扩展名排序",
-                    preHolder:"批量前缀",
-                    nextHolder:"批量后缀",
-                    closeBtn:"关闭",
-                    typeHead:"类型："
-                };
-                break;
-            case "zh-TW":
-            case "zh-HK":
-            case "zh-MO":
-                config={
-                    configure:"全載設置",
-                    yyw:"115網盤",
-                    baidu:"百度網盤",
-                    furk:"Furk網盤",
-                    seedr:"Seedr網盤",
-                    pcloud:"Pcloud網盤",
-                    xunlei:"迅雷離線",
-                    xunleipan:"迅雷網盤",
-                    xiaomi:"小米路由器",
-                    weiyun:"騰訊微雲",
-                    bitqiu:"比特球",
-                    apiv:"九秒雲播",
-                    torrent:"Itorrents種子下載",
-                    btcache:"Btcache.me種子下載",
-                    enable:"啟用",
-                    disable:"禁用",
-                    addIcon:"添加站點",
-                    settingTitle:"全載",
-                    urlRegexpTips:"自定義需要啟用一鍵下載的連結正則，一行一條",
-                    disableOnSite:"已於此站點禁用，點擊啟用",
-                    bdPathTips:"不需要加'我的網盤/全部文件'",
-                    bdPathTitle:"度盤存儲路徑：",
-                    settingMouseOver:"僅當滑鼠經過時顯示圖標",
-                    settingBtn:"設置",
-                    allDisableError:"不能全部禁用！",
-                    siteRuleSetOK:"設置成功，刷新生效",
-                    setOK:"設置成功",
-                    regExpError:"含有無效正則，請重新輸入",
-                    addSiteRuleTitle:"自定義新增圖標規則，一行一條",
-                    siteRulePlaceholder:"站點 @@ 站名 @@ 下載鏈接正則 @@ 圖標base64 @@ 圖標背景顏色 @@ 是否隱藏圖標\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值，${reg}用正则提取，$text代表連結文本，$title代表連結title\n\n可用//注釋規則\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@^magnet@@data:image/png;base64,AAA@@ffffff",
-                    inputLink:"輸入需要離線下載的連結：",
-                    importOrNot:"是否導入規則？",
-                    importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
-                    importOver:"規則導入完畢!",
-                    postOver:"發送成功，返回消息：",
-                    copyOver:"複製成功！",
-                    postError:"發送失敗，錯誤内容：",
-                    importCustomSame:"存在同名規則，是否覆蓋？",
-                    copyLinks:"嗅探下載資源",
-                    noLinks:"當前頁面沒有資源！",
-                    userName:"請輸入用戶賬號",
-                    userPass:"請輸入用戶密碼",
-                    seekKey:"嗅探快捷鍵："
-                };
-                manageLinksLang={
-                    copyAll:"全部複製",
-                    copySel:"複製選中",
-                    addTips:"%i代表遞增 %n代表文件名",
-                    sortByName:"按文件名排序",
-                    sortByUrl:"按網址排序",
-                    sortByType:"按擴展名排序",
-                    preHolder:"批量前綴",
-                    nextHolder:"批量後綴",
-                    closeBtn:"關閉",
-                    typeHead:"類型："
-                };
-                break;
-            default:
-                config={
-                    configure:"Easy-Offline Configure",
-                    yyw:"115",
-                    baidu:"BaiduPan",
-                    furk:"Furk",
-                    seedr:"Seedr",
-                    pcloud:"Pcloud",
-                    xunlei:"Xunlei",
-                    xunleipan:"XunleiPan",
-                    xiaomi:"MiWifi",
-                    weiyun:"Weiyun",
-                    bitqiu:"bitqiu",
-                    apiv:"Apiv Online play",
-                    torrent:"Torrent download in itorrent.org",
-                    btcache:"Torrent download in btcache.me",
-                    enable:"Enable ",
-                    disable:"Disable ",
-                    addIcon:"Add new site",
-                    settingTitle: "Easy Offline",
-                    urlRegexpTips: "Customize the Link Regexp, one per line",
-                    disableOnSite: "Disabled currently, click to enable",
-                    bdPathTips: "No need to add'/all files'",
-                    bdPathTitle: "Path of BDpan:",
-                    settingMouseOver: "Display the icon only when the mouse passes over",
-                    settingBtn: "Save",
-                    allDisableError: "Cannot disable all!",
-                    siteRuleSetOK: "Set successfully, refresh takes effect",
-                    setOK: "Set successfully",
-                    regExpError: "Contains invalid regularity, please re-enter",
-                    addSiteRuleTitle: "Customize new icon rules, one per line",
-                    siteRulePlaceholder: "site @@ sitename @@ link regexp @@ icon base64 @@ icon background color @@ hide icon\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link, ${reg} for regexp result on link, $text for link text, $title for link title\n\nUse // to comment rule\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@^magnet@@data:image/png;base64,AAA@@ffffff",
-                    inputLink: "Enter the link that needs to be downloaded with this:",
-                    importOrNot:"Do you want to import rules?",
-                    importCustomAlert:"Ok to add rule，Cancel to cover rule",
-                    importOver:"Rules import over!",
-                    postOver:"Post over, return: ",
-                    copyOver:"Copy over!",
-                    postError:"Fail in post, error: ",
-                    importCustomSame:"Rule exists, overwritten?",
-                    copyLinks:"Seek downloadable links",
-                    noLinks:"No links！",
-                    userName:"Input user name",
-                    userPass:"Input user pass",
-                    seekKey:"Seek key: "
-                };
-                manageLinksLang={
-                    copyAll: "Copy all",
-                    copySel: "Copy selected",
-                    addTips: "%i means increment, %n means file name",
-                    sortByName: "Sort by name",
-                    sortByUrl: "Sort by URL",
-                    sortByType: "Sort by type",
-                    preHolder: "Batch Prefix",
-                    nextHolder: "Batch Suffix",
-                    closeBtn: "Close",
-                    typeHead: "Type:"
-                };
-                break;
-        }
         return config[name]?config[name]:name;
     };
 
@@ -1420,7 +1420,7 @@
             document.body.appendChild(configContent);
             configContent.innerHTML=`
                 <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-250px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
-                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="font-size: large;position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
+                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="font-size: large;position: absolute; width: 100%; left: 0; text-decoration: underline;"><h3 style="padding: 0; margin: 0;">${i18n("settingTitle")}</h3></a>
                     <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">${i18n("disableOnSite")}</a>
                     <div style="text-align:center;font-size: 12px;margin-top: 38px;">${i18n("urlRegexpTips")}</div>
                     <textarea id="configInput" placeholder="http:.*\\.php\\?getRes=\\d+\n\\.doc$\n\\.xls$\n\\.ppt$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
