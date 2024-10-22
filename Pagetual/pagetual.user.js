@@ -8527,11 +8527,18 @@
     const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
-        if (!ruleParser.curSiteRule.smart && !ruleParser.curSiteRule.loadMore) return null;
+        let loadMoreSel = ruleParser.curSiteRule.loadMore;
+        if (!ruleParser.curSiteRule.smart && !loadMoreSel) return null;
         if (loadmoreBtn) return loadmoreBtn;
-        let btnSel = ruleParser.curSiteRule.loadMore || defaultLoadmoreSel;
+        let btnSel = loadMoreSel || defaultLoadmoreSel;
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc, null, true);
+            if (loadmoreBtn && !loadMoreSel) {
+                let childBtns = loadmoreBtn.querySelectorAll("button,.btn");
+                if (childBtns.length === 1) {
+                    loadmoreBtn = childBtns[0];
+                }
+            }
         }
         if (!loadmoreBtn) {
             let buttons = getBody(doc).querySelectorAll("input,button,a,div[onclick]");
