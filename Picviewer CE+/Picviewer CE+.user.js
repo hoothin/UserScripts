@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.10.16.1
+// @version              2024.10.23.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -18907,7 +18907,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle{\
                     opacity: 0.6;\
-                    padding: 15px;\
+                    padding: 35px;\
                     background-color:#00000000;\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle:hover{\
@@ -19156,6 +19156,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-viewmore-v{\
                     height:30px;\
                     top:6%;\
+                    top: calc(50% - 25px);\
                     }\
                     .pv-gallery-sidebar-toggle-top{\
                     top:-3px;\
@@ -19163,8 +19164,11 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-sidebar-viewmore-top{\
                     top:15px;\
                     }\
-                    .pv-gallery-sidebar-toggle-right,.pv-gallery-sidebar-viewmore-right{\
+                    .pv-gallery-sidebar-toggle-right{\
                     right:-3px;\
+                    }\
+                    .pv-gallery-sidebar-viewmore-right{\
+                    right:18px;\
                     }\
                     .pv-gallery-sidebar-toggle-bottom{\
                     bottom:-3px;\
@@ -19177,8 +19181,11 @@ ImgOps | https://imgops.com/#b#`;
                     background-color: rgb(42, 42, 42);\
                     opacity: 1;\
                     }\
-                    .pv-gallery-sidebar-toggle-left,.pv-gallery-sidebar-viewmore-left{\
+                    .pv-gallery-sidebar-toggle-left{\
                     left:-3px;\
+                    }\
+                    .pv-gallery-sidebar-viewmore-left{\
+                    left:18px;\
                     }\
                     span.pv-gallery-sidebar-toggle-content{\
                     display:inline-block;\
@@ -19186,7 +19193,7 @@ ImgOps | https://imgops.com/#b#`;
                     white-space:normal;\
                     word-wrap:break-word;\
                     overflow-wrap:break-word;\
-                    line-height:1.1;\
+                    line-height:16px;\
                     font-size:18px;\
                     text-align:center;\
                     margin-bottom:8px;\
@@ -19203,6 +19210,9 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-sidebar-toggle-content-v,.pv-gallery-sidebar-viewmore-content-v{\
                     width:1.1em;\
+                    }\
+                    span.pv-gallery-sidebar-toggle-content-v{\
+                    line-height: 60px !important;\
                     }\
                     /*侧边栏开始*/\
                     .pv-gallery-sidebar-container {\
