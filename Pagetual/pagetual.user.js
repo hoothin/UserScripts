@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.109
+// @version      1.9.37.110
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4129,7 +4129,7 @@
         }
 
         needCheckClick(ele) {
-            return this.nextLinkHref === '#' && !picker.contains(ele) && ele.parentNode && ele.parentNode.className !== 'pagetual_pageBar';
+            return this.nextLinkHref === '#' && !picker.contains(ele) && ele.parentNode && !ele.parentNode.classList.contains('pagetual_pageBar');
         }
 
         docElementValid() {
@@ -8603,7 +8603,7 @@
         if (hidePageBar) return null;
         url = url.replace(/#p{.*/, "");
         let example = (ruleParser.curSiteRule.insertPos == 2 || ruleParser.curSiteRule.insertPos == "in") ? insert.children[0] : (insert.parentNode.children[0] || insert);
-        while (example && (compareNodeName(example, ["script", "style"]) || example.className == "pagetual_pageBar")) {
+        while (example && (compareNodeName(example, ["script", "style"]) || example.classList.contains("pagetual_pageBar"))) {
             example = example.nextElementSibling;
         }
         if (!example || !example.parentNode) example = insert;
@@ -8627,7 +8627,7 @@
         let downSpan = document.createElement("span");
         let pageText = document.createElement("a");
         let pageNum;
-        pageBar.className = isHideBar ? "pagetual_pageBar hide" : "pagetual_pageBar";
+        pageBar.className = isHideBar ? "pagetual_pageBar autopagerize_page_info hide" : "pagetual_pageBar autopagerize_page_info";
         pageBar.id = "pagetual_pageBar" + curPage;
         pageBar.setAttribute("translate", "no");
         if (isPause) {
