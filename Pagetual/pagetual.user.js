@@ -7820,14 +7820,14 @@
            color: red;
          }
          .pagetual_pageBar a:hover>span {
-           opacity: 1!important;
+           opacity: 1 !important;
          }
          .pagetual_pageBar span.prevScreen,
          .pagetual_pageBar span.nextScreen {
-           display: block!important;
+           display: block !important;
            top: unset !important;
            padding: unset !important;
-           opacity: 0!important;
+           opacity: 0 !important;
          }
          .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -${rulesData.opacity == 1 ? 31 : 30}px!important;
@@ -8712,7 +8712,7 @@
                 targetY = scrollTop - (window.innerHeight || document.documentElement.clientHeight);
                 window.scrollTo({ top: targetY, behavior: 'smooth'});
             }
-        });
+        }, true);
         nextBtn.addEventListener("click", e => {
             e.stopPropagation();
             e.preventDefault();
@@ -8724,7 +8724,7 @@
                 targetY = scrollH || 9999999;
                 window.scrollTo({ top: targetY, behavior: 'smooth'});
             }
-        });
+        }, true);
         if (!rulesData.hideBarArrow) {
             pageText.insertBefore(preBtn, pageText.firstChild);
             pageText.insertBefore(nextBtn, pageText.firstChild);
@@ -8737,7 +8737,7 @@
             pageText.title = "Refresh";
             pageText.appendChild(bgRing);
             pageText.addEventListener("click", e => {
-                e.stopPropagation();
+                if (e.target !== pageText) return;
                 if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
                 let nextEle = pageBar && pageBar.nextElementSibling;
@@ -8750,6 +8750,7 @@
             }, true);
         } else if (rulesData.pageBarMenu) {
             pageText.addEventListener("click", e => {
+                if (e.target !== pageText) return;
                 e.stopPropagation();
                 if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
