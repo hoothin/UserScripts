@@ -8325,14 +8325,20 @@
             }
             if (scrolling) return;
             scrolling = true;
+            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             setTimeout(() => {
                 scrolling = false;
+                curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+                if (curScroll <= 20) {
+                    if (sideController.inited) {
+                        sideController.pagenum.innerHTML = createHTML("1");
+                    }
+                }
             }, 100);
             if (!isLoading && !stopScroll) {
                 checkScrollReach();
             }
             ruleParser.changeVisibility();
-            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             if (ruleParser.curSiteRule.lockScroll) {
                 if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
                     getBody(document).scrollTop = lastScroll;
@@ -8344,11 +8350,6 @@
             if (targetY >= 0) {
                 if (Math.abs(targetY - curScroll) < 100) {
                     targetY = -1;
-                }
-            }
-            if (curScroll <= 20 && curScroll > 0) {
-                if (sideController.inited) {
-                    sideController.pagenum.innerHTML = createHTML("1");
                 }
             }
         };
