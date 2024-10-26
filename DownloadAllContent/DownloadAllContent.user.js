@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.13
+// @version      2.8.3.14
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -1830,6 +1830,17 @@ if (window.top != window.self) {
                     if(evalCode.indexOf("return ")==-1){
                         if(evalCode.indexOf("@")==0){
                             let content="";
+                            var selectors=GM_getValue("selectors");
+                            if(selectors){
+                                [].forEach.call(data.querySelectorAll(selectors),function(item){
+                                    item.innerHTML="";
+                                });
+                            }
+                            [].forEach.call(data.querySelectorAll("script,style,link,noscript,iframe"),function(item){
+                                if (item && item.parentNode) {
+                                    item.parentNode.removeChild(item);
+                                }
+                            });
                             if(retainImage){
                                 [].forEach.call(data.querySelectorAll("img[src]"), img => {
                                     let imgTxt=`![img](${canonicalUri(img.getAttribute("src"), location.href)})`;
