@@ -21487,6 +21487,9 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 2.5;
                 if(prefs.imgWindow.suitLongImg && this.isLongImg){
+                    if(prefs.imgWindow.fitToScreen){
+                        this.fitToScreenWidth();
+                    }
                     this.center(rectSize.w <= wSize.w,false);
                     this.imgWindow.classList.add("pv-pic-window-scroll");
                 }else if(prefs.imgWindow.fitToScreen){
@@ -21705,7 +21708,7 @@ ImgOps | https://imgops.com/#b#`;
                     w: parseFloat(imgWindowCS.width),
                 };
 
-                let size, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
+                let size = rectSize, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
                 if (prefs.imgWindow.fitToScreenSmall || rectSize.w - wSize.w > 0 || rectSize.h - wSize.h > 0) {//超出屏幕，那么缩小。
                     if (rectSize.w / rectSize.h > wSize.w / wSize.h) {
                         size = {
@@ -21718,6 +21721,35 @@ ImgOps | https://imgops.com/#b#`;
                             w: wSize.h * (rectSize.w / rectSize.h),
                         }
                     };
+
+                    let cs = this.getRotatedImgCliSize(size);
+                    let ns = this.imgNaturalSize;
+                    if (cs && ns && cs.w && ns.w) {
+                        this.zoom(cs.w / ns.w);
+                    }
+                };
+            },
+            fitToScreenWidth:function(){
+                let imgWindow = this.imgWindow;
+                if (!prefs.imgWindow.fitToScreen) return;
+                let wSize=getWindowSize();
+                wSize.h -= 6;
+                wSize.w -= 6;
+
+                let imgWindowCS = unsafeWindow.getComputedStyle(imgWindow);
+                let rectSize = {
+                    h: parseFloat(imgWindowCS.height),
+                    w: parseFloat(imgWindowCS.width),
+                };
+
+                let size = rectSize, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
+                if (rectSize.w > wSize.w) {
+                    if (rectSize.w / rectSize.h > wSize.w / wSize.h) {
+                        size = {
+                            w: wSize.w,
+                            h: wSize.w / (rectSize.w / rectSize.h),
+                        };
+                    }
 
                     let cs = this.getRotatedImgCliSize(size);
                     let ns = this.imgNaturalSize;
