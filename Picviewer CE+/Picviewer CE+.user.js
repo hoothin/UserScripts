@@ -21467,6 +21467,7 @@ ImgOps | https://imgops.com/#b#`;
 
             firstOpen:function(){
                 ImgWindowC.selectedTool='hand';
+                this.removed = false;
                 this.imgWindow.classList.remove("pv-pic-window-scroll");
                 this.focus();
                 var imgWindow=this.imgWindow;
@@ -21679,7 +21680,7 @@ ImgOps | https://imgops.com/#b#`;
                     imgWindow.classList.remove("pv-pic-window-transition-all");
                     this.following = false;
                 } else {
-                    if (Math.abs(left - parseInt(imgWindow.style.left)) + Math.abs(top - parseInt(imgWindow.style.top)) > 200) {
+                    if (Math.abs(left - parseInt(imgWindow.style.left)) + Math.abs(top - parseInt(imgWindow.style.top)) > 50) {
                         this.following = true;
                         imgWindow.classList.add("pv-pic-window-transition-all");
                         this.followPosTimer = setTimeout(() => {
