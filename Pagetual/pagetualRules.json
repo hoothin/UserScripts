@@ -5851,8 +5851,9 @@
     "name": "1688全部商品页",
     "url": "^https://.*\\.1688\\.com/page",
     "pageElement": "#bd_1_container_0 > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(6) > div",
-    "pageAction": "window.setUrl=null;window.index=0;eles.forEach(e=>{let img=e.querySelector('.main-picture[src^=data]');if(!img)return;img.src=img.nextElementSibling.children[0].src;e.onclick=()=>window.open(e.dataset.url,'_blank')})",
-    "pageInit": "if(!window.index)window.index=0;if(!window.setUrl){window.setUrl=()=>{setTimeout(()=>{if(window.url){eles[window.index++].dataset.url=window.url;window.url=null;}if(eles[window.index]){eles[window.index].click();window.setUrl()}},1)};Object.defineProperty(doc.defaultView, 'open', { get: function () { return (s)=>window.url=s; } });window.setUrl();}if(eles.length<=window.index)return true;else return false;"
+    "pageAction": "window.setUrl=null;window.index=0;eles.forEach(e=>{e.onclick=()=>window.open(e.dataset.url,'_blank');})",
+    "pageInit": "if(!window.index)window.index=0;if(!window.setUrl){window.setUrl=()=>{setTimeout(()=>{if(window.url){eles[window.index++].dataset.url=window.url;window.url=null;}if(eles[window.index]){eles[window.index].click();window.setUrl()}},1)};Object.defineProperty(doc.defaultView, 'open', { get: function () { return (s)=>window.url=s; } });window.setUrl();}if(eles.length<=window.index)return true;else return false;",
+    "waitElement":"!.main-picture[src^=data]"
 },
 {
     "name": "blog1",
