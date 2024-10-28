@@ -5674,7 +5674,16 @@
     "name": "Startpage Search Results",
     "url": "^https?://www\\.startpage\\.com/",
     "example": "https://www.startpage.com/sp/search?query=pagetual",
-    "nextLink": "#main > div.pagination-container > div.pagination > form[aria-label='page Next'] > button"
+    "nextLink": "#main > div.pagination-container > div.pagination > form[aria-label='page Next'] > button",
+    "action": 0
+},
+{
+    "name": "Startpage Search Results",
+    "url": "^https?://www\\.startpage\\.com/sp/",
+    "example": "https://www.startpage.com/sp/search?query=pagetual",
+    "nextLink": "#main > div.pagination-container > div.pagination > form[aria-label='page Next'] > button",
+    "pageElement": "#main>.w-gl>div",
+    "action": 1
 },
 {
     "name": "图书书目检索",
