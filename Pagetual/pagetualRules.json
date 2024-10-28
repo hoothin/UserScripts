@@ -3463,7 +3463,7 @@
     "example": "http://e-hentai.org/，https://exhentai.org/",
     "url": "^https?://(e-hentai|exhentai)\\.org/",
     "nextLink": "//table[@class='ptt']//a[string()='>'] | id('next') | id('unext')",
-    "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c), #img",
+    "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c),#gdt>a:not(.c), #img",
     "replaceElement": ".ptt,.ptb,.sn,.searchnav",
     "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}",
     "pageInit": "let img=doc.getElementById('img');img&&img.setAttribute('onerror','setTimeout(()=>{this.src=this.src},3000)');"
