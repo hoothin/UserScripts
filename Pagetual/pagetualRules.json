@@ -3466,8 +3466,7 @@
     "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c),#gdt>a:not(.c), #img",
     "replaceElement": ".ptt,.ptb,.sn,.searchnav",
     "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}",
-    "pageInit": "let img=doc.getElementById('img');img&&img.setAttribute('onerror','setTimeout(()=>{this.src=this.src.replace(/(\\\\?time=.*)?$/,`?time=${Date.now()}`)},3000)');",
-    "action": 1
+    "pageInit": "let img=doc.getElementById('img');img&&img.setAttribute('onerror','setTimeout(()=>{this.src=this.src.replace(/(\\\\?time=.*)?$/,`?time=${Date.now()}`)},3000)');"
 },
 {
     "name": "177 漫画/xxiav - 圖片",
