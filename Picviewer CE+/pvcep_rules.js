@@ -913,9 +913,9 @@ var siteInfo = [
         url: /donmai\.us/,
         src: /(thumbnails|sample)\/(.*)\/(thumbnail|sample)_|\/\d+x\d+\//i,
         r: [/\/(thumbnails|sample)\/(.*)\/(thumbnail|sample)_(.*)/i,
-            /\/\d+x\d+\//i
+            /\/\d+x\d+\/(.*)\..*/i
            ],
-        s: ["/original/$2/$4","/original/"]
+        s: ["/original/$2/$4",["/original/$1.jpg", "/original/$1.png"]]
     },
     {
         name: "erosberry",
