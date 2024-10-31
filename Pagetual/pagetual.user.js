@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.111
+// @version      1.9.37.112
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -9160,13 +9160,18 @@
             clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
+            let doc;
+            try {
+                doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.hasFocus = () => true;
+            } catch(e) {}
             let pageEleTryTimes = 0;
             async function checkIframe() {
                 if (urlChanged || isPause) {
                     return callback(false, false);
                 }
                 try {
-                    let doc = iframe.contentDocument || iframe.contentWindow.document;
+                    doc = doc || iframe.contentDocument || iframe.contentWindow.document;
                     if (checkEval && !await checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
@@ -9544,6 +9549,7 @@
             emuIframe.addEventListener("load", e => {
                 try {
                     iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+                    iframeDoc.hasFocus = () => true;
                 } catch(e) {
                     if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
                         emuIframe.removeAttribute("sandbox");
