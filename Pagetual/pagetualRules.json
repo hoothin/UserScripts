@@ -5618,7 +5618,7 @@
     "action": 1,
     "url": "^https://.*\\.bing\\.com/search",
     "nextLink": "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
-    "pageElement": "body>style,ol#b_results>li.b_algo",
+    "pageElement": "ol#b_results>li.b_algo",
     "waitElement": [
         "a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl,#b_results>.b_no",
         ".siteicon>div,div.rms_iac"
