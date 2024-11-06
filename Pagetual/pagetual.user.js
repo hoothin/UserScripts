@@ -2557,7 +2557,8 @@
                         let h = validSize.h;
                         let w = validSize.w;
                         if (isNaN(h) || isNaN(w) || !h || !w) continue;
-                        isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop === -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop === curNode.offsetTop);
+                        let elementSibling = curNode.nextElementSibling || curNode.previousElementSibling;
+                        isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop === -1 && elementSibling && elementSibling.offsetTop === curNode.offsetTop);
                         if (isHori && h <= 50) continue;
                         /*if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
                             let curRect = curNode.getBoundingClientRect();
