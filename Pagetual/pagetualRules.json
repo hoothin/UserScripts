@@ -6300,7 +6300,7 @@
 },
 {
     "name": "什么值得买社区",
-    "action": 0,
+    "action": 1,
     "url": "^https://post\\.smzdm\\.com/p",
     "pageElement": "#comment",
     "nextLink": ".pagedown>a"
