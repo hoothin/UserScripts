@@ -7257,6 +7257,12 @@
     "action": 3
 },
 {
+    "name": "RuTracker.org",
+    "url": "^https?://rutracker\\.org/forum/",
+    "example": "https://rutracker.org/forum/viewtopic.php?t=239577",
+    "pageElement": "table.topic"
+},
+{
     "name": "骑砍中亚",
     "url": "^https?://h5\\.shaoniandream\\.com/pages/chapter/",
     "example": "https://h5.shaoniandream.com/pages/chapter/index?bookid=1866",
