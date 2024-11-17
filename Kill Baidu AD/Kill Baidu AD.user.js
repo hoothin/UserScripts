@@ -107,7 +107,7 @@
 
     function checkLeftItem(item) {
         let mu = item.getAttribute("mu");
-        if (mu && mu !== 'null' && mu.indexOf("nourl") == -1) {
+        if (mu && mu !== 'null' && mu.indexOf("nourl") == -1 && mu.indexOf("lightapp") == -1) {
             if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
                 item.remove();
                 return;
@@ -422,7 +422,7 @@
     function registerMenuCommand() {
         initCss();
         if (window.top !== window.self) return;
-        hidePictureRegister = GM_registerMenuCommand(hidePicture ? "✅ 恢复图片与样式" : "❌ 隐藏图片并简化样式", () => {
+        hidePictureRegister = GM_registerMenuCommand(hidePicture ? "✅ 恢复图片视频与样式" : "❌ 隐藏图片视频并简化样式", () => {
             GM_unregisterMenuCommand(killRightRegister);
             GM_unregisterMenuCommand(hidePictureRegister);
             hidePicture = !hidePicture;
