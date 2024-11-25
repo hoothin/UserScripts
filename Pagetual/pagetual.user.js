@@ -3005,6 +3005,7 @@
                 "body [class*=paginat] li.active+span+li>a",
                 "body [class*=paginat] li.active+li>a",
                 "body [class^=pag] .current+a",
+                "body [class*=-pag] .current+a",
                 ".page_current+a",
                 "input[value='next']",
                 "input[value='Next page']",
