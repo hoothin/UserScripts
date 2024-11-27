@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.113
+// @version      1.9.37.114
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1776,7 +1776,7 @@
                 timeout: 1000000,
                 headers: {
                     'accept': 'application/json,text/html',
-                    'Referer': url,
+                    'Referer': url
                 },
                 onload: function(res) {
                     let json = null;
@@ -3867,7 +3867,7 @@
                 headers: {
                     'Referer': location.href,
                     'User-Agent': navigator.userAgent,
-                    "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset,
+                    "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset
                 },
                 timeout: 10000,
                 onload: function(res) {
@@ -7308,7 +7308,7 @@
             ruleUrls = [{
                 id: 1,
                 url: data && data.wedata2github ? 'https://hoothin.github.io/UserScripts/Pagetual/items_all.json' : 'http://wedata.net/databases/AutoPagerize/items_all.json',
-                type: 0,
+                type: 0
             }];
             if (data) {
                 rulesData = data;
@@ -7598,7 +7598,7 @@
             'Referer': location.href,
             'User-Agent': navigator.userAgent,
             'accept': 'text/html,application/xhtml+xml,application/xml',
-            "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset,
+            "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset
         };
         if (ruleHeaders) {
             if (ruleHeaders.referer) {
@@ -8044,7 +8044,7 @@
             top,
             right,
             bottom,
-            left,
+            left
         } = element.getBoundingClientRect();
 
         return (
@@ -8066,7 +8066,7 @@
                 top,
                 right,
                 bottom,
-                left,
+                left
             } = pageBar.getBoundingClientRect();
             if (top > 500) {
                 nextBar = pageBar;
@@ -8076,7 +8076,7 @@
                         top,
                         right,
                         bottom,
-                        left,
+                        left
                     } = pageBar.getBoundingClientRect();
                     if (top < -500) {
                         preBar = pageBar;
@@ -9645,7 +9645,7 @@
             top,
             right,
             bottom,
-            left,
+            left
         } = element.getBoundingClientRect();
 
         return (
