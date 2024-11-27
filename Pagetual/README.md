@@ -16,17 +16,15 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="5">Buy me a coffee if you get help💞</th>
     </tr>
     <tr>
-        <td><a href="https://paypal.me/hoothin"><img src="https://www.paypal.me/favicon.ico"><br>PayPal</a></td>
-        <td><a href="https://ko-fi.com/hoothin"><img src="https://ko-fi.com/favicon-32x32.png"><br>Ko-fi</a></td>
-        <td><a href="https://afdian.com/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></td>
-        <td rowspan="4" width="50%"><img src="https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg" alt="donate"></td>
-        <td rowspan="4" width="25%"><img alt="reward" src="https://s2.loli.net/2024/07/04/1CIsVfT9rxjKwRU.jpg"></td>
+        <th><a href="https://paypal.me/hoothin"><img src="https://www.paypal.me/favicon.ico"><br>PayPal</a></th>
+        <th><a href="https://ko-fi.com/hoothin"><img src="https://ko-fi.com/favicon-32x32.png"><br>Ko-fi</a></th>
+        <th><a href="https://afdian.com/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></th>
     </tr>
     <tr>
-        <th colspan="3">💬<a href="https://discord.com/invite/keqypXC6wD">Join our Discord</a></th>
+        <th colspan="3"><a href="https://discord.com/invite/keqypXC6wD">Join our 💬Discord</a></th>
     </tr>
     <tr>
-        <th colspan="3">📧<a href="mailto:rixixi@gmail.com">Send me an email</a></th>
+        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an 📧email</a></th>
     </tr>
     <tr>
         <th colspan="3">Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>
