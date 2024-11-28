@@ -3203,10 +3203,10 @@
                                         }
                                     }
                                 }
-                                if (!isApp && !next3) {
+                                if (!isApp && !next3 && nextTextReg3.test(aTag.textContent)) {
+                                    let pa = aTag.parentNode;
                                     if (isJs) {
                                         if (!jsNext) {
-                                            let pa = aTag.parentNode;
                                             if (pa && /pag[ei]/i.test(pa.className)) {
                                                 jsNext = aTag;
                                             } else {
@@ -3216,7 +3216,7 @@
                                                 }
                                             }
                                         }
-                                    } else if (nextTextReg3.test(aTag.textContent) && aTag.parentNode.hasAttribute && !aTag.parentNode.hasAttribute("jsaction")) {
+                                    } else if (pa.hasAttribute && !pa.hasAttribute("jsaction")) {
                                         next3 = aTag;
                                     }
                                 }
