@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.114
+// @version      1.9.37.115
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4657,6 +4657,9 @@
                  background: white;
                  opacity: 0;
              }
+             #pagetual-sideController.minSize.uninited #pagetual-sideController-move > svg {
+                 opacity: 1;
+             }
              #pagetual-sideController #pagetual-sideController-move > img,
              #pagetual-sideController #pagetual-sideController-move > span {
                  width: 35px;
@@ -4688,6 +4691,9 @@
              }
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
                  opacity: 1;
+             }
+             #pagetual-sideController.minSize.uninited #pagetual-sideController-pagenum {
+                 opacity: 0;
              }
              #pagetual-sideController:hover {
                  opacity: 1;
@@ -4978,6 +4984,14 @@
             }
             this.pagenum.innerHTML = createHTML(curPage);
             this.frame.title = i18n("page") + curPage;
+            if (!this.validPage) {
+                if (curPage === 1) {
+                    this.frame.classList.add("uninited");
+                } else {
+                    this.frame.classList.remove("uninited");
+                    this.validPage = true;
+                }
+            }
             if (this.frame.parentNode) return;
             getBody(document).appendChild(this.frame);
             clearTimeout(this.hideTimer);
