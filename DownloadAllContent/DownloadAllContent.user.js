@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.14
+// @version      2.8.3.15
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -268,10 +268,11 @@ if (window.top != window.self) {
                 dacSaveAsZip:"下载为 zip",
                 dacSetCustomRule:"修改规则",
                 dacAddUrl:"添加章节",
+                prefix:"给章节名称添加前缀",
                 dacStartDownload:"下载选中",
-                downloadShortcut:"下载章节",
-                downloadSingleShortcut:"下载单页",
-                downloadCustomShortcut:"自定义下载"
+                downloadShortcut:"下载章节快捷键",
+                downloadSingleShortcut:"下载单页快捷键",
+                downloadCustomShortcut:"自定义下载快捷键"
             };
             break;
         case "zh":
@@ -316,10 +317,11 @@ if (window.top != window.self) {
                 dacSaveAsZip:"下載為 zip",
                 dacSetCustomRule:"修改規則",
                 dacAddUrl:"新增章節",
+                prefix:"為章節名稱加上前綴",
                 dacStartDownload:"下載選取",
-                downloadShortcut:"下載章節",
-                downloadSingleShortcut:"下載單頁",
-                downloadCustomShortcut:"自設下載"
+                downloadShortcut:"下載章節快速鍵",
+                downloadSingleShortcut:"下載單頁快速鍵",
+                downloadCustomShortcut:"自設下載快速鍵"
             };
             break;
         case "ar":
@@ -379,6 +381,7 @@ if (window.top != window.self) {
                 dacSaveAsZip: "zip%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
                 dacSetCustomRule: "%D8%AA%D8%B9%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
                 dacAddUrl: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%81%D8%B5%D9%84",
+                prefix:"Prefix%20of%20chapter%20name",
                 dacStartDownload: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF",
                 downloadShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B5%D9%84",
                 downloadSingleShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%B5%D9%81%D8%AD%D8%A9%20%D9%88%D8%A7%D8%AD%D8%AF%D8%A9",
@@ -425,10 +428,11 @@ if (window.top != window.self) {
                 dacSaveAsZip: "Save as zip",
                 dacSetCustomRule:"Modify rules",
                 dacAddUrl:"Add Chapter",
+                prefix:"Prefix of chapter name",
                 dacStartDownload:"Download selected",
-                downloadShortcut:"Download chapter",
-                downloadSingleShortcut:"Download single page",
-                downloadCustomShortcut:"Custom download"
+                downloadShortcut:"Download chapter Shortcut",
+                downloadSingleShortcut:"Download single page Shortcut",
+                downloadCustomShortcut:"Custom download Shortcut"
             };
             break;
     }
@@ -966,6 +970,7 @@ if (window.top != window.self) {
         const minute=60000;
         var minTxtLength=GM_getValue("minTxtLength") || 100;
         var customTitle=GM_getValue("customTitle");
+        var prefix=GM_getValue("prefix");
         var disableNextPage=!!GM_getValue("disableNextPage");
         var customNextPageReg=GM_getValue("nextPageReg");
         var maxDlPerMin=GM_getValue("maxDlPerMin") || 0;
@@ -975,6 +980,23 @@ if (window.top != window.self) {
                 innerNextPage = new RegExp(customNextPageReg);
             } catch(e) {
                 console.warn(e);
+            }
+        }
+        var linkIndex = 1;
+        function packLink(doc, item) {
+            if (customTitle) {
+                try {
+                    let title = doc.querySelector(customTitle);
+                    if (title && title.innerText) {
+                        item.innerText = title.innerText;
+                    }
+                } catch(e) {
+                    console.warn(e);
+                }
+            }
+            if (prefix) {
+                item.innerText = prefix.replace(/\$i/g, linkIndex) + item.innerText;
+                linkIndex++;
             }
         }
         var insertSigns=[];
@@ -999,6 +1021,9 @@ if (window.top != window.self) {
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
             let request=(aTag, curIndex)=>{
+                if (aTag && aTag.cloneNode) {
+                    aTag = aTag.cloneNode(true);
+                }
                 let tryTimes=0;
                 let validTimes=0;
                 function requestDoc(_charset) {
@@ -1075,16 +1100,7 @@ if (window.top != window.self) {
                             } else {
                                 console.log(result.status);
                             }
-                            if (customTitle) {
-                                try {
-                                    let title = doc.querySelector(customTitle);
-                                    if (title && title.innerText) {
-                                        aTag.innerText = title.innerText;
-                                    }
-                                } catch(e) {
-                                    console.warn(e);
-                                }
-                            }
+                            packLink(doc, aTag);
                             let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 5);
                             if (!validData && validTimes++ < 5) {
                                 downIndex--;
@@ -1211,16 +1227,7 @@ if (window.top != window.self) {
                                         }
                                     });
                                 }
-                                if (customTitle) {
-                                    try {
-                                        let title = doc.querySelector(customTitle);
-                                        if (title && title.innerText) {
-                                            aTag.innerText = title.innerText;
-                                        }
-                                    } catch(e) {
-                                        console.warn(e);
-                                    }
-                                }
+                                packLink(doc, aTag);
                                 downIndex++;
                                 downNum++;
                                 let validData = processDoc(curIndex, aTag, doc, "", failedTimes < 2);
@@ -2122,10 +2129,12 @@ if (window.top != window.self) {
         reSortUrl.name = "sort";
         contentSort.name = "sort";
         let reverse = createOption(i18n.reverseOrder, !!GM_getValue("reverse"), "checkbox");
+        let prefix = createOption(i18n.prefix, GM_getValue("prefix") || "");
         let disableNextPage = !!GM_getValue("disableNextPage");
         let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
         let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
         let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
+        prefix.setAttribute("placeHolder", "第 $i 章：");
         nextPageReg.setAttribute("placeHolder", "^\\s*(下一[页頁张張]|next\\s*page|次のページ)");
         if (disableNextPage) {
             nextPageReg.parentNode.style.display = "none";
@@ -2159,6 +2168,7 @@ if (window.top != window.self) {
             GM_setValue("showFilterList", showFilterList.checked);
             GM_setValue("disableNextPage", !nextPage.checked);
             GM_setValue("nextPageReg", nextPageReg.value || "");
+            GM_setValue("prefix", prefix.value || "");
             GM_setValue("downloadShortcut", geneShortcutData(downloadShortcutInput.value) || "");
             GM_setValue("downloadSingleShortcut", geneShortcutData(downloadSingleShortcutInput.value) || "");
             GM_setValue("downloadCustomShortcut", geneShortcutData(downloadCustomShortcutInput.value) || "");

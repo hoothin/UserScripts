@@ -3,7 +3,7 @@
 // @name:zh-CN   怠惰小说下载器 ZIP 扩展
 // @name:zh-TW   怠惰小説下載器 ZIP 擴充
 // @namespace    hoothin
-// @version      0.6
+// @version      0.6.1
 // @description  Save content as ZIP for DownloadAllContent
 // @description:zh-CN  下载时分章节保存 TXT 并打包为 ZIP
 // @description:zh-TW  下載時分章節儲存 TXT 並打包為 ZIP
@@ -198,7 +198,7 @@
                 imgMatch = cat.match(mdImgReg);
                 hasImg = true;
             }
-            zipTemp.push({title: (i + 1) + " - " + catTitle.replace(/[\*\/:<>\?\\\|\r\n]/g, "_").slice(0, 50), hasImg: hasImg, content: cat});
+            zipTemp.push({title: catTitle.replace(/[\*\/:<>\?\\\|\r\n]/g, "_").slice(0, 50), hasImg: hasImg, content: cat});
         }
         downloadImages(() => {
             zipTemp.forEach(d => {
