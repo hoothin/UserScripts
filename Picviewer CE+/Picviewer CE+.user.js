@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.11.28.1
+// @version              2024.12.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12456,7 +12456,7 @@ ImgOps | https://imgops.com/#b#`;
 
         var matchedRule,
             _URL=location.href.slice(0, 500);
-        const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc", "data-preview"];
+        const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc", "data-preview", "data-page-image-url"];
         var tprules = [
             function(a) {
                 if (this.currentSrc && !this.src) this.src = this.currentSrc;
@@ -13898,11 +13898,12 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if (self.lockMaxSize) {
                         storage.setListItem("maxSize", location.hostname, self.lockMaxSize);
-                        storage.setListItem("minSize", location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                        self.curDefaultSize = {h: sizeInputH.value, w: sizeInputW.value};
                     } else {
                         storage.setListItem("maxSize", location.hostname, "");
-                        storage.setListItem("minSize", location.hostname, "");
+                        self.curDefaultSize = "";
                     }
+                    storage.setListItem("minSize", location.hostname, self.curDefaultSize);
                 };
 
                 var maximizeTrigger=document.createElement('span');
@@ -15690,11 +15691,12 @@ ImgOps | https://imgops.com/#b#`;
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
                 sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
                 clearTimeout(this.saveDefaultSize);
+                var self=this;
                 this.saveDefaultSize = setTimeout(() => {
-                    storage.setListItem("minSize", location.hostname, {h: sizeInputH.value, w: sizeInputW.value});
+                    self.curDefaultSize = {h: sizeInputH.value, w: sizeInputW.value};
+                    storage.setListItem("minSize", location.hostname, self.curDefaultSize);
                 }, 1000);
 
-                var self=this;
                 var viewmoreShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
                 if(viewmoreShow){
                     var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
@@ -17974,7 +17976,15 @@ ImgOps | https://imgops.com/#b#`;
                         linkMedias.push(node);
                     }
                 });
-                imgs = imgs.reverse().concat(linkMedias.reverse());
+                imgs = imgs.reverse().sort((a, b) => {
+                    if (a.offsetParent && !b.offsetParent) {
+                        return -1;
+                    }
+                    if (!a.offsetParent && b.offsetParent) {
+                        return 1;
+                    }
+                    return 0;
+                }).concat(linkMedias.reverse());
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
                     if (img.parentNode) {
