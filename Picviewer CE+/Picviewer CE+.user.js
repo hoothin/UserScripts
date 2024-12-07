@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.12.4.1
+// @version              2024.12.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -17961,43 +17961,48 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return total;
                 }
-                var imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
-                    return anylizeEle(total, node);
-                }, []);
-                [].forEach.call(document.head.querySelectorAll("link[rel*='icon']"), node => {
-                    if (imageReg.test(node.href)) {
-                        node.src = node.href;
-                        linkMedias.push(node);
-                    }
-                });
-                [].forEach.call(document.head.querySelectorAll('meta[itemprop="image"]'), node => {
-                    if (imageReg.test(node.content)) {
-                        node.src = node.content;
-                        linkMedias.push(node);
-                    }
-                });
-                imgs = imgs.reverse().sort((a, b) => {
-                    if (a.offsetParent && !b.offsetParent) {
-                        return -1;
-                    }
-                    if (!a.offsetParent && b.offsetParent) {
-                        return 1;
-                    }
-                    return 0;
-                }).concat(linkMedias.reverse());
-                // 排除库里面的图片
-                imgs = imgs.filter(function(img){
-                    if (img.parentNode) {
-                        if (img.parentNode.id=="icons" || img.parentNode.id=="pagetual-preload") {
-                            return false;
-                        } else if (img.parentNode.classList && img.parentNode.classList.contains("search-jumper-btn")) {
-                            return false;
-                        } else if (img.classList && img.classList.contains("pagetual")) {
-                            return false;
+                var imgs;
+                if (matchedRule.gallery) {
+                    imgs = matchedRule.gallery();
+                } else {
+                    imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
+                        return anylizeEle(total, node);
+                    }, []);
+                    [].forEach.call(document.head.querySelectorAll("link[rel*='icon']"), node => {
+                        if (imageReg.test(node.href)) {
+                            node.src = node.href;
+                            linkMedias.push(node);
                         }
-                    }
-                    return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
-                });
+                    });
+                    [].forEach.call(document.head.querySelectorAll('meta[itemprop="image"]'), node => {
+                        if (imageReg.test(node.content)) {
+                            node.src = node.content;
+                            linkMedias.push(node);
+                        }
+                    });
+                    imgs = imgs.reverse().sort((a, b) => {
+                        if (a.offsetParent && !b.offsetParent) {
+                            return -1;
+                        }
+                        if (!a.offsetParent && b.offsetParent) {
+                            return 1;
+                        }
+                        return 0;
+                    }).concat(linkMedias.reverse());
+                    // 排除库里面的图片
+                    imgs = imgs.filter(function(img){
+                        if (img.parentNode) {
+                            if (img.parentNode.id=="icons" || img.parentNode.id=="pagetual-preload") {
+                                return false;
+                            } else if (img.parentNode.classList && img.parentNode.classList.contains("search-jumper-btn")) {
+                                return false;
+                            } else if (img.classList && img.classList.contains("pagetual")) {
+                                return false;
+                            }
+                        }
+                        return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
+                    });
+                }
 
                 await sleep(0);
                 // 已经在图库里面的
@@ -21198,6 +21203,10 @@ ImgOps | https://imgops.com/#b#`;
                     margin-right: -5px;\
                     padding: 3px;\
                     }\
+                    .pv-pic-search-state>span>strong {\
+                    background: inherit;\
+                    color: inherit;\
+                    }\
                     span.pv-pic-search-state>.pv-icon {\
                     width: 20px;\
                     height: 20px;\
@@ -24289,6 +24298,16 @@ ImgOps | https://imgops.com/#b#`;
                                     }
                                     if (site.ext) {
                                         self.ext = site.ext;
+                                    }
+                                    if (site.gallery) {
+                                        let gallery = site.gallery;
+                                        self.gallery = () => {
+                                            if (typeof gallery === "string") {
+                                                return document.querySelectorAll(gallery);
+                                            } else {
+                                                return gallery();
+                                            }
+                                        };
                                     }
                                     if (site.video) {
                                         let reMatch = typeof site.video === "string" && site.video.match(/^\/(.*)\/(\w*)$/);
