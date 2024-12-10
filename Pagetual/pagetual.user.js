@@ -4383,14 +4383,13 @@
                     parent.parentNode.appendChild(loadingDiv);
                 }
             }
-            getBody(document).scrollTop = lastScrollTop;
-            document.documentElement.scrollTop = lastScrollTop;
+            this.setPageTop(lastScrollTop);
             if (sideController.inited) {
                 sideController.frame.classList.add("pagetual-sideController-loading");
             }
         }
 
-        insertElement(ele) {
+        async insertElement(ele) {
             if (!this.insert || !this.insert.parentNode) {
                 this.getInsert();
             }
@@ -4404,15 +4403,52 @@
                     this.addedElePool.push(ele);
                 }
                 if (this.curSiteRule.insertPos == 2 || this.curSiteRule.insertPos == "in") {
-                    this.insert.appendChild(ele);
+                    await this.addElementsInBatches(ele, child => {
+                        self.insert.appendChild(child);
+                    });
                 } else {
-                    this.insert.parentNode.insertBefore(ele, this.insert);
+                    await this.addElementsInBatches(ele, child => {
+                        self.insert.parentNode.insertBefore(child, self.insert);
+                    });
                 }
             }
         }
 
+        async addElementsInBatches(ele, appendCall) {
+            if (ele.nodeName !== "#document-fragment") {
+                return appendCall(ele);
+            }
+            let elements = ele.children;
+            return new Promise(resolve => {
+                function addBatch() {
+                    const fragment = document.createDocumentFragment();
+                    const batchSize = 5;
+                    for (let i = 0; i < batchSize && elements.length; i++) {
+                        fragment.appendChild(elements[0]);
+                    }
+                    appendCall(fragment);
+                    if (elements.length) {
+                        requestAnimationFrame(addBatch);
+                    } else resolve();
+                }
+                addBatch();
+            });
+        }
+
         noValidContent(url) {
             if (!this.curSiteRule.nextLinkByUrl) showTips(i18n("noValidContent"), url);
+        }
+
+        setPageTop(top) {
+            if (getBody(document).scrollTop) {
+                if (getBody(document).scrollTop != top) {
+                    getBody(document).scrollTop = top;
+                }
+            } else {
+                if (document.documentElement.scrollTop != top) {
+                    document.documentElement.scrollTop = top;
+                }
+            }
         }
 
         async insertPage(doc, eles, url, callback, tried) {
@@ -4516,14 +4552,15 @@
                     let ele = document.createElement("div");
                     self.insertElement(ele);
                     let shadowRoot = ele.attachShadow({ mode: "open" });
-                    shadowRoot.appendChild(collection);
+                    await self.addElementsInBatches(collection, child => {
+                        shadowRoot.appendChild(child);
+                    });
                     addCss(shadowRoot);
                 } else {
-                    self.insertElement(collection);
+                    await self.insertElement(collection);
                 }
             }
-            getBody(document).scrollTop = lastScrollTop;
-            document.documentElement.scrollTop = lastScrollTop;
+            this.setPageTop(lastScrollTop);
             this.pageAction(doc, newEles);
             let enableHistory = this.curSiteRule.history;
             let enableHistoryAfterInsert = false;
@@ -8361,33 +8398,34 @@
             }
             if (scrolling) return;
             scrolling = true;
-            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             setTimeout(() => {
                 scrolling = false;
-                curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+            }, 100);
+            requestAnimationFrame(() => {
+                let curScroll = document.documentElement.scrollTop || document.body.scrollTop;
                 if (curScroll <= 20) {
-                    if (sideController.inited) {
+                    if (sideController.inited && sideController.pagenum.innerHTML !== "1") {
                         sideController.pagenum.innerHTML = createHTML("1");
                     }
                 }
-            }, 100);
+                if (ruleParser.curSiteRule.lockScroll) {
+                    if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
+                        getBody(document).scrollTop = lastScroll;
+                        document.documentElement.scrollTop = lastScroll;
+                    } else {
+                        lastScroll = curScroll;
+                    }
+                }
+                if (targetY >= 0) {
+                    if (Math.abs(targetY - curScroll) < 100) {
+                        targetY = -1;
+                    }
+                }
+            });
             if (!isLoading && !stopScroll) {
                 checkScrollReach();
             }
             ruleParser.changeVisibility();
-            if (ruleParser.curSiteRule.lockScroll) {
-                if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
-                    getBody(document).scrollTop = lastScroll;
-                    document.documentElement.scrollTop = lastScroll;
-                } else {
-                    lastScroll = curScroll;
-                }
-            }
-            if (targetY >= 0) {
-                if (Math.abs(targetY - curScroll) < 100) {
-                    targetY = -1;
-                }
-            }
         };
         dblclickHandler = e => {
             if (forceState == 1 || compareNodeName(e.target, ["input", "textarea", "select", "a", "button", "svg", "use", "img", "path"])) return;
@@ -8915,7 +8953,7 @@
         if (sideController.inited) {
             try {
                 let observer = new IntersectionObserver(entries => {
-                    if (entries[0].intersectionRatio > 0) {
+                    if (entries[0].intersectionRatio > 0 && sideController.pagenum.innerHTML != localPage) {
                         sideController.pagenum.innerHTML = createHTML(localPage);
                     }
                 });
