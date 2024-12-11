@@ -4428,7 +4428,7 @@
                     }
                     appendCall(fragment);
                     if (elements.length) {
-                        requestAnimationFrame(addBatch);
+                        setTimeout(addBatch, 0);
                     } else resolve();
                 }
                 addBatch();
@@ -4440,12 +4440,13 @@
         }
 
         setPageTop(top) {
-            if (getBody(document).scrollTop) {
-                if (getBody(document).scrollTop != top) {
+            let bodyScroll = getBody(document).scrollTop;
+            if (bodyScroll) {
+                if (Math.abs(bodyScroll - top) > 50) {
                     getBody(document).scrollTop = top;
                 }
             } else {
-                if (document.documentElement.scrollTop != top) {
+                if (Math.abs(document.documentElement.scrollTop - top) > 50) {
                     document.documentElement.scrollTop = top;
                 }
             }
@@ -4484,7 +4485,6 @@
                 window.scrollTo({ top: targetY, behavior: 'instant'});
                 targetY = -1;
             }
-            let lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
             this.getInsert();
             await this.pageInit(doc, eles);
             var self = this, newEles = [];
@@ -4560,7 +4560,6 @@
                     await self.insertElement(collection);
                 }
             }
-            this.setPageTop(lastScrollTop);
             this.pageAction(doc, newEles);
             let enableHistory = this.curSiteRule.history;
             let enableHistoryAfterInsert = false;
