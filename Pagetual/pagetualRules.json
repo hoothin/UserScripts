@@ -7447,6 +7447,14 @@
     "enable": 0
 },
 {
+    "name": "Slickdeals",
+    "url": "^https?://slickdeals\\.net/f/",
+    "include": ".slickdealsPagination",
+    "nextLink": "span+a.slickdealsPagination__pageNumber",
+    "action": 1,
+    "waitElement": ".slickdealsPagination>a"
+},
+{
     "name": "IGGGAMES » Free Download PC Games - Direct Links - Torrent",
     "url": "^https?://igg-games\\.com/",
     "author": "hhhllll",
