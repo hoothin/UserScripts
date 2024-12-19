@@ -107,7 +107,7 @@
 
     function checkLeftItem(item) {
         let mu = item.getAttribute("mu");
-        if (mu && mu !== 'null' && mu.indexOf("nourl") == -1 && item.getAttribute("tpl") != "short_video") {
+        if (mu && mu !== 'null' && mu.indexOf("http") == 0 && mu.indexOf("nourl") == -1 && item.getAttribute("tpl") != "short_video") {
             if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
                 item.remove();
                 return;

@@ -2442,6 +2442,15 @@
                                 pageElement = pageElement.children;
                             }
                             this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
+                        } else if (!pageElement || pageElement.length === 0) {
+                            pageElementSel = pageElementSel.replace(/[^\s\>]+\+/g, "");
+                            pageElement = getAllElements(pageElementSel, doc);
+                            if (pageElement && pageElement.length === 1) {
+                                if (targetChild) {
+                                    pageElement = pageElement.children;
+                                }
+                                this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
+                            }
                         }
                     }
                 }
