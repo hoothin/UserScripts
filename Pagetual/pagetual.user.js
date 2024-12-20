@@ -4392,7 +4392,7 @@
                     parent.parentNode.appendChild(loadingDiv);
                 }
             }
-            this.setPageTop(lastScrollTop);
+            //this.setPageTop(lastScrollTop);
             if (sideController.inited) {
                 sideController.frame.classList.add("pagetual-sideController-loading");
             }
