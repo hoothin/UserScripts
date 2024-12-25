@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.115
+// @version      1.9.37.116
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3045,6 +3045,7 @@
                 "body [class*=Pages]>.curr+a",
                 "body [class*=page]>.cur+a",
                 "body [class*=paginat] [class*=current]+li>a",
+                "body [class*=paginat] [class*=next-next]",
                 "body [class*=paginat] [class*=next]",
                 "body [class*=paginat] [class*=right]",
                 ".page>em+a",
@@ -8607,7 +8608,7 @@
     }
 
     const loadmoreReg = /^\s*((点击)?((加载|展开)(更多|剩余)|继续加载)|(點擊)?((加載|展開)(更多|剩餘)|繼續加載)|load\s*more|もっと読み込む)[\.…▼\s\d%]*$/i;
-    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
+    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class^='load-more'],[class*=' load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         let loadMoreSel = ruleParser.curSiteRule.loadMore;
@@ -9384,7 +9385,7 @@
             [...inputs].forEach(input => {
                 let sel = geneSelector(input, true, true);
                 let mirrorEle = iframeDoc.querySelector(sel);
-                if (!mirrorEle) return;
+                if (!mirrorEle || !mirrorEle.offsetParent) return;
                 if (mirrorEle.type === "checkbox" || mirrorEle.type === "radio") {
                     mirrorEle.checked = !!input.checked;
                 } else {
@@ -9394,8 +9395,9 @@
             [...selectOptions].forEach(option => {
                 let sel = geneSelector(option, true, true);
                 let mirrorEle = iframeDoc.querySelector(sel);
-                if (!mirrorEle) return;
+                if (!mirrorEle || !mirrorEle.parentNode.offsetParent) return;
                 let selected = option.selected;
+                if (mirrorEle.selected === selected) return;
                 mirrorEle.selected = !!selected;
                 if (selected) {
                     mirrorEle.parentNode.dispatchEvent(new Event('change'));
