@@ -1275,18 +1275,22 @@
             var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
             var observer = new MutationObserver(function(records) {
                 records.map(function(record) {
-                    if (record.type === "characterData") {
-                        let target = record.target;
-                        let parentNode = target && target.parentNode;
-                        if (!parentNode) {
+                    let target = record.target;
+                    let parentNode = target && target.parentNode;
+                    while (target) {
+                        if (/TEXTAREA/i.test(target.nodeName)) return;
+                        if (/INPUT/i.test(target.nodeName) && (target.value === "" || target.type === "text" || target.type === "search" || target.type === "hidden")) {
                             return;
                         }
-                        while (target) {
-                            if (target.contentEditable == 'true') return;
-                            if (target.nodeName.toUpperCase() == 'BODY') {
-                                break;
-                            }
-                            target = target.parentNode;
+                        if (target.contentEditable == 'true') return;
+                        if (target.nodeName.toUpperCase() == 'BODY') {
+                            break;
+                        }
+                        target = target.parentNode;
+                    }
+                    if (record.type === "characterData") {
+                        if (!parentNode) {
+                            return;
                         }
                         transTask(parentNode);
                     }
