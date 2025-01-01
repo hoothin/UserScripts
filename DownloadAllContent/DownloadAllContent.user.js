@@ -245,9 +245,12 @@ if (window.top != window.self) {
                 abort:"跳过此章",
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
+                saveAsJSON: "存为 JSON",
                 downThreadNum:"设置同时下载的线程数，负数为单线程下载间隔",
                 enableTouch:"在移动端按→↓←↑的方向滑动屏幕画正方形立即开始下载",
                 customTitle:"自定义章节标题，输入内页文字对应选择器",
+                saveUrl: "储存 URL",
+                disableAutoStartSave: "禁用自动保存",
                 maxDlPerMin:"每分钟最大下载数",
                 reSortDefault:"默认按页面中位置排序章节",
                 reverseOrder:"反转章节排序",
@@ -294,9 +297,12 @@ if (window.top != window.self) {
                 abort:"跳過此章",
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
+                saveAsJSON: "存爲 JSON",
                 downThreadNum:"設置同時下載的綫程數，負數為單線程下載間隔",
                 enableTouch:"在行動端按→↓←↑的方向滑動螢幕畫方立即開始下載",
                 customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
+                saveUrl: "儲存 URL",
+                disableAutoStartSave: "禁用自動保存",
                 maxDlPerMin:"每分鐘最大下載數",
                 reSortDefault:"預設依頁面中位置排序章節",
                 reverseOrder:"反轉章節排序",
@@ -358,9 +364,12 @@ if (window.top != window.self) {
                 abort: "%D8%A5%D9%8A%D9%82%D8%A7%D9%81",
                 save: "%D8%AD%D9%81%D8%B8",
                 saveAsMd: "Markdown%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
+                saveAsJSON: "JSON%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
                 downThreadNum: "%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AE%D9%8A%D9%88%D8%B7%20%D9%84%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
                 enableTouch: "On%20the%20mobile%20device,%20slide%20the%20screen%20in%20the%20direction%20of%20%E2%86%92%E2%86%93%E2%86%90%E2%86%91%20to%20draw%20a%20square%20will%20start%20downloading%20immediately",
                 customTitle: "%D8%AA%D8%AE%D8%B5%D9%8A%D8%B5%20%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D9%81%D8%B5%D9%84%D8%8C%20%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%AE%D9%84%D9%8A%D8%A9",
+                saveUrl: "%D8%AD%D9%81%D8%B8%20URL",
+                disableAutoStartSave: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%A7%D9%84%D8%AD%D9%81%D8%B8%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
                 maxDlPerMin: "%D8%A7%D9%84%D8%AD%D8%AF%20%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D9%89%20%D9%84%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AA%D9%86%D8%B2%D9%8A%D9%84%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AF%D9%82%D9%8A%D9%82%D8%A9",
                 reSortDefault: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%A7%D9%84%D8%A7%D9%81%D8%AA%D8%B1%D8%A7%D8%B6%D9%8A%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
                 reverseOrder: "%D8%B9%D9%83%D8%B3%20%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%A7%D9%84%D9%81%D8%B5%D9%88%D9%84",
@@ -405,9 +414,12 @@ if (window.top != window.self) {
                 abort:"Abort",
                 save:"Save",
                 saveAsMd:"Save as Markdown",
+                saveAsJSON: "Save as JSON",
                 downThreadNum:"Set threadNum for download, negative means interval of single thread",
                 enableTouch:"On the mobile device, slide the screen in the direction of →↓←↑ to draw a square will start downloading immediately",
                 customTitle: "Customize the chapter title, enter the selector on inner page",
+                saveUrl: "Save URL",
+                disableAutoStartSave: "Disable auto save",
                 maxDlPerMin:"Maximum number of downloads per minute",
                 reSortDefault: "Default sort by position in the page",
                 reverseOrder:"Reverse chapter ordering",
@@ -885,6 +897,7 @@ if (window.top != window.self) {
                     <button id="abortRequest" style="display:none;">${getI18n('abort')}</button>
                     <button id="tempSaveTxt">${getI18n('save')}</button>
                     <button id="saveAsMd" title="${getI18n('saveAsMd')}">Markdown</button>
+                    <button id="saveAsJSON" title="${getI18n('saveAsJSON')}">JSON</button>
                 </div>
             </div>`);
         txtDownWords=txtDownContent.querySelector("#txtDownWords");
@@ -911,6 +924,8 @@ if (window.top != window.self) {
         var tempSavebtn = txtDownContent.querySelector('#tempSaveTxt');
         var abortbtn = txtDownContent.querySelector('#abortRequest');
         var saveAsMd = txtDownContent.querySelector('#saveAsMd');
+        var saveAsJSON = txtDownContent.querySelector('#saveAsJSON');
+
         tempSavebtn.onclick = function(){
             saveContent();
             console.log(curRequests);
@@ -927,6 +942,28 @@ if (window.top != window.self) {
             });
             var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".md");
+        }
+        saveAsJSON.onclick = function(){
+            let txt = [];
+            rCats.forEach(cat => {
+                let catArr = cat.split("\r\n", 3);
+                let saveUrl = GM_getValue("saveUrl");
+                let catJson = {
+                    title: catArr[0].trim(),
+                    content: catArr[1].trim()
+                };
+                if (saveUrl){
+                    catJson = {
+                        title: catArr[0].trim(),
+                        url: catArr[1].trim(),
+                        content: catArr[2].trim()
+                    };
+                }
+                txt.push(catJson);
+            });
+            txt = JSON.stringify(txt, null, 2);
+            var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".json");
         }
     }
 
@@ -1330,7 +1367,12 @@ if (window.top != window.self) {
         var waitForComplete;
         function processDoc(i, aTag, doc, cause, check){
             let cbFunc=content=>{
-                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + (cause || '') + content.replace(/\s*$/, ""));
+                let isHref = "";
+                let saveUrl = GM_getValue("saveUrl");
+                if (saveUrl){
+                    isHref = aTag.href + '\r\n';
+                }
+                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + isHref + (cause || '') + content.replace(/\s*$/, ""));
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
                 txtDownContent.style.display="block";
                 txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
@@ -1340,7 +1382,10 @@ if (window.top != window.self) {
                         if(downNum==aEles.length){
                             txtDownWords.innerHTML=getI18n("complete",[downNum]);
                             sortInnerPage();
-                            saveContent();
+                            var disableAutoStartSave = GM_getValue("disableAutoStartSave");
+                            if(!disableAutoStartSave){
+                                saveContent();
+                            }
                         }
                     },3000);
                 }
@@ -2118,6 +2163,8 @@ if (window.top != window.self) {
         let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
         let maxDlPerMin = createOption(i18n.maxDlPerMin, GM_getValue("maxDlPerMin") || "0", "number");
         let customTitle = createOption(i18n.customTitle, GM_getValue("customTitle") || "");
+        let saveUrl = createOption(i18n.saveUrl, !!GM_getValue("saveUrl"), "checkbox");
+        let disableAutoStartSave = createOption(i18n.disableAutoStartSave, !!GM_getValue("disableAutoStartSave"), "checkbox");
         customTitle.setAttribute("placeHolder", "title");
         let minTxtLength = createOption(i18n.minTxtLength, GM_getValue("minTxtLength") || "100", "number");
         let contentSortUrlValue = GM_getValue("contentSortUrl") || false;
@@ -2152,6 +2199,8 @@ if (window.top != window.self) {
             GM_setValue("maxDlPerMin", parseInt(maxDlPerMin.value || 20));
             GM_setValue("minTxtLength", parseInt(minTxtLength.value || 100));
             GM_setValue("customTitle", customTitle.value || "");
+            GM_setValue("disableAutoStartSave", disableAutoStartSave.checked);
+            GM_setValue("saveUrl", saveUrl.checked);
             if (reSortUrl.checked) {
                 GM_setValue("contentSortUrl", true);
                 GM_setValue("contentSort", false);
