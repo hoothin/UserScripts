@@ -397,7 +397,7 @@ switch (lang) {
                     },
                     {
                         "name": "Poe - Sage AI Chat",
-                        "url": "https://poe.com/#p{sleep(2000)&[class*\\=ChatMessageInputContainer]>textarea=%s&click([class*\\=ChatMessageSendButton])}"
+                        "url": "https://poe.com/#p{sleep(2000)&[class*\\=ChatMessageInputContainer]>textarea=%s&click([data-button-send])}"
                     },
                     {
                         "name": "ChatGPT",
@@ -547,7 +547,7 @@ switch (lang) {
                     },
                     {
                         "name": "Search GIF by ChatGPT",
-                        "url": "https://poe.com/ChatGPT#p{sleep(1000)&[class*\\='ChatMessageInputContainer'] textarea=hey ChatGPT. hope you're having a great day. From now on you will respond to anything I say with the perfect gif response. Once you know what gif you want to use, compile the most accurate and perfect search phrase that will result in the specific gif you want to send. respond with url: \" Sure, I'm happy to help you!\\n http://scythe-spot-carpenter.glitch.me/search?search_term\\=.gif \n%s&click(button[class*\\='ChatMessageSendButton_sendButton'])}"
+                        "url": "https://poe.com/ChatGPT#p{sleep(1000)&[class*\\='ChatMessageInputContainer'] textarea=hey ChatGPT. hope you're having a great day. From now on you will respond to anything I say with the perfect gif response. Once you know what gif you want to use, compile the most accurate and perfect search phrase that will result in the specific gif you want to send. respond with url: \" Sure, I'm happy to help you!\\n http://scythe-spot-carpenter.glitch.me/search?search_term\\=.gif \n%s&click([data-button-send])}"
                     }
                 ]
             },
@@ -781,7 +781,7 @@ switch (lang) {
                     },
                     {
                         "name": "Poe - Sage AI Chat",
-                        "url": "https://poe.com/#p{sleep(2000)&[class*\\=ChatMessageInputContainer]>textarea=%s&click([class*\\=ChatMessageSendButton])}"
+                        "url": "https://poe.com/#p{sleep(2000)&[class*\\=ChatMessageInputContainer]>textarea=%s&click([data-button-send])}"
                     },
                     {
                         "name": "ChatGPT",
