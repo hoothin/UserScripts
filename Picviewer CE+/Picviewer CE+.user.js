@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.12.7.1
+// @version              2025.1.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12247,6 +12247,7 @@ ImgOps | https://imgops.com/#b#`;
                 let blob = d.response;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
                 let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
+                if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
                 let conversion = formatDict.get(ext);
                 if (canvas && (conversion || forcePng)) {
                     var self = this;
@@ -16620,6 +16621,7 @@ ImgOps | https://imgops.com/#b#`;
                             };
 
                             self.imgNaturalSize=imgNaturalSize;
+                            self.eleMaps['head-left-img-info-resolution'].textContent=imgNaturalSize.w + ' x ' + imgNaturalSize.h;
                             dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
                             let key = imgNaturalSize.w + "x" + imgNaturalSize.h;
                             self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
@@ -18453,6 +18455,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-range-box>#pinSize{\
                     margin: 0 5px;\
+                    padding: 0px;\
                     }\
                     .pv-gallery-range-box>span{\
                     padding: 0 5px 0 5px;\
