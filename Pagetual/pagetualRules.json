@@ -5539,7 +5539,7 @@
         "id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
         "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
     ],
-    "pageElement": "id('rso')|id('main')//style|//head//style",
+    "pageElement": "id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]",
     "action": 1,
     "pageNum": "&start={10*($p-1)}",
     "pageBarTop": 55,
