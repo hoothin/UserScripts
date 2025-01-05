@@ -1477,7 +1477,7 @@
     const prevReg = new RegExp("\u005e\u005c\u0073\u002a\u0028\u005b\u4e0a\u524d\u9996\u5c3e\u005d\u007c\u0070\u0072\u0065\u0076\u0069\u006f\u0075\u0073\u007c\u0065\u006e\u0064\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-s", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, loadNowNum = 5, autoScrollRate = 50;
-    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false, hidePageBar = false;
+    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, initAutoLoadNum = 0, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false, hidePageBar = false;
     var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
     function getBody(doc) {
@@ -4847,6 +4847,7 @@
             }, true);
 
             loadNow.addEventListener("click", e => {
+                initAutoLoadNum = 0;
                 if (autoLoadNum != -1) {
                     autoLoadNum = -1;
                     return;
@@ -5174,6 +5175,7 @@
                     ruleParser.curUrl += "#pagetual";
                     ruleParser.oldUrl = ruleParser.curUrl;
                     autoLoadNum = -1;
+                    initAutoLoadNum = 0;
                     if (!ruleParser.nextLinkHref) {
                         isLoading = false;
                     }
@@ -5716,6 +5718,7 @@
                 let loadNum = window.prompt(i18n("loadConfirm"), "1");
                 if (loadNum === "" || loadNum === null) return;
                 autoLoadNum = Math.abs(parseInt(loadNum));
+                initAutoLoadNum = 0;
                 nextPage();
             }, true);
             closeBtn.addEventListener("click", e => {
@@ -7527,6 +7530,7 @@
                 rate = rulesData.rate;
                 if (rulesData.autoLoadNum && rulesData.initRun) {
                     autoLoadNum = parseInt(rulesData.autoLoadNum);
+                    initAutoLoadNum = autoLoadNum;
                 }
                 openInNewTab = rulesData.openInNewTab ? 1 : 0;
                 enableDebug = rulesData.enableDebug;
@@ -7807,6 +7811,7 @@
         ruleParser.initPage(() => {
             if (ruleParser.curSiteRule.autoLoadNum) {
                 autoLoadNum = ruleParser.curSiteRule.autoLoadNum;
+                initAutoLoadNum = autoLoadNum;
             }
             if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
                 _GM_registerMenuCommand(i18n("nextSwitch"), () => {
@@ -7831,6 +7836,7 @@
                     });
                 }
                 _GM_registerMenuCommand(i18n("loadNow"), () => {
+                    initAutoLoadNum = 0;
                     if (autoLoadNum != -1) {
                         autoLoadNum = -1;
                         return;
@@ -8356,6 +8362,7 @@
                             loadNowNum = detail;
                         }
                         autoLoadNum = detail;
+                        initAutoLoadNum = 0;
                         nextPage();
                         break;
                     case "loadMore":
@@ -10029,7 +10036,7 @@
     function checkAutoLoadNum() {
         if (autoLoadNum >= 0) {
             if (autoLoadNum !== 0 && --autoLoadNum === 0) {
-                autoLoadNum = -1;
+                autoLoadNum = initAutoLoadNum || -1;
             } else {
                 setTimeout(() => nextPage(), 1);
             }
