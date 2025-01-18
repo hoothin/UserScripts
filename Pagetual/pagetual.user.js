@@ -2366,7 +2366,7 @@
                 let paStyle = curWin.getComputedStyle(ele.parentNode);
                 let paDisplay = paStyle.display;
                 let paOverflow = paStyle.overflow;
-                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection.indexOf("row") === 0 && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
+                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection.indexOf("row") === 0 && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul", "td"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
             }
             let curStyle = curWin.getComputedStyle(ele);
             if (ele.children.length > 1) {
