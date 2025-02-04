@@ -1,4 +1,4 @@
-[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.116](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
+[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.117](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 

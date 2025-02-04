@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.116
+// @version      1.9.37.117
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2208,7 +2208,7 @@
                 if (!this.hpRules) this.hpRules = [];
                 let url = this.curSiteRule && this.curSiteRule.url, self = this;
                 let href = location.href.slice(0, 500);
-                let matchedRules = this.hpRules.filter(rule => rule != self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
+                let matchedRules = this.hpRules.filter(rule => JSON.stringify(rule) != JSON.stringify(self.curSiteRule) && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
                 if (url) matchedRules.unshift(this.curSiteRule);
                 matchedRules.sort((a, b) => {
                     if ((a.include || a.exclude) && (!b.include && !b.exclude)) {
@@ -4295,18 +4295,20 @@
                         self.curSiteRule.pageNum = null;
                     }
                 }
-                if (self.curSiteRule.smart && self.nextLinkHref == false && self.possibleRule) {
+                if (self.curSiteRule.smart && self.possibleRule) {
                     let urlReg = new RegExp(self.possibleRule.url, "i");
+                    let href = location.href.slice(0, 500);
                     function checkPossible () {
                         if (self.possibleCheck++ < 3) {
-                            setTimeout(() => {
-                                if (self.curSiteRule.smart) {
-                                    var href = location.href.slice(0, 500);
-                                    if (urlReg.test(href) && self.ruleMatch(self.possibleRule)) {
-                                        self.initPage(() => {});
-                                    } else checkPossible();
+                            if (self.curSiteRule.smart) {
+                                if (urlReg.test(href) && self.ruleMatch(self.possibleRule)) {
+                                    self.initPage(() => {});
+                                } else {
+                                    setTimeout(() => {
+                                        checkPossible();
+                                    }, 3000);
                                 }
-                            }, 3000);
+                            }
                         }
                     }
                     checkPossible();
