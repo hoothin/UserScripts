@@ -4667,6 +4667,7 @@
                  padding: 5px 0;
                  cursor: pointer;
                  height: 35px;
+                 box-sizing: border-box;
                  transition: transform .15s ease-in-out, opacity .3s ease;
              }
              #pagetual-sideController .pagetual-sideController-btn:hover {
