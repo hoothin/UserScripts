@@ -1916,7 +1916,7 @@
     "nextLink": "a.next",
     "pageElement": "article[class^='post']",
     "replaceElement": ".pagination",
-    "pageInit": "doc.querySelectorAll('a.img-holder').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`;a.classList.add('b-loaded');a.removeAttribute('data-src')})"
+    "pageInit": "doc.querySelectorAll('a.img-holder[data-src]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`;a.classList.add('b-loaded');a.removeAttribute('data-src')})"
 },
 {
     "name": "KaranPc",
@@ -5847,7 +5847,7 @@
     "name": "FC Portables",
     "url": "^https://www\\.fcportables\\.com",
     "pageElement": ".listing-blog>article",
-    "pageAction": "eles.forEach(e=>{let a=e.querySelector('.img-holder');if(!a)return;a.style.backgroundImage=`url(\"${a.dataset.src}\")`;a.classList.add('b-loaded')})"
+    "pageAction": "eles.forEach(e=>{let a=e.querySelector('.img-holder[data-src]');if(!a)return;a.style.backgroundImage=`url(\"${a.dataset.src}\")`;a.classList.add('b-loaded')})"
 },
 {
     "name": "1688全部商品页",
