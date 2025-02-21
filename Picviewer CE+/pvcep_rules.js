@@ -751,7 +751,7 @@ var siteInfo = [
                 if (a && a.href && /\/\/v.redd\.it\/\w+\/?$/.test(a.href)) {
                     return a.href + '/DASHPlaylist.mpd';
                 } else if (a && a.href && /^https:\/\/www\.reddit\.com\/gallery\//.test(a.href)) {
-                    return a.href;
+                    return a.href.replace(/.*(reddit\.com\/)gallery\/([\da-z]+).*/, "https://www.$1by_id/t3_$2.json");
                 } else if (a && a.href && /redgifs\.com\//.test(a.href)) {
                     const apiUrl = 'https://api.redgifs.com/v2';
                     if (!self.redgifsToken) {
@@ -791,10 +791,20 @@ var siteInfo = [
                         if (data && data.gif) {
                             return data.gif.urls.gif || data.gif.urls.hd;
                         }
-                    } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(url)) {
-                        return [].reduce.call(doc.querySelectorAll("figure>a"), (total, cur) => {
-                            return total.concat(cur.href);
-                        }, []);
+                    } else if (/\/by_id\//.test(url)) {
+                        let data;
+                        try {
+                            data = JSON.parse(html).data.children[0].data;
+                        } catch (e) {
+                            return;
+                        }
+                        return (data.gallery_data && data.gallery_data.items || []).map(function(c, i) {
+                            var u=data.media_metadata[c.media_id].s
+                            return [
+                                (u.u ? u.u.replace(/preview(\.redd.it\/[^?]+).*/, 'i$1') : (u.mp4 ? u.mp4 + '#mp4' : u.gif)),
+                                (!i ? '[' + new Date(data.created_utc*1e3).toLocaleString() + ' | ' + data.title + '] ' : '') + (c.caption || '')
+                            ]
+                        })
                     }
                     var xmlDoc = (new DOMParser()).parseFromString(html, 'application/xml');
                     var highestRes = [].slice.call(xmlDoc.querySelectorAll('Representation[frameRate]'))
