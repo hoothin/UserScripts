@@ -2996,6 +2996,7 @@
                 ".nextPage",
                 ".pagination-next>a",
                 ".pagination>.active+a",
+                ".pagination>[class*=link_sel]+a",
                 "a[data-pagination=next]",
                 ".pageButtonsCurrent+a",
                 "a[class*=nextpage]",
