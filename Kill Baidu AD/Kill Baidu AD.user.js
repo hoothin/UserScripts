@@ -119,7 +119,10 @@
                     return;
                 }
                 let link = item.querySelector("a[href*='www.baidu.com/link']");
-                if (link) link.href = mu;
+                if (link) {
+                    link.href = mu;
+                    item.setAttribute("mu", "");
+                }
             }
         }
         let s = item.getAttribute("style");
