@@ -38,7 +38,7 @@
 ## Contributors
 
 <a href="https://github.com/hoothin/UserScripts/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=hoothin/UserScripts&max=400&columns=15" />
+  <img src="https://contrib.rocks/image?repo=hoothin/UserScripts&max=15&columns=15" />
 </a>
 
 ## Star History
