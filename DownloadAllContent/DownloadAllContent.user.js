@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.15
+// @version      2.8.3.16
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -1019,8 +1019,7 @@ if (window.top != window.self) {
                 console.warn(e);
             }
         }
-        var linkIndex = 1;
-        function packLink(doc, item) {
+        function packLink(doc, item, curIndex) {
             if (customTitle) {
                 try {
                     let title = doc.querySelector(customTitle);
@@ -1032,8 +1031,7 @@ if (window.top != window.self) {
                 }
             }
             if (prefix) {
-                item.innerText = prefix.replace(/\$i/g, linkIndex) + item.innerText;
-                linkIndex++;
+                item.innerText = prefix.replace(/\$i/g, ++curIndex) + item.innerText;
             }
         }
         var insertSigns=[];
@@ -1137,7 +1135,7 @@ if (window.top != window.self) {
                             } else {
                                 console.log(result.status);
                             }
-                            packLink(doc, aTag);
+                            packLink(doc, aTag, curIndex);
                             let validData = processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} from: ${aTag.href} `:""), validTimes < 5);
                             if (!validData && validTimes++ < 5) {
                                 downIndex--;
@@ -1264,7 +1262,7 @@ if (window.top != window.self) {
                                         }
                                     });
                                 }
-                                packLink(doc, aTag);
+                                packLink(doc, aTag, curIndex);
                                 downIndex++;
                                 downNum++;
                                 let validData = processDoc(curIndex, aTag, doc, "", failedTimes < 2);
@@ -1612,7 +1610,7 @@ if (window.top != window.self) {
         }
         getContentByLargest();
         if (rStr.length < 100) {
-            let articles = pageData.querySelectorAll("article");
+            let articles = pageData.querySelectorAll("article,.content,#content");
             if (articles && articles.length == 1) {
                 largestContent = articles[0];
                 largestNum = largestContent.innerText.length;
