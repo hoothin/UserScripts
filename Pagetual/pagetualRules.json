@@ -136,53 +136,6 @@
     "enable": 0
 },
 {
-    "name": "仙漫网 - 手機版閱讀",
-    "author": "skofkyo",
-    "example": "https://m.gaonaojin.com/kaijujiuwudi/0.html",
-    "url": "^https?://m\\.gaonaojin\\.com/\\w+/\\d+\\.html",
-    "init": "let hasTouchEvents=()=>{if(('ontouchstart'in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0)){return true}return false};if(hasTouchEvents()===false){let style=document.createElement('style');style.id='PagetualStyle';style.innerHTML='#cp_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}';document.head.appendChild(style)}let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src='https://res.xiaoqinre.com/'+e;F.appendChild(img)});let E=document.querySelector('#cp_img');E.innerHTML='';E.appendChild(F);",
-    "nextLink": "a.next[href$=html]",
-    "pageElement": "#cp_img",
-    "replaceElement": "head>title,#title[style*='30'],.btn.prev,.btn.next",
-    "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src='https://res.xiaoqinre.com/'+e;F.appendChild(img)});let E=doc.querySelector('#cp_img');E.innerHTML='';E.appendChild(F);",
-    "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#cp_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
-    "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let imgSrcArr=[];imgData.forEach(e=>{let imgSrc='https://res.xiaoqinre.com/'+e;imgSrcArr.push(imgSrc)});return imgSrcArr",
-    "pageBarText": "let t=doc.querySelector(\"#title[style*='30']\");if(t)return t.innerText",
-    "rate": 2,
-    "css": "img[style*='18vh'],.dropload-down{display:none!important}.recommendList{display:block!important}"
-},
-{
-    "name": "仙漫网 - 閱讀",
-    "author": "skofkyo",
-    "example": "https://www.gaonaojin.com/kaijujiuwudi/0.html",
-    "url": "^https?://www\\.gaonaojin\\.com/\\w+/\\d+\\.html",
-    "init": "let ge=e=>document.querySelector(e);if(ge('img[src*=banquan]')){location.replace(location.href.replace('www','m'))}else{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.trim().slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=imgDomain+e;F.appendChild(img)});let E=ge('.comiclist');E.innerHTML='';E.appendChild(F)}",
-    "nextLink": "//li[a[@class='active']]/preceding-sibling::li[1]/a",
-    "pageElement": ".comiclist",
-    "replaceElement": "head>title,h1.title",
-    "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.trim().slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=imgDomain+e;F.appendChild(img)});let E=doc.querySelector('.comiclist');E.innerHTML='';E.appendChild(F);",
-    "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('.comiclist');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
-    "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.trim().slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let imgSrcArr=[];imgData.forEach(e=>{let imgSrc=imgDomain+e;imgSrcArr.push(imgSrc)});return imgSrcArr",
-    "pageBarText": "let t=doc.querySelector('a.active');if(t)return t.innerText.match(/[^（]+/)[0].trim();",
-    "css": "h1.title>span{display:none!important}.comiclist>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
-},
-{
-    "name": "漫画台 - 閱讀",
-    "author": "skofkyo",
-    "example": "http://manhuat.cc/manhua/3394/660348.html",
-    "url": "(www\\.)?manhuat\\.cc/manhua/\\d+/\\d+\\.html",
-    "include": "//script[contains(text(),'imgs')]",
-    "init": "let ge=e=>document.querySelector(e);let E=ge('#contents');E.innerHTML=imgs.join('');",
-    "nextLink": "a[rel=next][href$=html],#next_url",
-    "pageElement": "#contents",
-    "replaceElement": "head>title,.con_top,.bottem1,.bottem2",
-    "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/imgs/)>-1).innerHTML;let imgData=eval(code.match(/imgs[^;]+/)[0]);let E=doc.querySelector('#contents');E.innerHTML=imgData.join('');",
-    "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#contents');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
-    "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/imgs/)>-1).innerHTML;let imgData=eval(code.match(/imgs[^;]+/)[0]);let imgSrcArr=[];imgData.forEach(e=>{let imgSrc=e.match(/http[^\"]+/)[0];imgSrcArr.push(imgSrc)});return imgSrcArr",
-    "pageBarText": "let t=doc.querySelector('.bookname,.reader-main>h1');if(t)return t.innerText.match(/[^（]+/)[0].trim();",
-    "css": ".box_con #content{font-size:0!important}.bookname,.imgpage,.imgpage2,h3,.readtj{display:none!important}"
-},
-{
     "name": "開車漫画 - 閱讀",
     "author": "skofkyo",
     "example": "https://18p.fun/ForInject/Chapter/?id=641992",
@@ -232,13 +185,6 @@
     "nextLink": "//a[text()='下页']",
     "pageElement": "//dt[div[@class='img']/a/img[@alt]]",
     "replaceElement": ".mypage"
-},
-{
-    "name": "嗨皮漫畫 - 更新頁",
-    "author": "skofkyo",
-    "example": "https://m.happymh.com/latest",
-    "url": "^https?://m\\.happymh\\.com/latest$",
-    "loadMore": ".more-div-btn"
 },
 {
     "name": "嗨皮漫畫 - 閱讀 - 禁用",
@@ -556,103 +502,56 @@
     "replaceElement": ".page-pagination"
 },
 {
-    "name": "無限動漫手機版 - 漫畫閱讀",
-    "author": "skofkyo",
-    "example": "https://8.twobili.com/comic/insurance_15059.html?ch=1",
-    "url": "^https?://8\\.twobili\\.com/comic/insurance",
-    "action": 1,
-    "wait": "if(!!doc.querySelector('#TheImg')){let frameCode=`let imgs=[];for(let i=1;i<=ps;i++){let src='https://img'+ss(c,4,2)+'.8comic.com/'+ss(c,6,1)+'/'+ti+'/'+ss(c,0,4)+'/'+nn([i])+'_'+ss(c,mm([i])+10,3,f)+'.jpg';let img=new Image();img.id='TheImg';img.src=src;imgs.push(img)}window.newImgs=imgs;`;let s=doc.createElement('script');s.textContent=frameCode;doc.body.appendChild(s);return true}else{return false}",
-    "init": "let _ge=e=>document.querySelector(e);let textNode=_ge('.book_inc_title')?.nextSibling;if(textNode?.nodeName=='#text'&&textNode?.textContent?.indexOf('alert')>-1){textNode.remove()}_ge('#pageindex').parentNode.appendChild(_ge('#prevvol').cloneNode(true));_ge('#pageindex').parentNode.appendChild(_ge('#nextvol').cloneNode(true));let ul=_ge('#TheTable>ul');let v1=_ge('.view_tmenu').cloneNode(true);let v2=[...document.querySelectorAll('.view_menut')][1];ul.appendChild(v2);ul.appendChild(v1);let b1=_ge('.book_inc_title');let b2=_ge('.book_link_item');ul.appendChild(b1);if(b2)ul.appendChild(b2);let E=_ge('#TheImg').parentNode;E.innerHTML='';E.append(...newImgs);",
-    "nextLinkByJs": "let next=doc.querySelector('#nextvol:not([style])');if(!!next){let{replaceurl,ni}=doc.defaultView;return replaceurl('ch',ni)}else{return null}",
-    "pageElement": "//script[contains(text(),'userAgent')]",
-    "insert": "//li[img[@id='TheImg']]",
-    "insertPos": "in",
-    "pageAction": "let E=document.querySelector('#TheImg').parentNode;E.append(...doc.defaultView.newImgs);ch=doc.defaultView.ch;",
-    "css": ".pinch-zoom-container{height:auto !important;display:contents !important}.view_tmenu+div[style],#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo,.cd-popup,.ls-link-div{display:none !important}.view_menut a{width:33.3% !important;max-width:33.3% !important}"
-},
-{
-    "name": "無限動漫手機版 - 分類",
-    "author": "skofkyo",
-    "example": "https://m.comicbus.com/category/update_comic-1.html",
-    "url": "^https?://m\\.comicbus\\.com/category/",
-    "nextLink": "//a[span/@class='mdi mdi-skip-next mdi-next-btn']",
-    "pageElement": "#list_dl",
-    "replaceElement": ".pager",
-    "css": ".pagetual_pageBar{margin-top:-1px!important;margin-bottom:5px!important}"
-},
-{
-    "name": "無限動漫 - 漫畫閱讀",
-    "author": "skofkyo",
-    "example": "https://www.comicabc.com/online/new-18722.html?ch=26",
-    "url": "^https?://(a|www)\\.(comicabc|twobili)\\.com/(ReadComic|online)",
-    "pinUrl": true,
-    "action": 1,
-    "wait": "if(!![...doc.scripts].find(s=>s.textContent.includes('ge(e)'))){let frameCode=`let code=[...document.scripts].find(s=>s.innerHTML.includes('ge(e)')).innerHTML;let[,keyCode]=code.match(/ge\\\\([^.]+\\\\.src\\\\s?=\\\\s?([^;]+)/);let imgs=[];for(let i=1;i<=ps;i++){let code=keyCode.replace(/\\\\(pp?\\\\)/g,'('+i+')');let src=eval(code);let img=new Image();img.id='TheImg';img.src=src;imgs.push(img)}window.newImgs=imgs;`;let s=doc.createElement('script');s.textContent=frameCode;doc.body.appendChild(s);return true}else{return false}",
-    "init": "let E=document.querySelector('#TheImg').parentNode;E.innerHTML='';E.append(...newImgs);",
-    "nextLinkByJs": "let{rp,ni,fz,reurl}=doc.defaultView;let next=doc.querySelector('#nextvol:not([style])');if(next&&/ReadComic/.test(location.pathname)){return rp+ni+'/'+ni+(fz+fz).substr((3*ni)%fz.length,10)+'.html'}else if(next){return reurl('ch',ni)}else{return null}",
-    "pageElement": "//script[contains(text(),'ge(e)')]",
-    "insert": "//td[img[@id='TheImg']]",
-    "insertPos": "in",
-    "pageAction": "let E=document.querySelector('#TheImg').parentNode;E.append(...doc.defaultView.newImgs);",
-    "css": "#TheImg{max-width: 100% !important;display: block !important;margin: 0 auto !important;}#TheTable td:nth-child(1),#TheTable td:nth-child(3),.comment_block,#prevnext2,#prev,#next{display:none!important}"
-},
-{
     "name": "無限動漫 - 動漫大全",
     "author": "skofkyo",
-    "example": "https://www.comicabc.com/list/all_all_all/",
-    "url": "^https?://www\\.comicabc\\.com/list/",
+    "example": "https://www.8comic.com/list/all_all_all/",
+    "url": "^https?://www\\.8comic\\.com/list/",
     "nextLink": "//a[span/@class='mdi mdi-skip-next']",
-    "pageElement": ".default_row_width .row>.p-0",
-    "replaceElement": ".pager",
-    "css": ".pagetual_pageBar{margin-top:-14px!important}"
+    "pageElement": "a.comicpic_col6",
+    "replaceElement": ".pager"
 },
 {
     "name": "無限動漫 - 分類",
     "author": "skofkyo",
-    "example": "https://www.comicabc.com/comic/6-1.html",
-    "url": "^https?://www\\.comicabc\\.com/comic/[a-z0-9-]+\\.html",
+    "example": "https://www.8comic.com/comic/u-1.html",
+    "url": "^https?://www\\.8comic\\.com/comic/[a-z0-9-]+\\.html",
     "nextLink": "//a[span/@class='mdi mdi-skip-next']",
-    "pageElement": ".default_row_width>.p-0",
+    "pageElement": ".row>div:has(>div.cat2_list)",
     "replaceElement": ".pager",
     "css": ".pagetual_pageBar{margin-top:-14px!important}"
 },
 {
     "name": "無限動漫 - 圖庫原圖瀏覽",
     "author": "skofkyo",
-    "example": "https://www.comicabc.com/photo/p6038.html?n=1",
-    "url": "^https?://www\\.comicabc\\.com/photo/p\\d+\\.html\\?n=\\d+$",
-    "nextLinkByUrl": [
-        "(\\?n=(\\d+))$",
-        "?n={$2+1}",
-        "#next:not([style])"
-    ],
-    "pageElement": "img[name='TheImg']",
-    "replaceElement": ".photo_main_div > div:nth-child(1)",
-    "pageBar": 0,
-    "css": "img[name='TheImg'] {max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
+    "example": "https://www.8comic.com/photo/p6041.html?n=1",
+    "url": "^https?://www\\.8comic\\.com/photo/p[0-9-]+\\.html\\?n=\\d+$",
+    "init": "let total=document.querySelectorAll('#pageindex option').length;let imgSrc=new URL(document.querySelector('#TheImg').src).pathname;let html='';for(let i=1;i<=total;i++){let num=String(i).padStart(3,'0');let src=imgSrc.replace(/(\\d+)(\\.\\w)$/,`${num}$2`);html+=`<img name='TheImg'hspace='4'vspace='4'border='0'id='TheImg'src='${src}'>`}document.querySelector('.photo_main_div').innerHTML=html;",
+    "css": "#TheImg{margin:2px auto;display:block}",
+    "pinUrl": true
 },
 {
     "name": "無限動漫 - 圖庫清單載入大圖",
     "author": "skofkyo",
-    "example": "https://www.comicabc.com/photo/6041.html",
-    "url": "^https?://www\\.comicabc\\.com/photo/\\d+\\.html$",
+    "example": "https://www.8comic.com/photo/6041.html",
+    "url": "^https?://www\\.8comic\\.com/photo/\\d+\\.html$",
     "init": "document.querySelectorAll('#dl img').forEach(img=>{let f=img.src.replace('.jpe','.jpg');img.src=f})",
     "pinUrl": true
 },
 {
-    "name": "無限動漫 - 圖庫",
+    "name": "無限動漫 - 圖庫分類",
     "author": "skofkyo",
-    "example": "https://www.comicabc.com/photo/1-1.html",
-    "url": "^https?://www\\.comicabc\\.com/photo/[0-9-]+\\.html$",
-    "nextLink": "//a[span/@class='mdi mdi-skip-next']",
-    "pageElement": ".photo_main_div .row",
+    "example": "https://www.8comic.com/photo/3-1.html",
+    "url": "^https?://www\\.8comic\\.com/photo/[0-9-]+\\.html$",
+    "nextLink": "a:has(>.mdi-skip-next)",
+    "pageElement": ".row:has(>div>.cat2_list)",
     "replaceElement": ".pager"
 },
 {
     "name": "無限動漫 - 類別停止自動匹配",
     "author": "skofkyo",
-    "example": "https://www.comicabc.com/html/1/",
-    "url": "^https?://www\\.comicabc\\.com/html/\\d+/$"
+    "example": "https://www.8comic.com/html/1/",
+    "url": "^https?://www\\.8comic\\.com/html/\\d+/$",
+    "enable": 0
 },
 {
     "name": "砂之船动漫家 - 手機版閱讀",
@@ -698,8 +597,8 @@
 {
     "name": "来漫画 - 手機版閱讀",
     "author": "skofkyo",
-    "example": "https://m.laimanhua8.com/kanmanhua/kaijujiangliyiyitiaoming/1684241122.html",
-    "url": "^https?://m\\.laimanhua8\\.com/kanmanhua/\\w+/\\d+\\.html",
+    "example": "https://m.laimanhua88.com/kanmanhua/kaijujiangliyiyitiaoming/1684241122.html",
+    "url": "^https?://m\\.laimanhua88\\.com/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
     "history": 2,
     "init": "let ge=e=>document.querySelector(e);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/mhInfo/)>-1).innerHTML;let json=eval(code.match(/mhInfo[^;]+/)[0]);let E=ge('#manga');let F=new DocumentFragment();json.images.forEach(e=>{let img=new Image();img.src=realurl+json.path+e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
@@ -715,8 +614,8 @@
 {
     "name": "来漫画 - 閱讀",
     "author": "skofkyo",
-    "example": "https://www.laimanhua8.com/kanmanhua/kaijujiangliyiyitiaoming/1684241122.html",
-    "url": "^https?://www\\.laimanhua8\\.com/kanmanhua/\\w+/\\d+\\.html",
+    "example": "https://www.laimanhua88.com/kanmanhua/kaijujiangliyiyitiaoming/1684241122.html",
+    "url": "^https?://www\\.laimanhua88\\.com/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
     "history": 2,
     "init": "let ge=e=>document.querySelector(e);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let base64=eval(code.match(/picTree[^;]+/)[0]);let imgData=base64_decode(base64).split('$qingtiandy$');let host=getpicdamin();let E=ge('#pic-list');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=encodeURI(host+e);F.appendChild(img)});E.innerHTML='';E.appendChild(F);$('head').append('<style>.loading-box+#pic-list>img:nth-child('+imgData.length+')~* {display:none!important}</style>')",
@@ -776,8 +675,8 @@
 {
     "name": "优酷漫画手機版 - 閱讀",
     "author": "skofkyo",
-    "example": "http://h5.ykmh.com/manhua/DrSTONEshijiyuan/2456.html",
-    "url": "^https?://h5\\.ykmh\\.com/manhua/[a-z]+/\\d+\\.html",
+    "example": "http://m.ykmh.net/manhua/DrSTONEshijiyuan/2456.html",
+    "url": "^https?://m\\.ykmh\\.net/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
     "pinUrl": true,
     "init": "$('#images').unbind('click',SinTheme.nextPage);$('#images').unbind('mousedown');let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgs=eval(code.match(/chapterImages[^;]+/)[0]);let host=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+/)[0];let F=new DocumentFragment();imgs.forEach(e=>{let img=new Image();img.src=host+e;F.appendChild(img)});let E=document.querySelector('#images');E.innerHTML='';E.appendChild(F);",
@@ -793,8 +692,8 @@
 {
     "name": "优酷漫画 - PC版閱讀",
     "author": "skofkyo",
-    "example": "http://www.ykmh.com/manhua/DrSTONEshijiyuan/2457.html",
-    "url": "^https?://www\\.ykmh\\.com/manhua/[a-z]+/\\d+\\.html",
+    "example": "http://www.ykmh.net/manhua/DrSTONEshijiyuan/2457.html",
+    "url": "^https?://www\\.ykmh\\.net/manhua/[a-z]+/\\d+\\.html",
     "history": 2,
     "pinUrl": true,
     "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imghost=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=imghost+e;F.appendChild(img)});let E=document.querySelector('#images');E.innerHTML='';E.appendChild(F);",
@@ -839,52 +738,6 @@
     "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih;if(SinConf.resHost1){ih=SinConf.resHost1+'/'}else{ih=SinMH.getResHostDomain()+'/'}let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let imgSrcArr=[];imgData.forEach(e=>{let imgSrc=ih+cp+e;imgSrcArr.push(imgSrc)});return imgSrcArr",
     "pageBarText": "let t=doc.querySelector('.head_wz');if(t)return t.innerHTML.replace(/.+;/,'')",
     "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.block.clearfix{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
-},
-{
-    "name": "亲亲漫画 - 手機版漫畫在新分頁打開",
-    "author": "skofkyo",
-    "example": "https://m.acgvd.com/update/",
-    "url": "^https?://m\\.acg(w|u|q|v)d\\.com/(update|list|list/wanjie)?/?$",
-    "pinUrl": true,
-    "init": "let openInNewTab=()=>document.querySelectorAll('.itemBox a:not([target=_blank]),.list-comic a:not([target=_blank])').forEach(a=>{a.setAttribute('target','_blank')});openInNewTab();new MutationObserver(()=>{openInNewTab()}).observe(document.body,{childList:true,subtree:true});"
-},
-{
-    "name": "亲亲漫画 - 手機版閱讀",
-    "author": "skofkyo",
-    "example": "https://m.acgvd.com/manhua/39305/1277010.html",
-    "url": "^https?://m\\.acg(w|u|q|v)d\\.com/manhua/\\d+/\\d+\\.html",
-    "pinUrl": true,
-    "history": 2,
-    "init": "let ge=e=>document.querySelector(e);$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let imgs=document.createElement('div');imgs.className='PagetualImgBox';let host=SinConf.resHost[0].domain+'/';let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=host+chapterPath+e;F.appendChild(img)});imgs.appendChild(F);let x=ge('#loading');x.parentNode.insertBefore(imgs,x);ge('a.iconRet').href=comicUrl;let n=ge('#action li:nth-child(4)>a');if(nextChapterData.id==null){n.href=comicUrl;n.innerText='返回目录'}",
-    "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
-    "pageElement": "//script[contains(text(),'chapterImages')]",
-    "replaceElement": "head>title,.BarTit",
-    "insert": "#loading",
-    "insertPos": 1,
-    "pageInit": "let ge=e=>document.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let s=document.createElement('script');s.textContent=code;let x=document.querySelector('#loading');x.parentNode.insertBefore(s,x);let cd=eval(code.match(/comicUrl[^;]+/)[0]);let pd=eval(code.match(/prevChapterData[^;]+/)[0]);let nd=eval(code.match(/nextChapterData[^;]+/)[0]);let p=ge('#action li:nth-child(1)>a');let n=ge('#action li:nth-child(4)>a');if(nd.id>0){n.href=nd.uri;n.innerText='下一章'}else{n.href=cd;n.innerText='返回目录'}p.href=pd.uri;",
-    "pageAction": "jmzz20191018();let imgs=document.createElement('div');imgs.className='PagetualImgBox';let host=SinConf.resHost[0].domain+'/';let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=host+chapterPath+e;F.appendChild(img)});imgs.appendChild(F);let x=document.querySelector('#loading');x.parentNode.insertBefore(imgs,x);let gae=e=>document.querySelectorAll(e);let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#images~*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
-    "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText.match(/[^(]+/)[0];",
-    "sleep": 1000,
-    "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*,#images{display:none!important}#action li{width:50%!important}.chapter-view img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.side_public{opacity:0.4;border-radius: 50%;position:fixed;bottom:60px;right:13px;width:36px;height:35px;display:none;margin-left:20px}.side_public a{border-radius: 50%;display:inline-block;*zoom:1;*display:inline;width:36px;height:36px;border:1px solid #e6e6e6;}.side_public a.return-top{background:#fff url(https://www.acgqd.com/assets/4155373f/images/side_ico.png) no-repeat 2px -81px}"
-},
-{
-    "name": "亲亲漫画 - PC版閱讀",
-    "author": "skofkyo",
-    "example": "http://www.acgvd.com/manhua/39305/1277010.html",
-    "url": "^https?://www\\.acg(w|u|q|v)d\\.com/manhua/\\d+/\\d+\\.html",
-    "pinUrl": true,
-    "history": 2,
-    "init": "let imgs=document.createElement('div');imgs.className='PagetualImgBox';let host=SinConf.resHost[0].domain+'/';let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=host+chapterPath+e;F.appendChild(img)});imgs.appendChild(F);document.querySelector('.comic_wraCon').appendChild(imgs);",
-    "nextLink": "span.next>a",
-    "pageElement": "//script[contains(text(),'chapterImages')]",
-    "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid,.btmBtnBox",
-    "insert": ".comic_wraCon",
-    "insertPos": 2,
-    "pageInit": "let code = Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;document.querySelector('.comic_wraCon').appendChild(document.createElement('script')).textContent = code;",
-    "pageAction": "jmzz20191018();let imgs=document.createElement('div');imgs.className='PagetualImgBox';let host=SinConf.resHost[0].domain+'/';let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=host+chapterPath+e;F.appendChild(img)});imgs.appendChild(F);document.querySelector('.comic_wraCon').appendChild(imgs);let gae=e=>document.querySelectorAll(e);let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#images~*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
-    "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText;",
-    "sleep": 1000,
-    "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select,.img_land_prev,.img_land_next,#images{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
 },
 {
     "name": "古风漫画网 / 优酷漫画  / 亲亲漫画 / 漫画456 - 分類",
@@ -951,8 +804,8 @@
 {
     "name": "漫画160 - 手機版閱讀",
     "author": "skofkyo",
-    "example": "https://m.mh160.cc/kanmanhua/yuanlaiwoshixianjiezhizun/1689580801.html",
-    "url": "^https?://m\\.mh160\\.cc/kanmanhua/\\w+/\\d+\\.html",
+    "example": "https://m.mh160mh.com/kanmanhua/yuanlaiwoshixianjiezhizun/1689580801.html",
+    "url": "^https?://m\\.mh160mh\\.com/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
     "history": 2,
     "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/qTcms_S_m_murl_e/)>-1).innerHTML;let imgBase64=code.match(/qTcms_S_m_murl_e=([^;]+)/)[1].replaceAll('\"','');let imgData=base64_decode(imgBase64).split('$qingtiandy$');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=f_qTcms_Pic_curUrl_realpic(e);F.appendChild(img)});let E=document.querySelector('#commicBox');E.innerHTML='';E.appendChild(F);",
@@ -968,8 +821,8 @@
 {
     "name": "漫画160 - PC版閱讀",
     "author": "skofkyo",
-    "example": "https://www.mh160.cc/kanmanhua/tianqiyubao/1668716868.html",
-    "url": "^https?://www\\.mh160\\.cc/kanmanhua/\\w+/\\d+\\.html",
+    "example": "https://www.mh160mh.com/kanmanhua/tianqiyubao/1668716868.html",
+    "url": "^https?://www\\.mh160mh\\.com/kanmanhua/\\w+/\\d+\\.html",
     "pinUrl": true,
     "history": 2,
     "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/qTcms_S_m_murl_e/)>-1).innerHTML;let imgBase64=code.match(/qTcms_S_m_murl_e=([^;]+)/)[1].replaceAll('\"','');let imgData=base64_decode(imgBase64).split('$qingtiandy$');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=f_qTcms_Pic_curUrl_realpic(e);F.appendChild(img)});let E=document.querySelector('#qTcms_Pic_middle').parentNode;E.innerHTML='';E.appendChild(F);",
@@ -985,8 +838,8 @@
 {
     "name": "漫画160 - 分類",
     "author": "skofkyo",
-    "example": "www.mh160.cc",
-    "url": "^https?://www\\.mh160\\.cc/",
+    "example": "www.mh160mh.com",
+    "url": "^https?://www\\.mh160mh\\.com/",
     "nextLink": "//a[text()='下一页'] | //li[a[@class='active']]/following-sibling::li[1]/a",
     "pageElement": ".cy_list_r,.grid-row.clearfix,#dmList,#contList,[class^='bookList'],.mh-search-list",
     "replaceElement": ".NewPages,.pager,.page_moreDiv",
@@ -1124,8 +977,7 @@
     "init": "let ia = document.querySelector('input~a');let sa = document.querySelector('script[language]+a');if(ia){ia.removeAttribute('href');}else{sa.removeAttribute('href');}",
     "nextLink": "//a[./img[@src='/images/d.gif']][not(@href='/exit/exit.htm')] | //a[span[text()='下一页']][not(@href='/exit/exit.htm')]",
     "pageElement": "//script[@language]/following-sibling::a/img[@src][not(contains(@src,'.gif'))]",
-    "replaceElement": "//a[./img[@src='/images/d.gif']] | //a[./img[@src='/images/t.gif']] | //div[@class='bottom']/ul[@class='subNav'] | //li[@class='txtA']",
-    "pageBar": 0
+    "replaceElement": "//a[./img[@src='/images/d.gif']] | //a[./img[@src='/images/t.gif']] | //div[@class='bottom']/ul[@class='subNav'] | //li[@class='txtA']"
 },
 {
     "name": "漫漫聚 / KuKu动漫 - 分類",
@@ -1209,7 +1061,7 @@
     "css": ".ds,.adv-img,.page-index__btn{display:none!important}.rd-article-wr>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
 },
 {
-    "name": "好漫 6 / 漫客栈 / 漫画屋 - 分類",
+    "name": "漫客栈 / 漫画屋 - 分類",
     "author": "skofkyo",
     "example": "https://www.mkzhan.com/category/，https://www.mhua5.com/category/",
     "url": "^https?://(www\\.)?(mkzhan|mhua5)\\.com/((category|search)|index\\.php/(category|search))",
@@ -1379,19 +1231,10 @@
     "css": ".pagetual_pageBar{margin-top:10px!important}.pagetual_pageBar+.subitem{margin-top:-2px!important}"
 },
 {
-    "name": "字幕库 zmk",
-    "author": "skofkyo",
-    "example": "https://zimuku.org/",
-    "url": "^https?://zimuku\\.org/",
-    "nextLink": "a.next",
-    "pageElement": "table>tbody",
-    "replaceElement": ".pagination"
-},
-{
     "name": "點點字幕",
     "author": "skofkyo",
-    "example": "http://www.ddzimu.com/download/xslist.php?key=king",
-    "url": "^https?://www\\.ddzimu\\.com/\\w+/xslist\\.php",
+    "example": "http://www.samfunny.com/download/xslist.php?key=king",
+    "url": "^https?://www\\.samfunny\\.com/\\w+/xslist\\.php",
     "nextLink": "li.disabled+li>a",
     "pageElement": ".list>ul>li:not(.first)",
     "replaceElement": "div.pagination"
@@ -1460,25 +1303,6 @@
     "rate": 3
 },
 {
-    "name": "言耽社 - 閱讀",
-    "author": "skofkyo",
-    "example": "https://yandanshe.com/",
-    "url": "^https?://yandanshe\\.com/\\d+",
-    "nextLink": "span.current+a",
-    "pageElement": "title,.article-content",
-    "replaceElement": ".list",
-    "pageBarText": "let t=doc.querySelector('.article-content');if(t)return t.innerText"
-},
-{
-    "name": "言耽社 - 分类页",
-    "author": "skofkyo",
-    "example": "https://yandanshe.com/",
-    "url": "^https?://yandanshe\\.com/",
-    "nextLink": ".next-page>a",
-    "pageElement": ".excerpts",
-    "replaceElement": ".pagination"
-},
-{
     "name": "MINI4K",
     "author": "skofkyo",
     "example": "https://www.mini4k.com/movies",
@@ -1497,25 +1321,6 @@
     "pageElement": "section>.row",
     "replaceElement": ".tsc_pagination",
     "css": "#social_popup{display:none!important}.pagetual_pageBar{margin-top:0px!important}"
-},
-{
-    "name": "TorrentGalaxy",
-    "author": "skofkyo",
-    "example": "https://torrentgalaxy.to/torrents.php",
-    "url": "^https?://torrentgalaxy\\.to/",
-    "nextLink": "li.page-item.active+li.page-item>a",
-    "pageElement": ".tgxtable>.tgxtablerow",
-    "replaceElement": ".pagination"
-},
-{
-    "name": "kickasss",
-    "author": "skofkyo",
-    "example": "https://kickasss.to/",
-    "url": "^https?://(kickasss|katcr)\\.",
-    "action": 1,
-    "nextLink": "a.active+a",
-    "pageElement": "table.data.frontPageWidget>tbody>tr:not(.firstr)",
-    "replaceElement": ".pages"
 },
 {
     "name": "1337x",
@@ -1585,28 +1390,6 @@
     "pageElement": "#table-list>tbody>tr"
 },
 {
-    "name": "怡萱动漫",
-    "author": "skofkyo",
-    "example": "https://www.iyxdm.me/resource/",
-    "url": "^https?://www\\.iyxdm\\.me/",
-    "nextLink": "//a[@class='nextPage' or text()='下一页']",
-    "pageElement": ".dhnew>ul",
-    "replaceElement": ".pagelist"
-},
-{
-    "name": "LIBVIO",
-    "author": "skofkyo",
-    "example": "https://www.libviohd.com/type/1.html",
-    "url": "^https?://www\\.libviohd\\.com/",
-    "action": 1,
-    "wait": 1000,
-    "nextLink": "li.active+li>a",
-    "pageElement": ".stui-vodlist",
-    "replaceElement": ".stui-page__item",
-    "pageInit": "let defaultImg='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-ae4eabf5-1b15-425e-bdc9-144e48cded99/c9d2141e-8569-4996-9c73-d633a0669fa8.gif';doc.querySelectorAll('a.lazyload').forEach((item)=>{let imgUrl=item.dataset.original;let image=new Image();image.src=imgUrl;if(!image.complete){item.style.backgroundImage=`url(${defaultImg})`}})",
-    "css": ".stui-page__all{display:none!important}"
-},
-{
     "name": "筆趣影視",
     "author": "skofkyo",
     "example": "http://biquysw.com/acg/y2022/",
@@ -1630,16 +1413,6 @@
     "nextLink": "//td[span/strong]/following-sibling::td[1]//a | //table/tbody/tr/td/font[@color]/a",
     "pageElement": "//tr[td[@nowrap]]",
     "replaceElement": "//div[contains(@class,'paginator')] | //table[tbody/tr/td/font[@color]]"
-},
-{
-    "name": "99images",
-    "author": "skofkyo",
-    "example": "https://99images.com/celebrities/aisha-sharma",
-    "url": "^https?://99images\\.com/",
-    "action": 1,
-    "nextLink": "a[rel='next']",
-    "pageElement": "//div[@class='w-full columns-2 md:columns-3 lg:columns-4 xl:columns-5 self-start px-4']",
-    "replaceElement": "//div[nav]"
 },
 {
     "name": "steamcommunity.com",
@@ -1697,27 +1470,6 @@
     "css": ".pagetual_pageBar{margin-top:0px!important}"
 },
 {
-    "name": "电影狗",
-    "author": "skofkyo",
-    "example": "https://www.dianyinggou.com/yingku/",
-    "url": "^https?://www\\.dianyinggou\\.com/",
-    "nextLink": ".mainPage li.selected+li>a",
-    "pageElement": ".movies,.celebrity,.cntBox.articles",
-    "replaceElement": ".mainPage ",
-    "lazyImgSrc": "data-url",
-    "css": ".movies+.pagetual_pageBar,.celebrity+.pagetual_pageBar{margin-top:-40px!important}"
-},
-{
-    "name": "厂长资源",
-    "author": "skofkyo",
-    "example": "https://www.czys.top/movie_bt",
-    "url": "^https?://[^/]+/",
-    "include": "//title[contains(text(),'厂长资源')]",
-    "nextLink": ".current+a",
-    "pageElement": ".bt_img>ul",
-    "replaceElement": ".pagenavi_txt"
-},
-{
     "name": "NO视频",
     "author": "skofkyo",
     "example": "https://www.novipnoad.net/movie/",
@@ -1745,20 +1497,6 @@
     "nextLink": "span.current+a",
     "pageElement": "//div[article]",
     "replaceElement": "#pagination"
-},
-{
-    "name": "www.thingiverse.com",
-    "author": "skofkyo",
-    "example": "https://www.thingiverse.com/",
-    "url": "^https?://www\\.thingiverse\\.com/",
-    "action": 1,
-    "waitElement": [
-        "[class^='ItemCardContentWrapper']>[class^='Image__image'][src^='http']"
-    ],
-    "nextLink": "a[aria-label='Next page']",
-    "pageElement": "[class^='ItemCardGrid__itemCardGrid']",
-    "replaceElement": "div[class^='Pagination__pagination'].margin-top--md",
-    "css": ".pagetual_pageBar{margin-top:2px!important;margin-bottom:0px!important}"
 },
 {
     "name": "https://www.orcy.net.cn/",
@@ -1805,16 +1543,6 @@
     "pageElement": "#main>article",
     "replaceElement": ".pagination",
     "rate": 3
-},
-{
-    "name": "cahdroid",
-    "author": "skofkyo",
-    "example": "https://cahdroid.com/",
-    "url": "^https?://cahdroid\\.com/",
-    "include": ".pagination",
-    "nextLink": "span.page-numbers.current+a",
-    "pageElement": ".relat,.post-show",
-    "replaceElement": ".pagination"
 },
 {
     "name": "docs.oracle.com",
@@ -1899,10 +1627,10 @@
     "replaceElement": ".pagination"
 },
 {
-    "name": "億破姐&電腦系統吧",
+    "name": "億破姐",
     "author": "skofkyo",
-    "example": "https://www.ypojie.com/pc，http://www.dnxitong.com/soft/",
-    "url": "^https?://www\\.(ypojie|dnxitong)\\.com/",
+    "example": "https://www.ypojie.com/pc",
+    "url": "^https?://www\\.ypojie\\.com/",
     "nextLink": ".next-page>a",
     "pageElement": "article[class^='excerpt excerpt-']",
     "replaceElement": ".pagination",
@@ -1944,16 +1672,6 @@
     "example": "https://apkpure.com/tw/game",
     "url": "^https?://apkpure\\.com/",
     "loadMore": "a.show-more"
-},
-{
-    "name": "軟體部落",
-    "author": "skofkyo",
-    "example": "https://softblog.tw/green-portable",
-    "url": "^https?://softblog\\.tw/",
-    "include": ".page-numbers",
-    "nextLink": "a.next",
-    "pageElement": "#blog-entries",
-    "replaceElement": ".oceanwp-pagination.clr"
 },
 {
     "name": "Gdaily",
@@ -2043,205 +1761,6 @@
     "replaceElement": "#pagination"
 },
 {
-    "name": "448人体艺术",
-    "author": "skofkyo",
-    "example": "https://488xm.com/666rentiyishu/",
-    "url": "^https?://488xm\\.com/\\w+/",
-    "pageElement": "#container>.grid",
-    "replaceElement": ".pagelist"
-},
-{
-    "name": "gogo人体艺术 - 圖片",
-    "author": "skofkyo",
-    "example": "https://gogortrt.com/gmgqdd/1305/",
-    "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/\\d+/",
-    "init": "let a=document.querySelector('.main>div:not(.atc_new_head)>a');a.outerHTML=a.innerHTML;",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".main>div:not(.atc_new_head):not(.keywords) img[alt]",
-    "replaceElement": ".Mrlsr55,.RlpeZsp,.cgdijkn,.d70rZyL,.i09cWt8,.pages,.pfb45A1,.vd7O8HI,.wpwRCvy,.zrLIsoJ",
-    "pageBar": 0
-},
-{
-    "name": "gogo人体艺术",
-    "author": "skofkyo",
-    "example": "https://gogortrt.com/gmgqdd/",
-    "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/",
-    "include": ".index_list",
-    "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
-    "pageElement": ".ulPic",
-    "replaceElement": ".pages",
-    "css": "iframe{height:55px!important}"
-},
-{
-    "name": "956体艺术 - 圖片",
-    "author": "skofkyo",
-    "example": "https://956n.com/rbddszysz/1398/",
-    "url": "^https?://956[a-z]{1,2}\\.[a-z]{2,3}/[a-z]+/\\d+/(\\d+\\.html$)?",
-    "init": "document.querySelectorAll('.content>a').forEach(a=>{a.outerHTML=a.innerHTML})",
-    "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
-    "pageElement": ".content img[alt]",
-    "replaceElement": ".page",
-    "pageBar": 0
-},
-{
-    "name": "956人体艺术",
-    "author": "skofkyo",
-    "example": "https://956n.com/rbddszysz/",
-    "url": "^https?://956[a-z]{1,2}\\.[a-z]{2,3}/",
-    "exclude": ".title",
-    "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
-    "pageElement": "//ul[li/a/@title]",
-    "replaceElement": ".page",
-    "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:0px!important}"
-},
-{
-    "name": "666人体艺术 - 圖片",
-    "author": "skofkyo",
-    "example": "https://6666rt.com/ArtZG/2152/1.html",
-    "url": "^https?://[6]{3,4}[a-z]{2}\\.[a-z]{2,3}/[a-zA-Z]+/\\d+/\\d+\\.html",
-    "init": "document.querySelectorAll('.imgbox>a').forEach(a=>{a.outerHTML=a.innerHTML})",
-    "nextLink": "//a[text()='下一页 >>' and contains(@href,'html')]",
-    "pageElement": ".imgbox img[alt]",
-    "replaceElement": ".page,span>h1,.www",
-    "pageBar": 0,
-    "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}.dis{display:none!important}"
-},
-{
-    "name": "666人体艺术",
-    "author": "skofkyo",
-    "example": "https://6666rt.com/ArtZG/",
-    "url": "^https?://[6]{3,4}[a-z]{2}\\.[a-z]{2,3}/",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".tpm02>.fzltp>ul",
-    "replaceElement": ".pagelist"
-},
-{
-    "name": "36人体艺术 - 圖片",
-    "author": "skofkyo",
-    "example": "www.36ut.com，xixirt.org",
-    "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.[a-z]{2,3}/[a-z]+/(\\d+/|\\d+(_\\d+)?\\.html)",
-    "action": 1,
-    "init": "let a=document.querySelector('.pp>a');a.outerHTML=a.innerHTML;",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".pp img",
-    "replaceElement": ".page-show",
-    "pageBar": 0,
-    "css": ".picTip{display:none!important}"
-},
-{
-    "name": "36人体艺术",
-    "author": "skofkyo",
-    "example": "www.36ut.com，xixirt.org",
-    "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.[a-z]{2,3}/",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".detail-list",
-    "replaceElement": ".page-show",
-    "css": ".pagetual_pageBar{margin-top:-10px!important}"
-},
-{
-    "name": "AJ人体艺术 - 圖片",
-    "author": "skofkyo",
-    "example": "https://www.02aj.com/yzrt/8674.html",
-    "url": "^https?://www\\.02aj\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
-    "action": 1,
-    "init": "document.querySelectorAll('.content>a').forEach(a=>{a.outerHTML=a.innerHTML})",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".content img",
-    "replaceElement": ".paging",
-    "pageBar": 0,
-    "css": "img[alt]{margin-bottom:0px!important}"
-},
-{
-    "name": "AJ人体艺术",
-    "author": "skofkyo",
-    "example": "https://www.02aj.com/yzrt/",
-    "url": "^https?://www\\.\\d+aj\\.[a-z]{2,3}/",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": "//div[(div/div/a/img/@alt) and @class='list']",
-    "replaceElement": ".page-list",
-    "css": ".pagetual_pageBar{margin-top:-10px!important}"
-},
-{
-    "name": "139人体艺术手機版 - 圖片",
-    "author": "skofkyo",
-    "example": "https://m.139tu.com/rtysyz/20200710/7479.html",
-    "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.[a-z]{2,3}/[a-zA-Z]+/(\\d+/(\\d+\\.html$)?|\\d+(_\\d+)?\\.html$|\\d+/\\d+(_\\d+)?\\.html$)",
-    "init": "document.querySelectorAll('.tal>a').forEach(a=>{a.outerHTML=a.innerHTML})",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".tal img[alt]",
-    "replaceElement": ".page,body>[style='font-size:14px;'],.tip",
-    "pageBar": 0,
-    "css": "[style='margin:3px 0 0 0;']{display:none!important}img[alt]{opacity: 1!important}"
-},
-{
-    "name": "139人体艺术手機版",
-    "author": "skofkyo",
-    "example": "88rtys.com，https://m.139tu.com/rtysyz/",
-    "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.[a-z]{2,3}/",
-    "include": ".page-show",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".listmain",
-    "replaceElement": ".page-show",
-    "lazyImgSrc": "lazysrc",
-    "css": "[style='margin:3px 0 0 0;']{display:none!important}img[alt]{opacity: 1!important}"
-},
-{
-    "name": "139人体艺术 - 圖片",
-    "author": "skofkyo",
-    "example": "https://www.139tu.com/rtysyz/20210829/8674.html",
-    "url": "^https?://www\\.139tu\\.[a-z]{2,3}/[a-z]+/\\d+/\\d+(_\\d+)?\\.html",
-    "action": 1,
-    "init": "document.querySelectorAll('.img_box>a').forEach(a=>{a.outerHTML=a.innerHTML})",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".img_box img",
-    "replaceElement": "#pages",
-    "pageBar": 0
-},
-{
-    "name": "139人体艺术",
-    "author": "skofkyo",
-    "example": "https://www.139tu.com/rtysyz/",
-    "url": "^https?://www\\.139tu\\.[a-z]{2,3}/",
-    "include": ".list_tags",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".list-box",
-    "replaceElement": "#pages",
-    "lazyImgSrc": "data-echo",
-    "css": ".pagetual_pageBar{margin-top:4px!important}"
-},
-{
-    "name": "Kemono - post",
-    "author": "skofkyo",
-    "example": "https://kemono.su/fantia/user/17148/post/1528173",
-    "url": "^https?://kemono\\.su/fantia/user/\\d+/post/\\d+$",
-    "nextLink": ".post__nav-item>a.next",
-    "pageElement": ".post__header,.post__body"
-},
-{
-    "name": "Kemono - user",
-    "author": "skofkyo",
-    "example": "https://kemono.su/fantia/user/17148?o=0",
-    "url": "^https?://kemono\\.su/fantia/user/\\d+\\?o=",
-    "nextLink": "a.pagination-button-after-current",
-    "stopSign": [
-        "",
-        "li.pagination-button-disabled.pagination-button-current+li.pagination-button-disabled.pagination-button-after-current"
-    ],
-    "pageElement": ".card-list__items>article"
-},
-{
-    "name": "Kemono - posts",
-    "author": "skofkyo",
-    "example": "https://kemono.su/posts",
-    "url": "^https?://kemono\\.su/posts",
-    "nextLink": "a.pagination-button-after-current",
-    "stopSign": [
-        "",
-        ".card-list__item--no-results"
-    ],
-    "pageElement": ".card-list.card-list--legacy"
-},
-{
     "name": "套图之家 - 圖片",
     "author": "skofkyo",
     "example": "https://taotuhome.com/19377.html",
@@ -2301,28 +1820,6 @@
     "replaceElement": ".paging-navigation"
 },
 {
-    "name": "Pic Yailay - 圖片",
-    "author": "skofkyo",
-    "example": "https://pic.yailay.com/articles/U2d0UkZBREtjdUNFSHpwcGxiU1ZOUT09.html，https://nungvl.net/gallerys/87379.cg?page=1",
-    "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/(articles|gallerys)",
-    "pinUrl": true,
-    "nextLink": "//a[text()='Next >']",
-    "pageElement": "img[onerror]+br,img[onerror]",
-    "replaceElement": ".article-header>h1,.entry-title,.dept-ct.show-less,.pagination",
-    "pageBar": 0,
-    "css": ".spa-title,.spa-title+div{display:none!important}"
-},
-{
-    "name": "Pic Yailay",
-    "author": "skofkyo",
-    "example": "https://pic.yailay.com/?page=1",
-    "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/",
-    "nextLink": "a.page-numbers.next",
-    "pageElement": ".videos",
-    "replaceElement": ".pagination",
-    "rate": 3
-},
-{
     "name": "imhentai.xxx - 圖片",
     "author": "skofkyo",
     "example": "https://imhentai.xxx/view/1053673/1/",
@@ -2374,49 +1871,14 @@
     "replaceElement": "#d_list_page,#d_list_foot"
 },
 {
-    "name": "24tupian",
+    "name": "24tupian - 圖集列表",
     "author": "skofkyo",
     "example": "https://www.24tupian.org/",
     "url": "^https?://www\\.24tupian\\.org/(meinv|nvyou|tuimo|gaoqing|model|class|Serch)",
     "nextLink": "a.on+a[href$='html']",
     "pageElement": ".lbleft>.lbl,.paihan.fl>ul,.model,.big.fl>ul,.gtps.fl>ul",
-    "replaceElement": ".page"
-},
-{
-    "name": "新老友图社 - 看圖",
-    "author": "skofkyo",
-    "example": "https://m.xtushe.com/photo/10377.html",
-    "url": "^https?://m\\.xtushe\\.com/photo/\\w+\\.html",
-    "nextLink": "li.next>a[title='下一张']",
-    "pageElement": "#content-photo>img",
-    "replaceElement": "#content-title,.pagebreak",
-    "pageBar": 0
-},
-{
-    "name": "新老友图社",
-    "author": "skofkyo",
-    "example": "https://m.xtushe.com/catalog/xinggan.html",
-    "url": "^https?://m\\.xtushe\\.com/",
-    "nextLink": "li.next>a[title='下一页']",
-    "pageElement": "#content-list",
-    "replaceElement": ".pagebreak"
-},
-{
-    "name": "美女目录网 - 圖片列表模式載入原圖",
-    "author": "skofkyo",
-    "example": "https://www.girldir.com/photos/aozhongmaqin_list/",
-    "url": "^https?://[^/]+/photos/",
-    "include": [
-        "//nav[@id='topNavBar']/a[@class='navbar-brand']/img[@src='/assets/logo.png']",
-        ".page-item.active",
-        "nav.pagination"
-    ],
-    "action": 1,
-    "init": "document.querySelectorAll('source').forEach(e=>{e.remove()});document.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.replace('.medium.','.big.')})",
-    "nextLink": "li.page-item.active+li>a",
-    "pageElement": ".list-page-box",
-    "replaceElement": "nav.pagination",
-    "pageInit": "doc.querySelectorAll('source').forEach(e=>{e.remove()});doc.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.replace('.medium.','.big.')})"
+    "replaceElement": ".page",
+    "pageInit": "[...doc.querySelectorAll(\"img[src*='load.']\")].forEach(img => (img.src = 'https://imgs.diercun.com' + img.getAttribute('data')))"
 },
 {
     "name": "美女目录网 - 圖片",
@@ -2472,44 +1934,6 @@
     "replaceElement": ".page-show,h1>span,.article-page",
     "pageBar": 0,
     "css": ".pgg1+.hh{display:none!important}"
-},
-{
-    "name": "娱乐吧 - 圖片",
-    "author": "skofkyo",
-    "example": "www.yuleba.org，m.entba.net",
-    "url": "^https?://(www\\.yuleba\\.org|m\\.entba\\.net)/a/",
-    "nextLink": "//div[@class='paging']/a[text()='下一页']",
-    "pageElement": ".main>p",
-    "replaceElement": ".paging",
-    "pageBar": 0
-},
-{
-    "name": "娱乐吧",
-    "author": "skofkyo",
-    "example": "www.yuleba.org，m.entba.net",
-    "url": "^https?://(www\\.yuleba\\.org|m\\.entba\\.net)/b/",
-    "nextLink": "//div[@class='paging']/a[text()='下一页']",
-    "pageElement": ".b_txt,.b_img:not(:nth-child(7))>ul",
-    "replaceElement": ".paging"
-},
-{
-    "name": "新闻吧 - xinwenba.net",
-    "author": "skofkyo",
-    "example": "www.xinwenba.net，m.xwbar.com",
-    "url": "^https?://(www\\.xinwenba\\.net|m\\.xwbar\\.com)/plus/view",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".main>p",
-    "replaceElement": ".paging",
-    "pageBar": 0
-},
-{
-    "name": "新闻吧 - xinwenba.net",
-    "author": "skofkyo",
-    "example": "www.xinwenba.net，m.xwbar.com",
-    "url": "^https?://(www\\.xinwenba\\.net|m\\.xwbar\\.com)/plus/list",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".list_image>ul>li,.list_img",
-    "replaceElement": ".paging"
 },
 {
     "name": "美图录 - 看圖",
@@ -2695,10 +2119,9 @@
     "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
     "url": "^https?://www\\.nlegs\\.com/girls/[^.]+\\.html",
     "nextLink": "li.active+li>a",
-    "pageElement": "//div[a/div[contains(@style,'thumb') and span]]",
-    "replaceElement": "#dnav",
-    "pageBar": 0,
-    "css": ".col-md-12.col-xs-12>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+    "pageElement": "//div[a/div[contains(@style,'thumb')]]",
+    "replaceElement": ".pagination",
+    "pageBar": 0
 },
 {
     "name": "Nlegs",
@@ -2707,8 +2130,7 @@
     "url": "^https?://www\\.nlegs\\.com/",
     "nextLink": "li.active+li>a",
     "pageElement": "//div[div/a/div/@class='img-div']",
-    "replaceElement": ".pagination",
-    "css": ".pagetual_pageBar{margin-top:10px!important}.pagetual_pageBar+div{margin-top:0px!important}"
+    "replaceElement": ".pagination"
 },
 {
     "name": "Mitaku - 看圖禁用",
@@ -2952,41 +2374,6 @@
     "replaceElement": ".wp-pagenavi"
 },
 {
-    "name": "MM 范 - 圖片",
-    "author": "skofkyo",
-    "example": "https://www.95mm.vip/65309.html",
-    "url": "^https?://www\\.95mm\\.\\w+/\\w+\\.html",
-    "init": "let a=document.querySelector('.post a');a.outerHTML=a.innerHTML;",
-    "include": ".post img[alt]",
-    "nextLinkByUrl": [
-        "/(\\d+)(/)?(\\d+)?(\\.html)",
-        "/$1/{($3.0||1)+1}$4"
-    ],
-    "stopSign": [
-        [
-            ".post-title",
-            "(\\d+)"
-        ],
-        [
-            ".post-title",
-            "\\/(\\d+)"
-        ]
-    ],
-    "pageElement": ".post img",
-    "replaceElement": "h1.h3",
-    "pageAction": "document.querySelectorAll('.post img[title]').forEach(img=>{img.removeAttribute('title')})",
-    "pageBar": 0,
-    "css": "span.d-md-inline-block.d-none:not(.mx-1),.text-xs.text-muted>b{display:none!important}"
-},
-{
-    "name": "MM 范",
-    "author": "skofkyo",
-    "example": "https://www.95mm.vip/qingchun",
-    "url": "^https?://www\\.95mm\\.\\w+/(qingchun|sifang|xinggan|tag)?",
-    "include": ".dposts-ajax-load",
-    "loadMore": ".dposts-ajax-load"
-},
-{
     "name": "Xiuren 秀人网",
     "author": "skofkyo",
     "example": "http://www.xiuren.org/category/TuiGirl.html",
@@ -3021,25 +2408,6 @@
     "css": "#infinite_scroll+.pagetual_pageBar{margin-top:-15px!important}.pagetual_pageBar+#infinite_scroll{margin-top:-15px!important}ul+.pagetual_pageBar{margin-top:-10px!important}"
 },
 {
-    "name": "Hentai Image - 圖片",
-    "author": "skofkyo",
-    "example": "hentai-img.com，hentai-cosplays.com，porn-images-xxx.com",
-    "url": "^https?://(.+)?(porn-images-xxx|hentai-cosplays|hentai-img)\\.com/image/",
-    "pageElement": ".icon-overlay",
-    "pageBar": 0
-},
-{
-    "name": "Hentai Image - 分類",
-    "author": "skofkyo",
-    "example": "https://ja.porn-images-xxx.com/search/",
-    "url": "^https?://(.+)?(porn-images-xxx|hentai-cosplays|hentai-img)\\.com/(search|recently|ranking|search-video|ranking-video)/",
-    "nextLink": "span+a",
-    "pageElement": "#center>#display_area_image",
-    "replaceElement": ".wp-pagenavi",
-    "css": ".pagetual_pageBar{margin-top:-30px!important;}#post_list_title+#display_area_image,.pagetual_pageBar+#display_area_image{margin-bottom:0px!important;}",
-    "rate": 3
-},
-{
     "name": "24fa",
     "author": "skofkyo",
     "example": "https://www.24fa.com/n93763c49.aspx",
@@ -3068,8 +2436,7 @@
     "url": "^https?://www\\.yasetube\\.com/",
     "action": 1,
     "waitElement": [
-        ".video-preview+img[data-src].loaded",
-        ".video-preview+img[data-src]:not(.loaded)"
+        ".video-preview+img[data-src].loaded"
     ],
     "nextLink": "//li[a/@class='current']/following-sibling::li[1]/a",
     "pageElement": "#main .videos-list",
@@ -3100,8 +2467,8 @@
 {
     "name": "fc2hub",
     "author": "skofkyo",
-    "example": "https://fc2hub.com/",
-    "url": "^https?://fc2hub\\.com/",
+    "example": "https://javten.com/",
+    "url": "^https?://javten\\.com/",
     "action": 1,
     "nextLink": "a[rel='next']",
     "pageElement": "//div[(div/div/@class='card shadow') and @class='row']",
@@ -3122,7 +2489,7 @@
     "name": "PPP.Porn - 首頁(載入更多 …)",
     "author": "skofkyo",
     "example": "https://ppp.porn/",
-    "url": "^https?://ppp\\.porn/$",
+    "url": "^https?://ppp\\.porn/",
     "loadMore": ".btn.btn--sm"
 },
 {
@@ -3135,15 +2502,6 @@
     "pageElement": "ul.item-list",
     "replaceElement": ".pagination",
     "css": ".pagetual_pageBar{margin-top:-5px!important}"
-},
-{
-    "name": "magnetdl.com",
-    "author": "skofkyo",
-    "example": "www.magnetdl.com",
-    "url": "^https?://www\\.magnetdl\\.com/",
-    "nextLink": "id('pages')/a[contains(string(),'>')]",
-    "pageElement": ".download>tbody>tr:nth-last-child(n+4)",
-    "replaceElement": "#pages"
 },
 {
     "name": "tokyomotion",
@@ -3320,6 +2678,7 @@
     "name": "绅士漫画 - 閱讀",
     "author": "skofkyo",
     "example": "https://wnacg.com/photos-view-id-15403544.html",
+    "action": 1,
     "url": "^https?://(www\\.)?(wnacg|htcomic|ssmh\\d+)\\.[^/]+/photos-view",
     "include": "span.newpagelabel",
     "init": "let a=document.querySelector('#imgarea>a');a.outerHTML=a.innerHTML;",
@@ -3369,7 +2728,7 @@
     "url": "^https?://www\\.lolhentai\\.net/",
     "action": 1,
     "waitElement": [
-        "img.thumbnail"
+        "#thumbnails img.thumbnail"
     ],
     "nextLink": "a[rel='next']",
     "pageElement": "//div[ul/li/div/a/img[@class='thumbnail']]",
@@ -3524,30 +2883,6 @@
     "replaceElement": ".pagination",
     "lazyImgSrc": "data-srcset",
     "css": ".home-rows-videos-div{margin-bottom:10px!important;}.search-pagination{margin-top:-50px!important;}"
-},
-{
-    "name": "Models Vibe",
-    "author": "skofkyo",
-    "example": "https://www.modelsvibe.com/albums/china/",
-    "url": "^https?://www\\.modelsvibe\\.com/albums/[\\w-]+/",
-    "nextLinkByUrl": [
-        "(albums/[\\w-]+/)(page/(\\d+)/)?",
-        "$1page/{$3+1}/"
-    ],
-    "pageElement": ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
-    "pageInit": "doc.querySelectorAll('span[data-img-url]').forEach(span=>{span.classList.add('td-animation-stack-type0-2');span.style.backgroundImage=`url('${span.dataset.imgUrl}')`})"
-},
-{
-    "name": "Models Vibe 首頁",
-    "author": "skofkyo",
-    "example": "https://www.modelsvibe.com/",
-    "url": "^https?://www\\.modelsvibe\\.com/$",
-    "nextLinkByUrl": [
-        "(^https?://www\\.modelsvibe\\.com/)(page/(\\d+)/)?",
-        "$1page/{$3+1}/"
-    ],
-    "pageElement": ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
-    "pageInit": "doc.querySelectorAll('span[data-img-url]').forEach(span=>{span.classList.add('td-animation-stack-type0-2');span.style.backgroundImage=`url('${span.dataset.imgUrl}')`})"
 },
 {
     "name": "尤美图库",
@@ -3764,16 +3099,6 @@
     "replaceElement": ".pagination"
 },
 {
-    "name": "Sex Nori",
-    "author": "skofkyo",
-    "example": "https://www.sexnori26.me/bbs/board.php?bo_table=av_korea",
-    "url": "^https?://www\\.sexnori(\\d+)?\\.me/",
-    "nextLink": "a.next",
-    "pageElement": ".gallery-item",
-    "replaceElement": ".eb-pagination",
-    "css": ".pagetual_pageBar{margin-top:12px!important}.gallery-item {position: static !important;float: left !important;}"
-},
-{
     "name": "JavTorrent",
     "author": "skofkyo",
     "example": "ijavtorrent.com，projectjav.com",
@@ -3823,16 +3148,6 @@
     "replaceElement": ".pages_c"
 },
 {
-    "name": "JavDove 番号鸽",
-    "author": "skofkyo",
-    "example": "https://www.javdove.com/videos/uncensored",
-    "url": "^https?://www\\.javdove\\.com/",
-    "nextLink": ".prevnext[rel='next']",
-    "pageElement": ".row>.col-video",
-    "replaceElement": ".pagination",
-    "css": ".pagetual_pageBar{margin-top:-5px!important}"
-},
-{
     "name": "JAVMOST 禁用",
     "author": "skofkyo",
     "example": "https://www.javmost.cx/category/uncensor/",
@@ -3849,21 +3164,6 @@
     "pageElement": "#archive-content,.items,.blog-list-items",
     "replaceElement": ".pagination",
     "css": ".pagetual_pageBar{margin-top:-25px!important}"
-},
-{
-    "name": "Jav223",
-    "author": "skofkyo",
-    "example": "https://www.jav223.com/?m=video_list*5*1",
-    "url": "^https?://www\\.jav223\\.com/",
-    "action": 1,
-    "nextLinkByJs": "let next = doc.querySelector('span.curwrpage+a'); if (next) return location.href.replace(/\\d+$/,'') + next.innerText",
-    "pageElement": ".video-content",
-    "waitElement": [
-        "span.curwrpage"
-    ],
-    "replaceElement": "#wr-page",
-    "pageAction": "let ge=e=>document.querySelector(e);let url=location.search.replace(/\\d+$/,'');setTimeout(()=>{let as=document.querySelectorAll('a.wrpage_number');as.forEach(a=>{a.href=url+a.innerText});let hp=ge('a.wr_pagefirst');if(hp){hp.href=url+'1'}let ep=ge('a.wr_pageend');if(ep){let epn=ge('span.wr_pagefirst').innerText.match(/(\\d+)/)[1];ep.href=url+epn}let pp=ge('a.wr_pagepre');if(pp){let cp=ge('span.curwrpage').innerText;let cpn=cp-1;pp.href=url+cpn}let np=ge('a.wr_pagenext');if(np){let npn=ge('span.curwrpage+a').innerText;np.href=url+npn}},1000)",
-    "css": ".pagetual_pageBar{margin-top:-5px!important}"
 },
 {
     "name": "Avgle & AV01",
@@ -3899,7 +3199,7 @@
     "example": "https://porn78.info/，https://nyaa.porn78.info/",
     "url": "^https?://(nyaa\\.)?porn78.info/",
     "action": 1,
-    "nextLink": ".next>a",
+    "nextLink": ".general-pagination .selected+li>a",
     "pageElement": "#portfolio>li",
     "replaceElement": ".general-pagination"
 },
@@ -3952,16 +3252,6 @@
     "replaceElement": ".nav-links"
 },
 {
-    "name": "Avbebe",
-    "author": "skofkyo",
-    "example": "https://avbebe.com/",
-    "url": "^https?://avbebe\\.com/",
-    "nextLink": ".next",
-    "pageElement": ".jeg_block_container",
-    "replaceElement": ".jeg_block_navigation",
-    "css": ".pagetual_pageBar{margin-top:-16px!important}"
-},
-{
     "name": "Latino Hentai",
     "author": "skofkyo",
     "example": "https://latinohentai.com/",
@@ -3969,16 +3259,6 @@
     "nextLink": ".current+a",
     "pageElement": ".items",
     "replaceElement": ".pagination"
-},
-{
-    "name": "ACG RW",
-    "author": "skofkyo",
-    "example": "https://www.acgrw.net/category/lifan/",
-    "url": "^https?://www\\.acgrw\\.net/",
-    "nextLink": "a.next",
-    "pageElement": ".uk-animation-slide-bottom-small",
-    "replaceElement": ".nav-links",
-    "pageInit": "doc.querySelectorAll('.media-content.scrollLoading:not(.ojbk)').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.xurl}')`;div.classList.add('ojbk');div.removeAttribute('data-xurl')})"
 },
 {
     "name": "ACG - 🏠 西普拉斯驿站|小西驿站 - 数码,音乐,ACG论坛",
@@ -4036,98 +3316,6 @@
     "css": ".pagetual_pageBar{margin-top:-15px!important}.photosgrid+.pagetual_pageBar{margin-top:10px!important}.mbprofile+.pagetual_pageBar{margin-top:0px!important}.mbphoto2+.pagetual_pageBar{display:none!important}"
 },
 {
-    "name": "xHamster gallery2",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/photos/gallery/15979608/513740284",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos/gallery/",
-    "exclude": ".gallery-list",
-    "nextLink": ".fotorama__arr--next",
-    "stopSign": [
-        [
-            ".photo-amounts-info",
-            "^(\\d+)"
-        ],
-        [
-            ".photo-amounts-info",
-            "(\\d+)$"
-        ]
-    ],
-    "pageElement": ".fotorama__active>img",
-    "replaceElement": ".gallery-thumbs,.photo-amounts-info",
-    "pageBar": 0,
-    "css": "#photo_slider *{overflow: initial !important;position: initial !important;}.fotorama__stage{height:auto!important;}.fotorama__loaded--img:not(.fotorama__active){display:none!important}.fotorama__img {max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
-},
-{
-    "name": "xHamster gallery1",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/photos/gallery/selfie-porn-pic-134-15984561，https://zh.xhamster.com/photos/gallery/selfie-porn-pic-122-15979608",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos/gallery/",
-    "include": ".gallery-list",
-    "pinUrl": true,
-    "action": 1,
-    "waitElement": [
-        "",
-        ".image-thumb:not([style])"
-    ],
-    "nextLink": ".next>a[href^='http']",
-    "pageElement": ".gallery-list",
-    "replaceElement": ".pager-section>[data-sync]",
-    "css": ".gallery-list img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
-},
-{
-    "name": "xHamster photos",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/photos",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos",
-    "pinUrl": true,
-    "nextLink": "//li[a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a",
-    "pageElement": ".thumb-list.gallery.thumb-list--sidebar",
-    "replaceElement": ".desktop-pagination",
-    "pageInit": "doc.querySelectorAll('div.thumb-image-container__image[data-lazy]:not([style])').forEach(div=>{div.querySelector('.dots-loader').remove();div.style.backgroundImage=`url('${div.dataset.lazy}')`})"
-},
-{
-    "name": "xHamster channels",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/channels",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/channels",
-    "nextLink": "//li[a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a",
-    "pageElement": ".width-wrap>.best-list-block>.root-ddffe",
-    "replaceElement": ".desktop-pagination",
-    "rate": 3
-},
-{
-    "name": "xHamster creators",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/creators",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/creators",
-    "nextLink": "//li[a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a",
-    "pageElement": ".width-wrap>div[class^=list]",
-    "replaceElement": ".desktop-pagination",
-    "rate": 3
-},
-{
-    "name": "xHamster pornstars",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/pornstars",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/pornstars",
-    "nextLink": "//li[a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a",
-    "pageElement": ".width-wrap>div[class^=list]",
-    "replaceElement": ".desktop-pagination",
-    "rate": 3
-},
-{
-    "name": "xHamster",
-    "author": "skofkyo",
-    "example": "https://zh.xhamster.com/newest",
-    "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/",
-    "exclude": ".fotorama__img",
-    "nextLink": "a[rel='next']",
-    "pageElement": ".thumb-list",
-    "replaceElement": ".pager-section",
-    "pageAction": "let gae=e=>document.querySelectorAll(e);let ps=gae('.thumb-list');let last=ps.length-1;ps[last].querySelectorAll('a[data-previewvideo]').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');v.setAttribute('loop','loop');v.setAttribute('autoplay','autoplay');v.setAttribute('playsinline','playsinline');v.setAttribute('webkitplaysinline','webkitplaysinline');v.setAttribute('src',a.getAttribute('data-previewvideo'));v.setAttribute('class','thumb-image-container__video');v.setAttribute('eid1','156');a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})",
-    "css": ".thumb-list__item+div[class^=root][style*='height']{display:none!important;}"
-},
-{
     "name": "色色啦",
     "author": "skofkyo",
     "example": "https://www.seselah.com/",
@@ -4142,6 +3330,7 @@
     "name": "91Porn",
     "author": "skofkyo",
     "example": "http://91porn.com/index.php",
+    "action": 1,
     "url": "^https?://(0118\\.)?(91porn|workarea7)\\.(com|live)/",
     "nextLink": "//a[text()='»']",
     "pageElement": ".row .row>div",
@@ -4239,28 +3428,11 @@
     "author": "skofkyo",
     "example": "https://www.xvideos.com/",
     "url": "^https?://www\\.(xvideos|xnxx)\\.com/",
-    "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
+    "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a | //a[@class='no-page next-page']",
     "pinUrl": true,
     "pageElement": ".mozaique.cust-nb-cols",
     "replaceElement": ".pagination",
     "pageAction": "xv.thumb_block_initiator.init_listing()"
-},
-{
-    "name": "麻豆村",
-    "author": "skofkyo",
-    "example": "https://madoucun.com/",
-    "url": "^https?://madoucun\\.com/",
-    "include": ".hl-page-wrap",
-    "pageElement": ".hl-list-item",
-    "replaceElement": ".hl-page-wrap",
-    "pageInit": "doc.querySelectorAll('a[data-original]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.original}')`})"
-},
-{
-    "name": "麻豆社,草麻豆",
-    "author": "skofkyo",
-    "example": "https://madou.club/",
-    "url": "^https?://madou\\.club/",
-    "loadMore": ".ias_trigger>a"
 },
 {
     "name": "CableAV",
@@ -4270,30 +3442,6 @@
     "nextLink": "span.current+a",
     "pageElement": ".blog-items>article",
     "replaceElement": ".wp-pagenavi"
-},
-{
-    "name": "肉漫屋 - 閱讀",
-    "author": "skofkyo",
-    "example": "https://rouman5.com/books/354b56da-1ab9-4909-9330-743842c5a5bf/0",
-    "url": "^https?://rouman[0-9]{1,2}\\.[a-z]{3}/books/[^/]+/",
-    "history": 2,
-    "action": 2,
-    "init": "document.querySelector(\"div[class^='id_chapterRoot']\").setAttribute('style','padding-right:0px!important;padding-left:0px!important;');",
-    "nextLink": "//a[text()='下一頁']",
-    "pageElement": "//div[div/img[@id]]",
-    "replaceElement": "div[class^='id_pagination']",
-    "pageBarText": 1,
-    "css": "inIframe:nav.navbar,#__next>div[class^='footer'],.row,div[class^='id_pagination']{display:none!important}.container{padding-right:0px!important;padding-left:0px!important;max-width: 800px!important;}"
-},
-{
-    "name": "肉漫屋",
-    "author": "skofkyo",
-    "example": "https://rouman5.com/books，https://rouman01.xyz/books",
-    "url": "^https?://rouman\\d{1,2}\\.[a-z]{3}/",
-    "include": "div[class^='pagination']",
-    "nextLink": "//a[text()='下一頁']",
-    "pageElement": "ul[class^='books_list']>li",
-    "replaceElement": "div[class^='pagination']"
 },
 {
     "name": "肉視頻",
@@ -4331,14 +3479,6 @@
     "example": "https://onejav.com/",
     "url": "^https?://onejav\\.com/$",
     "loadMore": "#button-load-more"
-},
-{
-    "name": "女神社",
-    "author": "skofkyo",
-    "example": "https://nshens.com/，https://inewgirl.com/",
-    "url": "^https?://(nshens\\.com|inewgirl\\.com)/",
-    "include": ".v-pagination",
-    "pageElement": ".justify-start>.col"
 },
 {
     "name": "微圖坊 - 看圖",
@@ -4423,15 +3563,6 @@
     "replaceElement": "ul.pagination"
 },
 {
-    "name": "U9A9",
-    "author": "skofkyo",
-    "example": "https://u9a9.net/",
-    "url": "^https?://u9a9\\.[a-z]{2,3}",
-    "nextLink": "li.active+li>a",
-    "pageElement": "table>tbody>tr",
-    "replaceElement": "nav>.pagination"
-},
-{
     "name": "Mixfemdomcc",
     "author": "skofkyo",
     "example": "https://mixfemdomcc.com/lastnews/",
@@ -4448,8 +3579,7 @@
     "url": "^https?://femdomup\\.net/",
     "nextLink": "//a[text()='Next']",
     "pageElement": "article.shortstory",
-    "replaceElement": ".navigation",
-    "pageAction": "let url=document.querySelector(\"script[src*='cat.js']\").src;if(url)fetch(url).then(res=>res.text()).then((res)=>{eval(res)})"
+    "replaceElement": ".navigation"
 },
 {
     "name": "xstarshub",
@@ -4482,15 +3612,6 @@
     "pageAction": "image_rotate('.video-rotate .thumb')"
 },
 {
-    "name": "MISSAV",
-    "author": "skofkyo",
-    "example": "https://missav.com/dm93/fc2",
-    "url": "^https?://missav.com/",
-    "nextLink": "a[rel='next']",
-    "pageElement": "//div[div/div/a/video] | //div[div/a/img[@data-src] and contains(@class,'shadow-lg')]",
-    "replaceElement": "nav.flex"
-},
-{
     "name": "愛污傳媒",
     "author": "skofkyo",
     "example": "https://aiwucm.com/",
@@ -4511,24 +3632,6 @@
     "nextLink": "//a[text()='Next']",
     "pageElement": ".videos-list>article",
     "replaceElement": ".pagination"
-},
-{
-    "name": "fanxxx.net",
-    "author": "skofkyo",
-    "example": "https://fanxxx.net/",
-    "url": "^https?://fanxxx\\.net/",
-    "nextLink": "a[rel='next']",
-    "pageElement": ".video-list",
-    "replaceElement": ".pagenavi"
-},
-{
-    "name": "JAVDAY",
-    "author": "skofkyo",
-    "example": "https://javday.tv/category/uncensored-leaked/",
-    "url": "^https?://javday\\.tv/(category|search)/",
-    "nextLink": ".layui-laypage-next",
-    "pageElement": ".videoGroup .video-wrapper .col-style.loaded",
-    "replaceElement": "div.av"
 },
 {
     "name": "AVPRO - 搜索",
@@ -4554,19 +3657,10 @@
     "replaceElement": ".pagination"
 },
 {
-    "name": "AV時間",
-    "author": "skofkyo",
-    "example": "https://avtime.tv/category/28/",
-    "url": "^https?://avtime\\.tv/",
-    "nextLink": "//a[span[text()='下一页']]",
-    "pageElement": "//ul[@class='wntheme-page text-center clearfix']/preceding-sibling::div[1]",
-    "replaceElement": ".wntheme-page",
-    "pageAction": "document.querySelectorAll('div[data-original]').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.original}')`})"
-},
-{
     "name": "Supjav",
     "author": "skofkyo",
     "example": "https://supjav.com/ja/category/uncensored-jav",
+    "action": 1,
     "url": "^https?://supjav\\.com/(zh/|ja/)?(\\?s=|popular|category)",
     "nextLink": "li.active+li>a",
     "pageElement": ".posts.clearfix>*",
@@ -4581,58 +3675,6 @@
     "nextLink": "//a[text()='下一頁']",
     "pageElement": "#content>.post.f",
     "replaceElement": ".page-navigator"
-},
-{
-    "name": "NETFLAV3",
-    "author": "skofkyo",
-    "example": "https://netflav5.com/all?genre=%E6%80%A7%E6%84%9F%E7%9A%84&page=2",
-    "url": "^https?://(www\\.)?netflav5\\.com/all\\?genre=.+(&page=\\d+)?$|^https?://(www\\.)?netflav5\\.com/actress",
-    "pinUrl": true,
-    "init": "let gae=e=>document.querySelectorAll(e);let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=document.querySelectorAll('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
-    "action": 1,
-    "nextLinkByJs": "let next=doc.querySelector('a.active.item+a.item:not(.icon)');if(next)return location.origin+location.pathname+location.search.replace(/&page=\\d+/,'')+'&page='+next.getAttribute('value')",
-    "pageElement": "//div[@class='general_pagination']/preceding-sibling::div[1]",
-    "waitElement": [
-        ".general_pagination a.active",
-        "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn),.lazyload-wrapper img[src^='data']"
-    ],
-    "replaceElement": ".general_pagination",
-    "rate": 3,
-    "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('#general-pagination a');as.forEach(a=>{let link=location.search.replace(/&page=\\d+/,'')+'&page='+a.getAttribute('value');a.href=link})},200)"
-},
-{
-    "name": "NETFLAV2",
-    "author": "skofkyo",
-    "example": "https://netflav5.com/uncensored?genre=FC2PPV",
-    "url": "^https?://(www\\.)?netflav5\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
-    "init": "let gae=e=>document.querySelectorAll(e);let ds=gae(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=gae('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
-    "action": 1,
-    "nextLinkByJs": "let next=doc.querySelector('a.active.item+a.item:not(.icon)');if(next)return location.origin+location.pathname+location.search.replace(/&page=\\d+/,'')+'&page='+next.getAttribute('value')",
-    "pageElement": "//div[@class='general_pagination']/preceding-sibling::div[1]",
-    "waitElement": [
-        "#general-pagination a.active",
-        "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn),.lazyload-wrapper img[src^='data']"
-    ],
-    "replaceElement": "#general-pagination",
-    "rate": 3,
-    "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('#general-pagination a');as.forEach(a=>{let link=location.search.replace(/&page=\\d+/,'')+'&page='+a.getAttribute('value');a.href=link})},200)"
-},
-{
-    "name": "NETFLAV1",
-    "author": "skofkyo",
-    "example": "https://netflav5.com/uncensored",
-    "url": "^https?://(www\\.)?netflav5\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
-    "init": "let gae=e=>document.querySelectorAll(e);let ds=gae(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=gae('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
-    "action": 1,
-    "nextLinkByJs": "let next=doc.querySelector('a.active.item+a.item:not(.icon)');if(next)return location.origin+location.pathname+'?page='+next.getAttribute('value')",
-    "pageElement": "//div[@class='general_pagination']/preceding-sibling::div[1]",
-    "waitElement": [
-        "#general-pagination a.active",
-        "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn),.lazyload-wrapper img[src^='data']"
-    ],
-    "replaceElement": "#general-pagination",
-    "rate": 3,
-    "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('#general-pagination a');as.forEach(a=>{let link=location.pathname+'?page='+a.getAttribute('value');a.href=link})},200)"
 },
 {
     "name": "avple.tv - 類別",
@@ -4697,33 +3739,11 @@
     "author": "skofkyo",
     "example": "https://hotgirl.asia/imiss%e7%88%b1%e8%9c%9c%e7%a4%be-vol-693-lavinia%e8%82%89%e8%82%89/",
     "url": "^https?://hotgirl\\.asia/[^/]+/",
-    "include": ".mx-auto",
-    "init": "document.querySelectorAll(\"img[alt][src^='data']\").forEach(e=>{e.parentNode.remove()})",
     "nextLink": "li.active+li>a",
     "pageElement": "//div[@class='galeria_img'][img[starts-with(@src,'http')]]",
+    "replaceElement": "#pagination",
     "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
     "pageBar": 0
-},
-{
-    "name": "Taotuxp.com - 看圖",
-    "author": "skofkyo",
-    "example": "https://www.taotucc.com/252555.html",
-    "url": "^https?://www\\.taotucc\\.com/\\d+\\.html",
-    "nextLink": ".pagelist>span+a",
-    "pageElement": "#post_content>p",
-    "replaceElement": ".pagelist",
-    "pageBar": 0,
-    "css": "#post_content img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#content p{margin:0!important}"
-},
-{
-    "name": "Taotuxp.com - 分類",
-    "author": "skofkyo",
-    "example": "https://www.taotucc.com/",
-    "url": "^https?://www\\.taotucc\\.com/",
-    "nextLink": "a.current+a",
-    "pageElement": "#post_container",
-    "replaceElement": ".pagination",
-    "css": ".pagetual_pageBar{margin-top:-8px!important}"
 },
 {
     "name": "Xgirls - 看圖",
@@ -4743,18 +3763,6 @@
     "nextLink": "//a[i[@class='fa fa-angle-right']]",
     "pageElement": "//div[@class='container']/div[@class='row']/div/div[div/div[@class='card-wrapper']/div[@class='card-img']/a/img][@class='row']/*",
     "replaceElement": ".pagination"
-},
-{
-    "name": "优丝库HD - 分類",
-    "author": "skofkyo",
-    "example": "https://yskhd.com/archives/category/xiuren/xiuren%e7%a7%80%e4%ba%ba%e7%bd%91?t",
-    "url": "^https?://yskhd\\.(com|me)/",
-    "include": ".pagination",
-    "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
-    "nextLink": "li.active+li>a",
-    "pageElement": ".posts",
-    "replaceElement": ".pagination",
-    "css": ".pagetual_pageBar{margin-top:-8px!important}.grids{margin:0 -10px 0px!important}"
 },
 {
     "name": "心动美图 - 看圖",
@@ -4815,7 +3823,7 @@
     "pageInit": "doc.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
     "replaceElement": ".prevNext",
     "pageBarText": "return doc.querySelector('.tag[checked=true]').innerText;",
-    "css": ".banner_ad{display:none!important}.pagetual_pageBar{margin-top:2px!important}"
+    "css": "body{overflow:unset!important}.banner_ad,.swal2-container,.article:has(.media),.jquery-modal.blocker.current,.push-top-container{display:none!important}"
 },
 {
     "name": "丽图·污漫画 - 分類",
@@ -4825,7 +3833,7 @@
     "nextLink": "a.next",
     "pageElement": ".list>.item",
     "replaceElement": ".pager",
-    "css": "._728x90{display:none!important}"
+    "css": "body{overflow:unset!important}.banner_ad,.swal2-container,.article:has(.media),.jquery-modal.blocker.current,.push-top-container{display:none!important}"
 },
 {
     "name": "海棠小说网 - 手机阅读",
@@ -4874,7 +3882,7 @@
         "div.article:not(.result)+div.pager",
         "div.article.result+div.pager"
     ],
-    "css": ".pagetual_pageBar+div{margin-top:-5px !important;}.slider-ad,.jquery-modal.blocker.current,.article.ad,.body>*:not(.article):not(.pager),.banner_ad{display:none!important}",
+    "css": ".slider-ad,.jquery-modal.blocker.current,.article.ad,.body>*:not(.article):not(.pager),.banner_ad{display:none!important}",
     "rate": 3
 },
 {
@@ -4901,7 +3909,7 @@
         "div.article>div.pager:first-child",
         "div.article>div.pager:last-child"
     ],
-    "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
+    "css": "body{overflow:unset!important}.push-slider,.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']{display: none!important;}",
     "pageBar": 0
 },
 {
@@ -4918,17 +3926,7 @@
         "div.article>div.pager:last-child"
     ],
     "rate": 3,
-    "css": ".pagetual_pageBar{margin-bottom:5px!important}.videos .pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad,.tips,.aside>.center,.item._300x250{display:none!important}"
-},
-{
-    "name": "YINGPIAN影片社",
-    "author": "skofkyo",
-    "example": "https://zhipai12.com/",
-    "url": "^https?://zhipai12\\.com/",
-    "nextLink": "a[rel='next'],.nav-previous>a",
-    "pageElement": "div[id^='post-']",
-    "replaceElement": ".wp-pagenavi",
-    "rate": 3
+    "css": ".videos .pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad,.tips,.aside>.center,.item._300x250{display:none!important}"
 },
 {
     "name": "國模網",
@@ -4939,59 +3937,6 @@
     "nextLink": "a.next",
     "pageElement": "#main > article",
     "replaceElement": "#nav-below"
-},
-{
-    "name": "MIC MIC IDOL",
-    "author": "skofkyo",
-    "example": "https://www.micmicidol.club/",
-    "url": "^https?://www\\.micmicidol\\.club/",
-    "action": 1
-},
-{
-    "name": "自拍图库",
-    "author": "skofkyo",
-    "example": "https://xn--yzp-zipaipiccom-6m3z988bh2ek30lissa.zipaitk.com/",
-    "url": "^https?://.*(zipaipic|zipaitk)\\.com/",
-    "action": 1,
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": "#tiles",
-    "replaceElement": ".page"
-},
-{
-    "name": "性趣套圖 - 搜索",
-    "author": "skofkyo",
-    "example": "https://534798.xyz/e/search/result/?searchid=7898",
-    "url": "^https?://534798\\.xyz/e/search/",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": "h2.r,table[width^='8']",
-    "replaceElement": ".list_page",
-    "css": "table.nav,table[width^='8'] tr:nth-child(1){display:none!important;}td{font:12px/1.5 Verdana,Arial,Helvetica,sans-serif,'微软雅黑'!important}"
-},
-{
-    "name": "性趣套圖 / H漫画 - 看圖",
-    "author": "skofkyo",
-    "example": "https://534798.xyz/e/action/ShowInfo.php?classid=1&id=23726，https://123548.xyz/e/action/ShowInfo.php?classid=1&id=28294",
-    "url": "^https?://(123548|534798)\\.xyz/e/action/ShowInfo\\.php",
-    "pinUrl": true,
-    "init": "let ge=e=>document.querySelector(e);let e=ge('.entry');e.innerHTML=e.innerHTML.replace('\"&gt;','');document.addEventListener('keydown',(e)=>{let key=window.event?e.keyCode:e.which;if(key=='39'){let n=ge('.nextinfo a');if(n)n.click()}});document.addEventListener('keydown',(e)=>{let key=window.event?e.keyCode:e.which;if(key=='37'){let p=ge('.nextinfo p:last-child a');if(p)p.click()}});",
-    "nextLink": ".pageLink b+a",
-    "pageElement": ".entry img",
-    "replaceElement": ".pageLink",
-    "pageBar": 0,
-    "rate": 10,
-    "css": "aside.side,.pageLink{display:none!important;}.main-content{margin-left:0px!important;}"
-},
-{
-    "name": "性趣套圖 / H漫画 - 列表",
-    "author": "skofkyo",
-    "example": "https://534798.xyz/e/action/ListInfo/?classid=1",
-    "url": "^https?://(123548|534798)\\.xyz/e/action/ListInfo",
-    "nextLink": "//a[text()='下一页']",
-    "pageElement": ".bloglist > ul",
-    "replaceElement": ".pageLink",
-    "css": ".pagetual_pageBar{width:98.6%!important;}aside.side{display:none!important;}.main-content{margin-left:0px!important;}body{background:#EDEDED!important;}",
-    "initRun": 1,
-    "autoLoadNum": 1
 },
 {
     "name": "雅拉伊",
@@ -5018,12 +3963,12 @@
     "name": "Mox.moe",
     "author": "skofkyo",
     "example": "https://mox.moe/",
-    "url": "^https?://mox\\.moe",
+    "url": "^https?://(mox|kox|kxo|koz)\\.moe",
     "action": 1,
     "wait": 1000,
-    "nextLink": "//a[button/text()='下頁']",
-    "pageElement": ".listbg",
-    "replaceElement": "td.listtitle[colspan='5']",
+    "nextLink": "//button[@name='link_page']/b/../../following-sibling::a[1]",
+    "pageElement": "tr.listbg",
+    "replaceElement": "tr[style='vertical-align:top']:first-child",
     "rate": 3
 },
 {
@@ -5071,32 +4016,6 @@
         ".o-list--menu",
         ".o-list--footer"
     ]
-},
-{
-    "name": "优书网 - 書籍分類",
-    "author": "skofkyo",
-    "example": "https://www.yousuu.com/booklists/?type=man",
-    "url": "^https?://www\\.yousuu\\.com/(bookstore|booklists)/",
-    "action": 1,
-    "waitElement": [
-        "",
-        ".loadingBlock"
-    ],
-    "init": "setTimeout(()=>{document.querySelectorAll('label.tab').forEach(e=>{e.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});document.querySelectorAll('h1>span').forEach(e=>{e.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});},1000)",
-    "nextLinkByJs": "let next=doc.querySelector('li.number.active+li.number');if(next)return location.origin+location.pathname+location.search.replace(/&page=\\d+$/,'')+'&page='+next.innerText",
-    "pageElement": ".booklist-card",
-    "replaceElement": ".pagination",
-    "pageAction": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);let lsr=location.search.replace(/&page=\\d+$/,'');setTimeout(()=>{gae('.number:not(.active)').forEach(e=>{let ls=lsr+'&page='+e.innerText;let link=`location.href='${ls}'`;e.setAttribute('onclick',link)});let pb=ge('.btn-prev');let nb=ge('.btn-next');let c=ge('.number.active');let n=ge('.number.active+.number');if(n){let ls=lsr+'&page='+n.innerText;let link=`location.href='${ls}'`;nb.setAttribute('onclick',link)}if(c.innerText>1){let p=c.innerText-1;let ls=lsr+'&page='+p;let link=`location.href='${ls}'`;pb.setAttribute('onclick',link)}},200)",
-    "pageBar": 0
-},
-{
-    "name": "第一版主 - 阅读",
-    "author": "skofkyo",
-    "example": "https://www.33yydstxt426.com/35/35669/1668046.html",
-    "url": "^https?://www\\.\\d+yydstxt\\d+\\.com/\\d+/\\d+/\\d+.html$",
-    "action": 1,
-    "nextLink": "//center[@class='chapterPages']/a[@class='curr']/following-sibling::a[1] | //a[text()='下一章>' and contains(@href,'html')]",
-    "pageElement": ".neirong"
 },
 {
     "name": "www.shoujixs.net_手机小说 - 阅读",
@@ -5301,33 +4220,6 @@
     "replaceElement": ".page"
 },
 {
-    "name": "69書吧 -閱讀",
-    "author": "skofkyo",
-    "example": "https://www.69shuba.pro/txt/38161/26369110",
-    "url": "^https?://www\\.69shuba\\.pro/txt/\\d+/\\d+",
-    "history": 2,
-    "action": 1,
-    "nextLink": "//a[text()='下一章']",
-    "pageElement": ".txtnav",
-    "replaceElement": "head>title",
-    "pageBar": 0,
-    "pageAction": "let gae=e=>document.querySelectorAll(e);let t=gae('.txtnav');if(t.length>10)t[0].remove()"
-},
-{
-    "name": "次元姬小说 - 閱讀",
-    "author": "skofkyo",
-    "example": "https://www.ciyuanji.com/chapter/5077_2227754.html",
-    "url": "^https?://www\\.ciyuanji\\.com/chapter/\\w+\\.htm",
-    "action": 1,
-    "history": 2,
-    "nextLink": "//a[button[text()='下一章']]",
-    "pageElement": "[class^=chapter_title],[class^=chapter_list],[class^=chapter_article]",
-    "replaceElement": "head>title,[class^='chapter_footer']",
-    "pageAction": "let gae=e=>document.querySelectorAll(e);let h=gae('[class^=chapter_title]');let t=gae('[class^=chapter_article]');let l=gae('[class^=chapter_list]');if(t.length>10){h[0].remove();t[0].remove();l[0].remove()}",
-    "pageBar": 0,
-    "css": "[class^=chapter_article]+[class^=chapter_title]{padding-top:0px!important}"
-},
-{
     "name": "轻小说文库 - 閱讀",
     "author": "skofkyo",
     "example": "https://www.wenku8.net/novel/1/1973/69567.htm",
@@ -5343,31 +4235,6 @@
     "pageBar": 0
 },
 {
-    "name": "稷下書院 - 閱讀",
-    "author": "skofkyo",
-    "example": "https://www.novel543.com/1004298677/8001_1.html",
-    "url": "^https?://www\\.novel543\\.com/\\d+/\\w+\\.html",
-    "history": 2,
-    "pinUrl": true,
-    "init": "let ge=e=>document.querySelector(e);let h=ge('h1');h.innerText=h.innerText.split('-')[1].trim();let c=ge('.content');c.innerHTML=c.innerHTML.replace(/[^\\u4e00-\\u9fa5]+(<br>)?/,'<br>').replace(/[^\\u4e00-\\u9fa5]+$/,'');let ad=ge('.gadBlock,.adBlock');if(ad){ad.remove()}c.innerHTML=c.innerHTML.replace(/<br><br>/g,'<br>');",
-    "nextLink": "//a[text()='下一章' and not(contains(@href,'end'))]",
-    "pageElement": "h1,.content",
-    "replaceElement": "head>title,.is-active,.foot-nav",
-    "pageInit": "let ge=e=>doc.querySelector(e);let h=ge('h1');h.innerText=h.innerText.split('-')[1].trim();let c=ge('.content');c.innerHTML=c.innerHTML.replace(/[^\\u4e00-\\u9fa5]+(<br>)?/,'<br>').replace(/[^\\u4e00-\\u9fa5]+$/,'');let ad=ge('.gadBlock,.adBlock');if(ad){ad.remove()}c.innerHTML=c.innerHTML.replace(/<br><br>/g,'<br>');",
-    "pageAction": "let gae=e=>document.querySelectorAll(e);gae('amp-addthis').forEach(e=>{e.remove()});let h=gae('h1');let t=gae('.content');if(t.length>10){h[0].remove();t[0].remove()}",
-    "pageBar": 0,
-    "css": ".gadBlock,.adBlock{display:none!important}#read h1{padding:20px 0 0px!important}"
-},
-{
-    "name": "稷下書院 - 分類",
-    "author": "skofkyo",
-    "example": "https://www.novel543.com/bookstack/",
-    "url": "^https?://www\\.novel543\\.com/",
-    "nextLink": ".next>a",
-    "pageElement": ".list>li",
-    "replaceElement": ".pagination"
-},
-{
     "name": "天天看小說 - 顯示全部目錄",
     "author": "skofkyo",
     "example": "https://tw.ttkan.co/novel/chapters/yedemingmingshu-huishuohuadezhouzi",
@@ -5381,7 +4248,7 @@
 {
     "name": "天天看小說 - 閱讀",
     "author": "skofkyo",
-    "example": "https://tw.bg3.co/novel/pagea/yedemingmingshu-huishuohuadezhouzi_1.html",
+    "example": "https://tw.ttkan.co/novel/pagea/yedemingmingshu-huishuohuadezhouzi_1.html",
     "url": "^https?://[^/]+/novel/pagea/[^.]+\\.html",
     "include": "//title[contains(text(),'天天看小說') or contains(text(),'天天看小说')]",
     "action": 1,
@@ -5418,15 +4285,16 @@
 {
     "name": "無限小說 - 閱讀",
     "author": "skofkyo",
-    "example": "https://www.8book.com/read/125687/?312407",
-    "url": "^https?://(www\\.)?8book\\.com/read/",
+    "example": "https://finance.binaccount.com/read/125687/?335030",
+    "url": "/read/",
+    "include": "//title[contains(text(),'無限小說')]",
     "action": 1,
     "history": 2,
     "init": "setTimeout(()=>{let t=document.querySelector('#text');t.innerHTML=t.innerHTML.replace(/[<br>]{4}[⒏8８⒏⑧⑻ВbｂьＯσｏоοoＫkкｃсcｍmм．。·.]{9,10}/gi,'')},1000)",
     "nextLink": "//a[text()='下一頁']|//a[text()='下一篇']",
     "pageElement": "//div[div/@id='subtitle'] | id('text')",
     "waitElement": [
-        "#text>br"
+        "#pch,#ppbt,#nch,#npbt"
     ],
     "replaceElement": ".read_btn_gp",
     "pageInit": "let t=doc.querySelector('#text');t.innerHTML=t.innerHTML.replace(/[<br>]{4}[⒏8８⒏⑧⑻ВbｂьＯσｏоοoＫkкｃсcｍmм．。·.]{9,10}/gi,'')",
@@ -5474,8 +4342,8 @@
 {
     "name": "愛下電子書 - 閱讀",
     "author": "skofkyo",
-    "example": "https://ixdzs8.tw/read/38804/p1.html",
-    "url": "^https?://ixdzs8\\.tw/read/\\d+/\\w+\\.html",
+    "example": "https://ixdzs.tw/read/38804/p1.html",
+    "url": "^https?://ixdzs\\.tw/read/\\d+/\\w+\\.html",
     "history": 2,
     "nextLink": "a.chapter-paging.chapter-next",
     "pageElement": "#page .page-content",
@@ -5486,8 +4354,8 @@
 {
     "name": "愛下電子書 - 書籍列表",
     "author": "skofkyo",
-    "example": "https://ixdzs8.tw/sort/1/",
-    "url": "^https?://ixdzs8\\.tw/(sort|hot|end)/",
+    "example": "https://ixdzs.tw/sort/1/",
+    "url": "^https?://ixdzs\\.tw/(sort|hot|end)/",
     "nextLink": "a.num.current+a",
     "pageElement": ".u-list",
     "replaceElement": "div.panel+div>.pagei"
