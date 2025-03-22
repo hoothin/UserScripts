@@ -5876,8 +5876,8 @@
     "name": "Baidu",
     "insertPos": 1,
     "nextLink": [
-        "//*[@id=\"page\"]/div/a[contains(text(),'下')]",
-        "//*[@id=\"page\"]/div/a[contains(text(),'上')]"
+        "//*[@id='page']/div/a[span[contains(text(),'下')]]",
+        "//*[@id='page']/div/a[span[contains(text(),'上')]]"
     ],
     "pageElement": "//*[@id=\"content_style\"]/style/following-sibling::*|//*[@id=\"content_left\"]/*",
     "pageNum": "&pn={10*($p-1)}",
@@ -5891,8 +5891,8 @@
     "name": "Baidu",
     "insertPos": 1,
     "nextLink": [
-        "//*[@id=\"page\"]/div/a[contains(text(),'下')]",
-        "//*[@id=\"page\"]/div/a[contains(text(),'上')]"
+        "//*[@id='page']/div/a[span[contains(text(),'下')]]",
+        "//*[@id='page']/div/a[span[contains(text(),'上')]]"
     ],
     "pageElement": "//*[@id=\"content_style\"]|//*[@id=\"content_left\"]",
     "pageNum": "&pn={10*($p-1)}",
