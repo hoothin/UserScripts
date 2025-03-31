@@ -15593,9 +15593,6 @@ ImgOps | https://imgops.com/#b#`;
                             urlToBlob(imgSrc, blob=>{
                                 if (blob && blob.size>58) {
                                     let fileName = imgName.replace(/\//g, "");
-                                    formatDict.forEach((value, key) => {
-                                        fileName.replace(new RegExp(`\\.${key}$`), value);
-                                    });
                                     zip.file(fileName, blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
