@@ -12,7 +12,7 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.3.16.1
+// @version              2025.4.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -23768,8 +23768,12 @@ ImgOps | https://imgops.com/#b#`;
                 if (buttonType === 'download' && !this.data.xhr) {
                     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
                     downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
+                    e.stopPropagation();
+                    e.preventDefault();
                     return;
                 } else {
+                    e.stopPropagation();
+                    e.preventDefault();
                     let altKey = e.altKey;
                     if (e.type != "click" && prefs.floatBar.globalkeys.invertInitShow && prefs.floatBar.globalkeys.alt) {
                         altKey = false;
@@ -25581,8 +25585,6 @@ ImgOps | https://imgops.com/#b#`;
                     if (action == 'enable' || action == 'search') return;
                     if (key == prefs.floatBar.keys[action]) {
                         floatBar.open(event, action);
-                        event.stopPropagation();
-                        event.preventDefault();
                         return true;
                     }
                 });
