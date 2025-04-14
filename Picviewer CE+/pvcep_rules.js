@@ -1709,5 +1709,11 @@ var siteInfo = [
         url: /^https:\/\/(www\.|m\.)?ctrip\.com/,
         r: /_(C|D)_\d[^\.]*/i,
         s: ""
+    },
+    {
+        name: "nozomi",
+        url: "^https://nozomi\\.la",
+        r: "///qtn(\\..*)\\.\\w+\\.webp/i",
+        s: "//w$1.webp"
     }
 ];
