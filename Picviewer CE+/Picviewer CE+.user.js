@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.4.11.1
+// @version              2025.4.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1552062/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1570604/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12333,7 +12333,7 @@ ImgOps | https://imgops.com/#b#`;
                 sizeLimitOr:false,
 
                 keys: {
-                    enable: true,
+                    enable: false,
                     actual: 'a', //  当出现悬浮条时按下 `a` 打开原图
                     search: 's',
                     current: 'c',
@@ -22434,25 +22434,14 @@ ImgOps | https://imgops.com/#b#`;
             },
             focusedKeydown:async function(e){
                 var keyCode=e.keyCode;
+                if (!prefs.floatBar.keys.enable) return;
                 if (this.data && this.data.img && e.key.toLowerCase() == prefs.floatBar.keys.download) {
                     downloadImg(this.img.src, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     e.preventDefault();
                     e.stopPropagation();
                     return;
                 }
-                var valid=[32,82,72,90,18,16,17,27,67,71];//有效的按键
-                if(valid.indexOf(keyCode)==-1) return;
-
-                e.preventDefault();
-
-                if(this.working){//working的时候也可以接受按下shift键，以便旋转的时候可以任何时候按下
-                    if(keyCode==16){//shift键
-                        this.shiftKeyUp=false;
-                    };
-                    return;
-                };
-
-                if (e.key == prefs.floatBar.keys.gallery) {
+                if (e.key.toLowerCase() == prefs.floatBar.keys.gallery) {
                     if (!gallery) {
                         gallery = new GalleryC();
                         gallery.data = [];
@@ -22463,89 +22452,102 @@ ImgOps | https://imgops.com/#b#`;
                     gallery.data = allData;
                     gallery.load(gallery.data);
                     this.remove();
-                } else {
-                    switch(keyCode){
-                        case 82:{//r键,切换到旋转工具
-                            if(this.rKeyUp){
-                                this.rKeyUp=false;
-                                this.beforeTool=this.selectedTool;
-                                if (this.beforeTool != 'rotate') {
-                                    this.selectTool('rotate');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                var valid=[32,82,72,90,18,16,17,27,67];//有效的按键
+                if(valid.indexOf(keyCode)==-1) return;
+
+                e.preventDefault();
+
+                if(this.working){//working的时候也可以接受按下shift键，以便旋转的时候可以任何时候按下
+                    if(keyCode==16){//shift键
+                        this.shiftKeyUp=false;
+                    };
+                    return;
+                };
+                switch(keyCode){
+                    case 82:{//r键,切换到旋转工具
+                        if(this.rKeyUp){
+                            this.rKeyUp=false;
+                            this.beforeTool=this.selectedTool;
+                            if (this.beforeTool != 'rotate') {
+                                this.selectTool('rotate');
+                            }
+                            var PI = Math.PI;
+                            var value = this.rotatedRadians + (e.shiftKey ? -90 : 90) * PI / 180;
+                            if (value >= 2 * PI) {
+                                value -= 2 * PI;
+                            } else if (value < 0) {
+                                value += 2 * PI;
+                            }
+                            this.rotate(value,true);
+                        };
+                    }break;
+                    case 72:{//h键,切换到抓手工具
+                        if(this.hKeyUp){
+                            this.hKeyUp=false;
+                            this.beforeTool=this.selectedTool;
+                            this.selectTool('hand');
+                        };
+                    }break;
+                    case 90:{//z键,切换到缩放工具
+                        if(this.zKeyUp){
+                            this.zKeyUp=false;
+                            this.beforeTool=this.selectedTool;
+                            this.selectTool('zoom');
+                            let level = e.shiftKey ? (this.zoomLevel - 0.5) : (this.zoomLevel + 0.5);
+                            if (typeof level != 'undefined') {
+                                this.zoom(level, { x: 0, y: 0});
+                            }
+                            if (uniqueImgWin && uniqueImgWin == this) {
+                                if (prefs.floatBar.globalkeys.previewFollowMouse) {
+                                    this.followPos(uniqueImgWinInitX, uniqueImgWinInitY, true);
+                                } else {
+                                    this.center(true, true);
                                 }
-                                var PI = Math.PI;
-                                var value = this.rotatedRadians + (e.shiftKey ? -90 : 90) * PI / 180;
-                                if (value >= 2 * PI) {
-                                    value -= 2 * PI;
-                                } else if (value < 0) {
-                                    value += 2 * PI;
-                                }
-                                this.rotate(value,true);
+                            }
+                        };
+                    }break;
+                    case 32:{//空格键阻止,临时切换到抓手功能
+                        if(this.spaceKeyUp){
+                            this.spaceKeyUp=false;
+                            if(this.selectedTool!='hand'){
+                                this.tempHand=true;
+                                this.changeCursor('hand');
                             };
-                        }break;
-                        case 72:{//h键,切换到抓手工具
-                            if(this.hKeyUp){
-                                this.hKeyUp=false;
-                                this.beforeTool=this.selectedTool;
-                                this.selectTool('hand');
-                            };
-                        }break;
-                        case 90:{//z键,切换到缩放工具
-                            if(this.zKeyUp){
-                                this.zKeyUp=false;
-                                this.beforeTool=this.selectedTool;
-                                this.selectTool('zoom');
-                                let level = e.shiftKey ? (this.zoomLevel - 0.5) : (this.zoomLevel + 0.5);
-                                if (typeof level != 'undefined') {
-                                    this.zoom(level, { x: 0, y: 0});
-                                }
-                                if (uniqueImgWin && uniqueImgWin == this) {
-                                    if (prefs.floatBar.globalkeys.previewFollowMouse) {
-                                        this.followPos(uniqueImgWinInitX, uniqueImgWinInitY, true);
-                                    } else {
-                                        this.center(true, true);
-                                    }
-                                }
-                            };
-                        }break;
-                        case 32:{//空格键阻止,临时切换到抓手功能
-                            if(this.spaceKeyUp){
-                                this.spaceKeyUp=false;
-                                if(this.selectedTool!='hand'){
-                                    this.tempHand=true;
-                                    this.changeCursor('hand');
+                        };
+                    }break;
+                    case 18:{//alt键,在当前选择是缩放工具的时候，按下的时候切换到缩小功能
+                        if(this.altKeyUp){
+                            if((this.selectedTool!='zoom' && !this.tempZoom) || this.zoomOut)return;
+                            this.zoomOut=true;
+                            this.altKeyUp=false;
+                            this.changeCursor('zoom',true);
+                        };
+                    }break;
+                    case 17:{//ctrl键临时切换到缩放工具
+                        if(this.ctrlKeyUp){
+                            var self=this;
+                            this.ctrlkeyDownTimer=setTimeout(function(){//规避词典软件的ctrl+c，一瞬间切换到缩放的问题
+                                self.ctrlKeyUp=false;
+                                if(self.selectedTool!='zoom'){
+                                    self.tempZoom=true;
+                                    self.changeCursor('zoom');
                                 };
-                            };
-                        }break;
-                        case 18:{//alt键,在当前选择是缩放工具的时候，按下的时候切换到缩小功能
-                            if(this.altKeyUp){
-                                if((this.selectedTool!='zoom' && !this.tempZoom) || this.zoomOut)return;
-                                this.zoomOut=true;
-                                this.altKeyUp=false;
-                                this.changeCursor('zoom',true);
-                            };
-                        }break;
-                        case 17:{//ctrl键临时切换到缩放工具
-                            if(this.ctrlKeyUp){
-                                var self=this;
-                                this.ctrlkeyDownTimer=setTimeout(function(){//规避词典软件的ctrl+c，一瞬间切换到缩放的问题
-                                    self.ctrlKeyUp=false;
-                                    if(self.selectedTool!='zoom'){
-                                        self.tempZoom=true;
-                                        self.changeCursor('zoom');
-                                    };
-                                },100);
-                            };
-                        }break;
-                        case 67:{//c键
-                            clearTimeout(this.ctrlkeyDownTimer);
-                        }break;
-                        case 27:{//ese关闭窗口
-                            if(prefs.imgWindow.close.escKey){
-                                this.remove();
-                            };
-                        }break;
-                        default:break;
-                    }
+                            },100);
+                        };
+                    }break;
+                    case 67:{//c键
+                        clearTimeout(this.ctrlkeyDownTimer);
+                    }break;
+                    case 27:{//ese关闭窗口
+                        if(prefs.imgWindow.close.escKey){
+                            this.remove();
+                        };
+                    }break;
+                    default:break;
                 }
                 e.stopPropagation();
                 return false;
