@@ -20314,8 +20314,7 @@ ImgOps | https://imgops.com/#b#`;
                         gallery.data=[];
                     }
                     var allData=await gallery.getAllValidImgs();
-                    if(allData.length<1)return;
-                    allData.target={src:img.src};
+                    allData.target = self.data;
                     gallery.data=allData;
                     gallery.load(gallery.data);
                     self.remove();
@@ -22447,8 +22446,7 @@ ImgOps | https://imgops.com/#b#`;
                         gallery.data = [];
                     }
                     var allData = await gallery.getAllValidImgs();
-                    if (allData.length < 1) return;
-                    allData.target = {src: this.img.src};
+                    allData.target = this.data;
                     gallery.data = allData;
                     gallery.load(gallery.data);
                     this.remove();
