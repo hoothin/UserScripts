@@ -3586,6 +3586,9 @@
                             return null;
                         }
                         parent = parent.parentNode;
+                        if (compareNodeName(parent, ["a"])) {
+                            nextLink = parent;
+                        }
                     }
                     if (doc === document) {
                         if (!this.linkHasHref(nextLink) && !isVisible(nextLink, _unsafeWindow)) {
@@ -8459,7 +8462,7 @@
             ruleParser.changeVisibility();
         };
         dblclickHandler = e => {
-            if (forceState == 1 || compareNodeName(e.target, ["input", "textarea", "select", "a", "button", "svg", "use", "img", "path"])) return;
+            if (forceState == 1 || compareNodeName(e.target, ["input", "textarea", "select", "a", "button", "svg", "canvas", "use", "img", "path"])) return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
