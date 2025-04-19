@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.118
+// @version      1.9.37.119
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3034,10 +3034,9 @@
                 ".next>button",
                 "a[alt=next]",
                 ".pg_area>em+a",
-                "button.next:not([disabled])",
-                ".btn_next:not([disabled])",
-                ".btn-next:not([disabled])",
                 "a#linkNext",
+                ".page>em+a",
+                "a.page_next",
                 "body a[class*=page__next]",
                 "body [class*=pager]>a.next",
                 "body [class*=pagination-next]>a",
@@ -3049,8 +3048,10 @@
                 "body [class*=paginat] [class*=next-next]",
                 "body [class*=paginat] [class*=next]",
                 "body [class*=paginat] [class*=right]",
-                ".page>em+a",
                 "[name*=nextPage]",
+                "button.next:not([disabled])",
+                ".btn_next:not([disabled])",
+                ".btn-next:not([disabled])",
                 '//button[contains(@class, "Page")][text()="Next"]',
                 '//button[contains(@class, "page")][text()="next"]'
             ];
@@ -8480,7 +8481,7 @@
                         selObj = selection && selection.cloneContents().children[0];
                         if (selObj && !compareNodeName(selObj, ["img"])) selObj = false;
                     }
-                    if (selObj) {
+                    if (selObj && selObj.trim()) {
                         return;
                     }
                 } catch (e) {}
@@ -8895,7 +8896,9 @@
                 let tdNum = 0;
                 if (exampleStyle.display == "table-row") {
                     [].forEach.call(example.children, el => {
-                        tdNum += el.colSpan || 1;
+                        if (el.offsetParent) {
+                            tdNum += el.colSpan || 1;
+                        }
                     });
                 } else {
                     [].forEach.call(example.children, el => {
