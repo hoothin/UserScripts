@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.4.14.1
+// @version              2025.4.21.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -22360,6 +22360,7 @@ ImgOps | https://imgops.com/#b#`;
                 var valid=[32,18,16,72,17,72,82,90,67,37,39];
                 if(valid.indexOf(keyCode)==-1)return;
 
+                if (window.getSelection().toString()) return;
                 e.preventDefault();
 
                 switch(keyCode){
@@ -22434,6 +22435,7 @@ ImgOps | https://imgops.com/#b#`;
             focusedKeydown:async function(e){
                 var keyCode=e.keyCode;
                 if (!prefs.floatBar.keys.enable) return;
+                if (window.getSelection().toString()) return;
                 if (this.data && this.data.img && e.key.toLowerCase() == prefs.floatBar.keys.download) {
                     downloadImg(this.img.src, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     e.preventDefault();
@@ -23754,6 +23756,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             open:async function(e,buttonType){
                 if (!this.shown || !this.data || !this.data.imgSrc) return;
+                if (window.getSelection().toString()) return;
                 if (this.data.imgSrc.indexOf("blob:") === 0) {
                     let blobUrl = await getBase64FromBlobUrl(this.data.imgSrc);
                     if (blobUrl) {
@@ -25578,7 +25581,7 @@ ImgOps | https://imgops.com/#b#`;
 
             if (event) {
                 if (event.ctrlKey || event.metaKey) return false;
-                if ((event.altKey || event.shiftKey) && window.getSelection().toString()) return false;
+                if (window.getSelection().toString()) return false;
             }
             if (floatBar && isKeyDownEffectiveTarget(event.target)) {
                 Object.keys(prefs.floatBar.keys).some(function(action) {
