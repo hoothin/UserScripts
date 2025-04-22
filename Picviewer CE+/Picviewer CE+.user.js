@@ -23591,9 +23591,30 @@ ImgOps | https://imgops.com/#b#`;
                     return true;
                 }
                 var targetPosi = getContentClientRect(this.data.img);
-                var pa = this.data.img.offsetParent || this.data.img.parentNode;
+                var pa = this.data.img.parentNode, limited = false;
                 if (pa && pa.scrollHeight > 30 && pa.scrollWidth > 30) {
                     var paPosi=pa.getBoundingClientRect();
+                    if (paPosi.width > 30 && paPosi.height > 30) {
+                        const style = unsafeWindow.getComputedStyle(this.data.img);
+                        const matrix = new DOMMatrixReadOnly(style.transform);
+                        let translateX = matrix.m41, translateY = matrix.m42, scaleX = matrix.m11, scaleY = matrix.m22;
+                        if (translateY || this.data.img.offsetTop != 0 || (scaleY && scaleY !== 1)) {
+                            if (paPosi.height < targetPosi.height - 3) {
+                                limited = true;
+                                targetPosi.top = paPosi.top;
+                            }
+                        }
+                        if (translateX || this.data.img.offsetLeft != 0 || (scaleX && scaleX !== 1)) {
+                            if (paPosi.width < targetPosi.width - 3) {
+                                limited = true;
+                                targetPosi.left = paPosi.left;
+                            }
+                        }
+                    }
+                }
+                if (!limited) {
+                    pa = this.data.img.offsetParent;
+                    paPosi=pa.getBoundingClientRect();
                     if (paPosi.width > 30 && paPosi.height > 30) {
                         const style = unsafeWindow.getComputedStyle(this.data.img);
                         const matrix = new DOMMatrixReadOnly(style.transform);
@@ -24967,7 +24988,10 @@ ImgOps | https://imgops.com/#b#`;
                             if (broEle == target) broEle = null;
                         }
                     }
-                    if (prefs.floatBar.listenBg && hasBg(target)) {
+                    if (target.children.length == 1 && !(target.textContent && target.textContent.trim()) && target.children[0].nodeName == "IMG") {
+                        target = target.children[0];
+                        found = true;
+                    } else if (prefs.floatBar.listenBg && hasBg(target)) {
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
@@ -24993,9 +25017,6 @@ ImgOps | https://imgops.com/#b#`;
                             };
                             found = true;
                         }
-                    } else if (target.children.length == 1 && !(target.textContent && target.textContent.trim()) && target.children[0].nodeName == "IMG") {
-                        target = target.children[0];
-                        found = true;
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
