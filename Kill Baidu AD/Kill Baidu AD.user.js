@@ -4,7 +4,7 @@
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @name:en            Kill Baidu AD
 // @namespace          hoothin
-// @version            1.23.11
+// @version            1.23.12
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，删除百家号
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，去除重定向，移除百家号
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，去除重定向，刪除百家號
@@ -31,7 +31,11 @@
 
 (function() {
     'use strict';
-    var MO = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver, killBaijiaType = 1, killRight, killRightStyle, killRightRegister, hidePicture, hidePictureStyle, hidePictureRegister, blackList;
+    var MO = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver, killBaijiaType = 1, killRight, killRightStyle, killRightRegister, hidePicture, keepBaijia, hidePictureStyle, hidePictureRegister, blackList;
+    killRight = !!GM_getValue("killRight");
+    hidePicture = !!GM_getValue("hidePicture");
+    keepBaijia = !!GM_getValue("keepBaijia");
+    blackList = GM_getValue("blackList") || [];
     if (MO) {
         var observer = new MO(function(records) {
             records.map(function(record) {
@@ -93,7 +97,7 @@
         }
         if (!mu || mu === 'null') return;
         if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
-            item.remove();
+            !keepBaijia && item.remove();
             return;
         } else {
             let title = item.querySelector('[data-module="title"]');
@@ -109,7 +113,7 @@
         let mu = item.getAttribute("mu");
         if (mu && mu !== 'null' && mu.indexOf("http") == 0 && mu.indexOf("nourl") == -1 && item.getAttribute("tpl") != "short_video") {
             if (/^https:\/\/baijiahao\.baidu\.com/.test(mu)) {
-                item.remove();
+                !keepBaijia && item.remove();
                 return;
             } else {
                 let title = item.querySelector('h3');
@@ -147,7 +151,7 @@
                 [].forEach.call(item.querySelectorAll("a>div>span+img"), function(img) {
                     if (img && /^https?:\/\/pic\.rmb\.bdstatic\.com/.test(img.src)) {
                         //checkBaijia(item);
-                        item.remove();
+                        !keepBaijia && item.remove();
                     }
                 });
             }
@@ -453,9 +457,6 @@
 
     function run() {
         try {
-            killRight = !!GM_getValue("killRight");
-            hidePicture = !!GM_getValue("hidePicture");
-            blackList = GM_getValue("blackList") || [];
             if (location.host === "greasyfork.org") {
                 function initConfig() {
                     let parent = document.querySelector('#additional-info');
@@ -480,6 +481,7 @@
                     };
                     let hidePictureInput = createCheckbox('隐藏图片并简化样式', hidePicture);
                     let killRightInput = createCheckbox('隐藏右边栏并多列显示', killRight);
+                    let keepBaijiaInput = createCheckbox('保留百家号', keepBaijia);
                     let importInput = document.createElement('textarea');
                     importInput.placeholder = '订阅 uBlacklist 规则：如 https://git.io/ublacklist';
                     importInput.style.width = '100%';
@@ -504,8 +506,10 @@
                     saveBtn.addEventListener("click", function(e) {
                         hidePicture = hidePictureInput.checked;
                         killRight = killRightInput.checked;
+                        keepBaijia = keepBaijiaInput.checked;
                         GM_setValue("hidePicture", hidePicture);
                         GM_setValue("killRight", killRight);
+                        GM_setValue("keepBaijia", keepBaijia);
                         if (importInput.value) {
                             alert("读取规则中……");
                             let importUrls = importInput.value.trim().split("\n");
