@@ -3192,7 +3192,7 @@
                     if (!this.verifyElement(aTag)) continue;
                     if (aTag.dataset && aTag.dataset.preview) continue;
                     let availableHref = aTag.href && aTag.href.length < 250 && !/^(javascript:|#)/.test(aTag.href);
-                    if (availableHref && /next\-?(page)?$|\/video\/|\/vod\/play\//i.test(aTag.href)) continue;
+                    if (availableHref && /next\-?(page)?$|\/vod\/play\//i.test(aTag.href)) continue;
                     if (compareNodeName(aTag.parentNode, ["blockquote"])) continue;
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
