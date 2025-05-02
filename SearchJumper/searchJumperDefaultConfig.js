@@ -132,7 +132,7 @@ switch (lang) {
                     },
                     {
                         "name": "🔗  打开文字链接",
-                        "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^ \\w\\-_\\.~!\\*';:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/.*([ :：]|^)(1[a-z0-9]{22,}).*?\\b([a-z0-9]{4}\\b|$).*/i,\"https://pan.baidu.com/s/$1?pwd=$2\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
+                        "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^\\s\\w\\-_\\.~!\\*';:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/https:\\/\\/pan\\.baidu\\.com\\/s\\//,\"\").replace(/.*([\\s:：]|^)(1[a-z_0-9\\-]{22,})[\\s\\S]*?\\b([a-z0-9]{4}\\b|$).*/i,\"https://pan.baidu.com/s/$2?pwd=$3\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
                         "kwFilter": "\\w\\S*\\.\\S*\\w|\\w.*[点。].*\\w|1[a-zA-Z0-9]{22,}",
                         "description": "支持类似“pan点baidu。com😄河蟹”以及“1bP23pzUpIV4CMuoMjOfxFA提取码:prt4”的分享链接",
                         "nobatch": true
@@ -285,14 +285,9 @@ switch (lang) {
                         "openInNewTab": true
                     },
                     {
-                        "name": "便宜服务器",
-                        "url": "https://my.racknerd.com/aff.php?aff=12390",
-                        "description": "性价比最高的服务器，2刀一个月"
-                    },
-                    {
-                        "name": "稳定服务器vultr",
-                        "url": "https://www.vultr.com/?ref=7427668",
-                        "description": "老牌 VPS 服务商，5刀一个月。胜在稳定"
+                        "name": "☁️便宜服务器",
+                        "url": "https://my.racknerd.com/aff.php?aff=12390&pid=903",
+                        "description": "👍性价比最高的服务器，一年仅需11美元\n可以用支付宝付款\n已经稳定运行6年"
                     },
                     {
                         "name": "便宜域名",
@@ -676,13 +671,8 @@ switch (lang) {
                     },
                     {
                         "name": "Cheap VPS",
-                        "url": "https://my.racknerd.com/aff.php?aff=12390",
-                        "description": "Most cost-effective server, $2 per month"
-                    },
-                    {
-                        "name": "Stable VPS",
-                        "url": "https://www.vultr.com/?ref=7427668",
-                        "description": "Veteran VPS provider, $5 per month, wins in stability"
+                        "url": "https://my.racknerd.com/aff.php?aff=12390&pid=903",
+                        "description": "Most cost-effective server, $11 per year"
                     },
                     {
                         "name": "Cheap Domain",
