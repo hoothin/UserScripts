@@ -534,8 +534,22 @@ var siteInfo = [
         name: "Pixiv",
         url: /pixiv\.net|pximg\.net/,
         src: /pximg\.net\/c\/\d+x\d+/i,
-        r: /pximg\.net\/c\/\d+x\d+.*\/img\/(.*)_.*$/i,
-        s: ["pximg.net/img-original/img/$1.jpg","pximg.net/img-original/img/$1.png"]
+        r: [/pximg\.net\/c\/\d+x\d+.*\/img\/(.*)_.*$/i, /(pixiv.net\/img\d+\/img\/.+\/\d+)_[ms]\.(\w{2,5})$/i],
+        s: [["pximg.net/img-original/img/$1.jpg","pximg.net/img-original/img/$1.png"],
+            "$1.$2"],
+        getImage: function(a, p) {
+            if (this.src && a && /(\/artworks\/|member_illust\.php\?mode="|\/group\/)/.test(a.href)) {
+                let dateMatch = this.src.match(/\/img\/(\d+\/(\d\d\/?(?!\d{3})){5})\/(\d+)_/);
+                let countMatch = a.outerHTML.match(/<span>(\d+)<\/span>/);
+                if (dateMatch && countMatch) {
+                    return {all:Array(parseInt(countMatch[1])).keys().reduce(
+                      (acc, cur) => acc.concat(`https://i.pximg.net/img-master/img/${dateMatch[1]}/${dateMatch[3]}_p${cur}_master1200.jpg`),
+                      []
+                    )}
+                }
+            }
+            return null;
+        }
     },
     {
         name: "Wallhaven",
@@ -545,7 +559,7 @@ var siteInfo = [
             /th\.wallhaven\.cc\/(small|lg)\/(.*)?\/(.*)\..*/i],
         s: [["wallpapers/full/wallhaven$1.jpg","wallpapers/full/wallhaven$1.png"],
             ["w.wallhaven.cc/full/$2/wallhaven-$3.jpg","w.wallhaven.cc/full/$2/wallhaven-$3.png"]],
-        getImage() {
+        getImage: function() {
             let srcReg1 = /wallpapers\/thumb\/small\/th(.*)\./i;
             let srcReg2 = /th\.wallhaven\.cc\/(small|lg)\/(.*)?\/(.*)\..*/i;
             let res1 = "wallpapers/full/wallhaven$1.";
@@ -1138,12 +1152,6 @@ var siteInfo = [
             var newsrc= $ ? ('http://' + $[1] + ($[4] ? $[4] + '=' : $[2]) + 's2634' + ($[3] || '')) : '';
             if(newsrc!=this.src)return newsrc;
         }
-    },
-    {
-        name: "pixiv",
-        src: /pixiv\.net/i,
-        r: /(pixiv.net\/img\d+\/img\/.+\/\d+)_[ms]\.(\w{2,5})$/i,
-        s: "$1.$2"
     },
     {
         name: "douban",
