@@ -23612,8 +23612,8 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 }
-                if (!limited) {
-                    pa = this.data.img.offsetParent;
+                pa = this.data.img.offsetParent;
+                if (pa && !limited) {
                     paPosi=pa.getBoundingClientRect();
                     if (paPosi.width > 30 && paPosi.height > 30) {
                         const style = unsafeWindow.getComputedStyle(this.data.img);
