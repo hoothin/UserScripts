@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.4.21.1
+// @version              2025.5.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1570604/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1582659/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -24182,6 +24182,7 @@ ImgOps | https://imgops.com/#b#`;
             if(!src)return;
 
             var ret = {
+                all: matchedRule.all,
                 src: src,                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
                 type: type,                // 通过哪种方式得到的
@@ -24498,6 +24499,7 @@ ImgOps | https://imgops.com/#b#`;
             getImage: function(img, a, p, target) {
                 var newSrc, rule;
                 var base64Img = /^data:/i.test(img.src);
+                this.all = null;
                 for (var i = 0; i < this.rules.length; i++) {
                     rule = this.rules[i];
                     if (rule.src && !toRE(rule.src).test(img.src)) continue;
@@ -24536,8 +24538,12 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if (rule.getImage) {
                         newSrc = rule.getImage.call(target || img, a, p, rule);
+                        if (newSrc && newSrc.all) {
+                            this.all = newSrc.all;
+                            newSrc = this.all[0];
+                        }
                     } else newSrc = null;
-                    if (!base64Img && rule.r && img.src) {
+                    if (!base64Img && rule.r && img.src && !Array.isArray(newSrc)) {
                         if (!newSrc) newSrc = img.currentSrc || img.src;
                         newSrc = this.replaceByRule(newSrc, rule);
                     }
@@ -24913,6 +24919,11 @@ ImgOps | https://imgops.com/#b#`;
                     throwErrorInfo(ex);
                 }
                 if (nsrc) {
+                    let all;
+                    if (nsrc && nsrc.all) {
+                        all = nsrc.all;
+                        nsrc = all[0];
+                    }
                     let src = nsrc, imgSrc = prefs.floatBar.listenBg && hasBg(target) ? targetBg : nsrc;
                     if (Array.isArray(nsrc) && nsrc.length == 2) {
                         imgSrc = nsrc[0];
@@ -24939,6 +24950,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     let noActual = src === imgSrc;
                     result = {
+                        all: all || matchedRule.all,
                         src: src,
                         type: matchedRule.xhrLink && noActual ? "link" : "rule",
                         imgSrc: imgSrc,
@@ -25171,6 +25183,7 @@ ImgOps | https://imgops.com/#b#`;
                                             description = attr ? node.getAttribute(attr) : (node.getAttribute('title') || node.textContent);
                                         }
                                     }
+                                    result.all = matchedRule.all;
                                     result.src = src;
                                     result.type = type;
                                     result.noActual = false;
