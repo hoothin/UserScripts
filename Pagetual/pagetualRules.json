@@ -5337,6 +5337,7 @@
     "nextLink": "a[title='下一页']",
     "action": 2,
     "pageElement": "div#m_posts",
+    "pageAction": "doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)",
     "iframeInit": "win.self=win.top;"
 },
 {
