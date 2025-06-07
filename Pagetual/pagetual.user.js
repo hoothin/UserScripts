@@ -3276,7 +3276,8 @@
                             let curHref = next4.getAttribute("href");
                             let curPageReg = new RegExp("(.*)" + (pageNum + 1) + afterStr.replace(/([\.\?])/g, '\\$1'));
                             let otherPageHref = curHref.replace(curPageReg, `$1${pageNum}${afterStr}`);
-                            let otherPageEle = body.querySelector(`a[href='${otherPageHref}']`);
+                            let otherPageEles = body.querySelectorAll(`a[href='${otherPageHref}']`);
+                            let otherPageEle = otherPageEles.length && otherPageEles[otherPageEles.length - 1];
                             if (!otherPageEle) {
                                 otherPageHref = curHref.replace(curPageReg, `$1${pageNum + 2}${afterStr}`);
                                 otherPageEle = body.querySelector(`a[href='${otherPageHref}']`);
