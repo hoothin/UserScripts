@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.17
+// @version      2.8.3.18
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -977,6 +977,7 @@ if (window.top != window.self) {
             charsetValid = false;
         }
     } else charsetValid = false;
+    var iframePool = [];
     function indexDownload(aEles, noSort){
         if(aEles.length<1)return;
         initTxtDownDiv();
@@ -1033,6 +1034,16 @@ if (window.top != window.self) {
             if (prefix) {
                 item.innerText = prefix.replace(/\$i/g, ++curIndex) + item.innerText;
             }
+        }
+        function getIframe() {
+            if (iframePool && iframePool.length) return iframePool.shift();
+            let iframe = document.createElement('iframe');
+            iframe.name = 'pagetual-iframe';
+            iframe.width = '100%';
+            iframe.height = '1000';
+            iframe.frameBorder = '0';
+            iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
+            return iframe;
         }
         var insertSigns=[];
         // var j=0,rCats=[];
@@ -1188,7 +1199,7 @@ if (window.top != window.self) {
                     });
                 };
                 if (useIframe) {
-                    let iframe = document.createElement('iframe'), inited = false, failedTimes = 0;
+                    let iframe = getIframe(), inited = false, failedTimes = 0;
                     let loadtimeout;
                     let loadIframe = src => {
                         iframe.src = src;
@@ -1197,12 +1208,7 @@ if (window.top != window.self) {
                             iframe.src = src;
                         }, 20000);
                     };
-                    iframe.name = 'pagetual-iframe';
-                    iframe.width = '100%';
-                    iframe.height = '1000';
-                    iframe.frameBorder = '0';
                     iframe.sandbox = iframeSandbox || "allow-same-origin allow-scripts allow-popups allow-forms";
-                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
                     iframe.addEventListener('load', e => {
                         if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
                         if (inited) return;
@@ -1280,7 +1286,15 @@ if (window.top != window.self) {
                             } catch(e) {
                                 console.debug("Stop as cors");
                             }
-                            if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                            if (iframe && iframe.parentNode) {
+                                try {
+                                    iframe.src = 'about:blank';
+                                } catch (e) {
+                                    console.error("Error clearing iframe src:", e);
+                                }
+                                iframe.parentNode.removeChild(iframe);
+                                iframePool.push(iframe);
+                            }
                         }
                         setTimeout(() => {
                             checkIframe();
