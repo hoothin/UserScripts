@@ -5051,7 +5051,8 @@
     "action": 1,
     "url": "^https://search\\.bilibili\\.com",
     "pageElement": "ul>li.video-item,div.video-list.row>*",
-    "sandbox": false
+    "sandbox": false,
+    "waitElement": ".bili-video-card__wrap"
 },
 {
     "name": "bilibili space",
