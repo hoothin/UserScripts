@@ -6424,5 +6424,15 @@
     "action": 0,
     "pageElement":".web-result>li",
     "pagePre": "let evalData=response.match(/\\*<!\\[CDATA\\[\\*\\/\\s+(window\\.[\\s\\S]*?)window\\.__PRELOADED_STATE_PREFERENCE_PAGE__/)[1]; eval(evalData); let eles = []; window.__PRELOADED_STATE__.searchResults.data.webSearchResult.resultElements.forEach(item=>{let ele=document.createElement('li');ele.innerHTML=`<li><div class='url'><img class='favicon' onerror=\"this.src=\\'https://mprewardserp.blob.core.windows.net/serp/newserp/static/img/519bc954a9bb7a7ec36c61e83fa79f40.svg'\" src='${item.url.replace(/^(\\w+:\\/\\/.*?\\/).*/, '$1favicon.ico')}' width='14px' height='14px' alt='Favicon' style='display: block;'><a id='search-url' href='${item.url}' target='_self' style='padding-left: 10px;'>${item.dispUrl}</a></div><a class='window' href='${item.url}' target='_self'><h2 class='title'>${item.title}</h2></a> <br><div><a class='href-description' href='${item.url}' target='_self'><p class='description'>${item.summary}</p></a></div></li>`;eles.push(ele);});return eles;"
+},
+{
+    "name": "EpicentrK - Герметики та мастики",
+    "author": "epicentrkScraper",
+    "url": "^https?://epicentrk\\.ua/ua/shop/germetiki-i-silikony/.*$",
+    "example": "https://epicentrk.ua/ua/shop/germetiki-i-silikony/",
+    "nextlink": "div.pagination a.pagination__btn--next",
+    "replaceElement": "div.product-card",
+    "pageElement": "div.products-catalog__list",
+    "action": 2
 }
 ]
