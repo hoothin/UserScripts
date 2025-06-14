@@ -109,6 +109,7 @@
             [].forEach.call(document.querySelectorAll("video"), video => {
                 video.removeAttribute && video.removeAttribute("autoplay");
                 video.pause && video.pause();
+                video.muted = true;
             });
         }, 1000);
     };
@@ -3597,7 +3598,7 @@
                             this.nextLinkHref = false;
                             return null;
                         }
-                        let video = document.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+                        let video = document.querySelector("video,#videoContainer,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
                         if (video) {
                             if (video.offsetParent && video.name !== 'pagetual-iframe') {
                                 let scrollWidth = video.scrollWidth || video.offsetWidth;
@@ -8439,7 +8440,7 @@
             }, 100);
             requestAnimationFrame(() => {
                 let curScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                if (curScroll <= 20) {
+                if (curScroll && curScroll <= 50) {
                     if (sideController.inited && sideController.pagenum.innerHTML !== "1") {
                         sideController.pagenum.innerHTML = createHTML("1");
                     }
