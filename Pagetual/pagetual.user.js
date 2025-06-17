@@ -8439,8 +8439,9 @@
                 scrolling = false;
             }, 100);
             requestAnimationFrame(() => {
-                let curScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                if (curScroll && curScroll <= 50) {
+                let curScroll = document.documentElement.scrollTop || getBody(document).scrollTop;
+                let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+                if (scrollH && curScroll <= 60) {
                     if (sideController.inited && sideController.pagenum.innerHTML !== "1") {
                         sideController.pagenum.innerHTML = createHTML("1");
                     }
