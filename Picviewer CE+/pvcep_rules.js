@@ -930,7 +930,7 @@ var siteInfo = [
         url: /gelbooru\.com/,
         src: /(thumbnails|samples)\/(.*)\/(thumbnail|sample)_/i,
         r: /.*\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/i,
-        s: ["https://img4.gelbooru.com/images/$2/$4.png","https://img4.gelbooru.com/images/$2/$4.jpg"]
+        s: ["https://img4.gelbooru.com/images/$2/$4.png","https://img4.gelbooru.com/images/$2/$4.jpg","https://img4.gelbooru.com/images/$2/$4.jpeg"]
     },
     {
         name: "donmai",
