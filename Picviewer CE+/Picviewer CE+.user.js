@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.6.7.1
+// @version              2025.6.24.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1582659/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1613188/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -22357,7 +22357,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             focusedKeyup:function(e){
                 var keyCode=e.keyCode;
-                var valid=[32,18,16,72,17,72,82,90,67,37,39];
+                var valid=[27,32,18,16,72,17,72,82,90,67,37,39];
                 if(valid.indexOf(keyCode)==-1)return;
 
                 if (window.getSelection().toString()) return;
@@ -22421,6 +22421,12 @@ ImgOps | https://imgops.com/#b#`;
                         break;
                     case 37:
                         this.switchImage(false);
+                        break;
+                    case 27:
+                        if (prefs.imgWindow.close.escKey) {
+                            this.remove();
+                            e.stopPropagation();
+                        }
                         break;
                     default:break;
                 };
@@ -22543,9 +22549,6 @@ ImgOps | https://imgops.com/#b#`;
                         clearTimeout(this.ctrlkeyDownTimer);
                     }break;
                     case 27:{//ese关闭窗口
-                        if(prefs.imgWindow.close.escKey){
-                            this.remove();
-                        };
                     }break;
                     default:break;
                 }
