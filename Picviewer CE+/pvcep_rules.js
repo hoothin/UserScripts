@@ -1646,7 +1646,7 @@ var siteInfo = [
     },
     {
         name: "Bangumi",
-        url: /^https:\/\/bgm\.tv\//,
+        url: /^https:\/\/(bgm|bangumi)\.tv\//,
         r: ["/c/","/m/"],
         s: "/l/"
     },
