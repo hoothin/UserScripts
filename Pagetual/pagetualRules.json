@@ -4783,7 +4783,7 @@
     "pageBar": "pageBar.classList.add('j_thread_list');pageBar.dataset.field='{}'",
     "url": "^https?://tieba\\.baidu\\.com/.+",
     "pageElement": "ul#thread_list>li",
-    "pageNum": "&pn={50*($p-1)}",
+    "pageNum": "[\\?&]pn={50*($p-1)}",
     "nextLink": ".next.pagination-item "
 },
 {
@@ -4792,7 +4792,7 @@
     "nextLink": "//div[@class=\"pb_footer\"]//a[starts-with(text(), '下一页')]",
     "pageElement": "//div[@class=\"p_postlist\"]/div[starts-with(@class, 'l_post')]",
     "action": 1,
-    "pageNum": "&pn={$p}",
+    "pageNum": "[\\?&]pn={$p}",
     "url": "^https?://tieba\\.baidu\\.com/p/.+",
     "wait": "if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){var actualTop=lzl.offsetTop;var current=lzl.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.body.scrollTop=actualTop;doc.documentElement.scrollTop=actualTop;return false}else{return true}",
     "history": 0
