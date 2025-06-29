@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1613206/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1615955/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -25217,7 +25217,7 @@ ImgOps | https://imgops.com/#b#`;
             var checkUniqueImgWin = function() {
                 if (canPreview) {
                     if (result.type != "link" && result.type != "rule" && result.src == result.imgSrc) {
-                        if (result.imgAS.w < result.imgCS.w * 1.5 && result.imgAS.h < result.imgCS.h * 1.5) {
+                        if (result.imgAS.w < result.imgCS.w * 1.6 && result.imgAS.h < result.imgCS.h * 1.6) {
                             if (result.img && result.img.childElementCount) return false;
                             var wSize = getWindowSize();
                             if (prefs.floatBar.globalkeys.invertInitShow && result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
