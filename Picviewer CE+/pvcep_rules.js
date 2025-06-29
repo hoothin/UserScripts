@@ -425,7 +425,7 @@ var siteInfo = [
     {
         name: '知乎',
         url: /(zhihu|zhimg)\.com/,
-        r: /_(b|xs|s|l|\d+(x\d+|w))\./i,
+        r: /_(b|qhd|xs|s|l|\d+(x\d+|w))\./i,
         s: "."
     },
     {
