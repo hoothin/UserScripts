@@ -13325,6 +13325,12 @@ ImgOps | https://imgops.com/#b#`;
                                     loadEnd.call(img,e);
                                 };
                             };
+                            iRReadyFn = iRReadyFn.filter(function(item) {
+                                return item !== readyHandler
+                            });
+                            isrcs = isrcs.filter(function(item) {
+                                return item !== src
+                            });
                         }break;
                         case 'ready':{
                             if(!ready || readyHandler.done)return;
@@ -13354,6 +13360,12 @@ ImgOps | https://imgops.com/#b#`;
                     img:img,
                     abort:function(){
                         if(!loadEndDone){
+                            iRReadyFn = iRReadyFn.filter(function(item) {
+                                return item !== readyHandler
+                            });
+                            isrcs = isrcs.filter(function(item) {
+                                return item !== src
+                            });
                             aborted=true;
                             removeListener();
                             img.src= prefs.icons.brokenImg_small;
@@ -25387,7 +25399,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (!canPreview) return;
                     let target = e.target;
                     if (target.nodeName == "PICTURE"){
-                        target = target.querySelector("img") || target;
+                        target = target.lastElementChild || target;
                     }
                     if (target.nodeName != 'IMG') return;
                 }
