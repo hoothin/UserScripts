@@ -2,7 +2,7 @@
 // @name         DownloadAllContent
 // @name:zh-CN   怠惰小说下载器
 // @name:zh-TW   怠惰小説下載器
-// @name:ja      怠惰者小説ダウンロードツール
+// @name:ja      怠惰小説ダウンローダー
 // @namespace    hoothin
 // @version      2.8.3.18
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
@@ -395,6 +395,57 @@ if (window.top != window.self) {
                 downloadShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B5%D9%84",
                 downloadSingleShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%B5%D9%81%D8%AD%D8%A9%20%D9%88%D8%A7%D8%AD%D8%AF%D8%A9",
                 downloadCustomShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D9%85%D8%AE%D8%B5%D8%B5"
+            };
+            break;
+        case "ja":
+        case "ja-JP":
+            i18n={
+                fetch:"小説のダウンロードを開始",
+                info:"提供元：#t#\nこの作品は、怠惰小説ダウンローダー（DownloadAllContent）を使ってダウンロードされました。",
+                error:"このコンテンツの取得に失敗しました",
+                downloading:"%s/%sエピソードをダウンロード済み<br>%sをダウンロード中",
+                complete:"全%sエピソードのダウンロードが完了しました",
+                del:"テキストの乱れを削除するCSSセレクターを設定",
+                custom:"カスタムルールでダウンロード",
+                customInfo:"URLまたは章のCSSセレクターを入力してください",
+                reSort:"章をタイトル順で並べ替え",
+                reSortUrl:"章をURL順で並べ替え",
+                setting:"オプション設定",
+                searchRule:"サイトの検索ルール",
+                abort:"この章をスキップ",
+                save:"現在の設定を保存",
+                saveAsMd:"Markdown形式で保存",
+                saveAsJSON: "JSON形式で保存",
+                downThreadNum:"同時ダウンロードスレッド数を設定（負の値はシングルスレッドでのダウンロード間隔）",
+                enableTouch:"モバイルで画面をスライドして正方形を描くとダウンロードを開始",
+                customTitle:"カスタム章タイトル（ページ内のテキストに対応するセレクターを入力）",
+                saveUrl: "URLを保存",
+                disableAutoStartSave: "自動保存を無効にする",
+                maxDlPerMin:"1分あたりの最大ダウンロード数",
+                reSortDefault:"デフォルト（ページ内の位置）で章を並べ替え",
+                reverseOrder:"章の並び順を反転",
+                saveBtn:"設定を保存",
+                saveOk:"保存しました",
+                nextPage:"章内のページを検出",
+                nextPageReg:"カスタムページネーション正規表現",
+                retainImage:"本文中の画像のURLを保持",
+                minTxtLength:"検出された本文の文字数がこの数より少ない場合、再取得を試行",
+                showFilterList:"ダウンロード前に章のフィルタリング・並べ替えウィンドウを表示",
+                ok:"OK",
+                close:"閉じる",
+                dacSortByPos:"ページ内の位置で並べ替え",
+                dacSortByUrl:"URLで並べ替え",
+                dacSortByName:"章の名前で並べ替え",
+                reverse:"選択を反転",
+                dacUseIframe:"iframeを使ってコンテンツをバックグラウンドで読み込む（低速）",
+                dacSaveAsZip:"Zip形式でダウンロード",
+                dacSetCustomRule:"ルールを編集",
+                dacAddUrl:"章を追加",
+                prefix:"章のタイトルにプレフィックスを追加",
+                dacStartDownload:"選択した章をダウンロード",
+                downloadShortcut:"章ダウンロードのショートカット",
+                downloadSingleShortcut:"単一ページダウンロードのショートカット",
+                downloadCustomShortcut:"カスタムダウンロードのショートカット"
             };
             break;
         default:
