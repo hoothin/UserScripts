@@ -8858,6 +8858,7 @@
                 if (e.target !== pageText) return;
                 if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
+                e.stopPropagation();
                 let nextEle = pageBar && pageBar.nextElementSibling;
                 if (nextEle && nextEle.name == 'pagetual-iframe') {
                     if (curForceIframe == nextEle) {
