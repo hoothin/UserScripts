@@ -7049,7 +7049,8 @@
         blacklistInput.style.height = "500px";
         blacklistInput.style.display = "none";
         blacklistInput.spellcheck = false;
-        blacklistInput.placeholder = "http://*.xxx.com/*/y\n/^https?://.*\\.xxx\\.com/i \t\t<= Regexp\n//http://*.aaa.com/ \t\t<= Disable\n/*http://*.bbb.com\nhttp://*.ccc.com*/ \t\t<= Block comment";
+        blacklistInput.placeholder = "http://*.xxx.com/*/y\n\n/^https?://.*\\.xxx\\.com/i \t\t<= Regexp\n\n// http://*.aaa.com/ \t\t<= Disable\n\n/* http://*.bbb.com\nhttp://*.ccc.com\nhttp://*.ddd.com */ \t\t<= Block comment";
+        blacklistInput.title = blacklistInput.placeholder;
         blacklistInput.value = rulesData.blacklist ? rulesData.blacklist.join("\n") : "";
         let blacklistBtn = document.createElement("button");
         blacklistBtn.innerText = i18n("editBlacklist");
@@ -7460,6 +7461,11 @@
                     if (curGlob.indexOf("/") == 0) {
                         let regMatch = curGlob.match(/^\/(.*)\/(\w*)$/);
                         if (regMatch && new RegExp(regMatch[1], regMatch[2]).test(href)) {
+                            forceState == 1;
+                            return;
+                        }
+                    } else if (curGlob.indexOf("^") == 0) {
+                        if (new RegExp(curGlob).test(href)) {
                             forceState == 1;
                             return;
                         }
