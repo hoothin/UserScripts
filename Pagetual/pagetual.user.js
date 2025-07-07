@@ -7036,7 +7036,9 @@
             ruleParser.customRules.unshift(rulesData.editTemp);
             rulesData.editTemp = null;
             storage.setItem("rulesData", rulesData);
-            customRulesInput.previousElementSibling.scrollIntoView();
+            setTimeout(() => {
+                customRulesInput.previousElementSibling.scrollIntoView();
+            }, 300);
         }
         customRulesInput.style.width = "100%";
         customRulesInput.style.height = "800px";
