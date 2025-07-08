@@ -2746,10 +2746,10 @@
 },
 {
     "name": "nhentai - Free Hentai Manga, Doujinshi and Adult Comics",
-    "url": "^https?://nhentai\\.website/g/",
-    "example": "https://nhentai.website/g/514378/70/",
-    "preload": 0,
-    "action": 3
+    "url": "^https?://nhentai\\.net/g/\\d+/",
+    "example": "https://nhentai.net/g/583072/1",
+    "pageElement": "#image-container",
+    "nextLink": "#content > section.reader-bar > div.reader-pagination > a.next"
 },
 {
     "name": "Danbooru",
