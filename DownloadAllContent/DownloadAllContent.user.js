@@ -1157,7 +1157,7 @@ if (window.top != window.self) {
                                 }
                             }
                             let base = doc.querySelector("base");
-                            let nextPages = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
+                            let nextPages = !disableNextPage && (!processFunc || nextPageFunc) && await checkNextPage(doc, base ? base.href : aTag.href);
                             if (nextPages) {
                                 if (!nextPages.length) nextPages = [nextPages];
                                 nextPages.forEach(nextPage => {
