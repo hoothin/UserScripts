@@ -2436,21 +2436,30 @@
                         }
                     }
                     if (!pageElement || pageElement.length === 0) {
-                        pageElementSel = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
-                        pageElement = getAllElements(pageElementSel, doc);
+                        let pageElementSelTrim = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
+                        pageElement = getAllElements(pageElementSelTrim, doc);
                         if (pageElement && pageElement.length === 1) {
                             if (targetChild) {
                                 pageElement = pageElement.children;
                             }
-                            this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
+                            this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
                         } else if (!pageElement || pageElement.length === 0) {
-                            pageElementSel = pageElementSel.replace(/[^\s\>]+\+/g, "");
-                            pageElement = getAllElements(pageElementSel, doc);
+                            pageElementSelTrim = pageElementSel.replace(/[^\s\>]+\+/g, "");
+                            pageElement = getAllElements(pageElementSelTrim, doc);
                             if (pageElement && pageElement.length === 1) {
                                 if (targetChild) {
                                     pageElement = pageElement.children;
                                 }
-                                this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
+                                this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
+                            } else if (!pageElement || pageElement.length === 0) {
+                                pageElementSelTrim = pageElementSel.replace(/\.[\w\-_]+/g, "");
+                                pageElement = getAllElements(pageElementSelTrim, doc);
+                                if (pageElement && pageElement.length === 1) {
+                                    if (targetChild) {
+                                        pageElement = pageElement.children;
+                                    }
+                                    this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
+                                }
                             }
                         }
                     }
