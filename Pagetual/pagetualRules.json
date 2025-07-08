@@ -2752,6 +2752,13 @@
     "action": 3
 },
 {
+    "name": "nhentai.net - Free Hentai Manga, Doujinshi and Adult Comics",
+    "url": "^https?://nhentai\\.net/g/\\d+/",
+    "example": "https://nhentai.net/g/583072/1",
+    "pageElement": "#image-container",
+    "nextLink": "#content > section.reader-bar > div.reader-pagination > a.next"
+},
+{
     "name": "Danbooru",
     "author": "skofkyo",
     "example": "danbooru.donmai.us，e621.net",
