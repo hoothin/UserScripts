@@ -47,7 +47,7 @@
 
  輸入章節的 css 選擇器可以更精確地標記章節連結。例如`.l_chaptname>a`，代表 class 為 l_chaptname 的元素下的 a 連結。
  如果有内分頁，且無法用正則提取下一頁連結，可直接用選擇器來獲取，例如`.l_chaptname>a@@@@@@next:{.curr+a}`。
- 如果正文提取錯誤，亦可使用選擇器來獲取，例如`.l_chaptname>a@@@@@@@div#content`。
+ 如果正文提取錯誤，亦可使用選擇器來獲取，例如`.l_chaptname>a@@@@@@@div#content`或者`.l_chaptname>a@@@@@@next:{.curr+a}@div#content`。
  下載內容可能含有幹擾碼，此時只需點擊**懶人小說下載設置**，輸入幹擾碼的 css 選擇器即可排除幹擾碼。例如 `.mask,.ksam,font.jammer`，代表刪除 class 為 mask 或者 ksam 的元素或者 class 為 jammer 的 font 元素。
 ### 第六層心法（超難）
 
