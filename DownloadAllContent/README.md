@@ -1,29 +1,29 @@
-起點等都推薦用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，遇到沒人願意適配的小站再考慮我的腳本。
+起點等主流網站建議優先使用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，如果遇到沒有人願意支援的小網站，再考慮我的腳本。。
 
-勿用于版權站，如造成侵權或對象站點損失，後果自負。
+請勿用於有版權的網站，如造成侵權或對目標網站造成損失，後果請自行負責。
 
-輕量級抓取腳本，用於下載網頁小説或其他文字內容，理論上通用於任何靜態寫入正文的小說網站、論壇、貼吧等而無需規則。
+輕量級抓取腳本，用於下載網路小說或其他文字內容。理論上，它通用於任何將內文靜態寫入網頁的小說網站、論壇、貼吧等，且無須另外設定規則。
 
-腳本會自動檢索頁面中的主要內容並下載（<del>省得複製完gal攻略還要手動逐條刪除「某某某13級頭銜水龍王發表於X年X月X日來自XX客戶端」</del>）。
-如果位於小說目錄頁會遍歷所有章節並排序拼接後存為TXT文檔。
+腳本會自動偵測並下載頁面中的主要內容（<del>省得複製完gal攻略還要手動逐條刪除「某某某13級頭銜水龍王發表於X年X月X日來自XX客戶端」</del>）。
+如果當前在小說目錄頁，腳本會遍歷所有章節，排序後串接成一個 TXT 文字檔。
 
 [![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts#StarMe) ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
 
 ---
 
 # 操作說明
-+ 打開小說目錄頁、論壇或貼吧內容頁
-+ 按下 `CTRL+F9` 或點擊命令菜單
-+ 按下 `SHIFT+CTRL+F9` 忽略目錄，僅下載當前頁
-+ 建議打開`下載前顯示章節篩選排序視窗`
++ 開啟小說目錄頁、論壇或貼吧的內容頁面
++ 按下 `CTRL+F9` 或點擊使用者腳本管理器中的指令選單
++ 按下 `SHIFT+CTRL+F9` 可忽略目錄，僅下載當前頁面
++ 建議開啟`下載前顯示章節篩選排序視窗`的選項
 
-若是遇到下載出錯的站點，可隨意提交 issue 至 [Github](https://github.com/hoothin/UserScripts/)。請幫我點亮 Star !
+如果遇到下載出錯的網站，歡迎到 [Github](https://github.com/hoothin/UserScripts/) 提交 issue。也請順手幫我點亮 Star！
 
-*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.com/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD)。*
+*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.com/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。也歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD)。*
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
-[怠惰小説下載器 ZIP 擴充](https://greasyfork.org/scripts/476943) 下載時分章節保存 TXT 並打包為 ZIP
+[怠惰小説下載器 ZIP 擴充](https://greasyfork.org/scripts/476943) 下載時將各章節分別存為 TXT，並打包成 ZIP 檔
 
 [圖片驗證碼辨識](https://github.com/hoothin/ImgCodeCheck) 開啟`保留內文圖片的網址`後配合 ZIP 擴充可自動轉換圖片文字，詳閱[愛發電](https://afdian.com/p/c7fc3abc8e8411ee9b1852540025c377)
 
@@ -35,43 +35,43 @@
  **CTRL+F9** 就完事了唄。
 ### 第二層心法（超易）
 
- 倘若章節連結沒有xx章、xx節、xx話之類的特徵字樣，可點擊**自定義下載**，輸入隨便一個章節名，例如 「`眾神的風車`」，即可標記所有同級連結為目錄章節並下載。假如頁面有兩套章節格式，也可標記多個，例如「`眾神的風車,風車的眾神`」。亦可標記排除項，例如「`眾神的風車01!02!03,風車的眾神!鐵幕`」，代表標記「眾神的風車01」同級連結並排除含有 02 的項和含有 03 的項，同時標記「風車的眾神」同級連結並排除含有「鐵幕」的項。
+ 倘若章節連結沒有xx章、xx節、xx話之類的特徵字樣，可點擊**自訂下載**，輸入任意一個章節名稱，例如 「`眾神的風車`」，即可標記所有同級的連結為目錄章節並下載。假如頁面有兩種章節格式，也可以標記多個，例如「`眾神的風車,風車的眾神`」。亦可標記排除項，例如「`眾神的風車01!02!03,風車的眾神!鐵幕`」，這代表：標記「眾神的風車01」的同級連結，但排除其中含有「02」和「03」的項目；同時標記「風車的眾神」的同級連結，並排除含有「鐵幕」的項目。
 ### 第三層心法（略易）
 
- 如果內頁沒有正文，但章節連結與真實內容連結有關聯，可通過**自定義下載**，替換連結內容獲取真實內容。例如 「`眾神的風車@@articles@@articlescontent`」，即可替換章節 URL 中的 articles 為 articlescontent 並自動獲取內容。
+ 如果內頁沒有正文，但章節連結與真實內容連結有關聯，可透過**自訂下載**，替換連結內容來獲取真實內容。例如輸入 「`眾神的風車@@articles@@articlescontent`」，即可替換章節 URL 中的 articles 為 articlescontent 並自動獲取內容。
 ### 第四層心法（略難）
 
- 如果連結無法由直接替換得到最終地址，可用正則替換，例如【`眾神的風車@@articles(\d+)@@articlescontent_$1b`】，即可替換章節 URL 中的 articles1、articles2 為
+ 如果連結無法由直接替換得到最終網址，可用正規表示式替換，例如【`眾神的風車@@articles(\d+)@@articlescontent_$1b`】，即可替換章節 URL 中的 articles1、articles2 為
  `articlescontent_1b、articlescontent_2b`
 ### 第五層心法（難）
 
  輸入章節的 css 選擇器可以更精確地標記章節連結。例如`.l_chaptname>a`，代表 class 為 l_chaptname 的元素下的 a 連結。
- 如果有内分頁，且無法用正則提取下一頁連結，可直接用選擇器來獲取，例如`.l_chaptname>a@@@@@@next:{.curr+a}`。
- 如果正文提取錯誤，亦可使用選擇器來獲取，例如`.l_chaptname>a@@@@@@@div#content`或者`.l_chaptname>a@@@@@@next:{.curr+a}@div#content`。
- 下載內容可能含有幹擾碼，此時只需點擊**懶人小說下載設置**，輸入幹擾碼的 css 選擇器即可排除幹擾碼。例如 `.mask,.ksam,font.jammer`，代表刪除 class 為 mask 或者 ksam 的元素或者 class 為 jammer 的 font 元素。
+ 如果有内分頁，且無法用正規表示式提取下一頁連結，可直接用選擇器來獲取，例如`.l_chaptname>a@@@@@@next:{.curr+a}`。
+ 如果內文擷取錯誤，也可以使用選擇器來獲取，例如`.l_chaptname>a@@@@@@@div#content`或者`.l_chaptname>a@@@@@@next:{.curr+a}@div#content`。
+ 下載內容可能含有幹擾碼，此時只需點擊**懶人小說下載設置**，輸入幹擾碼的 CSS 選擇器即可排除幹擾碼。例如 `.mask,.ksam,font.jammer`，代表刪除 class 為 mask 或者 ksam 的元素，或者 class 為 jammer 的 font 元素。
 ### 第六層心法（超難）
 
- 倘若正文不在內頁正文，是頁面加載後處理得到的，可點擊**自定義下載**，輸入自定義代碼對內頁進行分析獲取正確結果。例如 【`眾神的風車@@@@@@var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】，即可通過自定義代碼處理返回頁面獲取內容。代碼中使用 doc 可以獲得返回頁面的 document，最後一個表達式的值為最終寫入的內容。
+ 倘若內文並非直接存在於頁面原始碼，而是在頁面載入後才處理生成的，可以點擊**自訂下載**，輸入自訂程式碼對內頁進行分析以獲取正確結果。例如 【`眾神的風車@@@@@@var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】，即可透過自訂程式碼處理返回的頁面來獲取內容。程式碼中的 `doc` 代表返回頁面的 document 物件，最後一個表達式的值就是最終寫入的內容。
  
- 如果返回 false，代表異步回調，可自行抓取內容並等待抓取成功後用 cb(content) 返回抓取到的 content。
+ 如果返回 `false`，代表這是一個非同步回呼（asynchronous callback），可自行抓取內容並等待抓取成功後用 `cb(content)`` 回傳抓取到的 content。
 
- 倘若章節沒有連結，點擊後方纔生成連結跳轉，可通過 `>>` 管道處理抓取到的元素生成章節連結，例如`a.link >> item.href = xxx; return item;`。詳情見下方例子。
+ 倘若章節沒有連結，而是點擊後才生成連結並跳轉，可透過 `>>` 管道處理抓取到的元素生成章節連結，例如`a.link >> item.href = xxx; return item;`。詳情見下方範例。
 ### 第七層心法（極難）
 
- 倘若正文已經經過加密，需要解密才能獲取正確內容，可打開瀏覽器的控製臺，自定義 dacProcess 函數，調取頁面中網站自身的解密代碼處理抓取的加密數據。例如控製臺輸入`dacProcess=data=>{return decrypt(xxx);}` 代表調用網站的 decrypt 解密章節頁面返回的數據。然後再點擊**自定義下載**，需要注意自定義下載時標記章節是必需的。
+ 倘若正文已經經過加密，需要解密才能獲取正確內容，可開啟瀏覽器的開發人員工具主控台，自訂 dacProcess 函數，調取頁面中網站自身的解密程式碼處理抓取的加密數據。例如主控台輸入`dacProcess=data=>{return decrypt(xxx);}` 代表調用網站的 decrypt 函數來解密章節頁面返回的資料。然後再點擊**自訂下載**，需要注意自訂下載時，標記章節是必要步驟。
 
-### 關於配置項
- **【以下功能需要通過 Tampermonkey 等管理器的命令菜單進入】**
+### 關於設定選項
+ **【以下功能需要透過 Tampermonkey 等腳本管理器的指令選單進入】**
 
 ![img](https://greasyfork.s3.us-east-2.amazonaws.com/grg0pe1t13eth8t012bd1absp9id)
- - 自定義目錄：如`https://xxx.xxx/book-**[20-99]**.html,https://xxx.xxx/book-**[01-10]**.html`，意思為下載book-20.html到book-99.html，以及book-01.html到book-10.html，使用**[1-10]**則不補0。
- - 章節選擇器自定義：輸入章節連結的 css 選擇器即可，後面可以接上 url 替換碼、以及自定義處理代碼。
+ - 自訂目錄：如`https://xxx.xxx/book-**[20-99]**.html,https://xxx.xxx/book-**[01-10]**.html`，意思為下載book-20.html到book-99.html，以及book-01.html到book-10.html，使用**[1-10]**則不補0。
+ - 章節選擇器自訂：輸入章節連結的 css 選擇器即可，後面可以接上 url 替換碼、以及自定義處理代碼。
  - 幹擾碼：填入幹擾碼的 css 選擇器，如`.mask,.ksam`，意為刪除 class 為 mask 或者 ksam 的元素。
  - 按標題名重新排序：是則把目錄頁所有連結按標題名排序後存入txt，否則按頁面位置順序排列。
- - 下載線程數：同時下載的線程數，默認為20，遇到存在限製的站點(例如下載時總有章節獲取失敗)可調低。
+ - 下載線程數：同時下載的執行緒數量，默認為20，遇到存在限製的站點(例如下載時總有章節獲取失敗)可調低。
 
 ### 完整格式說明
-<code>某個章節名 / CSS 選擇器【選擇器後可跟 >> 傳入 item 處理】 **@@** 抓取到 URL 的正則匹配 **@@** 正則替換 URL **@@** 根據爬取返回內容 data 處理並返回最終文本</code>
+<code>某個章節名 / CSS 選擇器【選擇器後可跟 >> 傳入 item 處理】 **@@** 抓取到 URL 的正規表示式匹配 **@@** 正規表示式替換 URL **@@** 根據爬取返回內容 data 進行處理並回傳最終文本</code>
 #### 内頁處理範例
 假設章節元素為 `a.links`
 + 使用 iframe 處理内頁内容
@@ -80,16 +80,16 @@
    `a.links@@@@@@iframe:sandbox:{allow-same-origin}`
  - iframe 添加初始化程式碼
    `a.links@@@@@@iframe:init:{win.top=win.self}`
-+ 自定義内頁中分頁抓取方式
++ 自訂内頁中分頁抓取方式
   - 透過選擇器抓取
     `a.links@@@@@@next:{a.next}`
   - 透過程式碼生成
     `a.links@@@@@@next:{return await getNextElement()}` 可以用多層 `{}` 來避免程式碼中出現大括號產生的問題
 
 <a id="example"></a>
-### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
+### 自訂下載範例，打開目錄頁點擊【自訂下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
 + [📕po18](https://www.po18.tw/books/755779/articles)
-> 章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 `.l_chaptname>a@@articles@@articlescontent` 粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
+> 章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 `.l_chaptname>a@@articles@@articlescontent` 粘貼進命令菜單即可下載。其中第一個 articles 可使用正規表示式，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  ``` css
 .l_chaptname>a@@articles@@articlescontent
  ```
@@ -210,7 +210,7 @@ function decode(t) {
 + [📕愛發電](https://愛發電/album/afee5ce2462d11ee897e52540025c377)
 > 我也是愛發電用戶，拿人手短，就不欺負它了。只給個思路，用第四層心法取 album_id 與 章節 id 去 /api/post 請求數據即可。
 + [📕頭文字小説](https://m.touwz.net/dushi/yinhezhuiluo/)
-> 簡單的分頁，沒啥難點。惟一需要注意的是，分頁連結藏在 js 代碼裏，用正則取出完事。
+> 簡單的分頁，沒啥難點。惟一需要注意的是，分頁連結藏在 js 代碼裏，用正規表示式取出完事。
 ``` javascript
 .chapter>li>a@@@@@@let content="\n";let checkContent=(doc,over)=>{word=doc.querySelector('.content-div');if(!word)content+='\n'+doc.body.innerText;else {let ps=[];[].forEach.call(word.children, p=>{if(p.className!='moreinfo')ps.push(p.innerText)});content+=ps.join('\n');}let next=doc.querySelector("#pt_next");if(next){fetch(location.href+ doc.body.innerHTML.match(/'([^\|']+)\|[^']+'\.split/)[1]+".html").then(r => r.text()).then(d => {let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = d;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content.replace(/\s*「如章节缺失请退#出#阅#读#模#式」\s*|\s*本章未完，点下一页继续阅读。>>>\s*/g,''))});return false;
 ```
