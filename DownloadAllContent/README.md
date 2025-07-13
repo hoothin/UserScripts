@@ -1,4 +1,4 @@
-起點等主流網站建議優先使用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，如果遇到沒有人願意支援的小網站，再考慮我的腳本。。
+起點等主流網站建議優先使用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，如果遇到沒有人願意支援的小網站，再考慮我的腳本。
 
 請勿用於有版權的網站，如造成侵權或對目標網站造成損失，後果請自行負責。
 
@@ -19,7 +19,7 @@
 
 如果遇到下載出錯的網站，歡迎到 [Github](https://github.com/hoothin/UserScripts/) 提交 issue。也請順手幫我點亮 Star！
 
-*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.com/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。也歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD)。*
+*對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.com/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。也歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD) 或者關注我的 [Twitter](https://twitter.com/intent/follow?screen_name=HoothinDev)。*
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
