@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.119
+// @version      1.9.37.120
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3904,61 +3904,57 @@
                 postParams = postParams[1];
                 url = url.replace(/#p{.*/, "");
             }
-            _GM_xmlhttpRequest({
-                url: url,
+            fetch(url, {
                 method: postParams ? 'POST' : 'GET',
-                data: postParams,
-                overrideMimeType: 'text/html;charset=' + charset,
+                body: postParams,
                 headers: {
                     'Referer': location.href,
                     'User-Agent': navigator.userAgent,
                     "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset
-                },
-                timeout: 10000,
-                onload: function(res) {
-                    var doc = null;
-                    try {
-                        doc = document.implementation.createHTMLDocument('');
-                        doc.documentElement.innerHTML = createHTML(res.response);
-                        var body = getBody(doc);
-                        if (!self.preloadDiv) {
-                            self.preloadDiv = document.createElement('div');
-                            self.preloadDiv.id = "pagetual-preload";
-                            self.preloadDiv.style.cssText = 'display:none!important;';
-                            getBody(document).appendChild(self.preloadDiv);
-                            self.checkedImgs = {};
-                            self.unCheckedImgs = [];
-                        }
-                        let code = self.curSiteRule.preloadImages;
-                        if (code) {
-                            let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
-                            if (imgSrcArr && imgSrcArr.length) {
-                                imgSrcArr.forEach(imgSrc => {
-                                    if (imgSrc && !self.checkedImgs[imgSrc]) {
-                                        self.checkedImgs[imgSrc] = true;
-                                        self.unCheckedImgs.push(imgSrc);
-                                    }
-                                });
-                            }
-                            self.preloadImageHandler();
-                        } else if (code !== 0 && code !== false) {
-                            if (body && body.firstChild) {
-                                self.lazyImgAction(body.children, doc);
-                            }
-                            [].forEach.call(doc.images, i => {
-                                let iSrc = i.src;
-                                if (iSrc && !self.checkedImgs[iSrc]) {
-                                    self.checkedImgs[iSrc] = true;
-                                    self.unCheckedImgs.push(iSrc);
+                }
+            }).then(response => response.text()).then(data => {
+                var doc = null;
+                try {
+                    doc = document.implementation.createHTMLDocument('');
+                    doc.documentElement.innerHTML = createHTML(data);
+                    var body = getBody(doc);
+                    if (!self.preloadDiv) {
+                        self.preloadDiv = document.createElement('div');
+                        self.preloadDiv.id = "pagetual-preload";
+                        self.preloadDiv.style.cssText = 'display:none!important;';
+                        getBody(document).appendChild(self.preloadDiv);
+                        self.checkedImgs = {};
+                        self.unCheckedImgs = [];
+                    }
+                    let code = self.curSiteRule.preloadImages;
+                    if (code) {
+                        let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
+                        if (imgSrcArr && imgSrcArr.length) {
+                            imgSrcArr.forEach(imgSrc => {
+                                if (imgSrc && !self.checkedImgs[imgSrc]) {
+                                    self.checkedImgs[imgSrc] = true;
+                                    self.unCheckedImgs.push(imgSrc);
                                 }
                             });
-                            self.preloadImageHandler();
                         }
+                        self.preloadImageHandler();
+                    } else if (code !== 0 && code !== false) {
+                        if (body && body.firstChild) {
+                            self.lazyImgAction(body.children, doc);
+                        }
+                        [].forEach.call(doc.images, i => {
+                            let iSrc = i.src;
+                            if (iSrc && !self.checkedImgs[iSrc]) {
+                                self.checkedImgs[iSrc] = true;
+                                self.unCheckedImgs.push(iSrc);
+                            }
+                        });
+                        self.preloadImageHandler();
                     }
-                    catch(e) {
-                        debug(e);
-                        return;
-                    }
+                }
+                catch(e) {
+                    debug(e);
+                    return;
                 }
             });
         }
