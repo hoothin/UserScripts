@@ -26198,7 +26198,8 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("aria2Host"),
                     type: 'text',
                     className: 'order',
-                    "default": prefs.gallery.aria2Host || 'http://localhost:6800'
+                    "default": prefs.gallery.aria2Host || 'http://localhost:6800',
+                    after: '/jsonrpc'
                 },
                 'gallery.aria2Token': {
                     label: i18n("aria2Token"),
