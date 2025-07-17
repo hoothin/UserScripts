@@ -21,10 +21,13 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th><a href="https://afdian.com/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></th>
     </tr>
     <tr>
-        <th colspan="3"><a href="https://discord.com/invite/keqypXC6wD">Join our 💬Discord</a></th>
+        <th colspan="3"><a href="https://discord.com/invite/keqypXC6wD">Join 💬Discord</a></th>
     </tr>
     <tr>
-        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an 📧email</a></th>
+        <th colspan="3"><a href="https://twitter.com/intent/follow?screen_name=HoothinDev">Follow 🕊️twitter</a></th>
+    </tr>
+    <tr>
+        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send 📧email</a></th>
     </tr>
     <tr>
         <th colspan="3">Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>
