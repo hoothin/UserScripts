@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.120
+// @version      1.9.37.121
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3497,7 +3497,20 @@
                     debug(e);
                 }
             } else if (this.curSiteRule.nextLinkByUrl) {
-                let targetUrl = this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0], "i"), this.curSiteRule.nextLinkByUrl[1]);
+                let urlReg = new RegExp(this.curSiteRule.nextLinkByUrl[0], "i");
+                let targetUrl;
+                if (urlReg.test(this.curUrl)) {
+                    targetUrl = this.curUrl.replace(urlReg, this.curSiteRule.nextLinkByUrl[1])
+                } else {
+                    if (this.curSiteRule.nextLinkByUrl[0].indexOf("&") != -1) {
+                        urlReg = new RegExp(this.curSiteRule.nextLinkByUrl[0].replace("&", "\\?"), "i");
+                    }
+                    if (urlReg.test(this.curUrl)) {
+                        targetUrl = this.curUrl.replace(urlReg, this.curSiteRule.nextLinkByUrl[1]);
+                    } else {
+                        targetUrl = this.curUrl + this.curSiteRule.nextLinkByUrl[1].replace(/\$\d+/g, "");
+                    }
+                }
                 if (targetUrl !== this.curUrl) {
                     let includeSel = this.curSiteRule.nextLinkByUrl[2];
                     let excludeSel = this.curSiteRule.nextLinkByUrl[3];
@@ -3529,8 +3542,11 @@
                                     debug(e);
                                 }
                             }
-                            targetUrl = targetUrl.replace(rep, result);
+                            targetUrl = targetUrl.replace(rep, result || "");
                         });
+                        if (targetUrl.indexOf("&") != -1 && targetUrl.indexOf("?") == -1) {
+                            targetUrl = targetUrl.replace("&", "?");
+                        }
                     }
                 }
                 nextLink = {href: targetUrl};
@@ -8754,7 +8770,6 @@
         let pageText = document.createElement("a");
         let pageNum;
         pageBar.className = isHideBar ? "pagetual_pageBar autopagerize_page_info hide" : "pagetual_pageBar autopagerize_page_info";
-        pageBar.id = "pagetual_pageBar" + curPage;
         pageBar.setAttribute("translate", "no");
         if (isPause) {
             pageBar.classList.add("stop");
@@ -8775,6 +8790,7 @@
         if (openInNewTab == 1) pageText.target = "_blank";
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
+        let localPage = curPage;
         let touched = false;
         let touchBodyHandler = e => {
             touched = false;
@@ -8788,6 +8804,7 @@
             pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page"));
             pageNum = document.createElement("span");
             let num = ruleParser.getPageNumFromUrl(url, curPage);
+            localPage = num;
             pageNum.innerHTML = createHTML(num + "<i style='font-size: 0;'>&nbsp;</i>");
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
@@ -8815,6 +8832,7 @@
         } else {
             pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page") + curPage + "<i style='font-size: 0;'>&nbsp;</i>");
         }
+        pageBar.id = "pagetual_pageBar" + localPage;
         let preBtn = document.createElement("span");
         preBtn.innerHTML = createHTML("∧");
         preBtn.title = i18n("prevPage");
@@ -8825,7 +8843,6 @@
         nextBtn.title = i18n("nextPage");
         nextBtn.className = "nextScreen";
         nextBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px; border-radius: 0 0 20px 20px; margin-top: 30px; ";
-        let localPage = curPage;
         preBtn.addEventListener("click", e => {
             e.stopPropagation();
             e.preventDefault();

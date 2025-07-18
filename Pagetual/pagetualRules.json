@@ -5476,13 +5476,21 @@
     "pageNum": "start={100*($p-1)}"
 },
 {
-    "name": "Github issues and pulls",
-    "type": 0,
+    "name": "Github issues",
     "action": 0,
-    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/(?:issues|pulls)",
+    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/issues",
+    "pageElement": "[data-listview-component=items-list]>[class^=ListItems]",
+    "nextLinkByUrl": [
+      "&page=(\\d+)",
+      "&page={$1+1}"
+    ]
+},
+{
+    "name": "Github pulls",
+    "action": 0,
+    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/pulls",
     "pageElement": "//div[starts-with(@id,'issue_')]",
-    "nextLink": "//a[@class='next_page']",
-    "pinUrl": true
+    "nextLink": "//a[rel=next]"
 },
 {
     "name": "Repository search results · GitHub",
