@@ -2784,7 +2784,8 @@
     "url": "^https?://(illusioncards\\.)?(gelbooru|tbib|safebooru|booru|rule34|hypnohub|xbooru)\\.(com|org|xxx|net)/.+s=list",
     "nextLink": "a[alt='next']",
     "pageElement": ".thumbnail-container, span.thumb",
-    "replaceElement": "#paginator"
+    "replaceElement": "#paginator",
+    "action": 1
 },
 {
     "name": "yande",
