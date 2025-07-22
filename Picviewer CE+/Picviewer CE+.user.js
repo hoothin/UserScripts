@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.7.5.1
+// @version              2025.7.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12226,6 +12226,22 @@ ImgOps | https://imgops.com/#b#`;
         };
         img.src = dataurl;
     }
+    function urlToBlobWithFetch(urlString, cb){
+        fetch(urlString).then(response => response.blob()).then(blob => cb(blob)).catch(error => {
+            cb(null);
+        });
+    }
+    function getCookie(cname) {
+        let name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) == 0)
+                return c.substring(name.length,c.length);
+        }
+        return "";
+    }
     var cookie;
     function urlToBlob(url, cb, forcePng, tryTimes = 0) {
         tryTimes++;
@@ -12255,8 +12271,12 @@ ImgOps | https://imgops.com/#b#`;
                     a.readAsDataURL(blob);
                     a.onload = function (e) {
                         dataURLToCanvas(e.target.result, canvas => {
-                            canvas.toBlob(blob => {
-                                cb(blob, conversion || "png");
+                            canvas.toBlob(nblob => {
+                                if (!nblob) {
+                                    cb(blob, ext || "png");
+                                } else {
+                                    cb(nblob, conversion || "png");
+                                }
                             }, "image/" + (conversion || "png"));
                         });
                     };
@@ -14533,7 +14553,7 @@ ImgOps | https://imgops.com/#b#`;
                             let picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
                             let host = hostArr[hostArr.length-2];
                             saveParams.push([node.dataset.src, picName]);
-                            if (node.dataset.srcs) {
+                            if (node.dataset.srcs && node.dataset.srcs != node.dataset.src) {
                                 node.dataset.srcs.split(",").forEach(src => {
                                     saveParams.push([src, picName]);
                                 });
@@ -15622,26 +15642,24 @@ ImgOps | https://imgops.com/#b#`;
                             });
                         }
                         if(canvas && (/^data:/.test(imgSrc) || imgSrc.split("/")[2] == document.domain)){
-                            self.dataURLToCanvas(imgSrc, canvas=>{
-                                self.showTips("Downloading "+(downloaded+1)+"/"+len, 1000000);
-                                if(!canvas){
+                            urlToBlobWithFetch(imgSrc, blob=>{
+                                if(!blob){
                                     crosHandler(imgSrc);
                                     return;
                                 }
-                                canvas.toBlob(blob=>{
-                                    zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
-                                    downloaded++;
-                                    over && over();
-                                    if(downloaded == len){
-                                        self.showTips(`Begin compress to ${packName}...`, 100000);
-                                        zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
-                                            if (content) {
-                                                saveAs(content, packName);
-                                            }
-                                            callback();
-                                        })
-                                    }
-                                }, "image/png");
+                                self.showTips("Downloading "+(downloaded+1)+"/"+len, 1000000);
+                                zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
+                                downloaded++;
+                                over && over();
+                                if(downloaded == len){
+                                    self.showTips(`Begin compress to ${packName}...`, 100000);
+                                    zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
+                                        if (content) {
+                                            saveAs(content, packName);
+                                        }
+                                        callback();
+                                    })
+                                }
                             });
                         }else{
                             crosHandler(imgSrc);
@@ -16189,29 +16207,6 @@ ImgOps | https://imgops.com/#b#`;
                     this.bricksInstance.pack();
                     this.bricksInstance.resize(true);
                 }
-            },
-            dataURLToCanvas:function (dataurl, cb){
-                if(!dataurl)return cb(null);
-                var ctx = canvas.getContext('2d');
-                var img = new Image();
-                img.setAttribute("crossOrigin","anonymous");
-                img.onload = function(){
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                    cb(canvas);
-                };
-                img.onerror = function(){
-                    cb(null);
-                };
-                img.src = dataurl;
-            },
-            blobToCanvas: function (blob, cb){
-                var self=this;
-                blobToDataURL(blob, function (dataurl){
-                    self.dataURLToCanvas(dataurl, cb);
-                });
             },
             showHideBottom: function() {  // 显示隐藏 sidebar-container
                 var sidebarContainer = this.eleMaps['sidebar-container'],
