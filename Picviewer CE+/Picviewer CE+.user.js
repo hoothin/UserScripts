@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.7.22.1
+// @version              2025.7.24.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1615955/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1629578/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12231,6 +12231,141 @@ ImgOps | https://imgops.com/#b#`;
             cb(null);
         });
     }
+    function loadVideoJsLibrary() {
+        if (!window.videoJsStatus) {
+            window.videoJsStatus = 'none';
+        }
+
+        return new Promise((resolve, reject) => {
+            if (window.videoJsStatus === 'loaded') {
+                return resolve();
+            }
+
+            if (window.videoJsStatus === 'loading') {
+                const interval = setInterval(() => {
+                    if (window.videoJsStatus === 'loaded') {
+                        clearInterval(interval);
+                        resolve();
+                    } else if (window.videoJsStatus === 'failed') {
+                        clearInterval(interval);
+                        reject(new Error('Previous Video.js loading attempt failed.'));
+                    }
+                }, 100);
+                return;
+            }
+
+            window.videoJsStatus = 'loading';
+
+            const cssSources = [
+                "https://vjs.zencdn.net/8.23.3/video-js.min.css",
+                "https://unpkg.com/video.js/dist/video-js.min.css",
+                "https://cdn.jsdelivr.net/npm/video.js@8.23.3/dist/video-js.min.css"
+            ];
+            const jsSources = [
+                "https://vjs.zencdn.net/8.23.3/video.min.js",
+                "https://unpkg.com/video.js/dist/video.min.js",
+                "https://cdn.jsdelivr.net/npm/video.js@8.23.3/dist/video.min.js"
+            ];
+            const fetchWithFallback = (urls) => {
+                return new Promise((resolve, reject) => {
+                    let lastError = null;
+                    const urlsToTry = [...urls];
+
+                    const tryNext = () => {
+                        if (urlsToTry.length === 0) {
+                            reject(new Error(`Failed to load resource after trying all sources. Last error: ${lastError}`));
+                            return;
+                        }
+
+                        const url = urlsToTry.shift();
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', url);
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                resolve(xhr.responseText);
+                            } else {
+                                lastError = `Status ${xhr.status} from ${url}`;
+                                console.warn(`Failed to load ${url}, trying next source...`);
+                                tryNext();
+                            }
+                        };
+                        xhr.onerror = () => {
+                            lastError = `Network error from ${url}`;
+                            console.warn(`Failed to load ${url}, trying next source...`);
+                            tryNext();
+                        };
+                        xhr.send();
+                    };
+
+                    tryNext();
+                });
+            };
+            const pCSS = fetchWithFallback(cssSources).then(cssContent => {
+                const styleElement = document.createElement('style');
+                styleElement.textContent = cssContent;
+                styleElement.id = 'imagus-videojs-styles';
+                document.head.appendChild(styleElement);
+            });
+            const pJS = fetchWithFallback(jsSources).then(jsContent => {
+                Function(jsContent)();
+            });
+
+            Promise.all([pCSS, pJS]).then(() => {
+                window.videoJsStatus = 'loaded';
+                console.timeEnd('Load Video.js');
+                resolve();
+            }).catch(error => {
+                window.videoJsStatus = 'failed';
+                console.error('Failed to load Video.js from all available sources.', error);
+                reject(error);
+            });
+        });
+    }
+    async function initVideojs(media, imgSrc) {
+        await loadVideoJsLibrary();
+        const videoOptions = {
+            autoplay: true
+        };
+        media.className = "video-js vjs-default-skin vjs-fluid";
+        media.width = 1920;
+        media.height = 1080;
+        const player = videojs(media, videoOptions);
+        player.on('loadedmetadata', function() {
+            const vhs = player.tech({ IWillNotUseThisInPlugins: true }).vhs;
+            if (!vhs) {
+                console.warn('VHS engine not found.');
+                return;
+            }
+            const representations = vhs.representations();
+            if (!representations || representations.length === 0) {
+                return;
+            }
+            let highestBandwidth = 0;
+            let highestRepresentation = null;
+            for (let i = 0; i < representations.length; i++) {
+                const representation = representations[i];
+                if (representation.bandwidth > highestBandwidth) {
+                    highestBandwidth = representation.bandwidth;
+                    highestRepresentation = representation;
+                }
+            }
+            if (highestRepresentation) {
+                representations.forEach(representation => {
+                    representation.enabled(representation.id === highestRepresentation.id);
+                });
+            }
+            const originalWidth = highestRepresentation ? highestRepresentation.width : player.videoWidth();
+            const originalHeight = highestRepresentation ? highestRepresentation.height : player.videoHeight();
+            media.naturalWidth = originalWidth;
+            media.naturalHeight = originalHeight;
+            media.onload();
+        });
+        player.src({
+            src: imgSrc,
+            fluid: true,
+            type: 'application/x-mpegURL'
+        });
+    }
     function getCookie(cname) {
         let name = cname + "=";
         var ca = document.cookie.split(';');
@@ -16067,12 +16202,18 @@ ImgOps | https://imgops.com/#b#`;
                             curNode.dataset.src = curNode.dataset.thumbSrc;
                             popupImgWin(i);
                         };
-                        let loadImg = () => {
+                        let loadImg = async() => {
                             self.showTips("Loading image...");
 
                             let imgSrc = dataset(node, 'src');
                             let mode = matchedRule.getMode(imgSrc);
                             let media;
+                            let loaded = function() {
+                                media.play();
+                                self.showTips("");
+                                popupImgWin(this || media);
+                                media.removeEventListener('loadeddata', loaded);
+                            }
                             switch (mode) {
                                 case "video":
                                     media = document.createElement('video');
@@ -16084,7 +16225,15 @@ ImgOps | https://imgops.com/#b#`;
                                     media.volume = matchedRule.mute ? 0 : 1;
                                     imgSrc = imgSrc.replace(/^video:/, "");
                                     if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
-                                    else if (imgSrc.indexOf('.m3u8') !== -1) media.type = 'application/vnd.apple.mpegurl';
+                                    else if (imgSrc.indexOf('.m3u8') !== -1) {
+                                        try {
+                                            loaded();
+                                            await initVideojs(media, imgSrc);
+                                            imgSrc = "";
+                                        } catch (error) {
+                                            console.error('Failed to load or initialize Video.js player:', error);
+                                        }
+                                    }
                                     break;
                                 case "audio":
                                     media = document.createElement('audio');
@@ -16097,15 +16246,11 @@ ImgOps | https://imgops.com/#b#`;
                                     break;
                             }
                             if (media) {
-                                media.src = imgSrc;
-                                let loaded = function() {
-                                    media.play();
-                                    self.showTips("");
-                                    popupImgWin(this);
-                                    media.removeEventListener('loadeddata', loaded);
+                                if (imgSrc) {
+                                    media.src = imgSrc;
+                                    media.addEventListener('loadeddata', loaded);
+                                    media.load();
                                 }
-                                media.addEventListener('loadeddata', loaded);
-                                media.load();
                             } else {
                                 imgReady(imgSrc, {
                                     ready: function() {
@@ -16382,7 +16527,7 @@ ImgOps | https://imgops.com/#b#`;
                     thumbScrollbar.scroll(needScrollDis - scrollCenter,false,!noTransition);
                 }, 0);
             },
-            getImg:function(ele){
+            getImg:async function(ele){
                 var self = this;
 
                 var src = dataset(ele,'src');
@@ -16460,6 +16605,19 @@ ImgOps | https://imgops.com/#b#`;
 
                 if (!src) return;
                 let media, mediaSrc = src;
+                let loaded = function() {
+                    var index = allLoading.indexOf(src);
+                    if (index != -1) {
+                        allLoading.splice(index,1);
+                    }
+
+                    if (src != self.lastLoading) return;
+
+                    if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display = '';
+                    if (preImgR) preImgR.abort();
+                    self.loadImg(media, ele);
+                    media.removeEventListener('loadeddata', loaded);
+                }
                 if (isVideoLink(src)) {
                     media = document.createElement('video');
                     media.style.width = 0;
@@ -16470,7 +16628,25 @@ ImgOps | https://imgops.com/#b#`;
                     media.volume = matchedRule.mute ? 0 : 1;
                     mediaSrc = mediaSrc.replace(/^video:/, "");
                     if (src.indexOf('.mkv') !== -1) media.type = 'video/mp4';
-                    else if (src.indexOf('.m3u8') !== -1) media.type = 'application/vnd.apple.mpegurl';
+                    else if (src.indexOf('.m3u8') !== -1) {
+                        try {
+                            loaded();
+                            await initVideojs(media, mediaSrc);
+                            media.onload = e => {
+                                self.imgNaturalSize = {
+                                    h:media.naturalHeight || 100,
+                                    w:media.naturalWidth || 100,
+                                };
+                                self.fitToScreen({
+                                    x:0,
+                                    y:0,
+                                });
+                            };
+                            mediaSrc = "";
+                        } catch (error) {
+                            console.error('Failed to load or initialize Video.js player:', error);
+                        }
+                    }
                 } else if (isAudioLink(src)) {
                     media = document.createElement('audio');
                     media.controls = true;
@@ -16482,22 +16658,12 @@ ImgOps | https://imgops.com/#b#`;
                     if (this.eleMaps['sidebar-toggle'].style.visibility == 'hidden') {
                         media.autoplay = false;
                     }
-                    media.src = mediaSrc;
-                    let loaded = function() {
-                        var index = allLoading.indexOf(src);
-                        if (index != -1) {
-                            allLoading.splice(index,1);
-                        }
-
-                        if (src != self.lastLoading) return;
-
-                        if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display = '';
-                        if (preImgR) preImgR.abort();
-                        self.loadImg(media, ele);
-                        media.removeEventListener('loadeddata', loaded);
+                    if (mediaSrc) {
+                        media.src = mediaSrc;
+                        curLoadingMedia = media;
+                        media.addEventListener('loadeddata', loaded);
+                        media.load();
                     }
-                    media.addEventListener('loadeddata', loaded);
-                    media.load();
                     return;
                 }
                 this.imgReady=imgReady(src, {
@@ -16548,6 +16714,9 @@ ImgOps | https://imgops.com/#b#`;
 
             },
             loadImg:function(img,relatedThumb,error){
+                [].forEach.call(this.eleMaps['img-parent'].querySelectorAll("[id^=vjs_video]"), video => {
+                    video.parentNode.removeChild(video);
+                });
                 if(!/^(img|video|audio)$/i.test(img.nodeName)){//先读取。
                     this.getImg(img);
                     return;
@@ -16560,8 +16729,8 @@ ImgOps | https://imgops.com/#b#`;
                 var imgNaturalSize;
                 if (/^video$/i.test(img.nodeName)) {
                     imgNaturalSize = {
-                        h:img.videoHeight || 200,
-                        w:img.videoWidth || 200,
+                        h:img.videoHeight || 1080,
+                        w:img.videoWidth || 1920,
                     };
                 } else if (/^audio$/i.test(img.nodeName)) {
                     imgNaturalSize = {
@@ -16710,6 +16879,7 @@ ImgOps | https://imgops.com/#b#`;
                 var imgPaSty=img.parentNode.style;
                 imgPaSty.width='';
                 imgPaSty.height='';
+                imgPaSty=this.eleMaps['img-parent'].style;
 
                 let rotate90 = this.galleryRotate == 90 || this.galleryRotate == 270;
                 let imgNaturalSize = rotate90 ? {w: this.imgNaturalSize.h, h: this.imgNaturalSize.w} : this.imgNaturalSize;
@@ -18846,6 +19016,9 @@ ImgOps | https://imgops.com/#b#`;
                     justify-content: center;\
                     line-height:0;\
                     }\
+                    .pv-gallery-img-parent video, .pv-gallery-img-parent>div{\
+                    background-size: cover;\
+                    }\
                     .pv-gallery-img_broken{\
                     display:none;\
                     cursor:pointer;\
@@ -20261,6 +20434,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 let imgbox=container.firstChild;
                 imgbox.appendChild(img);
+                this.imgbox = imgbox;
 
                 this.imgWindow=container;
 
@@ -20420,8 +20594,8 @@ ImgOps | https://imgops.com/#b#`;
                     setSearchState(`<strong>${img.naturalWidth} x ${img.naturalHeight}</strong>`, self.imgState);
                 }
                 if (!this.isImg) {
-                    img.naturalHeight = img.videoHeight || 80;
-                    img.naturalWidth = img.videoWidth || 300;
+                    img.naturalHeight = img.videoHeight || 1080;
+                    img.naturalWidth = img.videoWidth || 1920;
                     setTimeout(() => {
                         img.onload();
                     }, 0);
@@ -22034,8 +22208,8 @@ ImgOps | https://imgops.com/#b#`;
                     };
                     img.width=afterImgSize.w;
                     img.height=afterImgSize.h;
-                    img.parentNode.style.width=afterImgSize.w + 'px';
-                    img.parentNode.style.height=afterImgSize.h + 'px';
+                    self.imgbox.style.width=afterImgSize.w + 'px';
+                    self.imgbox.style.height=afterImgSize.h + 'px';
                     if (afterImgSize.w < 60) {
                         self.imgState.style.display = "none";
                     } else {
@@ -23125,11 +23299,16 @@ ImgOps | https://imgops.com/#b#`;
             },
 
             // 根据 imgSrc 载入图片，imgSrcs 为备用图片地址，imgSrc 加载失败备用
-            loadImg: function(imgSrc, imgSrcs, nextFun) {
+            loadImg: async function(imgSrc, imgSrcs, nextFun) {
                 var self = this;
 
                 var mode = matchedRule.getMode(imgSrc);
                 var media;
+                let loaded = function() {
+                    media.play();
+                    self.load(this || media);
+                    media.removeEventListener('loadeddata', loaded);
+                }
                 if (this.buttonType === 'magnifier') {
                     media = document.createElement('img');
                     media.src = (mode === "video" || mode === "audio") ? this.data.imgSrc : imgSrc;
@@ -23146,7 +23325,15 @@ ImgOps | https://imgops.com/#b#`;
                             media.volume = matchedRule.mute ? 0 : 1;
                             imgSrc = imgSrc.replace(/^video:/, "");
                             if (imgSrc.indexOf('.mkv') !== -1) media.type = 'video/mp4';
-                            else if (imgSrc.indexOf('.m3u8') !== -1) media.type = 'application/vnd.apple.mpegurl';
+                            else if (imgSrc.indexOf('.m3u8') !== -1) {
+                                try {
+                                    loaded();
+                                    await initVideojs(media, imgSrc);
+                                    imgSrc = "";
+                                } catch (error) {
+                                    console.error('Failed to load or initialize Video.js player:', error);
+                                }
+                            }
                             break;
                         case "audio":
                             media = document.createElement('audio');
@@ -23159,7 +23346,8 @@ ImgOps | https://imgops.com/#b#`;
                             media = document.createElement('img');
                             break;
                     }
-                    media.src = imgSrc;
+                    if (imgSrc) media.src = imgSrc;
+                    curLoadingMedia = media;
                 }
 
                 var opts = {
@@ -23182,13 +23370,10 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 if (mode === 'video' || mode === 'audio') {
-                    let loaded = function() {
-                        media.play();
-                        self.load(this);
-                        media.removeEventListener('loadeddata', loaded);
+                    if (imgSrc) {
+                        media.addEventListener('loadeddata', loaded);
+                        media.load();
                     }
-                    media.addEventListener('loadeddata', loaded);
-                    media.load();
                 } else {
                     self.imgReady = imgReady(media, opts);
                 }
@@ -23887,7 +24072,7 @@ ImgOps | https://imgops.com/#b#`;
                     var iurl, iurls = [], cap, caps, doc = createDoc(html);
 
                     if(typeof q == 'function') {
-                        iurl = await q(html, doc, url, xhr);
+                        iurl = await q(html, doc, url + (post ? `#p{${post}}` : ""), xhr);
                         if (iurl) {
                             if(iurl.url) {
                                 cap = iurl.cap;
@@ -23928,9 +24113,9 @@ ImgOps | https://imgops.com/#b#`;
                             cap: cap,
                             caps: caps
                         };
-                        caches[url] = cacheData;
+                        caches[url + (post || "")] = cacheData;
                         if (cacheNum) {
-                            storage.setListItem("xhrCache", url, cacheData, cacheNum);
+                            storage.setListItem("xhrCache", url + (post || ""), cacheData, cacheNum);
                         }
                     }
 
@@ -23959,7 +24144,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (headers) {
                     if (typeof headers == 'function') {
-                        headers = await headers(url, xhr);
+                        headers = await headers(url, xhr, getCookie);
                     }
                     opts.headers = headers;
                 }
@@ -24023,7 +24208,7 @@ ImgOps | https://imgops.com/#b#`;
                     opt.url = opt.url.replace(/#p{.*/, "");
                 }
 
-                parsePage(opt.url, xhr.query || xhr.q, xhr.caption || xhr.c, xhr.post, opt.cb, xhr.headers, xhr.after);
+                parsePage(opt.url, xhr.query || xhr.q, xhr.caption || xhr.c, opt.post, opt.cb, xhr.headers, xhr.after);
             };
 
             return _;
@@ -25278,12 +25463,16 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 }
 
-
-                if (target.nodeName.toUpperCase() == 'A' && imageReg.test(target.href)) {
-                } else if (target.parentNode && target.parentNode.nodeName.toUpperCase() == 'A' && imageReg.test(target.parentNode.href)) {
+                let i = 0;
+                while(target) {
+                    if (i++ > 5) {
+                        target = null;
+                        break;
+                    }
+                    if ((target.nodeName == 'A' || target.nodeName == 'a') && imageReg.test(target.href)) {
+                        break;
+                    }
                     target = target.parentNode;
-                } else {
-                    target = null;
                 }
                 if (target) {
                     let src = target.href;
@@ -25442,6 +25631,31 @@ ImgOps | https://imgops.com/#b#`;
 
         document.addEventListener('visibilitychange', e => {
             initMouse = false;
+        });
+
+        var curLoadingMedia;
+        document.addEventListener('securitypolicyviolation', (e) => {
+            if (!e.violatedDirective.includes('media-src')) {
+                return;
+            }
+            if (curLoadingMedia && curLoadingMedia.src == e.blockedURI) {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: curLoadingMedia.src,
+                    responseType: 'blob',
+                    onload: function(response) {
+                        const blobUrl = URL.createObjectURL(response.response);
+
+                        curLoadingMedia.src = blobUrl;
+                        curLoadingMedia.load();
+                        videoElement.play().catch(err => console.warn('[CSP Fixer] Autoplay after fix was blocked.', err));
+
+                        const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                        videoElement.addEventListener('ended', releaseBlob);
+                        window.addEventListener('beforeunload', releaseBlob);
+                    }
+                });
+            }
         });
 
         async function input(sel, v) {
