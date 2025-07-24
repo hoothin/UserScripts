@@ -741,6 +741,58 @@ var siteInfo = [
         s: "images$1_o."
     },
     {
+        name: "Twitch",
+        url: /^https:\/\/(www\.twitch\.tv\/|www\.reddit\.com\/r\/TwitchClips\/)/,
+        xhr: {
+            url: function(a, p, xhr) {
+                if (!a) return;
+                if (!/twitch\.tv/.test(a.href)) return;
+                let m = a.href.match(/(\/clip\/|clips\.twitch\.tv\/)([^?]{1,})/);
+                if (m) {
+                    var slug = m[2];
+                    var operationNameClip = "VideoAccessToken_Clip";
+                    var operationNameLiveOrVOD = "PlaybackAccessToken";
+                    var sha256HashClip = "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11";
+                    var sha256HashLiveOrVOD = "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712";
+                    return `https://gql.twitch.tv/gql#p{{"operationName":"${operationNameClip}","variables":{"slug":"${slug}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${sha256HashClip}"}}}}`;
+                } else {
+                    m = a.href.match(/(?:m\.|www\.)?twitch\.tv\/(?:(?!directory|downloads|jobs|store|twitchartists|turbo|privacy)(\w+)$|(?:\w+\/)?videos\/(\d+))/);
+                    if (m) {
+                        return `https://gql.twitch.tv/gql#p{{"operationName":"PlaybackAccessToken_Template","query":"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!, $platform: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: $platform, playerBackend: \\"mediaplayer\\", playerType: $playerType}) @include(if: $isLive) {    value    signature   authorization { isForbidden forbiddenReasonCode }   __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: $platform, playerBackend: \\"mediaplayer\\", playerType: $playerType}) @include(if: $isVod) {    value    signature   __typename  }}","variables":{"isLive":${m[1]?'true':'false'},"login":"${m[1]||''}","isVod":true,"vodID":"${m[2]||''}","playerType":"site","platform":"web"}}}`;
+                    }
+                }
+            },
+            headers: function(url, xhr, getCookie) {
+                return {"Client-ID":"kimne78kx3ncx6brgo4mv6wki5h1ko", "X-Device-Id": getCookie('unique_id') || getCookie('unique_id_durable') || 'd56e8463c57c7cd7'}
+            },
+            cacheNum: 20,
+            query: function(html, doc, u, xhr) {
+                try {
+                    let r = JSON.parse(html);
+                    if (r.data.clip) {
+                        let signature = r.data.clip.playbackAccessToken.signature;
+                        let token = r.data.clip.playbackAccessToken.value;
+                        let t = JSON.parse(token);
+                        let clip_uri = r.data.clip.videoQualities[0].sourceURL;
+                        let fullsizeUrl = clip_uri + '?sig=' + signature + '&token=' + encodeURIComponent(token);
+
+                        return {url: ["video:" + fullsizeUrl], cap: ""};
+                    } else {
+                        let m = u.match(/"login":"(.*?)".*"vodID":"(.*?)"/);
+                        let tokens = r.data.streamPlaybackAccessToken || r.data.videoPlaybackAccessToken;
+                        if (!tokens) return;
+                        let hex = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+                        let url = m[1] ? 'api/channel/hls': 'vod';
+                        let p = Math.floor(999999 * Math.random());
+                        let id = '';
+                        for (let i = 0; i < 32; i++) id += hex[Math.floor(Math.random() * 16)];
+                        return `video:https://usher.ttvnw.net/${url}/${m[1]||m[2]}.m3u8?acmb=eyJBcHBWZXJzaW9uIjoiYjlhNjU4ZWMtMTcyMS00Y2FjLThkMjgtZjk0NmJmY2E3YzUwIn0%3D&allow_source=true&p=${p}&platform=web&play_session_id=${id}&sig=${tokens.signature}&supported_codecs=av1,h264&token=${encodeURIComponent(tokens.value)}&transcode_mode=cbr_v1`;
+                    }
+                } catch { }
+            }
+        }
+    },
+    {
         name: "Reddit",
         url: /reddit\.com|redd\.it/,
         getImage: function() {
@@ -835,58 +887,6 @@ var siteInfo = [
                 } catch (err) {
                     console.log(err);
                 }
-            }
-        }
-    },
-    {
-        name: "Twitch",
-        url: /^https:\/\/(www\.twitch\.tv\/|www\.reddit\.com\/r\/TwitchClips\/)/,
-        xhr: {
-            url: function(a, p, xhr) {
-                if (!a) return;
-                if (!/twitch\.tv/.test(a.href)) return;
-                let m = a.href.match(/(\/clip\/|clips\.twitch\.tv\/)([^?]{1,})/);
-                if (m) {
-                    var slug = m[2];
-                    var operationNameClip = "VideoAccessToken_Clip";
-                    var operationNameLiveOrVOD = "PlaybackAccessToken";
-                    var sha256HashClip = "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11";
-                    var sha256HashLiveOrVOD = "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712";
-                    return `https://gql.twitch.tv/gql#p{{"operationName":"${operationNameClip}","variables":{"slug":"${slug}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${sha256HashClip}"}}}}`;
-                } else {
-                    m = a.href.match(/(?:m\.|www\.)?twitch\.tv\/(?:(?!directory|downloads|jobs|store|twitchartists|turbo|privacy)(\w+)$|(?:\w+\/)?videos\/(\d+))/);
-                    if (m) {
-                        xhr.m = m;
-                        return `https://gql.twitch.tv/gql#p{{"operationName":"PlaybackAccessToken_Template","query":"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!, $platform: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: $platform, playerBackend: \\"mediaplayer\\", playerType: $playerType}) @include(if: $isLive) {    value    signature   authorization { isForbidden forbiddenReasonCode }   __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: $platform, playerBackend: \\"mediaplayer\\", playerType: $playerType}) @include(if: $isVod) {    value    signature   __typename  }}","variables":{"isLive":${m[1]?'true':'false'},"login":"${m[1]||''}","isVod":true,"vodID":"${m[2]||''}","playerType":"site","platform":"web"}}}`;
-                    }
-                }
-            },
-            headers: function(url, xhr, getCookie) {
-                return {"Client-ID":"kimne78kx3ncx6brgo4mv6wki5h1ko", "X-Device-Id": getCookie('unique_id') || getCookie('unique_id_durable') || 'd56e8463c57c7cd7'}
-            },
-            cacheNum: 20,
-            query: function(html, doc, u, xhr) {
-                try {
-                    let r = JSON.parse(html);
-                    if (r.data.clip) {
-                        let signature = r.data.clip.playbackAccessToken.signature;
-                        let token = r.data.clip.playbackAccessToken.value;
-                        let t = JSON.parse(token);
-                        let clip_uri = r.data.clip.videoQualities[0].sourceURL;
-                        let fullsizeUrl = clip_uri + '?sig=' + signature + '&token=' + encodeURIComponent(token);
-
-                        return {url: ["video:" + fullsizeUrl], cap: ""};
-                    } else {
-                        let tokens = r.data.streamPlaybackAccessToken || r.data.videoPlaybackAccessToken;
-                        if (!tokens) return;
-                        let hex = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-                        let url = xhr.m[1] ? 'api/channel/hls': 'vod';
-                        let p = Math.floor(999999 * Math.random());
-                        let id = '';
-                        for (let i = 0; i < 32; i++) id += hex[Math.floor(Math.random() * 16)];
-                        return `video:https://usher.ttvnw.net/${url}/${xhr.m[1]||xhr.m[2]}.m3u8?acmb=eyJBcHBWZXJzaW9uIjoiYjlhNjU4ZWMtMTcyMS00Y2FjLThkMjgtZjk0NmJmY2E3YzUwIn0%3D&allow_source=true&p=${p}&platform=web&play_session_id=${id}&sig=${tokens.signature}&supported_codecs=av1,h264&token=${encodeURIComponent(tokens.value)}&transcode_mode=cbr_v1`;
-                    }
-                } catch { }
             }
         }
     },
