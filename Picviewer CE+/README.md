@@ -1,4 +1,4 @@
-# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe) 🌐[Reddit](https://www.reddit.com/r/PicviewerCE) 🗨️[Discord](https://discord.com/invite/keqypXC6wD) 🕊️[Twitter](https://twitter.com/intent/follow?screen_name=HoothinDev) [⏬](https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js)
+# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe) 🌐[Reddit](https://www.reddit.com/r/PicviewerCE) 🗨️[Discord](https://discord.com/invite/keqypXC6wD) 🕊️[Twitter](https://twitter.com/intent/follow?screen_name=HoothinDev) [⏬](https://hoothin.github.io/UserScripts/Picviewer%20CE+/Picviewer%20CE+.user.js)
 
 > Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
