@@ -12356,6 +12356,7 @@ ImgOps | https://imgops.com/#b#`;
             }
             const originalWidth = highestRepresentation ? highestRepresentation.width : player.videoWidth();
             const originalHeight = highestRepresentation ? highestRepresentation.height : player.videoHeight();
+            this.addClass('vjs-has-started');
             media.naturalWidth = originalWidth;
             media.naturalHeight = originalHeight;
             media.onload();
@@ -24144,7 +24145,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (headers) {
                     if (typeof headers == 'function') {
-                        headers = await headers(url, xhr, getCookie);
+                        headers = await headers(url + (post ? `#p{${post}}` : ""), xhr, getCookie);
                     }
                     opts.headers = headers;
                 }
