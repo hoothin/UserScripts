@@ -1209,12 +1209,13 @@
                                 if(/^c:/.test(url)){
                                     urlArr.push(url.replace(/^c:/i,""));
                                 }else if(/^p:/.test(url)){
-                                    url=url.match(/p:(.*?)\?(.*)/);
+                                    url=url.match(/p:(.*?)\?(.*?)(\$headers({.*}))?$/);
                                     if(!url)return;
                                     let postData=JSON.stringify(urlArgs(url[2]));
+                                    let headers = url[4] ? JSON.parse(url[4]) : null;
                                     url=url[1];
                                     _GM_xmlhttpRequest({
-                                        method: "POST", url: url, data: postData,
+                                        method: "POST", url: url, data: postData, headers: headers,
                                         onload: (d) => {
                                             _GM_notification(i18n("postOver")+d.statusText);
                                         },
@@ -1243,12 +1244,13 @@
                             _GM_setClipboard(url.replace(/^c:/i,""));
                             _GM_notification(i18n("copyOver"));
                         }else if(/^p:/.test(url)){
-                            url=url.match(/p:(.*?)\?(.*)/);
+                            url=url.match(/p:(.*?)\?(.*?)(\$headers({.*}))?$/);
                             if(!url)return;
                             let postData=JSON.stringify(urlArgs(url[2]));
+                            let headers = url[4] ? JSON.parse(url[4]) : null;
                             url=url[1];
                             _GM_xmlhttpRequest({
-                                method: "POST", url: url, data: postData,
+                                method: "POST", url: url, data: postData, headers: headers,
                                 onload: (d) => {
                                     _GM_notification(i18n("postOver")+d.statusText);
                                 },
