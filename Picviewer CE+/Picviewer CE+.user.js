@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.7.24.1
+// @version              2025.7.26.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1629578/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1630518/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -20542,7 +20542,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.curIndex = -1;
                 if (this.data && this.data.all && this.data.all.length > 1) {
                     for (let i = 0; i < this.data.all.length; i++) {
-                        if (this.data.all[i].replace(/^(video|audio):/, "") == this.data.src) {
+                        if (this.data.src.indexOf(this.data.all[i].replace(/^(video|audio):/, "")) !== -1) {
                             this.curIndex = i;
                             break;
                         }
@@ -20617,8 +20617,15 @@ ImgOps | https://imgops.com/#b#`;
                 */
                 if (this.data) {
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
-                    let desc = (this.data.description || '').trim();
-                    descriptionSpan.textContent = desc;
+                    let desc = (this.data.description || '');
+                    if (Array.isArray(this.data.description) && Array.isArray(this.data.all)) {
+                        let curIndex;
+                        for (curIndex = 0; curIndex < this.data.all.length; curIndex++) {
+                            if (this.data.src.indexOf(this.data.all[curIndex].replace(/^(video|audio):/, "")) !== -1) break;
+                        }
+                        desc = desc[curIndex] || desc[0] || "";
+                    }
+                    descriptionSpan.textContent = desc.trim();
                     this.imgStateBox.title = desc;
                     descriptionSpan.style.display = desc ? "inline" : "none";
                     this.descriptionSpan = descriptionSpan;
@@ -20956,7 +20963,7 @@ ImgOps | https://imgops.com/#b#`;
                     let imgData = this.data;
                     let curIndex;
                     for (curIndex = 0; curIndex < this.data.all.length; curIndex++) {
-                        if (this.data.all[curIndex].replace(/^(video|audio):/, "") == this.data.src) break;
+                        if (this.data.src.indexOf(this.data.all[curIndex].replace(/^(video|audio):/, "")) !== -1) break;
                     }
                     if (fw) {
                         curIndex++;
