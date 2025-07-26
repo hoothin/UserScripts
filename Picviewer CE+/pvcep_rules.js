@@ -807,18 +807,15 @@ var siteInfo = [
             }
             return this.src;
         },
-        getExtSrc: function() {
-            if (/^https?:\/\/imgur\.com(\/a)?\/\w{5,}/.test(this.href)) {
-                return this.href.replace(/^https?:\/\/imgur\.com(\/a)?\/(\w+)/, "https://i.imgur.com/$2.webp");
-            }
-        },
         xhr: {
             url: function(a, p, self) {
-                if (a && a.href && /\/\/v.redd\.it\/\w+\/?$/.test(a.href)) {
-                    return a.href + '/DASHPlaylist.mpd';
-                } else if (a && a.href && /^https:\/\/www\.reddit\.com\/gallery\//.test(a.href)) {
-                    return a.href.replace(/.*(reddit\.com\/)gallery\/([\da-z]+).*/, "https://www.$1by_id/t3_$2.json");
-                } else if (a && a.href && /redgifs\.com\//.test(a.href)) {
+                let aHref = a && a.href;
+                const imgurReg = /^https?:\/\/(?:(?:[im].)?(?:imgur.(?:com|io)|filmot.(?:com|org))\/+(?:(?:(a|gallery(?!\/random|\/custom)|t(?:opic)?\/[^/]+)|r\/[^/]+)\/(?:[^-/]+-)*([^W_]{5}(?:[^_W]{2})?)|(?:[^W_]{5}(?:[^W_]{2})?[,&])+[^_W]{5}(?:[^W_]{2})?)).*/;
+                if (/\/\/v.redd\.it\/\w+\/?$/.test(aHref)) {
+                    return aHref + '/DASHPlaylist.mpd';
+                } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(aHref)) {
+                    return aHref.replace(/.*(reddit\.com\/)gallery\/([\da-z]+).*/, "https://www.$1by_id/t3_$2.json");
+                } else if (/redgifs\.com\//.test(aHref)) {
                     const apiUrl = 'https://api.redgifs.com/v2';
                     if (!self.redgifsToken) {
                         self.redgifsToken = "1";
@@ -828,7 +825,10 @@ var siteInfo = [
                             }
                         });
                     }
-                    return apiUrl + "/gifs/" + a.href.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
+                    return apiUrl + "/gifs/" + aHref.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
+                } else if (imgurReg.test(aHref)) {
+                    const m = aHref.match(imgurReg);
+                    return m[1] ? 'https://imgur.com/' + (m[1] == 'a' ? 'a/' + m[2] + '/embed' : m[1] + '/' + m[2] + '/hit.json') : m[0];
                 } else if (p[1] && p[1].classList.contains("search-result")) {
                     let link = p[1].querySelector("a.search-link");
                     if (link && link.href) {
@@ -847,6 +847,54 @@ var siteInfo = [
             },
             query: function(html, doc, url) {
                 try {
+                    if (/^https:\/\/imgur\.com\//.test(url)) {
+                        var cap = [], urls = [], im, g, c, x, i, t, u, l = '//i.imgur.com/', p404='404 page</title>';
+                        try {
+                            if (typeof html == 'string' && html[0]!='{') {
+                                if(html.lastIndexOf(p404, 300) > -1) throw true;
+                                x = html.match(/(?:album|image)\s*[:=] +([^\n\r]+),/);
+                                x = JSON.parse(x[1])
+                                t = window.t; if (window.t) delete window.t;
+                                if (!t&&'title' in x)t = x;
+                                x.album_images&&(x=x.album_images);
+                                x.images&&(x=x.images)||x.items&&(x=x.items);
+                            } else {
+                                html=JSON.parse(html);
+                                if(html.album){
+                                    x=html.album
+                                    t={title:x.title, description: x.description}
+                                    x=x.images
+                                } else {
+                                    x=html.data.image
+                                    if (x.is_album) {
+                                        t={title:x.title, description: x.description}
+                                        if (x.album_images.count != x.album_images.images.length) {
+                                            window.t=t
+                                            return;
+                                        }
+                                        x=x.album_images.images
+                                    }
+                                }
+                                if (window.t) delete window.t;
+                            }
+
+                            if (!x)throw html.lastIndexOf(p404, 300) > -1;
+
+                            t = t && [t.title, t.description].filter(Boolean).join(' - ') || !1
+                            x = Array.isArray(x)?x:[x]
+                            for (i = 0; i < x.length; ++i) {
+                                im = x[i].image||x[i];
+                                c = [im.title, im.caption, im.description].filter(Boolean).join(' - ');
+                                if (!i && t && t!=c) c='['+t+'] ' + c;
+                                im.ext = im.ext || x[i].links.original.match(/\.[^.]+$/)[0];
+                                g = (''+im.animated)=='true'
+                                u = l + im.hash;
+                                urls.push(!g && im.width <= 1200 && im.height <= 1200 ? u + im.ext : (g ? [u + '.mp4', u + '.gif'] : ['#' + u + im.ext, u + 'h' + im.ext]));
+                                cap.push(c);
+                            }
+                        } catch (ex) {}
+                        return urls.length ? {url: urls, cap: cap} : null
+                    }
                     if (/redgifs\.com\//.test(url)) {
                         let data;
                         try {
@@ -860,10 +908,11 @@ var siteInfo = [
                     } else if (/\/by_id\//.test(url)) {
                         let data;
                         try {
-                            data = JSON.parse(html).data.children[0].data;
+                            data = JSON.parse(html);
                         } catch (e) {
                             return;
                         }
+                        data = data.data.children[0].data;
                         return (data.gallery_data && data.gallery_data.items || []).map(function(c, i) {
                             var u=data.media_metadata[c.media_id].s
                             return [
