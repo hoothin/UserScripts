@@ -810,7 +810,6 @@ var siteInfo = [
         xhr: {
             url: function(a, p, self) {
                 let aHref = a && a.href;
-                const imgurReg = /^https?:\/\/(?:(?:[im].)?(?:imgur.(?:com|io)|filmot.(?:com|org))\/+(?:(?:(a|gallery(?!\/random|\/custom)|t(?:opic)?\/[^/]+)|r\/[^/]+)\/(?:[^-/]+-)*([^W_]{5}(?:[^_W]{2})?)|(?:[^W_]{5}(?:[^W_]{2})?[,&])+[^_W]{5}(?:[^W_]{2})?)).*/;
                 if (/\/\/v.redd\.it\/\w+\/?$/.test(aHref)) {
                     return aHref + '/DASHPlaylist.mpd';
                 } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(aHref)) {
@@ -826,9 +825,6 @@ var siteInfo = [
                         });
                     }
                     return apiUrl + "/gifs/" + aHref.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
-                } else if (imgurReg.test(aHref)) {
-                    const m = aHref.match(imgurReg);
-                    return m[1] ? 'https://imgur.com/' + (m[1] == 'a' ? 'a/' + m[2] + '/embed' : m[1] + '/' + m[2] + '/hit.json') : m[0];
                 } else if (p[1] && p[1].classList.contains("search-result")) {
                     let link = p[1].querySelector("a.search-link");
                     if (link && link.href) {
@@ -847,54 +843,6 @@ var siteInfo = [
             },
             query: function(html, doc, url) {
                 try {
-                    if (/^https:\/\/imgur\.com\//.test(url)) {
-                        var cap = [], urls = [], im, g, c, x, i, t, u, l = '//i.imgur.com/', p404='404 page</title>';
-                        try {
-                            if (typeof html == 'string' && html[0]!='{') {
-                                if(html.lastIndexOf(p404, 300) > -1) throw true;
-                                x = html.match(/(?:album|image)\s*[:=] +([^\n\r]+),/);
-                                x = JSON.parse(x[1])
-                                t = window.t; if (window.t) delete window.t;
-                                if (!t&&'title' in x)t = x;
-                                x.album_images&&(x=x.album_images);
-                                x.images&&(x=x.images)||x.items&&(x=x.items);
-                            } else {
-                                html=JSON.parse(html);
-                                if(html.album){
-                                    x=html.album
-                                    t={title:x.title, description: x.description}
-                                    x=x.images
-                                } else {
-                                    x=html.data.image
-                                    if (x.is_album) {
-                                        t={title:x.title, description: x.description}
-                                        if (x.album_images.count != x.album_images.images.length) {
-                                            window.t=t
-                                            return;
-                                        }
-                                        x=x.album_images.images
-                                    }
-                                }
-                                if (window.t) delete window.t;
-                            }
-
-                            if (!x)throw html.lastIndexOf(p404, 300) > -1;
-
-                            t = t && [t.title, t.description].filter(Boolean).join(' - ') || !1
-                            x = Array.isArray(x)?x:[x]
-                            for (i = 0; i < x.length; ++i) {
-                                im = x[i].image||x[i];
-                                c = [im.title, im.caption, im.description].filter(Boolean).join(' - ');
-                                if (!i && t && t!=c) c='['+t+'] ' + c;
-                                im.ext = im.ext || x[i].links.original.match(/\.[^.]+$/)[0];
-                                g = (''+im.animated)=='true'
-                                u = l + im.hash;
-                                urls.push(!g && im.width <= 1200 && im.height <= 1200 ? u + im.ext : (g ? [u + '.mp4', u + '.gif'] : ['#' + u + im.ext, u + 'h' + im.ext]));
-                                cap.push(c);
-                            }
-                        } catch (ex) {}
-                        return urls.length ? {url: urls, cap: cap} : null
-                    }
                     if (/redgifs\.com\//.test(url)) {
                         let data;
                         try {
@@ -935,6 +883,68 @@ var siteInfo = [
                     }
                 } catch (err) {
                     console.log(err);
+                }
+            }
+        }
+    },
+    {
+        name: "imgurLink",
+        xhr: {
+            url: function(a, p) {
+                const imgurReg = /^https?:\/\/(?:(?:[im].)?(?:imgur.(?:com|io)|filmot.(?:com|org))\/+(?:(?:(a|gallery(?!\/random|\/custom)|t(?:opic)?\/[^/]+)|r\/[^/]+)\/(?:[^-/]+-)*([^W_]{5}(?:[^_W]{2})?)|(?:[^W_]{5}(?:[^W_]{2})?[,&])+[^_W]{5}(?:[^W_]{2})?)).*/;
+                if (a.href.match && imgurReg.test(a.href)) {
+                    const m = a.href.match(imgurReg);
+                    return m[1] ? 'https://imgur.com/' + (m[1] == 'a' ? 'a/' + m[2] + '/embed' : m[1] + '/' + m[2] + '/hit.json') : m[0];
+                }
+            },
+            query: function(html, doc, url) {
+                if (/^https:\/\/imgur\.com\//.test(url)) {
+                    var cap = [], urls = [], im, g, c, x, i, t, u, l = '//i.imgur.com/', p404='404 page</title>';
+                    try {
+                        if (typeof html == 'string' && html[0]!='{') {
+                            if(html.lastIndexOf(p404, 300) > -1) throw true;
+                            x = html.match(/(?:album|image)\s*[:=] +([^\n\r]+),/);
+                            x = JSON.parse(x[1])
+                            t = window.t; if (window.t) delete window.t;
+                            if (!t&&'title' in x)t = x;
+                            x.album_images&&(x=x.album_images);
+                            x.images&&(x=x.images)||x.items&&(x=x.items);
+                        } else {
+                            html=JSON.parse(html);
+                            if(html.album){
+                                x=html.album
+                                t={title:x.title, description: x.description}
+                                x=x.images
+                            } else {
+                                x=html.data.image
+                                if (x.is_album) {
+                                    t={title:x.title, description: x.description}
+                                    if (x.album_images.count != x.album_images.images.length) {
+                                        window.t=t
+                                        return;
+                                    }
+                                    x=x.album_images.images
+                                }
+                            }
+                            if (window.t) delete window.t;
+                        }
+
+                        if (!x)throw html.lastIndexOf(p404, 300) > -1;
+
+                        t = t && [t.title, t.description].filter(Boolean).join(' - ') || !1
+                        x = Array.isArray(x)?x:[x]
+                        for (i = 0; i < x.length; ++i) {
+                            im = x[i].image||x[i];
+                            c = [im.title, im.caption, im.description].filter(Boolean).join(' - ');
+                            if (!i && t && t!=c) c='['+t+'] ' + c;
+                            im.ext = im.ext || x[i].links.original.match(/\.[^.]+$/)[0];
+                            g = (''+im.animated)=='true'
+                            u = l + im.hash;
+                            urls.push(!g && im.width <= 1200 && im.height <= 1200 ? u + im.ext : (g ? [u + '.mp4', u + '.gif'] : ['#' + u + im.ext, u + 'h' + im.ext]));
+                            cap.push(c);
+                        }
+                    } catch (ex) {}
+                    return urls.length ? {url: urls, cap: cap} : null
                 }
             }
         }
