@@ -24674,6 +24674,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.xhrLink = false;
                 for (var i = 0; i < this.rules.length; i++) {
                     rule = this.rules[i];
+                    if (rule.src) continue;
                     if (rule.xhr) {
                         if (rule.xhr.url) {
                             if (rule.xhr.url.test) {
@@ -25127,7 +25128,7 @@ ImgOps | https://imgops.com/#b#`;
                 let nsrc, imgPN, imgPA, imgPE = [];
                 try {
                     if (matchedRule.getExtSrc) {
-                        nsrc = matchedRule.getExtSrc(target);
+                        nsrc = matchedRule.getExtSrc.call(target);
                     }
                     if (!nsrc && target.href) {
                         imgPN = target;
