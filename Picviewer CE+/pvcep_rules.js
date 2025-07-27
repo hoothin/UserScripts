@@ -18,7 +18,7 @@ or
 }
 Other parameter items can be added as needed.
 Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen should only be used after specifying the url.
-xhr is used to obtain the attributes of the pictures on the inner pages. 
+xhr is used to obtain the attributes of the pictures on the inner pages.
     1. First, use xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
     2. And get pictures through xhr.
         2.1 xhr.query is the picture (you can For multiple, multiple will be added to the gallery) selector or function
