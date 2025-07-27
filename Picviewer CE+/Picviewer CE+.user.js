@@ -21841,7 +21841,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (!imme && this.following) return;
                 let wSize = getWindowSize();
 
-                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2), padding2 = 50, left, top;//内外侧间距
+                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2, (this.img.naturalWidth || 500)>>1, (this.img.naturalHeight || 500)>>1), padding2 = 50, left, top;//内外侧间距
                 imgWindow.style.position = "fixed";
                 let scrolled = {x: 0, y: 0};
 
