@@ -277,16 +277,20 @@ var siteInfo = [
         name:"deviantart",
         url:/^https?:\/\/[^.]*\.deviantart\.com/i,
         getImage: function(a, p) {
-            if (!a) return;
-            let media =Object.keys(a).filter(prop => prop.indexOf("__reactProps") === 0);
-            if (!media || !a[media] || !a[media].children || !a[media].children.props || !a[media].children.props.deviation) return;
-            media = a[media].children.props.deviation.media;
-            let fullview = media.types.filter(d => d.t === "fullview");
-            let ext = media.baseUri.match(/\.\w+$/);
-            if (!fullview || !ext) return;
-            fullview = fullview[0];
-            ext = ext[0];
-            return media.baseUri + `/v1/fill/w_${fullview.w},h_${fullview.h}/${media.prettyName}-fullview${ext}?token=` + media.token[0];
+            if (a) {
+                let media =Object.keys(a).filter(prop => prop.indexOf("__reactProps") === 0);
+                if (media && a[media] && a[media].children && a[media].children.props && a[media].children.props.deviation) {
+                    media = a[media].children.props.deviation.media;
+                    let fullview = media.types.filter(d => d.t === "fullview");
+                    let ext = media.baseUri.match(/\.\w+$/);
+                    if (fullview && ext) {
+                        fullview = fullview[0];
+                        ext = ext[0];
+                        return media.baseUri + `/v1/fill/w_${fullview.w},h_${fullview.h}/${media.prettyName}-fullview${ext}?token=` + media.token[0];
+                    }
+                }
+            }
+            return this.src && this.src.replace(/,q_\d+,/, ",q_100,").replace(/\/v1\/fill\/[^?]+\-pre\.\w+\?/, "?");
         }
     },
     {
@@ -891,6 +895,7 @@ var siteInfo = [
         name: "imgurLink",
         xhr: {
             url: function(a, p) {
+                if (!a) return;
                 const imgurReg = /^https?:\/\/(?:(?:[im].)?(?:imgur.(?:com|io)|filmot.(?:com|org))\/+(?:(?:(a|gallery(?!\/random|\/custom)|t(?:opic)?\/[^/]+)|r\/[^/]+)\/(?:[^-/]+-)*([^W_]{5}(?:[^_W]{2})?)|(?:[^W_]{5}(?:[^W_]{2})?[,&])+[^_W]{5}(?:[^W_]{2})?)).*/;
                 if (a.href.match && imgurReg.test(a.href)) {
                     const m = a.href.match(imgurReg);
