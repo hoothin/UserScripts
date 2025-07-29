@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.7.27.1
+// @version              2025.7.29.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -14722,7 +14722,7 @@ ImgOps | https://imgops.com/#b#`;
                                     media = document.createElement('audio');
                                     src = "audio:" + src;
                                 } else if (file.type.indexOf("video") === 0) {
-                                    media = document.createElement('video');
+                                    media = createVideo();
                                     src = "video:" + src;
                                 } else continue;
                                 media.title = file.name;
@@ -15630,7 +15630,7 @@ ImgOps | https://imgops.com/#b#`;
                                         media = document.createElement('audio');
                                         src = "audio:" + src;
                                     } else if (file.type.indexOf("video") === 0) {
-                                        media = document.createElement('video');
+                                        media = createVideo();
                                         src = "video:" + src;
                                     } else continue;
                                     media.src = src;
@@ -16217,7 +16217,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             switch (mode) {
                                 case "video":
-                                    media = document.createElement('video');
+                                    media = createVideo();
                                     media.style.width = 0;
                                     media.style.height = 0;
                                     media.controls = true;
@@ -16620,7 +16620,7 @@ ImgOps | https://imgops.com/#b#`;
                     media.removeEventListener('loadeddata', loaded);
                 }
                 if (isVideoLink(src)) {
-                    media = document.createElement('video');
+                    media = createVideo();
                     media.style.width = 0;
                     media.style.height = 0;
                     media.controls = true;
@@ -23324,7 +23324,7 @@ ImgOps | https://imgops.com/#b#`;
                 } else {
                     switch (mode) {
                         case "video":
-                            media = document.createElement('video');
+                            media = createVideo();
                             media.style.width = 0;
                             media.style.height = 0;
                             media.controls = true;
@@ -25661,7 +25661,7 @@ ImgOps | https://imgops.com/#b#`;
                 return;
             }
             if (curLoadingMedia && curLoadingMedia.src == e.blockedURI) {
-                GM_xmlhttpRequest({
+                _GM_xmlhttpRequest({
                     method: 'GET',
                     url: curLoadingMedia.src,
                     responseType: 'blob',
@@ -25670,15 +25670,39 @@ ImgOps | https://imgops.com/#b#`;
 
                         curLoadingMedia.src = blobUrl;
                         curLoadingMedia.load();
-                        videoElement.play().catch(err => console.warn('[CSP Fixer] Autoplay after fix was blocked.', err));
+                        curLoadingMedia.play().catch(err => console.warn('[CSP Fixer] Autoplay after fix was blocked.', err));
 
                         const releaseBlob = () => URL.revokeObjectURL(blobUrl);
-                        videoElement.addEventListener('ended', releaseBlob);
+                        curLoadingMedia.addEventListener('ended', releaseBlob);
                         window.addEventListener('beforeunload', releaseBlob);
                     }
                 });
             }
         });
+        function createVideo() {
+            let media = document.createElement('video');
+            media.addEventListener('error', e => {
+                if (/^blob:/.test(media.src)) return;
+                _GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: media.src,
+                    responseType: 'blob',
+                    onload: function(response) {
+                        const blobUrl = URL.createObjectURL(response.response);
+
+                        media.src = blobUrl;
+                        media.load();
+                        media.play().catch(err => console.warn('[CSP Fixer] Autoplay after fix was blocked.', err));
+
+                        const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                        media.addEventListener('ended', releaseBlob);
+                        window.addEventListener('beforeunload', releaseBlob);
+                        curLoadingMedia = null;
+                    }
+                });
+            });
+            return media;
+        }
 
         async function input(sel, v) {
             await new Promise((resolve) => {
