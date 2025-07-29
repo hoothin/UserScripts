@@ -21,19 +21,19 @@ Hover your mouse over any image and click the icons on the float bar.
 
 Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger picture when hovering over images or links.
 
-English by [RX-3200](https://greasyfork.org/users/43-rx-3200).
-
-Português by [AstroCoelestis](https://greasyfork.org/users/881248).
-
-Русский by RX-3200 & vanja-san.
-
-Turkish by [PUFF1N](https://github.com/PUFF1N-000).
-
-Ukrainian by [MaSHiNiK](https://github.com/MaSHiNiK).
-
-Arabic by [Prankster 199](https://github.com/vfggf95565).
-
 There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
+
++ English by [RX-3200](https://greasyfork.org/users/43-rx-3200).
+
++ Português by [AstroCoelestis](https://greasyfork.org/users/881248).
+
++ Русский by RX-3200 & vanja-san.
+
++ Turkish by [PUFF1N](https://github.com/PUFF1N-000).
+
++ Ukrainian by [MaSHiNiK](https://github.com/MaSHiNiK).
+
++ Arabic by [Prankster 199](https://github.com/vfggf95565).
 
 If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
