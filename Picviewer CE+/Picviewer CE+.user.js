@@ -16198,10 +16198,33 @@ ImgOps | https://imgops.com/#b#`;
                         e.preventDefault();
                         self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
-                            let i = document.createElement("img");
-                            i.src = curNode.dataset.thumbSrc;
-                            curNode.dataset.src = curNode.dataset.thumbSrc;
-                            popupImgWin(i);
+                            if (/^blob:/.test(media.src)) {
+                                let i = document.createElement("img");
+                                i.src = curNode.dataset.thumbSrc;
+                                curNode.dataset.src = curNode.dataset.thumbSrc;
+                                popupImgWin(i);
+                            } else {
+                                _GM_xmlhttpRequest({
+                                    method: 'GET',
+                                    url: dataset(node, 'src'),
+                                    responseType: 'blob',
+                                    onload: function(response) {
+                                        const blobUrl = URL.createObjectURL(response.response);
+                                        let i = document.createElement("img");
+                                        i.src = blobUrl;
+                                        curNode.dataset.src = curNode.dataset.thumbSrc;
+                                        popupImgWin(i);
+                                        const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                                        window.addEventListener('beforeunload', releaseBlob);
+                                    },
+                                    onerror: function() {
+                                        let i = document.createElement("img");
+                                        i.src = curNode.dataset.thumbSrc;
+                                        curNode.dataset.src = curNode.dataset.thumbSrc;
+                                        popupImgWin(i);
+                                    }
+                                });
+                            }
                         };
                         let loadImg = async() => {
                             self.showTips("Loading image...");
@@ -16259,8 +16282,31 @@ ImgOps | https://imgops.com/#b#`;
                                         popupImgWin(this);
                                     },
                                     error:function(e){
-                                        self.showTips("");
-                                        loadError();
+                                        if (/^blob:/.test(imgSrc)) {
+                                            self.showTips("");
+                                            loadError();
+                                        } else if (mode == "image" || mode == "") {
+                                            _GM_xmlhttpRequest({
+                                                method: 'GET',
+                                                url: imgSrc,
+                                                responseType: 'blob',
+                                                onload: function(response) {
+                                                    const blobUrl = URL.createObjectURL(response.response);
+                                                    self.showTips("");
+                                                    let img = document.createElement("img");
+                                                    popupImgWin(img);
+                                                    const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                                                    window.addEventListener('beforeunload', releaseBlob);
+                                                },
+                                                onerror: function() {
+                                                    self.showTips("");
+                                                    loadError();
+                                                }
+                                            });
+                                        } else {
+                                            self.showTips("");
+                                            loadError();
+                                        }
                                     }
                                 });
                             }
@@ -16692,9 +16738,36 @@ ImgOps | https://imgops.com/#b#`;
 
                         if(e.type=='error'){
                             if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
-                            self.errorSpan=ele;
-                            if(preImgR)preImgR.abort();
-                            self.loadImg(this, ele,true);
+                            if (/^blob:/.test(src)) {
+                                self.errorSpan=ele;
+                                if(preImgR)preImgR.abort();
+                                self.loadImg(this, ele,true);
+                            } else {
+                                _GM_xmlhttpRequest({
+                                    method: 'GET',
+                                    url: src,
+                                    responseType: 'blob',
+                                    onload: function(response) {
+                                        const blobUrl = URL.createObjectURL(response.response);
+                                        self.slideShow.run('loadEnd');
+                                        let img = document.createElement("img");
+                                        img.src = blobUrl;
+                                        imgReady(blobUrl, {
+                                            ready:function(){
+                                                self.loadImg(img, ele, false);
+                                                self.slideShow.run('loadEnd');
+                                            }
+                                        });
+                                        const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                                        window.addEventListener('beforeunload', releaseBlob);
+                                    },
+                                    onerror: function() {
+                                        self.errorSpan=ele;
+                                        if(preImgR)preImgR.abort();
+                                        self.loadImg(this, ele, true);
+                                    }
+                                });
+                            }
                         };
 
                         self.slideShow.run('loadEnd');
@@ -23360,12 +23433,40 @@ ImgOps | https://imgops.com/#b#`;
 
                 var opts = {
                     error: function(e) {
-                        if (Array.isArray(imgSrcs)) {
-                            var src = imgSrcs.shift();
-                            if (src) {
-                                self.loadImg(src, imgSrcs, nextFun);
-                                return;
+                        if (/^blob:/.test(imgSrc)) {
+                            if (Array.isArray(imgSrcs)) {
+                                var src = imgSrcs.shift();
+                                if (src) {
+                                    self.loadImg(src, imgSrcs, nextFun);
+                                    return;
+                                }
                             }
+                        } else if (mode == "image" || mode == "") {
+                            _GM_xmlhttpRequest({
+                                method: 'GET',
+                                url: media.src,
+                                responseType: 'blob',
+                                onload: function(response) {
+                                    const blobUrl = URL.createObjectURL(response.response);
+                                    self.loadImg(blobUrl, imgSrcs, nextFun);
+                                    const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                                    window.addEventListener('beforeunload', releaseBlob);
+                                },
+                                onerror: function() {
+                                    if (Array.isArray(imgSrcs)) {
+                                        var src = imgSrcs.shift();
+                                        if (src) {
+                                            self.loadImg(src, imgSrcs, nextFun);
+                                            return;
+                                        }
+                                    } else {
+                                        self.error('', this, e);
+                                    }
+                                }
+                            });
+                            return;
+                        } else {
+                            self.error('', this, e);
                         }
 
                         if(nextFun) nextFun();
