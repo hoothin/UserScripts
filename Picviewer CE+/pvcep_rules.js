@@ -1558,10 +1558,32 @@ var siteInfo = [
     {
         name: "Sankaku Complex",
         url:/sankakucomplex\.com/,
-        src:/\/data\/preview\//,
         xhr:{
-            url: "a",
-            query: "img#image"
+            url: function(a, p) {
+                const re = /^https?:\/\/(?:www\.)?((?:idol|chan)\.)?(sankaku)complex(\.com\/)(?:\w{2}\/)?(post)s?\/(?:show\/)?([a-zA-Z0-9]+).*/;
+                const $ = a && a.href.match(re);
+                if ($) {
+                    return !$[1] ? `https://${$[2]}api${$[3]+$[4]}s/${$[5]}/fu` : $[0];
+                }
+            },
+            query: function(html, doc, url) {
+                const re = /^https?:\/\/((?:idol|chan|www)\.)?(sankaku)complex(\.com\/)(?:\w{2}\/)?(post)s?\/(?:show\/)?([a-zA-Z0-9]+).*/;
+                const $ = url.match(re);
+                if(html[0]!=='{') return;
+                let meta = document.querySelector('head > meta[name="referrer"]');
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    meta.name = 'referrer';
+                    meta.content = 'same-origin';
+                    document.getElementsByTagName('head')[0].appendChild(meta);
+                } else if (meta.attributes.content.value !== 'same-origin') {
+                    meta.attributes.content.value = 'same-origin';
+                }
+                let lowres_url, highres_url;
+                lowres_url = html.match(/(?:(?:Resized: <a|<a id="lowres"[^>]+?) href=|sample_url": ?)"([^"]+)/)?.[1];
+                highres_url = html.match(/(?:(?:Original: <a|<a id="highres"[^>]+?) href="|file_url":"?)([^(,")]+)/)?.[1];
+                return highres_url;
+            }
         }
     },
     {
