@@ -1004,7 +1004,7 @@ var siteInfo = [
                 if (!img) return;
                 newsrc = img.src;
             }
-            return newsrc.replace(/\?.*$/i,"");
+            return newsrc.replace(/\?.*$/i,"").replace(/\/an_webp\/([^\/]+)\/mqdefault_6s\.webp/, "/vi/$1/hqdefault.jpg");
         },
         getImage: function(a, p) {
             var newsrc=this.src;
@@ -1012,7 +1012,7 @@ var siteInfo = [
                 newsrc = p[2].querySelector("img").src;
             }
             if(!newsrc || newsrc.indexOf("i.ytimg.com") == -1) return;
-            return newsrc.replace(/\?.*$/i,"");
+            return newsrc.replace(/\?.*$/i,"").replace(/\/an_webp\/([^\/]+)\/mqdefault_6s\.webp/, "/vi/$1/hqdefault.jpg");
         }
     },
     {
@@ -1559,13 +1559,7 @@ var siteInfo = [
         name: "Sankaku Complex",
         url:/sankakucomplex\.com/,
         xhr:{
-            url: function(a, p) {
-                const re = /^https?:\/\/(?:www\.)?((?:idol|chan)\.)?(sankaku)complex(\.com\/)(?:\w{2}\/)?(post)s?\/(?:show\/)?([a-zA-Z0-9]+).*/;
-                const $ = a && a.href.match(re);
-                if ($) {
-                    return !$[1] ? `https://${$[2]}api${$[3]+$[4]}s/${$[5]}/fu` : $[0];
-                }
-            },
+            url: ["^https?://(?:www\\.)?(sankaku)complex(\\.com/)(?:\\w{2}/)?(post)s?/(?:show/)?([a-zA-Z0-9]+).*", "https://$1api$2$3s/$4/fu"],
             query: function(html, doc, url) {
                 const re = /^https?:\/\/((?:idol|chan|www)\.)?(sankaku)complex(\.com\/)(?:\w{2}\/)?(post)s?\/(?:show\/)?([a-zA-Z0-9]+).*/;
                 const $ = url.match(re);
