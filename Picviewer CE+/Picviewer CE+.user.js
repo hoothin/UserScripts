@@ -16808,8 +16808,8 @@ ImgOps | https://imgops.com/#b#`;
                     };
                 } else if (/^audio$/i.test(img.nodeName)) {
                     imgNaturalSize = {
-                        h:80,
-                        w:300,
+                        h:50,
+                        w:350,
                     };
                 } else {
                     imgNaturalSize={
@@ -20670,8 +20670,13 @@ ImgOps | https://imgops.com/#b#`;
                     setSearchState(`<strong>${img.naturalWidth} x ${img.naturalHeight}</strong>`, self.imgState);
                 }
                 if (!this.isImg) {
-                    img.naturalHeight = img.videoHeight || 1080;
-                    img.naturalWidth = img.videoWidth || 1920;
+                    if (/^video$/i.test(img.nodeName)) {
+                        img.naturalHeight = img.videoHeight || 1080;
+                        img.naturalWidth = img.videoWidth || 1920;
+                    } else if (/^audio$/i.test(img.nodeName)) {
+                        img.naturalHeight = 50;
+                        img.naturalWidth = 350;
+                    }
                     setTimeout(() => {
                         img.onload();
                     }, 0);
