@@ -625,8 +625,8 @@ var siteInfo = [
     {
         name: "discordapp",
         url: /(discordapp\.|discord\.)(com|net)/,
-        r: [/\?width=\d+&height=\d+$/i, /.*\/external\/.*\/(https?)\/(.*)\?format.*/],
-        s: ["", "$1://$2"]
+        r: [/\?width=\d+&height=\d+$/i, /.*\/external\/.*\/(https?)\/(.*)\?format.*/, /media\.discordapp\.net/],
+        s: ["", "$1://$2", "cdn.discordapp.com"]
     },
     {
         name: "推特",
