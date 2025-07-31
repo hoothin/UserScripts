@@ -1813,6 +1813,28 @@ var siteInfo = [
         }
     },
     {
+        name: "postimg Link",
+        xhr: {
+            url: "a[href^='https://postimg.cc/']",
+            query: function(html, doc, url) {
+                if (url.indexOf("gallery") != -1) {
+                    let urls = [];
+                    [].forEach.call(doc.querySelectorAll("#thumb-list>.thumb-container"), ele => {
+                        let hotlink = ele.dataset.hotlink;
+                        let name = ele.dataset.name;
+                        let ext = ele.dataset.ext;
+                        if (hotlink && name && ext) {
+                            urls.push(`https://i.postimg.cc/${hotlink}/${name}.${ext}`);
+                        }
+                    });
+                    if (urls.length) return urls;
+                }
+                let img = doc.querySelector("#main-image");
+                return img && img.src;
+            }
+        }
+    },
+    {
         name: "postimg",
         url: /^https:\/\/postimg\.cc/,
         xhr: {
