@@ -24188,7 +24188,7 @@ ImgOps | https://imgops.com/#b#`;
                     var iurl, iurls = [], cap, caps, doc = createDoc(html);
 
                     if(typeof q == 'function') {
-                        iurl = await q(html, doc, url + (post ? `#p{${post}}` : ""), xhr);
+                        iurl = await q(html, doc, url + (post ? `#p{${post}}` : ""), xhr, GM_fetch);
                         if (iurl) {
                             if(iurl.url) {
                                 cap = iurl.cap;
