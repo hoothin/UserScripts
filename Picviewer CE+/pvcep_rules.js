@@ -1829,7 +1829,10 @@ var siteInfo = [
                     });
                     if (urls.length) return urls;
                 }
-                let img = doc.querySelector("#main-image");
+                let img = doc.querySelector("#download");
+                if (img) {
+                    return img.href;
+                } else img = doc.querySelector("#main-image");
                 return img && img.src;
             }
         }
