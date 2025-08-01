@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.7.31.2
+// @version              2025.8.1.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12613,7 +12613,7 @@ ImgOps | https://imgops.com/#b#`;
 
         var matchedRule,
             _URL=location.href.slice(0, 500);
-        const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc", "data-preview", "data-page-image-url"];
+        const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-defer-src", "data-actualsrc", "data-original", "data-origin-src", "data-imageurl", "lazysrc", "data-src", "data-preview", "data-cover", "data-page-image-url", "data-thumb", "data-placeholder"];
         var tprules = [
             function(a) {
                 if (this.currentSrc && !this.src) this.src = this.currentSrc;
@@ -18047,7 +18047,7 @@ ImgOps | https://imgops.com/#b#`;
                 var container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
-                var bgReg = /.*?url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
+                var bgReg = /.*?url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
                 var body = getBody(document);
                 var linkMedias = [];
                 function anylizeEle(total, node) {
@@ -23960,11 +23960,7 @@ ImgOps | https://imgops.com/#b#`;
                 let offsetParent, bodyPosi;
 
                 if (bodyStyle.position === "static") {
-                    if (document.documentElement.scrollLeft || document.documentElement.scrollTop) {
-                        offsetParent = document.documentElement;
-                    } else {
-                        offsetParent = body;
-                    }
+                    offsetParent = document.documentElement;
                     bodyPosi = {
                         top: 0,
                         bottom: windowSize.h,
@@ -25206,8 +25202,8 @@ ImgOps | https://imgops.com/#b#`;
                     if (!target) return;
                 }
             }
-            let bgReg = /.*url\(\s*["']?([^ad\s'"].+?)["']?\s*\)([^'"]|$)/i;
-            let bgRegLong = /^\s*url\(\s*["']?([^ad\s'"].+?)["']?\s*\)([^'"]|$)/i;
+            let bgReg = /.*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
+            let bgRegLong = /^\s*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
             let result, targetBg, hasBg = node => {
                 if(node.nodeName.toUpperCase() == "HTML" || node.nodeName == "#document"){
                     return false;
