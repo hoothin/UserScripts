@@ -829,7 +829,7 @@ var siteInfo = [
                         });
                     }
                     return apiUrl + "/gifs/" + aHref.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
-                } else if (p[1] && p[1].classList.contains("search-result")) {
+                } else if (p[1] && p[1].classList && p[1].classList.contains("search-result")) {
                     let link = p[1].querySelector("a.search-link");
                     if (link && link.href) {
                         if (/\/\/v.redd\.it\/\w+\/?$/.test(link.href)) {
@@ -838,6 +838,8 @@ var siteInfo = [
                             return link.href;
                         }
                     }
+                } else if (a && this.src && p[2] && p[2].nodeName == "FACEPLATE-IMG") {
+                    return a.href;
                 }
             },
             headers: (url, self) => {
@@ -872,6 +874,17 @@ var siteInfo = [
                                 (!i ? '[' + new Date(data.created_utc*1e3).toLocaleString() + ' | ' + data.title + '] ' : '') + (c.caption || '')
                             ]
                         })
+                    } else if (/\/r\//.test(url)) {
+                        let img = doc.querySelector("img[src^='https://preview.redd.it/']");
+                        if (img) return img.src;
+                        img = doc.querySelector("[packaged-media-json]");
+                        if (img) {
+                            let mediaJson = img.getAttribute("packaged-media-json");
+                            if (mediaJson) {
+                                return JSON.parse(mediaJson).playbackMp4s.permutations.pop().source.url;
+                            }
+                        }
+                        return;
                     }
                     var xmlDoc = (new DOMParser()).parseFromString(html, 'application/xml');
                     var highestRes = [].slice.call(xmlDoc.querySelectorAll('Representation[frameRate]'))
