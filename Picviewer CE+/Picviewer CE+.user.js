@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1633507/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1633680/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -13074,10 +13074,10 @@ ImgOps | https://imgops.com/#b#`;
             var rect=target.getBoundingClientRect();
             var compStyle=unsafeWindow.getComputedStyle(target);
             var pFloat=parseFloat;
-            var top=rect.top + pFloat(compStyle.paddingTop) + pFloat(compStyle.borderTopWidth);
-            var right=rect.right - pFloat(compStyle.paddingRight) - pFloat(compStyle.borderRightWidth);
-            var bottom=rect.bottom - pFloat(compStyle.paddingBottom) - pFloat(compStyle.borderBottomWidth);
-            var left=rect.left + pFloat(compStyle.paddingLeft) + pFloat(compStyle.borderLeftWidth);
+            var top=rect.top + pFloat(compStyle.borderTopWidth);
+            var right=rect.right - pFloat(compStyle.borderRightWidth);
+            var bottom=rect.bottom - pFloat(compStyle.borderBottomWidth);
+            var left=rect.left + pFloat(compStyle.borderLeftWidth);
             return {
                 top:top,
                 right:right,
