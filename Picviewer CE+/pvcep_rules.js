@@ -660,7 +660,7 @@ var siteInfo = [
     },
     {
         name: "Fandom",
-        url: /fandom\.com/,
+        url: /\bfandom\.com/,
         r: [/scale\-to\-width\-down\/\d+/i,
             /smart\/width\/\d+\/height\/\d+/i],
         s: ["",""]
@@ -706,7 +706,7 @@ var siteInfo = [
     },
     {
         name: "E621",
-        url: /e621\.net/,
+        url: /\be621\.net/,
         getImage: function(a, p) {
             if(p[2] && p[2].dataset.fileUrl){
                 return p[2].dataset.fileUrl;
@@ -716,7 +716,7 @@ var siteInfo = [
     },
     {
         name: "Pinterest",
-        url: /pinterest\.com/,
+        url: /\bpinterest\.com/,
         getImage: function(a, p) {
             if(this.srcset){
                 var srcs=this.srcset.split(","),minSize=0,newSrc;
@@ -734,13 +734,13 @@ var siteInfo = [
     },
     {
         name: "Zhisheji",
-        url: /zhisheji\.com/,
+        url: /\bzhisheji\.com/,
         r: /thumbnail\/.*/i,
         s: ""
     },
     {
         name: "imgbox",
-        src: /imgbox\.com/,
+        src: /\bimgbox\.com/,
         r: /thumbs(\d\.imgbox.*)_t\./i,
         s: "images$1_o."
     },
@@ -798,7 +798,7 @@ var siteInfo = [
     },
     {
         name: "Reddit",
-        url: /reddit\.com|redd\.it/,
+        url: /\breddit\.com|redd\.it/,
         getImage: function() {
             if (this.srcset) {
                 var srcs = this.srcset.split(/[xw],/i);
@@ -956,26 +956,26 @@ var siteInfo = [
     },
     {
         name: "Rule34hentai",
-        url: /rule34hentai\.net/,
+        url: /\brule34hentai\.net/,
         r: "/_thumbs/",
         s: "/_images/"
     },
     {
         name: "Rule34",
-        url: /rule34\.xxx/,
+        url: /\brule34\.xxx/,
         src: /\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_/i,
         r: /\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/i,
         s: ["/images/$2/$4.jpeg","/images/$2/$4.png","/images/$2/$4.jpg"]
     },
     {
         name: "Photosight",
-        url: /photosight\.ru/,
+        url: /\bphotosight\.ru/,
         r: /(cdny\.de.*\/)t\//i,
         s: "$1x/"
     },
     {
         name: "Xiaohongshu",
-        url: /xiaohongshu\.com/,
+        url: /\bxiaohongshu\.com/,
         ext: function(target) {
             if (target.className == 'change-pic') {
                 var imgs=target.previousElementSibling.querySelectorAll('li'),i=0;
@@ -991,7 +991,7 @@ var siteInfo = [
     },
     {
         name: "Youtube",
-        url: /youtube\.com/,
+        url: /\byoutube\.com/,
         ext: function(target) {
             if (target.tagName == "ytd-thumbnail" || target.id == "thumbnail-container") {
                 return target.querySelector("img");
@@ -1183,13 +1183,13 @@ var siteInfo = [
     },
     {
         name: "gravatar",
-        src: /gravatar\.com\/avatar\/|\/gravatar\//i,
+        src: /\bgravatar\.com\/avatar\/|\/gravatar\//i,
         r: /(avatar\/.*[\?&]s=).*/,
         s: '$11920'
     },
     {
         name: "ucServerAvatar",
-        src: /uc_server\/avatar\.php/i,
+        src: /\buc_server\/avatar\.php/i,
         r: /(uc_server\/avatar\.php\?uid=\d+&size=).*/,
         s: '$1big'
     },
@@ -1271,7 +1271,7 @@ var siteInfo = [
     },
     {
         name: "douban",
-        url: /douban\.com/i,
+        url: /\bdouban\.com/i,
         getImage:function(){
             var $ = /(img\d+\.douban\.com\/)(?:(view\/)(?:photo|movie_poster_cover)\/(?!large)[^\/]+|(icon\/u(?=\d))|[sm](?=pic\/))(.*)/i.exec(this.src);
             var newsrc= $ ? ('http://' + $[1] + ($[2] ? $[2] + 'photo/photo' : (($[3]||'') + 'l')) + $[4]) : '';
@@ -1290,7 +1290,7 @@ var siteInfo = [
     },
     {
         name: "taobao",
-        url: /item\.taobao\.com/i,
+        url: /\bitem\.taobao\.com/i,
         r: [/.*((?:img\d\d\.taobaocdn|img(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/i,
             /(.*\.alicdn\.com\/.*?)((.jpg|.png)(\.|_)\d+x\d+.*)\.jpg(_\.webp)?$/i,
             /(.*\.alicdn\.com\/.*?)((\.|_)\d+x\d+.*|\.search|\.summ)\.jpg(_\.webp)?$/i],
@@ -1305,14 +1305,14 @@ var siteInfo = [
     },
     {
         name: "yihaodianimg",
-        url: /yhd\.com/i,
+        url: /\byhd\.com/i,
         src: /yihaodianimg\.com/i,
         r: /(.*\.yihaodianimg\.com\/.*)_\d+x\d+\.jpg$/i,
         s: "$1.jpg"
     },
     {
         name: "jd",
-        url: /jd\.com/i,
+        url: /\bjd\.com/i,
         src: /360buyimg\.com/i,
         r: [/(.*360buyimg\.com\/)n\d\/.+?\_(.*)/i,
             /(.*360buyimg\.com\/)n\d\/(.*)/i,
@@ -1321,20 +1321,20 @@ var siteInfo = [
     },
     {
         name: "dangdang",
-        url: /dangdang\.com/i,
-        src: /ddimg\.cn/i,
+        url: /\bdangdang\.com/i,
+        src: /\bddimg\.cn/i,
         r: /(.*ddimg.cn\/.*?)_[bw]_(\d+\.jpg$)/i,
         s: "$1_e_$2"
     },
     {
         name: "duokan",
-        url: /duokan\.com/i,
+        url: /\bduokan\.com/i,
         r: /(cover.read.duokan.com.*?\.jpg)!\w+$/i,
         s: "$1"
     },
     {
         name: "yyets",
-        url: /yyets\.com/i,
+        url: /\byyets\.com/i,
         r: /^(res\.yyets\.com.*?\/ftp\/(?:attachment\/)?\d+\/\d+)\/[ms]_(.*)/i,
         s: "http://$1/$2"
     },
@@ -1387,35 +1387,35 @@ var siteInfo = [
     },
     {
         name: "nhentai",
-        url: /nhentai\./i,
+        url: /\bnhentai\./i,
         r: [/(cdn\..*\d+)t(\.[a-z]+)$/, /\/\/\w+(\..*\/)(\d+)t(\.[a-z]+)$/i],
         s: ["$1$2","//i$1$2$3"],
         example: "http://nhentai.net/g/113475/"
     },
     {
         name: "GithubAvatars",
-        url: /github\.com/i,
+        url: /\bgithub\.com/i,
         r: /(avatars\d*\.githubusercontent\.com.*)\?.*$/i,
         s: "$1",
         example: "https://avatars2.githubusercontent.com/u/3233275/"
     },
     {
         name: "ggpht",
-        src: /ggpht\.com/i,
+        src: /\bggpht\.com/i,
         r: /=s\d+.*/i,
         s: "=s9999"
     },
     {
         name: "kodansha",
-        url: /kodansha\.co\.jp/i,
-        src: /kodansha\.co\.jp/i,
+        url: /\bkodansha\.co\.jp/i,
+        src: /\bkodansha\.co\.jp/i,
         r: 't_og_image_center',
         s: 'c_limit'
     },
     {
         name: "fanseven",
-        url: /fanseven\.com/i,
-        src: /fanseven\.com/i,
+        url: /\bfanseven\.com/i,
+        src: /\bfanseven\.com/i,
         r: /w=\d+&h=\d+/i,
         s: 'w=9999&h=9999'
     },
@@ -1864,6 +1864,12 @@ var siteInfo = [
             url: "a[href^='/albums/']",
             query: "[data-type=photo]>img[data-src]",
         }
+    },
+    {
+        name: "Google review",
+        url: /\bgoogle\.com\//,
+        r: /=w\d+\-h\d+\-\w/,
+        s: "=s3072-v1"
     },
     {
         name: "MAL Anime/Manga",
