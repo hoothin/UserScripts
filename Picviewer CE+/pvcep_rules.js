@@ -1858,6 +1858,14 @@ var siteInfo = [
         }
     },
     {
+        name: "Yupoo main",
+        url: /\byupoo\.com\//,
+        xhr: {
+            url: "a[href^='/albums/']",
+            query: "[data-type=photo]>img[data-src]",
+        }
+    },
+    {
         name: "MAL Anime/Manga",
         src: /^https:\/\/cdn\.myanimelist\.net/,
         r: /(\/r\/\d+x\d+)?(\/images\/(anime|manga)\/\d+\/\d+)\.(webp|jpg).+/,
