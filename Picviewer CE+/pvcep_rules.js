@@ -799,8 +799,10 @@ var siteInfo = [
     {
         name: "Reddit",
         url: /\breddit\.com|redd\.it/,
-        getImage: function() {
-            if (this.srcset) {
+        getImage: function(a, p) {
+            if (a && /review\.redd\.it/.test(a.href)) {
+                return a.href;
+            } else if (this.srcset) {
                 let srcs = this.srcset.split(/[xw],\s*/i);
                 let maxSize = 0;
                 let result = "";
