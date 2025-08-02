@@ -1248,6 +1248,12 @@ var siteInfo = [
         s: '$1'
     },
     {
+        name: "thumbnail",
+        src: /\.thumbnail\./i,
+        r: /\.thumbnail(\.[^\.]+)$/i,
+        s: '$1'
+    },
+    {
         name: "ytimg",
         src: /i\.ytimg\.com/i,
         exclude: /mqdefault_6s/i,
@@ -1942,5 +1948,25 @@ var siteInfo = [
         url: "^https://nozomi\\.la",
         r: "///qtn(\\..*)\\.\\w+\\.webp/i",
         s: "//w$1.webp"
+    },
+    {
+        name: "Wjcodes",
+        url: /^https:\/\/[^\.]+\.wjcodes\.com\//,
+        getImage: function(a, p) {
+            if (!p[0]) return;
+            let dtEle;
+            if (dtEle = p[0].querySelector("[d=t]")) {
+                let onclick = dtEle.getAttribute("onclick");
+                if (onclick) return onclick.replace(/.*download_file\('([^']+).*/, "$1");
+            }
+        }
+    },
+    {
+        name: "anime-pictures",
+        url: /^https:\/\/anime\-pictures\.net\//,
+        xhr: {
+            url: "a[href^='/posts/']",
+            query: "a.icon-download"
+        }
     }
 ];
