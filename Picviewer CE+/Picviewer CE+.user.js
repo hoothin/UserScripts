@@ -16996,8 +16996,8 @@ ImgOps | https://imgops.com/#b#`;
                                 imgSty.width=width + 'px';
                                 imgSty.setProperty('width', width+'px', 'important');
                             }
-                            imgSty.width=width + 'px';
-                            imgSty.setProperty('width', width+'px', 'important');
+                            imgPaSty.width=width + 'px';
+                            imgPaSty.setProperty('width', width+'px', 'important');
                             scaled=width/imgNaturalSize.w;
                         };
                         scaled=(scaled*100).toFixed(2) + '%';
@@ -17025,8 +17025,8 @@ ImgOps | https://imgops.com/#b#`;
                                 imgSty.width=width + 'px';
                                 imgSty.setProperty('width', width+'px', 'important');
                             }
-                            imgSty.width=width + 'px';
-                            imgSty.setProperty('width', width+'px', 'important');
+                            imgPaSty.width=width + 'px';
+                            imgPaSty.setProperty('width', width+'px', 'important');
                             scaled=width/imgNaturalSize.w;
                         };
                         scaled=(scaled*100).toFixed(2) + '%';
