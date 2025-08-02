@@ -856,6 +856,9 @@ var siteInfo = [
                     }
                 } else if (a && this.src && p[2] && p[2].nodeName == "FACEPLATE-IMG") {
                     return a.href;
+                } else if (p[3]) {
+                    let a = p[3].querySelector("a.group");
+                    if (a) return a.href;
                 }
             },
             headers: (url, self) => {
@@ -891,8 +894,15 @@ var siteInfo = [
                             ]
                         })
                     } else if (/\/r\//.test(url)) {
-                        let img = doc.querySelector("img[src^='https://preview.redd.it/']");
-                        if (img) {
+                        let imgs = doc.querySelectorAll("img[src^='https://preview.redd.it/'],img[data-lazy-src^='https://preview.redd.it/']");
+                        let urls = [];
+                        [].forEach.call(imgs, img => {
+                            if (!img.src && img.getAttribute("data-lazy-src")) {
+                                img.src = img.getAttribute("data-lazy-src");
+                            }
+                            if (!img.srcset && img.getAttribute("data-lazy-srcset")) {
+                                img.srcset = img.getAttribute("data-lazy-srcset");
+                            }
                             if (img.srcset) {
                                 let srcs = img.srcset.split(/[xw],\s*/i);
                                 let maxSize = 0;
@@ -900,19 +910,20 @@ var siteInfo = [
                                 srcs.forEach(srcset => {
                                     let srcArr = srcset.split(" ");
                                     let curSize = parseInt(srcArr[1]);
-                                    if (srcArr[0].indexOf("?width") == -1) return srcArr[0];
+                                    if (srcArr[0].indexOf("?width") == -1) return urls.push(srcArr[0]);
                                     if (curSize > maxSize) {
                                         maxSize = curSize;
                                         result = srcArr[0];
                                     }
                                 });
-                                if (img.src.indexOf("?width") !== -1) return result;
+                                if (img.src.indexOf("?width") !== -1) return urls.push(result);
                             }
-                            return img.src;
-                        }
-                        img = doc.querySelector("[packaged-media-json]");
-                        if (img) {
-                            let mediaJson = img.getAttribute("packaged-media-json");
+                            urls.push(img.src);
+                        });
+                        if (urls.length) return urls;
+                        let json = doc.querySelector("[packaged-media-json]");
+                        if (json) {
+                            let mediaJson = json.getAttribute("packaged-media-json");
                             if (mediaJson) {
                                 return JSON.parse(mediaJson).playbackMp4s.permutations.pop().source.url;
                             }
