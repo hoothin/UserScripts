@@ -801,11 +801,19 @@ var siteInfo = [
         url: /\breddit\.com|redd\.it/,
         getImage: function() {
             if (this.srcset) {
-                var srcs = this.srcset.split(/[xw],/i);
-                for (let i = 0; i < srcs.length; i++) {
-                    let srcInfo = srcs[i].trim().split(" ")[0];
-                    if (srcInfo.indexOf("?width") == -1) return srcInfo;
-                }
+                let srcs = this.srcset.split(/[xw],\s*/i);
+                let maxSize = 0;
+                let result = "";
+                srcs.forEach(srcset => {
+                    let srcArr = srcset.split(" ");
+                    let curSize = parseInt(srcArr[1]);
+                    if (srcArr[0].indexOf("?width") == -1) return srcArr[0];
+                    if (curSize > maxSize) {
+                        maxSize = curSize;
+                        result = srcArr[0];
+                    }
+                });
+                if (this.src.indexOf("?width") !== -1) return result;
             } else if (/^https?:\/\/preview\./.test(this.src)){
                 return this.src.replace("preview", "i").replace(/\?.*/, "");
             }
@@ -876,7 +884,24 @@ var siteInfo = [
                         })
                     } else if (/\/r\//.test(url)) {
                         let img = doc.querySelector("img[src^='https://preview.redd.it/']");
-                        if (img) return img.src;
+                        if (img) {
+                            if (img.srcset) {
+                                let srcs = img.srcset.split(/[xw],\s*/i);
+                                let maxSize = 0;
+                                let result = "";
+                                srcs.forEach(srcset => {
+                                    let srcArr = srcset.split(" ");
+                                    let curSize = parseInt(srcArr[1]);
+                                    if (srcArr[0].indexOf("?width") == -1) return srcArr[0];
+                                    if (curSize > maxSize) {
+                                        maxSize = curSize;
+                                        result = srcArr[0];
+                                    }
+                                });
+                                if (img.src.indexOf("?width") !== -1) return result;
+                            }
+                            return img.src;
+                        }
                         img = doc.querySelector("[packaged-media-json]");
                         if (img) {
                             let mediaJson = img.getAttribute("packaged-media-json");
