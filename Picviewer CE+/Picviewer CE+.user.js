@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1633712/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1634053/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12640,7 +12640,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (newsrc) {
                 } else if (this.srcset) {
-                    var srcs = this.srcset.split(/[xw],/i), largeSize = -1;
+                    var srcs = this.srcset.split(/[xw],\s*/i), largeSize = -1;
                     srcs.forEach(srci => {
                         let srcInfo = srci.trim().split(/\s+/), curSize = parseInt(srcInfo[1] || 0);
                         if ((srcInfo[1] || !oldsrc) && curSize > largeSize) {
@@ -24331,7 +24331,7 @@ ImgOps | https://imgops.com/#b#`;
 
         function pretreatment(img, fetchImg) {
             if (img.removeAttribute) img.removeAttribute("loading");
-            if (img.nodeName.toUpperCase() != "IMG" || (!fetchImg && img.src && !/^data/.test(img.src))) return;
+            if (img.nodeName.toUpperCase() != "IMG" || (!fetchImg && img.src && !img.srcset && !/^data/.test(img.src))) return;
             let src;
             tprules.find(function(rule, index, array) {
                 try {
