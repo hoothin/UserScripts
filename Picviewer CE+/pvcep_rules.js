@@ -795,6 +795,14 @@ var siteInfo = [
         }
     },
     {
+        name: "streamain",
+        url: /^https:\/\/(streamain\.com\/|www\.reddit\.com\/)/,
+        xhr: {
+            url: "a[href^='https://streamain.com/'][href$='/watch']",
+            query: '#playbob-video'
+        }
+    },
+    {
         name: "Reddit",
         url: /\breddit\.com|redd\.it/,
         getImage: function(a, p) {
