@@ -798,7 +798,7 @@ var siteInfo = [
         name: "streamain",
         url: /^https:\/\/(streamain\.com\/|www\.reddit\.com\/)/,
         xhr: {
-            url: "a[href^='https://streamain.com/'][href$='/watch']",
+            url: /^https:\/\/streamain\.com\/.*\/watch$/,
             query: '#playbob-video'
         }
     },
@@ -1865,7 +1865,7 @@ var siteInfo = [
         name: "behance",
         url: /^https:\/\/www\.behance\.net/,
         xhr: {
-            url: "a[href^='/gallery/']",
+            url: /^\/gallery\//,
             query: "img[class^='ImageElement-image']"
         },
         getExtSrc: function() {
@@ -1879,14 +1879,14 @@ var siteInfo = [
         name: "postimg host",
         src: /^https:\/\/i\.postimg\.cc/,
         xhr: {
-            url: "a[href^='https://postimg.cc/']",
+            url: /^https:\/\/postimg\.cc\//,
             query: "#main-image"
         }
     },
     {
         name: "postimg Link",
         xhr: {
-            url: "a[href^='https://postimg.cc/']",
+            url: /^https:\/\/postimg\.cc\//,
             query: function(html, doc, url) {
                 if (url.indexOf("gallery") != -1) {
                     let urls = [];
@@ -1932,7 +1932,7 @@ var siteInfo = [
         name: "Yupoo main",
         url: /\byupoo\.com\//,
         xhr: {
-            url: "a[href^='/albums/']",
+            url: /^\/albums\//,
             query: "[data-type=photo]>img[data-src]",
         }
     },
@@ -1982,7 +1982,7 @@ var siteInfo = [
         name: "anime-pictures",
         url: /^https:\/\/anime\-pictures\.net\//,
         xhr: {
-            url: "a[href^='/posts/']",
+            url: /^\/posts\//,
             query: "a.icon-download"
         }
     }
