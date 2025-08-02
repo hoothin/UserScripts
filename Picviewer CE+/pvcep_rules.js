@@ -819,6 +819,14 @@ var siteInfo = [
             }
             return this.src;
         },
+        getExtSrc: function() {
+            if (this.getAttribute("reason") == "nsfw") {
+                if (!this.firstElementChild) return;
+                let img = this.firstElementChild.querySelector("img");
+                if (!img) return;
+                return img.src.replace(/^https:\/\/preview\.redd\.it\/(.*)\?.*/, "https://i.redd.it/$1");
+            }
+        },
         xhr: {
             url: function(a, p, self) {
                 let aHref = a && a.href;
