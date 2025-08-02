@@ -902,7 +902,7 @@ var siteInfo = [
                             ]
                         })
                     } else if (/\/r\//.test(url)) {
-                        let imgs = doc.querySelectorAll("img[src^='https://preview.redd.it/'],img[data-lazy-src^='https://preview.redd.it/']");
+                        let imgs = doc.querySelectorAll("img[src*='preview.redd.it/'],img[data-lazy-src^='https://preview.redd.it/']");
                         let urls = [];
                         [].forEach.call(imgs, img => {
                             if (!img.src && img.getAttribute("data-lazy-src")) {
