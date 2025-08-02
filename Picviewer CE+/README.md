@@ -1,6 +1,6 @@
-# 🏞️ Picviewer CE+ ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe) 🌐[Reddit](https://www.reddit.com/r/PicviewerCE) 🗨️[Discord](https://discord.com/invite/keqypXC6wD) 🕊️[Twitter](https://twitter.com/intent/follow?screen_name=HoothinDev) [⏬](https://hoothin.github.io/UserScripts/Picviewer%20CE+/Picviewer%20CE+.user.js)
+# 🏞️ Picviewer CE+ ⭐[Star](https://github.com/hoothin/UserScripts#StarMe) 🌐[Reddit](https://www.reddit.com/r/PicviewerCE) 🗨️[Discord](https://discord.com/invite/keqypXC6wD) 🕊️[Twitter](https://twitter.com/intent/follow?screen_name=HoothinDev)
 
-> Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
+### Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
 + **Adjust:** Scale/rotate/batch save every picture
 
@@ -15,13 +15,19 @@
 
 + View long image by scroll
 
-## Usage
+## 🚀 Quick Start
+
+Install from [Github](https://hoothin.github.io/UserScripts/Picviewer%20CE+/Picviewer%20CE+.user.js) or [Greasefork](https://greasyfork.org/scripts/24204-picviewer-ce).
 
 Hover your mouse over any image and click the icons on the float bar.
 
 Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger picture when hovering over images or links.
 
 There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
+
+## 🤝 Contribution & Support
+
+If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
 + English by [RX-3200](https://greasyfork.org/users/43-rx-3200).
 
@@ -35,11 +41,9 @@ There are additional settings available in the "Picviewer CE+ config" for furthe
 
 + Arabic by [Prankster 199](https://github.com/vfggf95565).
 
-If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
-
 *Need more rules for peculiar sites? feel free to pull requests or open issues.*
 
-## PDF Addon
+## ✨ PDF Addon
 [Picviewer CE+ PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon) After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
  <details>
 <summary>Make a PDF e-book with this addon</summary>
