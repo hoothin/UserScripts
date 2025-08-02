@@ -6192,6 +6192,11 @@
     "pageElement": "main.site-main > div.row.posts-wrapper"
 },
 {
+    "name": "Konachan-CHS 汉化 | 动漫壁纸下载 | Konachan中文站",
+    "url": "^https?://gelbooru\\.wjcodes\\.com/",
+    "nextLink": "//ul[@class='am-pagination']/li/a[text()='下一页']"
+},
+{
     "name": "投稿列表 pixivFANBOX",
     "url": "^https?://[^\\.]+\\.fanbox\\.cc/",
     "example": "https://ffxivinitiala.fanbox.cc/posts",
