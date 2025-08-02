@@ -102,6 +102,8 @@ This way, you'll get a beautifully created PDF e-book.
 ```
 You have the option to use a standalone userscript, which allows you to manage all of your custom rules effectively.
 
+Feel free to share your own custom rules on Greasy Fork!
+
 ``` js
 // ==UserScript==
 // @name         Picviewer CE+ custom rules
