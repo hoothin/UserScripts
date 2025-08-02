@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1634114/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1634207/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -24871,10 +24871,10 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     } else newSrc = null;
                     if (!base64Img && rule.r && img.src && !Array.isArray(newSrc)) {
-                        if (!newSrc) newSrc = img.currentSrc || img.src;
+                        if (!newSrc) newSrc = img.src || img.currentSrc;
                         newSrc = this.replaceByRule(newSrc, rule);
                     }
-                    if (newSrc && newSrc.length > 0 && newSrc != (img.currentSrc || img.src)) {
+                    if (newSrc && newSrc.length > 0 && newSrc != (img.src || img.currentSrc)) {
                         debug(rule);
                         break;
                     } else newSrc = null;
