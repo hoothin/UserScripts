@@ -295,14 +295,12 @@ var siteInfo = [
     },
     {
         name: '花瓣网',
-        enabled: true,
         url: /^https?:\/\/huaban\.com\//i,
         ext: 'previous-2',
-        r: /(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i,
-        s: '$1_fw658',
+        r: [/(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i, /_fw\d+\w+/i],
+        s: ['$1_fw658', ''],
         description: './../following-sibling::p[@class="description"]',
-        // css: '.pin a.img .cover { display: none; }',
-        exclude: /weixin_code\.png$/i,
+        exclude: /weixin_code\.png$/i
     },
     {
         name: "wikipedia",
