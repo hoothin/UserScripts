@@ -21362,7 +21362,7 @@ ImgOps | https://imgops.com/#b#`;
                     margin: 0 -5px 0 15px!important;\
                     padding: 3px!important;\
                     color: black;\
-                    text-shadow: 0 0 0px black;\
+                    text-shadow: 0 0 1px #00000099;\
                     }\
                     .pv-pic-window-description::before {\
                     display: inline-block;\
@@ -21458,10 +21458,11 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-box-sizing: content-box;\
                     box-sizing: content-box;\
                     border-radius: 1px;\
-                    background: rgb(0 0 0 / 80%);\
+                    background: rgb(0 0 0 / 75%);\
+                    box-shadow: rgb(221, 221, 221) 0px 0px 1px inset;\
                     max-width: 100%;\
                     overflow: hidden;\
-                    font: 13px / 1.4em "Trebuchet MS", sans-serif;\
+                    font: 13px / 1.4em Roboto,arial,sans-serif,微软雅黑,"Noto Sans SC";\
                     pointer-events: none;\
                     }\
                     .pv-pic-search-state>span {\
@@ -21478,7 +21479,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-search-state>span>strong {\
                     background: inherit;\
-                    color: inherit;\
+                    color: #ffffff;\
                     }\
                     span.pv-pic-search-state>.pv-icon {\
                     width: 20px;\
