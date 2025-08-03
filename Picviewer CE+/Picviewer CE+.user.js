@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.8.1.3
+// @version              2025.8.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12124,22 +12124,22 @@ ImgOps | https://imgops.com/#b#`;
         }
         switch (type) {
             case 1:
-                name = (name || nameFromUrl || "image").substr(-80);
+                name = (name || nameFromUrl || "image").substr(-200);
                 break;
             case 2:
-                name = (nameFromUrl || url || "image").substr(-80);
+                name = (nameFromUrl || url || "image").substr(-200);
                 break;
             case 3:
                 if (nameFromUrl && !name) {
-                    name = nameFromUrl.substr(-80);
+                    name = nameFromUrl.substr(-200);
                 } else if (nameFromUrl && name) {
-                    name = nameFromUrl.substr(-80) + " - " + name.substr(-80);
+                    name = nameFromUrl.substr(-200) + " - " + name.substr(-200);
                 } else if (!nameFromUrl && !name) {
                     name = "image";
                 }
                 break;
             default:
-                name = (nameFromUrl || name || "image").substr(-80);
+                name = (nameFromUrl || name || "image").substr(-200);
                 break;
         }
         return name.replace(/.*?\/([^\/\?]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
@@ -12612,7 +12612,7 @@ ImgOps | https://imgops.com/#b#`;
         };
 
         var matchedRule,
-            _URL=location.href.slice(0, 500);
+            _URL=location.href.length > 510 ? location.href.slice(0, 500) + location.href.slice(-10) : location.href.slice(0, 500);
         const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-defer-src", "data-actualsrc", "data-original", "data-origin-src", "data-imageurl", "lazysrc", "data-src", "data-preview", "data-cover", "data-page-image-url", "data-thumb", "data-placeholder"];
         var tprules = [
             function(a) {
@@ -17208,7 +17208,7 @@ ImgOps | https://imgops.com/#b#`;
                             //if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || (item.img ? (item.img.title || item.img.alt || "") : ""));
                             spanMark.dataset.thumbSrc=(item.img && (item.img.currentSrc || item.img.src)) || item.imgSrc;
-                            let title = item.img ? (item.img.title || item.img.alt || "").slice(-80) : "";
+                            let title = item.img ? (item.img.title || item.img.alt || "").slice(-200) : "";
                             if (title) {
                                 if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
                                 else title += '\n';
@@ -25428,6 +25428,10 @@ ImgOps | https://imgops.com/#b#`;
                                 target = checkEle;
                                 found = true;
                                 break;
+                            } else if (checkEle.nodeName === "PICTURE") {
+                                target = checkEle.querySelector("img");
+                                found = true;
+                                break;
                             } else if (prefs.floatBar.listenBg && hasBg(checkEle)) {
                                 let src = targetBg, nsrc = src, noActual = true, type = "scale";
                                 result = {
@@ -25572,7 +25576,10 @@ ImgOps | https://imgops.com/#b#`;
                 if (canPreview) {
                     if (result.type != "link" && result.type != "rule" && result.src == result.imgSrc) {
                         if (result.imgAS.w < result.imgCS.w * 1.6 && result.imgAS.h < result.imgCS.h * 1.6) {
-                            if (result.img && result.img.childElementCount) return false;
+                            if (result.img && result.img.childElementCount) {
+                                if (result.type == "force") return false;
+                                if (prefs.floatBar.globalkeys.invertInitShow) return false;
+                            }
                             var wSize = getWindowSize();
                             if (prefs.floatBar.globalkeys.invertInitShow && result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
                         }
