@@ -3428,7 +3428,7 @@
     "pinUrl": true,
     "action": 1,
     "nextLink": ".page_next:not(.disabled)>a",
-    "pageElement": "#singleFeedSection>.pcVideoListItem,#videoCategory>.pcVideoListItem,#videoSearchResult>.pcVideoListItem,.videoList,.homeSection",
+    "pageElement": "#singleFeedSection>.pcVideoListItem,#videoCategory>.pcVideoListItem,#videoSearchResult>.pcVideoListItem,.videoList,.homeSection,#recommendedListings,#mostRecentVideosSection",
     "replaceElement": ".paginationGated"
 },
 {
