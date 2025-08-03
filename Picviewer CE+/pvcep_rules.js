@@ -1985,5 +1985,15 @@ var siteInfo = [
             url: /^\/posts\//,
             query: "a.icon-download"
         }
+    },
+    {
+        name: "hentai-sharing",
+        url: /^https:\/\/hentai\-sharing\.net\//,
+        getImage: function(a, p) {
+            if (a && a.href.indexOf("https://hentai-sharing.net/nyaa/") == 0) {
+                let link = atob(a.href.replace("https://hentai-sharing.net/nyaa/", ""));
+                return /\.(?:jpe?|pn)g/.test(link) ? link : '';
+            }
+        }
     }
 ];
