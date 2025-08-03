@@ -5742,6 +5742,12 @@
                     ruleParser.customRules.unshift(editTemp);
                     ruleParser.curSiteRule = editTemp;
                 } else {
+                    if (ruleParser.hpRules) {
+                        let href = location.href.slice(0, 500);
+                        ruleParser.hpRules = ruleParser.hpRules.filter(item => {
+                            return item && !(new RegExp(item.url, "i").test(href) && ruleParser.ruleMatch(item));
+                        });
+                    }
                     ruleParser.curSiteRule = {};
                     isPause = true;
                 }
@@ -6804,7 +6810,7 @@
         let sideControllerIconInput = document.createElement("input");
         sideControllerIconInput.style.width = "100%";
         sideControllerIconInput.style.position = "relative";
-        sideControllerIconInput.placeholder = "📄";
+        sideControllerIconInput.placeholder = "☯️";
         sideControllerIconInput.value = rulesData.sideControllerIcon || '';
         sideControllerIconInput.spellcheck = false;
         sideControllerIconDiv.appendChild(sideControllerIconInput);
