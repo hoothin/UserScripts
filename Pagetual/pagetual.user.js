@@ -2209,6 +2209,11 @@
                 if (!this.hpRules) this.hpRules = [];
                 let url = this.curSiteRule && this.curSiteRule.url, self = this;
                 let href = location.href.slice(0, 500);
+                if (instead) {
+                    this.hpRules = this.hpRules.filter(item => {
+                        return item && !(new RegExp(item.url, "i").test(href) && self.ruleMatch(item));
+                    });
+                }
                 let matchedRules = this.hpRules.filter(rule => JSON.stringify(rule) != JSON.stringify(self.curSiteRule) && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
                 if (url) matchedRules.unshift(this.curSiteRule);
                 matchedRules.sort((a, b) => {
@@ -5742,12 +5747,6 @@
                     ruleParser.customRules.unshift(editTemp);
                     ruleParser.curSiteRule = editTemp;
                 } else {
-                    if (ruleParser.hpRules) {
-                        let href = location.href.slice(0, 500);
-                        ruleParser.hpRules = ruleParser.hpRules.filter(item => {
-                            return item && !(new RegExp(item.url, "i").test(href) && ruleParser.ruleMatch(item));
-                        });
-                    }
                     ruleParser.curSiteRule = {};
                     isPause = true;
                 }
