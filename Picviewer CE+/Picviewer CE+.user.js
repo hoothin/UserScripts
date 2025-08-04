@@ -25340,8 +25340,10 @@ ImgOps | https://imgops.com/#b#`;
                     if (target.nodeName.toUpperCase() != 'A' && target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
                         broEle = target.previousElementSibling;
                         while (broEle) {
-                            if (broEle.nodeName == "IMG") broImg = broEle;
-                            else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
+                            if (broEle.offsetWidth) {
+                                if (broEle.nodeName == "IMG") broImg = broEle;
+                                else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
+                            }
                             if (getComputedStyle(broEle).position !== "absolute") break;
                             broEle = broEle.previousElementSibling;
                         }
@@ -25349,8 +25351,10 @@ ImgOps | https://imgops.com/#b#`;
                         else if (!broEle) {
                             broEle = target.nextElementSibling;
                             while (broEle) {
-                                if (broEle.nodeName == "IMG") broImg = broEle;
-                                else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
+                                if (broEle.offsetWidth) {
+                                    if (broEle.nodeName == "IMG") broImg = broEle;
+                                    else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
+                                }
                                 if (getComputedStyle(broEle).position == "absolute") break;
                                 broEle = broEle.nextElementSibling;
                             }
