@@ -1,4 +1,6 @@
-# 🏞️ Picviewer CE+ ⭐[Star](https://github.com/hoothin/UserScripts#StarMe) 🌐[Reddit](https://www.reddit.com/r/PicviewerCE) 🗨️[Discord](https://discord.com/invite/keqypXC6wD) 🕊️[Twitter](https://twitter.com/intent/follow?screen_name=HoothinDev)
+# 🏞️ Picviewer CE+
+
+![twitter](https://img.shields.io/twitter/follow/HoothinDev) [![Discord](https://img.shields.io/badge/Discord-Join-blue.svg?logo=discord&style=social)](https://discord.com/invite/keqypXC6wD) ![reddit](https://img.shields.io/reddit/subreddit-subscribers/PicviewerCE) ![stars](https://img.shields.io/github/stars/Hoothin/UserScripts)
 
 ### Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
@@ -15,6 +17,8 @@
 
 + View long image by scroll
 
+Recommended similar plugins: [Imagus](https://chromewebstore.google.com/detail/imagus/immpkjjlgappgfkkfieppnmlhakdmaab) - [Hover-zoom+](https://chromewebstore.google.com/detail/hover-zoom+/pccckmaobkjjboncdfnnofkonhgpceea) - [Mouseover Popup Image Viewer](https://greasyfork.org/scripts/394820)
+
 ## 🚀 Quick Start
 
 Install from [Github](https://hoothin.github.io/UserScripts/Picviewer%20CE+/Picviewer%20CE+.user.js) or [Greasefork](https://greasyfork.org/scripts/24204-picviewer-ce).
@@ -27,7 +31,7 @@ There are additional settings available in the "Picviewer CE+ config" for furthe
 
 ## 🤝 Contribution & Support
 
-If you are glad to assist with the translation, please [🌐edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
+If you are glad to assist with the translation, please ✍️[edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
 + English by [RX-3200](https://greasyfork.org/users/43-rx-3200).
 
@@ -44,7 +48,7 @@ If you are glad to assist with the translation, please [🌐edit this file](http
 *Need more rules for peculiar sites? feel free to pull requests or open issues.*
 
 ## ✨ PDF Addon
-[Picviewer CE+ PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon) After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
+Picviewer CE+ [PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
  <details>
 <summary>Make a PDF e-book with this addon</summary>
   
