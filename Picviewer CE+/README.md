@@ -1,6 +1,6 @@
 # 🏞️ Picviewer CE+
 
-![twitter](https://img.shields.io/twitter/follow/HoothinDev) [![Discord](https://img.shields.io/badge/Discord-Join-blue.svg?logo=discord&style=social)](https://discord.com/invite/keqypXC6wD) ![reddit](https://img.shields.io/reddit/subreddit-subscribers/PicviewerCE) ![stars](https://img.shields.io/github/stars/Hoothin/UserScripts)
+[![twitter](https://img.shields.io/twitter/follow/HoothinDev)](https://twitter.com/intent/follow?screen_name=HoothinDev) [![Discord](https://img.shields.io/badge/Discord-Join-blue.svg?logo=discord&style=social)](https://discord.com/invite/keqypXC6wD) [![reddit](https://img.shields.io/reddit/subreddit-subscribers/PicviewerCE)](https://www.reddit.com/r/PicviewerCE) [![stars](https://img.shields.io/github/stars/Hoothin/UserScripts)](https://github.com/hoothin/UserScripts#StarMe)
 
 ### Zoom images across all your favorite websites. Pop up, scale, edit, rotate, batch save images, or automatically load pictures from subsequent pages. Simply hover your mouse over any image and click the icons on the float bar.
 
