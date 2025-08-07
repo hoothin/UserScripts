@@ -1995,5 +1995,13 @@ var siteInfo = [
                 return /\.(?:jpe?|pn)g/.test(link) ? link : '';
             }
         }
+    },
+    {
+        name: "streamain",
+        url: "^https://(www\\.)?img(?:inn|sed)\\.com/",
+        xhr: {
+            url: "/^https://(www\\.)?img(?:inn|sed)\\.com/p/[\\w-]/",
+            query: '.swiper-slide,.downloads a'
+        }
     }
 ];
