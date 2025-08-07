@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1634900/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1636990/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -11978,13 +11978,6 @@ ImgOps | https://imgops.com/#b#`;
     }else{
         _GM_setClipboard=(s)=>{};
     }
-    if(typeof GM_xmlhttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM_xmlhttpRequest;
-    }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM.xmlHttpRequest;
-    }else{
-        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
-    }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
     }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
@@ -12006,7 +11999,7 @@ ImgOps | https://imgops.com/#b#`;
         _GM_xmlhttpRequest = GM.xmlHttpRequest;
         GM_fetch = true;
     } else {
-        _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data || '', headers: f.headers}).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
+        _GM_xmlhttpRequest = (f) => {fetch(f.url, (f.method && f.method !== 'GET' ? {method: f.method || 'GET', body: f.data || '', headers: f.headers} : {method: 'GET', headers: f.headers})).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
     }
     if (typeof GM_addStyle != 'undefined') {
         _GM_addStyle = GM_addStyle;
@@ -24191,6 +24184,7 @@ ImgOps | https://imgops.com/#b#`;
             var handleError;
             var cacheNum = 0;
             var xhr;
+            var useFetch = false;
 
             /**
             * @param  q  图片的选择器或函数
@@ -24259,8 +24253,12 @@ ImgOps | https://imgops.com/#b#`;
                     onload: function(req) {
                         try {
                             if(req.status > 399) throw 'Server error: ' + req.status;
-                            cb(req.responseText, req.finalUrl || url);
+                            else cb(req.responseText, req.finalUrl || url);
                         } catch(ex) {
+                            if (!useFetch && req.responseHeaders.indexOf("cloudflare") != -1) {
+                                useFetch = true;
+                                return downloadPage(url, post, headers, cb);
+                            }
                             handleError(ex);
                         }
                     },
@@ -24278,7 +24276,15 @@ ImgOps | https://imgops.com/#b#`;
                     opts.headers = headers;
                 }
 
-                _GM_xmlhttpRequest(opts);
+                if (useFetch) {
+                    let fetchOption = {method: opts.method || 'GET', headers: opts.headers};
+                    if (opts.method && opts.method != 'GET') {
+                        fetchOption.body = opts.data || '';
+                    }
+                    fetch(opts.url, fetchOption).then(response => response.text()).then(data => {opts.onload({responseText: data})}).catch(e => opts.onerror(e));
+                } else {
+                    _GM_xmlhttpRequest(opts);
+                }
             }
 
             function createDoc(text) {
@@ -24304,7 +24310,7 @@ ImgOps | https://imgops.com/#b#`;
 
             function findFile(n, url) {
                 pretreatment(n, true);
-                var path = n.src || n.href || (n.children && n.children[0] &&  n.children[0].src);
+                var path = (n.dataset && n.dataset.src) || n.src || n.href || (n.children && n.children[0] &&  n.children[0].src);
                 if (/^video$/i.test(n.nodeName)) {
                     path = "video:" + path;
                 } else if (/^audio$/i.test(n.nodeName)) {
