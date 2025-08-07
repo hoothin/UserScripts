@@ -11999,7 +11999,7 @@ ImgOps | https://imgops.com/#b#`;
         _GM_xmlhttpRequest = GM.xmlHttpRequest;
         GM_fetch = true;
     } else {
-        _GM_xmlhttpRequest = (f) => {fetch(f.url, (f.method && f.method !== 'GET' ? {method: f.method || 'GET', body: f.data || '', headers: f.headers} : {method: 'GET', headers: f.headers})).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
+        _GM_xmlhttpRequest = (f) => {fetch(f.url, (f.method && f.method !== 'GET' ? {method: f.method || 'GET', body: f.data || '', headers: f.headers} : {method: 'GET', headers: f.headers})).then(response => response.text()).then(data => {f.onload({response: data})}).catch(e => f.onerror())};
     }
     if (typeof GM_addStyle != 'undefined') {
         _GM_addStyle = GM_addStyle;
