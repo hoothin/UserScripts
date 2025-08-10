@@ -109,13 +109,19 @@
             window.open(imageUrl, '_blank');
         }
     }
-    document.addEventListener("mouseenter", e => {
+    const addBtn = e => {
         if (e.target.dataset && e.target.dataset.testid == "tweetPhoto") {
+            e.target.parentNode.appendChild(downloadBtn);
+        } else if (e.target.dataset && /^video\-player/.test(e.target.dataset.testid)) {
             e.target.parentNode.appendChild(downloadBtn);
         } else if (e.target.firstElementChild) {
             if (e.target.firstElementChild.getAttribute("role") == "progressbar") {
                 e.target.parentNode.parentNode.appendChild(downloadBtn);
             }
+        } else if (e.target.parentNode && e.target.parentNode.dataset && e.target.parentNode.dataset.testid == "tweetPhoto") {
+            e.target.parentNode.parentNode.appendChild(downloadBtn);
         }
-    }, true);
+    };
+    document.addEventListener("mouseenter", addBtn, true);
+    document.addEventListener("touchstart", addBtn, true);
 })();
