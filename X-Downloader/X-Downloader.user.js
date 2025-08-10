@@ -28,7 +28,7 @@
     downloadBtn.addEventListener("mousedown", e => {
         let parent = downloadBtn.parentNode;
         if (!parent) return;
-        let img = parent.querySelector('[data-testid="tweetPhoto"]>img');
+        let img = parent.querySelector('[data-testid="tweetPhoto"]>img,[data-testid="card.layoutLarge.media"] img');
         if (img) {
             let newsrc = img.src.replace("_normal.",".").replace("_200x200.",".").replace("_mini.",".").replace("_bigger.",".").replace(/_x\d+\./,"."), imgname;
             if (/\.svg$/.test(newsrc)) return;
@@ -110,7 +110,9 @@
         }
     }
     const addBtn = e => {
-        if (e.target.dataset && e.target.dataset.testid == "tweetPhoto") {
+        if (e.target.dataset && e.target.dataset.testid == "card.layoutLarge.media") {
+            e.target.parentNode.appendChild(downloadBtn);
+        } else if (e.target.dataset && e.target.dataset.testid == "tweetPhoto") {
             e.target.parentNode.appendChild(downloadBtn);
         } else if (e.target.dataset && /^video\-player/.test(e.target.dataset.testid)) {
             e.target.parentNode.appendChild(downloadBtn);
