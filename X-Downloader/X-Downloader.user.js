@@ -116,10 +116,6 @@
             e.target.parentNode.appendChild(downloadBtn);
         } else if (e.target.dataset && /^video\-player/.test(e.target.dataset.testid)) {
             e.target.parentNode.appendChild(downloadBtn);
-        } else if (e.target.firstElementChild) {
-            if (e.target.firstElementChild.getAttribute("role") == "progressbar") {
-                e.target.parentNode.parentNode.appendChild(downloadBtn);
-            }
         } else if (e.target.parentNode && e.target.parentNode.dataset && e.target.parentNode.dataset.testid == "tweetPhoto") {
             e.target.parentNode.parentNode.appendChild(downloadBtn);
         }
