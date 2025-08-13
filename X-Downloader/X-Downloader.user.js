@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         X-Downloader
-// @name:zh-CN   X-Downloader
-// @name:zh-TW   X-Downloader
-// @name:ja      X-Downloader
+// @name         X-Downloader-Script
+// @name:zh-CN   X-Downloader-Script
+// @name:zh-TW   X-Downloader-Script
+// @name:ja      X-Downloader-Script
 // @namespace    hoothin
-// @version      2025-08-10
+// @version      2025-08-13
 // @license      MIT
 // @description      Enhances your Twitter (X) experience by adding a convenient download button to images and videos (GIFs), enabling easy, one-click saving of media.
 // @description:zh-CN  优化你的推特 (X) 浏览体验，直接在图片和视频（GIF）上添加一个便捷的下载按钮，一键轻松保存喜欢的媒体内容。
@@ -89,7 +89,7 @@
         downloadBtn.style.opacity = 1;
     });
     downloadBtn.addEventListener("mouseleave", () => {
-        downloadBtn.style.opacity = 0.5;
+        downloadBtn.style.opacity = 0.1;
     });
     async function downloadByFetch(imageUrl, filename) {
         try {
