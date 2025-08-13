@@ -10,10 +10,18 @@
 + 基礎用法
 
 ``` js
+import Stcasc from './stcasc.lib.js';
 const stcasc = Stcasc();
-const sc = "香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发";
+const sc = "香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发 知识产权";
 console.log(stcasc.traditionalized(sc));
-//香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮
+//香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮 智慧財產權
+```
+
+``` js
+const stcasc = Stcasc({}, {}, true);
+const sc = "知识产权";
+console.log(stcasc.traditionalized(sc));
+//知識産權
 ```
 
 + 透過 npm 安裝
@@ -55,4 +63,10 @@ const custom = {
 	"软件": "軟體"
 };
 let stcasc = Stcasc(cache, custom);
+```
+
++ 禁用用語轉換
+
+``` js
+let stcasc = Stcasc({}, {}, true);
 ```

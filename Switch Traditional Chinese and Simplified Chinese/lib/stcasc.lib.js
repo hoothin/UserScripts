@@ -473,7 +473,7 @@ const tc2sc = {
         ['了','瞭望','瞭然','瞭解','瞭若指掌','瞭如指掌']
     ]
 };
-const sc2tcComb = {
+let sc2tcComb = {
     '香烟袅袅':'香煙裊裊',
     '袅袅香烟':'裊裊香煙',
     '补丁':'補靪',
@@ -756,12 +756,13 @@ function simplized(orgStr) {
     return str;
 }
 
-function Stcasc(cache, custom) {
+function Stcasc(cache, custom, disableTerms) {
 	if (!cache) cache = {};
 	if (cache.sc2tcCombTree && cache.tc2scCombTree) {
 		sc2tcCombTree = cache.sc2tcCombTree;
         tc2scCombTree = cache.tc2scCombTree;
 	} else {
+        if (disableTerms) sc2tcComb = {};
 		if (custom && custom.length) {
 			for (let sc in custom) {
 				sc2tcComb[sc] = custom[sc];
