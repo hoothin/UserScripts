@@ -89,7 +89,9 @@
         downloadBtn.style.opacity = 1;
     });
     downloadBtn.addEventListener("mouseleave", () => {
-        downloadBtn.style.opacity = 0.1;
+        setTimeout(() => {
+            downloadBtn.style.opacity = 0.1;
+        }, 100);
     });
     async function downloadByFetch(imageUrl, filename) {
         try {
