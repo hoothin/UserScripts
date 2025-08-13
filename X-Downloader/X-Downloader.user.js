@@ -23,7 +23,7 @@
     'use strict';
     let downloadBtn = document.createElement("a");
     downloadBtn.target = "_blank";
-    downloadBtn.style.cssText = "background: #000000aa; border-radius: 50%; transition: opacity ease 0.3s; position: absolute; top: 0; right: 0px; cursor: pointer; opacity: 0.5; padding: 5px;";
+    downloadBtn.style.cssText = "background: #000000aa; border-radius: 50%; transition: opacity ease 0.3s; position: absolute; top: 0; right: 0px; cursor: pointer; opacity: 0; padding: 5px;";
     downloadBtn.innerHTML = `<svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>`;
     downloadBtn.addEventListener("mousedown", e => {
         let parent = downloadBtn.parentNode;
@@ -109,15 +109,21 @@
             window.open(imageUrl, '_blank');
         }
     }
+    const show = (ele) => {
+        ele.appendChild(downloadBtn);
+        setTimeout(() => {
+            downloadBtn.style.opacity = 0.6;
+        }, 0);
+    };
     const addBtn = e => {
         if (e.target.dataset && e.target.dataset.testid == "card.layoutLarge.media") {
-            e.target.parentNode.appendChild(downloadBtn);
+            show(e.target.parentNode);
         } else if (e.target.dataset && e.target.dataset.testid == "tweetPhoto") {
-            e.target.parentNode.appendChild(downloadBtn);
+            show(e.target.parentNode);
         } else if (e.target.dataset && /^video\-player/.test(e.target.dataset.testid)) {
-            e.target.parentNode.appendChild(downloadBtn);
+            show(e.target.parentNode);
         } else if (e.target.parentNode && e.target.parentNode.dataset && e.target.parentNode.dataset.testid == "tweetPhoto") {
-            e.target.parentNode.parentNode.appendChild(downloadBtn);
+            show(e.target.parentNode.parentNode);
         }
     };
     document.addEventListener("mouseenter", addBtn, true);
