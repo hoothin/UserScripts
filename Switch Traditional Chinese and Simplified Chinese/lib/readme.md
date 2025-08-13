@@ -1,6 +1,6 @@
 簡繁自由切換
 ===
-> 切換簡體中文與正體中文
+> 切換正體/簡體中文，超輕量級，支援自訂詞彙與「一簡多繁」轉換，無任何相依性
 
 [![NPM](https://img.shields.io/npm/v/switch-chinese.svg)](https://www.npmjs.com/package/switch-chinese) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://www.npmjs.com/package/switch-chinese)
 
@@ -10,9 +10,9 @@
 + 基礎用法
 
 ``` js
-import Stcasc from './stcasc.lib.js';
-let stcasc = Stcasc();
-console.log(stcasc.traditionalized("香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发"));
+const stcasc = Stcasc();
+const sc = "香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发";
+console.log(stcasc.traditionalized(sc));
 //香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮
 ```
 
