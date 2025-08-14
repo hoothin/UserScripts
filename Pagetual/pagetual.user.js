@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.121
+// @version      1.9.37.122
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -8014,32 +8014,32 @@
            margin-top: 30px!important;
            pointer-events: all;
          }
-         .pagetual_pageBar span>svg {
+         .pagetual_pageBar a>svg {
            -moz-transition:transform 0.5s ease, opacity 0.3s ease;
            -webkit-transition:transform 0.5s ease, opacity 0.3s ease;
            transition:transform 0.5 ease, opacity 0.3s ease;
            opacity: 0;
          }
-         .pagetual_pageBar.stop span>svg{
+         .pagetual_pageBar.stop a>svg{
            opacity: 1;
          }
-         .pagetual_pageBar.stop span>svg>path{
+         .pagetual_pageBar.stop a>svg>path{
            transform: scale(.8);
            transform-origin: center;
            -moz-transition:transform 0.3s ease;
            -webkit-transition:transform 0.3s ease;
            transition:transform 0.3 ease;
          }
-         .pagetual_pageBar.stop:hover span>svg>path{
+         .pagetual_pageBar.stop:hover a>svg>path{
            transform: unset;
          }
-         .pagetual_pageBar:hover span>svg {
+         .pagetual_pageBar:hover a>svg {
            opacity: 1;
          }
-         .pagetual_pageBar span>svg.upSvg:hover {
+         .pagetual_pageBar a>svg.upSvg:hover {
            transform: rotate(360deg) scale3d(1.2, 1.2, 1.2);
          }
-         .pagetual_pageBar span>svg.downSvg:hover {
+         .pagetual_pageBar a>svg.downSvg:hover {
            transform: rotate(540deg) scale3d(1.2, 1.2, 1.2)!important;
          }
          .pagetual_pageBar .pagetual_pageNum{
@@ -8773,8 +8773,8 @@
             inLi = compareNodeName(example, ["li"]) || (example.nextElementSibling && compareNodeName(example.nextElementSibling, ["li"]));
         }
         let pageBar = document.createElement(inTable ? "tr" : (inLi ? "li" : "div"));
-        let upSpan = document.createElement("span");
-        let downSpan = document.createElement("span");
+        let upSpan = document.createElement("a");
+        let downSpan = document.createElement("a");
         let pageText = document.createElement("a");
         let pageNum;
         pageBar.className = isHideBar ? "pagetual_pageBar autopagerize_page_info hide" : "pagetual_pageBar autopagerize_page_info";
@@ -8787,6 +8787,7 @@
         upSpan.innerHTML = createHTML(upSvg);
         upSpan.children[0].style.cssText = upSvgCSS;
         upSpan.title = i18n("toTop");
+        upSpan.href = ruleParser.initUrl || '';
         downSpan.innerHTML = createHTML(downSvg);
         downSpan.children[0].style.cssText = downSvgCSS;
         downSpan.title = i18n("toBottom");
@@ -9006,21 +9007,32 @@
         }
 
         upSpan.addEventListener("click", e => {
+            e.stopPropagation();
+            if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
+                if (e.altKey) location.href = upSpan.href;
+                return;
+            }
             getBody(document).scrollTop = 0;
             document.documentElement.scrollTop = 0;
             e.preventDefault();
-            e.stopPropagation();
+        });
+        downSpan.addEventListener("mousedown", e => {
+            if (ruleParser.nextLinkHref && ruleParser.nextLinkHref != '#') {
+                downSpan.href = ruleParser.nextLinkHref;
+            } else downSpan.href = '';
         });
         downSpan.addEventListener("click", e => {
-            if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                changeStop(true);
+            e.stopPropagation();
+            if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
+                if (e.altKey && downSpan.getAttribute('href')) location.href = upSpan.href;
+                return;
             }
+            changeStop(true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
             getBody(document).scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
-            e.stopPropagation();
         });
         pageBar.addEventListener("click", e => {
             changeStop(!isPause);
