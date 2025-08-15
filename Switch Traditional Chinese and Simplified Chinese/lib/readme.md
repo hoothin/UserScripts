@@ -17,16 +17,10 @@ console.log(stcasc.traditionalized(sc));
 //香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮 智慧財產權
 ```
 
-``` js
-const stcasc = Stcasc({}, {}, true);
-const sc = "知识产权";
-console.log(stcasc.traditionalized(sc));
-//知識産權
-```
 
 + 透過 npm 安裝
 
-``` 
+``` shell
 npm install switch-chinese
 import Stcasc from 'switch-chinese';
 ```
@@ -45,7 +39,7 @@ stcasc.simplized("正體中文");
 //正体中文
 ```
 
-+ 添加快取
++ 添加快取，避免重複生成字典
 
 ``` js
 let cache = loadCacheAtYourWay();
@@ -62,11 +56,14 @@ const custom = {
 	"转换": "轉檔",
 	"软件": "軟體"
 };
-let stcasc = Stcasc(cache, custom);
+const stcasc = Stcasc(cache, custom);
 ```
 
 + 禁用用語轉換
 
 ``` js
-let stcasc = Stcasc({}, {}, true);
+const stcasc = Stcasc({}, {}, true);
+const sc = "知识产权";
+console.log(stcasc.traditionalized(sc));
+//知識産權
 ```

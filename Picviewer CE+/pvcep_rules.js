@@ -1939,8 +1939,8 @@ var siteInfo = [
     {
         name: "Google review",
         url: /\bgoogle\.com\//,
-        r: /=w\d+\-h\d+\-\w/,
-        s: "=s3072-v1"
+        r: [/=w\d+\-h\d+\-\w/, /=s\d+/],
+        s: ["=s0-v1", "=s0"]
     },
     {
         name: "MAL Anime/Manga",
