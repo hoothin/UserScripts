@@ -1027,10 +1027,25 @@ var siteInfo = [
     },
     {
         name: "Rule34",
-        url: /\brule34\.xxx/,
+        url: /\b(rule34\.xxx|realbooru\.com)/,
         src: /\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_/i,
-        r: /\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/i,
-        s: ["/images/$2/$4.jpeg","/images/$2/$4.png","/images/$2/$4.jpg"]
+        xhr: {
+            url: function(a, p) {
+                if (!a) return;
+                const re = /^https?:\/\/(?:www\.)?(?:(realbooru\.com|rule34\.xxx))\/index\.php\?page=post&s=view&id=(\d+).*/;
+                const m = a.href.match(re);
+                if (m) {
+                    return m[1] == "rule34.xxx" ? `https://api.${m[1]}/index.php?page=dapi&s=post&q=index&id=${m[2]}&json=1` : `https://${m[1]}/index.php?page=dapi&s=post&q=index&id=${m[2]}&json=1`;
+                }
+            },
+            query: function(html, doc, url) {
+                try {
+                    const o = JSON.parse(html);
+                    let url = o[0];
+                    return url.file_url || `https://${location.hostname}/images/${url.directory}/${url.image}`;
+                } catch { }
+            }
+        }
     },
     {
         name: "Photosight",
