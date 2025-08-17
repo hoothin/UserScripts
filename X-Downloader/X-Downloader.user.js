@@ -4,7 +4,7 @@
 // @name:zh-TW   X-Downloader-Script
 // @name:ja      X-Downloader-Script
 // @namespace    hoothin
-// @version      2025-08-13
+// @version      2025-08-17
 // @license      MIT
 // @description      Enhances your Twitter (X) experience by adding a convenient download button to images and videos (GIFs), enabling easy, one-click saving of media.
 // @description:zh-CN  优化你的推特 (X) 浏览体验，直接在图片和视频（GIF）上添加一个便捷的下载按钮，一键轻松保存喜欢的媒体内容。
@@ -71,7 +71,7 @@
             }
             if (parent) {
                 downloadBtn.removeAttribute('download');
-                let link = parent.querySelector('a[role="link"][aria-label]');
+                let link = parent.querySelector('a[role="link"][aria-label][href^="/"]');
                 downloadBtn.href = `https://twitter.hoothin.com/?url=${encodeURIComponent(link ? link.href : document.location.href)}`;
                 if (e.altKey) {
                     window.open(downloadBtn.href, "_blank");
