@@ -4,7 +4,7 @@
 // @name:zh-TW   X-Downloader-Script
 // @name:ja      X-Downloader-Script
 // @namespace    hoothin
-// @version      2025-08-17
+// @version      2025-08-18
 // @license      MIT
 // @description      Enhances your Twitter (X) experience by adding a convenient download button to images and videos (GIFs), enabling easy, one-click saving of media.
 // @description:zh-CN  优化你的推特 (X) 浏览体验，直接在图片和视频（GIF）上添加一个便捷的下载按钮，一键轻松保存喜欢的媒体内容。
@@ -21,7 +21,7 @@
 
 (function() {
     'use strict';
-    let downloadBtn = document.createElement("a");
+    let downloadBtn = document.createElement("a"), touch = false;
     downloadBtn.target = "_blank";
     downloadBtn.style.cssText = "background: #000000aa; border-radius: 50%; transition: opacity ease 0.3s; position: absolute; top: 0; right: 0px; cursor: pointer; opacity: 0; padding: 5px;";
     downloadBtn.innerHTML = `<svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>`;
@@ -59,7 +59,7 @@
                 imgname = `${user.innerText} ${time.innerText.replace(/(.*) · (.*)/, "$2 $1")}.${ext}`;
             }
             downloadBtn.href = newsrc;
-            if (e.altKey) {
+            if (e.altKey || touch) {
                 downloadByFetch(newsrc, imgname);
             }
         } else {
@@ -114,7 +114,7 @@
     const show = (ele) => {
         ele.appendChild(downloadBtn);
         setTimeout(() => {
-            downloadBtn.style.opacity = 0.6;
+            downloadBtn.style.opacity = touch ? 0.8 : 0.6;
         }, 0);
     };
     const addBtn = e => {
@@ -128,6 +128,34 @@
             show(e.target.parentNode.parentNode);
         }
     };
+    function findFirstVisibleElement(selector) {
+        const elements = document.querySelectorAll(selector);
+        const firstVisibleElement = Array.from(elements).find(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.top < window.innerHeight && rect.top > 0 && rect.bottom >= 0;
+        });
+        return firstVisibleElement;
+    }
+    let checkTimer;
+    const touchCheck = e => {
+        clearTimeout(checkTimer);
+        if (e.target == downloadBtn) return;
+        checkTimer = setTimeout(() => {
+            let target = findFirstVisibleElement("[data-testid='card.layoutLarge.media']");
+            if (target) {
+                return show(target.parentNode);
+            }
+            target = findFirstVisibleElement("[data-testid='tweetPhoto']");
+            if (target) {
+                return show(target.parentNode);
+            }
+            target = findFirstVisibleElement("[data-testid^='video-player']");
+            if (target) {
+                return show(target.parentNode);
+            }
+        }, 100);
+    };
     document.addEventListener("mouseenter", addBtn, true);
-    document.addEventListener("touchstart", addBtn, true);
+    document.addEventListener("touchstart", e => {touch = true; addBtn(e);}, true);
+    document.addEventListener("touchend", touchCheck, true);
 })();
