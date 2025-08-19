@@ -128,11 +128,14 @@
             show(e.target.parentNode.parentNode);
         }
     };
+    function isElementVisible(el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.top > 0 && rect.bottom >= 0;
+    }
     function findFirstVisibleElement(selector) {
         const elements = document.querySelectorAll(selector);
         const firstVisibleElement = Array.from(elements).find(el => {
-            const rect = el.getBoundingClientRect();
-            return rect.top < window.innerHeight && rect.top > 0 && rect.bottom >= 0;
+            return isElementVisible(el);
         });
         return firstVisibleElement;
     }
@@ -141,6 +144,7 @@
         clearTimeout(checkTimer);
         if (e.target == downloadBtn) return;
         checkTimer = setTimeout(() => {
+            if (isElementVisible(downloadBtn)) return;
             let target = findFirstVisibleElement("[data-testid='card.layoutLarge.media']");
             if (target) {
                 return show(target.parentNode);
