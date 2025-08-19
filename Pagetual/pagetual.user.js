@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.122
+// @version      1.9.37.123
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2438,7 +2438,7 @@
                             }
                             this.curSiteRule.pageElement = tempSel + (targetChild ? ">*" : "");
                             break;
-                        }
+                        } else pageElement = null;
                     }
                     if (!pageElement || pageElement.length === 0) {
                         let pageElementSelTrim = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
@@ -2464,8 +2464,8 @@
                                         pageElement = pageElement.children;
                                     }
                                     this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
-                                }
-                            }
+                                } else pageElement = null;
+                            } else pageElement = null;
                         }
                     }
                 }
@@ -8702,7 +8702,11 @@
             }
         }
         if (loadmoreBtn && !ruleParser.curSiteRule.loadMore && loadmoreBtn.dataset.ajax !== "true") {
-            let href = loadmoreBtn.getAttribute("href");
+            let href = loadmoreBtn.getAttribute("href"), i = 0, pa = loadmoreBtn.parentNode;
+            while (!href && i++ < 5 && pa) {
+                href = pa.getAttribute && pa.getAttribute("href");
+                pa = pa.parentNode;
+            }
             if (href && href != "/" && !ruleParser.hrefIsJs(href)) {
                 loadmoreBtn = null;
             }
