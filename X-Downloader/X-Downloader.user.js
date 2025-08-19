@@ -80,7 +80,7 @@
         }
     });
     downloadBtn.addEventListener("click", e => {
-        if (e.altKey) {
+        if (e.altKey || touch) {
             e.preventDefault();
             e.stopPropagation();
         }
