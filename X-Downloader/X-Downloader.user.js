@@ -73,7 +73,7 @@
                 downloadBtn.removeAttribute('download');
                 let link = parent.querySelector('a[role="link"][aria-label][href^="/"]');
                 downloadBtn.href = `https://twitter.hoothin.com/?url=${encodeURIComponent(link ? link.href : document.location.href)}`;
-                if (e.altKey) {
+                if (e.altKey || touch) {
                     window.open(downloadBtn.href, "_blank");
                 }
             }
