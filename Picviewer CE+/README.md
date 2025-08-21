@@ -197,6 +197,8 @@ Feel free to share your own custom rules on Greasy Fork!
       - getImage
       - getExtSrc
 
+    Learn from https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js
+
  </details>
 
 ## Blank Gallery Page
