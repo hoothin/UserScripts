@@ -4,24 +4,28 @@
 
 [![NPM](https://img.shields.io/npm/v/switch-chinese.svg)](https://www.npmjs.com/package/switch-chinese) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://www.npmjs.com/package/switch-chinese)
 
+Install
+---
+``` shell
+npm install switch-chinese
+```
 
 演示
 ---
 + 基礎用法
 
 ``` js
-import Stcasc from './stcasc.lib.js';
 const stcasc = Stcasc();
-const sc = "香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发 知识产权";
-console.log(stcasc.traditionalized(sc));
-//香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮 智慧財產權
+const sc = "简繁转换 繁简切换 香烟 香烟袅袅 烟雾里 里长面子 吃干面 干 把考卷发回来 卷发 知识产权";
+const tc = stcasc.traditionalized(sc);
+console.log(tc);
+//簡繁轉換 繁簡切換 香菸 香煙裊裊 煙霧裡 里長面子 吃乾麵 幹 把考卷發回來 捲髮 智慧財產權
 ```
 
 
-+ 透過 npm 安裝
++ Import
 
 ``` shell
-npm install switch-chinese
 import Stcasc from 'switch-chinese';
 ```
 
@@ -35,8 +39,8 @@ stcasc.traditionalized("简体中文");
 + 轉簡體中文
 
 ``` js
-stcasc.simplized("正體中文");
-//正体中文
+stcasc.simplized("繁體中文");
+//繁体中文
 ```
 
 + 添加快取，避免重複生成字典
