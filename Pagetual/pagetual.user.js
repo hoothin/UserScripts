@@ -9157,10 +9157,15 @@
         if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
             if (!inUpdate && rulesData.uninited) {
-                setTimeout(() => {
-                    if (!inUpdate && !importing) showTips(i18n("firstAlert"));
-                }, 3000);
-                showTips(i18n("firstAlert"));
+                let showTimes = 0;
+                let showFirstAlert = () => {
+                    if (inUpdate || importing || ++showTimes > 5) return;
+                    showTips(i18n("firstAlert"), configPage[0], 2000);
+                    setTimeout(() => {
+                        showFirstAlert();
+                    }, 3000);
+                };
+                showFirstAlert();
             }
             let defaultOption = document.querySelector('#discussion_rating_4');
             if (defaultOption) defaultOption.checked = true;
