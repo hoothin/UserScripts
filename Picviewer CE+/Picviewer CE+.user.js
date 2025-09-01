@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.8.29.1
+// @version              2025.9.1.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -25324,16 +25324,25 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
             var checkUniqueImgWin = function() {
-                if (canPreview) {
-                    if (result.type != "link" && result.type != "rule" && result.src == result.imgSrc) {
-                        if (result.imgAS.w < result.imgCS.w * 1.6 && result.imgAS.h < result.imgCS.h * 1.6) {
-                            if (result.img && result.img.childElementCount) {
-                                if (result.type == "force") return false;
-                                if (prefs.floatBar.globalkeys.invertInitShow) return false;
+                let invert = !canPreview && prefs.floatBar.globalkeys.invertInitShow && prefs.floatBar.globalkeys.type == "hold";
+                if (canPreview || invert) {
+                    let forceShow = (() => {
+                        if (result.type != "link" && result.type != "rule" && result.src == result.imgSrc) {
+                            if (result.imgAS.w < result.imgCS.w * 1.3 && result.imgAS.h < result.imgCS.h * 1.3) {
+                                if (result.img && result.img.childElementCount) {
+                                    if (result.type == "force") return false;
+                                    if (prefs.floatBar.globalkeys.invertInitShow) return false;
+                                }
+                                var wSize = getWindowSize();
+                                if (prefs.floatBar.globalkeys.invertInitShow && result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
                             }
-                            var wSize = getWindowSize();
-                            if (prefs.floatBar.globalkeys.invertInitShow && result.imgAS.w <= wSize.w && result.imgAS.h <= wSize.h) return false;
                         }
+                        return true;
+                    })();
+                    if (forceShow) {
+                        if (invert) return false;
+                    } else {
+                        if (!invert) return false;
                     }
                     uniqueImgWinInitX = clientX;
                     uniqueImgWinInitY = clientY;
