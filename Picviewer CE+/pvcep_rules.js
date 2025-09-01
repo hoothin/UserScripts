@@ -1982,6 +1982,12 @@ var siteInfo = [
         s: "//w$1.webp"
     },
     {
+        name: "hentaizap",
+        url: /\bhentaizap\.com\//,
+        r: /t\.jpg$/,
+        s: ".webp"
+    },
+    {
         name: "Wjcodes",
         url: /^https:\/\/[^\.]+\.wjcodes\.com\//,
         getImage: function(a, p) {
