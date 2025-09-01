@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1643244/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1652811/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -25473,17 +25473,6 @@ ImgOps | https://imgops.com/#b#`;
                         } else if (target.parentNode.nodeName.toUpperCase() == 'IMG') {
                             target = target.parentNode;
                             found = true;
-                        } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
-                            target = target.parentNode;
-                            let src = targetBg, nsrc = src, noActual = true, type = "scale";
-                            result = {
-                                src: nsrc,
-                                type: type,
-                                imgSrc: src,
-                                noActual:noActual,
-                                img: target
-                            };
-                            found = true;
                         }
                     }
                     if (!found) {
@@ -25568,6 +25557,18 @@ ImgOps | https://imgops.com/#b#`;
                     if (!found && target.shadowRoot) {
                         let imgs = target.shadowRoot.querySelectorAll('img');
                         if (imgs.length === 1) target = imgs[0];
+                    }
+                    if (!found && prefs.floatBar.listenBg && hasBg(target.parentNode)) {
+                        target = target.parentNode;
+                        let src = targetBg, nsrc = src, noActual = true, type = "scale";
+                        result = {
+                            src: nsrc,
+                            type: type,
+                            imgSrc: src,
+                            noActual:noActual,
+                            img: target
+                        };
+                        found = true;
                     }
                     if (result && !/^data:/i.test(result.src)) {
                         if (matchedRule.rules.length > 0 && target.nodeName.toUpperCase() != 'IMG') {
