@@ -5384,7 +5384,7 @@
                             curWidth = validSize.w;
                         }
                     }
-                    if (compareNodeName(ele, ["picture"]) || !ele.innerText || ele.innerText.trim() === '') {
+                    if (compareNodeName(ele, ["picture", "img"])) {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         let eles = [];
