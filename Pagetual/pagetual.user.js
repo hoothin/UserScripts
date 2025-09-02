@@ -7286,6 +7286,10 @@
                 if (compareNodeName(parent, ["table"])) {
                     parent.parentNode.appendChild(loadingDiv);
                 }
+                if (loadingDiv.previousElementSibling) {
+                    let preStyle = _unsafeWindow.getComputedStyle(loadingDiv.previousElementSibling);
+                    loadingDiv.style.order = preStyle.order;
+                }
             }
             //this.setPageTop(lastScrollTop);
             if (sideController.inited) {
@@ -11644,6 +11648,9 @@
             pageBar.classList.add("stop");
         }
         pageBar.style.cssText = pageBarStyle;
+        if (exampleStyle.order) {
+            pageBar.style.order = exampleStyle.order;
+        }
         pageBar.title = i18n(isPause ? "enable" : "disable");
         upSpan.innerHTML = createHTML(upSvg);
         upSpan.children[0].style.cssText = upSvgCSS;
