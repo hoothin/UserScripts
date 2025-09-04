@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.2.2
+// @version              2025.9.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -20652,7 +20652,12 @@ ImgOps | https://imgops.com/#b#`;
                         if (!self.zoomed) {
                             if (!self.imgWindow.classList.contains("pv-pic-window-scroll")) {
                                 self.zoomLevel=0;
-                                self.zoom(1);
+                                if (img.naturalHeight && img.naturalHeight < 100) {
+                                    let zoomLevel = 100 / img.naturalHeight;
+                                    self.zoom(zoomLevel);
+                                } else {
+                                    self.zoom(1);
+                                }
                             }
                             if (self == uniqueImgWin) {
                                 self.initMaxSize();
@@ -23971,16 +23976,10 @@ ImgOps | https://imgops.com/#b#`;
 
                 if (bodyStyle.position === "static") {
                     offsetParent = document.documentElement;
-                    bodyPosi = {
-                        top: 0,
-                        bottom: windowSize.h,
-                        left: 0,
-                        right: windowSize.w
-                    };
                 } else {
                     offsetParent = body;
-                    bodyPosi = offsetParent.getBoundingClientRect();
                 }
+                bodyPosi = offsetParent.getBoundingClientRect();
 
 
                 var scrolled=getScrolled(offsetParent);
