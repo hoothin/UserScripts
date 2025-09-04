@@ -1,5 +1,11 @@
 [
 {
+    "name": "Fapello",
+    "url": "^https?://fapello\\.com/",
+    "example": "https://fapello.com/noemy-love/38/",
+    "pageElement": "a.uk-align-center > img"
+},
+{
     "name": "精易论坛 - 手机版 - Powered by Discuz!",
     "url": "^https?://bbs\\.125\\.la/",
     "example": "https://bbs.125.la/forum.php?mod=forumdisplay&fid=98&mobile=2",
