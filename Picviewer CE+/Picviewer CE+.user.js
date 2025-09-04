@@ -23983,10 +23983,10 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 var scrolled=getScrolled(offsetParent);
-                targetPosi.top = targetPosi.top - bodyPosi.top + scrolled.y;
-                targetPosi.left = targetPosi.left - bodyPosi.left + scrolled.x;
-                targetPosi.bottom = bodyPosi.bottom - targetPosi.bottom - scrolled.y;
-                targetPosi.right = bodyPosi.right - targetPosi.right - scrolled.x;
+                targetPosi.top = targetPosi.top - bodyPosi.top;
+                targetPosi.left = targetPosi.left - bodyPosi.left;
+                targetPosi.bottom = bodyPosi.bottom - targetPosi.bottom;
+                targetPosi.right = bodyPosi.right - targetPosi.right;
 
                 var fbs = this.floatBar.style;
                 var setPosition = {
