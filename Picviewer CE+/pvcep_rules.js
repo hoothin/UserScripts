@@ -186,7 +186,7 @@ var siteInfo = [
         url: /^https?:\/\/image\.baidu\.com\/.*&word=/i,
         getImage: function(a) {
             if (!a) return;
-            var reg = /&objurl=(http.*?\.(?:jpg|jpeg|png|gif|bmp))/i;
+            var reg = /&objurl=(http.*?\.(?:jpg|jpeg|png|gif|bmp|webp))/i;
             if (a.href.match(reg)) {
                 let url = RegExp.$1;
                 try {
