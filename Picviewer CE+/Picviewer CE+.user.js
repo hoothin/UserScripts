@@ -12393,6 +12393,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
                 let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
                 if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
+                if (ext === "none") ext = "webp";
                 let conversion = formatDict.get(ext);
                 if (canvas && (conversion || forcePng)) {
                     var self = this;
