@@ -188,7 +188,12 @@ var siteInfo = [
             if (!a) return;
             var reg = /&objurl=(http.*?\.(?:jpg|jpeg|png|gif|bmp))/i;
             if (a.href.match(reg)) {
-                return decodeURIComponent(RegExp.$1);
+                let url = RegExp.$1;
+                try {
+                    url = decodeURIComponent(url);
+                    url = decodeURIComponent(url);
+                }catch(e){}
+                return url;
             }
         }
     },
