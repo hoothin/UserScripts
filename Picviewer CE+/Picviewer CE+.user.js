@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.5.1
+// @version              2025.9.5.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12541,7 +12541,7 @@ ImgOps | https://imgops.com/#b#`;
                 disableArrow:false,
 
                 scrollEndAndLoad: true, // 滚动主窗口到最底部，然后自动重载库的图片。
-                scrollEndAndLoad_num: 6, // 最后几张图片执行
+                scrollEndAndLoad_num: 5, // 最后几张图片执行
 
                 autoZoom: false, // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32, // 注释的最大宽度
@@ -12647,7 +12647,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
-        const imageReg = /^\s*(http|ftp).*\.(avi|avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|a?png|svgz?|webp|xbm|dib|divx|3gpp|m3u|m4v|mkv|mp4|mpe?g|ogv|webm|flv|flac|m4a|m4b|mpa|mp3|aac|cda|oga|ogg|opus|wma|wav)(&|\?|#|\/?$|\s)/i;
+        const imageReg = /^\s*(https?|ftp):\/\/.*?\/[^\.]*\.(avi|avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|a?png|svgz?|webp|xbm|dib|divx|3gpp|m3u|m4v|mkv|mp4|mpe?g|ogv|webm|flv|flac|m4a|m4b|mpa|mp3|aac|cda|oga|ogg|opus|wma|wav)(&|\?|#|\/?$|\s)/i;
 
         const ruleImportHost = ["greasyfork.org", "github.com", "reddit.com"];
         const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)|\.reddit\.com\/r\/PicviewerCE/i;
@@ -16739,13 +16739,14 @@ ImgOps | https://imgops.com/#b#`;
                         };
 
                         if(src!=self.lastLoading)return;
+                        let img = this;
 
                         if(e.type=='error'){
                             if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
                             if (/^blob:/.test(src)) {
                                 self.errorSpan=ele;
                                 if(preImgR)preImgR.abort();
-                                self.loadImg(this, ele,true);
+                                self.loadImg(img, ele,true);
                             } else {
                                 _GM_xmlhttpRequest({
                                     method: 'GET',
@@ -16755,7 +16756,7 @@ ImgOps | https://imgops.com/#b#`;
                                         if (response.response && response.response.type == "text/html") {
                                             self.errorSpan=ele;
                                             if(preImgR)preImgR.abort();
-                                            self.loadImg(this, ele, true);
+                                            self.loadImg(img, ele, true);
                                             return;
                                         }
                                         const blobUrl = URL.createObjectURL(response.response);
@@ -16774,7 +16775,7 @@ ImgOps | https://imgops.com/#b#`;
                                     onerror: function() {
                                         self.errorSpan=ele;
                                         if(preImgR)preImgR.abort();
-                                        self.loadImg(this, ele, true);
+                                        self.loadImg(img, ele, true);
                                     }
                                 });
                             }
