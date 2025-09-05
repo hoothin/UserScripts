@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.4.1
+// @version              2025.9.5.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1652811/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1655189/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1653424/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
@@ -12540,8 +12540,8 @@ ImgOps | https://imgops.com/#b#`;
                 showSmallSize:true,//是否默认显示小尺寸图片
                 disableArrow:false,
 
-                scrollEndAndLoad: false, // 滚动主窗口到最底部，然后自动重载库的图片。还有bug，有待进一步测试
-                scrollEndAndLoad_num: 3, // 最后几张图片执行
+                scrollEndAndLoad: true, // 滚动主窗口到最底部，然后自动重载库的图片。
+                scrollEndAndLoad_num: 6, // 最后几张图片执行
 
                 autoZoom: false, // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32, // 注释的最大宽度
@@ -14632,7 +14632,13 @@ ImgOps | https://imgops.com/#b#`;
                     self.switchThumbVisible();//切换图片类别显隐;
                 },true);
 
-                prefs.gallery.scrollEndAndLoad = !!storage.getListItem("scrollEndAndLoad", location.hostname);
+                let scrollEndAndLoad = storage.getListItem("scrollEndAndLoad", location.hostname);
+                if (scrollEndAndLoad === true) {
+                    prefs.gallery.scrollEndAndLoad = true;
+                } else if (scrollEndAndLoad === false) {
+                    prefs.gallery.scrollEndAndLoad = false;
+                }
+
                 eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
                 let srcSplit, downloading=false, saveParams;
                 async function getSaveParams() {
@@ -16284,6 +16290,11 @@ ImgOps | https://imgops.com/#b#`;
                                                 url: imgSrc,
                                                 responseType: 'blob',
                                                 onload: function(response) {
+                                                    if (response.response && response.response.type == "text/html") {
+                                                        self.showTips("");
+                                                        loadError();
+                                                        return;
+                                                    }
                                                     const blobUrl = URL.createObjectURL(response.response);
                                                     self.showTips("");
                                                     let img = document.createElement("img");
@@ -16741,6 +16752,12 @@ ImgOps | https://imgops.com/#b#`;
                                     url: src,
                                     responseType: 'blob',
                                     onload: function(response) {
+                                        if (response.response && response.response.type == "text/html") {
+                                            self.errorSpan=ele;
+                                            if(preImgR)preImgR.abort();
+                                            self.loadImg(this, ele, true);
+                                            return;
+                                        }
                                         const blobUrl = URL.createObjectURL(response.response);
                                         self.slideShow.run('loadEnd');
                                         let img = document.createElement("img");
@@ -18052,13 +18069,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
             },
             getAllValidImgs:async function(newer, checkListenBg){
-                var validImgs = [];
-                var container = document.querySelector('.pv-gallery-container'),
+                let validImgs = [];
+                let container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
-                var bgReg = /.*?url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
-                var body = getBody(document);
-                var linkMedias = [];
+                let bgReg = /^\s*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
+                let body = getBody(document);
+                let linkMedias = [];
                 function anylizeEle(total, node) {
                     if (/^iframe$/i.test(node.nodeName)) {
                         if (node.name == "pagetual-iframe") return total;
@@ -19203,7 +19220,7 @@ ImgOps | https://imgops.com/#b#`;
                     border-top: 0px solid transparent;\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head{\
-                    opacity: 0.1;\
+                    opacity: 0;\
                     transition: opacity .3s ease;\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container{\
