@@ -98,8 +98,6 @@
 // @connect      *
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
-// @downloadURL https://update.greasyfork.org/scripts/438684/Pagetual.user.js
-// @updateURL https://update.greasyfork.org/scripts/438684/Pagetual.meta.js
 // ==/UserScript==
 
 (function() {
