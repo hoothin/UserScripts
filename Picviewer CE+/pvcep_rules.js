@@ -872,6 +872,9 @@ var siteInfo = [
                 } else if (p[3]) {
                     let a = p[3].querySelector("a.group");
                     if (a) return a.href;
+                    else if(p[3].previousElementSibling && p[3].previousElementSibling.getAttribute('slot') == 'full-post-link') {
+                        return p[3].previousElementSibling.href;
+                    }
                 }
             },
             headers: (url, self) => {
