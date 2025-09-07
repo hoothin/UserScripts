@@ -9,6 +9,8 @@
 
 [![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts#StarMe) ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
 
+安裝: [Github📥](https://hoothin.github.io/UserScripts/DownloadAllContent/DownloadAllContent.user.js) / [Greasefork📥](https://greasyfork.org/scripts/25068).
+
 ---
 
 # 操作說明
