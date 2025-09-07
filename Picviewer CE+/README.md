@@ -144,10 +144,12 @@ Feel free to share your own custom rules on Greasy Fork!
 <summary><h2>Advance rule wizard</h2></summary>
 
   There are two types of rules available:
+
   + JSON (simple mode)
 
     These rules are written in JSON format and can be imported online through [Discussions](https://github.com/hoothin/UserScripts/discussions) or [Reddit](https://www.reddit.com/r/PicviewerCE).
     They won't limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
+
     + JSON params
       - name
 
@@ -189,9 +191,11 @@ Feel free to share your own custom rules on Greasy Fork!
         `"xhr": { "url": ".showcase__link", "query": "img[fetchpriority]" }`
         
         Fetch the link above the image that matches ".showcase__link" and query the "img[fetchpriority]" on the inner page from the link.
+ 
   + JS (full mode)
 
     These rules are written in JavaScript object format. If you are not using a standalone userscript, they may be limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
+
     + JS params
       - all mentioned above and the function type instead of string type
       - getImage
