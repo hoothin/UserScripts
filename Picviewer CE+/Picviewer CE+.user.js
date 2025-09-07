@@ -26218,7 +26218,7 @@ ImgOps | https://imgops.com/#b#`;
         GM_config.init({
             id: 'pv-prefs',
             title: GM_config.create('a', {
-                href: 'https://greasyfork.org/scripts/24204-picviewer-ce',
+                href: 'https://hoothin.github.io/UserScripts/Picviewer%20CE%2B',
                 target: '_blank',
                 textContent: 'Picviewer CE+ '+i18n("config"),
                 title: i18n("openHomePage")
@@ -26940,7 +26940,8 @@ ImgOps | https://imgops.com/#b#`;
                                             node: "a",
                                             text: "Hoothin",
                                             attr: {
-                                                "href": "mailto:rixixi@gmail.com"
+                                                href: "https://www.hoothin.com/",
+                                                target: "_blank"
                                             }
                                         },
                                         {
