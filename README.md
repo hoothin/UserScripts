@@ -1,4 +1,4 @@
-<h1 align="center">⚙️<a href="https://greasyfork.org/users/8227">Greasemonkey scripts</a></h1>
+<h1 align="center">⚙️<a href="https://hoothin.github.io/UserScripts/">Greasemonkey scripts</a></h1>
 
 <p align="center">
   <a href="https://github.com/hoothin/UserScripts"><img src="https://img.shields.io/badge/License-MIT-red.svg" alt="license"></a>
