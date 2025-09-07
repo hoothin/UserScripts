@@ -1,0 +1,34 @@
+name: Build Picviewer CE+ Dist
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Picviewer CE*/Picviewer CE*.user.js'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Replace require paths, add timestamp, and create dist file
+        run: |
+          TIMESTAMP=$(date +%s)
+
+          sed -e "s#// @require               https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js#// @require               http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=$TIMESTAMP#" \
+              -e "s#// @require               https://update.greasyfork.org/scripts/438080/1655629/pvcep_rules.js#// @require               http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=$TIMESTAMP#" \
+              -e "s#// @require               https://update.greasyfork.org/scripts/440698/1653424/pvcep_lang.js#// @require               http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=$TIMESTAMP#" \
+              "Picviewer CE+/Picviewer CE+.user.js" > "Picviewer CE+/dist.user.js"
+
+      - name: Commit and push dist.user.js
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(Picviewer CE+): Auto-generate dist.user.js with timestamp"
+          file_pattern: 'Picviewer CE+/dist.user.js'
+          commit_user_name: GitHub Actions
+          commit_user_email: rixixi@gmail.com
+          commit_author: GitHub Actions <rixixi@gmail.com>
