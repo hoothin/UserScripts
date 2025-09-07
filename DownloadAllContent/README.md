@@ -25,7 +25,7 @@
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
-[怠惰小説下載器 ZIP 擴充](https://greasyfork.org/scripts/476943) 下載時將各章節分別存為 TXT，並打包成 ZIP 檔
+[怠惰小説下載器 ZIP 擴充](https://hoothin.github.io/UserScripts/DownloadAllContent/DownloadAllContentSavaAsZIP.user.js) 下載時將各章節分別存為 TXT，並打包成 ZIP 檔
 
 [圖片驗證碼辨識](https://github.com/hoothin/ImgCodeCheck) 開啟`保留內文圖片的網址`後配合 ZIP 擴充可自動轉換圖片文字，詳閱[愛發電](https://afdian.com/p/c7fc3abc8e8411ee9b1852540025c377)
 
