@@ -21,7 +21,7 @@ Recommended similar plugins: [Imagus](https://chromewebstore.google.com/detail/i
 
 ## Quick Start
 
-Install from [Github📥](https://hoothin.github.io/UserScripts/Picviewer%20CE+/Picviewer%20CE+.user.js) or [Greasefork📥](https://greasyfork.org/scripts/24204-picviewer-ce).
+Install from [Github📥](https://hoothin.github.io/UserScripts/Picviewer%20CE+/dist.user.js) or [Greasefork📥](https://greasyfork.org/scripts/24204-picviewer-ce).
 
 Hover your mouse over any image and click the icons on the float bar.
 
