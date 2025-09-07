@@ -206,7 +206,9 @@ Feel free to share your own custom rules on Greasy Fork!
 
 > *A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
-You can drag and drop folders or videos/audios/images into this gallery to get an electronic slideshow to view them.
+You can drag and drop **folders** or videos/audios/images into this gallery to get an electronic slideshow to view them.
+
+Click with `Ctrl key` can import folder too.
 
 Include `mode=`*`1`* to open gallery in view-more mode.<br/>
 Add `imgs=`*`http://xxx/xxx.jpg`* to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
