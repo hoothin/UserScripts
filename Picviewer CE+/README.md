@@ -48,18 +48,19 @@ If you are glad to assist with the translation, please ✍️[edit this file](ht
 *Need more rules for peculiar sites? feel free to pull requests or open issues.*
 
 ## PDF Addon
-Picviewer CE+ [PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
- <details>
-<summary>Make a PDF e-book with this addon</summary>
-  
-  For example, if there is a website with images from `xxx.com/1.jpg` to `xxx.com/99.jpg`, you can use this addon to generate a beautiful PDF e-book as follows:
-1. Open the gallery by pressing Ctrl + g
-2. In the `Command` menu, find and click `Add image`
-3. Input `xxx.com/[1-99].jpg`
-4. Right-click in the thumbnail frame below to ignore any unwanted images
-5. Click `Download all shown` in the `Command` menu
+Picviewer CE+ [PDF Addon](https://hoothin.github.io/UserScripts/Picviewer%20CE+/pvcep_pdf_addon.user.js). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
 
-This way, you'll get a beautifully created PDF e-book.
+<details>
+<summary>Make a PDF e-book with this addon</summary>
+<p dir="auto">For example, if there is a website with images from <code>xxx.com/1.jpg</code> to <code>xxx.com/99.jpg</code>, you can use this addon to generate a beautiful PDF e-book as follows:</p>
+<ol dir="auto">
+<li>Open the gallery by pressing Ctrl + g</li>
+<li>In the <code>Command</code> menu, find and click <code>Add image</code></li>
+<li>Input <code>xxx.com/[1-99].jpg</code></li>
+<li>Right-click in the thumbnail frame below to ignore any unwanted images</li>
+<li>Click <code>Download all shown</code> in the <code>Command</code> menu</li>
+</ol>
+<p dir="auto">This way, you'll get a beautifully created PDF e-book.</p>
  </details>
 
 ## Custom [Rules Example](pvcep_rules.js):
@@ -140,65 +141,77 @@ Feel free to share your own custom rules on Greasy Fork!
 })();
 ```
 
- <details>
-<summary><h2>Advance rule wizard</h2></summary>
 
-  There are two types of rules available:
-  + JSON (simple mode)
-
-    These rules are written in JSON format and can be imported online through [Discussions](https://github.com/hoothin/UserScripts/discussions) or [Reddit](https://www.reddit.com/r/PicviewerCE).
-    They won't limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
-    + JSON params
-      - name
-
-        `"name": "rule name"`
-
-        Name of the rule
-      - url
-
-        `"url": "^https://google\\.com"`
-        
-        Regular expression used to match the site URL.
-      - src
-
-        `"src": "^https://image\\.xx\\.com"`
-        
-        Regular expression used to match the image src
-      - r
-
-        `"r": "/(.*)\\d+/i"` or `"r": "thumb"`
-        
-        Simple string or regular expression used to replace the image src from
-      - s
-
-        `"s": "$1"`
-        
-        Replace the image src to
-      - ext
-
-        `"ext": "previous"`
-        
-        Capture nearby image element when the mouse hovers over a non-image element.
-      - lazyAttr
-
-        `"lazyAttr": "data-lazy"`
-        
-        Lazy loaded original image URL attribute name
-      - xhr
-
-        `"xhr": { "url": ".showcase__link", "query": "img[fetchpriority]" }`
-        
-        Fetch the link above the image that matches ".showcase__link" and query the "img[fetchpriority]" on the inner page from the link.
-  + JS (full mode)
-
-    These rules are written in JavaScript object format. If you are not using a standalone userscript, they may be limited by websites that have a strict Content Security Policy that disallows unsafe-eval.
-    + JS params
-      - all mentioned above and the function type instead of string type
-      - getImage
-      - getExtSrc
-
-    Learn from https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js
-
+<details>
+<summary>Advance rule wizard</summary>
+<p dir="auto">There are two types of rules available:</p>
+<ul dir="auto">
+<li>
+<p dir="auto">JSON (simple mode)</p>
+<p dir="auto">These rules are written in JSON format and can be imported online through <a href="https://github.com/hoothin/UserScripts/discussions">Discussions</a> or <a href="https://www.reddit.com/r/PicviewerCE" rel="nofollow">Reddit</a>.
+They won't limited by websites that have a strict Content Security Policy that disallows unsafe-eval.</p>
+<ul dir="auto">
+<li>JSON params
+<ul dir="auto">
+<li>
+<p dir="auto">name</p>
+<p dir="auto"><code>"name": "rule name"</code></p>
+<p dir="auto">Name of the rule</p>
+</li>
+<li>
+<p dir="auto">url</p>
+<p dir="auto"><code>"url": "^https://google\\.com"</code></p>
+<p dir="auto">Regular expression used to match the site URL.</p>
+</li>
+<li>
+<p dir="auto">src</p>
+<p dir="auto"><code>"src": "^https://image\\.xx\\.com"</code></p>
+<p dir="auto">Regular expression used to match the image src</p>
+</li>
+<li>
+<p dir="auto">r</p>
+<p dir="auto"><code>"r": "/(.*)\\d+/i"</code> or <code>"r": "thumb"</code></p>
+<p dir="auto">Simple string or regular expression used to replace the image src from</p>
+</li>
+<li>
+<p dir="auto">s</p>
+<p dir="auto"><code>"s": "$1"</code></p>
+<p dir="auto">Replace the image src to</p>
+</li>
+<li>
+<p dir="auto">ext</p>
+<p dir="auto"><code>"ext": "previous"</code></p>
+<p dir="auto">Capture nearby image element when the mouse hovers over a non-image element.</p>
+</li>
+<li>
+<p dir="auto">lazyAttr</p>
+<p dir="auto"><code>"lazyAttr": "data-lazy"</code></p>
+<p dir="auto">Lazy loaded original image URL attribute name</p>
+</li>
+<li>
+<p dir="auto">xhr</p>
+<p dir="auto"><code>"xhr": { "url": ".showcase__link", "query": "img[fetchpriority]" }</code></p>
+<p dir="auto">Fetch the link above the image that matches ".showcase__link" and query the "img[fetchpriority]" on the inner page from the link.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p dir="auto">JS (full mode)</p>
+<p dir="auto">These rules are written in JavaScript object format. If you are not using a standalone userscript, they may be limited by websites that have a strict Content Security Policy that disallows unsafe-eval.</p>
+<ul dir="auto">
+<li>JS params
+<ul dir="auto">
+<li>all mentioned above and the function type instead of string type</li>
+<li>getImage</li>
+<li>getExtSrc</li>
+</ul>
+</li>
+</ul>
+<p dir="auto">Learn from <a href="https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js">https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js</a></p>
+</li>
+</ul>
  </details>
 
 ## Blank Gallery Page
@@ -206,7 +219,9 @@ Feel free to share your own custom rules on Greasy Fork!
 
 > *A blank gallery page designed for viewing local or online pictures, showcasing every image you have imported.*
 
-You can drag and drop folders or videos/audios/images into this gallery to get an electronic slideshow to view them.
+You can drag and drop **folders** or videos/audios/images into this gallery to get an electronic slideshow to view them.
+
+Click with `Ctrl key` can import folder too.
 
 Include `mode=`*`1`* to open gallery in view-more mode.<br/>
 Add `imgs=`*`http://xxx/xxx.jpg`* to import images. ` ` to split multi-image, `[01-09]` to generate nine urls form 01 to 09<br/>
