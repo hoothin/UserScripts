@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'Picviewer CE*/Picviewer CE*.user.js'
+  workflow_dispatch:
 
 jobs:
   build:
