@@ -45,9 +45,9 @@
 // @grant                GM.registerMenuCommand
 // @grant                GM.notification
 // @grant                unsafeWindow
-// @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1655629/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1653424/pvcep_lang.js
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1757208217
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1757208217
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1757208217
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*

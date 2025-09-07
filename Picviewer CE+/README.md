@@ -19,9 +19,9 @@
 
 Recommended similar plugins: [Imagus](https://chromewebstore.google.com/detail/imagus/immpkjjlgappgfkkfieppnmlhakdmaab) - [Hover-zoom+](https://chromewebstore.google.com/detail/hover-zoom+/pccckmaobkjjboncdfnnofkonhgpceea) - [Mouseover Popup Image Viewer](https://greasyfork.org/scripts/394820)
 
-## 🚀 Quick Start
+## Quick Start
 
-Install from [Github](https://hoothin.github.io/UserScripts/Picviewer%20CE+/Picviewer%20CE+.user.js) or [Greasefork](https://greasyfork.org/scripts/24204-picviewer-ce).
+Install from [Github📥](https://hoothin.github.io/UserScripts/Picviewer%20CE+/dist.user.js) or [Greasefork📥](https://greasyfork.org/scripts/24204-picviewer-ce).
 
 Hover your mouse over any image and click the icons on the float bar.
 
@@ -29,7 +29,7 @@ Press `CTRL + G` to quickly enter the gallery. Hold `CTRL` to view a larger pict
 
 There are additional settings available in the "Picviewer CE+ config" for further customization. Currently, reviewing these settings is the best way to learn about the script's capabilities. Try exploring more functions on your own!
 
-## 🤝 Contribution & Support
+## Contribution & Support
 
 If you are glad to assist with the translation, please ✍️[edit this file](https://github.com/hoothin/UserScripts/edit/master/Picviewer%20CE%2B/pvcep_lang.js#L1). It will be beneficial for individuals who speak the same language as you do. Thank you for your help.
 
@@ -47,7 +47,7 @@ If you are glad to assist with the translation, please ✍️[edit this file](ht
 
 *Need more rules for peculiar sites? feel free to pull requests or open issues.*
 
-## ✨ PDF Addon
+## PDF Addon
 Picviewer CE+ [PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
  <details>
 <summary>Make a PDF e-book with this addon</summary>
@@ -62,7 +62,7 @@ Picviewer CE+ [PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf
 This way, you'll get a beautifully created PDF e-book.
  </details>
 
-## 🔧 Custom [Rules Example](pvcep_rules.js):
+## Custom [Rules Example](pvcep_rules.js):
 **💝 Buy me a coffee with [Ko-fi](https://ko-fi.com/hoothin) or [愛發電](https://afdian.com/a/hoothin) to keep my scripts always up to date.**
 
 <a href="https://github.com/hoothin/UserScripts/raw/master/Picviewer%20CE%2B/customRule.png"><img src="customRule.png" height="100"></a>
