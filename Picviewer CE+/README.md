@@ -48,7 +48,7 @@ If you are glad to assist with the translation, please ✍️[edit this file](ht
 *Need more rules for peculiar sites? feel free to pull requests or open issues.*
 
 ## PDF Addon
-Picviewer CE+ [PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
+Picviewer CE+ [PDF Addon](https://hoothin.github.io/UserScripts/Picviewer%20CE+/pvcep_pdf_addon.user.js). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
 
 <details>
 <summary>Make a PDF e-book with this addon</summary>
