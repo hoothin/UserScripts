@@ -142,7 +142,7 @@ Feel free to share your own custom rules on Greasy Fork!
 
 
 <details>
-<summary><h2 tabindex="-1" class="heading-element" dir="auto">Advance rule wizard</h2></summary>
+<summary>Advance rule wizard</summary>
 <p dir="auto">There are two types of rules available:</p>
 <ul dir="auto">
 <li>
