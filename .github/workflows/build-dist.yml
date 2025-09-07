@@ -25,10 +25,9 @@ jobs:
               "Picviewer CE+/Picviewer CE+.user.js" > "Picviewer CE+/dist.user.js"
 
       - name: Commit and push dist.user.js
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(Picviewer CE+): Auto-generate dist.user.js with timestamp"
-          file_pattern: 'Picviewer CE+/dist.user.js'
-          commit_user_name: GitHub Actions
-          commit_user_email: rixixi@gmail.com
-          commit_author: GitHub Actions <rixixi@gmail.com>
+        run: |
+          git config --local user.email "rixixi@gmail.com"
+          git config --local user.name "hoothin-update"
+          git add Picviewer CE+/dist.user.js
+          git commit -m "chore(Picviewer CE+): Auto-generate dist.user.js with timestamp"
+          git push https://${{ secrets.ACTION_SECRET }}@github.com/${{ github.repository }}
