@@ -8,6 +8,8 @@ on:
     paths-ignore:
       - 'Pagetual/items_all.json'
       - 'Pagetual/pagetualRules.json'
+      - '.github/*'
+      - '.github/*/*'
   workflow_run:
     workflows: ["Update Version on File Change"]
     types:
