@@ -49,17 +49,18 @@ If you are glad to assist with the translation, please ✍️[edit this file](ht
 
 ## PDF Addon
 Picviewer CE+ [PDF Addon](https://greasyfork.org/scripts/498445-picviewer-ce-pdf-addon). After installing this addon, when the `Compress to ZIP` feature is enabled, a PDF file will be generated instead of a ZIP file during the packaging process.
- <details>
-<summary>Make a PDF e-book with this addon</summary>
-  
-  For example, if there is a website with images from `xxx.com/1.jpg` to `xxx.com/99.jpg`, you can use this addon to generate a beautiful PDF e-book as follows:
-1. Open the gallery by pressing Ctrl + g
-2. In the `Command` menu, find and click `Add image`
-3. Input `xxx.com/[1-99].jpg`
-4. Right-click in the thumbnail frame below to ignore any unwanted images
-5. Click `Download all shown` in the `Command` menu
 
-This way, you'll get a beautifully created PDF e-book.
+<details>
+<summary>Make a PDF e-book with this addon</summary>
+<p dir="auto">For example, if there is a website with images from <code>xxx.com/1.jpg</code> to <code>xxx.com/99.jpg</code>, you can use this addon to generate a beautiful PDF e-book as follows:</p>
+<ol dir="auto">
+<li>Open the gallery by pressing Ctrl + g</li>
+<li>In the <code>Command</code> menu, find and click <code>Add image</code></li>
+<li>Input <code>xxx.com/[1-99].jpg</code></li>
+<li>Right-click in the thumbnail frame below to ignore any unwanted images</li>
+<li>Click <code>Download all shown</code> in the <code>Command</code> menu</li>
+</ol>
+<p dir="auto">This way, you'll get a beautifully created PDF e-book.</p>
  </details>
 
 ## Custom [Rules Example](pvcep_rules.js):
