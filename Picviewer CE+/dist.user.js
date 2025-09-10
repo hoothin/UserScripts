@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.5.2
+// @version              2025.9.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -45,9 +45,9 @@
 // @grant                GM.registerMenuCommand
 // @grant                GM.notification
 // @grant                unsafeWindow
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1757244391
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1757244391
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1757244391
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1757505897
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1757505897
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1757505897
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -12218,7 +12218,33 @@ ImgOps | https://imgops.com/#b#`;
         img.src = dataurl;
     }
     function urlToBlobWithFetch(urlString, cb){
-        fetch(urlString).then(response => response.blob()).then(blob => cb(blob)).catch(error => {
+        fetch(urlString).then(response => response.blob()).then(blob => {
+            let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
+            if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
+            if (ext === "none") ext = "webp";
+            let conversion = formatDict.get(ext);
+            if (canvas && conversion) {
+                var self = this;
+                var a = new FileReader();
+                a.readAsDataURL(blob);
+                a.onload = function (e) {
+                    dataURLToCanvas(e.target.result, canvas => {
+                        canvas.toBlob(nblob => {
+                            if (!nblob) {
+                                cb(blob);
+                            } else {
+                                cb(nblob, conversion || "png");
+                            }
+                        }, "image/" + (conversion || "png"));
+                    });
+                };
+                a.onerror = function (e){
+                    cb(blob);
+                }
+            } else {
+                cb(blob);
+            }
+        }).catch(error => {
             cb(null);
         });
     }
@@ -15756,9 +15782,10 @@ ImgOps | https://imgops.com/#b#`;
                     var len = saveParams.length;
                     function downloadOne(imgSrc, imgName, over){
                         let crosHandler = imgSrc => {
-                            urlToBlob(imgSrc, blob=>{
+                            urlToBlob(imgSrc, (blob, ext)=>{
                                 if (blob && blob.size>58) {
                                     let fileName = imgName.replace(/\//g, "");
+                                    if (ext) fileName = fileName.replace(/\.\w+$/, "") + "." + ext;
                                     zip.file(fileName, blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
@@ -15776,13 +15803,15 @@ ImgOps | https://imgops.com/#b#`;
                             });
                         }
                         if(canvas && (/^data:/.test(imgSrc) || imgSrc.split("/")[2] == document.domain)){
-                            urlToBlobWithFetch(imgSrc, blob=>{
+                            urlToBlobWithFetch(imgSrc, (blob, ext)=>{
                                 if(!blob){
                                     crosHandler(imgSrc);
                                     return;
                                 }
                                 self.showTips("Downloading "+(downloaded+1)+"/"+len, 1000000);
-                                zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
+                                let fileName = imgName.replace(/^data:.*/, "img").replace(/\//g,"");
+                                if (ext) fileName = fileName.replace(/\.\w+$/, "") + "." + ext;
+                                zip.file(fileName, blob);
                                 downloaded++;
                                 over && over();
                                 if(downloaded == len){
