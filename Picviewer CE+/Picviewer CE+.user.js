@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.10.1
+// @version              2025.9.11.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -23439,6 +23439,7 @@ ImgOps | https://imgops.com/#b#`;
                 },3000);
             },
             setPosition:function(){
+                if (!this.data.img) return;
                 var position=getContentClientRect(this.data.img);
                 var cs=this.loadingAnim.style;
                 var scrolled=getScrolled();
@@ -23572,7 +23573,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 var self=this;
-                function openInTop(){
+                async function openInTop(){
                     var data=self.data;
 
                     //删除不能发送的项。
@@ -23593,6 +23594,15 @@ ImgOps | https://imgops.com/#b#`;
                         delCantClone(data);
                     };
 
+                    if(!gallery){
+                        gallery=new GalleryC();
+                        gallery.data=[];
+                    }
+                    let allData=(await gallery.getAllValidImgs()).map(item => item.src);
+                    allData = allData.filter((item, index) => {
+                        return allData.indexOf(item) === index;
+                    });
+                    data.all = allData;
                     window.postMessage({
                         messageID:messageID,
                         src:img.src,
