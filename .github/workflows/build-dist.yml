@@ -16,19 +16,59 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Replace require paths, add timestamp, and create dist file
-        run: |
-          TIMESTAMP=$(date +%s)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-          sed -e "s#https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js#http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=$TIMESTAMP#" \
-              -e "s#https://update.greasyfork.org/scripts/438080/1655629/pvcep_rules.js#http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=$TIMESTAMP#" \
-              -e "s#https://update.greasyfork.org/scripts/440698/1653424/pvcep_lang.js#http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=$TIMESTAMP#" \
-              "Picviewer CE+/Picviewer CE+.user.js" > "Picviewer CE+/dist.user.js"
+      - name: Install Terser
+        run: npm install terser -g
+
+      - name: Build and Minify User Script
+        run: |
+          set -e
+
+          TIMESTAMP=$(date +%s)
+          SOURCE_FILE="Picviewer CE+/Picviewer CE+.user.js"
+          DIST_FILE="Picviewer CE+/dist.user.js"
+          
+          TEMP_DIR=$(mktemp -d)
+          TEMP_PROCESSED_FILE="$TEMP_DIR/processed.user.js"
+          HEADER_FILE="$TEMP_DIR/header.txt"
+          BODY_FILE="$TEMP_DIR/body.js"
+          MINIFIED_BODY_FILE="$TEMP_DIR/body.min.js"
+
+          echo "Step 1: Replacing paths and adding timestamp..."
+          sed -e "s#https://update.greasyfork.org/scripts/6158/[0-9]\+/GM_config%20CN.js#http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=$TIMESTAMP#" \
+              -e "s#https://update.greasyfork.org/scripts/438080/[0-9]\+/pvcep_rules.js#http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=$TIMESTAMP#" \
+              -e "s#https://update.greasyfork.org/scripts/440698/[0-9]\+/pvcep_lang.js#http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=$TIMESTAMP#" \
+              "$SOURCE_FILE" > "$TEMP_PROCESSED_FILE"
+          echo "Path replacement complete."
+
+          echo "Step 2: Separating UserScript header and body..."
+          sed -n '/\/\/ ==UserScript==/,/\/\/ ==\/UserScript==/p' "$TEMP_PROCESSED_FILE" > "$HEADER_FILE"
+          sed '1,/\/\/ ==\/UserScript==/d' "$TEMP_PROCESSED_FILE" > "$BODY_FILE"
+          echo "Header and body separated."
+
+          echo "Step 3: Minifying the script body with Terser..."
+          terser "$BODY_FILE" --compress --mangle -o "$MINIFIED_BODY_FILE"
+          echo "Minification complete."
+
+          echo "Step 4: Combining header and minified body..."
+          cat "$HEADER_FILE" > "$DIST_FILE"
+          echo "" >> "$DIST_FILE"
+          cat "$MINIFIED_BODY_FILE" >> "$DIST_FILE"
+          echo "Final dist file created at $DIST_FILE."
 
       - name: Commit and push dist.user.js
         run: |
           git config --local user.email "rixixi@gmail.com"
           git config --local user.name "hoothin-update"
           git add "Picviewer CE+/dist.user.js"
-          git commit -m "chore(Picviewer CE+): Auto-generate dist.user.js with timestamp"
-          git push https://${{ secrets.ACTION_SECRET }}@github.com/${{ github.repository }}
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore(Picviewer CE+): Auto-generate and minify dist.user.js"
+            git push https://${{ secrets.ACTION_SECRET }}@github.com/${{ github.repository }}
+          fi
+
