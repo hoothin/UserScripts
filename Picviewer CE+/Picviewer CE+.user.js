@@ -21626,8 +21626,8 @@ ImgOps | https://imgops.com/#b#`;
                     min-width:unset;\
                     max-height:unset;\
                     min-height:unset;\
-                    width:inherit;\
-                    height:inherit;\
+                    width:inherit!important;\
+                    height:inherit!important;\
                     padding:0;\
                     margin:0;\
                     border:none;\
