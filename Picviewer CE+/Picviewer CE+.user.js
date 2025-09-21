@@ -12928,18 +12928,19 @@ ImgOps | https://imgops.com/#b#`;
             unsafeWindow.URL.createObjectURL = createObjectURLProxy;
         }
 
-        function downloadImg(url, name, type, errCb) {
+        function downloadImg(url, name, type, over) {
             urlToBlob(url, (blob, ext) => {
                 if(blob){
                     try {
                         saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                        over && over();
                     } catch(e) {
                         _GM_download(url, name, type);
-                        if (errCb) errCb();
+                        over && over();
                     }
                 }else{
                     _GM_download(url, name, type);
-                    if (errCb) errCb();
+                    over && over();
                 }
             });
         }
@@ -15857,9 +15858,14 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return;
                 }
-
-                let download5Times=function(){
-                    for(let i=0;i<5;i++){
+                let threadNum = 10;
+                if (prefs.gallery.downloadGap > 500) {
+                    threadNum = 1;
+                } else if (prefs.gallery.downloadGap > 100) {
+                    threadNum = 5;
+                }
+                let downloadMulTimes=function(){
+                    for(let i=0;i<threadNum;i++){
                         let saveParam=saveParams.shift();
                         if(saveParam){
                             downloadImg(saveParam[0], saveParam[1], prefs.saveName);
@@ -15870,11 +15876,11 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if(saveParams.length>0){
                         setTimeout(()=>{
-                            download5Times();
-                        },1000);
+                            downloadMulTimes();
+                        },prefs.gallery.downloadGap);
                     }
                 };
-                download5Times();
+                downloadMulTimes();
             },
             changeMinView:function(){
                 var sizeInputH=this.sizeInputH;
