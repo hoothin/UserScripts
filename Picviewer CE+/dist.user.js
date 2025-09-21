@@ -45,9 +45,9 @@
 // @grant                GM.registerMenuCommand
 // @grant                GM.notification
 // @grant                unsafeWindow
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1758450736
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1758453500
 // @require              https://update.greasyfork.org/scripts/438080/1664500/pvcep_rules.js
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1758450736
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1758453500
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -12220,7 +12220,7 @@ ImgOps | https://imgops.com/#b#`;
     function urlToBlobWithFetch(urlString, cb){
         fetch(urlString).then(response => response.blob()).then(blob => {
             let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
-            if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
+            if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 1000) return cb(null, '');
             if (ext === "none") ext = "webp";
             let conversion = formatDict.get(ext);
             if (canvas && conversion) {
@@ -12416,7 +12416,10 @@ ImgOps | https://imgops.com/#b#`;
                 let blob = d.response;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
                 let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
-                if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
+                if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 100000) {
+                    urlToBlobWithFetch(url, cb);
+                    return;
+                }
                 if (ext === "none") ext = "webp";
                 let conversion = formatDict.get(ext);
                 if (canvas && (conversion || forcePng)) {
@@ -12928,20 +12931,38 @@ ImgOps | https://imgops.com/#b#`;
             unsafeWindow.URL.createObjectURL = createObjectURLProxy;
         }
 
-        function downloadImg(url, name, type, errCb) {
-            urlToBlob(url, (blob, ext) => {
-                if(blob){
+        function downloadImg(url, name, type, over) {
+            if(canvas && (/^data:/.test(url) || url.split("/")[2] == document.domain)){
+                urlToBlobWithFetch(url, (blob, ext)=>{
+                    if(!blob){
+                        _GM_download(url, name, type);
+                        over && over();
+                        return;
+                    }
                     try {
                         saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                        over && over();
                     } catch(e) {
                         _GM_download(url, name, type);
-                        if (errCb) errCb();
+                        over && over();
                     }
-                }else{
-                    _GM_download(url, name, type);
-                    if (errCb) errCb();
-                }
-            });
+                });
+            } else {
+                urlToBlob(url, (blob, ext) => {
+                    if(blob){
+                        try {
+                            saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                            over && over();
+                        } catch(e) {
+                            _GM_download(url, name, type);
+                            over && over();
+                        }
+                    }else{
+                        _GM_download(url, name, type);
+                        over && over();
+                    }
+                });
+            }
         }
 
         function getBlob(url) {
@@ -14675,7 +14696,7 @@ ImgOps | https://imgops.com/#b#`;
 
                             let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                             if (xhr) {
-                                self.showTips("Sending request...");
+                                self.showTips("Sending request...", 3000);
                                 await new Promise(resolve => {
                                     setTimeout(() => {
                                         let xhrError = function() {
@@ -15505,6 +15526,7 @@ ImgOps | https://imgops.com/#b#`;
                         saveIndex++;
 
                         if (conItem.dataset.xhr) {
+                            self.showTips("Sending request...", 3000);
                             await new Promise((resolve) => {
                                 let getxhroverHandler = e => {
                                     conItem.removeEventListener('getxhrover', getxhroverHandler);
@@ -15857,9 +15879,15 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return;
                 }
-
-                let download5Times=function(){
-                    for(let i=0;i<5;i++){
+                let threadNum = 10;
+                if (prefs.gallery.downloadGap > 500) {
+                    threadNum = 1;
+                } else if (prefs.gallery.downloadGap > 100) {
+                    threadNum = 5;
+                }
+                let downloadMulTimes=function(){
+                    self.showTips("Downloading...", 3000);
+                    for(let i=0;i<threadNum;i++){
                         let saveParam=saveParams.shift();
                         if(saveParam){
                             downloadImg(saveParam[0], saveParam[1], prefs.saveName);
@@ -15870,11 +15898,11 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if(saveParams.length>0){
                         setTimeout(()=>{
-                            download5Times();
-                        },1000);
+                            downloadMulTimes();
+                        },prefs.gallery.downloadGap);
                     }
                 };
-                download5Times();
+                downloadMulTimes();
             },
             changeMinView:function(){
                 var sizeInputH=this.sizeInputH;
@@ -16349,7 +16377,7 @@ ImgOps | https://imgops.com/#b#`;
                         };
                         let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                         if (xhr) {
-                            self.showTips("Sending request...");
+                            self.showTips("Sending request...", 3000);
                             let imgSrc = await getXhr();
                             if (imgSrc) {
                                 loadImg();
