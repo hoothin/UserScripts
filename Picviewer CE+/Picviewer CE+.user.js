@@ -12220,7 +12220,7 @@ ImgOps | https://imgops.com/#b#`;
     function urlToBlobWithFetch(urlString, cb){
         fetch(urlString).then(response => response.blob()).then(blob => {
             let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
-            if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
+            if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 1000) return cb(null, '');
             if (ext === "none") ext = "webp";
             let conversion = formatDict.get(ext);
             if (canvas && conversion) {
@@ -12416,7 +12416,10 @@ ImgOps | https://imgops.com/#b#`;
                 let blob = d.response;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
                 let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
-                if (ext === "text/html" && (blob.size || 0) < 1000) return cb(null, '');
+                if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 100000) {
+                    urlToBlobWithFetch(url, cb);
+                    return;
+                }
                 if (ext === "none") ext = "webp";
                 let conversion = formatDict.get(ext);
                 if (canvas && (conversion || forcePng)) {
@@ -12929,8 +12932,13 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function downloadImg(url, name, type, over) {
-            urlToBlob(url, (blob, ext) => {
-                if(blob){
+            if(canvas && (/^data:/.test(url) || url.split("/")[2] == document.domain)){
+                urlToBlobWithFetch(url, (blob, ext)=>{
+                    if(!blob){
+                        _GM_download(url, name, type);
+                        over && over();
+                        return;
+                    }
                     try {
                         saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
                         over && over();
@@ -12938,11 +12946,23 @@ ImgOps | https://imgops.com/#b#`;
                         _GM_download(url, name, type);
                         over && over();
                     }
-                }else{
-                    _GM_download(url, name, type);
-                    over && over();
-                }
-            });
+                });
+            } else {
+                urlToBlob(url, (blob, ext) => {
+                    if(blob){
+                        try {
+                            saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                            over && over();
+                        } catch(e) {
+                            _GM_download(url, name, type);
+                            over && over();
+                        }
+                    }else{
+                        _GM_download(url, name, type);
+                        over && over();
+                    }
+                });
+            }
         }
 
         function getBlob(url) {
@@ -14676,7 +14696,7 @@ ImgOps | https://imgops.com/#b#`;
 
                             let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                             if (xhr) {
-                                self.showTips("Sending request...");
+                                self.showTips("Sending request...", 3000);
                                 await new Promise(resolve => {
                                     setTimeout(() => {
                                         let xhrError = function() {
@@ -15506,6 +15526,7 @@ ImgOps | https://imgops.com/#b#`;
                         saveIndex++;
 
                         if (conItem.dataset.xhr) {
+                            self.showTips("Sending request...", 3000);
                             await new Promise((resolve) => {
                                 let getxhroverHandler = e => {
                                     conItem.removeEventListener('getxhrover', getxhroverHandler);
@@ -15865,6 +15886,7 @@ ImgOps | https://imgops.com/#b#`;
                     threadNum = 5;
                 }
                 let downloadMulTimes=function(){
+                    self.showTips("Downloading...", 3000);
                     for(let i=0;i<threadNum;i++){
                         let saveParam=saveParams.shift();
                         if(saveParam){
@@ -16355,7 +16377,7 @@ ImgOps | https://imgops.com/#b#`;
                         };
                         let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                         if (xhr) {
-                            self.showTips("Sending request...");
+                            self.showTips("Sending request...", 3000);
                             let imgSrc = await getXhr();
                             if (imgSrc) {
                                 loadImg();
