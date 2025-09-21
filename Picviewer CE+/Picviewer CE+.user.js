@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.21.1
+// @version              2025.9.21.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -15837,10 +15837,14 @@ ImgOps | https://imgops.com/#b#`;
                             }, prefs.gallery.downloadGap);
                         };
                         let threadNum = 10;
+                        if (prefs.gallery.downloadGap > 500) {
+                            threadNum = 1;
+                        } else if (prefs.gallery.downloadGap > 100) {
+                            threadNum = 5;
+                        }
                         let downIntv = setInterval(() => {
-                            if (threadNum-- === 0) {
+                            if (--threadNum === 0) {
                                 clearInterval(downIntv);
-                                return;
                             }
                             let saveParam = saveParams && saveParams.shift();
                             if (!saveParam) clearInterval(downIntv);
@@ -19847,6 +19851,9 @@ ImgOps | https://imgops.com/#b#`;
                     GalleryC.prototype.Preload.prototype.container=div;
                 };
                 this.max=prefs.gallery.max;
+                if (prefs.gallery.downloadGap > 500) {
+                    this.max = 0;
+                }
                 this.nextNumber=0;
                 this.nextEle=this.ele;
                 this.preNumber=0;
