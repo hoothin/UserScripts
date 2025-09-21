@@ -45,9 +45,9 @@
 // @grant                GM.registerMenuCommand
 // @grant                GM.notification
 // @grant                unsafeWindow
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1758453500
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=1758454047
 // @require              https://update.greasyfork.org/scripts/438080/1664500/pvcep_rules.js
-// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1758453500
+// @require              http://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1758454047
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -16254,6 +16254,10 @@ ImgOps | https://imgops.com/#b#`;
                         imgSpan.addEventListener('getxhr', getXhrHandler);
                     }
                     imgSpan.addEventListener("click", async function(e) {
+                        if (maximizeContainer.classList.contains("checked")) {
+                            imgSpan.querySelector("input").click();
+                            return;
+                        }
                         e.preventDefault();
                         self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
