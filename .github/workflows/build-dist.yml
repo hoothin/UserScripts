@@ -18,10 +18,11 @@ jobs:
 
       - name: Replace require paths, add timestamp, and create dist file
         run: |
-          sed -e "s#https://update.greasyfork.org/scripts/6158/([0-9]+)/GM_config%20CN.js#https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=\1#" \
-              -e "s#https://update.greasyfork.org/scripts/438080/([0-9]+)/pvcep_rules.js#https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=\1#" \
-              -e "s#https://update.greasyfork.org/scripts/440698/([0-9]+)/pvcep_lang.js#https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=\1#" \
-              "Picviewer CE+/Picviewer CE+.user.js" > "Picviewer CE+/dist.user.js"
+          sed -E \
+            -e "s#https://update.greasyfork.org/scripts/6158/([0-9]+)/GM_config%20CN.js#https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=\1#g" \
+            -e "s#https://update.greasyfork.org/scripts/438080/([0-9]+)/pvcep_rules.js#https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=\1#g" \
+            -e "s#https://update.greasyfork.org/scripts/440698/([0-9]+)/pvcep_lang.js#https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=\1#g" \
+            "Picviewer CE+/Picviewer CE+.user.js" > "Picviewer CE+/dist.user.js"
 
       - name: Commit and push dist.user.js
         run: |
