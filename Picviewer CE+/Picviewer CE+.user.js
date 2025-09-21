@@ -16254,6 +16254,10 @@ ImgOps | https://imgops.com/#b#`;
                         imgSpan.addEventListener('getxhr', getXhrHandler);
                     }
                     imgSpan.addEventListener("click", async function(e) {
+                        if (maximizeContainer.classList.contains("checked")) {
+                            imgSpan.querySelector("input").click();
+                            return;
+                        }
                         e.preventDefault();
                         self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
