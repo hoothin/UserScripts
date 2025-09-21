@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.123
+// @version      1.9.37.124
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5568,7 +5568,7 @@
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
                     if (posEle && posEle.lastElementChild) {
-                        if (posEle.scrollHeight === 0) posEle = posEle.lastElementChild;
+                        if (posEle.scrollHeight === 0 && posEle.lastElementChild.offsetParent) posEle = posEle.lastElementChild;
                         else if (posEle.lastElementChild.offsetTop > 500) {
                             posEle = posEle.lastElementChild;
                         }
@@ -7618,7 +7618,7 @@
                  text-shadow: rgb(255 255 255) 0px 0px 10px;
              }
              #pagetual-sideController #pagetual-sideController-pagenum {
-                 font-size: 15px!important;
+                 font-size: 12px!important;
                  line-height: 30px;
                  text-align: center;
                  position: absolute;
@@ -9950,6 +9950,12 @@
         configCon.appendChild(blacklistBtn);
         configCon.appendChild(blacklistInput);
         let saveBtn = document.createElement("button");
+        langSelect.onchange = e => {
+            saveBtn.click();
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        };
         saveBtn.innerHTML = i18n("save");
         saveBtn.id = "saveBtn";
         configCon.appendChild(saveBtn);
@@ -10328,7 +10334,9 @@
                 }, 100);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
-                _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                if (window.top == window.self) {
+                    _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                }
             });
             if (rulesData.blacklist && rulesData.blacklist.length > 0) {
                 let href = location.href.slice(0, 500);
@@ -10411,7 +10419,7 @@
                     rulesData.updateNotification = true;
                 }
                 if (typeof(rulesData.initRun) == "undefined") {
-                    rulesData.initRun = true;
+                    rulesData.initRun = false;
                 }
                 if (typeof(rulesData.preload) == "undefined") {
                     rulesData.preload = false;
@@ -10669,6 +10677,11 @@
                     if (!ruleParser.curSiteRule.smart || !xhrFailed) {
                         xhrFailed = true;
                         return callback(false);
+                    } else {
+                        if (!ruleParser.curSiteRule.sleep) {
+                            ruleParser.curSiteRule.sleep = 1000;
+                            return callback(false);
+                        }
                     }
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
@@ -11800,7 +11813,7 @@
                 example = compareNodeName(example, ["tr", "tbody"]) ? example : example.nextElementSibling || example;
                 if (compareNodeName(example, ["tbody"])) example = example.querySelector("tr");
                 let nextTr = example;
-                while (nextTr && nextTr.children.length == 0) nextTr = nextTr.nextElementSibling;
+                while (nextTr && (nextTr.children.length == 0 || (nextTr.children.length == 1 && !nextTr.children[0].offsetParent))) nextTr = nextTr.nextElementSibling;
                 if (nextTr) example = nextTr;
                 let tdNum = 0;
                 if (exampleStyle.display == "table-row") {
