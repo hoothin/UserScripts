@@ -1043,14 +1043,13 @@ var siteInfo = [
                 const re = /^https?:\/\/(?:www\.)?(?:(realbooru\.com|rule34\.xxx))\/index\.php\?page=post&s=view&id=(\d+).*/;
                 const m = a.href.match(re);
                 if (m) {
-                    return m[1] == "rule34.xxx" ? `https://api.${m[1]}/index.php?page=dapi&s=post&q=index&id=${m[2]}&json=1` : `https://${m[1]}/index.php?page=dapi&s=post&q=index&id=${m[2]}&json=1`;
+                    return a.href;
                 }
             },
             query: function(html, doc, url) {
                 try {
-                    const o = JSON.parse(html);
-                    let url = o[0];
-                    return url.file_url || `https://${location.hostname}/images/${url.directory}/${url.image}`;
+                    const o = doc.querySelector(".link-list>ul>li>a[href^=http]");
+                    return o && o.href;
                 } catch { }
             }
         }
