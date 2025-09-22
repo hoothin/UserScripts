@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.21.2
+// @version              2025.9.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -18193,7 +18193,7 @@ ImgOps | https://imgops.com/#b#`;
                             total.push(node);
                         }
                     } else if (/^a$/i.test(node.nodeName)) {
-                        if (imageReg.test(node.href)) {
+                        if (node.href && node.href.length < 300 && imageReg.test(node.href)) {
                             let src = node.href;
                             if (/[&\?]url\=/.test(src)) {
                                 src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
@@ -18413,30 +18413,30 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 scrollTarget = scrollTarget || document.documentElement;
                 var self = this;
-                setTimeout(() => {
-                    self.isScrollToEndAndReloading = false;
-                    var des = document.documentElement.style;
-                    des.overflow = '';
-                    document.head.appendChild(self.hideScrollStyle);
-                    let scrollIntv = setInterval(function() {
-                        let scrollTop = scrollTarget.scrollTop;
-                        scrollTarget.scrollTop += 500;
-                        if (scrollTop === scrollTarget.scrollTop) {
-                            clearInterval(scrollIntv);
-                            setTimeout(() => {
-                                des.overflow = 'hidden';
-                                document.head.removeChild(self.hideScrollStyle);
-                            }, 0);
-                            clearTimeout(self.reloadTimeout);
-                            self.reloadTimeout = setTimeout(function() {
-                                self.reloadNew();
-                                self.loadThumb();
-                            }, 1000);
-                        } else {
+                var des = document.documentElement.style;
+                des.overflow = '';
+                document.head.appendChild(self.hideScrollStyle);
+                let scrollIntv = setInterval(function() {
+                    let scrollTop = scrollTarget.scrollTop;
+                    scrollTarget.scrollTop += 800;
+                    if (scrollTop === scrollTarget.scrollTop) {
+                        clearInterval(scrollIntv);
+                        self.isScrollToEndAndReloading = false;
+                        setTimeout(() => {
+                            des.overflow = 'hidden';
+                            document.head.removeChild(self.hideScrollStyle);
+                        }, 0);
+                        if (self.lastScrollTop == scrollTop) return;
+                        clearTimeout(self.reloadTimeout);
+                        self.reloadTimeout = setTimeout(function() {
                             self.reloadNew();
-                        }
-                    }, 1);
-                }, 300);
+                            self.loadThumb();
+                            self.lastScrollTop = scrollTop;
+                        }, 300);
+                    } else {
+                        self.reloadNew();
+                    }
+                }, 150);
             },
             exportImages: function () {// 导出所有图片到新窗口
                 var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)'),i;
@@ -19482,6 +19482,16 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-container.checked span>.pv-top-banner{\
                     opacity: 0.6;\
+                    }\
+                    .pv-gallery-maximize-container+p>input{\
+                    width:min-content;\
+                    border: 1px solid transparent;\
+                    border-bottom-color: #a3a3a3;\
+                    }\
+                    .pv-gallery-maximize-container+p>input:hover{\
+                    border-color: white;\
+                    background: #333;\
+                    color: white;\
                     }\
                     .pv-gallery-maximize-container+p>input.compareBtn{\
                     display: none;\
