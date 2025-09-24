@@ -1,4 +1,4 @@
-# [FlashViewer](https://github.com/hoothin/UserScripts/raw/master/FlashViewer-HTML5%20Video/flashViewer.user.js)
+# [FlashViewer](https://hoothin.github.io/UserScripts/FlashViewer-HTML5%20Video/flashViewer.user.js)
 HTML5 視頻增強腳本
 
 原作者 NLF
