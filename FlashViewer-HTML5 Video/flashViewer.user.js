@@ -2,9 +2,9 @@
 // @name           flashViewer
 // @author         NLF & Hoothin
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
-// @version        1.2.1.8
+// @version        1.2.1.9
 // @created        2013-12-27
-// @lastUpdated    2024-8-10
+// @lastUpdated    2025-9-24
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -1555,6 +1555,7 @@
             minHeight: 150,
 
             scale: function (e) {
+                if (this.pinned || this.maximized) return;
                 if (e.deltaY > 0) {
                     this.zoomLevel += -0.1;
                     if (this.zoomLevel > 3) this.zoomLevel = 1;
@@ -1635,7 +1636,7 @@
                 var vNodeName = video.nodeName;
 
                 // 如果是这些元素，那么pin的时候直接用fixed方式（这些元素随便调整position不会引发重载）
-                var fixedPin = /^(?:IFRAME|VIDEO|AUDIO)$/.test(vNodeName);
+                var fixedPin = /^(?:IFRAME|VIDEO|AUDIO|CANVAS)$/.test(vNodeName);
                 this.fixedPin = fixedPin;
 
                 video.fvPopVideo = true;// 标记弹出中。
@@ -3843,7 +3844,7 @@
             }
 
             // 可弹出元素
-            const availableNode = /^(?:OBJECT|EMBED|VIDEO|AUDIO|IFRAME)$/i;
+            const availableNode = /^(?:OBJECT|EMBED|VIDEO|AUDIO|IFRAME|CANVAS)$/i;
             if (!availableNode.test(tNName)) {
                 target = null;
                 if (document.elementsFromPoint) {
