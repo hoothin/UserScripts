@@ -1642,7 +1642,9 @@
                 video.fvPopVideo = true;// 标记弹出中。
                 this.zoomLevel = 1;
                 video.addEventListener("wheel", this.scale.bind(this));
-                video.addEventListener("mousedown", this.videoMouseDown.bind(this), true);
+                if (vNodeName === "VIDEO") {
+                    video.addEventListener("mousedown", this.videoMouseDown.bind(this), true);
+                }
 
                 // 很多网站加载flash为了兼容现代浏览器和ie，经常使用 object classid嵌套object或者embed的格式
                 var vPEIsObject;
