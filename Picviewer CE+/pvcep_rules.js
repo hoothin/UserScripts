@@ -1073,7 +1073,7 @@ var siteInfo = [
             }
             return target;
         },
-        r: [/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/i, /.*\.xhscdn\.com.*\/(\w+)(!.*|$)/i],
+        r: [/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/i, /.*\.xhscdn\.com.*\d\/(\w+)(!.*|$)/i],
         s: ["/w/1080/", "https://sns-img-bd.xhscdn.com/$1"]
     },
     {
