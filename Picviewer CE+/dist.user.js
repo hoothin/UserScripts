@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.25.1
+// @version              2025.9.26.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -22031,7 +22031,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (!imme && this.following) return;
                 let wSize = getWindowSize();
 
-                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2, (this.img.naturalWidth || 500)>>1, (this.img.naturalHeight || 500)>>1), padding2 = 50, left, top;//内外侧间距
+                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2, Math.max(this.data.img && this.data.img.clientWidth, this.data.img && this.data.img.clientHeight, 100)>>2), padding2 = 50, left, top;//内外侧间距
                 imgWindow.style.position = "fixed";
                 let scrolled = {x: 0, y: 0};
 
