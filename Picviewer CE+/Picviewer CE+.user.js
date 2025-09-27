@@ -27303,6 +27303,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function openPrefs() {
+            if (window.top != window.self) return;
             let fieldsSearchData = GM_config.fields["gallery.searchData"];
             if (fieldsSearchData && fieldsSearchData.value) {
                 fieldsSearchData.value = fieldsSearchData.value.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
