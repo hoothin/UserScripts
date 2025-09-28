@@ -22031,7 +22031,9 @@ ImgOps | https://imgops.com/#b#`;
                 if (!imme && this.following) return;
                 let wSize = getWindowSize();
 
-                let padding1 = Math.min(250, wSize.h>>2, wSize.w>>2, Math.max(this.data.img && this.data.img.clientWidth, this.data.img && this.data.img.clientHeight, 50)>>1), padding2 = 50, left, top;//内外侧间距
+                let paddingW = Math.min(250, wSize.w>>2, Math.max(this.data.img && this.data.img.clientWidth, 50)>>1);
+                let paddingH = Math.min(250, wSize.h>>2, Math.max(this.data.img && this.data.img.clientHeight, 50)>>1);
+                let padding2 = 50, left, top;//内外侧间距
                 imgWindow.style.position = "fixed";
                 let scrolled = {x: 0, y: 0};
 
@@ -22041,18 +22043,18 @@ ImgOps | https://imgops.com/#b#`;
                     //宽条，上下半屏
                     if (posY > wSize.h / 2) {
                         //上
-                        top = posY - imgWindow.offsetHeight - padding1 + scrolled.y;
+                        top = posY - imgWindow.offsetHeight - paddingH + scrolled.y;
                         if (top < padding2>>1) top = padding2>>1;
                     } else {
                         //下
-                        top = posY + padding1 + scrolled.y;
+                        top = posY + paddingH + scrolled.y;
                         if (top > wSize.h - imgWindow.offsetHeight - 1) top = wSize.h - imgWindow.offsetHeight - 1;
                     }
                     left = (wSize.w - imgWindow.offsetWidth) / 2;
-                    let maxLeft = posX + padding1;
+                    let maxLeft = posX + paddingW;
                     if (left > maxLeft) left = maxLeft;
                     else {
-                        let minLeft = posX - imgWindow.offsetWidth - padding1;
+                        let minLeft = posX - imgWindow.offsetWidth - paddingW;
                         if (left < minLeft) left = minLeft;
                     }
                     left = left + scrolled.x;
@@ -22060,18 +22062,18 @@ ImgOps | https://imgops.com/#b#`;
                     //窄条，左右半屏
                     if (posX > wSize.w / 2) {
                         //左
-                        left = posX - imgWindow.offsetWidth - padding1 + scrolled.x;
+                        left = posX - imgWindow.offsetWidth - paddingW + scrolled.x;
                         if (left < 1) left = 1;
                     } else {
                         //右
-                        left = posX + padding1 + scrolled.x;
+                        left = posX + paddingW + scrolled.x;
                         if (left > wSize.w - imgWindow.offsetWidth - 1) left = wSize.w - imgWindow.offsetWidth - 1;
                     }
                     top = (wSize.h - imgWindow.offsetHeight) / 2;
-                    let maxTop = posY + padding1;
+                    let maxTop = posY + paddingH;
                     if (top > maxTop) top = maxTop;
                     else {
-                        let minTop = posY - imgWindow.offsetHeight - padding1;
+                        let minTop = posY - imgWindow.offsetHeight - paddingH;
                         if (top < minTop) top = minTop;
                     }
                     top = top + scrolled.y;
