@@ -29,5 +29,5 @@ jobs:
           git config --local user.email "rixixi@gmail.com"
           git config --local user.name "hoothin-update"
           git add "Picviewer CE+/dist.user.js"
-          git commit -m "chore(Picviewer CE+): Auto-generate dist.user.js with timestamp"
+          git commit -m "chore(Picviewer CE+): Auto-generate dist.user.js"
           git push https://${{ secrets.ACTION_SECRET }}@github.com/${{ github.repository }}
