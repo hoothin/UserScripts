@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.27.2
+// @version              2025.9.30.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1666736/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1669339/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1653424/pvcep_lang.js
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
@@ -12675,7 +12675,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         ];
 
-        const imageReg = /^\s*(https?|ftp):\/\/.*?\/[^\.]*\.(avi|avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|a?png|svgz?|webp|xbm|dib|divx|3gpp|m3u|m4v|mkv|mp4|mpe?g|ogv|webm|flv|flac|m4a|m4b|mpa|mp3|aac|cda|oga|ogg|opus|wma|wav)(&|\?|#|\/?$|\s)/i;
+        const imageReg = /^\s*(https?|ftp):\/\/.*?\/[^\.:：]*\.(avi|avif|avifs|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|jif|jfi|a?png|svgz?|webp|xbm|dib|divx|3gpp|m3u|m4v|mkv|mp4|mpe?g|ogv|webm|flv|flac|m4a|m4b|mpa|mp3|aac|cda|oga|ogg|opus|wma|wav)(&|\?|#|\/?$|\s)/i;
 
         const ruleImportHost = ["greasyfork.org", "github.com", "reddit.com"];
         const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/24204(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Picviewer%20CE%2B|issues|discussions)|\.reddit\.com\/r\/PicviewerCE/i;
@@ -13451,6 +13451,7 @@ ImgOps | https://imgops.com/#b#`;
 
 
 
+            var errorList = {}, errorBlobList = {};
             var imgReady=function(img,opts){
 
                 if(/NodeList|HTMLCollection/.test(Object.prototype.toString.call(img))  || Array.isArray(img)){
@@ -13596,6 +13597,42 @@ ImgOps | https://imgops.com/#b#`;
 
                 function errorHandler(e){
                     if(aborted)return;
+
+                    if (!errorBlobList[img.src] && !/^blob:/.test(img.src)) {
+                        errorList[img.src]=true;
+                        _GM_xmlhttpRequest({
+                            method: 'GET',
+                            url: img.src,
+                            responseType: 'blob',
+                            onload: function(response) {
+                                const blobUrl = URL.createObjectURL(response.response);
+                                const releaseBlob = () => URL.revokeObjectURL(blobUrl);
+                                window.addEventListener('beforeunload', releaseBlob);
+
+                                let orgSrc = img.src;
+                                img.src = blobUrl;
+                                setTimeout(() => {
+                                    if (aborted) return;
+                                    if (typeof img.width == 'number' && img.width && img.height) {
+                                        go('load', {
+                                            type:'load',
+                                            target: img,
+                                        });
+                                    } else {
+                                        errorBlobList[orgSrc] = true;
+                                        go('error',e);
+                                    }
+                                }, 0);
+                            },
+                            onerror: function() {
+                                if (aborted) return;
+                                errorBlobList[orgSrc] = true;
+                                go('error',e);
+                            }
+                        });
+                        return;
+                    }
+
                     go('error',e);
                 };
 
@@ -13616,6 +13653,7 @@ ImgOps | https://imgops.com/#b#`;
                             });
                         },0);
                     }else{//这不是图片.opera会识别错误.
+                        errorList[img.src]=true;
                         setTimeout(function(){
                             if(aborted)return;
                             go('error',{
@@ -13646,6 +13684,12 @@ ImgOps | https://imgops.com/#b#`;
                         iRInterval=setInterval(checkReady,66);
                     };
                 };
+                if (errorList[img.src]) {
+                    go('error',{
+                        type:'error',
+                        target:img,
+                    });
+                }
 
                 return ret;
             };
@@ -14947,7 +14991,7 @@ ImgOps | https://imgops.com/#b#`;
                                                 self.img.style.display = "";
                                             }
                                         });
-                                    },
+                                    }
                                 });
                             } else {
                                 let target = self.img;
@@ -16345,36 +16389,8 @@ ImgOps | https://imgops.com/#b#`;
                                         popupImgWin(this);
                                     },
                                     error:function(e){
-                                        if (/^blob:/.test(imgSrc)) {
-                                            self.showTips("");
-                                            loadError();
-                                        } else if (mode == "image" || mode == "") {
-                                            _GM_xmlhttpRequest({
-                                                method: 'GET',
-                                                url: imgSrc,
-                                                responseType: 'blob',
-                                                onload: function(response) {
-                                                    if (response.response && response.response.type == "text/html") {
-                                                        self.showTips("");
-                                                        loadError();
-                                                        return;
-                                                    }
-                                                    const blobUrl = URL.createObjectURL(response.response);
-                                                    self.showTips("");
-                                                    let img = document.createElement("img");
-                                                    popupImgWin(img);
-                                                    const releaseBlob = () => URL.revokeObjectURL(blobUrl);
-                                                    window.addEventListener('beforeunload', releaseBlob);
-                                                },
-                                                onerror: function() {
-                                                    self.showTips("");
-                                                    loadError();
-                                                }
-                                            });
-                                        } else {
-                                            self.showTips("");
-                                            loadError();
-                                        }
+                                        self.showTips("");
+                                        loadError();
                                     }
                                 });
                             }
@@ -16807,42 +16823,9 @@ ImgOps | https://imgops.com/#b#`;
 
                         if(e.type=='error'){
                             if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
-                            if (/^blob:/.test(src)) {
-                                self.errorSpan=ele;
-                                if(preImgR)preImgR.abort();
-                                self.loadImg(img, ele,true);
-                            } else {
-                                _GM_xmlhttpRequest({
-                                    method: 'GET',
-                                    url: src,
-                                    responseType: 'blob',
-                                    onload: function(response) {
-                                        if (response.response && response.response.type == "text/html") {
-                                            self.errorSpan=ele;
-                                            if(preImgR)preImgR.abort();
-                                            self.loadImg(img, ele, true);
-                                            return;
-                                        }
-                                        const blobUrl = URL.createObjectURL(response.response);
-                                        self.slideShow.run('loadEnd');
-                                        let img = document.createElement("img");
-                                        img.src = blobUrl;
-                                        imgReady(blobUrl, {
-                                            ready:function(){
-                                                self.loadImg(img, ele, false);
-                                                self.slideShow.run('loadEnd');
-                                            }
-                                        });
-                                        const releaseBlob = () => URL.revokeObjectURL(blobUrl);
-                                        window.addEventListener('beforeunload', releaseBlob);
-                                    },
-                                    onerror: function() {
-                                        self.errorSpan=ele;
-                                        if(preImgR)preImgR.abort();
-                                        self.loadImg(img, ele, true);
-                                    }
-                                });
-                            }
+                            self.errorSpan=ele;
+                            if(preImgR)preImgR.abort();
+                            self.loadImg(img, ele,true);
                         };
 
                         self.slideShow.run('loadEnd');
@@ -23553,44 +23536,16 @@ ImgOps | https://imgops.com/#b#`;
 
                 var opts = {
                     error: function(e) {
-                        if (/^blob:/.test(imgSrc)) {
-                            if (Array.isArray(imgSrcs)) {
-                                var src = imgSrcs.shift();
-                                if (src) {
-                                    self.loadImg(src, imgSrcs, nextFun);
-                                    return;
-                                }
+                        if (Array.isArray(imgSrcs)) {
+                            var src = imgSrcs.shift();
+                            if (src) {
+                                self.loadImg(src, imgSrcs, nextFun);
+                                return;
                             }
-                        } else if (mode == "image" || mode == "") {
-                            _GM_xmlhttpRequest({
-                                method: 'GET',
-                                url: media.src,
-                                responseType: 'blob',
-                                onload: function(response) {
-                                    const blobUrl = URL.createObjectURL(response.response);
-                                    self.loadImg(blobUrl, imgSrcs, nextFun);
-                                    const releaseBlob = () => URL.revokeObjectURL(blobUrl);
-                                    window.addEventListener('beforeunload', releaseBlob);
-                                },
-                                onerror: function() {
-                                    if (Array.isArray(imgSrcs)) {
-                                        var src = imgSrcs.shift();
-                                        if (src) {
-                                            self.loadImg(src, imgSrcs, nextFun);
-                                            return;
-                                        }
-                                    } else {
-                                        self.error('', this, e);
-                                    }
-                                }
-                            });
-                            return;
                         } else {
-                            self.error('', this, e);
+                            if(nextFun) nextFun();
+                            else self.error('', this, e);
                         }
-
-                        if(nextFun) nextFun();
-                        else self.error('', this, e);
                     },
                 };
 
@@ -25278,7 +25233,7 @@ ImgOps | https://imgops.com/#b#`;
             }, prefs.floatBar.showDelay || 0)
         }
 
-        function checkFloatBar(_target, type, canPreview, clientX, clientY, altKey) {
+        function checkFloatBar(_target, type, canPreview, clientX, clientY, altKey, composedTarget) {
             let target = _target;
             if (!target || target.id == "pv-float-bar-container" ||
                 (target.parentNode && (target.parentNode.id == "icons" || target.parentNode.className == "search-jumper-btn")) ||
@@ -25335,7 +25290,7 @@ ImgOps | https://imgops.com/#b#`;
             let bgReg = /.*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
             let bgRegLong = /^\s*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
             let result, targetBg, hasBg = node => {
-                if(node.nodeName.toUpperCase() == "HTML" || node.nodeName == "#document"){
+                if(node.nodeName.toUpperCase() == "HTML" || node.nodeName == "#document" || node.nodeType != 1){
                     return false;
                 }
                 if (node.clientWidth <= prefs.floatBar.minSizeLimit.w || node.clientHeight <= prefs.floatBar.minSizeLimit.h) {
@@ -25503,17 +25458,18 @@ ImgOps | https://imgops.com/#b#`;
 
                         return;
                     }
+                    if (composedTarget) target = composedTarget;
                     let found = false;
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var broEle, broImg;
-                    if (target.nodeName.toUpperCase() != 'A' && target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
+                    if (target.parentNode && target.parentNode.style && !/flex|grid|table/.test(getComputedStyle(target.parentNode).display)) {
                         broEle = target.previousElementSibling;
                         while (broEle) {
                             if (broEle.offsetWidth && broEle.offsetWidth > target.offsetWidth>>1) {
                                 if (broEle.nodeName == "IMG") broImg = broEle;
                                 else if (broEle.nodeName == "PICTURE") broImg = broEle.querySelector("img");
                             }
-                            if (getComputedStyle(broEle).position !== "absolute") break;
+                            if (broEle.offsetWidth && broEle.offsetHeight && getComputedStyle(broEle).position !== "absolute") break;
                             broEle = broEle.previousElementSibling;
                         }
                         if (broEle == target) broEle = null;
@@ -25861,7 +25817,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
-        var checkFloatBarTimer, initMouse = false, lastEvent;
+        var checkFloatBarTimer, initMouse = false, lastEvent, composedTarget;
         function globalMouseoverHandler(e) {
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
@@ -25871,6 +25827,8 @@ ImgOps | https://imgops.com/#b#`;
                 e = lastEvent;
             } else {
                 lastEvent = e;
+                let path = e && e.composedPath && e.composedPath();
+                composedTarget = path && path[0];
             }
             if (e.type == "mousemove") {
                 if (!initMouse) {
@@ -25900,7 +25858,7 @@ ImgOps | https://imgops.com/#b#`;
             checkFloatBarTimer = setTimeout(function() {
                 if (!e || !e.target || !e.target.parentNode) return;
                 if (gallery && gallery.shown) return;
-                checkFloatBar(e.target, e.type, canPreview, e.clientX, e.clientY, e.altKey);
+                checkFloatBar(e.target, e.type, canPreview, e.clientX, e.clientY, e.altKey, composedTarget);
             }, 50);
         }
 
