@@ -25822,14 +25822,6 @@ ImgOps | https://imgops.com/#b#`;
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
             let canPreview = checkPreview(e);
-            if (e.type == "keydown") {
-                if (!lastEvent) return;
-                e = lastEvent;
-            } else {
-                lastEvent = e;
-                let path = e && e.composedPath && e.composedPath();
-                composedTarget = path && path[0];
-            }
             if (e.type == "mousemove") {
                 if (!initMouse) {
                     initMouse = true;
@@ -25854,6 +25846,14 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
             if (!initMouse) return;
+            if (e.type == "keydown") {
+                if (!lastEvent) return;
+                e = lastEvent;
+            } else {
+                lastEvent = e;
+                let path = e && e.composedPath && e.composedPath();
+                composedTarget = path && path[0];
+            }
             clearTimeout(checkFloatBarTimer);
             checkFloatBarTimer = setTimeout(function() {
                 if (!e || !e.target || !e.target.parentNode) return;
