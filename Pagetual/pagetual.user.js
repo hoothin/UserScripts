@@ -6823,11 +6823,15 @@
                         });
                         self.preloadImageHandler();
                     }
+                    self.fetchFailed = 0;
                 }
                 catch(e) {
                     debug(e);
                     return;
                 }
+            }).catch(error => {
+                self.fetchFailed = (self.fetchFailed || 0) + 1;
+                if (self.fetchFailed > 1) self.curSiteRule.preload = 0;
             });
         }
 
@@ -7286,7 +7290,7 @@
                 }
                 if (loadingDiv.previousElementSibling) {
                     let preStyle = _unsafeWindow.getComputedStyle(loadingDiv.previousElementSibling);
-                    loadingDiv.style.order = preStyle.order;
+                    if (preStyle.order && preStyle.order !== '0') loadingDiv.style.order = preStyle.order;
                 }
             }
             //this.setPageTop(lastScrollTop);
