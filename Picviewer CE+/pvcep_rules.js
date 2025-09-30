@@ -2031,5 +2031,11 @@ var siteInfo = [
             url: "/^https://(www\\.)?img(?:inn|sed)\\.com/p/[\\w-]/",
             query: '.swiper-slide,.downloads a'
         }
+    },
+    {
+        name: "zlib",
+        src: /^https:\/\/[^\/]+\.cdn\-zlib\./i,
+        r: /covers\d+/i,
+        s: 'covers4096'
     }
 ];
