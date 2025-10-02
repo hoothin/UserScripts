@@ -25290,7 +25290,7 @@ ImgOps | https://imgops.com/#b#`;
             let bgReg = /.*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
             let bgRegLong = /^\s*url\(\s*["']?([^ad\s'"#].+?)["']?\s*\)([^'"]|$)/i;
             let result, targetBg, hasBg = node => {
-                if(node.nodeName.toUpperCase() == "HTML" || node.nodeName == "#document" || node.nodeType != 1){
+                if(/^(html|body|#document)$/i.test(node.nodeName) || node.nodeType != 1){
                     return false;
                 }
                 if (node.clientWidth <= prefs.floatBar.minSizeLimit.w || node.clientHeight <= prefs.floatBar.minSizeLimit.h) {
