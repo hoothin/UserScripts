@@ -3061,7 +3061,7 @@
     "name": "美人图 - 分類",
     "author": "skofkyo",
     "example": "https://meirentu.cc/group/xiuren.html",
-    "url": "^https?://meirentu\\.\\w+/",
+    "url": "^https?://meirentu\\.\\w+/group",
     "nextLink": "//a[text()='下页'] | //a[@class='current']/following-sibling::a[1]",
     "stopSign": [
         "ul.update_area_lists img"
