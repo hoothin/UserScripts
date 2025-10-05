@@ -5798,9 +5798,9 @@
                 if (e.style.display === "none" || e.getAttribute("aria-disabled") === "true") {
                     return false;
                 }
-                if (/\bbanner|slick|slide|carousel|gallery/i.test(e.id)) return false;
+                if (/\bbanner|slick|slide|carousel/i.test(e.id)) return false;
                 if (e.className) {
-                    if (!/page/i.test(e.className) && /\bbanner|slick|slide|carousel|gallery|disabled\s*$/i.test(e.className)) {
+                    if (!/page/i.test(e.className) && /\bbanner|slick|slide|carousel|disabled\s*$/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
@@ -5809,7 +5809,7 @@
                     }
                 }
                 let ariaLabel = e.getAttribute("aria-label");
-                if (ariaLabel && /\bbanner|slick|slide|carousel|gallery/i.test(ariaLabel)) return false;
+                if (ariaLabel && /\bbanner|slick|slide|carousel/i.test(ariaLabel)) return false;
                 return true;
             };
             if (!ele) return false;
@@ -5919,7 +5919,8 @@
                 ".btn_next:not([disabled])",
                 ".btn-next:not([disabled])",
                 '//button[contains(@class, "Page")][text()="Next"]',
-                '//button[contains(@class, "page")][text()="next"]'
+                '//button[contains(@class, "page")][text()="next"]',
+                '//form/button[@type="submit"][text()="Next"]'
             ];
             let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
