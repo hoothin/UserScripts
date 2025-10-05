@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.9.30.1
+// @version              2025.10.5.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -24038,10 +24038,20 @@ ImgOps | https://imgops.com/#b#`;
 
                 if (bodyStyle.position === "static") {
                     offsetParent = document.documentElement;
+                    bodyPosi = body.getBoundingClientRect();
+                    let docPosy = offsetParent.getBoundingClientRect();
+                    if (bodyPosi.top == docPosy.top && bodyPosi.left == docPosy.left && bodyPosi.bottom == docPosy.bottom && bodyPosi.right == docPosy.right) {
+                        bodyPosi = {
+                            top: -offsetParent.scrollTop,
+                            left: -offsetParent.scrollLeft,
+                            bottom: offsetParent.scrollHeight - offsetParent.scrollTop,
+                            right: offsetParent.scrollWidth - offsetParent.scrollLeft
+                        };
+                    }
                 } else {
                     offsetParent = body;
+                    bodyPosi = offsetParent.getBoundingClientRect();
                 }
-                bodyPosi = offsetParent.getBoundingClientRect();
 
 
                 var scrolled=getScrolled(offsetParent);
@@ -24145,6 +24155,7 @@ ImgOps | https://imgops.com/#b#`;
                 window.addEventListener('scroll',this._scrollHandler,true);
             },
             hide:function(){
+                lastEvent = null;
                 clearTimeout(this.showTimer);
                 this.floatBar.style.opacity=0.01;
                 this.shown=false;
@@ -26204,7 +26215,7 @@ ImgOps | https://imgops.com/#b#`;
             if (e.relatedTarget == ImgWindowC.overlayer) return;
             if(uniqueImgWin && !uniqueImgWin.removed){
                 if(checkPreview(e)){
-                    if (!uniqueImgWin.data.img) return uniqueImgWin && uniqueImgWin.remove();
+                    if (!uniqueImgWin.data.img || !uniqueImgWin.data.img.parentNode) return uniqueImgWin && uniqueImgWin.remove();
                     let showArea=uniqueImgWin.data.img.getBoundingClientRect();
                     if(e.clientX < showArea.left + 20 ||
                       e.clientX > showArea.right - 20 ||
