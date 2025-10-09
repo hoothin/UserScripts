@@ -25831,7 +25831,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
-        var checkFloatBarTimer, initMouse = false, lastEvent, composedTarget;
+        var checkFloatBarTimer, initMouse = false, lastEvent, composedTarget, checking = false;
         function globalMouseoverHandler(e) {
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
@@ -25851,6 +25851,13 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return;
                 } else {
+                    if (checking) {
+                        setTimeout(() => {
+                            checking = false;
+                        }, 50);
+                        return;
+                    }
+                    checking = true;
                     if (!canPreview) return;
                     let target = e.target;
                     if (target.nodeName == "PICTURE"){
@@ -25865,8 +25872,15 @@ ImgOps | https://imgops.com/#b#`;
                 e = lastEvent;
             } else {
                 lastEvent = e;
-                let path = e && e.composedPath && e.composedPath();
-                composedTarget = path && path[0];
+                if (checking) {
+                    setTimeout(() => {
+                        checking = false;
+                    }, 50);
+                } else {
+                    checking = true;
+                    let path = e && e.composedPath && e.composedPath();
+                    composedTarget = path && path[0];
+                }
             }
             clearTimeout(checkFloatBarTimer);
             checkFloatBarTimer = setTimeout(function() {
