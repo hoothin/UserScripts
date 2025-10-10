@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.10.7.1
+// @version              2025.10.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12455,14 +12455,108 @@ ImgOps | https://imgops.com/#b#`;
         });
     }
     var prefs;
-    var escapeHTMLPolicy;
-    if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy) {
-        escapeHTMLPolicy=unsafeWindow.trustedTypes.createPolicy('pvcep_default', {
-            createHTML: (string, sink) => string,
-            createScriptURL: string => string,
-            createScript: string => string
+
+    function parseTrustedTypes(cspString) {
+        const policies = new Set();
+        const ttRegex = /trusted-types\s+([^;]+)/gi;
+        let match;
+        while ((match = ttRegex.exec(cspString)) !== null) {
+            match[1].trim().split(/\s+/)
+                .forEach(name => {
+                    if (name !== "'allow-duplicates'" && name !== "'none'") {
+                        policies.add(name.replace(/'/g, ''));
+                    }
+                });
+        }
+        return Array.from(policies);
+    }
+
+    async function getAvailablePolicyNamesOptimized() {
+        if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.getPolicyNames) {
+            const existingNames = unsafeWindow.trustedTypes.getPolicyNames();
+            if (existingNames.length > 0) {
+                return new Set(existingNames);
+            }
+        }
+
+        const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+        if (meta) {
+            const metaNames = parseTrustedTypes(meta.content);
+            if (metaNames.length > 0) {
+                return new Set(metaNames);
+            }
+        }
+
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "HEAD",
+                url: window.location.href,
+                onload: function(response) {
+                    const cspHeader = response.responseHeaders.split('\r\n')
+                        .filter(h => h.toLowerCase().startsWith('content-security-policy:'))
+                        .map(h => h.substring(26).trim())
+                        .join('; ');
+
+                    const headerNames = parseTrustedTypes(cspHeader);
+                    if (headerNames.length > 0) {
+                        resolve(new Set(headerNames));
+                    } else {
+                        resolve(new Set());
+                    }
+                },
+                onerror: function(error) {
+                    resolve(new Set());
+                }
+            });
         });
     }
+
+    function isTrustedTypesEnforced() {
+        try {
+            document.createElement('div').innerHTML = '';
+            return false;
+        } catch (e) {
+            return true;
+        }
+    }
+
+    async function createPolicy() {
+        if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy && isTrustedTypesEnforced()) {
+            const allowedNames = await getAvailablePolicyNamesOptimized();
+
+            if (allowedNames.size === 0) {
+                escapeHTMLPolicy = unsafeWindow.trustedTypes.createPolicy('pvcep_default', {
+                    createHTML: (string, sink) => string,
+                    createScriptURL: string => string,
+                    createScript: string => string
+                });
+                return;
+            }
+
+            for (const name of allowedNames) {
+                if (name === '*') continue;
+                try {
+                    escapeHTMLPolicy = unsafeWindow.trustedTypes.createPolicy(name, {
+                        createHTML: (string, sink) => string,
+                        createScriptURL: string => string,
+                        createScript: string => string
+                    });
+                    break;
+                } catch (e) {
+                    try {
+                        escapeHTMLPolicy = unsafeWindow.trustedTypes.policies.get(name);
+                        if (escapeHTMLPolicy) {
+                            break;
+                        }
+                    } catch (e2) {
+                        console.warn(`create '${name}' failed`);
+                    }
+                }
+            }
+        }
+    }
+
+    let escapeHTMLPolicy = null;
 
     function getBody(doc){
         return doc.body || doc.querySelector('body') || doc;
@@ -12477,6 +12571,7 @@ ImgOps | https://imgops.com/#b#`;
         return escapeHTMLPolicy?escapeHTMLPolicy.createScript(html):html;
     }
     async function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
+        await createPolicy();
         // 默认设置，请到设置界面修改
         prefs={
             floatBar:{//浮动工具栏相关设置.
