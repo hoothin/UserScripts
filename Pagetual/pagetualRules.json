@@ -5520,6 +5520,14 @@
     "include": "[rel='next']"
 },
 {
+    "name": "github repos list",
+    "url": "^https?://github\\.com/[^/]+\\?tab=repositories",
+    "pageElement": "//ul[@data-filterable-for='your-repos-filter']",
+    "nextLink": "//a[@rel='next']",
+    "action": 0,
+    "css": ".starring-container+.hide-lg{display:none}"
+},
+{
     "name": "Actions · github",
     "action": 0,
     "url": "^https?://github\\.com/",
