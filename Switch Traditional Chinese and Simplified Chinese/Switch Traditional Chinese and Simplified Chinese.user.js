@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.7.9
+// @version      1.2.7.10
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體），顯示漢字對應漢語拼音，自訂任意替換文本
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体），显示汉字对应汉语拼音，自定义任意替换文本
 // @description:ja     ウェブページ上の簡体字中国語と繁体字中国語を自由に変換し、中国語の文字にひらがなを表示し、任意の文字を置き換えることができます。
@@ -1713,12 +1713,16 @@
                     storage.setItem('sc2tcCombConfig', sc2tcCombConfig);
                 } catch (e) {
                     console.log(e);
+                    alert("自訂簡繁用語轉換格式錯誤：" + e);
+                    return;
                 }
                 try {
                     illiteracyConfig = customIlliteracyInput.value ? JSON.parse(customIlliteracyInput.value) : "";
                     storage.setItem('illiteracyConfig', illiteracyConfig);
                 } catch (e) {
                     console.log(e);
+                    alert("通用字詞轉換格式錯誤：" + e);
+                    return;
                 }
                 storage.setItem('sc2tcCombTree', "");
                 storage.setItem('tc2scCombTree', "");
@@ -1888,32 +1892,38 @@
             function makeCombTree(key, value) {
                 let curTree=sc2tcCombTree;
                 for(let i=0;i<key.length;i++){
+                    let curKey=key.charAt(i);
+                    let branch=curTree[curKey];
                     let newTree={};
                     if(i==key.length-1){
                         newTree={"end":value};
+                        if(branch){
+                            branch.end=value;
+                        }
                     }
-                    let curKey=key.charAt(i);
-                    let branch=curTree[curKey];
-                    if(!branch){
+                    if(branch){
+                        curTree=branch;
+                    }else{
                         curTree[curKey]=newTree;
                         curTree=newTree;
-                    }else{
-                        curTree=branch;
                     }
                 }
                 curTree=tc2scCombTree;
                 for(let i=0;i<value.length;i++){
+                    let curKey=value.charAt(i);
+                    let branch=curTree[curKey];
                     let newTree={};
                     if(i==value.length-1){
                         newTree={"end":key};
+                        if(branch){
+                            branch.end=value;
+                        }
                     }
-                    let curKey=value.charAt(i);
-                    let branch=curTree[curKey];
-                    if(!branch){
+                    if(branch){
+                        curTree=branch;
+                    }else{
                         curTree[curKey]=newTree;
                         curTree=newTree;
-                    }else{
-                        curTree=branch;
                     }
                 }
             }
