@@ -4643,14 +4643,8 @@
                     });
                     break;
                 } catch (e) {
-                    try {
-                        escapeHTMLPolicy = _unsafeWindow.trustedTypes.policies.get(name);
-                        if (escapeHTMLPolicy) {
-                            break;
-                        }
-                    } catch (e2) {
-                        console.warn(`create '${name}' failed`);
-                    }
+                    console.warn(`create '${name}' failed`);
+                    return;
                 }
             }
         }

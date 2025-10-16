@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.10.10.1
+// @version              2025.10.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -12543,14 +12543,8 @@ ImgOps | https://imgops.com/#b#`;
                     });
                     break;
                 } catch (e) {
-                    try {
-                        escapeHTMLPolicy = unsafeWindow.trustedTypes.policies.get(name);
-                        if (escapeHTMLPolicy) {
-                            break;
-                        }
-                    } catch (e2) {
-                        console.warn(`create '${name}' failed`);
-                    }
+                    console.warn(`create '${name}' failed`);
+                    return;
                 }
             }
         }
@@ -22227,12 +22221,10 @@ ImgOps | https://imgops.com/#b#`;
 
                 let size = rectSize, containsScroll = imgWindow.classList.contains("pv-pic-window-scroll");
                 if (rectSize.w > wSize.w) {
-                    if (rectSize.w / rectSize.h > wSize.w / wSize.h) {
-                        size = {
-                            w: wSize.w,
-                            h: wSize.w / (rectSize.w / rectSize.h),
-                        };
-                    }
+                    size = {
+                        w: wSize.w,
+                        h: wSize.w / (rectSize.w / rectSize.h),
+                    };
 
                     let cs = this.getRotatedImgCliSize(size);
                     let ns = this.imgNaturalSize;
@@ -24250,7 +24242,7 @@ ImgOps | https://imgops.com/#b#`;
                 window.addEventListener('scroll',this._scrollHandler,true);
             },
             hide:function(){
-                lastEvent = null;
+                target = null;
                 clearTimeout(this.showTimer);
                 this.floatBar.style.opacity=0.01;
                 this.shown=false;
@@ -25674,16 +25666,18 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         }
                     }
-                    if (!found && target.children && target.children[0] && target.children[0].nodeName.toUpperCase() == 'IMG') {
-                        let img = target.children[0];
-                        while (img.nextElementSibling && img.nextElementSibling.nodeName.toUpperCase() == 'IMG') {
-                            img = img.nextElementSibling;
-                        }
-                        let rect = img.getBoundingClientRect();
+                    if (!found && target.children && target.children.length) {
+                        let img = target.querySelector("img");
+                        if (img) {
+                            while (img.nextElementSibling && img.nextElementSibling.nodeName.toUpperCase() == 'IMG') {
+                                img = img.nextElementSibling;
+                            }
+                            let rect = img.getBoundingClientRect();
 
-                        if (clientY >= rect.top && clientY <= rect.bottom && clientX >= rect.left  &&  clientX <= rect.right) {
-                            target = img;
-                            found = true;
+                            if (clientY >= rect.top && clientY <= rect.bottom && clientX >= rect.left  &&  clientX <= rect.right) {
+                                target = img;
+                                found = true;
+                            }
                         }
                     }
                     if (!found && document.elementsFromPoint) {
@@ -25926,7 +25920,7 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
-        var checkFloatBarTimer, initMouse = false, lastEvent, composedTarget, checking = false;
+        var checkFloatBarTimer, initMouse = false, composedTarget, checking = false, target, type, clientX, clientY, altKey;
         function globalMouseoverHandler(e) {
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
@@ -25963,26 +25957,33 @@ ImgOps | https://imgops.com/#b#`;
             }
             if (!initMouse) return;
             if (e.type == "keydown") {
-                if (!lastEvent) return;
-                e = lastEvent;
+                if (!target) return;
             } else {
-                lastEvent = e;
-                if (checking) {
-                    setTimeout(() => {
-                        checking = false;
-                    }, 50);
-                } else {
-                    checking = true;
+                target = e.target;
+                type = e.type;
+                clientX = e.clientX;
+                clientY = e.clientY;
+                altKey = e.altKey;
+                if (e.type !== "mousemove") {
                     let path = e && e.composedPath && e.composedPath();
                     composedTarget = path && path[0];
                 }
             }
             clearTimeout(checkFloatBarTimer);
             checkFloatBarTimer = setTimeout(function() {
-                if (!e || !e.target || !e.target.parentNode) return;
+                if (!target || !target.parentNode) return;
                 if (gallery && gallery.shown) return;
-                checkFloatBar(e.target, e.type, canPreview, e.clientX, e.clientY, e.altKey, composedTarget);
+                checkFloatBar(target, type, canPreview, clientX, clientY, altKey, composedTarget);
             }, 50);
+            if (e.target.shadowRoot) {
+                if (!e.target.shadowRoot.initListener) {
+                    e.target.shadowRoot.initListener = true;
+                    e.target.shadowRoot.addEventListener('mouseenter', (e) => {
+                        globalMouseoverHandler(e);
+                    }, true);
+                    e.target.shadowRoot.addEventListener('mousemove', globalMouseoverHandler, true);
+                }
+            }
         }
 
         var selectionClientRect, selectionStr, selectionChanging = false;
