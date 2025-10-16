@@ -23539,6 +23539,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             remove:function(){
                 if(!this.removed){
+                    lastPopupLoading = null;
                     this.removed=true;
                     this.loadingAnim.parentNode.removeChild(this.loadingAnim);
                     LoadingAnimC.all.splice(LoadingAnimC.all.indexOf(this),1);
@@ -23651,6 +23652,7 @@ ImgOps | https://imgops.com/#b#`;
             },
 
             load:async function(img,e){
+                lastPopupLoading = null;
                 this.remove();
                 this.img=img;
                 var buttonType=this.buttonType;
