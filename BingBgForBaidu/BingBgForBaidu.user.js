@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.42
+// @version      2.3.43
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -99,7 +99,7 @@
             iframeDoc.scrollTop(125);
             iframeDoc.scrollLeft(145);
             iframe.width=618;
-            iframe.height=615;
+            iframe.height=630;
         };
         riliLink.onmouseleave=function(){
             clearTimeout(t);
@@ -123,17 +123,14 @@
             riliLink.title=title;
         }
     };
-    var skinContainer=document.querySelector(".s-skin-container");
-    if(!skinContainer){
-        skinContainer=document.getElementsByTagName("body")[0];
-        GM_addStyle(".s-news-rank-content{max-height: 180px; width: 99%; overflow-y: auto; overflow-x: hidden;}.s-top-right .ai-entry-right-nologin,.s-top-right .operate-wrapper-nologin{right:362px;}.hot-refresh{padding-bottom:7px;}.hot-title>div,.hot-refresh{border-radius: 3px 3px 0 0}.s-hotsearch-content{position: absolute; background-color: #f0f8ff95; border-radius: 0 0 5px 5px;padding-right: 2px;}.s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}");
-        var inputsu=document.querySelector("input#su");
-        var clickHandler=e=>{
-            if(skinContainer)skinContainer.style.backgroundImage="";
-            else inputsu.removeEventListener("click",clickHandler);
-        };
-        inputsu.addEventListener("click",clickHandler);
-    }
+    var skinContainer=document.getElementsByTagName("body")[0];
+    GM_addStyle(".s-news-rank-content{max-height: 180px; width: 99%; overflow-y: auto; overflow-x: hidden;}.s-top-right .ai-entry-right-nologin,.s-top-right .operate-wrapper-nologin{right:362px;}.hot-refresh{padding-bottom:7px;}.hot-title>div,.hot-refresh{border-radius: 3px 3px 0 0}.s-hotsearch-title>a,.s-hotsearch-title>a>div{padding: 5px;background-color: #f0f8ff95;border-radius: 5px;}.s-hotsearch-content{position: absolute; background-color: #f0f8ff95; border-radius: 5px;padding: 5px;}.s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}");
+    var inputsu=document.querySelector("input#su");
+    var clickHandler=e=>{
+        if(skinContainer)skinContainer.style.backgroundImage="";
+        else inputsu.removeEventListener("click",clickHandler);
+    };
+    inputsu.addEventListener("click",clickHandler);
     var bingImgObj=GM_getValue("bingImgObj");
     if(bingImgObj){
         skinContainer.style.backgroundImage = "url(\""+bingImgObj.base64+"\")";
