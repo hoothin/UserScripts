@@ -153,7 +153,7 @@
             logo.style.display="initial";
         }
     }
-    var input=document.querySelector("#kw");
+    var input=document.querySelector("#kw,#chat-textarea");
     var headWrapper=document.querySelector("#head_wrapper");
     let inputHandler = e => {
         setTimeout(() => {
@@ -165,6 +165,11 @@
         }, 0);
     };
     input.addEventListener('input', inputHandler);
+    var submit=document.querySelector("#chat-submit-button");
+    submit.addEventListener('click', e => {
+        if(skinContainer)skinContainer.style.backgroundImage="";
+        skinContainer=null;
+    });
     GM_xmlhttpRequest({
         method: 'GET',
         url: "https://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
