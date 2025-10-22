@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.10.16.1
+// @version              2025.10.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
@@ -22813,7 +22813,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             focusedKeyup:function(e){
                 var keyCode=e.keyCode;
-                var valid=[27,32,18,16,72,17,72,82,90,67,37,39];
+                var valid=[27,32,18,16,72,17,72,82,90,67,37,38,39,40];
                 if(valid.indexOf(keyCode)==-1)return;
 
                 if (window.getSelection().toString()) return;
@@ -22872,11 +22872,11 @@ ImgOps | https://imgops.com/#b#`;
                     case 90://z键
                         this.zKeyUp=true;
                         break;
-                    case 39:
-                        this.switchImage(true);
-                        break;
                     case 37:
                         this.switchImage(false);
+                        break;
+                    case 39:
+                        this.switchImage(true);
                         break;
                     case 27:
                         if (prefs.imgWindow.close.escKey) {
@@ -22918,7 +22918,7 @@ ImgOps | https://imgops.com/#b#`;
                     e.stopPropagation();
                     return;
                 }
-                var valid=[32,82,72,90,18,16,17,27,67];//有效的按键
+                var valid=[32,82,72,90,18,16,17,27,67,38,40];//有效的按键
                 if(valid.indexOf(keyCode)==-1) return;
 
                 e.preventDefault();
@@ -23005,6 +23005,12 @@ ImgOps | https://imgops.com/#b#`;
                         clearTimeout(this.ctrlkeyDownTimer);
                     }break;
                     case 27:{//ese关闭窗口
+                    }break;
+                    case 38:{//上
+                        this.imgbox.scrollTop -= 200;
+                    }break;
+                    case 40:{//下
+                        this.imgbox.scrollTop += 200;
                     }break;
                     default:break;
                 }
