@@ -4562,32 +4562,40 @@
 
     function parseTrustedTypes(cspString) {
         const policies = new Set();
+        let allowDuplicates = false;
+        let ttDirectiveFound = false;
         const ttRegex = /trusted-types\s+([^;]+)/gi;
         let match;
-        while ((match = ttRegex.exec(cspString)) !== null) {
-            match[1].trim().split(/\s+/)
-                .forEach(name => {
-                    if (name !== "'allow-duplicates'" && name !== "'none'") {
-                        policies.add(name.replace(/'/g, ''));
-                    }
-                });
-        }
-        return Array.from(policies);
-    }
 
-    async function getAvailablePolicyNamesOptimized() {
-        if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.getPolicyNames) {
-            const existingNames = _unsafeWindow.trustedTypes.getPolicyNames();
-            if (existingNames.length > 0) {
-                return new Set(existingNames);
+        while ((match = ttRegex.exec(cspString)) !== null) {
+            ttDirectiveFound = true;
+
+            const policyNames = match[1].trim().split(/\s+/);
+            for (const name of policyNames) {
+                if (name === "'allow-duplicates'") {
+                    allowDuplicates = true;
+                } else if (name !== "'none'") {
+                    policies.add(name.replace(/'/g, ''));
+                }
             }
         }
+        return { names: policies, allowDuplicates: allowDuplicates, ttDirectiveFound: ttDirectiveFound };
+    }
+
+    async function getCspTrustedTypesInfo() {
+        const combinedPolicies = new Set();
+        let combinedAllowDuplicates = false;
+        let combinedTtDirectiveFound = false;
 
         const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
         if (meta) {
-            const metaNames = parseTrustedTypes(meta.content);
-            if (metaNames.length > 0) {
-                return new Set(metaNames);
+            const metaResult = parseTrustedTypes(meta.content);
+            metaResult.names.forEach(name => combinedPolicies.add(name));
+            if (metaResult.allowDuplicates) {
+                combinedAllowDuplicates = true;
+            }
+            if (metaResult.ttDirectiveFound) {
+                combinedTtDirectiveFound = true;
             }
         }
 
@@ -4597,19 +4605,31 @@
                 url: window.location.href,
                 onload: function(response) {
                     const cspHeader = response.responseHeaders.split('\r\n')
-                        .filter(h => h.toLowerCase().startsWith('content-security-policy:'))
-                        .map(h => h.substring(26).trim())
-                        .join('; ');
+                    .filter(h => h.toLowerCase().startsWith('content-security-policy:'))
+                    .map(h => h.substring(26).trim())
+                    .join('; ');
 
-                    const headerNames = parseTrustedTypes(cspHeader);
-                    if (headerNames.length > 0) {
-                        resolve(new Set(headerNames));
-                    } else {
-                        resolve(new Set());
+                    const headerResult = parseTrustedTypes(cspHeader);
+                    headerResult.names.forEach(name => combinedPolicies.add(name));
+                    if (headerResult.allowDuplicates) {
+                        combinedAllowDuplicates = true;
                     }
+                    if (headerResult.ttDirectiveFound) {
+                        combinedTtDirectiveFound = true;
+                    }
+
+                    resolve({
+                        names: combinedPolicies,
+                        allowDuplicates: combinedAllowDuplicates,
+                        ttDirectiveFound: combinedTtDirectiveFound
+                    });
                 },
                 onerror: function(error) {
-                    resolve(new Set());
+                    resolve({
+                        names: combinedPolicies,
+                        allowDuplicates: combinedAllowDuplicates,
+                        ttDirectiveFound: combinedTtDirectiveFound
+                    });
                 }
             });
         });
@@ -4625,29 +4645,48 @@
     }
 
     async function createPolicy() {
-        if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy && isTrustedTypesEnforced()) {
-            const allowedNames = await getAvailablePolicyNamesOptimized();
+        if (!(_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy && isTrustedTypesEnforced())) {
+            return;
+        }
 
-            if (allowedNames.size === 0) {
-                escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('pagetual_default', {
-                    createHTML: (string, sink) => string
+        const { names: allowedNames, allowDuplicates, ttDirectiveFound } = await getCspTrustedTypesInfo();
+
+        if (ttDirectiveFound && !allowDuplicates) {
+            debug("CSP Trusted Types is enforced without 'allow-duplicates'. " +
+                         "Skipping policy creation to avoid conflicts with the page.");
+            return;
+        }
+
+        const MY_POLICY_NAME = 'pvcep_default';
+
+        try {
+            escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(MY_POLICY_NAME, {
+                createHTML: (string, sink) => string,
+                createScriptURL: string => string,
+                createScript: string => string
+            });
+            return;
+        } catch (e) {
+        }
+
+        const existingPolicies = new Set(_unsafeWindow.trustedTypes.getPolicyNames());
+        for (const name of allowedNames) {
+            if (name === '*' || existingPolicies.has(name)) {
+                continue;
+            }
+
+            try {
+                escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(name, {
+                    createHTML: (string, sink) => string,
+                    createScriptURL: string => string,
+                    createScript: string => string
                 });
                 return;
-            }
-
-            for (const name of allowedNames) {
-                if (name === '*') continue;
-                try {
-                    escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(name, {
-                        createHTML: (string, sink) => string
-                    });
-                    break;
-                } catch (e) {
-                    console.warn(`create '${name}' failed`);
-                    return;
-                }
+            } catch (e) {
+                debug(`create '${name}' failed, trying next...`);
             }
         }
+        debug("Could not create any trusted types policy.");
     }
 
     let escapeHTMLPolicy = null;
