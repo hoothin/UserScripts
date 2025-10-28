@@ -12155,6 +12155,7 @@ ImgOps | https://imgops.com/#b#`;
         var root_page = /^[^\?#]*\//.exec(url)[0],
             root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
             absolute_regex = /^\w+\:\/\//;
+        src = src.replace(/^\/(\.\.\/)+/, "/");
         while (src.indexOf("../") === 0) {
             src = src.substr(3);
             root_page = root_page.replace(/\/[^\/]+\/$/, "/");
