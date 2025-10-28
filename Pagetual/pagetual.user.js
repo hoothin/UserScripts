@@ -6361,6 +6361,7 @@
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                 absolute_regex = /^\w+\:\/\//;
             this.updateUrl = false;
+            src = src.replace(/^\/(\.\.\/)+/, "/");
             while (src.indexOf("../") === 0) {
                 src = src.substr(3);
                 root_page = root_page.replace(/\/[^\/]+\/$/, "/");
