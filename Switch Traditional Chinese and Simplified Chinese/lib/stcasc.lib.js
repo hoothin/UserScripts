@@ -837,84 +837,90 @@ function detect(text) {
 }
 
 function stcasc(cache, custom, disableTerms) {
-	if (!cache) cache = {};
-	if (cache.sc2tcCombTree && cache.tc2scCombTree) {
-		sc2tcCombTree = cache.sc2tcCombTree;
+    if (!cache) cache = {};
+    if (cache.sc2tcCombTree && cache.tc2scCombTree) {
+        sc2tcCombTree = cache.sc2tcCombTree;
         tc2scCombTree = cache.tc2scCombTree;
-	} else {
+    } else {
         if (disableTerms) sc2tcComb = {};
-		if (custom && custom.length) {
-			for (let sc in custom) {
-				sc2tcComb[sc] = custom[sc];
-			}
-		}
-	    function makeCombTree(key, value) {
-	        let curTree = sc2tcCombTree;
-	        for (let i = 0; i < key.length; i++) {
-	            let newTree = {};
-	            if (i == key.length - 1) {
-	                newTree = {"end": value};
-	            }
-	            let curKey = key.charAt(i);
-	            let branch = curTree[curKey];
-	            if (!branch) {
-	                curTree[curKey] = newTree;
-	                curTree = newTree;
-	            } else {
-	                curTree = branch;
-	            }
-	        }
-	        curTree = tc2scCombTree;
-	        for (let i = 0; i < value.length; i++) {
-	            let newTree = {};
-	            if (i == value.length - 1) {
-	                newTree = {"end": key};
-	            }
-	            let curKey = value.charAt(i);
-	            let branch = curTree[curKey];
-	            if (!branch) {
-	                curTree[curKey] = newTree;
-	                curTree = newTree;
-	            } else {
-	                curTree = branch;
-	            }
-	        }
-	    }
-	    for (let key in sc2tcComb) {
-	        let value = sc2tcComb[key];
-	        if (Array.isArray(value)) {
-	            value.forEach(v => {
-	                makeCombTree(key, v);
-	            });
-	        } else {
-	            makeCombTree(key, value);
-	        }
-	    }
-	    cache.sc2tcCombTree = sc2tcCombTree;
+        if (custom && custom.length) {
+            for (let sc in custom) {
+                sc2tcComb[sc] = custom[sc];
+            }
+        }
+        function makeCombTree(key, value) {
+            let curTree = sc2tcCombTree;
+            for (let i = 0; i < key.length; i++) {
+                let curKey = key.charAt(i);
+                let branch = curTree[curKey];
+                let newTree = {};
+                if (i == key.length - 1) {
+                    newTree = {"end": value};
+                    if (branch) {
+                        branch.end = value;
+                    }
+                }
+                if (branch) {
+                    curTree = branch;
+                } else {
+                    curTree[curKey] = newTree;
+                    curTree = newTree;
+                }
+            }
+            curTree = tc2scCombTree;
+            for (let i = 0; i < value.length; i++) {
+                let curKey = value.charAt(i);
+                let branch = curTree[curKey];
+                let newTree = {};
+                if (i == value.length - 1) {
+                    newTree = {"end": key};
+                    if (branch) {
+                        branch.end = value;
+                    }
+                }
+                if (branch) {
+                    curTree = branch;
+                } else {
+                    curTree[curKey] = newTree;
+                    curTree = newTree;
+                }
+            }
+        }
+        for (let key in sc2tcComb) {
+            let value = sc2tcComb[key];
+            if (Array.isArray(value)) {
+                value.forEach(v => {
+                    makeCombTree(key, v);
+                });
+            } else {
+                makeCombTree(key, value);
+            }
+        }
+        cache.sc2tcCombTree = sc2tcCombTree;
         cache.tc2scCombTree = tc2scCombTree;
-	}
-	if (cache.stDict && cache.tsDict) {
-		stDict = cache.stDict;
+    }
+    if (cache.stDict && cache.tsDict) {
+        stDict = cache.stDict;
         tsDict = cache.tsDict;
-	} else {
-		for (let i = 0; i < scStr.length; i++) {
-	        let _sc = scStr[i];
-	        let _tc = tcStr[i];
-	        if (!stDict[_sc]) stDict[_sc] = _tc;
-	        if (!tsDict[_tc]) tsDict[_tc] = _sc;
-	    }
-	    Object.keys(oc2tc).forEach(key => {
-	        let ocList = oc2tc[key];
-	        for (let i = 0; i < ocList.length; i++) {
-	            let oc = ocList[i];
-	            stDict[oc] = key;
-	            tsDict[oc] = tsDict[key] || key;
-	        }
-	    })
-		cache.stDict = stDict;
+    } else {
+        for (let i = 0; i < scStr.length; i++) {
+            let _sc = scStr[i];
+            let _tc = tcStr[i];
+            if (!stDict[_sc]) stDict[_sc] = _tc;
+            if (!tsDict[_tc]) tsDict[_tc] = _sc;
+        }
+        Object.keys(oc2tc).forEach(key => {
+            let ocList = oc2tc[key];
+            for (let i = 0; i < ocList.length; i++) {
+                let oc = ocList[i];
+                stDict[oc] = key;
+                tsDict[oc] = tsDict[key] || key;
+            }
+        })
+        cache.stDict = stDict;
         cache.tsDict = tsDict;
-	}
-	return {simplized, traditionalized, detect, cache};
+    }
+    return {simplized, traditionalized, detect, cache};
 }
 
 export default stcasc;

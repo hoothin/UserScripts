@@ -15,19 +15,20 @@
 // @match        https://twitter.com/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/545186/X-Downloader.user.js
-// @updateURL https://update.greasyfork.org/scripts/545186/X-Downloader.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/545186/X-Downloader-Script.user.js
+// @updateURL https://update.greasyfork.org/scripts/545186/X-Downloader-Script.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
-    let downloadBtn = document.createElement("a"), touch = false;
+    let downloadBtn = document.createElement("a"), touch = false, simpleClick = false;
     downloadBtn.target = "_blank";
     downloadBtn.style.cssText = "background: #000000aa; border-radius: 50%; transition: opacity ease 0.3s; position: absolute; top: 0; right: 0px; cursor: pointer; opacity: 0; padding: 5px;";
     downloadBtn.innerHTML = `<svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>`;
     downloadBtn.addEventListener("mousedown", e => {
         let parent = downloadBtn.parentNode;
         if (!parent) return;
+        simpleClick = false;
         let img = parent.querySelector('[data-testid="tweetPhoto"]>img,[data-testid="card.layoutLarge.media"] img');
         if (img) {
             let newsrc = img.src.replace("_normal.",".").replace("_200x200.",".").replace("_mini.",".").replace("_bigger.",".").replace(/_x\d+\./,"."), imgname;
@@ -59,7 +60,8 @@
                 imgname = `${user.innerText} ${time.innerText.replace(/(.*) · (.*)/, "$2 $1")}.${ext}`;
             }
             downloadBtn.href = newsrc;
-            if (e.altKey || touch) {
+            if ((e.button === 0 && !e.ctrlKey) || touch) {
+                simpleClick = true;
                 downloadByFetch(newsrc, imgname);
             }
         } else {
@@ -72,7 +74,7 @@
             if (parent) {
                 downloadBtn.removeAttribute('download');
                 let link = parent.querySelector('a[role="link"][aria-label][href^="/"]');
-                downloadBtn.href = `https://twitter.hoothin.com/?url=${encodeURIComponent(link ? link.href : document.location.href)}`;
+                downloadBtn.href = `https://twitter.luopo.org/?url=${encodeURIComponent(link ? link.href : document.location.href)}`;
                 if (e.altKey || touch) {
                     window.open(downloadBtn.href, "_blank");
                 }
@@ -80,7 +82,7 @@
         }
     });
     downloadBtn.addEventListener("click", e => {
-        if (e.altKey || touch) {
+        if (simpleClick || e.altKey || touch) {
             e.preventDefault();
             e.stopPropagation();
         }
