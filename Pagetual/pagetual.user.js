@@ -4908,10 +4908,12 @@
                 getBody(doc).scrollTop = actualTop - 10;
                 doc.documentElement.scrollTop = actualTop - 10;
                 setTimeout(() => {
-                    while (actualTop < maxHeight) {
+                    if (actualTop < maxHeight) {
                         actualTop += 200;
                         getBody(doc).scrollTop = actualTop;
                         doc.documentElement.scrollTop = actualTop;
+                        getBody(doc).scrollTop = maxHeight;
+                        doc.documentElement.scrollTop = maxHeight;
                     }
                 }, 0);
                 return false;
@@ -4958,7 +4960,13 @@
         runPageBar(pageBar) {
             if (this.curSiteRule.pageBar && this.curSiteRule.pageBar !== 0) {
                 try {
-                    ((typeof this.curSiteRule.pageBar === 'function') ? this.curSiteRule.pageBar : Function("pageBar",'"use strict";' + this.curSiteRule.pageBar))(pageBar);
+                    if (typeof this.curSiteRule.pageBar === 'function') {
+                        this.curSiteRule.pageBar(pageBar);
+                    } else if (/^pageBar\.className=['"][^'"]*['"];?$/.test(this.curSiteRule.pageBar)) {
+                        pageBar.className = this.curSiteRule.pageBar.match(/^pageBar\.className=['"]([^'"]*)['"];?$/)[1];
+                    } else {
+                        Function("pageBar",'"use strict";' + this.curSiteRule.pageBar)(pageBar);
+                    }
                 } catch(e) {
                     debug(e);
                 }
