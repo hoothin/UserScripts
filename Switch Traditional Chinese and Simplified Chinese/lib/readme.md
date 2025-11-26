@@ -14,6 +14,7 @@
 
 - **轻量级**：零依赖，体积小，性能优异
 - **智能转换**：支持基于词组的智能分词和「一简多繁」精准转换
+- **多种数据类型**：支持字符串、数组、对象的转换，自动递归处理嵌套结构
 - **自定义词库**：允许用户自定义简繁转换词汇
 - **缓存机制**：支持字典缓存，避免重复初始化
 - **简繁检测**：自动检测文本是简体中文、繁体中文还是未知类型
@@ -81,6 +82,54 @@ ChineseType 枚举值：
 - `ChineseType.SIMPLIFIED` (0): 简体中文
 - `ChineseType.TRADITIONAL` (1): 繁体中文
 - `ChineseType.UNKNOWN` (2): 未知类型
+
+#### 转换数组和对象
+
+库支持转换数组和对象中的所有字符串，非字符串值保持原样：
+
+```javascript
+import stcasc from 'switch-chinese';
+
+const { traditionalized, simplized } = stcasc();
+
+// 转换数组
+const arr = ['简体中文', '软件', '网络', 123, true, null];
+const arrTc = traditionalized(arr);
+console.log(arrTc);
+// 输出: ['簡體中文', '軟體', '網路', 123, true, null]
+
+// 转换对象
+const obj = {
+    title: '简体中文标题',
+    description: '这是一个简体中文描述',
+    count: 100,
+    active: true,
+    tags: ['软件', '网络', '服务器']
+};
+const objTc = traditionalized(obj);
+console.log(objTc);
+// 输出: {
+//   title: '簡體中文標題',
+//   description: '這是一個簡體中文描述',
+//   count: 100,
+//   active: true,
+//   tags: ['軟體', '網路', '伺服器']
+// }
+
+// 转换嵌套结构
+const nested = {
+    user: {
+        name: '简体名称',
+        profile: {
+            bio: '这是简体中文简介',
+            skills: ['软件开发', '网络管理']
+        }
+    },
+    count: 42
+};
+const nestedTc = traditionalized(nested);
+// 所有字符串属性值都会被转换，数字等其他类型保持不变
+```
 
 ### 高级用法
 
@@ -186,8 +235,14 @@ OutputFormat 枚举值：
 
 返回包含以下方法的对象：
 
-- `traditionalized(text, options?)`: 将简体中文转换为繁体中文
-- `simplized(text, options?)`: 将繁体中文转换为简体中文
+- `traditionalized(input, options?)`: 将简体中文转换为繁体中文
+  - `input`: 可以是字符串、数组或对象
+  - 字符串：直接转换返回新字符串
+  - 数组：转换所有字符串元素，其他类型保持不变
+  - 对象：递归转换所有字符串属性值，其他类型保持不变
+- `simplized(input, options?)`: 将繁体中文转换为简体中文
+  - `input`: 可以是字符串、数组或对象
+  - 支持的数据类型同 `traditionalized`
 - `detect(text)`: 检测文本的中文类型，返回 ChineseType 枚举值
 - `cache`: 字典缓存对象
 
@@ -318,6 +373,7 @@ Lightweight Chinese converter library for bidirectional conversion between Simpl
 
 - **Lightweight**: Zero dependencies, small footprint, excellent performance
 - **Intelligent Conversion**: Context-aware word segmentation and accurate one-to-many character mapping
+- **Multiple Data Types**: Supports string, array, and object conversion with automatic recursive processing
 - **Custom Dictionary**: User-defined conversion rules support
 - **Caching Mechanism**: Dictionary caching to avoid repeated initialization
 - **Text Detection**: Automatic detection of Simplified Chinese, Traditional Chinese, or unknown text
@@ -385,6 +441,54 @@ ChineseType enumeration values:
 - `ChineseType.SIMPLIFIED` (0): Simplified Chinese
 - `ChineseType.TRADITIONAL` (1): Traditional Chinese
 - `ChineseType.UNKNOWN` (2): Unknown type
+
+#### Converting Arrays and Objects
+
+The library supports converting all strings in arrays and objects, while preserving non-string values:
+
+```javascript
+import stcasc from 'switch-chinese';
+
+const { traditionalized, simplized } = stcasc();
+
+// Convert array
+const arr = ['简体中文', '软件', '网络', 123, true, null];
+const arrTc = traditionalized(arr);
+console.log(arrTc);
+// Output: ['簡體中文', '軟體', '網路', 123, true, null]
+
+// Convert object
+const obj = {
+    title: '简体中文标题',
+    description: '这是一个简体中文描述',
+    count: 100,
+    active: true,
+    tags: ['软件', '网络', '服务器']
+};
+const objTc = traditionalized(obj);
+console.log(objTc);
+// Output: {
+//   title: '簡體中文標題',
+//   description: '這是一個簡體中文描述',
+//   count: 100,
+//   active: true,
+//   tags: ['軟體', '網路', '伺服器']
+// }
+
+// Convert nested structures
+const nested = {
+    user: {
+        name: '简体名称',
+        profile: {
+            bio: '这是简体中文简介',
+            skills: ['软件开发', '网络管理']
+        }
+    },
+    count: 42
+};
+const nestedTc = traditionalized(nested);
+// All string property values will be converted, other types remain unchanged
+```
 
 ### Advanced Usage
 
@@ -490,8 +594,14 @@ Main function to create a converter instance.
 
 An object containing the following methods:
 
-- `traditionalized(text, options?)`: Convert Simplified Chinese to Traditional Chinese
-- `simplized(text, options?)`: Convert Traditional Chinese to Simplified Chinese
+- `traditionalized(input, options?)`: Convert Simplified Chinese to Traditional Chinese
+  - `input`: Can be a string, array, or object
+  - String: Directly converts and returns a new string
+  - Array: Converts all string elements, other types remain unchanged
+  - Object: Recursively converts all string property values, other types remain unchanged
+- `simplized(input, options?)`: Convert Traditional Chinese to Simplified Chinese
+  - `input`: Can be a string, array, or object
+  - Supports the same data types as `traditionalized`
 - `detect(text)`: Detect Chinese text type, returns ChineseType enumeration value
 - `cache`: Dictionary cache object
 
@@ -622,6 +732,7 @@ Chinese Converter, Simplified Chinese, Traditional Chinese, Chinese Translation,
 
 - **輕量級**：零依賴，體積小，效能優異
 - **智能轉換**：支援基於詞組的智能分詞和「一簡多繁」精準轉換
+- **多種資料類型**：支援字串、陣列、物件的轉換，自動遞迴處理巢狀結構
 - **自訂詞庫**：允許使用者自訂簡繁轉換詞彙
 - **快取機制**：支援字典快取，避免重複初始化
 - **簡繁檢測**：自動檢測文字是簡體中文、繁體中文還是未知類型
@@ -689,6 +800,54 @@ ChineseType 列舉值：
 - `ChineseType.SIMPLIFIED` (0): 簡體中文
 - `ChineseType.TRADITIONAL` (1): 繁體中文
 - `ChineseType.UNKNOWN` (2): 未知類型
+
+#### 轉換陣列和物件
+
+函式庫支援轉換陣列和物件中的所有字串，非字串值保持原樣：
+
+```javascript
+import stcasc from 'switch-chinese';
+
+const { traditionalized, simplized } = stcasc();
+
+// 轉換陣列
+const arr = ['简体中文', '软件', '网络', 123, true, null];
+const arrTc = traditionalized(arr);
+console.log(arrTc);
+// 輸出: ['簡體中文', '軟體', '網路', 123, true, null]
+
+// 轉換物件
+const obj = {
+    title: '简体中文标题',
+    description: '这是一个简体中文描述',
+    count: 100,
+    active: true,
+    tags: ['软件', '网络', '服务器']
+};
+const objTc = traditionalized(obj);
+console.log(objTc);
+// 輸出: {
+//   title: '簡體中文標題',
+//   description: '這是一個簡體中文描述',
+//   count: 100,
+//   active: true,
+//   tags: ['軟體', '網路', '伺服器']
+// }
+
+// 轉換巢狀結構
+const nested = {
+    user: {
+        name: '简体名称',
+        profile: {
+            bio: '这是简体中文简介',
+            skills: ['软件开发', '网络管理']
+        }
+    },
+    count: 42
+};
+const nestedTc = traditionalized(nested);
+// 所有字串屬性值都會被轉換，數字等其他類型保持不變
+```
 
 ### 進階用法
 
@@ -794,8 +953,14 @@ OutputFormat 列舉值：
 
 回傳包含以下方法的物件：
 
-- `traditionalized(text, options?)`: 將簡體中文轉換為繁體中文
-- `simplized(text, options?)`: 將繁體中文轉換為簡體中文
+- `traditionalized(input, options?)`: 將簡體中文轉換為繁體中文
+  - `input`: 可以是字串、陣列或物件
+  - 字串：直接轉換並回傳新字串
+  - 陣列：轉換所有字串元素，其他類型保持不變
+  - 物件：遞迴轉換所有字串屬性值，其他類型保持不變
+- `simplized(input, options?)`: 將繁體中文轉換為簡體中文
+  - `input`: 可以是字串、陣列或物件
+  - 支援的資料類型同 `traditionalized`
 - `detect(text)`: 檢測文字的中文類型，回傳 ChineseType 列舉值
 - `cache`: 字典快取物件
 

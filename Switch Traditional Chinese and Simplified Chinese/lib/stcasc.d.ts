@@ -34,11 +34,19 @@ export interface ConversionOptions {
 }
 
 /**
+ * Tree node for combination dictionary
+ */
+interface CombTreeNode {
+  end?: string;
+  [key: string]: CombTreeNode | string | undefined;
+}
+
+/**
  * Cache object for storing conversion dictionaries
  */
 export interface ConversionCache {
-  sc2tcCombTree?: Record<string, any>;
-  tc2scCombTree?: Record<string, any>;
+  sc2tcCombTree?: Record<string, CombTreeNode>;
+  tc2scCombTree?: Record<string, CombTreeNode>;
   stDict?: Record<string, string>;
   tsDict?: Record<string, string>;
 }
@@ -56,19 +64,51 @@ export type CustomDictionary = Record<string, string | string[]>;
 export interface StcascConverter {
   /**
    * Convert traditional Chinese to simplified Chinese
-   * @param text - Text to convert
+   * @param text - String to convert
    * @param options - Conversion options
-   * @returns Converted simplified Chinese text
+   * @returns Converted simplified Chinese string
    */
   simplized(text: string, options?: ConversionOptions): string;
 
   /**
-   * Convert simplified Chinese to traditional Chinese
-   * @param text - Text to convert
+   * Convert traditional Chinese to simplified Chinese (array version)
+   * @param data - Array to convert (converts all strings in the array)
    * @param options - Conversion options
-   * @returns Converted traditional Chinese text
+   * @returns Array with converted strings
+   */
+  simplized<T extends unknown[]>(data: T, options?: ConversionOptions): T;
+
+  /**
+   * Convert traditional Chinese to simplified Chinese (object version)
+   * @param data - Object to convert (converts all string property values)
+   * @param options - Conversion options
+   * @returns Object with converted string values
+   */
+  simplized<T extends Record<string, unknown>>(data: T, options?: ConversionOptions): T;
+
+  /**
+   * Convert simplified Chinese to traditional Chinese
+   * @param text - String to convert
+   * @param options - Conversion options
+   * @returns Converted traditional Chinese string
    */
   traditionalized(text: string, options?: ConversionOptions): string;
+
+  /**
+   * Convert simplified Chinese to traditional Chinese (array version)
+   * @param data - Array to convert (converts all strings in the array)
+   * @param options - Conversion options
+   * @returns Array with converted strings
+   */
+  traditionalized<T extends unknown[]>(data: T, options?: ConversionOptions): T;
+
+  /**
+   * Convert simplified Chinese to traditional Chinese (object version)
+   * @param data - Object to convert (converts all string property values)
+   * @param options - Conversion options
+   * @returns Object with converted string values
+   */
+  traditionalized<T extends Record<string, unknown>>(data: T, options?: ConversionOptions): T;
 
   /**
    * Detect Chinese text type

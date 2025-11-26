@@ -622,10 +622,7 @@ let sc2tcComb = {
 var stDict = {}, tsDict = {};
 var sc2tcCombTree = {}, tc2scCombTree = {};
 
-function traditionalized(orgStr, options) {
-    options = options || {};
-    const format = options.format !== undefined ? options.format : OutputFormat.NORMAL;
-
+function traditionalizedString(orgStr, format) {
     if (!orgStr) return "";
     var str = '', char;
     for (var i = 0; i < orgStr.length; i++) {
@@ -716,10 +713,39 @@ function traditionalized(orgStr, options) {
     return str;
 }
 
-function simplized(orgStr, options) {
+function traditionalized(input, options) {
     options = options || {};
     const format = options.format !== undefined ? options.format : OutputFormat.NORMAL;
 
+    // Handle null/undefined
+    if (input == null) return input;
+
+    // Handle string
+    if (typeof input === 'string') {
+        return traditionalizedString(input, format);
+    }
+
+    // Handle array
+    if (Array.isArray(input)) {
+        return input.map(item => traditionalized(item, options));
+    }
+
+    // Handle object
+    if (typeof input === 'object') {
+        const result = {};
+        for (const key in input) {
+            if (input.hasOwnProperty(key)) {
+                result[key] = traditionalized(input[key], options);
+            }
+        }
+        return result;
+    }
+
+    // Return other types as-is (number, boolean, etc.)
+    return input;
+}
+
+function simplizedString(orgStr, format) {
     if (!orgStr) return "";
     var str = '', char;
     for (var i = 0; i < orgStr.length; i++) {
@@ -810,6 +836,38 @@ function simplized(orgStr, options) {
     return str;
 }
 
+function simplized(input, options) {
+    options = options || {};
+    const format = options.format !== undefined ? options.format : OutputFormat.NORMAL;
+
+    // Handle null/undefined
+    if (input == null) return input;
+
+    // Handle string
+    if (typeof input === 'string') {
+        return simplizedString(input, format);
+    }
+
+    // Handle array
+    if (Array.isArray(input)) {
+        return input.map(item => simplized(item, options));
+    }
+
+    // Handle object
+    if (typeof input === 'object') {
+        const result = {};
+        for (const key in input) {
+            if (input.hasOwnProperty(key)) {
+                result[key] = simplized(input[key], options);
+            }
+        }
+        return result;
+    }
+
+    // Return other types as-is (number, boolean, etc.)
+    return input;
+}
+
 function detect(text) {
     if (!text) return ChineseType.UNKNOWN;
 
@@ -875,7 +933,7 @@ function stcasc(cache, custom, disableTerms) {
                 if (i == value.length - 1) {
                     newTree = {"end": key};
                     if (branch) {
-                        branch.end = value;
+                        branch.end = key;
                     }
                 }
                 if (branch) {
