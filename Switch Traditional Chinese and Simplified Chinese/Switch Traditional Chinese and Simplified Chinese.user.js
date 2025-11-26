@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.7.10
+// @version      1.2.7.11
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體），顯示漢字對應漢語拼音，自訂任意替換文本
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体），显示汉字对应汉语拼音，自定义任意替换文本
 // @description:ja     ウェブページ上の簡体字中国語と繁体字中国語を自由に変換し、中国語の文字にひらがなを表示し、任意の文字を置き換えることができます。
@@ -1217,14 +1217,14 @@
                 curLang = isSimple;
             }
             curLang=!curLang;
-            activeEle.innerHTML=curLang?traditionalized(activeEle.innerHTML):simplized(activeEle.innerHTML);
-            activeEle.value=curLang?traditionalized(activeEle.value):simplized(activeEle.value);
+            activeEle.innerHTML=curLang?simplized(activeEle.innerHTML):traditionalized(activeEle.innerHTML);
+            activeEle.value=curLang?simplized(activeEle.value):traditionalized(activeEle.value);
         }else if("INPUT"==activeEle.nodeName.toUpperCase()){
             if (curInput != activeEle) {
                 curLang = isSimple;
             }
             curLang=!curLang;
-            activeEle.value=curLang?traditionalized(activeEle.value):simplized(activeEle.value);
+            activeEle.value=curLang?simplized(activeEle.value):traditionalized(activeEle.value);
         }else{
             var selecter;
             if(window.getSelection()){
@@ -1916,7 +1916,7 @@
                     if(i==value.length-1){
                         newTree={"end":key};
                         if(branch){
-                            branch.end=value;
+                            branch.end=key;
                         }
                     }
                     if(branch){
