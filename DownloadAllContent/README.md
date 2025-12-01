@@ -104,6 +104,10 @@
  ``` javascript
 main>section ul>li div>a@@@@@@var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
  ```
+ 新規則
+ ``` javascript
+main>section ul>li div>a@@novel/show\.php\?id=@@ajax/novel/@@data.json().body.content;
+ ```
 + [📕紅薯中文網](https://g.hongshu.com/chapterlist/91735.do)
 > 這個站沒有目錄連結，此時可以遍歷標籤自己創建目錄連結下載
  ``` javascript
