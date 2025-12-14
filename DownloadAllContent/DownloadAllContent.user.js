@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰小説ダウンローダー
 // @namespace    hoothin
-// @version      2.8.3.18
+// @version      2.8.3.19
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -931,7 +931,7 @@ if (window.top != window.self) {
               height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;font-family: arial;background: initial; float: initial;
             }
             #txtDownQuit+div{
-              position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px;
+              position:absolute;right:0px;bottom:2px;cursor: pointer;display: flex;
             }
             #txtDownQuit+div>button{
               background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;overflow: hidden;
@@ -1071,7 +1071,7 @@ if (window.top != window.self) {
                 console.warn(e);
             }
         }
-        function packLink(doc, item, curIndex) {
+        function packLink(doc, item) {
             if (customTitle) {
                 try {
                     let title = doc.querySelector(customTitle);
@@ -1081,9 +1081,6 @@ if (window.top != window.self) {
                 } catch(e) {
                     console.warn(e);
                 }
-            }
-            if (prefix) {
-                item.innerText = prefix.replace(/\$i/g, ++curIndex) + item.innerText;
             }
         }
         function getIframe() {
@@ -1157,7 +1154,7 @@ if (window.top != window.self) {
                                 }
                             }
                             let base = doc.querySelector("base");
-                            let nextPages = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
+                            let nextPages = !disableNextPage && (!processFunc || nextPageFunc) && await checkNextPage(doc, base ? base.href : aTag.href);
                             if (nextPages) {
                                 if (!nextPages.length) nextPages = [nextPages];
                                 nextPages.forEach(nextPage => {
@@ -1424,11 +1421,16 @@ if (window.top != window.self) {
                 }
             }
             rCats = rCats.filter(function(e){return e!=null});
+            if (prefix) {
+                for(i=0;i<rCats.length;i++){
+                    rCats[i]=prefix.replace(/\$i/g, i+1) + rCats[i];
+                }
+            }
         }
         var waitForComplete;
         function processDoc(i, aTag, doc, cause, check){
             let cbFunc=content=>{
-                packLink(doc, aTag, i);
+                packLink(doc, aTag);
                 let isHref = "";
                 let saveUrl = GM_getValue("saveUrl");
                 if (saveUrl){
@@ -1534,10 +1536,10 @@ if (window.top != window.self) {
 
     function getPageContent(doc, cb, url){
         if(!doc)return i18n.error;
-        if(doc.body && !doc.body.children.length)return doc.body.innerText;
         if(processFunc){
             return processFunc(doc, cb, url);
         }
+        if(doc.body && !doc.body.children.length)return doc.body.innerText;
         [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
             var thisStyle=doc.defaultView?doc.defaultView.getComputedStyle(item):item.style;
             if(thisStyle && (thisStyle.display=="none" || (item.nodeName=="SPAN" && thisStyle.fontSize=="0px"))){

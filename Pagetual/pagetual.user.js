@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.119
+// @version      1.9.37.125
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -98,8 +98,6 @@
 // @connect      *
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
-// @downloadURL https://update.greasyfork.org/scripts/438684/Pagetual.user.js
-// @updateURL https://update.greasyfork.org/scripts/438684/Pagetual.meta.js
 // ==/UserScript==
 
 (function() {
@@ -283,6 +281,130 @@
             }
         },
         {
+            name: "한국어",
+            match: ["ko"],
+            lang: {
+                enableDebug: "콘솔에 디버그 출력 활성화",
+                updateNotification: "규칙 업데이트 후 알림",
+                disable: "일시적으로 비활성화",
+                disableSite: "비활성화 상태 전환",
+                disableSiteTips: "이 사이트에서 비활성화됨.",
+                enableSiteTips: "이 사이트에서 활성화됨.",
+                enable: "✅자동 페이지 넘김 활성화",
+                tempActive: "일시적으로 활성",
+                toTop: "맨 위로 이동.",
+                toBottom: "맨 아래로 이동.",
+                current: "현재 페이지.",
+                forceIframe: "다음 페이지 강제 결합",
+                cancelForceIframe: "강제 결합 취소",
+                configure: "Pagetual 설정",
+                firstUpdate: "기본 규칙 목록을 초기화하려면 여기를 클릭하세요",
+                update: "온라인 규칙 업데이트",
+                click2update: "URL에서 규칙을 지금 업데이트하려면 클릭하세요",
+                loadNow: "다음 페이지 자동 로드",
+                loadConfirm: "몇 페이지를 로드하시겠습니까? (0은 무한을 의미)",
+                noNext: "다음 링크를 찾을 수 없습니다. 새 규칙을 만들어 주세요",
+                passSec: "#t#초 전에 업데이트됨",
+                passMin: "#t#분 전에 업데이트됨",
+                passHour: "#t#시간 전에 업데이트됨",
+                passDay: "#t#일 전에 업데이트됨",
+                cantDel: "내장된 규칙은 삭제할 수 없습니다",
+                confirmDel: "이 규칙을 정말로 삭제하시겠습니까?",
+                updateSucc: "업데이트 성공",
+                beginUpdate: "업데이트를 시작합니다. 잠시만 기다려 주세요",
+                customUrls: "Pagetual 또는 AutoPagerize 규칙 URL 가져오기, 한 줄에 하나의 URL.",
+                customRules: "사용자 정의 규칙을 입력하세요. <a href='#t#'>✍️규칙 기여하기</a>",
+                save: "저장",
+                loadingText: "로딩 중...",
+                opacity: "불투명도",
+                opacityPlaceholder: "0: 구분선 숨기기",
+                hideBar: "페이지 구분선 숨기기",
+                hideBarButNoStop: "숨기지만 중지하지 않음",
+                dbClick2Stop: "일시 중지하려면 빈 공간을 두 번 클릭하세요",
+                sortTitle: "정렬은 다음 규칙 업데이트 후에 적용됩니다",
+                autoRun: "자동 활성화 (블랙리스트 모드)",
+                autoLoadNum: "미리 로드할 페이지 수",
+                turnRate: "바닥글로부터 페이지 높이의 【X】배 미만일 때 다음 페이지로 넘기기",
+                inputPageNum: "이동할 페이지 번호를 입력하세요",
+                enableHistory: "페이지 넘김 후 방문 기록 저장",
+                enableHistoryAfterInsert: "페이지 결합 직후 방문 기록 저장, 그렇지 않으면 탐색 후 저장",
+                contentVisibility: "렌더링 성능 향상을 위해 content-visibility 자동 전환",
+                initRun: "페이지 열람 직후 자동 넘김 시작",
+                preload: "속도 향상을 위해 다음 페이지 미리 로드",
+                click2ImportRule: "기본 규칙 링크를 가져오려면 클릭하고 업데이트가 완료될 때까지 기다리세요: ",
+                forceAllBody: "페이지의 전체 본문을 결합하시겠습니까?",
+                openInNewTab: "추가된 URL을 새 탭에서 열기",
+                importSucc: "가져오기 완료",
+                import: "가져오기",
+                editCurrent: "현재 웹사이트 규칙 편집",
+                editBlacklist: "URL 블랙리스트 편집, 한 줄에 하나씩 입력, [?,*] 와일드카드 지원.",
+                upBtnImg: "맨 위로 가기 아이콘",
+                downBtnImg: "맨 아래로 가기 아이콘",
+                sideControllerIcon: "사이드바 아이콘",
+                loadingTextTitle: "로딩",
+                dbClick2StopCtrl: "Ctrl 키",
+                dbClick2StopAlt: "Alt 키",
+                dbClick2StopShift: "Shift 키",
+                dbClick2StopMeta: "Meta 키",
+                dbClick2StopKey: "단축키",
+                pageElementCss: "주요 페이지 요소에 대한 사용자 정의 스타일",
+                customCss: "사용자 정의 전체 CSS",
+                firstAlert: "기본 규칙을 가져오지 않았습니다. 가져올 적절한 규칙을 선택해주세요",
+                picker: "Pagetual 요소 선택기",
+                closePicker: "Pagetual 선택기 닫기",
+                pickerPlaceholder: "요소 선택기 (고급 사용자 전용, 그렇지 않으면 비워두세요)",
+                pickerCheck: "선택기 확인 및 복사",
+                switchSelector: "클릭하여 요소 전환",
+                gotoEdit: "현재 선택기로 규칙 편집하러 가기",
+                manualMode: "결합 비활성화, 오른쪽 화살표 키를 사용하여 수동으로 다음 페이지로 이동 (또는 'pagetual.next' 이벤트 전달)",
+                clickMode: "결합 비활성화, 페이지 끝까지 스크롤하면 다음 페이지 자동 클릭",
+                pageBarMenu: "페이지 바 중앙을 클릭하여 선택기 메뉴 열기",
+                nextSwitch: "다음 링크 전환",
+                arrowToScroll: "왼쪽 화살표를 눌러 뒤로 스크롤하고 오른쪽 화살표를 눌러 페이지 이동",
+                sideController: "사이드바에 페이징 제어 바 표시",
+                sideControllerScroll: "스크롤 시 표시/숨김",
+                sideControllerAlways: "항상 표시",
+                hideLoadingIcon: "로딩 애니메이션 숨기기",
+                hideBarArrow: "페이지 바 화살표 숨기기",
+                duplicate: "중복된 Pagetual이 설치되었습니다. 스크립트 관리자를 확인하세요!",
+                forceStateIframe: "전체 페이지를 iframe으로 삽입",
+                forceStateDynamic: "iframe을 통해 동적 콘텐츠 로드",
+                forceStateDisable: "이 사이트에서 페이지 넘김 비활성화",
+                autoScrollRate: "스크롤 속도 (1~1000)",
+                disableAutoScroll: "자동 스크롤 중지",
+                enableAutoScroll: "자동 스크롤 활성화",
+                toggleAutoScroll: "자동 스크롤 전환",
+                ruleRequest: "규칙 요청",
+                page: "페이지 ",
+                prevPage: "이전 페이지",
+                nextPage: "다음 페이지",
+                errorRulesMustBeArray: "규칙은 배열이어야 합니다!",
+                errorJson: "JSON 오류, 다시 확인해주세요!",
+                editSuccess: "성공적으로 편집되었습니다",
+                errorWrongUrl: "잘못된 URL, 다시 확인해주세요!",
+                errorAlreadyExists: "규칙이 이미 존재합니다!",
+                settingsSaved: "설정이 저장되었습니다. 확인하려면 새로고침하세요",
+                iframe: "iframe으로 강제 분할",
+                dynamic: "동적 로딩",
+                reloadPage: "편집 완료, 지금 새로고침하시겠습니까?",
+                copied: "복사됨",
+                noValidContent: "유효한 콘텐츠를 찾을 수 없습니다. 보안 문자(Captcha)가 있을 수 있습니다",
+                outOfDate: "스크립트가 오래되었습니다. 최신 버전으로 업데이트해주세요.",
+                hideBarTips: "페이지네이션 바 숨기기, 몰입형 경험 전환",
+                setConfigPage: "현재 페이지를 기본 설정 페이지로 지정",
+                wedata2github: "wedata 주소를 github 저장소의 미러 주소로 변경",
+                addOtherProp: "규칙 속성 추가",
+                addNextSelector: "선택기 콘텐츠를 nextLink로 추가",
+                addPageSelector: "선택기 콘텐츠를 pageElement로 추가",
+                propName: "규칙 속성 이름 입력",
+                propValue: "규칙 속성 값 입력",
+                customFirst: "로컬 사용자 정의 규칙 캐시 무시",
+                rulesExample: "규칙 예시",
+                lastPage: "마지막 페이지에 도달했습니다",
+                lastPageTips: "마지막 페이지 도달 시 팁 표시"
+            }
+        },
+        {
             name: "Deutsch",
             match: ["de", "de-AT", "de-CH", "de-DE", "de-LI", "de-LU"],
             lang: {
@@ -404,6 +526,2486 @@
                 rulesExample: "Regeln Beispiel",
                 lastPage: "Letzte Seite erreicht",
                 lastPageTips: "Tipps anzeigen, wenn die letzte Seite erreicht ist"
+            }
+        },
+        {
+            name: "ไทย",
+            match: ["th"],
+            lang: {
+                enableDebug: "เปิดใช้งานเอาต์พุตการดีบักไปยังคอนโซล",
+                updateNotification: "การแจ้งเตือนหลังจากอัปเดตกฎ",
+                disable: "ปิดใช้งานชั่วคราว",
+                disableSite: "สลับสถานะการปิดใช้งาน",
+                disableSiteTips: "ปิดใช้งานบนไซต์นี้",
+                enableSiteTips: "เปิดใช้งานบนไซต์นี้",
+                enable: "✅เปิดใช้งานการเปลี่ยนหน้าอัตโนมัติ",
+                tempActive: "ใช้งานชั่วคราว",
+                toTop: "กลับไปด้านบน",
+                toBottom: "ไปที่ด้านล่าง",
+                current: "หน้าปัจจุบัน",
+                forceIframe: "บังคับให้เข้าร่วมหน้าถัดไป",
+                cancelForceIframe: "ยกเลิกการเข้าร่วมบังคับ",
+                configure: "กำหนดค่า Pagetual",
+                firstUpdate: "คลิกที่นี่เพื่อเริ่มต้นรายการกฎเริ่มต้น",
+                update: "อัปเดตกฎออนไลน์",
+                click2update: "คลิกเพื่ออัปเดตกฎจาก url ทันที",
+                loadNow: "โหลดหน้าถัดไปโดยอัตโนมัติ",
+                loadConfirm: "คุณต้องการโหลดกี่หน้า (0 หมายถึงไม่สิ้นสุด)",
+                noNext: "ไม่พบลิงก์ถัดไป โปรดสร้างกฎใหม่",
+                passSec: "อัปเดตเมื่อ #t# วินาทีที่แล้ว",
+                passMin: "อัปเดตเมื่อ #t# นาทีที่แล้ว",
+                passHour: "อัปเดตเมื่อ #t# ชั่วโมงที่แล้ว",
+                passDay: "อัปเดตเมื่อ #t# วันที่แล้ว",
+                cantDel: "ไม่สามารถลบกฎในตัวได้",
+                confirmDel: "คุณแน่ใจหรือไม่ว่าต้องการลบกฎนี้",
+                updateSucc: "อัปเดตสำเร็จ",
+                beginUpdate: "เริ่มอัปเดต โปรดรอสักครู่",
+                customUrls: "นำเข้า URL กฎ Pagetual หรือ AutoPagerize หนึ่ง URL ต่อบรรทัด",
+                customRules: "ป้อนกฎที่กำหนดเอง <a href='#t#'>✍️มีส่วนร่วมในกฎ</a>",
+                save: "บันทึก",
+                loadingText: "กำลังโหลด...",
+                opacity: "ความทึบ",
+                opacityPlaceholder: "0: ซ่อนตัวเว้นวรรค",
+                hideBar: "ซ่อนตัวเว้นวรรคของหน้า",
+                hideBarButNoStop: "ซ่อนแต่ไม่หยุด",
+                dbClick2Stop: "ดับเบิลคลิกที่พื้นที่ว่างเพื่อหยุดชั่วคราว",
+                sortTitle: "การเรียงลำดับจะมีผลหลังจากการอัปเดตกฎครั้งถัดไป",
+                autoRun: "เปิดใช้งานอัตโนมัติ (โหมดบัญชีดำ)",
+                autoLoadNum: "จำนวนหน้าที่โหลดล่วงหน้า",
+                turnRate: "เปลี่ยนหน้าถัดไปเมื่ออยู่ห่างจากส่วนท้ายน้อยกว่า【X】เท่าของความสูงของหน้า",
+                inputPageNum: "ป้อนหมายเลขหน้าเพื่อข้ามไป",
+                enableHistory: "เขียนประวัติการเข้าชมหลังจากการเปลี่ยนหน้า",
+                enableHistoryAfterInsert: "เขียนประวัติการเข้าชมทันทีหลังจากต่อเข้าด้วยกัน มิฉะนั้นจะเขียนหลังจากการเข้าชม",
+                contentVisibility: "สลับ content-visibility โดยอัตโนมัติเพื่อปรับปรุงประสิทธิภาพการเรนเดอร์",
+                initRun: "เปลี่ยนหน้าทันทีหลังจากเปิด",
+                preload: "โหลดหน้าถัดไปล่วงหน้าเพื่อเพิ่มความเร็ว",
+                click2ImportRule: "คลิกเพื่อนำเข้าลิงก์กฎพื้นฐาน แล้วรอจนกว่าการอัปเดตจะเสร็จสมบูรณ์: ",
+                forceAllBody: "เข้าร่วมเนื้อหาทั้งหมดของหน้าหรือไม่",
+                openInNewTab: "เปิด URL ของส่วนเพิ่มเติมในแท็บใหม่",
+                importSucc: "นำเข้าสำเร็จ",
+                import: "นำเข้า",
+                editCurrent: "แก้ไขกฎสำหรับเว็บไซต์ปัจจุบัน",
+                editBlacklist: "แก้ไขบัญชีดำของ URL หนึ่งรายการต่อบรรทัด รองรับ [?,*] wildcards",
+                upBtnImg: "ไอคอนกลับไปด้านบน",
+                downBtnImg: "ไอคอนไปที่ส่วนท้าย",
+                sideControllerIcon: "ไอคอนของแถบด้านข้าง",
+                loadingTextTitle: "กำลังโหลด",
+                dbClick2StopCtrl: "ปุ่ม Ctrl",
+                dbClick2StopAlt: "ปุ่ม Alt",
+                dbClick2StopShift: "ปุ่ม Shift",
+                dbClick2StopMeta: "ปุ่ม Meta",
+                dbClick2StopKey: "ปุ่มลัด",
+                pageElementCss: "สไตล์ที่กำหนดเองสำหรับองค์ประกอบหน้าหลัก",
+                customCss: "CSS ที่กำหนดเองทั้งหมด",
+                firstAlert: "คุณยังไม่ได้นำเข้ากฎพื้นฐาน โปรดเลือกกฎที่เหมาะสมเพื่อนำเข้า",
+                picker: "ตัวเลือกองค์ประกอบ Pagetual",
+                closePicker: "ปิดตัวเลือก Pagetual",
+                pickerPlaceholder: "ตัวเลือกองค์ประกอบ (สำหรับผู้ใช้ขั้นสูงเท่านั้น เว้นว่างไว้)",
+                pickerCheck: "ตรวจสอบตัวเลือกและคัดลอก",
+                switchSelector: "คลิกเพื่อสลับองค์ประกอบ",
+                gotoEdit: "ไปที่การแก้ไขกฎด้วยตัวเลือกปัจจุบัน",
+                manualMode: "ปิดใช้งานการต่อเข้าด้วยกัน เลื่อนหน้าถัดไปด้วยตนเองโดยใช้ปุ่มลูกศรขวา (หรือส่งเหตุการณ์ 'pagetual.next')",
+                clickMode: "ปิดใช้งานการต่อเข้าด้วยกัน คลิกหน้าถัดไปโดยอัตโนมัติเมื่อเลื่อนไปที่ท้ายหน้า",
+                pageBarMenu: "คลิกที่กึ่งกลางของแถบหน้าเพื่อเปิดเมนูตัวเลือก",
+                nextSwitch: "สลับลิงก์ถัดไป",
+                arrowToScroll: "กดลูกศรซ้ายเพื่อเลื่อนกลับและลูกศรขวาเพื่อเลื่อนหน้า",
+                sideController: "แสดงแถบควบคุมการแบ่งหน้าในแถบด้านข้าง",
+                sideControllerScroll: "สลับการเลื่อน",
+                sideControllerAlways: "แสดงเสมอ",
+                hideLoadingIcon: "ซ่อนภาพเคลื่อนไหวการโหลด",
+                hideBarArrow: "ซ่อนลูกศรสำหรับแถบหน้า",
+                duplicate: "มีการติดตั้ง Pagetual ที่ซ้ำกัน ตรวจสอบผู้จัดการสคริปต์ของคุณ!",
+                forceStateIframe: "ฝังหน้าเต็มเป็น iframe",
+                forceStateDynamic: "โหลดเนื้อหาแบบไดนามิกผ่าน iframe",
+                forceStateDisable: "ปิดใช้งานการเปลี่ยนหน้าบนไซต์นี้",
+                autoScrollRate: "ความเร็วในการเลื่อน (1~1000)",
+                disableAutoScroll: "หยุดการเลื่อนอัตโนมัติ",
+                enableAutoScroll: "เปิดใช้งานการเลื่อนอัตโนมัติ",
+                toggleAutoScroll: "สลับการเลื่อนอัตโนมัติ",
+                ruleRequest: "ขอกฎ",
+                page: "หน้า ",
+                prevPage: "หน้าก่อนหน้า",
+                nextPage: "หน้าถัดไป",
+                errorRulesMustBeArray: "กฎต้องเป็นอาร์เรย์!",
+                errorJson: "ข้อผิดพลาด JSON ตรวจสอบอีกครั้ง!",
+                editSuccess: "แก้ไขสำเร็จ",
+                errorWrongUrl: "URL ไม่ถูกต้อง ตรวจสอบอีกครั้ง!",
+                errorAlreadyExists: "มีกฎอยู่แล้ว!",
+                settingsSaved: "บันทึกการตั้งค่าแล้ว รีเฟรชเพื่อดู",
+                iframe: "บังคับแยกโดย iframe",
+                dynamic: "การโหลดแบบไดนามิก",
+                reloadPage: "แก้ไขเสร็จแล้ว โหลดใหม่ตอนนี้หรือไม่",
+                copied: "คัดลอกแล้ว",
+                noValidContent: "ไม่พบเนื้อหาที่ถูกต้อง อาจมี Captcha",
+                outOfDate: "สคริปต์ล้าสมัย โปรดอัปเดตเป็นเวอร์ชันล่าสุด",
+                hideBarTips: "ซ่อนแถบเลขหน้า สลับประสบการณ์ที่สมจริง",
+                setConfigPage: "ตั้งค่าหน้าปัจจุบันเป็นหน้าการกำหนดค่าเริ่มต้น",
+                wedata2github: "เปลี่ยนที่อยู่ wedata เป็นที่อยู่มิเรอร์ในที่เก็บ github",
+                addOtherProp: "เพิ่มคุณสมบัติของกฎ",
+                addNextSelector: "เพิ่มเนื้อหาตัวเลือกเป็น nextLink",
+                addPageSelector: "เพิ่มเนื้อหาตัวเลือกเป็น pageElement",
+                propName: "ป้อนชื่อคุณสมบัติของกฎ",
+                propValue: "ป้อนค่าคุณสมบัติของกฎ",
+                customFirst: "ไม่สนใจแคชสำหรับกฎที่กำหนดเองในเครื่อง",
+                rulesExample: "ตัวอย่างกฎ",
+                lastPage: "ถึงหน้าสุดท้ายแล้ว",
+                lastPageTips: "แสดงเคล็ดลับเมื่อถึงหน้าสุดท้าย"
+            }
+        },
+        {
+            name: "Norsk (Bokmål)",
+            match: ["nb", "nb-NO"],
+            lang: {
+                enableDebug: "Aktiver feilsøkingsutdata til konsollen",
+                updateNotification: "Varsling etter at regler er oppdatert",
+                disable: "Deaktiver midlertidig",
+                disableSite: "Veksle deaktivert tilstand",
+                disableSiteTips: "Deaktivert på dette nettstedet.",
+                enableSiteTips: "Aktivert på dette nettstedet.",
+                enable: "✅Aktiver automatisk sidevending",
+                tempActive: "Midlertidig aktiv",
+                toTop: "Tilbake til toppen.",
+                toBottom: "Gå til bunnen.",
+                current: "Gjeldende side.",
+                forceIframe: "Tving til å koble til neste side",
+                cancelForceIframe: "Avbryt tvungen tilkobling",
+                configure: "Konfigurer Pagetual",
+                firstUpdate: "Klikk her for å initialisere standard regelliste",
+                update: "Oppdater nettbaserte regler",
+                click2update: "Klikk for å oppdatere regler fra url nå",
+                loadNow: "Last neste automatisk",
+                loadConfirm: "Hvor mange sider vil du laste? (0 betyr uendelig)",
+                noNext: "Ingen neste lenke funnet, vennligst opprett en ny regel",
+                passSec: "Oppdatert for #t# sekunder siden",
+                passMin: "Oppdatert for #t# minutter siden",
+                passHour: "Oppdatert for #t# timer siden",
+                passDay: "Oppdatert for #t# dager siden",
+                cantDel: "Kan ikke slette innebygde regler",
+                confirmDel: "Er du sikker på at du vil slette denne regelen?",
+                updateSucc: "Oppdatering vellykket",
+                beginUpdate: "Starter oppdatering, vent et øyeblikk",
+                customUrls: "Importer Pagetual eller AutoPagerize regel-url, én url per linje.",
+                customRules: "Skriv inn egendefinerte regler. <a href='#t#'>✍️Bidra med regler</a>",
+                save: "Lagre",
+                loadingText: "Laster nå...",
+                opacity: "Opasitet",
+                opacityPlaceholder: "0: skjul avstandsstykke",
+                hideBar: "Skjul pagineringsavstandsstykket",
+                hideBarButNoStop: "Skjul, men ikke stopp",
+                dbClick2Stop: "Dobbeltklikk på det tomme området for å pause",
+                sortTitle: "Sortering trer i kraft etter neste regeloppdatering",
+                autoRun: "Auto-aktiver (svartelistemodus)",
+                autoLoadNum: "Antall for forhåndslastede sider",
+                turnRate: "Snu til neste side når det er mindre enn 【X】 ganger sidehøyden fra bunnteksten",
+                inputPageNum: "Skriv inn sidetall for å hoppe",
+                enableHistory: "Skriv nettleserlogg etter sidevending",
+                enableHistoryAfterInsert: "Skriv nettleserlogg umiddelbart etter spleising, ellers skriv etter surfing",
+                contentVisibility: "Bytt automatisk innholdssynlighet for å forbedre gjengivelsesytelsen",
+                initRun: "Snu sider umiddelbart etter åpning",
+                preload: "Forhåndslast neste side for å øke hastigheten",
+                click2ImportRule: "Klikk for å importere grunnregellenke, og vent deretter til oppdateringen er fullført: ",
+                forceAllBody: "Koble til hele sidens kropp?",
+                openInNewTab: "Åpne url-er for tillegg i ny fane",
+                importSucc: "Import fullført",
+                import: "Importer",
+                editCurrent: "Rediger regel for gjeldende nettsted",
+                editBlacklist: "Rediger url-svartelisten, én oppføring per linje, støtter [?,*] jokertegn.",
+                upBtnImg: "Ikon for tilbake til toppen",
+                downBtnImg: "Ikon for å gå til bunntekst",
+                sideControllerIcon: "Ikon for sidefelt",
+                loadingTextTitle: "Laster",
+                dbClick2StopCtrl: "Ctrl-tast",
+                dbClick2StopAlt: "Alt-tast",
+                dbClick2StopShift: "Shift-tast",
+                dbClick2StopMeta: "Meta-tast",
+                dbClick2StopKey: "Hurtigtast",
+                pageElementCss: "Egendefinert stil for hovedsideelementer",
+                customCss: "Egendefinert komplett css",
+                firstAlert: "Du har ikke importert grunnregelen, vennligst velg riktig regel å importere",
+                picker: "Pagetual elementvelger",
+                closePicker: "Lukk Pagetual-velger",
+                pickerPlaceholder: "Elementvelger, (Kun avanserte brukere, la stå tomt ellers)",
+                pickerCheck: "Sjekk velger og kopier",
+                switchSelector: "Klikk for å bytte element",
+                gotoEdit: "Gå til redigeringsregel med gjeldende velger",
+                manualMode: "Deaktiver spleising, gå manuelt frem til neste side med høyre piltast (eller send hendelsen 'pagetual.next')",
+                clickMode: "Deaktiver spleising, klikk automatisk på neste side når du ruller til slutten av siden",
+                pageBarMenu: "Klikk på midten av sidelinjen for å åpne velgermenyen",
+                nextSwitch: "Bytt neste lenke",
+                arrowToScroll: "Trykk venstre piltast for å rulle tilbake og høyre piltast for å gå frem en side",
+                sideController: "Vis pagineringskontrollinjen i sidefeltet",
+                sideControllerScroll: "Rulleveksling",
+                sideControllerAlways: "Vis alltid",
+                hideLoadingIcon: "Skjul lasteanimasjon",
+                hideBarArrow: "Skjul pil for sidelinje",
+                duplicate: "Duplikat Pagetual har blitt installert, sjekk skriptbehandleren din!",
+                forceStateIframe: "Bygg inn hele siden som iframe",
+                forceStateDynamic: "Last dynamisk innhold via iframe",
+                forceStateDisable: "Deaktiver sidevending på dette nettstedet",
+                autoScrollRate: "Rullehastighet (1~1000)",
+                disableAutoScroll: "Stopp automatisk rulling",
+                enableAutoScroll: "Aktiver automatisk rulling",
+                toggleAutoScroll: "Veksle automatisk rulling",
+                ruleRequest: "Regelforespørsel",
+                page: "Side ",
+                prevPage: "Forrige side",
+                nextPage: "Neste side",
+                errorRulesMustBeArray: "Regler må være en matrise!",
+                errorJson: "JSON-feil, sjekk igjen!",
+                editSuccess: "Redigering vellykket",
+                errorWrongUrl: "Feil url, sjekk igjen!",
+                errorAlreadyExists: "En regel eksisterer allerede!",
+                settingsSaved: "Innstillingene er lagret, oppdater for å se",
+                iframe: "Tvunget delt av iframe",
+                dynamic: "Dynamisk lasting",
+                reloadPage: "Redigering fullført, last på nytt nå?",
+                copied: "Kopiert",
+                noValidContent: "Ingen gyldig innhold funnet, en Captcha kan være til stede",
+                outOfDate: "Skriptet er utdatert, vennligst oppdater til den nyeste versjonen.",
+                hideBarTips: "Skjul pagineringslinjen, veksle mellom oppslukende opplevelse",
+                setConfigPage: "Angi gjeldende side som standard konfigurasjonsside",
+                wedata2github: "Endre wedata-adressen til speiladressen i github-depotet",
+                addOtherProp: "Legg til regelegenskaper",
+                addNextSelector: "Legg til velgerinnhold som nextLink",
+                addPageSelector: "Legg til velgerinnhold som pageElement",
+                propName: "Skriv inn regelegenskapsnavn",
+                propValue: "Skriv inn regelegenskapsverdi",
+                customFirst: "Ignorer hurtigbuffer for lokale egendefinerte regler",
+                rulesExample: "Regeleksempel",
+                lastPage: "Nådde den siste siden",
+                lastPageTips: "Vis tips når du når den siste siden"
+            }
+        },
+        {
+            name: "Svenska",
+            match: ["sv"],
+            lang: {
+                enableDebug: "Aktivera felsökningsutdata till konsolen",
+                updateNotification: "Meddelande efter att regler har uppdaterats",
+                disable: "Inaktivera tillfälligt",
+                disableSite: "Växla inaktiverat läge",
+                disableSiteTips: "Inaktiverad på denna webbplats.",
+                enableSiteTips: "Aktiverad på denna webbplats.",
+                enable: "✅Aktivera automatisk sidvändning",
+                tempActive: "Tillfälligt aktiv",
+                toTop: "Tillbaka till toppen.",
+                toBottom: "Gå till botten.",
+                current: "Nuvarande sida.",
+                forceIframe: "Tvinga att ansluta till nästa sida",
+                cancelForceIframe: "Avbryt tvångsanslutning",
+                configure: "Konfigurera Pagetual",
+                firstUpdate: "Klicka här för att initiera standardregellistan",
+                update: "Uppdatera onlineregler",
+                click2update: "Klicka för att uppdatera regler från url nu",
+                loadNow: "Ladda nästa automatiskt",
+                loadConfirm: "Hur många sidor vill du ladda? (0 betyder oändligt)",
+                noNext: "Ingen nästa länk hittades, skapa en ny regel",
+                passSec: "Uppdaterad för #t# sekunder sedan",
+                passMin: "Uppdaterad för #t# minuter sedan",
+                passHour: "Uppdaterad för #t# timmar sedan",
+                passDay: "Uppdaterad för #t# dagar sedan",
+                cantDel: "Kan inte ta bort inbyggda regler",
+                confirmDel: "Är du säker på att du vill ta bort denna regel?",
+                updateSucc: "Uppdatering lyckades",
+                beginUpdate: "Påbörjar uppdatering, vänta ett ögonblick",
+                customUrls: "Importera Pagetual eller AutoPagerize regel-url, en url per rad.",
+                customRules: "Ange anpassade regler. <a href='#t#'>✍️Bidra med regler</a>",
+                save: "Spara",
+                loadingText: "Laddar nu...",
+                opacity: "Opacitet",
+                opacityPlaceholder: "0: dölj mellanrum",
+                hideBar: "Dölj pagineringsmellanrummet",
+                hideBarButNoStop: "Dölj men stoppa inte",
+                dbClick2Stop: "Dubbelklicka på det tomma utrymmet för att pausa",
+                sortTitle: "Sortering träder i kraft efter nästa regeluppdatering",
+                autoRun: "Auto-aktivera (svartlistningsläge)",
+                autoLoadNum: "Antal för förinläsning av sidor",
+                turnRate: "Vänd till nästa sida när det är mindre än 【X】 gånger sidhöjden från sidfoten",
+                inputPageNum: "Ange sidnummer för att hoppa",
+                enableHistory: "Skriv webbhistorik efter sidvändning",
+                enableHistoryAfterInsert: "Skriv webbhistorik omedelbart efter sammanfogning, annars skriv efter surfning",
+                contentVisibility: "Växla automatiskt innehållssynlighet för att förbättra renderingsprestanda",
+                initRun: "Vänd sidor omedelbart efter öppning",
+                preload: "Förinläs nästa sida för att påskynda",
+                click2ImportRule: "Klicka för att importera grundregellänk, och vänta sedan tills uppdateringen är klar: ",
+                forceAllBody: "Anslut hela sidans kropp?",
+                openInNewTab: "Öppna webbadresser för tillägg i ny flik",
+                importSucc: "Importen är klar",
+                import: "Importera",
+                editCurrent: "Redigera regel för aktuell webbplats",
+                editBlacklist: "Redigera webbadress-svartlistan, en post per rad, stöder [?,*] jokertecken.",
+                upBtnImg: "Ikon för tillbaka till toppen",
+                downBtnImg: "Ikon för att gå till sidfot",
+                sideControllerIcon: "Ikon för sidofältet",
+                loadingTextTitle: "Laddar",
+                dbClick2StopCtrl: "Ctrl-tangent",
+                dbClick2StopAlt: "Alt-tangent",
+                dbClick2StopShift: "Shift-tangent",
+                dbClick2StopMeta: "Meta-tangent",
+                dbClick2StopKey: "Snabbtangent",
+                pageElementCss: "Anpassad stil för huvudsidaelement",
+                customCss: "Anpassad komplett css",
+                firstAlert: "Du har inte importerat grundregeln, välj lämplig regel att importera",
+                picker: "Pagetual elementväljare",
+                closePicker: "Stäng Pagetual-väljare",
+                pickerPlaceholder: "Elementväljare, (Endast avancerade användare, lämna tomt annars)",
+                pickerCheck: "Kontrollera väljare och kopiera",
+                switchSelector: "Klicka för att byta element",
+                gotoEdit: "Gå till redigera regel med aktuell väljare",
+                manualMode: "Inaktivera sammanfogning, gå manuellt framåt till nästa sida med höger piltangent (eller skicka händelsen 'pagetual.next')",
+                clickMode: "Inaktivera sammanfogning, klicka automatiskt på nästa sida när du rullar till slutet av sidan",
+                pageBarMenu: "Klicka på mitten av sidfältet för att öppna väljarmenyn",
+                nextSwitch: "Byt nästa länk",
+                arrowToScroll: "Tryck på vänster piltangent för att rulla tillbaka och höger piltangent för att gå fram en sida",
+                sideController: "Visa pagineringskontrollfältet i sidofältet",
+                sideControllerScroll: "Rullningsväxling",
+                sideControllerAlways: "Visa alltid",
+                hideLoadingIcon: "Dölj laddningsanimation",
+                hideBarArrow: "Dölj pil för sidfält",
+                duplicate: "Duplicerad Pagetual har installerats, kontrollera din skripthanterare!",
+                forceStateIframe: "Bädda in hela sidan som iframe",
+                forceStateDynamic: "Ladda dynamiskt innehåll via iframe",
+                forceStateDisable: "Inaktivera sidvändning på denna webbplats",
+                autoScrollRate: "Rullningshastighet (1~1000)",
+                disableAutoScroll: "Stoppa automatisk rullning",
+                enableAutoScroll: "Aktivera automatisk rullning",
+                toggleAutoScroll: "Växla automatisk rullning",
+                ruleRequest: "Regelförfrågan",
+                page: "Sida ",
+                prevPage: "Föregående sida",
+                nextPage: "Nästa sida",
+                errorRulesMustBeArray: "Regler måste vara en array!",
+                errorJson: "JSON-fel, kontrollera igen!",
+                editSuccess: "Redigering lyckades",
+                errorWrongUrl: "Fel webbadress, kontrollera igen!",
+                errorAlreadyExists: "En regel finns redan!",
+                settingsSaved: "Inställningarna har sparats, uppdatera för att se",
+                iframe: "Tvingad delning av iframe",
+                dynamic: "Dynamisk laddning",
+                reloadPage: "Redigering slutförd, ladda om nu?",
+                copied: "Kopierad",
+                noValidContent: "Inget giltigt innehåll hittades, en Captcha kan finnas",
+                outOfDate: "Skriptet är föråldrat, uppdatera till den senaste versionen.",
+                hideBarTips: "Dölj pagineringsfältet, växla till en uppslukande upplevelse",
+                setConfigPage: "Ange aktuell sida som standardkonfigurationssida",
+                wedata2github: "Ändra wedata-adressen till spegeladressen i github-förvaret",
+                addOtherProp: "Lägg till regelegenskaper",
+                addNextSelector: "Lägg till väljarinnehåll som nextLink",
+                addPageSelector: "Lägg till väljarinnehåll som pageElement",
+                propName: "Ange regelegenskapsnamn",
+                propValue: "Ange regelegenskapsvärde",
+                customFirst: "Ignorera cache för lokala anpassade regler",
+                rulesExample: "Regelexempel",
+                lastPage: "Nådde sista sidan",
+                lastPageTips: "Visa tips när du når sista sidan"
+            }
+        },
+        {
+            name: "Српски",
+            match: ["sr"],
+            lang: {
+                enableDebug: "Омогући отклањање грешака на конзоли",
+                updateNotification: "Обавештење након ажурирања правила",
+                disable: "Привремено онемогући",
+                disableSite: "Промени стање онемогућености",
+                disableSiteTips: "Онемогућено на овом сајту.",
+                enableSiteTips: "Омогућено на овом сајту.",
+                enable: "✅Омогући аутоматско окретање страница",
+                tempActive: "Привремено активно",
+                toTop: "Назад на врх.",
+                toBottom: "Иди на дно.",
+                current: "Тренутна страница.",
+                forceIframe: "Присили спајање следеће странице",
+                cancelForceIframe: "Откажи присилно спајање",
+                configure: "Конфигуриши Pagetual",
+                firstUpdate: "Кликните овде да бисте покренули подразумевану листу правила",
+                update: "Ажурирај правила на мрежи",
+                click2update: "Кликните да бисте одмах ажурирали правила са УРЛ-а",
+                loadNow: "Учитај следеће аутоматски",
+                loadConfirm: "Колико страница желите да учитате? (0 значи бесконачно)",
+                noNext: "Није пронађена следећа веза, креирајте ново правило",
+                passSec: "Ажурирано пре #t# секунди",
+                passMin: "Ажурирано пре #t# минута",
+                passHour: "Ажурирано пре #t# сати",
+                passDay: "Ажурирано пре #t# дана",
+                cantDel: "Не могу се избрисати уграђена правила",
+                confirmDel: "Да ли сте сигурни да желите да избришете ово правило?",
+                updateSucc: "Ажурирање је успело",
+                beginUpdate: "Започни ажурирање, сачекајте тренутак",
+                customUrls: "Увезите Pagetual или AutoPagerize УРЛ правила, један УРЛ по линији.",
+                customRules: "Унесите прилагођена правила. <a href='#t#'>✍️Допринесите правилима</a>",
+                save: "Сачувај",
+                loadingText: "Учитавање у току...",
+                opacity: "Провидност",
+                opacityPlaceholder: "0: сакриј размак",
+                hideBar: "Сакриј размак за пагинацију",
+                hideBarButNoStop: "Сакриј, али не заустављај",
+                dbClick2Stop: "Двапут кликните на празан простор да бисте паузирали",
+                sortTitle: "Сортирање ступа на снагу након следећег ажурирања правила",
+                autoRun: "Аутоматско омогућавање (режим црне листе)",
+                autoLoadNum: "Количина за унапред учитане странице",
+                turnRate: "Окрените следећу страницу када је мање од 【X】 пута висине странице од подножја",
+                inputPageNum: "Унесите број странице за скок",
+                enableHistory: "Упиши историју прегледања након окретања странице",
+                enableHistoryAfterInsert: "Упиши историју прегледања одмах након спајања, у супротном упиши након прегледања",
+                contentVisibility: "Аутоматски промени видљивост садржаја да би се побољшале перформансе приказивања",
+                initRun: "Окрени странице одмах након отварања",
+                preload: "Унапред учитај следећу страницу ради убрзања",
+                click2ImportRule: "Кликните да бисте увезли везу основних правила, а затим сачекајте док се ажурирање не заврши: ",
+                forceAllBody: "Спојити цело тело странице?",
+                openInNewTab: "Отвори УРЛ-ове додатака у новој картици",
+                importSucc: "Увоз је завршен",
+                import: "Увези",
+                editCurrent: "Уреди правило за тренутни веб-сајт",
+                editBlacklist: "Уредите УРЛ црну листу, један унос по линији, подржава џокере [?,*].",
+                upBtnImg: "Икона за повратак на врх",
+                downBtnImg: "Икона за одлазак на подножје",
+                sideControllerIcon: "Икона бочне траке",
+                loadingTextTitle: "Учитавање",
+                dbClick2StopCtrl: "Тастер Ctrl",
+                dbClick2StopAlt: "Тастер Alt",
+                dbClick2StopShift: "Тастер Shift",
+                dbClick2StopMeta: "Тастер Meta",
+                dbClick2StopKey: "Тастер пречице",
+                pageElementCss: "Прилагођени стил за главне елементе странице",
+                customCss: "Прилагођени комплетан ЦСС",
+                firstAlert: "Нисте увезли основно правило, изаберите одговарајуће правило за увоз",
+                picker: "Pagetual бирач елемената",
+                closePicker: "Затвори Pagetual бирач",
+                pickerPlaceholder: "Бирач елемената, (Само напредни корисници, иначе оставите празно)",
+                pickerCheck: "Провери бирач и копирај",
+                switchSelector: "Кликните да бисте променили елемент",
+                gotoEdit: "Иди на уређивање правила са тренутним бирачем",
+                manualMode: "Онемогући спајање, ручно пређи на следећу страницу помоћу десног тастера са стрелицом (или пошаљи догађај 'pagetual.next')",
+                clickMode: "Онемогући спајање, аутоматски кликни на следећу страницу приликом померања до краја странице",
+                pageBarMenu: "Кликните на центар траке странице да бисте отворили мени бирача",
+                nextSwitch: "Промени следећу везу",
+                arrowToScroll: "Притисните леви тастер са стрелицом за померање уназад и десни тастер са стрелицом за прелазак на страницу",
+                sideController: "Прикажи контролну траку за пагинацију у бочној траци",
+                sideControllerScroll: "Промена померања",
+                sideControllerAlways: "Увек прикажи",
+                hideLoadingIcon: "Сакриј анимацију учитавања",
+                hideBarArrow: "Сакриј стрелицу за траку странице",
+                duplicate: "Дупликат Pagetual је инсталиран, проверите свој менаџер скрипти!",
+                forceStateIframe: "Угради целу страницу као iframe",
+                forceStateDynamic: "Учитај динамички садржај путем iframe-a",
+                forceStateDisable: "Онемогући окретање страница на овом сајту",
+                autoScrollRate: "Брзина померања (1~1000)",
+                disableAutoScroll: "Заустави аутоматско померање",
+                enableAutoScroll: "Омогући аутоматско померање",
+                toggleAutoScroll: "Промени аутоматско померање",
+                ruleRequest: "Захтев за правило",
+                page: "Страница ",
+                prevPage: "Претходна страница",
+                nextPage: "Следећа страница",
+                errorRulesMustBeArray: "Правила морају бити низ!",
+                errorJson: "ЈСОН грешка, проверите поново!",
+                editSuccess: "Успешно уређено",
+                errorWrongUrl: "Погрешан УРЛ, проверите поново!",
+                errorAlreadyExists: "Правило већ постоји!",
+                settingsSaved: "Подешавања су сачувана, освежите да бисте видели",
+                iframe: "Присилно подељено iframe-ом",
+                dynamic: "Динамичко учитавање",
+                reloadPage: "Уређивање је завршено, поново учитати сада?",
+                copied: "Копирано",
+                noValidContent: "Није детектован важећи садржај, можда је присутан Цаптцха",
+                outOfDate: "Скрипта је застарела, ажурирајте на најновију верзију.",
+                hideBarTips: "Сакријте траку за пагинацију, промените имерзивно искуство",
+                setConfigPage: "Постави тренутну страницу као подразумевану страницу за конфигурацију",
+                wedata2github: "Промените wedata адресу на адресу огледала у гитхуб спремишту",
+                addOtherProp: "Додај својства правила",
+                addNextSelector: "Додај садржај бирача као nextLink",
+                addPageSelector: "Додај садржај бирача као pageElement",
+                propName: "Унесите назив својства правила",
+                propValue: "Унесите вредност својства правила",
+                customFirst: "Игнориши кеш за локална прилагођена правила",
+                rulesExample: "Пример правила",
+                lastPage: "Достигнута је последња страница",
+                lastPageTips: "Прикажи савете приликом достизања последње странице"
+            }
+        },
+        {
+            name: "Slovenčina",
+            match: ["sk"],
+            lang: {
+                enableDebug: "Povoliť výstup ladenia do konzoly",
+                updateNotification: "Oznámenie po aktualizácii pravidiel",
+                disable: "Dočasne zakázať",
+                disableSite: "Prepnúť stav zakázania",
+                disableSiteTips: "Na tejto stránke zakázané.",
+                enableSiteTips: "Na tejto stránke povolené.",
+                enable: "✅Povoliť automatické otáčanie stránok",
+                tempActive: "Dočasne aktívne",
+                toTop: "Späť na začiatok.",
+                toBottom: "Ísť na koniec.",
+                current: "Aktuálna stránka.",
+                forceIframe: "Vynútiť pripojenie k ďalšej stránke",
+                cancelForceIframe: "Zrušiť vynútené pripojenie",
+                configure: "Konfigurovať Pagetual",
+                firstUpdate: "Kliknite sem pre inicializáciu predvoleného zoznamu pravidiel",
+                update: "Aktualizovať online pravidlá",
+                click2update: "Kliknite pre aktualizáciu pravidiel z URL teraz",
+                loadNow: "Načítať ďalšie automaticky",
+                loadConfirm: "Koľko stránok chcete načítať? (0 znamená nekonečno)",
+                noNext: "Nenašiel sa žiadny ďalší odkaz, vytvorte nové pravidlo",
+                passSec: "Aktualizované pred #t# sekundami",
+                passMin: "Aktualizované pred #t# minútami",
+                passHour: "Aktualizované pred #t# hodinami",
+                passDay: "Aktualizované pred #t# dňami",
+                cantDel: "Nie je možné odstrániť vstavané pravidlá",
+                confirmDel: "Ste si istí, že chcete odstrániť toto pravidlo?",
+                updateSucc: "Aktualizácia úspešná",
+                beginUpdate: "Začína sa aktualizácia, chvíľu počkajte",
+                customUrls: "Importovať URL pravidla Pagetual alebo AutoPagerize, jedno URL na riadok.",
+                customRules: "Zadajte vlastné pravidlá. <a href='#t#'>✍️Prispieť pravidlami</a>",
+                save: "Uložiť",
+                loadingText: "Načítava sa...",
+                opacity: "Nepriehľadnosť",
+                opacityPlaceholder: "0: skryť medzerník",
+                hideBar: "Skryť medzerník stránkovania",
+                hideBarButNoStop: "Skryť, ale nezastaviť",
+                dbClick2Stop: "Dvojitým kliknutím na prázdne miesto pozastavíte",
+                sortTitle: "Triedenie sa prejaví po ďalšej aktualizácii pravidiel",
+                autoRun: "Automatické povolenie (režim čiernej listiny)",
+                autoLoadNum: "Množstvo pre prednačítané stránky",
+                turnRate: "Otočte na ďalšiu stránku, keď je menej ako 【X】 násobok výšky stránky od pätičky",
+                inputPageNum: "Zadajte číslo stránky na preskočenie",
+                enableHistory: "Zapísať históriu prehliadania po otočení stránky",
+                enableHistoryAfterInsert: "Zapísať históriu prehliadania ihneď po spojení, inak zapísať po prehliadaní",
+                contentVisibility: "Automaticky prepínať viditeľnosť obsahu na zlepšenie výkonu vykresľovania",
+                initRun: "Otočiť stránky ihneď po otvorení",
+                preload: "Prednačítať ďalšiu stránku na zrýchlenie",
+                click2ImportRule: "Kliknite pre import odkazu na základné pravidlá a potom počkajte, kým sa aktualizácia nedokončí: ",
+                forceAllBody: "Pripojiť celé telo stránky?",
+                openInNewTab: "Otvoriť URL adries prídavkov v novej karte",
+                importSucc: "Import dokončený",
+                import: "Importovať",
+                editCurrent: "Upraviť pravidlo pre aktuálnu webovú stránku",
+                editBlacklist: "Upraviť čiernu listinu URL, jeden záznam na riadok, podporuje zástupné znaky [?,*].",
+                upBtnImg: "Ikona späť na začiatok",
+                downBtnImg: "Ikona ísť na pätičku",
+                sideControllerIcon: "Ikona bočného panela",
+                loadingTextTitle: "Načítavanie",
+                dbClick2StopCtrl: "Kláves Ctrl",
+                dbClick2StopAlt: "Kláves Alt",
+                dbClick2StopShift: "Kláves Shift",
+                dbClick2StopMeta: "Kláves Meta",
+                dbClick2StopKey: "Klávesová skratka",
+                pageElementCss: "Vlastný štýl pre hlavné prvky stránky",
+                customCss: "Vlastné kompletné CSS",
+                firstAlert: "Neimportovali ste základné pravidlo, vyberte prosím vhodné pravidlo na import",
+                picker: "Výber prvkov Pagetual",
+                closePicker: "Zavrieť výber Pagetual",
+                pickerPlaceholder: "Výber prvkov, (Iba pre pokročilých používateľov, inak nechajte prázdne)",
+                pickerCheck: "Skontrolovať výber a kopírovať",
+                switchSelector: "Kliknutím prepnete prvok",
+                gotoEdit: "Prejsť na úpravu pravidla s aktuálnym výberom",
+                manualMode: "Zakázať spájanie, manuálne prejsť na ďalšiu stránku pomocou klávesu so šípkou doprava (alebo odoslať udalosť 'pagetual.next')",
+                clickMode: "Zakázať spájanie, automaticky kliknúť na ďalšiu stránku pri posunutí na koniec stránky",
+                pageBarMenu: "Kliknutím na stred lišty stránky otvoríte menu výberu",
+                nextSwitch: "Prepnúť ďalší odkaz",
+                arrowToScroll: "Stlačením ľavej šípky sa posuniete späť a pravou šípkou prejdete na stránku",
+                sideController: "Zobraziť ovládací panel stránkovania v bočnom paneli",
+                sideControllerScroll: "Prepnúť posúvanie",
+                sideControllerAlways: "Vždy zobraziť",
+                hideLoadingIcon: "Skryť animáciu načítavania",
+                hideBarArrow: "Skryť šípku pre lištu stránky",
+                duplicate: "Duplicitný Pagetual bol nainštalovaný, skontrolujte svoj správcu skriptov!",
+                forceStateIframe: "Vložiť celú stránku ako iframe",
+                forceStateDynamic: "Načítať dynamický obsah cez iframe",
+                forceStateDisable: "Zakázať otáčanie stránok na tejto stránke",
+                autoScrollRate: "Rýchlosť posúvania (1~1000)",
+                disableAutoScroll: "Zastaviť automatické posúvanie",
+                enableAutoScroll: "Povoliť automatické posúvanie",
+                toggleAutoScroll: "Prepnúť automatické posúvanie",
+                ruleRequest: "Žiadosť o pravidlo",
+                page: "Stránka ",
+                prevPage: "Predchádzajúca stránka",
+                nextPage: "Ďalšia stránka",
+                errorRulesMustBeArray: "Pravidlá musia byť pole!",
+                errorJson: "Chyba JSON, skontrolujte znova!",
+                editSuccess: "Úspešne upravené",
+                errorWrongUrl: "Nesprávne URL, skontrolujte znova!",
+                errorAlreadyExists: "Pravidlo už existuje!",
+                settingsSaved: "Nastavenia sú uložené, obnovte pre zobrazenie",
+                iframe: "Vynútené rozdelenie pomocou iframe",
+                dynamic: "Dynamické načítavanie",
+                reloadPage: "Úprava dokončená, načítať znova?",
+                copied: "Skopírované",
+                noValidContent: "Nebol zistený žiadny platný obsah, môže byť prítomná Captcha",
+                outOfDate: "Skript je zastaraný, aktualizujte prosím na najnovšiu verziu.",
+                hideBarTips: "Skryť lištu stránkovania, prepnúť pohlcujúci zážitok",
+                setConfigPage: "Nastaviť aktuálnu stránku ako predvolenú konfiguračnú stránku",
+                wedata2github: "Zmeniť adresu wedata na zrkadlovú adresu v repozitári github",
+                addOtherProp: "Pridať vlastnosti pravidla",
+                addNextSelector: "Pridať obsah výberu ako nextLink",
+                addPageSelector: "Pridať obsah výberu ako pageElement",
+                propName: "Zadajte názov vlastnosti pravidla",
+                propValue: "Zadajte hodnotu vlastnosti pravidla",
+                customFirst: "Ignorovať vyrovnávaciu pamäť pre lokálne vlastné pravidlá",
+                rulesExample: "Príklad pravidiel",
+                lastPage: "Dosiahli ste poslednú stránku",
+                lastPageTips: "Zobraziť tipy pri dosiahnutí poslednej stránky"
+            }
+        },
+        {
+            name: "Magyar",
+            match: ["hu"],
+            lang: {
+                enableDebug: "Hibakeresési kimenet engedélyezése a konzolon",
+                updateNotification: "Értesítés a szabályok frissítése után",
+                disable: "Ideiglenes letiltás",
+                disableSite: "Letiltott állapot váltása",
+                disableSiteTips: "Letiltva ezen az oldalon.",
+                enableSiteTips: "Engedélyezve ezen az oldalon.",
+                enable: "✅Automatikus lapozás engedélyezése",
+                tempActive: "Ideiglenesen aktív",
+                toTop: "Vissza a tetejére.",
+                toBottom: "Ugrás az aljára.",
+                current: "Jelenlegi oldal.",
+                forceIframe: "Következő oldal csatlakozásának kényszerítése",
+                cancelForceIframe: "Kényszerített csatlakozás megszakítása",
+                configure: "Pagetual konfigurálása",
+                firstUpdate: "Kattintson ide az alapértelmezett szabálylista inicializálásához",
+                update: "Online szabályok frissítése",
+                click2update: "Kattintson a szabályok URL-ről történő frissítéséhez",
+                loadNow: "Következő automatikus betöltése",
+                loadConfirm: "Hány oldalt szeretne betölteni? (0 a végtelent jelenti)",
+                noNext: "Nincs következő link, hozzon létre új szabályt",
+                passSec: "#t# másodperce frissítve",
+                passMin: "#t# perce frissítve",
+                passHour: "#t# órája frissítve",
+                passDay: "#t# napja frissítve",
+                cantDel: "Beépített szabályok nem törölhetők",
+                confirmDel: "Biztosan törli ezt a szabályt?",
+                updateSucc: "Sikeres frissítés",
+                beginUpdate: "Frissítés megkezdése, kérem várjon egy pillanatot",
+                customUrls: "Pagetual vagy AutoPagerize szabály URL importálása, soronként egy URL.",
+                customRules: "Adjon meg egyéni szabályokat. <a href='#t#'>✍️Szabályok beküldése</a>",
+                save: "Mentés",
+                loadingText: "Betöltés...",
+                opacity: "Átlátszóság",
+                opacityPlaceholder: "0: elválasztó elrejtése",
+                hideBar: "Lapozó elválasztó elrejtése",
+                hideBarButNoStop: "Elrejtés, de nem leállítás",
+                dbClick2Stop: "Dupla kattintás az üres területre a szüneteltetéshez",
+                sortTitle: "A rendezés a következő szabályfrissítés után lép érvénybe",
+                autoRun: "Automatikus engedélyezés (feketelista mód)",
+                autoLoadNum: "Előtöltendő oldalak száma",
+                turnRate: "Lapozzon a következő oldalra, ha a lábléctől mért távolság kevesebb, mint az oldal magasságának 【X】-szerese",
+                inputPageNum: "Adja meg az ugrani kívánt oldalszámot",
+                enableHistory: "Böngészési előzmények írása lapozás után",
+                enableHistoryAfterInsert: "Böngészési előzmények írása azonnal az illesztés után, egyébként a böngészés után",
+                contentVisibility: "A content-visibility automatikus váltása a renderelési teljesítmény javítása érdekében",
+                initRun: "Oldalak lapozása azonnal a megnyitás után",
+                preload: "Következő oldal előtöltése a gyorsítás érdekében",
+                click2ImportRule: "Kattintson az alapszabályok linkjének importálásához, majd várja meg a frissítés befejezését: ",
+                forceAllBody: "Csatlakoztatja az oldal teljes törzsét?",
+                openInNewTab: "A kiegészítések URL-jeinek megnyitása új lapon",
+                importSucc: "Importálás befejezve",
+                import: "Importálás",
+                editCurrent: "Szabály szerkesztése az aktuális webhelyhez",
+                editBlacklist: "URL feketelista szerkesztése, soronként egy bejegyzés, támogatja a [?,*] helyettesítő karaktereket.",
+                upBtnImg: "Vissza a tetejére ikon",
+                downBtnImg: "Ugrás a lábléchez ikon",
+                sideControllerIcon: "Oldalsáv ikonja",
+                loadingTextTitle: "Betöltés",
+                dbClick2StopCtrl: "Ctrl billentyű",
+                dbClick2StopAlt: "Alt billentyű",
+                dbClick2StopShift: "Shift billentyű",
+                dbClick2StopMeta: "Meta billentyű",
+                dbClick2StopKey: "Gyorsbillentyű",
+                pageElementCss: "Egyéni stílus a fő oldalelemekhez",
+                customCss: "Egyéni teljes CSS",
+                firstAlert: "Nem importálta az alapszabályt, kérjük, válassza ki a megfelelő szabályt az importáláshoz",
+                picker: "Pagetual elemkiválasztó",
+                closePicker: "Pagetual kiválasztó bezárása",
+                pickerPlaceholder: "Elemválasztó (Csak haladó felhasználóknak, egyébként hagyja üresen)",
+                pickerCheck: "Választó ellenőrzése és másolása",
+                switchSelector: "Kattintson az elem váltásához",
+                gotoEdit: "Ugrás a szabály szerkesztéséhez az aktuális választóval",
+                manualMode: "Illesztés letiltása, manuális lapozás a jobb nyílbillentyűvel (vagy a 'pagetual.next' esemény küldésével)",
+                clickMode: "Illesztés letiltása, automatikus kattintás a következő oldalra az oldal végére görgetve",
+                pageBarMenu: "Kattintson az oldalsáv közepére a kiválasztó menü megnyitásához",
+                nextSwitch: "Következő link váltása",
+                arrowToScroll: "Nyomja meg a bal nyilat a visszagörgetéshez és a jobb nyilat az oldallapozáshoz",
+                sideController: "A lapozásvezérlő sáv megjelenítése az oldalsávon",
+                sideControllerScroll: "Görgetés váltása",
+                sideControllerAlways: "Mindig mutassa",
+                hideLoadingIcon: "Betöltési animáció elrejtése",
+                hideBarArrow: "Oldalsáv nyilának elrejtése",
+                duplicate: "Duplikált Pagetual telepítve van, ellenőrizze a szkriptkezelőjét!",
+                forceStateIframe: "Teljes oldal beágyazása iframe-ként",
+                forceStateDynamic: "Dinamikus tartalom betöltése iframe-en keresztül",
+                forceStateDisable: "Lapozás letiltása ezen az oldalon",
+                autoScrollRate: "Görgetési sebesség (1-1000)",
+                disableAutoScroll: "Automatikus görgetés leállítása",
+                enableAutoScroll: "Automatikus görgetés engedélyezése",
+                toggleAutoScroll: "Automatikus görgetés váltása",
+                ruleRequest: "Szabálykérés",
+                page: "Oldal ",
+                prevPage: "Előző oldal",
+                nextPage: "Következő oldal",
+                errorRulesMustBeArray: "A szabályoknak tömbnek kell lenniük!",
+                errorJson: "JSON hiba, ellenőrizze újra!",
+                editSuccess: "Sikeres szerkesztés",
+                errorWrongUrl: "Hibás URL, ellenőrizze újra!",
+                errorAlreadyExists: "Már létezik egy szabály!",
+                settingsSaved: "A beállítások mentve, frissítsen a megtekintéshez",
+                iframe: "Iframe által kényszerített felosztás",
+                dynamic: "Dinamikus betöltés",
+                reloadPage: "Szerkesztés befejezve, újratölti most?",
+                copied: "Másolva",
+                noValidContent: "Nincs érvényes tartalom, lehet, hogy Captcha van jelen",
+                outOfDate: "A szkript elavult, kérjük, frissítsen a legújabb verzióra.",
+                hideBarTips: "A lapozósáv elrejtése, magával ragadó élmény váltása",
+                setConfigPage: "Az aktuális oldal beállítása alapértelmezett konfigurációs oldalként",
+                wedata2github: "A wedata cím megváltoztatása a tükör címre a github tárolóban",
+                addOtherProp: "Szabálytulajdonságok hozzáadása",
+                addNextSelector: "Választó tartalmának hozzáadása nextLink-ként",
+                addPageSelector: "Választó tartalmának hozzáadása pageElement-ként",
+                propName: "Adja meg a szabálytulajdonság nevét",
+                propValue: "Adja meg a szabálytulajdonság értékét",
+                customFirst: "Gyorsítótár figyelmen kívül hagyása a helyi egyéni szabályoknál",
+                rulesExample: "Szabályok példa",
+                lastPage: "Elérte az utolsó oldalt",
+                lastPageTips: "Tippek megjelenítése az utolsó oldal elérésekor"
+            }
+        },
+        {
+            name: "Română",
+            match: ["ro"],
+            lang: {
+                enableDebug: "Activați ieșirea de depanare în consolă",
+                updateNotification: "Notificare după actualizarea regulilor",
+                disable: "Dezactivați temporar",
+                disableSite: "Comutați starea de dezactivare",
+                disableSiteTips: "Dezactivat pe acest site.",
+                enableSiteTips: "Activat pe acest site.",
+                enable: "✅Activați întoarcerea automată a paginii",
+                tempActive: "Activ temporar",
+                toTop: "Înapoi sus.",
+                toBottom: "Mergi jos.",
+                current: "Pagina curentă.",
+                forceIframe: "Forțați alăturarea la pagina următoare",
+                cancelForceIframe: "Anulați alăturarea forțată",
+                configure: "Configurați Pagetual",
+                firstUpdate: "Faceți clic aici pentru a inițializa lista de reguli implicită",
+                update: "Actualizați regulile online",
+                click2update: "Faceți clic pentru a actualiza regulile de la URL acum",
+                loadNow: "Încărcați următoarea automat",
+                loadConfirm: "Câte pagini doriți să încărcați? (0 înseamnă infinit)",
+                noNext: "Nu s-a găsit niciun link următor, vă rugăm să creați o nouă regulă",
+                passSec: "Actualizat acum #t# secunde",
+                passMin: "Actualizat acum #t# minute",
+                passHour: "Actualizat acum #t# ore",
+                passDay: "Actualizat acum #t# zile",
+                cantDel: "Nu se pot șterge regulile încorporate",
+                confirmDel: "Sunteți sigur că doriți să ștergeți această regulă?",
+                updateSucc: "Actualizare reușită",
+                beginUpdate: "Începe actualizarea, vă rugăm așteptați un moment",
+                customUrls: "Importați URL-ul regulii Pagetual sau AutoPagerize, un URL pe linie.",
+                customRules: "Introduceți reguli personalizate. <a href='#t#'>✍️Contribuiți cu reguli</a>",
+                save: "Salvați",
+                loadingText: "Se încarcă...",
+                opacity: "Opacitate",
+                opacityPlaceholder: "0: ascundeți distanțierul",
+                hideBar: "Ascundeți distanțierul de paginare",
+                hideBarButNoStop: "Ascundeți, dar nu opriți",
+                dbClick2Stop: "Faceți dublu clic pe spațiul gol pentru a întrerupe",
+                sortTitle: "Sortarea intră în vigoare după următoarea actualizare a regulilor",
+                autoRun: "Activare automată (mod listă neagră)",
+                autoLoadNum: "Cantitatea de pagini de preîncărcat",
+                turnRate: "Întoarceți la pagina următoare când este mai puțin de 【X】 ori înălțimea paginii de la subsol",
+                inputPageNum: "Introduceți numărul paginii pentru a sări",
+                enableHistory: "Scrieți istoricul de navigare după întoarcerea paginii",
+                enableHistoryAfterInsert: "Scrieți istoricul de navigare imediat după îmbinare, altfel scrieți după navigare",
+                contentVisibility: "Comutați automat vizibilitatea conținutului pentru a îmbunătăți performanța de randare",
+                initRun: "Întoarceți paginile imediat după deschidere",
+                preload: "Preîncărcați pagina următoare pentru a accelera",
+                click2ImportRule: "Faceți clic pentru a importa linkul regulilor de bază, apoi așteptați până la finalizarea actualizării: ",
+                forceAllBody: "Alăturați corpul complet al paginii?",
+                openInNewTab: "Deschideți URL-urile adăugirilor într-o filă nouă",
+                importSucc: "Import finalizat",
+                import: "Importați",
+                editCurrent: "Editați regula pentru site-ul web curent",
+                editBlacklist: "Editați lista neagră de URL-uri, o intrare pe linie, suportă caracterele [?,*].",
+                upBtnImg: "Pictogramă înapoi sus",
+                downBtnImg: "Pictogramă mergi la subsol",
+                sideControllerIcon: "Pictogramă bară laterală",
+                loadingTextTitle: "Se încarcă",
+                dbClick2StopCtrl: "Tasta Ctrl",
+                dbClick2StopAlt: "Tasta Alt",
+                dbClick2StopShift: "Tasta Shift",
+                dbClick2StopMeta: "Tasta Meta",
+                dbClick2StopKey: "Tastă de comandă rapidă",
+                pageElementCss: "Stil personalizat pentru elementele principale ale paginii",
+                customCss: "CSS complet personalizat",
+                firstAlert: "Nu ați importat regula de bază, vă rugăm să selectați regula corespunzătoare pentru a o importa",
+                picker: "Selector de elemente Pagetual",
+                closePicker: "Închideți selectorul Pagetual",
+                pickerPlaceholder: "Selector de elemente (Doar utilizatori avansați, altfel lăsați necompletat)",
+                pickerCheck: "Verificați selectorul și copiați",
+                switchSelector: "Faceți clic pentru a comuta elementul",
+                gotoEdit: "Mergeți la editarea regulii cu selectorul curent",
+                manualMode: "Dezactivați îmbinarea, avansați manual la pagina următoare folosind tasta săgeată dreapta (sau trimiteți evenimentul 'pagetual.next')",
+                clickMode: "Dezactivați îmbinarea, faceți clic automat pe pagina următoare la derularea până la sfârșitul paginii",
+                pageBarMenu: "Faceți clic în centrul barei de pagină pentru a deschide meniul selectorului",
+                nextSwitch: "Comutați linkul următor",
+                arrowToScroll: "Apăsați săgeata stânga pentru a derula înapoi și săgeata dreapta pentru a avansa pagina",
+                sideController: "Afișați bara de control a paginării în bara laterală",
+                sideControllerScroll: "Comutare derulare",
+                sideControllerAlways: "Afișați întotdeauna",
+                hideLoadingIcon: "Ascundeți animația de încărcare",
+                hideBarArrow: "Ascundeți săgeata pentru bara de pagină",
+                duplicate: "Pagetual duplicat a fost instalat, verificați managerul de scripturi!",
+                forceStateIframe: "Încorporați pagina completă ca iframe",
+                forceStateDynamic: "Încărcați conținut dinamic prin iframe",
+                forceStateDisable: "Dezactivați întoarcerea paginii pe acest site",
+                autoScrollRate: "Viteza de derulare (1~1000)",
+                disableAutoScroll: "Opriți derularea automată",
+                enableAutoScroll: "Activați derularea automată",
+                toggleAutoScroll: "Comutați derularea automată",
+                ruleRequest: "Cerere de regulă",
+                page: "Pagina ",
+                prevPage: "Pagina anterioară",
+                nextPage: "Pagina următoare",
+                errorRulesMustBeArray: "Regulile trebuie să fie un tablou!",
+                errorJson: "Eroare JSON, verificați din nou!",
+                editSuccess: "Editat cu succes",
+                errorWrongUrl: "URL greșit, verificați din nou!",
+                errorAlreadyExists: "O regulă există deja!",
+                settingsSaved: "Setările sunt salvate, reîmprospătați pentru a vizualiza",
+                iframe: "Divizare forțată de iframe",
+                dynamic: "Încărcare dinamică",
+                reloadPage: "Editare finalizată, reîncărcați acum?",
+                copied: "Copiat",
+                noValidContent: "Nu s-a detectat niciun conținut valid, este posibil să existe un Captcha",
+                outOfDate: "Scriptul este învechit, vă rugăm să actualizați la cea mai recentă versiune.",
+                hideBarTips: "Ascundeți bara de paginare, comutați experiența imersivă",
+                setConfigPage: "Setați pagina curentă ca pagină de configurare implicită",
+                wedata2github: "Schimbați adresa wedata cu adresa oglindă din depozitul github",
+                addOtherProp: "Adăugați proprietăți de regulă",
+                addNextSelector: "Adăugați conținutul selectorului ca nextLink",
+                addPageSelector: "Adăugați conținutul selectorului ca pageElement",
+                propName: "Introduceți numele proprietății regulii",
+                propValue: "Introduceți valoarea proprietății regulii",
+                customFirst: "Ignorați memoria cache pentru regulile personalizate locale",
+                rulesExample: "Exemplu de reguli",
+                lastPage: "Ați ajuns la ultima pagină",
+                lastPageTips: "Afișați sfaturi la atingerea ultimei pagini"
+            }
+        },
+        {
+            name: "Suomi",
+            match: ["fi"],
+            lang: {
+                enableDebug: "Ota virheenkorjaustuloste käyttöön konsolissa",
+                updateNotification: "Ilmoitus sääntöjen päivityksen jälkeen",
+                disable: "Poista väliaikaisesti käytöstä",
+                disableSite: "Vaihda käytöstä poistettu tila",
+                disableSiteTips: "Poistettu käytöstä tällä sivustolla.",
+                enableSiteTips: "Otettu käyttöön tällä sivustolla.",
+                enable: "✅Ota automaattinen sivunvaihto käyttöön",
+                tempActive: "Väliaikaisesti aktiivinen",
+                toTop: "Takaisin ylös.",
+                toBottom: "Mene alas.",
+                current: "Nykyinen sivu.",
+                forceIframe: "Pakota liittymään seuraavalle sivulle",
+                cancelForceIframe: "Peruuta pakotettu liittyminen",
+                configure: "Määritä Pagetual",
+                firstUpdate: "Napsauta tästä alustaaksesi oletussääntöluettelon",
+                update: "Päivitä verkkosäännöt",
+                click2update: "Napsauta päivittääksesi säännöt URL-osoitteesta nyt",
+                loadNow: "Lataa seuraava automaattisesti",
+                loadConfirm: "Kuinka monta sivua haluat ladata? (0 tarkoittaa ääretöntä)",
+                noNext: "Seuraavaa linkkiä ei löytynyt, luo uusi sääntö",
+                passSec: "Päivitetty #t# sekuntia sitten",
+                passMin: "Päivitetty #t# minuuttia sitten",
+                passHour: "Päivitetty #t# tuntia sitten",
+                passDay: "Päivitetty #t# päivää sitten",
+                cantDel: "Sisäänrakennettuja sääntöjä ei voi poistaa",
+                confirmDel: "Haluatko varmasti poistaa tämän säännön?",
+                updateSucc: "Päivitys onnistui",
+                beginUpdate: "Aloitetaan päivitys, odota hetki",
+                customUrls: "Tuo Pagetual- tai AutoPagerize-säännön URL-osoite, yksi URL-osoite riviä kohti.",
+                customRules: "Syötä mukautettuja sääntöjä. <a href='#t#'>✍️Osallistu sääntöihin</a>",
+                save: "Tallenna",
+                loadingText: "Ladataan...",
+                opacity: "Läpinäkyvyys",
+                opacityPlaceholder: "0: piilota välilevy",
+                hideBar: "Piilota sivutuksen välilevy",
+                hideBarButNoStop: "Piilota, mutta älä pysäytä",
+                dbClick2Stop: "Kaksoisnapsauta tyhjää tilaa keskeyttääksesi",
+                sortTitle: "Lajittelu tulee voimaan seuraavan sääntöpäivityksen jälkeen",
+                autoRun: "Ota automaattisesti käyttöön (mustan listan tila)",
+                autoLoadNum: "Esiladattavien sivujen määrä",
+                turnRate: "Vaihda seuraavalle sivulle, kun se on alle 【X】 kertaa sivun korkeuden päässä alatunnisteesta",
+                inputPageNum: "Syötä sivunumero siirtyäksesi",
+                enableHistory: "Kirjoita selaushistoria sivunvaihdon jälkeen",
+                enableHistoryAfterInsert: "Kirjoita selaushistoria heti liittämisen jälkeen, muuten kirjoita selauksen jälkeen",
+                contentVisibility: "Vaihda automaattisesti sisällön näkyvyyttä parantaaksesi renderöintisuorituskykyä",
+                initRun: "Vaihda sivuja heti avaamisen jälkeen",
+                preload: "Esilataa seuraava sivu nopeuttaaksesi",
+                click2ImportRule: "Napsauta tuodaksesi perussääntöjen linkin ja odota sitten, kunnes päivitys on valmis: ",
+                forceAllBody: "Liitetäänkö sivun koko runko?",
+                openInNewTab: "Avaa lisäysten URL-osoitteet uudessa välilehdessä",
+                importSucc: "Tuonti onnistui",
+                import: "Tuo",
+                editCurrent: "Muokkaa nykyisen verkkosivuston sääntöä",
+                editBlacklist: "Muokkaa URL-mustaa listaa, yksi merkintä riviä kohti, tukee [?,*] -jokerimerkkejä.",
+                upBtnImg: "Takaisin ylös -kuvake",
+                downBtnImg: "Mene alatunnisteeseen -kuvake",
+                sideControllerIcon: "Sivupalkin kuvake",
+                loadingTextTitle: "Ladataan",
+                dbClick2StopCtrl: "Ctrl-näppäin",
+                dbClick2StopAlt: "Alt-näppäin",
+                dbClick2StopShift: "Shift-näppäin",
+                dbClick2StopMeta: "Meta-näppäin",
+                dbClick2StopKey: "Pikakuvake",
+                pageElementCss: "Mukautettu tyyli pääsivun elementeille",
+                customCss: "Mukautettu täydellinen CSS",
+                firstAlert: "Et ole tuonut perussääntöä, valitse sopiva sääntö tuotavaksi",
+                picker: "Pagetual-elementin valitsin",
+                closePicker: "Sulje Pagetual-valitsin",
+                pickerPlaceholder: "Elementin valitsin (Vain edistyneille käyttäjille, muuten jätä tyhjäksi)",
+                pickerCheck: "Tarkista valitsin ja kopioi",
+                switchSelector: "Napsauta vaihtaaksesi elementtiä",
+                gotoEdit: "Siirry muokkaamaan sääntöä nykyisellä valitsimella",
+                manualMode: "Poista liittäminen käytöstä, siirry manuaalisesti seuraavalle sivulle oikealla nuolinäppäimellä (tai lähetä tapahtuma 'pagetual.next')",
+                clickMode: "Poista liittäminen käytöstä, napsauta automaattisesti seuraavaa sivua, kun vierität sivun loppuun",
+                pageBarMenu: "Napsauta sivupalkin keskustaa avataksesi valitsinvalikon",
+                nextSwitch: "Vaihda seuraava linkki",
+                arrowToScroll: "Paina vasenta nuolta selataksesi taaksepäin ja oikeaa nuolta siirtyäksesi sivulle",
+                sideController: "Näytä sivutuksen ohjauspalkki sivupalkissa",
+                sideControllerScroll: "Vierityksen vaihto",
+                sideControllerAlways: "Näytä aina",
+                hideLoadingIcon: "Piilota latausanimaatio",
+                hideBarArrow: "Piilota nuoli sivupalkille",
+                duplicate: "Pagetualin kaksoiskappale on asennettu, tarkista komentosarjojen hallinta!",
+                forceStateIframe: "Upota koko sivu iframeksi",
+                forceStateDynamic: "Lataa dynaamista sisältöä iframen kautta",
+                forceStateDisable: "Poista sivunvaihto käytöstä tällä sivustolla",
+                autoScrollRate: "Vieritysnopeus (1-1000)",
+                disableAutoScroll: "Pysäytä automaattinen vieritys",
+                enableAutoScroll: "Ota automaattinen vieritys käyttöön",
+                toggleAutoScroll: "Vaihda automaattista vieritystä",
+                ruleRequest: "Sääntöpyyntö",
+                page: "Sivu ",
+                prevPage: "Edellinen sivu",
+                nextPage: "Seuraava sivu",
+                errorRulesMustBeArray: "Sääntöjen on oltava taulukko!",
+                errorJson: "JSON-virhe, tarkista uudelleen!",
+                editSuccess: "Muokkaus onnistui",
+                errorWrongUrl: "Väärä URL-osoite, tarkista uudelleen!",
+                errorAlreadyExists: "Sääntö on jo olemassa!",
+                settingsSaved: "Asetukset on tallennettu, päivitä nähdäksesi",
+                iframe: "Pakotettu jako iframella",
+                dynamic: "Dynaaminen lataus",
+                reloadPage: "Muokkaus valmis, ladataanko uudelleen nyt?",
+                copied: "Kopioitu",
+                noValidContent: "Kelvollista sisältöä ei havaittu, Captcha saattaa olla läsnä",
+                outOfDate: "Komentosarja on vanhentunut, päivitä uusimpaan versioon.",
+                hideBarTips: "Piilota sivutuspalkki, vaihda immersiiviseen kokemukseen",
+                setConfigPage: "Aseta nykyinen sivu oletusmäärityssivuksi",
+                wedata2github: "Vaihda wedata-osoite github-arkiston peiliosoitteeseen",
+                addOtherProp: "Lisää säännön ominaisuuksia",
+                addNextSelector: "Lisää valitsimen sisältö nimellä nextLink",
+                addPageSelector: "Lisää valitsimen sisältö nimellä pageElement",
+                propName: "Syötä säännön ominaisuuden nimi",
+                propValue: "Syötä säännön ominaisuuden arvo",
+                customFirst: "Ohita välimuisti paikallisille mukautetuille säännöille",
+                rulesExample: "Sääntöesimerkki",
+                lastPage: "Viimeinen sivu saavutettu",
+                lastPageTips: "Näytä vinkkejä, kun saavutaan viimeiselle sivulle"
+            }
+        },
+        {
+            name: "Ελληνικά",
+            match: ["el"],
+            lang: {
+                enableDebug: "Ενεργοποίηση εξόδου εντοπισμού σφαλμάτων στην κονσόλα",
+                updateNotification: "Ειδοποίηση μετά την ενημέρωση των κανόνων",
+                disable: "Προσωρινή απενεργοποίηση",
+                disableSite: "Εναλλαγή κατάστασης απενεργοποίησης",
+                disableSiteTips: "Απενεργοποιημένο σε αυτόν τον ιστότοπο.",
+                enableSiteTips: "Ενεργοποιημένο σε αυτόν τον ιστότοπο.",
+                enable: "✅Ενεργοποίηση αυτόματης αλλαγής σελίδας",
+                tempActive: "Προσωρινά ενεργό",
+                toTop: "Επιστροφή στην κορυφή.",
+                toBottom: "Μετάβαση στο κάτω μέρος.",
+                current: "Τρέχουσα σελίδα.",
+                forceIframe: "Εξαναγκασμός συμμετοχής στην επόμενη σελίδα",
+                cancelForceIframe: "Ακύρωση εξαναγκασμένης συμμετοχής",
+                configure: "Διαμόρφωση Pagetual",
+                firstUpdate: "Κάντε κλικ εδώ για να αρχικοποιήσετε την προεπιλεγμένη λίστα κανόνων",
+                update: "Ενημέρωση διαδικτυακών κανόνων",
+                click2update: "Κάντε κλικ για να ενημερώσετε τους κανόνες από το URL τώρα",
+                loadNow: "Φόρτωση του επόμενου αυτόματα",
+                loadConfirm: "Πόσες σελίδες θέλετε να φορτώσετε; (0 σημαίνει άπειρο)",
+                noNext: "Δεν βρέθηκε επόμενος σύνδεσμος, δημιουργήστε έναν νέο κανόνα",
+                passSec: "Ενημερώθηκε πριν από #t# δευτερόλεπτα",
+                passMin: "Ενημερώθηκε πριν από #t# λεπτά",
+                passHour: "Ενημερώθηκε πριν από #t# ώρες",
+                passDay: "Ενημερώθηκε πριν από #t# ημέρες",
+                cantDel: "Δεν είναι δυνατή η διαγραφή ενσωματωμένων κανόνων",
+                confirmDel: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν τον κανόνα;",
+                updateSucc: "Η ενημέρωση ολοκληρώθηκε με επιτυχία",
+                beginUpdate: "Έναρξη ενημέρωσης, περιμένετε μια στιγμή",
+                customUrls: "Εισαγωγή URL κανόνα Pagetual ή AutoPagerize, ένα URL ανά γραμμή.",
+                customRules: "Εισαγωγή προσαρμοσμένων κανόνων. <a href='#t#'>✍️Συνεισφέρετε κανόνες</a>",
+                save: "Αποθήκευση",
+                loadingText: "Φόρτωση...",
+                opacity: "Αδιαφάνεια",
+                opacityPlaceholder: "0: απόκρυψη διαχωριστικού",
+                hideBar: "Απόκρυψη του διαχωριστικού σελιδοποίησης",
+                hideBarButNoStop: "Απόκρυψη αλλά όχι διακοπή",
+                dbClick2Stop: "Κάντε διπλό κλικ στον κενό χώρο για παύση",
+                sortTitle: "Η ταξινόμηση τίθεται σε ισχύ μετά την επόμενη ενημέρωση κανόνων",
+                autoRun: "Αυτόματη ενεργοποίηση (λειτουργία μαύρης λίστας)",
+                autoLoadNum: "Ποσότητα για προφόρτωση σελίδων",
+                turnRate: "Μετάβαση στην επόμενη σελίδα όταν απέχει λιγότερο από 【X】 φορές το ύψος της σελίδας από το υποσέλιδο",
+                inputPageNum: "Εισαγάγετε τον αριθμό σελίδας για μετάβαση",
+                enableHistory: "Εγγραφή ιστορικού περιήγησης μετά την αλλαγή σελίδας",
+                enableHistoryAfterInsert: "Εγγραφή ιστορικού περιήγησης αμέσως μετά τη συγκόλληση, διαφορετικά εγγραφή μετά την περιήγηση",
+                contentVisibility: "Αυτόματη εναλλαγή της ορατότητας περιεχομένου για βελτίωση της απόδοσης απόδοσης",
+                initRun: "Αλλαγή σελίδων αμέσως μετά το άνοιγμα",
+                preload: "Προφόρτωση της επόμενης σελίδας για επιτάχυνση",
+                click2ImportRule: "Κάντε κλικ για να εισαγάγετε τον σύνδεσμο των βασικών κανόνων και, στη συνέχεια, περιμένετε μέχρι να ολοκληρωθεί η ενημέρωση: ",
+                forceAllBody: "Συμμετοχή ολόκληρου του σώματος της σελίδας;",
+                openInNewTab: "Άνοιγμα των URL των προσθηκών σε νέα καρτέλα",
+                importSucc: "Η εισαγωγή ολοκληρώθηκε",
+                import: "Εισαγωγή",
+                editCurrent: "Επεξεργασία κανόνα για τον τρέχοντα ιστότοπο",
+                editBlacklist: "Επεξεργαστείτε τη μαύρη λίστα URL, μία καταχώριση ανά γραμμή, υποστηρίζει μπαλαντέρ [?,*].",
+                upBtnImg: "Εικονίδιο επιστροφής στην κορυφή",
+                downBtnImg: "Εικονίδιο μετάβασης στο υποσέλιδο",
+                sideControllerIcon: "Εικονίδιο πλευρικής γραμμής",
+                loadingTextTitle: "Φόρτωση",
+                dbClick2StopCtrl: "Πλήκτρο Ctrl",
+                dbClick2StopAlt: "Πλήκτρο Alt",
+                dbClick2StopShift: "Πλήκτρο Shift",
+                dbClick2StopMeta: "Πλήκτρο Meta",
+                dbClick2StopKey: "Πλήκτρο συντόμευσης",
+                pageElementCss: "Προσαρμοσμένο στυλ για τα κύρια στοιχεία της σελίδας",
+                customCss: "Προσαρμοσμένο πλήρες CSS",
+                firstAlert: "Δεν έχετε εισαγάγει τον βασικό κανόνα, επιλέξτε τον κατάλληλο κανόνα για εισαγωγή",
+                picker: "Επιλογέας στοιχείων Pagetual",
+                closePicker: "Κλείσιμο του επιλογέα Pagetual",
+                pickerPlaceholder: "Επιλογέας στοιχείων (Μόνο για προχωρημένους χρήστες, αλλιώς αφήστε κενό)",
+                pickerCheck: "Έλεγχος επιλογέα και αντιγραφή",
+                switchSelector: "Κάντε κλικ για εναλλαγή στοιχείου",
+                gotoEdit: "Μετάβαση στην επεξεργασία κανόνα με τον τρέχοντα επιλογέα",
+                manualMode: "Απενεργοποίηση συγκόλλησης, μη αυτόματη μετάβαση στην επόμενη σελίδα χρησιμοποιώντας το δεξί βέλος (ή αποστολή συμβάντος 'pagetual.next')",
+                clickMode: "Απενεργοποίηση συγκόλλησης, αυτόματο κλικ στην επόμενη σελίδα κατά την κύλιση στο τέλος της σελίδας",
+                pageBarMenu: "Κάντε κλικ στο κέντρο της γραμμής σελίδας για να ανοίξετε το μενού επιλογέα",
+                nextSwitch: "Εναλλαγή επόμενου συνδέσμου",
+                arrowToScroll: "Πατήστε το αριστερό βέλος για κύλιση προς τα πίσω και το δεξί βέλος για μετάβαση στη σελίδα",
+                sideController: "Εμφάνιση της γραμμής ελέγχου σελιδοποίησης στην πλευρική γραμμή",
+                sideControllerScroll: "Εναλλαγή κύλισης",
+                sideControllerAlways: "Πάντα εμφάνιση",
+                hideLoadingIcon: "Απόκρυψη κινούμενης εικόνας φόρτωσης",
+                hideBarArrow: "Απόκρυψη βέλους για τη γραμμή σελίδας",
+                duplicate: "Έχει εγκατασταθεί διπλότυπο Pagetual, ελέγξτε τον διαχειριστή σεναρίων σας!",
+                forceStateIframe: "Ενσωμάτωση ολόκληρης της σελίδας ως iframe",
+                forceStateDynamic: "Φόρτωση δυναμικού περιεχομένου μέσω iframe",
+                forceStateDisable: "Απενεργοποίηση αλλαγής σελίδας σε αυτόν τον ιστότοπο",
+                autoScrollRate: "Ταχύτητα κύλισης (1~1000)",
+                disableAutoScroll: "Διακοπή αυτόματης κύλισης",
+                enableAutoScroll: "Ενεργοποίηση αυτόματης κύλισης",
+                toggleAutoScroll: "Εναλλαγή αυτόματης κύλισης",
+                ruleRequest: "Αίτημα κανόνα",
+                page: "Σελίδα ",
+                prevPage: "Προηγούμενη σελίδα",
+                nextPage: "Επόμενη σελίδα",
+                errorRulesMustBeArray: "Οι κανόνες πρέπει να είναι πίνακας!",
+                errorJson: "Σφάλμα JSON, ελέγξτε ξανά!",
+                editSuccess: "Η επεξεργασία ολοκληρώθηκε με επιτυχία",
+                errorWrongUrl: "Λάθος URL, ελέγξτε ξανά!",
+                errorAlreadyExists: "Ένας κανόνας υπάρχει ήδη!",
+                settingsSaved: "Οι ρυθμίσεις αποθηκεύτηκαν, ανανεώστε για προβολή",
+                iframe: "Εξαναγκασμένος διαχωρισμός από iframe",
+                dynamic: "Δυναμική φόρτωση",
+                reloadPage: "Η επεξεργασία ολοκληρώθηκε, επαναφόρτωση τώρα;",
+                copied: "Αντιγράφηκε",
+                noValidContent: "Δεν εντοπίστηκε έγκυρο περιεχόμενο, ενδέχεται να υπάρχει Captcha",
+                outOfDate: "Το σενάριο είναι ξεπερασμένο, ενημερώστε στην πιο πρόσφατη έκδοση.",
+                hideBarTips: "Απόκρυψη της γραμμής σελιδοποίησης, εναλλαγή καθηλωτικής εμπειρίας",
+                setConfigPage: "Ορισμός της τρέχουσας σελίδας ως προεπιλεγμένης σελίδας διαμόρφωσης",
+                wedata2github: "Αλλάξτε τη διεύθυνση wedata στη διεύθυνση καθρέφτη στο αποθετήριο github",
+                addOtherProp: "Προσθήκη ιδιοτήτων κανόνα",
+                addNextSelector: "Προσθήκη περιεχομένου επιλογέα ως nextLink",
+                addPageSelector: "Προσθήκη περιεχομένου επιλογέα ως pageElement",
+                propName: "Εισαγάγετε το όνομα ιδιότητας κανόνα",
+                propValue: "Εισαγάγετε την τιμή ιδιότητας κανόνα",
+                customFirst: "Παράβλεψη κρυφής μνήμης για τοπικούς προσαρμοσμένους κανόνες",
+                rulesExample: "Παράδειγμα κανόνων",
+                lastPage: "Φτάσατε στην τελευταία σελίδα",
+                lastPageTips: "Εμφάνιση συμβουλών κατά την άφιξη στην τελευταία σελίδα"
+            }
+        },
+        {
+            name: "Esperanto",
+            match: ["eo"],
+            lang: {
+                enableDebug: "Aktivigi sencimigan eligon al la konzolo",
+                updateNotification: "Sciigo post ĝisdatigo de reguloj",
+                disable: "Provizore malŝalti",
+                disableSite: "Baskuligi malŝaltitan staton",
+                disableSiteTips: "Malŝaltita en ĉi tiu retejo.",
+                enableSiteTips: "Ŝaltita en ĉi tiu retejo.",
+                enable: "✅Aktivigi aŭtomatan paĝo-turnadon",
+                tempActive: "Provizore aktiva",
+                toTop: "Reen al supro.",
+                toBottom: "Iri al malsupro.",
+                current: "Nuna paĝo.",
+                forceIframe: "Devigi kunigon de la sekva paĝo",
+                cancelForceIframe: "Nuligi devigitan kunigon",
+                configure: "Agordi Pagetual",
+                firstUpdate: "Klaku ĉi tie por pravalorizi la defaŭltan regul-liston",
+                update: "Ĝisdatigi retajn regulojn",
+                click2update: "Klaku por ĝisdatigi regulojn el URL nun",
+                loadNow: "Ŝargi la sekvan aŭtomate",
+                loadConfirm: "Kiom da paĝoj vi volas ŝargi? (0 signifas senfine)",
+                noNext: "Neniu sekva ligilo trovita, bonvolu krei novan regulon",
+                passSec: "Ĝisdatigita antaŭ #t# sekundoj",
+                passMin: "Ĝisdatigita antaŭ #t# minutoj",
+                passHour: "Ĝisdatigita antaŭ #t# horoj",
+                passDay: "Ĝisdatigita antaŭ #t# tagoj",
+                cantDel: "Ne eblas forigi enkonstruitajn regulojn",
+                confirmDel: "Ĉu vi certas, ke vi volas forigi ĉi tiun regulon?",
+                updateSucc: "Ĝisdatigo sukcesis",
+                beginUpdate: "Komencante ĝisdatigon, bonvolu atendi momenton",
+                customUrls: "Importi regulan URL de Pagetual aŭ AutoPagerize, unu URL po linio.",
+                customRules: "Enigu proprajn regulojn. <a href='#t#'>✍️Kontribui regulojn</a>",
+                save: "Konservi",
+                loadingText: "Ŝargante...",
+                opacity: "Opakeco",
+                opacityPlaceholder: "0: kaŝi apartigilon",
+                hideBar: "Kaŝi la paĝrangan apartigilon",
+                hideBarButNoStop: "Kaŝi sed ne haltigi",
+                dbClick2Stop: "Duoble-klaku sur la malplena spaco por paŭzi",
+                sortTitle: "Ordigo efektiviĝas post la sekva ĝisdatigo de reguloj",
+                autoRun: "Aŭtomata aktivigo (nigra listo reĝimo)",
+                autoLoadNum: "Kvanto por antaŭŝargitaj paĝoj",
+                turnRate: "Turnu la sekvan paĝon kiam ĝi estas malpli ol 【X】 fojojn la paĝa alteco de la piedlinio",
+                inputPageNum: "Enigu paĝan numeron por salti",
+                enableHistory: "Skribi foliumhistorion post paĝo-turnado",
+                enableHistoryAfterInsert: "Skribi foliumhistorion tuj post kunigo, alie skribi post foliumado",
+                contentVisibility: "Aŭtomate baskuligi enhavan videblecon por plibonigi bildigan rendimenton",
+                initRun: "Turni paĝojn tuj post malfermo",
+                preload: "Antaŭŝargi la sekvan paĝon por rapidigi",
+                click2ImportRule: "Klaku por importi bazan regulan ligilon, kaj poste atendu ĝis la ĝisdatigo finiĝos: ",
+                forceAllBody: "Kunigi la plenan korpon de la paĝo?",
+                openInNewTab: "Malfermi URL-ojn de aldonoj en nova langeto",
+                importSucc: "Importado finiĝis",
+                import: "Importi",
+                editCurrent: "Redakti regulon por la nuna retejo",
+                editBlacklist: "Redakti la nigran liston de URL-oj, unu enigo po linio, subtenas [?,*] ĵokerojn.",
+                upBtnImg: "Ikono por reen al supro",
+                downBtnImg: "Ikono por iri al piedlinio",
+                sideControllerIcon: "Ikono de flanka stango",
+                loadingTextTitle: "Ŝargante",
+                dbClick2StopCtrl: "Klavo Ctrl",
+                dbClick2StopAlt: "Klavo Alt",
+                dbClick2StopShift: "Klavo Shift",
+                dbClick2StopMeta: "Klavo Meta",
+                dbClick2StopKey: "Fulmoklavo",
+                pageElementCss: "Propra stilo por ĉefaj paĝaj elementoj",
+                customCss: "Propra kompleta CSS",
+                firstAlert: "Vi ne importis la bazan regulon, bonvolu elekti la taŭgan regulon por importi",
+                picker: "Pagetual elementa elektilo",
+                closePicker: "Fermi la elektilon de Pagetual",
+                pickerPlaceholder: "Elementa elektilo (Nur por spertaj uzantoj, alie lasu malplena)",
+                pickerCheck: "Kontroli elektilon kaj kopii",
+                switchSelector: "Klaku por ŝanĝi elementon",
+                gotoEdit: "Iri al redakto de regulo kun la nuna elektilo",
+                manualMode: "Malŝalti kunigon, permane antaŭeniri al la sekva paĝo per la dekstra sagoklavo (aŭ sendi eventon 'pagetual.next')",
+                clickMode: "Malŝalti kunigon, aŭtomate alklaki la sekvan paĝon rulumante ĝis la fino de la paĝo",
+                pageBarMenu: "Klaku la centron de la paĝa stango por malfermi la elektilan menuon",
+                nextSwitch: "Ŝanĝi la sekvan ligilon",
+                arrowToScroll: "Premu la maldekstran sagon por rulumigi reen kaj la dekstran sagon por antaŭeniri paĝon",
+                sideController: "Montri la paĝrangan kontrolstangon en la flanka stango",
+                sideControllerScroll: "Rulumiga baskulo",
+                sideControllerAlways: "Ĉiam montri",
+                hideLoadingIcon: "Kaŝi ŝargan animacion",
+                hideBarArrow: "Kaŝi sagon por la paĝa stango",
+                duplicate: "Duplikata Pagetual estis instalita, kontrolu vian skript-administrilon!",
+                forceStateIframe: "Enigi plenan paĝon kiel iframe",
+                forceStateDynamic: "Ŝargi dinamikan enhavon per iframe",
+                forceStateDisable: "Malŝalti paĝo-turnadon en ĉi tiu retejo",
+                autoScrollRate: "Rulumrapido (1~1000)",
+                disableAutoScroll: "Haltigi Aŭtomatan Rulumadon",
+                enableAutoScroll: "Aktivigi Aŭtomatan Rulumadon",
+                toggleAutoScroll: "Baskuligi Aŭtomatan Rulumadon",
+                ruleRequest: "Regula Peto",
+                page: "Paĝo ",
+                prevPage: "Antaŭa paĝo",
+                nextPage: "Sekva paĝo",
+                errorRulesMustBeArray: "Reguloj devas esti tabelo!",
+                errorJson: "JSON-eraro, Rekontrolu!",
+                editSuccess: "Sukcese redaktita",
+                errorWrongUrl: "Malĝusta URL, Rekontrolu!",
+                errorAlreadyExists: "Regulo jam ekzistas!",
+                settingsSaved: "La agordoj estas konservitaj, refreŝigu por vidi",
+                iframe: "Devigita disigo per iframe",
+                dynamic: "Dinamika ŝargado",
+                reloadPage: "Redakto finiĝis, ĉu reŝargi nun?",
+                copied: "Kopiita",
+                noValidContent: "Neniu valida enhavo detektita, Captcha eble ĉeestas",
+                outOfDate: "La skripto estas malmoderna, bonvolu ĝisdatigi al la plej nova versio.",
+                hideBarTips: "Kaŝi la paĝrangan stangon, baskuligi imersivan sperton",
+                setConfigPage: "Agordi la nunan paĝon kiel la defaŭltan agordan paĝon",
+                wedata2github: "Ŝanĝi la wedata-adreson al la spegula adreso en la github-deponejo",
+                addOtherProp: "Aldoni regulajn ecojn",
+                addNextSelector: "Aldoni elektilan enhavon kiel nextLink",
+                addPageSelector: "Aldoni elektilan enhavon kiel pageElement",
+                propName: "Enigu regulan econan nomon",
+                propValue: "Enigu regulan econan valoron",
+                customFirst: "Ignori kaŝmemoron por lokaj propraj reguloj",
+                rulesExample: "Regula Ekzemplo",
+                lastPage: "Atingis la lastan paĝon",
+                lastPageTips: "Montri konsilojn atinginte la lastan paĝon"
+            }
+        },
+        {
+            name: "Български",
+            match: ["bg"],
+            lang: {
+                enableDebug: "Активиране на изход за отстраняване на грешки в конзолата",
+                updateNotification: "Известие след актуализиране на правилата",
+                disable: "Временно деактивиране",
+                disableSite: "Превключване на деактивирано състояние",
+                disableSiteTips: "Деактивирано на този сайт.",
+                enableSiteTips: "Активирано на този сайт.",
+                enable: "✅Активиране на автоматично прелистване на страници",
+                tempActive: "Временно активно",
+                toTop: "Обратно горе.",
+                toBottom: "Към дъното.",
+                current: "Текуща страница.",
+                forceIframe: "Принудително присъединяване към следващата страница",
+                cancelForceIframe: "Отказ от принудително присъединяване",
+                configure: "Конфигуриране на Pagetual",
+                firstUpdate: "Щракнете тук, за да инициализирате списъка с правила по подразбиране",
+                update: "Актуализиране на онлайн правилата",
+                click2update: "Щракнете, за да актуализирате правилата от URL сега",
+                loadNow: "Зареждане на следващото автоматично",
+                loadConfirm: "Колко страници искате да заредите? (0 означава безкрайност)",
+                noNext: "Няма намерена следваща връзка, моля, създайте ново правило",
+                passSec: "Актуализирано преди #t# секунди",
+                passMin: "Актуализирано преди #t# минути",
+                passHour: "Актуализирано преди #t# часа",
+                passDay: "Актуализирано преди #t# дни",
+                cantDel: "Не могат да се изтриват вградени правила",
+                confirmDel: "Сигурни ли сте, че искате да изтриете това правило?",
+                updateSucc: "Актуализацията е успешна",
+                beginUpdate: "Започва актуализация, моля, изчакайте малко",
+                customUrls: "Импортиране на URL на правило Pagetual или AutoPagerize, един URL на ред.",
+                customRules: "Въведете персонализирани правила. <a href='#t#'>✍️Допринесете с правила</a>",
+                save: "Запазване",
+                loadingText: "Зареждане...",
+                opacity: "Непрозрачност",
+                opacityPlaceholder: "0: скриване на разделителя",
+                hideBar: "Скриване на разделителя за пагинация",
+                hideBarButNoStop: "Скриване, но не спиране",
+                dbClick2Stop: "Двоен клик върху празното пространство за пауза",
+                sortTitle: "Сортирането влиза в сила след следващата актуализация на правилата",
+                autoRun: "Автоматично активиране (режим на черен списък)",
+                autoLoadNum: "Количество за предварително заредени страници",
+                turnRate: "Превъртете на следващата страница, когато е на по-малко от 【X】 пъти височината на страницата от долния колонтитул",
+                inputPageNum: "Въведете номер на страница за прескачане",
+                enableHistory: "Записване на историята на сърфиране след прелистване на страница",
+                enableHistoryAfterInsert: "Записване на историята на сърфиране веднага след снаждане, в противен случай записване след сърфиране",
+                contentVisibility: "Автоматично превключване на видимостта на съдържанието за подобряване на производителността на изобразяване",
+                initRun: "Превъртане на страници веднага след отваряне",
+                preload: "Предварително зареждане на следващата страница за ускоряване",
+                click2ImportRule: "Щракнете, за да импортирате връзката към основните правила, и след това изчакайте, докато актуализацията приключи: ",
+                forceAllBody: "Присъединяване на цялото тяло на страницата?",
+                openInNewTab: "Отваряне на URL адресите на допълненията в нов раздел",
+                importSucc: "Импортирането е завършено",
+                import: "Импортиране",
+                editCurrent: "Редактиране на правило за текущия уебсайт",
+                editBlacklist: "Редактирайте черния списък с URL адреси, един запис на ред, поддържа заместващи символи [?,*].",
+                upBtnImg: "Икона за връщане горе",
+                downBtnImg: "Икона за преминаване към долния колонтитул",
+                sideControllerIcon: "Икона на страничната лента",
+                loadingTextTitle: "Зареждане",
+                dbClick2StopCtrl: "Клавиш Ctrl",
+                dbClick2StopAlt: "Клавиш Alt",
+                dbClick2StopShift: "Клавиш Shift",
+                dbClick2StopMeta: "Клавиш Meta",
+                dbClick2StopKey: "Клавишна комбинация",
+                pageElementCss: "Персонализиран стил за основните елементи на страницата",
+                customCss: "Персонализиран пълен CSS",
+                firstAlert: "Не сте импортирали основното правило, моля, изберете подходящото правило за импортиране",
+                picker: "Избор на елементи на Pagetual",
+                closePicker: "Затваряне на избора на Pagetual",
+                pickerPlaceholder: "Избор на елементи (Само за напреднали потребители, в противен случай оставете празно)",
+                pickerCheck: "Проверка на селектора и копиране",
+                switchSelector: "Щракнете, за да превключите елемент",
+                gotoEdit: "Отидете на редактиране на правило с текущия селектор",
+                manualMode: "Деактивиране на снаждането, ръчно преминаване към следващата страница с помощта на десния клавиш със стрелка (или изпращане на събитие 'pagetual.next')",
+                clickMode: "Деактивиране на снаждането, автоматично щракване върху следващата страница при превъртане до края на страницата",
+                pageBarMenu: "Щракнете в центъра на лентата на страницата, за да отворите менюто за избор",
+                nextSwitch: "Превключване на следваща връзка",
+                arrowToScroll: "Натиснете лявата стрелка, за да превъртите назад, и дясната стрелка, за да преминете напред",
+                sideController: "Показване на контролната лента за пагинация в страничната лента",
+                sideControllerScroll: "Превключване на превъртането",
+                sideControllerAlways: "Винаги показване",
+                hideLoadingIcon: "Скриване на анимацията за зареждане",
+                hideBarArrow: "Скриване на стрелката за лентата на страницата",
+                duplicate: "Инсталиран е дубликат на Pagetual, проверете вашия мениджър на скриптове!",
+                forceStateIframe: "Вграждане на цялата страница като iframe",
+                forceStateDynamic: "Зареждане на динамично съдържание чрез iframe",
+                forceStateDisable: "Деактивиране на прелистването на страници на този сайт",
+                autoScrollRate: "Скорост на превъртане (1-1000)",
+                disableAutoScroll: "Спиране на автоматичното превъртане",
+                enableAutoScroll: "Активиране на автоматичното превъртане",
+                toggleAutoScroll: "Превключване на автоматичното превъртане",
+                ruleRequest: "Искане за правило",
+                page: "Страница ",
+                prevPage: "Предишна страница",
+                nextPage: "Следваща страница",
+                errorRulesMustBeArray: "Правилата трябва да са масив!",
+                errorJson: "Грешка в JSON, проверете отново!",
+                editSuccess: "Редактирането е успешно",
+                errorWrongUrl: "Грешен URL, проверете отново!",
+                errorAlreadyExists: "Правило вече съществува!",
+                settingsSaved: "Настройките са запазени, опреснете, за да видите",
+                iframe: "Принудително разделяне от iframe",
+                dynamic: "Динамично зареждане",
+                reloadPage: "Редактирането е завършено, презареждане сега?",
+                copied: "Копирано",
+                noValidContent: "Не е открито валидно съдържание, може да има Captcha",
+                outOfDate: "Скриптът е остарял, моля, актуализирайте до най-новата версия.",
+                hideBarTips: "Скрийте лентата за пагинация, превключете поглъщащото изживяване",
+                setConfigPage: "Задайте текущата страница като страница за конфигурация по подразбиране",
+                wedata2github: "Променете адреса на wedata на огледалния адрес в хранилището на github",
+                addOtherProp: "Добавяне на свойства на правилото",
+                addNextSelector: "Добавяне на съдържание на селектора като nextLink",
+                addPageSelector: "Добавяне на съдържание на селектора като pageElement",
+                propName: "Въведете име на свойството на правилото",
+                propValue: "Въведете стойност на свойството на правилото",
+                customFirst: "Игнориране на кеша за локални персонализирани правила",
+                rulesExample: "Пример за правила",
+                lastPage: "Достигната е последната страница",
+                lastPageTips: "Показване на съвети при достигане на последната страница"
+            }
+        },
+        {
+            name: "Čeština",
+            match: ["cs"],
+            lang: {
+                enableDebug: "Povolit výstup ladění do konzole",
+                updateNotification: "Oznámení po aktualizaci pravidel",
+                disable: "Dočasně zakázat",
+                disableSite: "Přepnout stav zakázání",
+                disableSiteTips: "Na této stránce zakázáno.",
+                enableSiteTips: "Na této stránce povoleno.",
+                enable: "✅Povolit automatické otáčení stránek",
+                tempActive: "Dočasně aktivní",
+                toTop: "Zpět nahoru.",
+                toBottom: "Jít dolů.",
+                current: "Aktuální stránka.",
+                forceIframe: "Vynutit připojení k další stránce",
+                cancelForceIframe: "Zrušit vynucené připojení",
+                configure: "Konfigurovat Pagetual",
+                firstUpdate: "Klikněte sem pro inicializaci výchozího seznamu pravidel",
+                update: "Aktualizovat online pravidla",
+                click2update: "Klikněte pro aktualizaci pravidel z URL nyní",
+                loadNow: "Načíst další automaticky",
+                loadConfirm: "Kolik stránek chcete načíst? (0 znamená nekonečno)",
+                noNext: "Nenalezen žádný další odkaz, vytvořte nové pravidlo",
+                passSec: "Aktualizováno před #t# sekundami",
+                passMin: "Aktualizováno před #t# minutami",
+                passHour: "Aktualizováno před #t# hodinami",
+                passDay: "Aktualizováno před #t# dny",
+                cantDel: "Nelze odstranit vestavěná pravidla",
+                confirmDel: "Jste si jisti, že chcete toto pravidlo odstranit?",
+                updateSucc: "Aktualizace úspěšná",
+                beginUpdate: "Zahajuje se aktualizace, chvíli prosím počkejte",
+                customUrls: "Importovat URL pravidla Pagetual nebo AutoPagerize, jedno URL na řádek.",
+                customRules: "Zadejte vlastní pravidla. <a href='#t#'>✍️Přispějte pravidly</a>",
+                save: "Uložit",
+                loadingText: "Načítání...",
+                opacity: "Neprůhlednost",
+                opacityPlaceholder: "0: skrýt oddělovač",
+                hideBar: "Skrýt oddělovač stránkování",
+                hideBarButNoStop: "Skrýt, ale nezastavit",
+                dbClick2Stop: "Dvojitým kliknutím na prázdné místo pozastavíte",
+                sortTitle: "Třídění se projeví po další aktualizaci pravidel",
+                autoRun: "Automatické povolení (režim černé listiny)",
+                autoLoadNum: "Množství pro přednačtené stránky",
+                turnRate: "Otočte na další stránku, když je méně než 【X】 násobek výšky stránky od zápatí",
+                inputPageNum: "Zadejte číslo stránky pro skok",
+                enableHistory: "Zapsat historii procházení po otočení stránky",
+                enableHistoryAfterInsert: "Zapsat historii procházení ihned po spojení, jinak zapsat po procházení",
+                contentVisibility: "Automaticky přepínat viditelnost obsahu pro zlepšení výkonu vykreslování",
+                initRun: "Otočit stránky ihned po otevření",
+                preload: "Přednačíst další stránku pro zrychlení",
+                click2ImportRule: "Klikněte pro import odkazu na základní pravidla a poté počkejte, dokud se aktualizace nedokončí: ",
+                forceAllBody: "Připojit celé tělo stránky?",
+                openInNewTab: "Otevřít URL adres přídavků v nové kartě",
+                importSucc: "Import dokončen",
+                import: "Importovat",
+                editCurrent: "Upravit pravidlo pro aktuální webovou stránku",
+                editBlacklist: "Upravit černou listinu URL, jeden záznam na řádek, podporuje zástupné znaky [?,*].",
+                upBtnImg: "Ikona zpět nahoru",
+                downBtnImg: "Ikona jít do zápatí",
+                sideControllerIcon: "Ikona bočního panelu",
+                loadingTextTitle: "Načítání",
+                dbClick2StopCtrl: "Klávesa Ctrl",
+                dbClick2StopAlt: "Klávesa Alt",
+                dbClick2StopShift: "Klávesa Shift",
+                dbClick2StopMeta: "Klávesa Meta",
+                dbClick2StopKey: "Klávesová zkratka",
+                pageElementCss: "Vlastní styl pro hlavní prvky stránky",
+                customCss: "Vlastní kompletní CSS",
+                firstAlert: "Neimportovali jste základní pravidlo, vyberte prosím vhodné pravidlo k importu",
+                picker: "Výběr prvků Pagetual",
+                closePicker: "Zavřít výběr Pagetual",
+                pickerPlaceholder: "Výběr prvků (Pouze pro pokročilé uživatele, jinak nechte prázdné)",
+                pickerCheck: "Zkontrolovat výběr a kopírovat",
+                switchSelector: "Kliknutím přepnete prvek",
+                gotoEdit: "Přejít na úpravu pravidla s aktuálním výběrem",
+                manualMode: "Zakázat spojování, ručně přejít na další stránku pomocí klávesy se šipkou doprava (nebo odeslat událost 'pagetual.next')",
+                clickMode: "Zakázat spojování, automaticky kliknout na další stránku při posunutí na konec stránky",
+                pageBarMenu: "Kliknutím na střed lišty stránky otevřete menu výběru",
+                nextSwitch: "Přepnout další odkaz",
+                arrowToScroll: "Stisknutím levé šipky se posunete zpět a pravou šipkou přejdete na stránku",
+                sideController: "Zobrazit ovládací panel stránkování v bočním panelu",
+                sideControllerScroll: "Přepnout posouvání",
+                sideControllerAlways: "Vždy zobrazit",
+                hideLoadingIcon: "Skrýt animaci načítání",
+                hideBarArrow: "Skrýt šipku pro lištu stránky",
+                duplicate: "Duplicitní Pagetual byl nainstalován, zkontrolujte svůj správce skriptů!",
+                forceStateIframe: "Vložit celou stránku jako iframe",
+                forceStateDynamic: "Načíst dynamický obsah přes iframe",
+                forceStateDisable: "Zakázat otáčení stránek на této stránce",
+                autoScrollRate: "Rychlost posouvání (1-1000)",
+                disableAutoScroll: "Zastavit automatické posouvání",
+                enableAutoScroll: "Povolit automatické posouvání",
+                toggleAutoScroll: "Přepnout automatické posouvání",
+                ruleRequest: "Žádost o pravidlo",
+                page: "Stránka ",
+                prevPage: "Předchozí stránka",
+                nextPage: "Další stránka",
+                errorRulesMustBeArray: "Pravidla musí být pole!",
+                errorJson: "Chyba JSON, zkontrolujte znovu!",
+                editSuccess: "Úspěšně upraveno",
+                errorWrongUrl: "Nesprávné URL, zkontrolujte znovu!",
+                errorAlreadyExists: "Pravidlo již existuje!",
+                settingsSaved: "Nastavení jsou uložena, obnovte pro zobrazení",
+                iframe: "Vynucené rozdělení pomocí iframe",
+                dynamic: "Dynamické načítání",
+                reloadPage: "Úprava dokončena, načíst znovu?",
+                copied: "Zkopírováno",
+                noValidContent: "Nebyl zjištěn žádný platný obsah, může být přítomna Captcha",
+                outOfDate: "Skript je zastaralý, aktualizujte prosím na nejnovější verzi.",
+                hideBarTips: "Skrýt lištu stránkování, přepnout pohlcující zážitek",
+                setConfigPage: "Nastavit aktuální stránku jako výchozí konfigurační stránku",
+                wedata2github: "Změnit adresu wedata na zrcadlovou adresu v repozitáři github",
+                addOtherProp: "Přidat vlastnosti pravidla",
+                addNextSelector: "Přidat obsah výběru jako nextLink",
+                addPageSelector: "Přidat obsah výběru jako pageElement",
+                propName: "Zadejte název vlastnosti pravidla",
+                propValue: "Zadejte hodnotu vlastnosti pravidla",
+                customFirst: "Ignorovat mezipaměť pro místní vlastní pravidla",
+                rulesExample: "Příklad pravidel",
+                lastPage: "Dosáhli jste poslední stránky",
+                lastPageTips: "Zobrazit tipy při dosažení poslední stránky"
+            }
+        },
+        {
+            name: "Tiếng Việt",
+            match: ["vi"],
+            lang: {
+                enableDebug: "Bật đầu ra gỡ lỗi vào bảng điều khiển",
+                updateNotification: "Thông báo sau khi cập nhật quy tắc",
+                disable: "Tạm thời vô hiệu hóa",
+                disableSite: "Chuyển đổi trạng thái vô hiệu hóa",
+                disableSiteTips: "Đã vô hiệu hóa trên trang này.",
+                enableSiteTips: "Đã bật trên trang này.",
+                enable: "✅Bật tự động chuyển trang",
+                tempActive: "Tạm thời hoạt động",
+                toTop: "Quay lại đầu trang.",
+                toBottom: "Đi đến cuối trang.",
+                current: "Trang hiện tại.",
+                forceIframe: "Buộc tham gia trang tiếp theo",
+                cancelForceIframe: "Hủy bỏ buộc tham gia",
+                configure: "Cấu hình Pagetual",
+                firstUpdate: "Nhấp vào đây để khởi tạo danh sách quy tắc mặc định",
+                update: "Cập nhật quy tắc trực tuyến",
+                click2update: "Nhấp để cập nhật quy tắc từ url ngay bây giờ",
+                loadNow: "Tải trang tiếp theo tự động",
+                loadConfirm: "Bạn muốn tải bao nhiêu trang? (0 có nghĩa là vô hạn)",
+                noNext: "Không tìm thấy liên kết tiếp theo, vui lòng tạo quy tắc mới",
+                passSec: "Đã cập nhật #t# giây trước",
+                passMin: "Đã cập nhật #t# phút trước",
+                passHour: "Đã cập nhật #t# giờ trước",
+                passDay: "Đã cập nhật #t# ngày trước",
+                cantDel: "Không thể xóa các quy tắc cài sẵn",
+                confirmDel: "Bạn có chắc chắn muốn xóa quy tắc này không?",
+                updateSucc: "Cập nhật thành công",
+                beginUpdate: "Bắt đầu cập nhật, vui lòng đợi một lát",
+                customUrls: "Nhập URL quy tắc Pagetual hoặc AutoPagerize, mỗi URL một dòng.",
+                customRules: "Nhập các quy tắc tùy chỉnh. <a href='#t#'>✍️Đóng góp quy tắc</a>",
+                save: "Lưu",
+                loadingText: "Đang tải...",
+                opacity: "Độ mờ",
+                opacityPlaceholder: "0: ẩn dấu phân cách",
+                hideBar: "Ẩn dấu phân cách phân trang",
+                hideBarButNoStop: "Ẩn nhưng không dừng",
+                dbClick2Stop: "Nhấp đúp vào khoảng trống để tạm dừng",
+                sortTitle: "Việc sắp xếp có hiệu lực sau khi cập nhật quy tắc tiếp theo",
+                autoRun: "Tự động bật (chế độ danh sách đen)",
+                autoLoadNum: "Số lượng trang tải trước",
+                turnRate: "Chuyển sang trang tiếp theo khi còn cách chân trang chưa đến 【X】 lần chiều cao trang",
+                inputPageNum: "Nhập số trang để chuyển đến",
+                enableHistory: "Ghi lại lịch sử duyệt web sau khi chuyển trang",
+                enableHistoryAfterInsert: "Ghi lại lịch sử duyệt web ngay sau khi ghép nối, nếu không thì ghi lại sau khi duyệt",
+                contentVisibility: "Tự động chuyển đổi khả năng hiển thị nội dung để cải thiện hiệu suất hiển thị",
+                initRun: "Chuyển trang ngay sau khi mở",
+                preload: "Tải trước trang tiếp theo để tăng tốc",
+                click2ImportRule: "Nhấp để nhập liên kết quy tắc cơ sở, sau đó đợi cho đến khi cập nhật hoàn tất: ",
+                forceAllBody: "Tham gia toàn bộ nội dung của trang?",
+                openInNewTab: "Mở các url bổ sung trong tab mới",
+                importSucc: "Nhập hoàn tất",
+                import: "Nhập",
+                editCurrent: "Chỉnh sửa quy tắc cho trang web hiện tại",
+                editBlacklist: "Chỉnh sửa danh sách đen url, mỗi mục một dòng, hỗ trợ ký tự đại diện [?,*].",
+                upBtnImg: "Biểu tượng quay lại đầu trang",
+                downBtnImg: "Biểu tượng đi đến chân trang",
+                sideControllerIcon: "Biểu tượng của thanh bên",
+                loadingTextTitle: "Đang tải",
+                dbClick2StopCtrl: "Phím Ctrl",
+                dbClick2StopAlt: "Phím Alt",
+                dbClick2StopShift: "Phím Shift",
+                dbClick2StopMeta: "Phím Meta",
+                dbClick2StopKey: "Phím tắt",
+                pageElementCss: "Kiểu tùy chỉnh cho các phần tử trang chính",
+                customCss: "CSS hoàn chỉnh tùy chỉnh",
+                firstAlert: "Bạn chưa nhập quy tắc cơ sở, vui lòng chọn quy tắc thích hợp để nhập",
+                picker: "Bộ chọn phần tử Pagetual",
+                closePicker: "Đóng bộ chọn Pagetual",
+                pickerPlaceholder: "Bộ chọn phần tử (Chỉ dành cho người dùng nâng cao, nếu không thì để trống)",
+                pickerCheck: "Kiểm tra bộ chọn và sao chép",
+                switchSelector: "Nhấp để chuyển đổi phần tử",
+                gotoEdit: "Chuyển đến chỉnh sửa quy tắc với bộ chọn hiện tại",
+                manualMode: "Vô hiệu hóa việc ghép nối, chuyển đến trang tiếp theo theo cách thủ công bằng phím mũi tên phải (hoặc gửi sự kiện 'pagetual.next')",
+                clickMode: "Vô hiệu hóa việc ghép nối, tự động nhấp vào trang tiếp theo khi cuộn đến cuối trang",
+                pageBarMenu: "Nhấp vào giữa thanh trang để mở menu bộ chọn",
+                nextSwitch: "Chuyển đổi liên kết tiếp theo",
+                arrowToScroll: "Nhấn mũi tên trái để cuộn lại và mũi tên phải để chuyển trang",
+                sideController: "Hiển thị thanh điều khiển phân trang trong thanh bên",
+                sideControllerScroll: "Chuyển đổi cuộn",
+                sideControllerAlways: "Luôn hiển thị",
+                hideLoadingIcon: "Ẩn hoạt ảnh tải",
+                hideBarArrow: "Ẩn mũi tên cho thanh trang",
+                duplicate: "Pagetual trùng lặp đã được cài đặt, hãy kiểm tra trình quản lý tập lệnh của bạn!",
+                forceStateIframe: "Nhúng toàn bộ trang dưới dạng iframe",
+                forceStateDynamic: "Tải nội dung động qua iframe",
+                forceStateDisable: "Vô hiệu hóa việc chuyển trang trên trang này",
+                autoScrollRate: "Tốc độ cuộn (1~1000)",
+                disableAutoScroll: "Dừng cuộn tự động",
+                enableAutoScroll: "Bật cuộn tự động",
+                toggleAutoScroll: "Chuyển đổi cuộn tự động",
+                ruleRequest: "Yêu cầu quy tắc",
+                page: "Trang ",
+                prevPage: "Trang trước",
+                nextPage: "Trang tiếp theo",
+                errorRulesMustBeArray: "Quy tắc phải là một mảng!",
+                errorJson: "Lỗi JSON, hãy kiểm tra lại!",
+                editSuccess: "Chỉnh sửa thành công",
+                errorWrongUrl: "URL sai, hãy kiểm tra lại!",
+                errorAlreadyExists: "Một quy tắc đã tồn tại!",
+                settingsSaved: "Cài đặt đã được lưu, hãy làm mới để xem",
+                iframe: "Tách bắt buộc bằng iframe",
+                dynamic: "Tải động",
+                reloadPage: "Chỉnh sửa hoàn tất, tải lại ngay bây giờ?",
+                copied: "Đã sao chép",
+                noValidContent: "Không phát hiện thấy nội dung hợp lệ, có thể có Captcha",
+                outOfDate: "Tập lệnh đã lỗi thời, vui lòng cập nhật lên phiên bản mới nhất.",
+                hideBarTips: "Ẩn thanh phân trang, chuyển đổi trải nghiệm đắm chìm",
+                setConfigPage: "Đặt trang hiện tại làm trang cấu hình mặc định",
+                wedata2github: "Thay đổi địa chỉ wedata thành địa chỉ nhân bản trong kho lưu trữ github",
+                addOtherProp: "Thêm thuộc tính quy tắc",
+                addNextSelector: "Thêm nội dung bộ chọn làm nextLink",
+                addPageSelector: "Thêm nội dung bộ chọn làm pageElement",
+                propName: "Nhập tên thuộc tính quy tắc",
+                propValue: "Nhập giá trị thuộc tính quy tắc",
+                customFirst: "Bỏ qua bộ nhớ cache cho các quy tắc tùy chỉnh cục bộ",
+                rulesExample: "Ví dụ về quy tắc",
+                lastPage: "Đã đến trang cuối cùng",
+                lastPageTips: "Hiển thị mẹo khi đến trang cuối cùng"
+            }
+        },
+        {
+            name: "Polski",
+            match: ["pl"],
+            lang: {
+                enableDebug: "Włącz wyjście debugowania do konsoli",
+                updateNotification: "Powiadomienie po aktualizacji reguł",
+                disable: "Tymczasowo wyłącz",
+                disableSite: "Przełącz stan wyłączenia",
+                disableSiteTips: "Wyłączone na tej stronie.",
+                enableSiteTips: "Włączone na tej stronie.",
+                enable: "✅Włącz automatyczne przewracanie stron",
+                tempActive: "Tymczasowo aktywne",
+                toTop: "Powrót na górę.",
+                toBottom: "Przejdź na dół.",
+                current: "Bieżąca strona.",
+                forceIframe: "Wymuś dołączenie do następnej strony",
+                cancelForceIframe: "Anuluj wymuszone dołączenie",
+                configure: "Skonfiguruj Pagetual",
+                firstUpdate: "Kliknij tutaj, aby zainicjować domyślną listę reguł",
+                update: "Aktualizuj reguły online",
+                click2update: "Kliknij, aby zaktualizować reguły z adresu URL teraz",
+                loadNow: "Załaduj następną automatycznie",
+                loadConfirm: "Ile stron chcesz załadować? (0 oznacza nieskończoność)",
+                noNext: "Nie znaleziono następnego linku, utwórz nową regułę",
+                passSec: "Zaktualizowano #t# sekund temu",
+                passMin: "Zaktualizowano #t# minut temu",
+                passHour: "Zaktualizowano #t# godzin temu",
+                passDay: "Zaktualizowano #t# dni temu",
+                cantDel: "Nie można usunąć wbudowanych reguł",
+                confirmDel: "Czy na pewno chcesz usunąć tę regułę?",
+                updateSucc: "Aktualizacja zakończona powodzeniem",
+                beginUpdate: "Rozpoczynam aktualizację, proszę czekać",
+                customUrls: "Importuj adres URL reguły Pagetual lub AutoPagerize, jeden adres URL na linię.",
+                customRules: "Wprowadź niestandardowe reguły. <a href='#t#'>✍️Współtwórz reguły</a>",
+                save: "Zapisz",
+                loadingText: "Ładowanie...",
+                opacity: "Przezroczystość",
+                opacityPlaceholder: "0: ukryj separator",
+                hideBar: "Ukryj separator paginacji",
+                hideBarButNoStop: "Ukryj, ale nie zatrzymuj",
+                dbClick2Stop: "Kliknij dwukrotnie w puste miejsce, aby wstrzymać",
+                sortTitle: "Sortowanie zacznie obowiązywać po następnej aktualizacji reguł",
+                autoRun: "Automatyczne włączanie (tryb czarnej listy)",
+                autoLoadNum: "Ilość stron do wstępnego załadowania",
+                turnRate: "Przewróć na następną stronę, gdy odległość od stopki jest mniejsza niż 【X】-krotność wysokości strony",
+                inputPageNum: "Wprowadź numer strony, aby przejść",
+                enableHistory: "Zapisuj historię przeglądania po przewróceniu strony",
+                enableHistoryAfterInsert: "Zapisuj historię przeglądania natychmiast po połączeniu, w przeciwnym razie zapisuj po przeglądaniu",
+                contentVisibility: "Automatycznie przełączaj widoczność zawartości, aby poprawić wydajność renderowania",
+                initRun: "Przewracaj strony natychmiast po otwarciu",
+                preload: "Wstępnie załaduj następną stronę, aby przyspieszyć",
+                click2ImportRule: "Kliknij, aby zaimportować link do podstawowych reguł, a następnie poczekaj na zakończenie aktualizacji: ",
+                forceAllBody: "Dołączyć całą treść strony?",
+                openInNewTab: "Otwórz adresy URL dodatków w nowej karcie",
+                importSucc: "Import zakończony",
+                import: "Importuj",
+                editCurrent: "Edytuj regułę dla bieżącej witryny",
+                editBlacklist: "Edytuj czarną listę adresów URL, jeden wpis na linię, obsługuje symbole wieloznaczne [?,*].",
+                upBtnImg: "Ikona powrotu na górę",
+                downBtnImg: "Ikona przejścia do stopki",
+                sideControllerIcon: "Ikona paska bocznego",
+                loadingTextTitle: "Ładowanie",
+                dbClick2StopCtrl: "Klawisz Ctrl",
+                dbClick2StopAlt: "Klawisz Alt",
+                dbClick2StopShift: "Klawisz Shift",
+                dbClick2StopMeta: "Klawisz Meta",
+                dbClick2StopKey: "Klawisz skrótu",
+                pageElementCss: "Niestandardowy styl dla głównych elementów strony",
+                customCss: "Niestandardowy kompletny CSS",
+                firstAlert: "Nie zaimportowałeś podstawowej reguły, wybierz odpowiednią regułę do zaimportowania",
+                picker: "Selektor elementów Pagetual",
+                closePicker: "Zamknij selektor Pagetual",
+                pickerPlaceholder: "Selektor elementów (Tylko dla zaawansowanych użytkowników, w przeciwnym razie pozostaw puste)",
+                pickerCheck: "Sprawdź selektor i skopiuj",
+                switchSelector: "Kliknij, aby przełączyć element",
+                gotoEdit: "Przejdź do edycji reguły z bieżącym selektorem",
+                manualMode: "Wyłącz łączenie, ręcznie przejdź do następnej strony za pomocą klawisza strzałki w prawo (lub wyślij zdarzenie 'pagetual.next')",
+                clickMode: "Wyłącz łączenie, automatycznie kliknij następną stronę po przewinięciu do końca strony",
+                pageBarMenu: "Kliknij środek paska strony, aby otworzyć menu selektora",
+                nextSwitch: "Przełącz następny link",
+                arrowToScroll: "Naciśnij lewą strzałkę, aby przewinąć do tyłu, a prawą strzałkę, aby przejść do przodu",
+                sideController: "Wyświetl pasek sterowania paginacją na pasku bocznym",
+                sideControllerScroll: "Przełączanie przewijania",
+                sideControllerAlways: "Zawsze pokazuj",
+                hideLoadingIcon: "Ukryj animację ładowania",
+                hideBarArrow: "Ukryj strzałkę paska strony",
+                duplicate: "Zainstalowano zduplikowany Pagetual, sprawdź menedżera skryptów!",
+                forceStateIframe: "Osadź całą stronę jako iframe",
+                forceStateDynamic: "Załaduj dynamiczną zawartość przez iframe",
+                forceStateDisable: "Wyłącz przewracanie stron na tej stronie",
+                autoScrollRate: "Prędkość przewijania (1-1000)",
+                disableAutoScroll: "Zatrzymaj automatyczne przewijanie",
+                enableAutoScroll: "Włącz automatyczne przewijanie",
+                toggleAutoScroll: "Przełącz automatyczne przewijanie",
+                ruleRequest: "Żądanie reguły",
+                page: "Strona ",
+                prevPage: "Poprzednia strona",
+                nextPage: "Następna strona",
+                errorRulesMustBeArray: "Reguły muszą być tablicą!",
+                errorJson: "Błąd JSON, sprawdź ponownie!",
+                editSuccess: "Edycja zakończona pomyślnie",
+                errorWrongUrl: "Błędny adres URL, sprawdź ponownie!",
+                errorAlreadyExists: "Reguła już istnieje!",
+                settingsSaved: "Ustawienia zostały zapisane, odśwież, aby zobaczyć",
+                iframe: "Wymuszony podział przez iframe",
+                dynamic: "Dynamiczne ładowanie",
+                reloadPage: "Edycja zakończona, przeładować teraz?",
+                copied: "Skopiowano",
+                noValidContent: "Nie wykryto prawidłowej zawartości, może być obecna Captcha",
+                outOfDate: "Skrypt jest przestarzały, zaktualizuj do najnowszej wersji.",
+                hideBarTips: "Ukryj pasek paginacji, przełącz na tryb immersyjny",
+                setConfigPage: "Ustaw bieżącą stronę jako domyślną stronę konfiguracji",
+                wedata2github: "Zmień adres wedata na adres lustrzany w repozytorium github",
+                addOtherProp: "Dodaj właściwości reguły",
+                addNextSelector: "Dodaj zawartość selektora jako nextLink",
+                addPageSelector: "Dodaj zawartość selektora jako pageElement",
+                propName: "Wprowadź nazwę właściwości reguły",
+                propValue: "Wprowadź wartość właściwości reguły",
+                customFirst: "Ignoruj pamięć podręczną dla lokalnych niestandardowych reguł",
+                rulesExample: "Przykład reguł",
+                lastPage: "Osiągnięto ostatnią stronę",
+                lastPageTips: "Pokaż wskazówki po osiągnięciu ostatniej strony"
+            }
+        },
+        {
+            name: "Українська",
+            match: ["uk"],
+            lang: {
+                enableDebug: "Увімкнути вивід налагодження в консоль",
+                updateNotification: "Сповіщення після оновлення правил",
+                disable: "Тимчасово вимкнути",
+                disableSite: "Перемкнути стан вимкнення",
+                disableSiteTips: "Вимкнено на цьому сайті.",
+                enableSiteTips: "Увімкнено на цьому сайті.",
+                enable: "✅Увімкнути автоматичне перегортання сторінок",
+                tempActive: "Тимчасово активний",
+                toTop: "Повернутися нагору.",
+                toBottom: "Перейти вниз.",
+                current: "Поточна сторінка.",
+                forceIframe: "Примусово приєднати наступну сторінку",
+                cancelForceIframe: "Скасувати примусове приєднання",
+                configure: "Налаштувати Pagetual",
+                firstUpdate: "Натисніть тут, щоб ініціалізувати стандартний список правил",
+                update: "Оновити онлайн-правила",
+                click2update: "Натисніть, щоб оновити правила з URL зараз",
+                loadNow: "Завантажити наступну автоматично",
+                loadConfirm: "Скільки сторінок ви хочете завантажити? (0 означає нескінченно)",
+                noNext: "Не знайдено наступного посилання, створіть нове правило",
+                passSec: "Оновлено #t# секунд тому",
+                passMin: "Оновлено #t# хвилин тому",
+                passHour: "Оновлено #t# годин тому",
+                passDay: "Оновлено #t# днів тому",
+                cantDel: "Неможливо видалити вбудовані правила",
+                confirmDel: "Ви впевнені, що хочете видалити це правило?",
+                updateSucc: "Оновлення успішне",
+                beginUpdate: "Починається оновлення, зачекайте хвилинку",
+                customUrls: "Імпортувати URL правила Pagetual або AutoPagerize, один URL на рядок.",
+                customRules: "Введіть власні правила. <a href='#t#'>✍️Додайте правила</a>",
+                save: "Зберегти",
+                loadingText: "Завантаження...",
+                opacity: "Непрозорість",
+                opacityPlaceholder: "0: приховати роздільник",
+                hideBar: "Приховати роздільник пагінації",
+                hideBarButNoStop: "Приховати, але не зупиняти",
+                dbClick2Stop: "Двічі клацніть на порожньому місці, щоб призупинити",
+                sortTitle: "Сортування набуде чинності після наступного оновлення правил",
+                autoRun: "Автоматичне ввімкнення (режим чорного списку)",
+                autoLoadNum: "Кількість для попередньо завантажених сторінок",
+                turnRate: "Перегорніть на наступну сторінку, коли до нижнього колонтитула залишиться менше 【X】 висот сторінки",
+                inputPageNum: "Введіть номер сторінки для переходу",
+                enableHistory: "Записувати історію переглядів після перегортання сторінки",
+                enableHistoryAfterInsert: "Записувати історію переглядів одразу після з'єднання, інакше записувати після перегляду",
+                contentVisibility: "Автоматично перемикати видимість вмісту для покращення продуктивності рендерингу",
+                initRun: "Перегортати сторінки одразу після відкриття",
+                preload: "Попередньо завантажити наступну сторінку для прискорення",
+                click2ImportRule: "Натисніть, щоб імпортувати посилання на базові правила, а потім зачекайте, доки оновлення не завершиться: ",
+                forceAllBody: "Приєднати все тіло сторінки?",
+                openInNewTab: "Відкрити URL-адреси доповнень у новій вкладці",
+                importSucc: "Імпорт завершено",
+                import: "Імпортувати",
+                editCurrent: "Редагувати правило для поточного веб-сайту",
+                editBlacklist: "Редагувати чорний список URL-адрес, один запис на рядок, підтримує символи підстановки [?,*].",
+                upBtnImg: "Іконка повернення нагору",
+                downBtnImg: "Іконка переходу до нижнього колонтитула",
+                sideControllerIcon: "Іконка бічної панелі",
+                loadingTextTitle: "Завантаження",
+                dbClick2StopCtrl: "Клавіша Ctrl",
+                dbClick2StopAlt: "Клавіша Alt",
+                dbClick2StopShift: "Клавіша Shift",
+                dbClick2StopMeta: "Клавіша Meta",
+                dbClick2StopKey: "Клавіша швидкого доступу",
+                pageElementCss: "Власний стиль для основних елементів сторінки",
+                customCss: "Власний повний CSS",
+                firstAlert: "Ви не імпортували базове правило, будь ласка, виберіть відповідне правило для імпорту",
+                picker: "Вибір елементів Pagetual",
+                closePicker: "Закрити вибір Pagetual",
+                pickerPlaceholder: "Вибір елементів (Лише для досвідчених користувачів, інакше залиште порожнім)",
+                pickerCheck: "Перевірити селектор і скопіювати",
+                switchSelector: "Натисніть, щоб перемкнути елемент",
+                gotoEdit: "Перейти до редагування правила з поточним селектором",
+                manualMode: "Вимкнути з'єднання, вручну переходити на наступну сторінку за допомогою клавіші зі стрілкою вправо (або надіслати подію 'pagetual.next')",
+                clickMode: "Вимкнути з'єднання, автоматично клацати на наступну сторінку при прокручуванні до кінця сторінки",
+                pageBarMenu: "Натисніть на центр панелі сторінки, щоб відкрити меню вибору",
+                nextSwitch: "Перемкнути наступне посилання",
+                arrowToScroll: "Натисніть ліву стрілку, щоб прокрутити назад, і праву стрілку, щоб перейти на сторінку вперед",
+                sideController: "Відображати панель керування пагінацією в бічній панелі",
+                sideControllerScroll: "Перемикання прокрутки",
+                sideControllerAlways: "Завжди показувати",
+                hideLoadingIcon: "Приховати анімацію завантаження",
+                hideBarArrow: "Приховати стрілку для панелі сторінки",
+                duplicate: "Встановлено дублікат Pagetual, перевірте свій менеджер скриптів!",
+                forceStateIframe: "Вбудувати повну сторінку як iframe",
+                forceStateDynamic: "Завантажувати динамічний вміст через iframe",
+                forceStateDisable: "Вимкнути перегортання сторінок на цьому сайті",
+                autoScrollRate: "Швидкість прокрутки (1-1000)",
+                disableAutoScroll: "Зупинити автоматичну прокрутку",
+                enableAutoScroll: "Увімкнути автоматичну прокрутку",
+                toggleAutoScroll: "Перемкнути автоматичну прокрутку",
+                ruleRequest: "Запит на правило",
+                page: "Сторінка ",
+                prevPage: "Попередня сторінка",
+                nextPage: "Наступна сторінка",
+                errorRulesMustBeArray: "Правила повинні бути масивом!",
+                errorJson: "Помилка JSON, перевірте ще раз!",
+                editSuccess: "Відредаговано успішно",
+                errorWrongUrl: "Неправильна URL-адреса, перевірте ще раз!",
+                errorAlreadyExists: "Правило вже існує!",
+                settingsSaved: "Налаштування збережено, оновіть, щоб переглянути",
+                iframe: "Примусове розділення за допомогою iframe",
+                dynamic: "Динамічне завантаження",
+                reloadPage: "Редагування завершено, перезавантажити зараз?",
+                copied: "Скопійовано",
+                noValidContent: "Не виявлено дійсного вмісту, можливо, є Captcha",
+                outOfDate: "Скрипт застарів, оновіть до останньої версії.",
+                hideBarTips: "Приховати панель пагінації, перемкнути на захоплюючий досвід",
+                setConfigPage: "Встановити поточну сторінку як сторінку конфігурації за замовчуванням",
+                wedata2github: "Змінити адресу wedata на дзеркальну адресу в репозиторії github",
+                addOtherProp: "Додати властивості правила",
+                addNextSelector: "Додати вміст селектора як nextLink",
+                addPageSelector: "Додати вміст селектора як pageElement",
+                propName: "Введіть назву властивості правила",
+                propValue: "Введіть значення властивості правила",
+                customFirst: "Ігнорувати кеш для локальних власних правил",
+                rulesExample: "Приклад правил",
+                lastPage: "Досягнуто останньої сторінки",
+                lastPageTips: "Показувати поради при досягненні останньої сторінки"
+            }
+        },
+        {
+            name: "Türkçe",
+            match: ["tr"],
+            lang: {
+                enableDebug: "Konsola hata ayıklama çıktısını etkinleştir",
+                updateNotification: "Kurallar güncellendikten sonra bildirim",
+                disable: "Geçici olarak devre dışı bırak",
+                disableSite: "Devre dışı bırakma durumunu değiştir",
+                disableSiteTips: "Bu sitede devre dışı bırakıldı.",
+                enableSiteTips: "Bu sitede etkinleştirildi.",
+                enable: "✅Otomatik sayfa çevirmeyi etkinleştir",
+                tempActive: "Geçici olarak aktif",
+                toTop: "Başa dön.",
+                toBottom: "Sona git.",
+                current: "Mevcut sayfa.",
+                forceIframe: "Sonraki sayfaya katılmaya zorla",
+                cancelForceIframe: "Zorla katılmayı iptal et",
+                configure: "Pagetual'ı yapılandır",
+                firstUpdate: "Varsayılan kural listesini başlatmak için buraya tıklayın",
+                update: "Çevrimiçi kuralları güncelle",
+                click2update: "Kuralları şimdi URL'den güncellemek için tıkla",
+                loadNow: "Sonrakini otomatik olarak yükle",
+                loadConfirm: "Kaç sayfa yüklemek istiyorsunuz? (0 sonsuz demektir)",
+                noNext: "Sonraki bağlantı bulunamadı, lütfen yeni bir kural oluşturun",
+                passSec: "#t# saniye önce güncellendi",
+                passMin: "#t# dakika önce güncellendi",
+                passHour: "#t# saat önce güncellendi",
+                passDay: "#t# gün önce güncellendi",
+                cantDel: "Yerleşik kurallar silinemez",
+                confirmDel: "Bu kuralı silmek istediğinizden emin misiniz?",
+                updateSucc: "Güncelleme başarılı",
+                beginUpdate: "Güncelleme başlıyor, lütfen bir dakika bekleyin",
+                customUrls: "Pagetual veya AutoPagerize kural URL'sini içe aktarın, her satıra bir URL.",
+                customRules: "Özel kuralları girin. <a href='#t#'>✍️Kurallara katkıda bulunun</a>",
+                save: "Kaydet",
+                loadingText: "Yükleniyor...",
+                opacity: "Opaklık",
+                opacityPlaceholder: "0: ayırıcıyı gizle",
+                hideBar: "Sayfalandırma ayırıcısını gizle",
+                hideBarButNoStop: "Gizle ama durdurma",
+                dbClick2Stop: "Duraklatmak için boş alana çift tıklayın",
+                sortTitle: "Sıralama bir sonraki kural güncellemesinden sonra etkili olur",
+                autoRun: "Otomatik etkinleştir (kara liste modu)",
+                autoLoadNum: "Önceden yüklenecek sayfa miktarı",
+                turnRate: "Altbilgiden sayfa yüksekliğinin 【X】 katından daha az olduğunda sonraki sayfaya geçin",
+                inputPageNum: "Atlamak için sayfa numarasını girin",
+                enableHistory: "Sayfa çevirdikten sonra tarama geçmişini yaz",
+                enableHistoryAfterInsert: "Birleştirmeden hemen sonra tarama geçmişini yaz, aksi takdirde taramadan sonra yaz",
+                contentVisibility: "Oluşturma performansını iyileştirmek için içerik görünürlüğünü otomatik olarak değiştir",
+                initRun: "Açtıktan hemen sonra sayfaları çevir",
+                preload: "Hızlandırmak için sonraki sayfayı önceden yükle",
+                click2ImportRule: "Temel kurallar bağlantısını içe aktarmak için tıklayın ve ardından güncelleme tamamlanana kadar bekleyin: ",
+                forceAllBody: "Sayfanın tam gövdesine katılsın mı?",
+                openInNewTab: "Eklerin URL'lerini yeni sekmede aç",
+                importSucc: "İçe aktarma tamamlandı",
+                import: "İçe aktar",
+                editCurrent: "Mevcut web sitesi için kuralı düzenle",
+                editBlacklist: "URL kara listesini düzenleyin, her satıra bir giriş, [?,*] joker karakterlerini destekler.",
+                upBtnImg: "Başa dön simgesi",
+                downBtnImg: "Altbilgiye git simgesi",
+                sideControllerIcon: "Kenar çubuğu simgesi",
+                loadingTextTitle: "Yükleniyor",
+                dbClick2StopCtrl: "Ctrl tuşu",
+                dbClick2StopAlt: "Alt tuşu",
+                dbClick2StopShift: "Shift tuşu",
+                dbClick2StopMeta: "Meta tuşu",
+                dbClick2StopKey: "Kısayol tuşu",
+                pageElementCss: "Ana sayfa öğeleri için özel stil",
+                customCss: "Özel tam CSS",
+                firstAlert: "Temel kuralı içe aktarmadınız, lütfen içe aktarmak için uygun kuralı seçin",
+                picker: "Pagetual öğe seçici",
+                closePicker: "Pagetual seçiciyi kapat",
+                pickerPlaceholder: "Öğe seçici (Yalnızca ileri düzey kullanıcılar, aksi takdirde boş bırakın)",
+                pickerCheck: "Seçiciyi kontrol et ve kopyala",
+                switchSelector: "Öğeyi değiştirmek için tıkla",
+                gotoEdit: "Mevcut seçiciyle kuralı düzenlemeye git",
+                manualMode: "Birleştirmeyi devre dışı bırak, sağ ok tuşunu kullanarak sonraki sayfaya manuel olarak ilerle (veya 'pagetual.next' olayını gönder)",
+                clickMode: "Birleştirmeyi devre dışı bırak, sayfanın sonuna kaydırıldığında sonraki sayfayı otomatik olarak tıkla",
+                pageBarMenu: "Seçici menüsünü açmak için sayfa çubuğunun ortasına tıklayın",
+                nextSwitch: "Sonraki bağlantıyı değiştir",
+                arrowToScroll: "Geri kaydırmak için sol oka, sayfayı ilerletmek için sağ oka basın",
+                sideController: "Sayfalandırma kontrol çubuğunu kenar çubuğunda göster",
+                sideControllerScroll: "Kaydırmayı değiştir",
+                sideControllerAlways: "Her zaman göster",
+                hideLoadingIcon: "Yükleme animasyonunu gizle",
+                hideBarArrow: "Sayfa çubuğu için oku gizle",
+                duplicate: "Yinelenen Pagetual yüklendi, komut dosyası yöneticinizi kontrol edin!",
+                forceStateIframe: "Tam sayfayı iframe olarak göm",
+                forceStateDynamic: "Dinamik içeriği iframe aracılığıyla yükle",
+                forceStateDisable: "Bu sitede sayfa çevirmeyi devre dışı bırak",
+                autoScrollRate: "Kaydırma hızı (1-1000)",
+                disableAutoScroll: "Otomatik Kaydırmayı Durdur",
+                enableAutoScroll: "Otomatik Kaydırmayı Etkinleştir",
+                toggleAutoScroll: "Otomatik Kaydırmayı Değiştir",
+                ruleRequest: "Kural İsteği",
+                page: "Sayfa ",
+                prevPage: "Önceki sayfa",
+                nextPage: "Sonraki sayfa",
+                errorRulesMustBeArray: "Kurallar bir Dizi olmalıdır!",
+                errorJson: "JSON hatası, Tekrar kontrol edin!",
+                editSuccess: "Başarıyla düzenlendi",
+                errorWrongUrl: "Yanlış URL, Tekrar kontrol edin!",
+                errorAlreadyExists: "Bir kural zaten var!",
+                settingsSaved: "Ayarlar kaydedildi, görüntülemek için yenileyin",
+                iframe: "Iframe tarafından zorla bölündü",
+                dynamic: "Dinamik yükleme",
+                reloadPage: "Düzenleme tamamlandı, şimdi yeniden yüklensin mi?",
+                copied: "Kopyalandı",
+                noValidContent: "Geçerli içerik algılanmadı, bir Captcha olabilir",
+                outOfDate: "Komut dosyası güncel değil, lütfen en son sürüme güncelleyin.",
+                hideBarTips: "Sayfalandırma çubuğunu gizle, sürükleyici deneyime geç",
+                setConfigPage: "Mevcut sayfayı varsayılan yapılandırma sayfası olarak ayarla",
+                wedata2github: "Wedata adresini github deposundaki ayna adresine değiştirin",
+                addOtherProp: "Kural özellikleri ekle",
+                addNextSelector: "Seçici içeriğini nextLink olarak ekle",
+                addPageSelector: "Seçici içeriğini pageElement olarak ekle",
+                propName: "Kural özelliği adını girin",
+                propValue: "Kural özelliği değerini girin",
+                customFirst: "Yerel özel kurallar için önbelleği yoksay",
+                rulesExample: "Kurallar Örneği",
+                lastPage: "Son sayfaya ulaşıldı",
+                lastPageTips: "Son sayfaya ulaşıldığında ipuçları göster"
+            }
+        },
+        {
+            name: "Nederlands",
+            match: ["nl"],
+            lang: {
+                enableDebug: "Foutopsporingsuitvoer naar console inschakelen",
+                updateNotification: "Melding nadat regels zijn bijgewerkt",
+                disable: "Tijdelijk uitschakelen",
+                disableSite: "Uitgeschakelde status omschakelen",
+                disableSiteTips: "Uitgeschakeld op deze site.",
+                enableSiteTips: "Ingeschakeld op deze site.",
+                enable: "✅Automatisch pagina's omslaan inschakelen",
+                tempActive: "Tijdelijk actief",
+                toTop: "Terug naar boven.",
+                toBottom: "Ga naar beneden.",
+                current: "Huidige pagina.",
+                forceIframe: "Dwingen om volgende pagina te koppelen",
+                cancelForceIframe: "Gedwongen koppeling annuleren",
+                configure: "Pagetual configureren",
+                firstUpdate: "Klik hier om de standaardregellijst te initialiseren",
+                update: "Online regels bijwerken",
+                click2update: "Klik om regels nu vanaf URL bij te werken",
+                loadNow: "Laad volgende automatisch",
+                loadConfirm: "Hoeveel pagina's wilt u laden? (0 betekent oneindig)",
+                noNext: "Geen volgende link gevonden, maak een nieuwe regel",
+                passSec: "#t# seconden geleden bijgewerkt",
+                passMin: "#t# minuten geleden bijgewerkt",
+                passHour: "#t# uur geleden bijgewerkt",
+                passDay: "#t# dagen geleden bijgewerkt",
+                cantDel: "Ingebouwde regels kunnen niet worden verwijderd",
+                confirmDel: "Weet u zeker dat u deze regel wilt verwijderen?",
+                updateSucc: "Update geslaagd",
+                beginUpdate: "Start update, een ogenblik geduld",
+                customUrls: "Importeer Pagetual of AutoPagerize regel-URL, één URL per regel.",
+                customRules: "Voer aangepaste regels in. <a href='#t#'>✍️Draag regels bij</a>",
+                save: "Opslaan",
+                loadingText: "Laden...",
+                opacity: "Dekking",
+                opacityPlaceholder: "0: verberg scheidingsteken",
+                hideBar: "Verberg het pagineringsscheidingsteken",
+                hideBarButNoStop: "Verbergen maar niet stoppen",
+                dbClick2Stop: "Dubbelklik op de lege ruimte om te pauzeren",
+                sortTitle: "Sorteren wordt van kracht na de volgende regelupdate",
+                autoRun: "Automatisch inschakelen (zwarte lijst-modus)",
+                autoLoadNum: "Aantal voor vooraf geladen pagina's",
+                turnRate: "Sla de volgende pagina om wanneer deze minder dan 【X】 keer de paginahoogte van de voettekst is",
+                inputPageNum: "Voer paginanummer in om te springen",
+                enableHistory: "Schrijf browsegeschiedenis na het omslaan van de pagina",
+                enableHistoryAfterInsert: "Schrijf browsegeschiedenis onmiddellijk na het splitsen, anders schrijven na het browsen",
+                contentVisibility: "Schakel automatisch de zichtbaarheid van inhoud om de renderprestaties te verbeteren",
+                initRun: "Sla pagina's onmiddellijk na het openen om",
+                preload: "Laad de volgende pagina vooraf om te versnellen",
+                click2ImportRule: "Klik om de link met basisregels te importeren en wacht vervolgens tot de update is voltooid: ",
+                forceAllBody: "Volledige body van de pagina koppelen?",
+                openInNewTab: "Open URL's van toevoegingen in een nieuw tabblad",
+                importSucc: "Importeren voltooid",
+                import: "Importeren",
+                editCurrent: "Regel voor huidige website bewerken",
+                editBlacklist: "Bewerk de URL-zwarte lijst, één item per regel, ondersteunt [?,*] jokertekens.",
+                upBtnImg: "Pictogram terug naar boven",
+                downBtnImg: "Pictogram ga naar voettekst",
+                sideControllerIcon: "Pictogram zijbalk",
+                loadingTextTitle: "Laden",
+                dbClick2StopCtrl: "Ctrl-toets",
+                dbClick2StopAlt: "Alt-toets",
+                dbClick2StopShift: "Shift-toets",
+                dbClick2StopMeta: "Meta-toets",
+                dbClick2StopKey: "Sneltoets",
+                pageElementCss: "Aangepaste stijl voor hoofdpagina-elementen",
+                customCss: "Aangepaste volledige CSS",
+                firstAlert: "U heeft de basisregel niet geïmporteerd, selecteer de juiste regel om te importeren",
+                picker: "Pagetual-elementenkiezer",
+                closePicker: "Pagetual-kiezer sluiten",
+                pickerPlaceholder: "Elementenkiezer (Alleen voor gevorderde gebruikers, laat anders leeg)",
+                pickerCheck: "Controleer kiezer en kopieer",
+                switchSelector: "Klik om van element te wisselen",
+                gotoEdit: "Ga naar regel bewerken met huidige kiezer",
+                manualMode: "Schakel splitsen uit, ga handmatig naar de volgende pagina met de rechterpijltoets (of verstuur gebeurtenis 'pagetual.next')",
+                clickMode: "Schakel splitsen uit, klik automatisch op de volgende pagina bij het scrollen naar het einde van de pagina",
+                pageBarMenu: "Klik op het midden van de paginabalk om het kiezermenu te openen",
+                nextSwitch: "Wissel volgende link",
+                arrowToScroll: "Druk op de linkerpijl om terug te scrollen en op de rechterpijl om naar de volgende pagina te gaan",
+                sideController: "Toon de pagineringsbalk in de zijbalk",
+                sideControllerScroll: "Scroll-schakelaar",
+                sideControllerAlways: "Altijd tonen",
+                hideLoadingIcon: "Verberg laadanimatie",
+                hideBarArrow: "Verberg pijl voor paginabalk",
+                duplicate: "Dubbele Pagetual is geïnstalleerd, controleer uw scriptmanager!",
+                forceStateIframe: "Volledige pagina insluiten als iframe",
+                forceStateDynamic: "Laad dynamische inhoud via iframe",
+                forceStateDisable: "Schakel het omslaan van pagina's op deze site uit",
+                autoScrollRate: "Scrollsnelheid (1-1000)",
+                disableAutoScroll: "Stop automatisch scrollen",
+                enableAutoScroll: "Schakel automatisch scrollen in",
+                toggleAutoScroll: "Schakel automatisch scrollen om",
+                ruleRequest: "Regelverzoek",
+                page: "Pagina ",
+                prevPage: "Vorige pagina",
+                nextPage: "Volgende pagina",
+                errorRulesMustBeArray: "Regels moeten een array zijn!",
+                errorJson: "JSON-fout, controleer opnieuw!",
+                editSuccess: "Succesvol bewerkt",
+                errorWrongUrl: "Verkeerde URL, controleer opnieuw!",
+                errorAlreadyExists: "Er bestaat al een regel!",
+                settingsSaved: "De instellingen zijn opgeslagen, ververs om te bekijken",
+                iframe: "Gedwongen gesplitst door iframe",
+                dynamic: "Dynamisch laden",
+                reloadPage: "Bewerking voltooid, nu opnieuw laden?",
+                copied: "Gekopieerd",
+                noValidContent: "Geen geldige inhoud gedetecteerd, er is mogelijk een Captcha aanwezig",
+                outOfDate: "Het script is verouderd, update naar de nieuwste versie.",
+                hideBarTips: "Verberg de pagineringsbalk, schakel de meeslepende ervaring om",
+                setConfigPage: "Stel de huidige pagina in als de standaardconfiguratiepagina",
+                wedata2github: "Wijzig het wedata-adres in het spiegeladres in de github-repository",
+                addOtherProp: "Voeg regeleigenschappen toe",
+                addNextSelector: "Voeg kiezerinhoud toe als nextLink",
+                addPageSelector: "Voeg kiezerinhoud toe als pageElement",
+                propName: "Voer de naam van de regeleigenschap in",
+                propValue: "Voer de waarde van de regeleigenschap in",
+                customFirst: "Cache negeren voor lokale aangepaste regels",
+                rulesExample: "Voorbeeld van regels",
+                lastPage: "Laatste pagina bereikt",
+                lastPageTips: "Toon tips bij het bereiken van de laatste pagina"
+            }
+        },
+        {
+            name: "Dansk",
+            match: ["da"],
+            lang: {
+                enableDebug: "Aktivér fejlfindingsoutput til konsollen",
+                updateNotification: "Meddelelse efter opdatering af regler",
+                disable: "Deaktiver midlertidigt",
+                disableSite: "Skift deaktiveret tilstand",
+                disableSiteTips: "Deaktiveret på dette websted.",
+                enableSiteTips: "Aktiveret på dette websted.",
+                enable: "✅Aktivér automatisk sidevending",
+                tempActive: "Midlertidigt aktiv",
+                toTop: "Tilbage til toppen.",
+                toBottom: "Gå til bunden.",
+                current: "Nuværende side.",
+                forceIframe: "Tving tilslutning til næste side",
+                cancelForceIframe: "Annuller tvungen tilslutning",
+                configure: "Konfigurer Pagetual",
+                firstUpdate: "Klik her for at initialisere standardregellisten",
+                update: "Opdater onlineregler",
+                click2update: "Klik for at opdatere regler fra URL nu",
+                loadNow: "Indlæs næste automatisk",
+                loadConfirm: "Hvor mange sider vil du indlæse? (0 betyder uendelig)",
+                noNext: "Intet næste link fundet, opret en ny regel",
+                passSec: "Opdateret for #t# sekunder siden",
+                passMin: "Opdateret for #t# minutter siden",
+                passHour: "Opdateret for #t# timer siden",
+                passDay: "Opdateret for #t# dage siden",
+                cantDel: "Kan ikke slette indbyggede regler",
+                confirmDel: "Er du sikker på, at du vil slette denne regel?",
+                updateSucc: "Opdatering lykkedes",
+                beginUpdate: "Starter opdatering, vent venligst et øjeblik",
+                customUrls: "Importer Pagetual- eller AutoPagerize-regel-URL, én URL pr. linje.",
+                customRules: "Indtast brugerdefinerede regler. <a href='#t#'>✍️Bidrag med regler</a>",
+                save: "Gem",
+                loadingText: "Indlæser...",
+                opacity: "Opacitet",
+                opacityPlaceholder: "0: skjul afstandsstykke",
+                hideBar: "Skjul pagineringsafstandsstykket",
+                hideBarButNoStop: "Skjul, men stop ikke",
+                dbClick2Stop: "Dobbeltklik på det tomme rum for at sætte på pause",
+                sortTitle: "Sortering træder i kraft efter næste regelopdatering",
+                autoRun: "Automatisk aktivering (sortlistetilstand)",
+                autoLoadNum: "Antal for forudindlæste sider",
+                turnRate: "Vend til næste side, når den er mindre end 【X】 gange sidehøjden fra sidefoden",
+                inputPageNum: "Indtast sidetal for at hoppe",
+                enableHistory: "Skriv browserhistorik efter sidevending",
+                enableHistoryAfterInsert: "Skriv browserhistorik umiddelbart efter splejsning, ellers skriv efter browsing",
+                contentVisibility: "Skift automatisk indholdssynlighed for at forbedre gengivelsesydelsen",
+                initRun: "Vend sider umiddelbart efter åbning",
+                preload: "Forudindlæs næste side for at fremskynde",
+                click2ImportRule: "Klik for at importere link til grundregler, og vent derefter, indtil opdateringen er fuldført: ",
+                forceAllBody: "Tilslut hele sidens krop?",
+                openInNewTab: "Åbn URL'er for tilføjelser i ny fane",
+                importSucc: "Import fuldført",
+                import: "Importer",
+                editCurrent: "Rediger regel for nuværende websted",
+                editBlacklist: "Rediger URL-sortlisten, én post pr. linje, understøtter [?,*] jokertegn.",
+                upBtnImg: "Ikon for tilbage til toppen",
+                downBtnImg: "Ikon for at gå til sidefod",
+                sideControllerIcon: "Sidebjælkeikon",
+                loadingTextTitle: "Indlæser",
+                dbClick2StopCtrl: "Ctrl-tast",
+                dbClick2StopAlt: "Alt-tast",
+                dbClick2StopShift: "Shift-tast",
+                dbClick2StopMeta: "Meta-tast",
+                dbClick2StopKey: "Genvejstast",
+                pageElementCss: "Brugerdefineret stil for hovedsideelementer",
+                customCss: "Brugerdefineret komplet CSS",
+                firstAlert: "Du har ikke importeret grundreglen, vælg den relevante regel at importere",
+                picker: "Pagetual-elementvælger",
+                closePicker: "Luk Pagetual-vælger",
+                pickerPlaceholder: "Elementvælger (Kun avancerede brugere, ellers lad være tomt)",
+                pickerCheck: "Kontroller vælger og kopier",
+                switchSelector: "Klik for at skifte element",
+                gotoEdit: "Gå til redigeringsregel med nuværende vælger",
+                manualMode: "Deaktiver splejsning, gå manuelt frem til næste side ved hjælp af højre piletast (eller send hændelsen 'pagetual.next')",
+                clickMode: "Deaktiver splejsning, klik automatisk på næste side, når du ruller til slutningen af siden",
+                pageBarMenu: "Klik på midten af sidebjælken for at åbne vælgermenuen",
+                nextSwitch: "Skift næste link",
+                arrowToScroll: "Tryk på venstre pil for at rulle tilbage og højre pil for at gå frem en side",
+                sideController: "Vis pagineringskontrolbjælken i sidebjælken",
+                sideControllerScroll: "Rul-skift",
+                sideControllerAlways: "Vis altid",
+                hideLoadingIcon: "Skjul indlæsningsanimation",
+                hideBarArrow: "Skjul pil for sidebjælke",
+                duplicate: "Duplikat Pagetual er blevet installeret, tjek din scriptmanager!",
+                forceStateIframe: "Integrer hele siden som en iframe",
+                forceStateDynamic: "Indlæs dynamisk indhold via iframe",
+                forceStateDisable: "Deaktiver sidevending på dette websted",
+                autoScrollRate: "Rullehastighed (1-1000)",
+                disableAutoScroll: "Stop automatisk rulning",
+                enableAutoScroll: "Aktivér automatisk rulning",
+                toggleAutoScroll: "Skift automatisk rulning",
+                ruleRequest: "Regelanmodning",
+                page: "Side ",
+                prevPage: "Forrige side",
+                nextPage: "Næste side",
+                errorRulesMustBeArray: "Regler skal være en matrix!",
+                errorJson: "JSON-fejl, tjek igen!",
+                editSuccess: "Redigering lykkedes",
+                errorWrongUrl: "Forkert URL, tjek igen!",
+                errorAlreadyExists: "En regel eksisterer allerede!",
+                settingsSaved: "Indstillingerne er gemt, opdater for at se",
+                iframe: "Tvunget opdelt af iframe",
+                dynamic: "Dynamisk indlæsning",
+                reloadPage: "Redigering fuldført, genindlæs nu?",
+                copied: "Kopieret",
+                noValidContent: "Intet gyldigt indhold fundet, en Captcha kan være til stede",
+                outOfDate: "Scriptet er forældet, opdater venligst til den nyeste version.",
+                hideBarTips: "Skjul pagineringsbjælken, skift til en fordybende oplevelse",
+                setConfigPage: "Indstil den aktuelle side som standardkonfigurationsside",
+                wedata2github: "Skift wedata-adressen til spejladressen i github-depotet",
+                addOtherProp: "Tilføj regelegenskaber",
+                addNextSelector: "Tilføj vælgerindhold som nextLink",
+                addPageSelector: "Tilføj vælgerindhold som pageElement",
+                propName: "Indtast regelegenskabsnavn",
+                propValue: "Indtast regelegenskabsværdi",
+                customFirst: "Ignorer cache for lokale brugerdefinerede regler",
+                rulesExample: "Regeleksempel",
+                lastPage: "Nåede den sidste side",
+                lastPageTips: "Vis tips, når du når den sidste side"
+            }
+        },
+        {
+            name: "Français (Canada)",
+            match: ["fr-CA"],
+            lang: {
+                enableDebug: "Activer la sortie de débogage dans la console",
+                updateNotification: "Notification après la mise à jour des règles",
+                disable: "Désactiver temporairement",
+                disableSite: "Basculer l'état de désactivation",
+                disableSiteTips: "Désactivé sur ce site.",
+                enableSiteTips: "Activé sur ce site.",
+                enable: "✅Activer le changement de page automatique",
+                tempActive: "Temporairement actif",
+                toTop: "Retour en haut.",
+                toBottom: "Aller en bas.",
+                current: "Page actuelle.",
+                forceIframe: "Forcer la jonction de la page suivante",
+                cancelForceIframe: "Annuler la jonction forcée",
+                configure: "Configurer Pagetual",
+                firstUpdate: "Cliquez ici pour initialiser la liste de règles par défaut",
+                update: "Mettre à jour les règles en ligne",
+                click2update: "Cliquez pour mettre à jour les règles depuis l'URL maintenant",
+                loadNow: "Charger la suite automatiquement",
+                loadConfirm: "Combien de pages voulez-vous charger ? (0 pour infini)",
+                noNext: "Aucun lien suivant trouvé, veuillez créer une nouvelle règle",
+                passSec: "Mis à jour il y a #t# secondes",
+                passMin: "Mis à jour il y a #t# minutes",
+                passHour: "Mis à jour il y a #t# heures",
+                passDay: "Mis à jour il y a #t# jours",
+                cantDel: "Impossible de supprimer les règles intégrées",
+                confirmDel: "Êtes-vous sûr de vouloir supprimer cette règle ?",
+                updateSucc: "Mise à jour réussie",
+                beginUpdate: "Début de la mise à jour, veuillez patienter",
+                customUrls: "Importer l'URL des règles Pagetual ou AutoPagerize, une URL par ligne.",
+                customRules: "Saisir des règles personnalisées. <a href='#t#'>✍️Contribuer aux règles</a>",
+                save: "Enregistrer",
+                loadingText: "Chargement en cours...",
+                opacity: "Opacité",
+                opacityPlaceholder: "0 : masquer le séparateur",
+                hideBar: "Masquer le séparateur de pagination",
+                hideBarButNoStop: "Masquer mais ne pas arrêter",
+                dbClick2Stop: "Double-cliquez sur l'espace vide pour mettre en pause",
+                sortTitle: "Le tri prendra effet après la prochaine mise à jour des règles",
+                autoRun: "Activation automatique (mode liste noire)",
+                autoLoadNum: "Nombre de pages à précharger",
+                turnRate: "Passer à la page suivante lorsqu'elle est à moins de 【X】 fois la hauteur de la page du pied de page",
+                inputPageNum: "Entrez le numéro de page pour y accéder",
+                enableHistory: "Inscrire l'historique de navigation après le changement de page",
+                enableHistoryAfterInsert: "Inscrire l'historique de navigation immédiatement après la jonction, sinon après la navigation",
+                contentVisibility: "Basculer automatiquement content-visibility pour améliorer les performances de rendu",
+                initRun: "Changer de page immédiatement après l'ouverture",
+                preload: "Précharger la page suivante pour accélérer",
+                click2ImportRule: "Cliquez pour importer le lien des règles de base, puis attendez la fin de la mise à jour : ",
+                forceAllBody: "Joindre le corps complet de la page ?",
+                openInNewTab: "Ouvrir les URL ajoutées dans un nouvel onglet",
+                importSucc: "Importation terminée",
+                import: "Importer",
+                editCurrent: "Modifier la règle pour le site actuel",
+                editBlacklist: "Modifier la liste noire d'URL, une entrée par ligne, supporte les jokers [?,*].",
+                upBtnImg: "Icône de retour en haut",
+                downBtnImg: "Icône d'aller en bas de page",
+                sideControllerIcon: "Icône de la barre latérale",
+                loadingTextTitle: "Chargement",
+                dbClick2StopCtrl: "Touche Ctrl",
+                dbClick2StopAlt: "Touche Alt",
+                dbClick2StopShift: "Touche Maj",
+                dbClick2StopMeta: "Touche Méta",
+                dbClick2StopKey: "Touche de raccourci",
+                pageElementCss: "Style personnalisé pour les éléments principaux de la page",
+                customCss: "CSS complet personnalisé",
+                firstAlert: "Vous n'avez pas importé la règle de base, veuillez sélectionner la règle appropriée à importer",
+                picker: "Sélecteur d'éléments Pagetual",
+                closePicker: "Fermer le sélecteur Pagetual",
+                pickerPlaceholder: "Sélecteur d'élément (Utilisateurs avancés seulement, laissez vide sinon)",
+                pickerCheck: "Vérifier le sélecteur et copier",
+                switchSelector: "Cliquez pour changer d'élément",
+                gotoEdit: "Aller à l'édition de la règle avec le sélecteur actuel",
+                manualMode: "Désactiver la jonction, avancer manuellement à la page suivante avec la flèche droite (ou envoyer l'événement 'pagetual.next')",
+                clickMode: "Désactiver la jonction, cliquer automatiquement sur la page suivante en faisant défiler jusqu'à la fin de la page",
+                pageBarMenu: "Cliquez au centre de la barre de page pour ouvrir le menu du sélecteur",
+                nextSwitch: "Changer de lien suivant",
+                arrowToScroll: "Appuyez sur la flèche gauche pour revenir en arrière et la flèche droite pour avancer",
+                sideController: "Afficher la barre de contrôle de pagination dans la barre latérale",
+                sideControllerScroll: "Afficher au défilement",
+                sideControllerAlways: "Toujours afficher",
+                hideLoadingIcon: "Masquer l'animation de chargement",
+                hideBarArrow: "Masquer les flèches de la barre de page",
+                duplicate: "Un doublon de Pagetual a été installé, vérifiez votre gestionnaire de scripts !",
+                forceStateIframe: "Intégrer la page complète en tant qu'iframe",
+                forceStateDynamic: "Charger le contenu dynamique via iframe",
+                forceStateDisable: "Désactiver le changement de page sur ce site",
+                autoScrollRate: "Vitesse de défilement (1~1000)",
+                disableAutoScroll: "Arrêter le défilement auto",
+                enableAutoScroll: "Activer le défilement auto",
+                toggleAutoScroll: "Basculer le défilement auto",
+                ruleRequest: "Demande de règle",
+                page: "Page ",
+                prevPage: "Page préc.",
+                nextPage: "Page suiv.",
+                errorRulesMustBeArray: "Les règles doivent être un tableau (Array) !",
+                errorJson: "Erreur JSON, veuillez vérifier !",
+                editSuccess: "Modification réussie",
+                errorWrongUrl: "URL incorrecte, veuillez vérifier !",
+                errorAlreadyExists: "Une règle existe déjà !",
+                settingsSaved: "Les paramètres sont enregistrés, actualisez pour voir les changements",
+                iframe: "Division forcée par iframe",
+                dynamic: "Chargement dynamique",
+                reloadPage: "Modification terminée, recharger maintenant ?",
+                copied: "Copié",
+                noValidContent: "Aucun contenu valide détecté, un Captcha peut être présent",
+                outOfDate: "Le script est obsolète, veuillez mettre à jour vers la dernière version.",
+                hideBarTips: "Masquer la barre de pagination, basculer l'expérience immersive",
+                setConfigPage: "Définir la page actuelle comme page de configuration par défaut",
+                wedata2github: "Changer l'adresse wedata pour l'adresse miroir dans le dépôt github",
+                addOtherProp: "Ajouter des propriétés à la règle",
+                addNextSelector: "Ajouter le contenu du sélecteur comme nextLink",
+                addPageSelector: "Ajouter le contenu du sélecteur comme pageElement",
+                propName: "Entrez le nom de la propriété de la règle",
+                propValue: "Entrez la valeur de la propriété de la règle",
+                customFirst: "Ignorer le cache pour les règles personnalisées locales",
+                rulesExample: "Exemple de règles",
+                lastPage: "Dernière page atteinte",
+                lastPageTips: "Afficher une notification en atteignant la dernière page"
+            }
+        },
+        {
+            name: "Bahasa Indonesia",
+            match: ["id"],
+            lang: {
+                enableDebug: "Aktifkan output debug ke konsol",
+                updateNotification: "Notifikasi setelah aturan diperbarui",
+                disable: "Nonaktifkan sementara",
+                disableSite: "Ubah status nonaktif",
+                disableSiteTips: "Dinonaktifkan di situs ini.",
+                enableSiteTips: "Diaktifkan di situs ini.",
+                enable: "✅Aktifkan pembalik halaman otomatis",
+                tempActive: "Aktif sementara",
+                toTop: "Kembali ke Atas.",
+                toBottom: "Pergi ke Bawah.",
+                current: "Halaman Saat Ini.",
+                forceIframe: "Paksa untuk menggabungkan halaman berikutnya",
+                cancelForceIframe: "Batalkan penggabungan paksa",
+                configure: "Konfigurasi Pagetual",
+                firstUpdate: "Klik di sini untuk menginisialisasi daftar aturan default",
+                update: "Perbarui aturan online",
+                click2update: "Klik untuk memperbarui aturan dari URL sekarang",
+                loadNow: "Muat berikutnya secara otomatis",
+                loadConfirm: "Berapa halaman yang ingin Anda muat? (0 berarti tak terbatas)",
+                noNext: "Tautan berikutnya tidak ditemukan, harap buat aturan baru",
+                passSec: "Diperbarui #t# detik yang lalu",
+                passMin: "Diperbarui #t# menit yang lalu",
+                passHour: "Diperbarui #t# jam yang lalu",
+                passDay: "Diperbarui #t# hari yang lalu",
+                cantDel: "Tidak dapat menghapus aturan bawaan",
+                confirmDel: "Apakah Anda yakin ingin menghapus aturan ini?",
+                updateSucc: "Pembaruan berhasil",
+                beginUpdate: "Memulai pembaruan, harap tunggu sebentar",
+                customUrls: "Impor URL aturan Pagetual atau AutoPagerize, satu URL per baris.",
+                customRules: "Masukkan aturan khusus. <a href='#t#'>✍️Kontribusi aturan</a>",
+                save: "Simpan",
+                loadingText: "Sedang Memuat...",
+                opacity: "Opasitas",
+                opacityPlaceholder: "0: sembunyikan pemisah",
+                hideBar: "Sembunyikan pemisah paginasi",
+                hideBarButNoStop: "Sembunyikan tapi jangan hentikan",
+                dbClick2Stop: "Klik dua kali pada ruang kosong untuk menjeda",
+                sortTitle: "Pengurutan berlaku setelah pembaruan aturan berikutnya",
+                autoRun: "Aktifkan otomatis (mode daftar hitam)",
+                autoLoadNum: "Jumlah halaman pramuat",
+                turnRate: "Buka halaman berikutnya saat jarak dari footer kurang dari 【X】 kali tinggi halaman",
+                inputPageNum: "Masukkan nomor halaman untuk melompat",
+                enableHistory: "Tulis riwayat penjelajahan setelah membalik halaman",
+                enableHistoryAfterInsert: "Tulis riwayat penjelajahan segera setelah penyambungan, jika tidak, tulis setelah menjelajah",
+                contentVisibility: "Secara otomatis mengganti content-visibility untuk meningkatkan kinerja rendering",
+                initRun: "Balik halaman segera setelah dibuka",
+                preload: "Pramuat halaman berikutnya untuk mempercepat",
+                click2ImportRule: "Klik untuk mengimpor tautan aturan dasar, lalu tunggu hingga pembaruan selesai: ",
+                forceAllBody: "Gabungkan seluruh badan halaman?",
+                openInNewTab: "Buka URL tambahan di tab baru",
+                importSucc: "Impor selesai",
+                import: "Impor",
+                editCurrent: "Edit aturan untuk situs web saat ini",
+                editBlacklist: "Edit daftar hitam URL, satu entri per baris, Mendukung wildcard [?,*].",
+                upBtnImg: "Ikon kembali ke atas",
+                downBtnImg: "Ikon pergi ke footer",
+                sideControllerIcon: "Ikon bilah sisi",
+                loadingTextTitle: "Memuat",
+                dbClick2StopCtrl: "Tombol Ctrl",
+                dbClick2StopAlt: "Tombol Alt",
+                dbClick2StopShift: "Tombol Shift",
+                dbClick2StopMeta: "Tombol Meta",
+                dbClick2StopKey: "Tombol pintas",
+                pageElementCss: "Gaya kustom untuk elemen halaman utama",
+                customCss: "CSS kustom lengkap",
+                firstAlert: "Anda belum mengimpor aturan dasar, silakan pilih aturan yang sesuai untuk diimpor",
+                picker: "Pemilih elemen Pagetual",
+                closePicker: "Tutup pemilih Pagetual",
+                pickerPlaceholder: "Selektor elemen, (Hanya pengguna tingkat lanjut, biarkan kosong jika tidak)",
+                pickerCheck: "Periksa selektor dan salin",
+                switchSelector: "Klik untuk mengganti elemen",
+                gotoEdit: "Pergi ke edit aturan dengan selektor saat ini",
+                manualMode: "Nonaktifkan penyambungan, maju ke halaman berikutnya secara manual menggunakan tombol panah kanan (atau kirim acara 'pagetual.next')",
+                clickMode: "Nonaktifkan penyambungan, klik halaman berikutnya secara otomatis saat menggulir ke akhir halaman",
+                pageBarMenu: "Klik tengah bilah halaman untuk membuka menu pemilih",
+                nextSwitch: "Ganti tautan berikutnya",
+                arrowToScroll: "Tekan panah kiri untuk menggulir ke belakang dan panah kanan untuk maju halaman",
+                sideController: "Tampilkan bilah kontrol paging di bilah sisi",
+                sideControllerScroll: "Tampilkan saat bergulir",
+                sideControllerAlways: "Selalu tampilkan",
+                hideLoadingIcon: "Sembunyikan animasi memuat",
+                hideBarArrow: "Sembunyikan panah untuk bilah halaman",
+                duplicate: "Pagetual duplikat telah diinstal, periksa manajer skrip Anda!",
+                forceStateIframe: "Sematkan halaman penuh sebagai iframe",
+                forceStateDynamic: "Muat konten dinamis melalui iframe",
+                forceStateDisable: "Nonaktifkan pembalik halaman di situs ini",
+                autoScrollRate: "Kecepatan gulir (1~1000)",
+                disableAutoScroll: "Hentikan Gulir Otomatis",
+                enableAutoScroll: "Aktifkan Gulir Otomatis",
+                toggleAutoScroll: "Ubah Gulir Otomatis",
+                ruleRequest: "Permintaan Aturan",
+                page: "Halaman ",
+                prevPage: "Halaman seb.",
+                nextPage: "Halaman ber.",
+                errorRulesMustBeArray: "Aturan harus berupa Array!",
+                errorJson: "Kesalahan JSON, Periksa lagi!",
+                editSuccess: "Berhasil diedit",
+                errorWrongUrl: "URL salah, Periksa lagi!",
+                errorAlreadyExists: "Aturan sudah ada!",
+                settingsSaved: "Pengaturan disimpan, segarkan untuk melihat",
+                iframe: "Pemisahan paksa oleh iframe",
+                dynamic: "Pemuatan dinamis",
+                reloadPage: "Pengeditan selesai, muat ulang sekarang?",
+                copied: "Disalin",
+                noValidContent: "Tidak ada konten valid yang terdeteksi, mungkin ada Captcha",
+                outOfDate: "Skrip sudah usang, harap perbarui ke versi terbaru.",
+                hideBarTips: "Sembunyikan bilah paginasi, alihkan pengalaman imersif",
+                setConfigPage: "Atur halaman saat ini sebagai halaman konfigurasi default",
+                wedata2github: "Ubah alamat wedata ke alamat cermin di repositori github",
+                addOtherProp: "Tambahkan properti aturan",
+                addNextSelector: "Tambahkan konten selektor sebagai nextLink",
+                addPageSelector: "Tambahkan konten selektor sebagai pageElement",
+                propName: "Masukkan nama properti aturan",
+                propValue: "Masukkan nilai properti aturan",
+                customFirst: "Abaikan cache untuk aturan kustom lokal",
+                rulesExample: "Contoh Aturan",
+                lastPage: "Telah mencapai halaman terakhir",
+                lastPageTips: "Tampilkan tip saat mencapai halaman terakhir"
             }
         },
         {
@@ -529,6 +3131,254 @@
                 rulesExample: "Exemplo de Regras",
                 lastPage: "Última página atingida",
                 lastPageTips: "Mostrar dicas ao atingir a última página"
+            }
+        },
+        {
+            name: "Français",
+            match: ["fr"],
+            lang: {
+                enableDebug: "Activer la sortie de débogage dans la console",
+                updateNotification: "Notification après la mise à jour des règles",
+                disable: "Désactiver temporairement",
+                disableSite: "Basculer l'état de désactivation",
+                disableSiteTips: "Désactivé sur ce site.",
+                enableSiteTips: "Activé sur ce site.",
+                enable: "✅Activer le changement de page automatique",
+                tempActive: "Temporairement actif",
+                toTop: "Retour en haut.",
+                toBottom: "Aller en bas.",
+                current: "Page actuelle.",
+                forceIframe: "Forcer la jonction de la page suivante",
+                cancelForceIframe: "Annuler la jonction forcée",
+                configure: "Configurer Pagetual",
+                firstUpdate: "Cliquez ici pour initialiser la liste de règles par défaut",
+                update: "Mettre à jour les règles en ligne",
+                click2update: "Cliquez pour mettre à jour les règles depuis l'URL maintenant",
+                loadNow: "Charger la suite automatiquement",
+                loadConfirm: "Combien de pages voulez-vous charger ? (0 pour infini)",
+                noNext: "Aucun lien suivant trouvé, veuillez créer une nouvelle règle",
+                passSec: "Mis à jour il y a #t# secondes",
+                passMin: "Mis à jour il y a #t# minutes",
+                passHour: "Mis à jour il y a #t# heures",
+                passDay: "Mis à jour il y a #t# jours",
+                cantDel: "Impossible de supprimer les règles intégrées",
+                confirmDel: "Êtes-vous sûr de vouloir supprimer cette règle ?",
+                updateSucc: "Mise à jour réussie",
+                beginUpdate: "Début de la mise à jour, veuillez patienter",
+                customUrls: "Importer l'URL des règles Pagetual ou AutoPagerize, une URL par ligne.",
+                customRules: "Saisir des règles personnalisées. <a href='#t#'>✍️Contribuer aux règles</a>",
+                save: "Enregistrer",
+                loadingText: "Chargement en cours...",
+                opacity: "Opacité",
+                opacityPlaceholder: "0 : masquer le séparateur",
+                hideBar: "Masquer le séparateur de pagination",
+                hideBarButNoStop: "Masquer mais ne pas arrêter",
+                dbClick2Stop: "Double-cliquez sur l'espace vide pour mettre en pause",
+                sortTitle: "Le tri prendra effet après la prochaine mise à jour des règles",
+                autoRun: "Activation automatique (mode liste noire)",
+                autoLoadNum: "Nombre de pages à précharger",
+                turnRate: "Passer à la page suivante lorsqu'elle est à moins de 【X】 fois la hauteur de la page du pied de page",
+                inputPageNum: "Entrez le numéro de page pour y accéder",
+                enableHistory: "Inscrire l'historique de navigation après le changement de page",
+                enableHistoryAfterInsert: "Inscrire l'historique de navigation immédiatement après la jonction, sinon après la navigation",
+                contentVisibility: "Basculer automatiquement content-visibility pour améliorer les performances de rendu",
+                initRun: "Changer de page immédiatement après l'ouverture",
+                preload: "Précharger la page suivante pour accélérer",
+                click2ImportRule: "Cliquez pour importer le lien des règles de base, puis attendez la fin de la mise à jour : ",
+                forceAllBody: "Joindre le corps complet de la page ?",
+                openInNewTab: "Ouvrir les URL ajoutées dans un nouvel onglet",
+                importSucc: "Importation terminée",
+                import: "Importer",
+                editCurrent: "Modifier la règle pour le site actuel",
+                editBlacklist: "Modifier la liste noire d'URL, une entrée par ligne, supporte les jokers [?,*].",
+                upBtnImg: "Icône de retour en haut",
+                downBtnImg: "Icône d'aller en bas de page",
+                sideControllerIcon: "Icône de la barre latérale",
+                loadingTextTitle: "Chargement",
+                dbClick2StopCtrl: "Touche Ctrl",
+                dbClick2StopAlt: "Touche Alt",
+                dbClick2StopShift: "Touche Maj",
+                dbClick2StopMeta: "Touche Méta",
+                dbClick2StopKey: "Touche de raccourci",
+                pageElementCss: "Style personnalisé pour les éléments principaux de la page",
+                customCss: "CSS complet personnalisé",
+                firstAlert: "Vous n'avez pas importé la règle de base, veuillez sélectionner la règle appropriée à importer",
+                picker: "Sélecteur d'éléments Pagetual",
+                closePicker: "Fermer le sélecteur Pagetual",
+                pickerPlaceholder: "Sélecteur d'élément (Utilisateurs avancés seulement, laissez vide sinon)",
+                pickerCheck: "Vérifier le sélecteur et copier",
+                switchSelector: "Cliquez pour changer d'élément",
+                gotoEdit: "Aller à l'édition de la règle avec le sélecteur actuel",
+                manualMode: "Désactiver la jonction, avancer manuellement à la page suivante avec la flèche droite (ou envoyer l'événement 'pagetual.next')",
+                clickMode: "Désactiver la jonction, cliquer automatiquement sur la page suivante en faisant défiler jusqu'à la fin de la page",
+                pageBarMenu: "Cliquez au centre de la barre de page pour ouvrir le menu du sélecteur",
+                nextSwitch: "Changer de lien suivant",
+                arrowToScroll: "Appuyez sur la flèche gauche pour revenir en arrière et la flèche droite pour avancer",
+                sideController: "Afficher la barre de contrôle de pagination dans la barre latérale",
+                sideControllerScroll: "Afficher au défilement",
+                sideControllerAlways: "Toujours afficher",
+                hideLoadingIcon: "Masquer l'animation de chargement",
+                hideBarArrow: "Masquer les flèches de la barre de page",
+                duplicate: "Un doublon de Pagetual a été installé, vérifiez votre gestionnaire de scripts !",
+                forceStateIframe: "Intégrer la page complète en tant qu'iframe",
+                forceStateDynamic: "Charger le contenu dynamique via iframe",
+                forceStateDisable: "Désactiver le changement de page sur ce site",
+                autoScrollRate: "Vitesse de défilement (1~1000)",
+                disableAutoScroll: "Arrêter le défilement auto",
+                enableAutoScroll: "Activer le défilement auto",
+                toggleAutoScroll: "Basculer le défilement auto",
+                ruleRequest: "Demande de règle",
+                page: "Page ",
+                prevPage: "Page préc.",
+                nextPage: "Page suiv.",
+                errorRulesMustBeArray: "Les règles doivent être un tableau (Array) !",
+                errorJson: "Erreur JSON, veuillez vérifier !",
+                editSuccess: "Modification réussie",
+                errorWrongUrl: "URL incorrecte, veuillez vérifier !",
+                errorAlreadyExists: "Une règle existe déjà !",
+                settingsSaved: "Les paramètres sont enregistrés, actualisez pour voir les changements",
+                iframe: "Division forcée par iframe",
+                dynamic: "Chargement dynamique",
+                reloadPage: "Modification terminée, recharger maintenant ?",
+                copied: "Copié",
+                noValidContent: "Aucun contenu valide détecté, un Captcha peut être présent",
+                outOfDate: "Le script est obsolète, veuillez mettre à jour vers la dernière version.",
+                hideBarTips: "Masquer la barre de pagination, basculer l'expérience immersive",
+                setConfigPage: "Définir la page actuelle comme page de configuration par défaut",
+                wedata2github: "Changer l'adresse wedata pour l'adresse miroir dans le dépôt github",
+                addOtherProp: "Ajouter des propriétés à la règle",
+                addNextSelector: "Ajouter le contenu du sélecteur comme nextLink",
+                addPageSelector: "Ajouter le contenu du sélecteur comme pageElement",
+                propName: "Entrez le nom de la propriété de la règle",
+                propValue: "Entrez la valeur de la propriété de la règle",
+                customFirst: "Ignorer le cache pour les règles personnalisées locales",
+                rulesExample: "Exemple de règles",
+                lastPage: "Dernière page atteinte",
+                lastPageTips: "Afficher une notification en atteignant la dernière page"
+            }
+        },
+        {
+            name: "Italiano",
+            match: ["it"],
+            lang: {
+                enableDebug: "Abilita output di debug nella console",
+                updateNotification: "Notifica dopo l'aggiornamento delle regole",
+                disable: "Disabilita temporaneamente",
+                disableSite: "Attiva/disattiva lo stato di disabilitazione",
+                disableSiteTips: "Disabilitato su questo sito.",
+                enableSiteTips: "Abilitato su questo sito.",
+                enable: "✅Abilita il cambio pagina automatico",
+                tempActive: "Temporaneamente attivo",
+                toTop: "Torna in cima.",
+                toBottom: "Vai in fondo.",
+                current: "Pagina corrente.",
+                forceIframe: "Forza l'unione della pagina successiva",
+                cancelForceIframe: "Annulla unione forzata",
+                configure: "Configura Pagetual",
+                firstUpdate: "Clicca qui per inizializzare l'elenco delle regole predefinite",
+                update: "Aggiorna regole online",
+                click2update: "Clicca per aggiornare le regole dall'URL ora",
+                loadNow: "Carica la prossima automaticamente",
+                loadConfirm: "Quante pagine vuoi caricare? (0 significa infinite)",
+                noNext: "Nessun link 'successivo' trovato, crea una nuova regola",
+                passSec: "Aggiornato #t# secondi fa",
+                passMin: "Aggiornato #t# minuti fa",
+                passHour: "Aggiornato #t# ore fa",
+                passDay: "Aggiornato #t# giorni fa",
+                cantDel: "Impossibile eliminare le regole predefinite",
+                confirmDel: "Sei sicuro di voler eliminare questa regola?",
+                updateSucc: "Aggiornamento riuscito",
+                beginUpdate: "Inizio aggiornamento, attendere un momento prego",
+                customUrls: "Importa URL di regole Pagetual o AutoPagerize, un URL per riga.",
+                customRules: "Inserisci regole personalizzate. <a href='#t#'>✍️Contribuisci alle regole</a>",
+                save: "Salva",
+                loadingText: "Caricamento in corso...",
+                opacity: "Opacità",
+                opacityPlaceholder: "0: nascondi separatore",
+                hideBar: "Nascondi il separatore di pagina",
+                hideBarButNoStop: "Nascondi ma non fermare",
+                dbClick2Stop: "Fai doppio clic sullo spazio vuoto per mettere in pausa",
+                sortTitle: "L'ordinamento avrà effetto dopo il prossimo aggiornamento delle regole",
+                autoRun: "Abilitazione automatica (modalità lista nera)",
+                autoLoadNum: "Numero di pagine da precaricare",
+                turnRate: "Gira alla pagina successiva quando la distanza dal fondo è inferiore a 【X】 volte l'altezza della pagina",
+                inputPageNum: "Inserisci il numero di pagina a cui saltare",
+                enableHistory: "Scrivi la cronologia di navigazione dopo aver girato pagina",
+                enableHistoryAfterInsert: "Scrivi la cronologia subito dopo l'unione, altrimenti dopo la navigazione",
+                contentVisibility: "Cambia automaticamente content-visibility per migliorare le prestazioni di rendering",
+                initRun: "Inizia a girare le pagine subito dopo l'apertura",
+                preload: "Precarica la pagina successiva per velocizzare",
+                click2ImportRule: "Clicca per importare il link delle regole di base, poi attendi il completamento dell'aggiornamento: ",
+                forceAllBody: "Unire l'intero corpo della pagina?",
+                openInNewTab: "Apri gli URL aggiunti in una nuova scheda",
+                importSucc: "Importazione completata",
+                import: "Importa",
+                editCurrent: "Modifica regola per il sito corrente",
+                editBlacklist: "Modifica la lista nera di URL, una voce per riga, supporta i caratteri jolly [?,*].",
+                upBtnImg: "Icona per tornare in cima",
+                downBtnImg: "Icona per andare in fondo",
+                sideControllerIcon: "Icona della barra laterale",
+                loadingTextTitle: "Caricamento",
+                dbClick2StopCtrl: "Tasto Ctrl",
+                dbClick2StopAlt: "Tasto Alt",
+                dbClick2StopShift: "Tasto Maiusc",
+                dbClick2StopMeta: "Tasto Meta",
+                dbClick2StopKey: "Tasto di scelta rapida",
+                pageElementCss: "Stile personalizzato per gli elementi principali della pagina",
+                customCss: "CSS completo personalizzato",
+                firstAlert: "Non hai importato la regola di base, seleziona la regola appropriata da importare",
+                picker: "Selettore di elementi Pagetual",
+                closePicker: "Chiudi selettore Pagetual",
+                pickerPlaceholder: "Selettore di elementi (Solo utenti esperti, altrimenti lasciare vuoto)",
+                pickerCheck: "Controlla selettore e copia",
+                switchSelector: "Clicca per cambiare elemento",
+                gotoEdit: "Vai alla modifica della regola con il selettore corrente",
+                manualMode: "Disabilita unione, avanza manualmente alla pagina successiva con la freccia destra (o invia l'evento 'pagetual.next')",
+                clickMode: "Disabilita unione, clicca automaticamente la pagina successiva scorrendo fino alla fine",
+                pageBarMenu: "Clicca al centro della barra di pagina per aprire il menu del selettore",
+                nextSwitch: "Cambia link successivo",
+                arrowToScroll: "Premi freccia sinistra per scorrere indietro e freccia destra per avanzare di pagina",
+                sideController: "Mostra la barra di controllo della paginazione nella barra laterale",
+                sideControllerScroll: "Mostra durante lo scorrimento",
+                sideControllerAlways: "Mostra sempre",
+                hideLoadingIcon: "Nascondi animazione di caricamento",
+                hideBarArrow: "Nascondi frecce della barra di pagina",
+                duplicate: "È stato installato un duplicato di Pagetual, controlla il tuo gestore di script!",
+                forceStateIframe: "Incorpora la pagina intera come iframe",
+                forceStateDynamic: "Carica contenuto dinamico tramite iframe",
+                forceStateDisable: "Disabilita il cambio pagina su questo sito",
+                autoScrollRate: "Velocità di scorrimento (1~1000)",
+                disableAutoScroll: "Ferma scorrimento automatico",
+                enableAutoScroll: "Abilita scorrimento automatico",
+                toggleAutoScroll: "Attiva/disattiva scorrimento automatico",
+                ruleRequest: "Richiesta regola",
+                page: "Pagina ",
+                prevPage: "Pagina prec.",
+                nextPage: "Pagina succ.",
+                errorRulesMustBeArray: "Le regole devono essere un Array!",
+                errorJson: "Errore JSON, controlla di nuovo!",
+                editSuccess: "Modificato con successo",
+                errorWrongUrl: "URL errato, controlla di nuovo!",
+                errorAlreadyExists: "Una regola esiste già!",
+                settingsSaved: "Le impostazioni sono state salvate, aggiorna per visualizzare",
+                iframe: "Divisione forzata tramite iframe",
+                dynamic: "Caricamento dinamico",
+                reloadPage: "Modifica completata, ricaricare ora?",
+                copied: "Copiato",
+                noValidContent: "Nessun contenuto valido rilevato, potrebbe esserci un Captcha",
+                outOfDate: "Lo script non è aggiornato, si prega di aggiornare all'ultima versione.",
+                hideBarTips: "Nascondi la barra di paginazione, attiva/disattiva l'esperienza immersiva",
+                setConfigPage: "Imposta la pagina corrente come pagina di configurazione predefinita",
+                wedata2github: "Cambia l'indirizzo wedata con l'indirizzo mirror nel repository github",
+                addOtherProp: "Aggiungi proprietà alla regola",
+                addNextSelector: "Aggiungi contenuto del selettore come nextLink",
+                addPageSelector: "Aggiungi contenuto del selettore come pageElement",
+                propName: "Inserisci il nome della proprietà della regola",
+                propValue: "Inserisci il valore della proprietà della regola",
+                customFirst: "Ignora la cache per le regole personalizzate locali",
+                rulesExample: "Esempio di regole",
+                lastPage: "Raggiunta l'ultima pagina",
+                lastPageTips: "Mostra un avviso quando si raggiunge l'ultima pagina"
             }
         },
         {
@@ -1472,7 +4322,7 @@
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)|^https:\/\/pagetual\.hoothin\.com\/.*firstRun\.html/i;
     const allOfBody = "body>*";
     const mainSel = ["article,.article","[role=main],main,.main,#main","#results"];
-    const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u2500\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434\u007c\u005e\u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435", "i");
+    const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u2500\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434\u007c\u005e\u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u2500\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const nextTextReg3 = /^(next\s*(»|>>|>|›|→|❯|\d+)?|&gt;|▶|>|›|→|❯)\s*$/i;
     const prevReg = new RegExp("\u005e\u005c\u0073\u002a\u0028\u005b\u4e0a\u524d\u9996\u5c3e\u005d\u007c\u0070\u0072\u0065\u0076\u007c\u0065\u006e\u0064\u0029", "i");
@@ -1710,9 +4560,136 @@
         return segs.length ? '/' + segs.join('/') : null;
     }
 
-    const escapeHTMLPolicy = (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) ? _unsafeWindow.trustedTypes.createPolicy('pagetual_default', {
-        createHTML: (string, sink) => string
-    }) : null;
+    function parseTrustedTypes(cspString) {
+        const policies = new Set();
+        let allowDuplicates = false;
+        let ttDirectiveFound = false;
+        const ttRegex = /trusted-types\s+([^;]+)/gi;
+        let match;
+
+        while ((match = ttRegex.exec(cspString)) !== null) {
+            ttDirectiveFound = true;
+
+            const policyNames = match[1].trim().split(/\s+/);
+            for (const name of policyNames) {
+                if (name === "'allow-duplicates'") {
+                    allowDuplicates = true;
+                } else if (name !== "'none'") {
+                    policies.add(name.replace(/'/g, ''));
+                }
+            }
+        }
+        return { names: policies, allowDuplicates: allowDuplicates, ttDirectiveFound: ttDirectiveFound };
+    }
+
+    async function getCspTrustedTypesInfo() {
+        const combinedPolicies = new Set();
+        let combinedAllowDuplicates = false;
+        let combinedTtDirectiveFound = false;
+
+        const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+        if (meta) {
+            const metaResult = parseTrustedTypes(meta.content);
+            metaResult.names.forEach(name => combinedPolicies.add(name));
+            if (metaResult.allowDuplicates) {
+                combinedAllowDuplicates = true;
+            }
+            if (metaResult.ttDirectiveFound) {
+                combinedTtDirectiveFound = true;
+            }
+        }
+
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "HEAD",
+                url: window.location.href,
+                onload: function(response) {
+                    const cspHeader = response.responseHeaders.split('\r\n')
+                    .filter(h => h.toLowerCase().startsWith('content-security-policy:'))
+                    .map(h => h.substring(26).trim())
+                    .join('; ');
+
+                    const headerResult = parseTrustedTypes(cspHeader);
+                    headerResult.names.forEach(name => combinedPolicies.add(name));
+                    if (headerResult.allowDuplicates) {
+                        combinedAllowDuplicates = true;
+                    }
+                    if (headerResult.ttDirectiveFound) {
+                        combinedTtDirectiveFound = true;
+                    }
+
+                    resolve({
+                        names: combinedPolicies,
+                        allowDuplicates: combinedAllowDuplicates,
+                        ttDirectiveFound: combinedTtDirectiveFound
+                    });
+                },
+                onerror: function(error) {
+                    resolve({
+                        names: combinedPolicies,
+                        allowDuplicates: combinedAllowDuplicates,
+                        ttDirectiveFound: combinedTtDirectiveFound
+                    });
+                }
+            });
+        });
+    }
+
+    function isTrustedTypesEnforced() {
+        try {
+            document.createElement('div').innerHTML = '';
+            return false;
+        } catch (e) {
+            return true;
+        }
+    }
+
+    async function createPolicy() {
+        if (!(_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy && isTrustedTypesEnforced())) {
+            return;
+        }
+
+        const { names: allowedNames, allowDuplicates, ttDirectiveFound } = await getCspTrustedTypesInfo();
+
+        if (ttDirectiveFound && !allowDuplicates) {
+            debug("CSP Trusted Types is enforced without 'allow-duplicates'. " +
+                         "Skipping policy creation to avoid conflicts with the page.");
+            return;
+        }
+
+        const MY_POLICY_NAME = 'pvcep_default';
+
+        try {
+            escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(MY_POLICY_NAME, {
+                createHTML: (string, sink) => string,
+                createScriptURL: string => string,
+                createScript: string => string
+            });
+            return;
+        } catch (e) {
+        }
+
+        const existingPolicies = new Set(_unsafeWindow.trustedTypes.getPolicyNames());
+        for (const name of allowedNames) {
+            if (name === '*' || existingPolicies.has(name)) {
+                continue;
+            }
+
+            try {
+                escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(name, {
+                    createHTML: (string, sink) => string,
+                    createScriptURL: string => string,
+                    createScript: string => string
+                });
+                return;
+            } catch (e) {
+                debug(`create '${name}' failed, trying next...`);
+            }
+        }
+        debug("Could not create any trusted types policy.");
+    }
+
+    let escapeHTMLPolicy = null;
 
     function createHTML(html) {
         return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
@@ -1931,10 +4908,12 @@
                 getBody(doc).scrollTop = actualTop - 10;
                 doc.documentElement.scrollTop = actualTop - 10;
                 setTimeout(() => {
-                    while (actualTop < maxHeight) {
+                    if (actualTop < maxHeight) {
                         actualTop += 200;
                         getBody(doc).scrollTop = actualTop;
                         doc.documentElement.scrollTop = actualTop;
+                        getBody(doc).scrollTop = maxHeight;
+                        doc.documentElement.scrollTop = maxHeight;
                     }
                 }, 0);
                 return false;
@@ -1981,7 +4960,13 @@
         runPageBar(pageBar) {
             if (this.curSiteRule.pageBar && this.curSiteRule.pageBar !== 0) {
                 try {
-                    ((typeof this.curSiteRule.pageBar === 'function') ? this.curSiteRule.pageBar : Function("pageBar",'"use strict";' + this.curSiteRule.pageBar))(pageBar);
+                    if (typeof this.curSiteRule.pageBar === 'function') {
+                        this.curSiteRule.pageBar(pageBar);
+                    } else if (/^pageBar\.className=['"][^'"]*['"];?$/.test(this.curSiteRule.pageBar)) {
+                        pageBar.className = this.curSiteRule.pageBar.match(/^pageBar\.className=['"]([^'"]*)['"];?$/)[1];
+                    } else {
+                        Function("pageBar",'"use strict";' + this.curSiteRule.pageBar)(pageBar);
+                    }
                 } catch(e) {
                     debug(e);
                 }
@@ -2209,6 +5194,11 @@
                 if (!this.hpRules) this.hpRules = [];
                 let url = this.curSiteRule && this.curSiteRule.url, self = this;
                 let href = location.href.slice(0, 500);
+                if (instead) {
+                    this.hpRules = this.hpRules.filter(item => {
+                        return item && !(new RegExp(item.url, "i").test(href) && self.ruleMatch(item));
+                    });
+                }
                 let matchedRules = this.hpRules.filter(rule => JSON.stringify(rule) != JSON.stringify(self.curSiteRule) && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
                 if (url) matchedRules.unshift(this.curSiteRule);
                 matchedRules.sort((a, b) => {
@@ -2433,25 +5423,34 @@
                             }
                             this.curSiteRule.pageElement = tempSel + (targetChild ? ">*" : "");
                             break;
-                        }
+                        } else pageElement = null;
                     }
                     if (!pageElement || pageElement.length === 0) {
-                        pageElementSel = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
-                        pageElement = getAllElements(pageElementSel, doc);
+                        let pageElementSelTrim = pageElementSel.replace(/:nth-of-type\(\d+\)/g, "");
+                        pageElement = getAllElements(pageElementSelTrim, doc);
                         if (pageElement && pageElement.length === 1) {
                             if (targetChild) {
                                 pageElement = pageElement.children;
                             }
-                            this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
+                            this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
                         } else if (!pageElement || pageElement.length === 0) {
-                            pageElementSel = pageElementSel.replace(/[^\s\>]+\+/g, "");
-                            pageElement = getAllElements(pageElementSel, doc);
+                            pageElementSelTrim = pageElementSel.replace(/[^\s\>]+\+/g, "");
+                            pageElement = getAllElements(pageElementSelTrim, doc);
                             if (pageElement && pageElement.length === 1) {
                                 if (targetChild) {
                                     pageElement = pageElement.children;
                                 }
-                                this.curSiteRule.pageElement = pageElementSel + (targetChild ? ">*" : "");
-                            }
+                                this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
+                            } else if (!pageElement || pageElement.length === 0) {
+                                pageElementSelTrim = pageElementSel.replace(/\.[\w\-_]+/g, "");
+                                pageElement = getAllElements(pageElementSelTrim, doc);
+                                if (pageElement && pageElement.length === 1) {
+                                    if (targetChild) {
+                                        pageElement = pageElement.children;
+                                    }
+                                    this.curSiteRule.pageElement = pageElementSelTrim + (targetChild ? ">*" : "");
+                                } else pageElement = null;
+                            } else pageElement = null;
                         }
                     }
                 }
@@ -2518,7 +5517,7 @@
                             curWidth = validSize.w;
                         }
                     }
-                    if (compareNodeName(ele, ["picture"]) || !ele.innerText || ele.innerText.trim() === '') {
+                    if (compareNodeName(ele, ["picture", "img"])) {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         let eles = [];
@@ -2704,7 +5703,7 @@
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
                     if (posEle && posEle.lastElementChild) {
-                        if (posEle.scrollHeight === 0) posEle = posEle.lastElementChild;
+                        if (posEle.scrollHeight === 0 && posEle.lastElementChild.offsetParent) posEle = posEle.lastElementChild;
                         else if (posEle.lastElementChild.offsetTop > 500) {
                             posEle = posEle.lastElementChild;
                         }
@@ -2934,9 +5933,9 @@
                 if (e.style.display === "none" || e.getAttribute("aria-disabled") === "true") {
                     return false;
                 }
-                if (/\bbanner|slick|slide|carousel|gallery/i.test(e.id)) return false;
+                if (/\bbanner|slick|slide|carousel/i.test(e.id)) return false;
                 if (e.className) {
-                    if (!/page/i.test(e.className) && /\bbanner|slick|slide|carousel|gallery|disabled\s*$/i.test(e.className)) {
+                    if (!/page/i.test(e.className) && /\bbanner|slick|slide|carousel|disabled\s*$/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
@@ -2945,7 +5944,7 @@
                     }
                 }
                 let ariaLabel = e.getAttribute("aria-label");
-                if (ariaLabel && /\bbanner|slick|slide|carousel|gallery/i.test(ariaLabel)) return false;
+                if (ariaLabel && /\bbanner|slick|slide|carousel/i.test(ariaLabel)) return false;
                 return true;
             };
             if (!ele) return false;
@@ -3037,15 +6036,16 @@
                 ".pg_area>em+a",
                 "a#linkNext",
                 ".page>em+a",
+                "body [class*=page--current]+li>a",
+                "body [class*=Pages]>.curr+a",
+                "body [class*=page]>.cur+a",
+                "body [class*=paging]>em+a",
+                "body [class*=paginat] [class*=current]+li>a",
                 "a.page_next",
                 "body a[class*=page__next]",
                 "body [class*=pager]>a.next",
                 "body [class*=pagination-next]>a",
                 "body [class*=pagination-next]>button",
-                "body [class*=page--current]+li>a",
-                "body [class*=Pages]>.curr+a",
-                "body [class*=page]>.cur+a",
-                "body [class*=paginat] [class*=current]+li>a",
                 "body [class*=paginat] [class*=next-next]",
                 "body [class*=paginat] [class*=next]",
                 "body [class*=paginat] [class*=right]",
@@ -3054,7 +6054,8 @@
                 ".btn_next:not([disabled])",
                 ".btn-next:not([disabled])",
                 '//button[contains(@class, "Page")][text()="Next"]',
-                '//button[contains(@class, "page")][text()="next"]'
+                '//button[contains(@class, "page")][text()="next"]',
+                '//form/button[@type="submit"][text()="Next"]'
             ];
             let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
@@ -3368,6 +6369,7 @@
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                 absolute_regex = /^\w+\:\/\//;
             this.updateUrl = false;
+            src = src.replace(/^\/(\.\.\/)+/, "/");
             while (src.indexOf("../") === 0) {
                 src = src.substr(3);
                 root_page = root_page.replace(/\/[^\/]+\/$/, "/");
@@ -3488,7 +6490,20 @@
                     debug(e);
                 }
             } else if (this.curSiteRule.nextLinkByUrl) {
-                let targetUrl = this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0], "i"), this.curSiteRule.nextLinkByUrl[1]);
+                let urlReg = new RegExp(this.curSiteRule.nextLinkByUrl[0], "i");
+                let targetUrl;
+                if (urlReg.test(this.curUrl)) {
+                    targetUrl = this.curUrl.replace(urlReg, this.curSiteRule.nextLinkByUrl[1])
+                } else {
+                    if (this.curSiteRule.nextLinkByUrl[0].indexOf("&") != -1) {
+                        urlReg = new RegExp(this.curSiteRule.nextLinkByUrl[0].replace("&", "\\?"), "i");
+                    }
+                    if (urlReg.test(this.curUrl)) {
+                        targetUrl = this.curUrl.replace(urlReg, this.curSiteRule.nextLinkByUrl[1]);
+                    } else {
+                        targetUrl = this.curUrl + this.curSiteRule.nextLinkByUrl[1].replace(/\$\d+/g, "");
+                    }
+                }
                 if (targetUrl !== this.curUrl) {
                     let includeSel = this.curSiteRule.nextLinkByUrl[2];
                     let excludeSel = this.curSiteRule.nextLinkByUrl[3];
@@ -3520,8 +6535,11 @@
                                     debug(e);
                                 }
                             }
-                            targetUrl = targetUrl.replace(rep, result);
+                            targetUrl = targetUrl.replace(rep, result || "");
                         });
+                        if (targetUrl.indexOf("&") != -1 && targetUrl.indexOf("?") == -1) {
+                            targetUrl = targetUrl.replace("&", "?");
+                        }
                     }
                 }
                 nextLink = {href: targetUrl};
@@ -3895,62 +6913,62 @@
                 postParams = postParams[1];
                 url = url.replace(/#p{.*/, "");
             }
-            _GM_xmlhttpRequest({
-                url: url,
+            fetch(url, {
                 method: postParams ? 'POST' : 'GET',
-                data: postParams,
-                overrideMimeType: 'text/html;charset=' + charset,
+                body: postParams,
                 headers: {
                     'Referer': location.href,
                     'User-Agent': navigator.userAgent,
                     "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + charset
-                },
-                timeout: 10000,
-                onload: function(res) {
-                    var doc = null;
-                    try {
-                        doc = document.implementation.createHTMLDocument('');
-                        doc.documentElement.innerHTML = createHTML(res.response);
-                        var body = getBody(doc);
-                        if (!self.preloadDiv) {
-                            self.preloadDiv = document.createElement('div');
-                            self.preloadDiv.id = "pagetual-preload";
-                            self.preloadDiv.style.cssText = 'display:none!important;';
-                            getBody(document).appendChild(self.preloadDiv);
-                            self.checkedImgs = {};
-                            self.unCheckedImgs = [];
-                        }
-                        let code = self.curSiteRule.preloadImages;
-                        if (code) {
-                            let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
-                            if (imgSrcArr && imgSrcArr.length) {
-                                imgSrcArr.forEach(imgSrc => {
-                                    if (imgSrc && !self.checkedImgs[imgSrc]) {
-                                        self.checkedImgs[imgSrc] = true;
-                                        self.unCheckedImgs.push(imgSrc);
-                                    }
-                                });
-                            }
-                            self.preloadImageHandler();
-                        } else if (code !== 0 && code !== false) {
-                            if (body && body.firstChild) {
-                                self.lazyImgAction(body.children, doc);
-                            }
-                            [].forEach.call(doc.images, i => {
-                                let iSrc = i.src;
-                                if (iSrc && !self.checkedImgs[iSrc]) {
-                                    self.checkedImgs[iSrc] = true;
-                                    self.unCheckedImgs.push(iSrc);
+                }
+            }).then(response => response.text()).then(data => {
+                var doc = null;
+                try {
+                    doc = document.implementation.createHTMLDocument('');
+                    doc.documentElement.innerHTML = createHTML(data);
+                    var body = getBody(doc);
+                    if (!self.preloadDiv) {
+                        self.preloadDiv = document.createElement('div');
+                        self.preloadDiv.id = "pagetual-preload";
+                        self.preloadDiv.style.cssText = 'display:none!important;';
+                        getBody(document).appendChild(self.preloadDiv);
+                        self.checkedImgs = {};
+                        self.unCheckedImgs = [];
+                    }
+                    let code = self.curSiteRule.preloadImages;
+                    if (code) {
+                        let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
+                        if (imgSrcArr && imgSrcArr.length) {
+                            imgSrcArr.forEach(imgSrc => {
+                                if (imgSrc && !self.checkedImgs[imgSrc]) {
+                                    self.checkedImgs[imgSrc] = true;
+                                    self.unCheckedImgs.push(imgSrc);
                                 }
                             });
-                            self.preloadImageHandler();
                         }
+                        self.preloadImageHandler();
+                    } else if (code !== 0 && code !== false) {
+                        if (body && body.firstChild) {
+                            self.lazyImgAction(body.children, doc);
+                        }
+                        [].forEach.call(doc.images, i => {
+                            let iSrc = i.src;
+                            if (iSrc && !self.checkedImgs[iSrc]) {
+                                self.checkedImgs[iSrc] = true;
+                                self.unCheckedImgs.push(iSrc);
+                            }
+                        });
+                        self.preloadImageHandler();
                     }
-                    catch(e) {
-                        debug(e);
-                        return;
-                    }
+                    self.fetchFailed = 0;
                 }
+                catch(e) {
+                    debug(e);
+                    return;
+                }
+            }).catch(error => {
+                self.fetchFailed = (self.fetchFailed || 0) + 1;
+                if (self.fetchFailed > 1) self.curSiteRule.preload = 0;
             });
         }
 
@@ -4407,6 +7425,10 @@
                 if (compareNodeName(parent, ["table"])) {
                     parent.parentNode.appendChild(loadingDiv);
                 }
+                if (loadingDiv.previousElementSibling) {
+                    let preStyle = _unsafeWindow.getComputedStyle(loadingDiv.previousElementSibling);
+                    if (preStyle.order && preStyle.order !== '0') loadingDiv.style.order = preStyle.order;
+                }
             }
             //this.setPageTop(lastScrollTop);
             if (sideController.inited) {
@@ -4690,6 +7712,7 @@
              }
              #pagetual-sideController #pagetual-sideController-move > svg {
                  transition: transform .3s ease;
+                 border-radius: 15px !important;
              }
              #pagetual-sideController #pagetual-sideController-move > svg:hover {
                  transform: scale(1.2);
@@ -4736,7 +7759,7 @@
                  text-shadow: rgb(255 255 255) 0px 0px 10px;
              }
              #pagetual-sideController #pagetual-sideController-pagenum {
-                 font-size: 15px!important;
+                 font-size: 12px!important;
                  line-height: 30px;
                  text-align: center;
                  position: absolute;
@@ -6277,10 +9300,15 @@
         if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
             if (!inUpdate && rulesData.uninited) {
-                setTimeout(() => {
-                    if (!inUpdate && !importing) showTips(i18n("firstAlert"));
-                }, 3000);
-                showTips(i18n("firstAlert"));
+                let showTimes = 0;
+                let showFirstAlert = () => {
+                    if (inUpdate || importing || ++showTimes > 5) return;
+                    showTips(i18n("firstAlert"), configPage[0], 2000);
+                    setTimeout(() => {
+                        showFirstAlert();
+                    }, 3000);
+                };
+                showFirstAlert();
             }
             let defaultOption = document.querySelector('#discussion_rating_4');
             if (defaultOption) defaultOption.checked = true;
@@ -6781,7 +9809,7 @@
         let sideControllerIconInput = document.createElement("input");
         sideControllerIconInput.style.width = "100%";
         sideControllerIconInput.style.position = "relative";
-        sideControllerIconInput.placeholder = "📄";
+        sideControllerIconInput.placeholder = "☯️";
         sideControllerIconInput.value = rulesData.sideControllerIcon || '';
         sideControllerIconInput.spellcheck = false;
         sideControllerIconDiv.appendChild(sideControllerIconInput);
@@ -7063,6 +10091,12 @@
         configCon.appendChild(blacklistBtn);
         configCon.appendChild(blacklistInput);
         let saveBtn = document.createElement("button");
+        langSelect.onchange = e => {
+            saveBtn.click();
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        };
         saveBtn.innerHTML = i18n("save");
         saveBtn.id = "saveBtn";
         configCon.appendChild(saveBtn);
@@ -7392,7 +10426,8 @@
     }
 
     let pageReady = false;
-    function initRules(callback) {
+    async function initRules(callback) {
+        await createPolicy();
         charset = (document.characterSet || document.charset || document.inputEncoding);
         let equiv = document.querySelector('[http-equiv="Content-Type"]');
         if (equiv && equiv.content) {
@@ -7441,7 +10476,9 @@
                 }, 100);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
-                _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                if (window.top == window.self) {
+                    _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                }
             });
             if (rulesData.blacklist && rulesData.blacklist.length > 0) {
                 let href = location.href.slice(0, 500);
@@ -7524,7 +10561,7 @@
                     rulesData.updateNotification = true;
                 }
                 if (typeof(rulesData.initRun) == "undefined") {
-                    rulesData.initRun = true;
+                    rulesData.initRun = false;
                 }
                 if (typeof(rulesData.preload) == "undefined") {
                     rulesData.preload = false;
@@ -7782,6 +10819,11 @@
                     if (!ruleParser.curSiteRule.smart || !xhrFailed) {
                         xhrFailed = true;
                         return callback(false);
+                    } else {
+                        if (!ruleParser.curSiteRule.sleep) {
+                            ruleParser.curSiteRule.sleep = 1000;
+                            return callback(false);
+                        }
                     }
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
@@ -7986,32 +11028,32 @@
            margin-top: 30px!important;
            pointer-events: all;
          }
-         .pagetual_pageBar span>svg {
+         .pagetual_pageBar a>svg {
            -moz-transition:transform 0.5s ease, opacity 0.3s ease;
            -webkit-transition:transform 0.5s ease, opacity 0.3s ease;
            transition:transform 0.5 ease, opacity 0.3s ease;
            opacity: 0;
          }
-         .pagetual_pageBar.stop span>svg{
+         .pagetual_pageBar.stop a>svg{
            opacity: 1;
          }
-         .pagetual_pageBar.stop span>svg>path{
+         .pagetual_pageBar.stop a>svg>path{
            transform: scale(.8);
            transform-origin: center;
            -moz-transition:transform 0.3s ease;
            -webkit-transition:transform 0.3s ease;
            transition:transform 0.3 ease;
          }
-         .pagetual_pageBar.stop:hover span>svg>path{
+         .pagetual_pageBar.stop:hover a>svg>path{
            transform: unset;
          }
-         .pagetual_pageBar:hover span>svg {
+         .pagetual_pageBar:hover a>svg {
            opacity: 1;
          }
-         .pagetual_pageBar span>svg.upSvg:hover {
+         .pagetual_pageBar a>svg.upSvg:hover {
            transform: rotate(360deg) scale3d(1.2, 1.2, 1.2);
          }
-         .pagetual_pageBar span>svg.downSvg:hover {
+         .pagetual_pageBar a>svg.downSvg:hover {
            transform: rotate(540deg) scale3d(1.2, 1.2, 1.2)!important;
          }
          .pagetual_pageBar .pagetual_pageNum{
@@ -8115,6 +11157,7 @@
 
     const initStyle = `text-indent: initial;display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
     const pageTextStyle = `opacity: 1!important;text-indent: initial;padding: unset;border: none;background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
+    const corsTips = "Blocked by CORS, try to install an extension like 'Ignore X-Frame options'.";
     var sideControllerIcon = '';
 
     var tipsWords = document.createElement("div");
@@ -8645,7 +11688,7 @@
     }
 
     const loadmoreReg = /^\s*((点击?)?(这里)?((看|加载|展开)(更多|剩余)|继续加载)|(點擊?)?(這裡)?((看|加載|展開)(更多|剩餘)|繼續加載)|load\s*more|もっと読み込む)[\.…▼\s\d%]*$/i;
-    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class^='load-more'],[class*=' load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
+    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class^='load-more'],[class*=' load-more'],.show-more,button.show_more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         let loadMoreSel = ruleParser.curSiteRule.loadMore;
@@ -8673,7 +11716,11 @@
             }
         }
         if (loadmoreBtn && !ruleParser.curSiteRule.loadMore && loadmoreBtn.dataset.ajax !== "true") {
-            let href = loadmoreBtn.getAttribute("href");
+            let href = loadmoreBtn.getAttribute("href"), i = 0, pa = loadmoreBtn.parentNode;
+            while (!href && i++ < 5 && pa) {
+                href = pa.getAttribute && pa.getAttribute("href");
+                pa = pa.parentNode;
+            }
             if (href && href != "/" && !ruleParser.hrefIsJs(href)) {
                 loadmoreBtn = null;
             }
@@ -8744,21 +11791,24 @@
             inLi = compareNodeName(example, ["li"]) || (example.nextElementSibling && compareNodeName(example.nextElementSibling, ["li"]));
         }
         let pageBar = document.createElement(inTable ? "tr" : (inLi ? "li" : "div"));
-        let upSpan = document.createElement("span");
-        let downSpan = document.createElement("span");
+        let upSpan = document.createElement("a");
+        let downSpan = document.createElement("a");
         let pageText = document.createElement("a");
         let pageNum;
         pageBar.className = isHideBar ? "pagetual_pageBar autopagerize_page_info hide" : "pagetual_pageBar autopagerize_page_info";
-        pageBar.id = "pagetual_pageBar" + curPage;
         pageBar.setAttribute("translate", "no");
         if (isPause) {
             pageBar.classList.add("stop");
         }
         pageBar.style.cssText = pageBarStyle;
+        if (exampleStyle.order) {
+            pageBar.style.order = exampleStyle.order;
+        }
         pageBar.title = i18n(isPause ? "enable" : "disable");
         upSpan.innerHTML = createHTML(upSvg);
         upSpan.children[0].style.cssText = upSvgCSS;
         upSpan.title = i18n("toTop");
+        upSpan.href = ruleParser.initUrl || '';
         downSpan.innerHTML = createHTML(downSvg);
         downSpan.children[0].style.cssText = downSvgCSS;
         downSpan.title = i18n("toBottom");
@@ -8770,6 +11820,7 @@
         if (openInNewTab == 1) pageText.target = "_blank";
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
+        let localPage = curPage;
         let touched = false;
         let touchBodyHandler = e => {
             touched = false;
@@ -8783,6 +11834,7 @@
             pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page"));
             pageNum = document.createElement("span");
             let num = ruleParser.getPageNumFromUrl(url, curPage);
+            localPage = num;
             pageNum.innerHTML = createHTML(num + "<i style='font-size: 0;'>&nbsp;</i>");
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
@@ -8810,6 +11862,7 @@
         } else {
             pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page") + curPage + "<i style='font-size: 0;'>&nbsp;</i>");
         }
+        pageBar.id = "pagetual_pageBar" + localPage;
         let preBtn = document.createElement("span");
         preBtn.innerHTML = createHTML("∧");
         preBtn.title = i18n("prevPage");
@@ -8820,7 +11873,6 @@
         nextBtn.title = i18n("nextPage");
         nextBtn.className = "nextScreen";
         nextBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px; border-radius: 0 0 20px 20px; margin-top: 30px; ";
-        let localPage = curPage;
         preBtn.addEventListener("click", e => {
             e.stopPropagation();
             e.preventDefault();
@@ -8903,7 +11955,7 @@
                 example = compareNodeName(example, ["tr", "tbody"]) ? example : example.nextElementSibling || example;
                 if (compareNodeName(example, ["tbody"])) example = example.querySelector("tr");
                 let nextTr = example;
-                while (nextTr && nextTr.children.length == 0) nextTr = nextTr.nextElementSibling;
+                while (nextTr && (nextTr.children.length == 0 || (nextTr.children.length == 1 && !nextTr.children[0].offsetParent))) nextTr = nextTr.nextElementSibling;
                 if (nextTr) example = nextTr;
                 let tdNum = 0;
                 if (exampleStyle.display == "table-row") {
@@ -8976,21 +12028,32 @@
         }
 
         upSpan.addEventListener("click", e => {
+            e.stopPropagation();
+            if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
+                if (e.altKey) location.href = upSpan.href;
+                return;
+            }
             getBody(document).scrollTop = 0;
             document.documentElement.scrollTop = 0;
             e.preventDefault();
-            e.stopPropagation();
+        });
+        downSpan.addEventListener("mousedown", e => {
+            if (ruleParser.nextLinkHref && ruleParser.nextLinkHref != '#') {
+                downSpan.href = ruleParser.nextLinkHref;
+            } else downSpan.href = '';
         });
         downSpan.addEventListener("click", e => {
-            if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                changeStop(true);
+            e.stopPropagation();
+            if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
+                if (e.altKey && downSpan.getAttribute('href')) location.href = upSpan.href;
+                return;
             }
+            changeStop(true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
             getBody(document).scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
-            e.stopPropagation();
         });
         pageBar.addEventListener("click", e => {
             changeStop(!isPause);
@@ -9349,7 +12412,7 @@
                 } catch(e) {
                     inCors = true;
                     if (forceState === 3) {
-                        debug("Stop as cors");
+                        debug(corsTips);
                         isPause = true;
                     }
                     if (!ruleParser.curSiteRule.pageElement) {
@@ -9461,7 +12524,7 @@
             try {
                 iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
             } catch(e) {
-                returnFalse("Stop as cors");
+                returnFalse(corsTips);
                 return;
             }
             getBody(iframeDoc).scrollTop = 9999999;
@@ -9681,7 +12744,7 @@
                             ruleParser.findNoNext();
                         }
                     } else {
-                        returnFalse("Stop as cors");
+                        returnFalse(corsTips);
                     }
                     return;
                 }
@@ -9959,7 +13022,7 @@
             try {
                 iframeDoc = curIframe.contentDocument || curIframe.contentWindow.document;
             } catch(e) {
-                debug("Stop as cors");
+                debug(corsTips);
                 isPause = true;
                 callback(false);
                 return;

@@ -1,5 +1,19 @@
 [
 {
+    "name": "Woot",
+    "url": "^https?://www\\.woot\\.com/",
+    "example": "https://www.woot.com/alldeals?ref=w_ngh_et_1",
+    "author": "Hoothin",
+    "nextLink": "//div[text()='Next >']",
+    "pinUrl": true
+},
+{
+    "name": "Fapello",
+    "url": "^https?://fapello\\.com/",
+    "example": "https://fapello.com/noemy-love/38/",
+    "pageElement": "a.uk-align-center > img"
+},
+{
     "name": "精易论坛 - 手机版 - Powered by Discuz!",
     "url": "^https?://bbs\\.125\\.la/",
     "example": "https://bbs.125.la/forum.php?mod=forumdisplay&fid=98&mobile=2",
@@ -2752,6 +2766,13 @@
     "action": 3
 },
 {
+    "name": "nhentai.net - Free Hentai Manga, Doujinshi and Adult Comics",
+    "url": "^https?://nhentai\\.net/g/\\d+/",
+    "example": "https://nhentai.net/g/583072/1",
+    "pageElement": "#image-container",
+    "nextLink": "#content > section.reader-bar > div.reader-pagination > a.next"
+},
+{
     "name": "Danbooru",
     "author": "skofkyo",
     "example": "danbooru.donmai.us，e621.net",
@@ -2777,7 +2798,8 @@
     "url": "^https?://(illusioncards\\.)?(gelbooru|tbib|safebooru|booru|rule34|hypnohub|xbooru)\\.(com|org|xxx|net)/.+s=list",
     "nextLink": "a[alt='next']",
     "pageElement": ".thumbnail-container, span.thumb",
-    "replaceElement": "#paginator"
+    "replaceElement": "#paginator",
+    "action": 1
 },
 {
     "name": "yande",
@@ -3039,7 +3061,7 @@
     "name": "美人图 - 分類",
     "author": "skofkyo",
     "example": "https://meirentu.cc/group/xiuren.html",
-    "url": "^https?://meirentu\\.\\w+/",
+    "url": "^https?://meirentu\\.\\w+/group",
     "nextLink": "//a[text()='下页'] | //a[@class='current']/following-sibling::a[1]",
     "stopSign": [
         "ul.update_area_lists img"
@@ -3420,7 +3442,7 @@
     "pinUrl": true,
     "action": 1,
     "nextLink": ".page_next:not(.disabled)>a",
-    "pageElement": "#singleFeedSection>.pcVideoListItem,#videoCategory>.pcVideoListItem,#videoSearchResult>.pcVideoListItem,.videoList,.homeSection",
+    "pageElement": "#singleFeedSection>.pcVideoListItem,#videoCategory>.pcVideoListItem,#videoSearchResult>.pcVideoListItem,.videoList,.homeSection,#recommendedListings,#mostRecentVideosSection",
     "replaceElement": ".paginationGated"
 },
 {
@@ -5469,13 +5491,21 @@
     "pageNum": "start={100*($p-1)}"
 },
 {
-    "name": "Github issues and pulls",
-    "type": 0,
+    "name": "Github issues",
     "action": 0,
-    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/(?:issues|pulls)",
+    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/issues",
+    "pageElement": "[data-listview-component=items-list]>[class^=ListItems]",
+    "nextLinkByUrl": [
+      "&page=(\\d+)",
+      "&page={$1+1}"
+    ]
+},
+{
+    "name": "Github pulls",
+    "action": 0,
+    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/pulls",
     "pageElement": "//div[starts-with(@id,'issue_')]",
-    "nextLink": "//a[@class='next_page']",
-    "pinUrl": true
+    "nextLink": "//a[rel=next]"
 },
 {
     "name": "Repository search results · GitHub",
@@ -5488,6 +5518,14 @@
     "pageElement": "[data-testid='results-list']",
     "action": 0,
     "include": "[rel='next']"
+},
+{
+    "name": "github repos list",
+    "url": "^https?://github\\.com/[^/]+\\?tab=repositories",
+    "pageElement": "//ul[@data-filterable-for='your-repos-filter']",
+    "nextLink": "//a[@rel='next']",
+    "action": 0,
+    "css": ".starring-container+.hide-lg{display:none}"
 },
 {
     "name": "Actions · github",
@@ -6174,6 +6212,11 @@
     "example": "https://www.gamer520.com/",
     "nextLink": "a.next.page-numbers",
     "pageElement": "main.site-main > div.row.posts-wrapper"
+},
+{
+    "name": "Konachan-CHS 汉化 | 动漫壁纸下载 | Konachan中文站",
+    "url": "^https?://gelbooru\\.wjcodes\\.com/",
+    "nextLink": "//ul[@class='am-pagination']/li/a[text()='下一页']"
 },
 {
     "name": "投稿列表 pixivFANBOX",

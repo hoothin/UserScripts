@@ -1,8 +1,8 @@
-[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.119](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
+[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.125](https://hoothin.github.io/UserScripts/Pagetual/pagetual.user.js "Latest version")
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
-<a name="otherconfig" title="For restricted environment" href="https://pagetual.hoothin.com/en/rule.html"><strong>🔧CONFIGURATION PAGE🔧</strong></a>
+<a name="otherconfig" title="For restricted environment" href="https://pagetual.hoothin.com/en/rule.html"><strong>🔧CONFIGURATION PAGE</strong></a>
 
 <p name="click2import"></p>
 <pre name="pagetual">
@@ -21,10 +21,13 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th><a href="https://afdian.com/@hoothin"><img src="https://static.afdiancdn.com/favicon.ico"><br>愛發電</a></th>
     </tr>
     <tr>
-        <th colspan="3"><a href="https://discord.com/invite/keqypXC6wD">Join our 💬Discord</a></th>
+        <th colspan="3"><a href="https://discord.com/invite/keqypXC6wD">Join 💬Discord</a></th>
     </tr>
     <tr>
-        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send me an 📧email</a></th>
+        <th colspan="3"><a href="https://twitter.com/intent/follow?screen_name=HoothinDev">Follow 🕊️twitter</a></th>
+    </tr>
+    <tr>
+        <th colspan="3"><a href="mailto:rixixi@gmail.com">Send 📧email</a></th>
     </tr>
     <tr>
         <th colspan="3">Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>

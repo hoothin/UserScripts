@@ -1,28 +1,70 @@
 {
   "name": "switch-chinese",
-  "version": "1.0.2",
-  "description": "Convert between simplified and traditional Chinese characters",
+  "version": "1.0.12",
+  "description": "繁簡轉換，支援簡繁雙向轉換、智慧分詞、自訂詞庫、文字偵測及多種輸出格式，零依賴。 Lightweight Chinese converter library for conversion between Simplified and Traditional Chinese. 轻量级简繁体中文智能转换库，支持简繁双向转换、智能分词、自定义词库、文本检测及多种输出格式，零依赖。",
   "main": "stcasc.lib.js",
+  "types": "stcasc.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./stcasc.lib.js",
+      "types": "./stcasc.d.ts"
+    }
+  },
+  "files": [
+    "stcasc.lib.js",
+    "stcasc.d.ts",
+    "readme.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoothin/UserScripts.git#master"
   },
   "keywords": [
-    "Switch",
-    "Traditional",
-    "Chinese",
-    "Simplified",
+    "chinese",
+    "converter",
+    "traditional",
+    "simplified",
+    "chinese-converter",
+    "simplified-chinese",
+    "traditional-chinese",
+    "chinese-translation",
+    "chinese-detection",
+    "character-detection",
+    "text-converter",
+    "language-converter",
+    "i18n",
+    "localization",
+    "ruby-annotation",
+    "简繁转换",
+    "簡繁轉換",
+    "简繁切换",
+    "簡繁切換",
+    "繁简转换",
+    "繁簡轉換",
+    "繁简切换",
+    "繁簡切換",
     "简体中文",
     "繁体中文",
     "簡體中文",
     "繁體中文",
-    "正體中文"
+    "正體中文",
+    "中文转换",
+    "中文检测",
+    "一简多繁",
+    "智能分词",
+    "自定义词库",
+    "零依赖",
+    "轻量级"
   ],
   "author": "Hoothin",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/hoothin/UserScripts/issues"
   },
-  "homepage": "https://github.com/hoothin/UserScripts/tree/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/lib"
+  "homepage": "https://github.com/hoothin/UserScripts/tree/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/lib",
+  "engines": {
+    "node": ">=12.0.0"
+  }
 }
+

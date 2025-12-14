@@ -421,6 +421,473 @@ switch (lang) {
             }
         ];
         break;
+    case "ja":
+        sitesConfig = [
+            {
+                "description": "検索エンジンの主分類",
+                "icon": "search",
+                "sites": [
+                    {
+                        "keywords": "textarea[name='q']",
+                        "match": "https://www\\.google\\..*/search((?!udm=2).)*$",
+                        "name": "Google",
+                        "url": "https://www.google.co.jp/search?q=%s&ie=utf-8&oe=utf-8"
+                    },
+                    {
+                        "match": "https://search\\.yahoo\\.co\\.jp/search",
+                        "name": "Yahoo! JAPAN",
+                        "url": "https://search.yahoo.co.jp/search?p=%s"
+                    },
+                    {
+                        "match": "^https://(www|cn|global)\\.bing\\.com/search",
+                        "name": "Bing",
+                        "url": "https://www.bing.com/search?q=%s"
+                    },
+                    {
+                        "name": "Goo",
+                        "url": "https://service.smt.docomo.ne.jp/portal/search/web/result.html?q=%s"
+                    },
+                    {
+                        "match": "https://duckduckgo\\.com",
+                        "name": "DuckDuckGo",
+                        "url": "https://duckduckgo.com/?q=%s"
+                    },
+                    {
+                        "match": "https://www\\.ecosia\\.org/search",
+                        "name": "Ecosia",
+                        "url": "https://www.ecosia.org/search?q=%s"
+                    },
+                    {
+                        "match": "https://www\\.perplexity\\.ai/search",
+                        "name": "Perplexity",
+                        "url": "https://www.perplexity.ai/search?q=%s"
+                    },
+                    {
+                        "icon": "https://www.amazon.co.jp/favicon.ico",
+                        "name": "Amazon.co.jpで検索",
+                        "url": "https://www.amazon.co.jp/s?k=%s"
+                    },
+                    {
+                        "icon": "https://www.rakuten.co.jp/favicon.ico",
+                        "name": "楽天市場で検索",
+                        "url": "https://search.rakuten.co.jp/search/mall/%s/"
+                    }
+                ],
+                "type": "検索"
+            },
+            {
+                "icon": "sitemap",
+                "openInNewTab": true,
+                "selectTxt": true,
+                "sites": [
+                    {
+                        "name": "Googleで検索",
+                        "url": "[\"Google\"]"
+                    },
+                    {
+                        "name": "📄  コピー",
+                        "nobatch": true,
+                        "url": "c:%sr"
+                    },
+                    {
+                        "name": "📝  貼り付け",
+                        "url": "paste:"
+                    },
+                    {
+                        "name": "🔆 ページ内検索",
+                        "url": "find:%sr"
+                    },
+                    {
+                        "name": "Googleサイト内検索",
+                        "url": "https://www.google.co.jp/search?q=%s%20site%3A%h"
+                    },
+                    {
+                        "name": "AIに質問",
+                        "url": "[\"この内容を解説 (Gemini)\"]"
+                    },
+                    {
+                        "name": "Yahoo! サイト内検索",
+                        "url": "https://search.yahoo.co.jp/search?p=%s%20site%3A%h"
+                    },
+                    {
+                        "icon": "https://hoothin.com/qrcode/favicon.svg",
+                        "name": "テキストをQRコードに変換",
+                        "url": "https://hoothin.com/qrcode#%s"
+                    },
+                    {
+                        "name": "ウィキペディアプレビュー",
+                        "url": "showTips:https://ja.wikipedia.org/wiki/%s\n<div style=\"max-height: 500px; margin: 5px; overflow: hidden; font-size: large; text-align: left; font-weight: initial; line-height: initial;\">\n<img style=\"max-width: 250px; margin: 0 10px;\" align=\"left\" src=\"{.infobox img,figure>a>img|src}\"/>\n{.mw-parser-output>p}\n</div>"
+                    },
+                    {
+                        "name": "Metacriticスコア",
+                        "url": "showTips:https://www.metacritic.com/search/%s/\n<div style=\"display: flex; font-size: 25px;\">\n<img src=\"{img.g-container-rounded-small|src}\"/>\n<div>\n<h2>{.c-pageSiteSearch-results-item>div>p}</h2>\n<div style=\"display: flex; justify-content: space-between; align-items: center;    border-top: 1px solid;\">\n<span style=\"margin: 0 10px;\">{.u-text-uppercase}</span>\n<span style=\"margin: 0 10px;\">{.c-pageSiteSearch-results-item strong}</span>\n<span style=\"color: orange;margin: 0 10px;\">{.c-siteReviewScore}</span>\n</div>\n</div>\n</div>"
+                    },
+                    {
+                        "name": "IMDbスコア",
+                        "url": "showTips:https://www.imdb.com/find/?q=%s&exact=true.then{.find-title-result .ipc-metadata-list-summary-item__t}\n<h2 style=\"margin: 5px;\">\n{.hero__primary-text}\n<span style=\"position: absolute; right: 10px; color: orange;\">{.ipc-btn__text>div>div>div}</span>\n</h2>\n<div style=\"display: flex; font-size: 20px; width: 500px;\">\n<img style=\"height: fit-content;\" src=\"{.ipc-image|src}\"/>\n<div style=\"font-size: 16px; line-height: 1.5; text-align: left; margin: 5px;\">\n<div>{a.ipc-chip|<span style=\"white-space: nowrap;margin: 5px; font-size: 16px; border-radius: 5px; padding: 2px; box-shadow: 0px 0px 10px 0px #000;\">()</span>}</div>\n<div>Year: {h1+ul>li>.ipc-link}</div>\n<div>Director: {section>div>div>.title-pc-list>li:nth-child(1) li}</div>\n<div>Writer: {section>div>div>.title-pc-list>li:nth-child(2) li}</div>\n<div>Stars: {section>div>div>.title-pc-list>li:nth-child(3) li|()}</div>\n<div style=\"font-size: 16px; margin-top: 10px; border-top: 1px solid;\">{section>p>span}</div>\n</div>\n</div>"
+                    },
+                    {
+                        "name": "すべてのエンジンを展開",
+                        "url": "https://search.hoothin.com/all#%s"
+                    },
+                    {
+                        "kwFilter": "\\d\\$|\\$\\d",
+                        "name": "💴ドルを円に変換",
+                        "nobatch": true,
+                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=JPY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/g,'')} JPY</i>"
+                    },
+                    {
+                        "kwFilter": "^https?:",
+                        "name": "📦 リンクを一括オープン",
+                        "url": "%s[all]"
+                    },
+                    {
+                        "description": "「example.com」などのテキストリンクをサポート",
+                        "kwFilter": "\\w\\S*\\.\\S*\\w|\\w.*[点。].*\\w",
+                        "name": "🔗  テキストリンクを開く",
+                        "nobatch": true,
+                        "url": "%sr.replace(/(点|。)/g,\".\").replace(/[^\\s\\w\\-_\\.~!\\*';:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")"
+                    },
+                    {
+                        "icon": "https://ejje.weblio.jp/favicon.ico",
+                        "kwFilter": "^[a-zA-Z\\s]+$",
+                        "name": "Weblio英和・和英辞典",
+                        "url": "showTips:https://ejje.weblio.jp/content/%s\n<div style=\"font-size: 16px; line-height: 1.5; text-align: left; margin: 5px;\">\n<b>{.summaryM.midashigo}</b><br/>\n{.summaryM.level_v15} <br/>\n{.summaryM.wordclass} {.summaryM.Jtnhj}\n</div>"
+                    },
+                    {
+                        "kwFilter": "^[a-zA-Z]+$",
+                        "name": "DeepL英語から日本語",
+                        "url": "https://www.deepl.com/translator#en/ja/%s"
+                    },
+                    {
+                        "kwFilter": "^https?://.",
+                        "name": "↩️ 短縮URLを復元",
+                        "url": "showTips:%s\n{url}"
+                    },
+                    {
+                        "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$",
+                        "name": "🔓 base64デコード",
+                        "url": "showTips:\n📋 <span data-copy style=\"user-select: all;\">%bd</span>"
+                    },
+                    {
+                        "name": "🔒 base64エンコード",
+                        "url": "paste:%be"
+                    },
+                    {
+                        "name": "📎 選択テキストを一括置換",
+                        "url": "paste:%sr.replace(/%input{マッチング正規表現を入力}/g,\"%input{置換文字列を入力}\")"
+                    },
+                    {
+                        "kwFilter": "^http.*\\.(3gpp|m4v|mkv|mp4|ogv|webm)\\b",
+                        "name": "📺 ビデオプレビュー",
+                        "url": "showTips:\n<video loop autoplay src=\"%s\">\n<a href=\"%s\" download=\"%s\">ビデオをダウンロード</a>\n</video>"
+                    },
+                    {
+                        "kwFilter": "^http.*\\.(flac|m4a|mp3|oga|ogg|opus|wav)\\b",
+                        "name": "🎵 オーディオプレビュー",
+                        "url": "showTips:\n<audio loop autoplay src=\"%s\">\n<a href=\"%s\" download=\"%s\">オーディオをダウンロード</a>\n</audio>"
+                    },
+                    {
+                        "kwFilter": "^http.*\\.(avif|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|png|svg|webp|xbm)\\b",
+                        "name": "🏞️ 画像プレビュー",
+                        "url": "showTips:\n<img src=\"%s\">"
+                    }
+                ],
+                "type": "選択テキスト検索"
+            },
+            {
+                "icon": "eye",
+                "openInNewTab": true,
+                "selectImg": true,
+                "sites": [
+                    {
+                        "name": "Google画像検索",
+                        "url": "https://www.google.com/searchbyimage?sbisrc=cr_1_0_0&image_url=%T"
+                    },
+                    {
+                        "name": "Google Lens",
+                        "url": "https://www.google.com/imghp#p{sleep(500)&click([data-propagated-experiment-ids])&[name\\=\"encoded_image\"]=%i}"
+                    },
+                    {
+                        "icon": "https://hoothin.com/qrcode/favicon.svg",
+                        "name": "QRコードデコード",
+                        "url": "https://hoothin.com/qrdecode#p{#fileInput=%i}"
+                    },
+                    {
+                        "name": "Google翻訳画像",
+                        "url": "https://translate.google.com/?op=images#p{input[accept^\\=\"image\"]=%i}"
+                    },
+                    {
+                        "name": "一键抠图",
+                        "url": "https://www.remove.bg/ja/upload#p{wait()&body=%i}"
+                    },
+                    {
+                        "icon": "https://trace.moe/favicon.png",
+                        "name": "アニメシーン検索",
+                        "url": "https://trace.moe/?url=%T"
+                    },
+                    {
+                        "description": "Lunapicで画像を編集",
+                        "name": "Lunapic",
+                        "nobatch": true,
+                        "url": "https://www.lunapic.com/editor/index.php?action=url&url=%t"
+                    },
+                    {
+                        "name": "Bing画像検索",
+                        "url": "https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbisrc=UrlPaste&q=imgurl:%T"
+                    },
+                    {
+                        "name": "TinEye",
+                        "url": "https://www.tineye.com/search?url=%T"
+                    },
+                    {
+                        "name": "QRコード生成",
+                        "url": "[\"QRコード生成\"]"
+                    }
+                ],
+                "type": "画像検索"
+            },
+            {
+                "icon": "list",
+                "openInNewTab": true,
+                "selectLink": true,
+                "selectPage": true,
+                "sites": [
+                    {
+                        "icon": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik05NjAgOTYwSDY0di02NGg4OTZ2NjR6IG0tNzMuNi02ODYuNGwtODQgODQtNDUuNiA0NS42TDM4NCA3NzZsLTE5MiA1NiA1Ni0xOTIgNTAyLjQtNTAyLjRjNC00IDkuNi02LjQgMTQuNC02LjQgNCAwIDggMS42IDEwLjQgNEw4ODggMjQ4YzcuMiA3LjIgNS42IDE3LjYtMS42IDI1LjZ6TTcxMiAzNTcuNkw2NjYuNCAzMTIgMzA0LjggNjczLjZsLTE4LjQgNjQgNjQtMTguNEw3MTIgMzU3LjZ6IG05Ny42LTk3LjZsLTQ1LjYtNDUuNi01MiA1MiA0NS42IDQ1LjYgNTItNTJ6Ij48L3BhdGg+PC9zdmc+",
+                        "name": "現在のページを編集",
+                        "nobatch": true,
+                        "url": "javascript:(function(){document.body.setAttribute('contenteditable', 'true');alert('ウェブページ編集を有効にしました。ESCキーでキャンセル');document.onkeydown = function (e) {e = e || window.event;if(e.keyCode==27){document.body.setAttribute('contenteditable', 'false');}}})();"
+                    },
+                    {
+                        "description": "ウェブページの右クリックおよびコピー制限を解除",
+                        "icon": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik04MDAgNDQ4SDcwNFYzMjBjMC0xMDYuNC04NS42LTE5Mi0xOTItMTkyUzMyMCAyMTMuNiAzMjAgMzIwaDY0YzAtNzAuNCA1Ny42LTEyOCAxMjgtMTI4czEyOCA1Ny42IDEyOCAxMjh2MTI4SDIyNGMtMTcuNiAwLTMyIDE0LjQtMzIgMzJ2Mzg0YzAgMTcuNiAxNC40IDMyIDMyIDMyaDU3NmMxNy42IDAgMzItMTQuNCAzMi0zMlY0ODBjMC0xNy42LTE0LjQtMzItMzItMzJ6TTUxMiA3MzZgLTM1LjIgMC02NC0yOC44LTY0LTY0czI4LjgtNjQgNjQtNjQgNjQgMjguOCA2NCA2NC0yOC44IDY0LTY0IDY0eiI+PC9wYXRoPjwvc3ZnPg==",
+                        "name": "制限解除",
+                        "nobatch": true,
+                        "url": "javascript:var d=document,b=d.body;with(b.onselectstart=b.oncopy=b.onpaste=b.onkeydown=b.oncontextmenu=b.onmousemove=b.ondragstart=d.oncopy=d.onpaste=null,d.onselectstart=d.oncontextmenu=d.onmousedown=d.onkeydown=function(){return!0},d.wrappedJSObject||d)onmouseup=null,onmousedown=null,oncontextmenu=null;for(var a=d.getElementsByTagName(\"*\"),i=a.length-1;i>=0;i--){var o=a[i];with(o.wrappedJSObject||o)onmouseup=null,onmousedown=null}var h=d.getElementsByTagName(\"head\")[0];if(h){var s=d.createElement(\"style\");s.innerHTML=\"html,*{user-select:text!important;-moz-user-select:text!important;-webkit-user-select:text!important;-webkit-user-drag:text!important;-khtml-user-select:text!important;-khtml-user-drag:text!important;pointer-events:auto!important;}\",h.appendChild(s)}Event.prototype.preventDefault=function(){};"
+                    },
+                    {
+                        "description": "拡張機能“Ignore X-Frame headers”と併用する必要があります",
+                        "name": "🔗  リンクプレビュー",
+                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
+                    },
+                    {
+                        "description": "ctrl バックグラウンドタブ alt 小窓 ctrl+shift シークレットウィンドウ",
+                        "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik03MjIuOCA0NTlsLTE4LjkgMTguOS0yLjcgMi43LTQuNyA0LjgtNTIuNyA1Mi43IDI2LjMgMjYuMyA1Mi43LTUyLjcgMTg0LjQgMTg0LjQtMjEwLjcgMjEwLjgtMTg0LjQtMTg0LjQgNTIuNi01Mi43LTI2LjMtMjYuNC01Mi43IDUyLjctMjYuMyAyNi40IDIzNy4xIDIzNy4xIDI2My40LTI2My41eiIgZmlsbD0iIzA2MDAwMSIvPjxwYXRoIGQ9Ik0zMjcuNyAzNTMuNmwzNDIuNSAzNDIuNSAyNi4zLTI2LjNMMzU0IDMyNy4zeiIgZmlsbD0iIzA2MDAwMSIvPjxwYXRoIGQ9Ik0zMDEuMyA1MTEuN0wxMTYuOSAzMjcuM2wyMTAuOC0yMTAuN0w1MTIuMSAzMDFsLTUyLjcgNTIuNiAyNi4zIDI2LjQgNTIuNy01Mi43IDI2LjMtMjYuNC0yMzctMjM3TDY0LjIgMzI3LjNsMjM3LjEgMjM3LjEgMjYuMy0yNi4zIDUyLjgtNTIuN0wzNTQgNDU5eiIgZmlsbD0iIzA2MDAwMSIvPjwvc3ZnPg==",
+                        "name": "リンクを開く",
+                        "openInNewTab": true,
+                        "url": "%t"
+                    },
+                    {
+                        "icon": "https://hoothin.com/qrcode/favicon.svg",
+                        "name": "QRコード生成",
+                        "url": "https://hoothin.com/qrcode#%U"
+                    },
+                    {
+                        "icon": "https://web.archive.org/_static/images/archive.ico",
+                        "name": "現在のページをアーカイブ",
+                        "nobatch": true,
+                        "url": "https://web.archive.org/save/%u"
+                    },
+                    {
+                        "name": "万能コマンド",
+                        "nobatch": true,
+                        "url": "https://wn.run/%u"
+                    },
+                    {
+                        "icon": "https://is.gd/isgd_favicon.ico",
+                        "name": "is.gd",
+                        "url": "https://is.gd/create.php%p{url=%u&opt=0}"
+                    },
+                    {
+                        "icon": "https://docrdsfx76ssb.cloudfront.net/static/1678306332/pages/wp-content/uploads/2019/02/favicon.ico",
+                        "name": "URL Shortener",
+                        "url": "https://bitly.com/%p{url=%u}"
+                    },
+                    {
+                        "description": "クリップボードの内容を行ごとに分割して、現在のフォーカス入力ボックスに順次貼り付け",
+                        "name": "⌨️ 行ごとに入力",
+                        "url": "#p{@=%s[]}"
+                    },
+                    {
+                        "description": "クリップボード画像を検索",
+                        "name": "Google Lens - クリップボード画像検索",
+                        "url": "[\"Google Lens\"]"
+                    },
+                    {
+                        "name": "Mainonly by jerrylus",
+                        "url": "javascript:(function(){var e=document.body;let n=document.head.appendChild(document.createElement(\"style\"));n.textContent=\".mainonly { outline: 2px solid red; }\";let t=CSS.supports(\"selector(:has(*))\");function o(n){n instanceof HTMLElement&&(e.classList.remove(\"mainonly\"),(e=n).classList.add(\"mainonly\"))}function i(e){o(e.target)}function l(o){if(o.preventDefault(),t)n.textContent=\":not(:has(.mainonly), .mainonly, .mainonly *) { visibility: hidden; }\";else{n.textContent=\":not(.mainonly *, .mainonly-ancestor) { visibility: hidden; }\";var i=e;do i.classList.add(\"mainonly-ancestor\");while(i=i.parentElement)}r()}function s(o){if(\"Escape\"===o.key){o.preventDefault();var i=window.scrollY||document.documentElement.scrollTop;if(n.remove(),document.removeEventListener(\"keydown\",s),r(),e?.classList.remove(\"mainonly\"),!t)for(let l of document.getElementsByClassName(\"mainonly-ancestor\"))l.classList.remove(\"mainonly-ancestor\");window.scrollTo(0,i)}}function a(n){n.preventDefault(),n.deltaY<0?o(e.parentElement):o(e.firstElementChild)}function r(){document.removeEventListener(\"mouseover\",i),document.removeEventListener(\"click\",l),document.removeEventListener(\"wheel\",a)}document.addEventListener(\"mouseover\",i),document.addEventListener(\"click\",l),document.addEventListener(\"wheel\",a,{passive:!1}),document.addEventListener(\"keydown\",s)}())"
+                    },
+                    {
+                        "kwFilter": "^http.*\\.(3gpp|m4v|mkv|mp4|ogv|webm)(\\?|#|$)",
+                        "name": "📺 ビデオプレビュー - 現在のページ",
+                        "url": "[\"📺 ビデオプレビュー\"]"
+                    },
+                    {
+                        "kwFilter": "^http.*\\.(flac|m4a|mp3|oga|ogg|opus|wav)(\\?|#|$)",
+                        "name": "🎵 オーディオプレビュー - 現在のページ",
+                        "url": "[\"🎵 オーディオプレビュー\"]"
+                    },
+                    {
+                        "kwFilter": "^http.*\\.(avif|bmp|gif|gifv|ico|jfif|jpe|jpeg|jpg|png|svg|webp|xbm)(\\?|#|$)",
+                        "name": "🏞️ 画像プレビュー - 現在のページ",
+                        "url": "[\"🏞️ 画像プレビュー\"]"
+                    }
+                ],
+                "type": "現在のページ"
+            },
+            {
+                "icon": "robot",
+                "openInNewTab": 1,
+                "selectTxt": true,
+                "sites": [
+                    {
+                        "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg",
+                        "name": "この内容を解説 (Gemini)",
+                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=以下の内容を説明してください\n`%s`} "
+                    },
+                    {
+                        "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg",
+                        "name": "Gemini",
+                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}"
+                    },
+                    {
+                        "name": "Poe - AIチャット",
+                        "url": "https://poe.com/#p{sleep(2000)&[class*\\=ChatMessageInputContainer]>textarea=%s&click([data-button-send])}"
+                    },
+                    {
+                        "name": "ChatGPT",
+                        "url": "https://chat.openai.com/#p{#prompt-textarea=%s&click(#prompt-textarea+button)}"
+                    },
+                    {
+                        "name": "Futurepedia - AIツールを検索",
+                        "url": "https://www.futurepedia.io/search?search=%s"
+                    }
+                ],
+                "type": "AI"
+            },
+            {
+                "type": "Assit",
+                "icon": "list-alt",
+                "selectTxt": true,
+                "selectImg": true,
+                "selectAudio": true,
+                "selectVideo": true,
+                "selectLink": true,
+                "selectPage": true,
+                "openInNewTab": true,
+                "sites": [
+                    {
+                        "name": "Twitterで共有",
+                        "url": "https://twitter.com/intent/tweet?url=%T"
+                    },
+                    {
+                        "icon": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE3LjQ5NCAyMS40ODhjLTIuMTQgMC00LjEzOS0uNzYtNS44MDgtMi4xM0w0LjM5MiAxOS4zOXYtMi41ODNjLS41NzktMS40NDgtLjkxMi0zLjA0OC0uOTEyLTQuNzY0IDAtNS4xNiA0Ljc4OC05LjM0OCA5LjAxMi05LjM0OCA0LjIyNCAwIDkuMDEyIDQuMTg4IDkuMDEyIDkuMzQ4IDAgNS4xNi00Ljc4OCA5LjM0OC05LjAxMiA5LjM0OHptLjAwOC0xNy4zMDVjLTMuNTUyIDAtNi40MyA3LjU4My02LjQzIDcuNTgzczIuODc4IDcuNTgzIDYuNDMgNy41ODNjMy41NTIgMCA2LjQzLTcuNTgzIDYuNDMtNy41ODNzLTIuODc4LTcuNTgzLTYuNDMtNy41ODN6bS0uNjYgMTAuMTE0Yy0uMzk2IDAtLjcxNC0uMzE4LS43MTQtLjcxNHMuMzE4LS43MTQuNzE0LS43MTRjLjM5NiAwIC43MTQuMzE4LjcxNC43MTRzLS4zMTguNzE0LS43MTQuNzE0em0yLjY0IDBjLS4zOTYgMC0uNzE0LS4zMTgtLjcxNC0uNzE0cy4zMTgtLjcxNC43MTQtLjcxNGMuMzk2IDAgLjcxNC4zMTguNzE0LjcxNHMtLjMxOC43MTQtLjcxNC43MTR6bS01LjI4IDBjLS4zOTYgMC0uNzE0LS4zMTgtLjcxNC0uNzE0cy4zMTgtLjcxNC43MTQtLjcxNGMuMzk2IDAgLjcxNC4zMTguNzE0LjcxNHMtLjMxOC43MTQtLjcxNC43MTR6IiBmaWxsPSIjMDZDMzAwIj48L3BhdGg+PC9zdmc+",
+                        "name": "LINEで共有",
+                        "nobatch": true,
+                        "url": "https://line.me/R/share?text=%n%20%u"
+                    },
+                    {
+                        "name": "Send by Gmail",
+                        "url": "https://mail.google.com/mail/u/0/?tf=cm&source=mailto&body=%n %T"
+                    },
+                    {
+                        "name": "Share to Facebook",
+                        "url": "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
+                    },
+                    {
+                        "name": "🧮  Calculator",
+                        "url": "calculator://"
+                    },
+                    {
+                        "name": "🔎  Everything",
+                        "url": "ES://%s"
+                    },
+                    {
+                        "name": "🦊  Firefox",
+                        "url": "FirefoxURL-308046B0AF4A39CB://%u"
+                    },
+                    {
+                        "name": "⏰  Clock",
+                        "url": "ms-clock://"
+                    },
+                    {
+                        "name": "✂️  Screenclip",
+                        "url": "ms-screenclip://"
+                    },
+                    {
+                        "name": "☑️  ToDo",
+                        "url": "ms-todo://",
+                        "description": "Microsoft To-Do"
+                    },
+                    {
+                        "name": "📓  Onenote",
+                        "url": "onenote://"
+                    },
+                    {
+                        "name": "⌨️  VSCode",
+                        "url": "vscode://%u"
+                    },
+                    {
+                        "name": "Open the link inside words",
+                        "url": "%sr.replace(/[^\\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\")"
+                    },
+                    {
+                        "name": "リンクをMarkdownでコピー",
+                        "url": "c:[%sr](%t)"
+                    },
+                    {
+                        "name": "📱 Send to phone",
+                        "url": "https://s.hoothin.com/#p{wait(x-peer)&rclick(x-peer)&#textInput=%s&click(#textInput+div>button)}",
+                        "icon": "https://s.hoothin.com/images/favicon-96x96.png"
+                    },
+                    {
+                        "name": "Bing Search in site",
+                        "url": "https://www.bing.com/search?q=%s%20site%3A%h"
+                    },
+                    {
+                        "name": "Duckduckgo Search in site",
+                        "url": "https://duckduckgo.com/?q=%s%20site%3A%h"
+                    },
+                    {
+                        "name": "Yahoo Search in site",
+                        "url": "https://search.yahoo.com/search;?p=%s%20site%3A%h"
+                    },
+                    {
+                        "name": "Yandex Search in site",
+                        "url": "https://yandex.com/search/?text=%s%20site%3A%h"
+                    },
+                    {
+                        "name": "Startpage Search in site",
+                        "url": "https://www.startpage.com/sp/search?query=%s%20site%3A%h",
+                        "icon": "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
+                    },
+                    {
+                        "name": "Preview wikipedia",
+                        "url": "showTips:https://en.wikipedia.org/wiki/%s\n<div style=\"max-height: 500px; margin: 5px; overflow: hidden; font-size: large; text-align: left; font-weight: initial; line-height: initial;\">\n<img style=\"max-width: 250px; margin: 0 10px;\" align=\"left\" src=\"{.infobox .image>img|src}\"/>\n{.mw-parser-output>p}\n</div>"
+                    },
+                    {
+                        "name": "🛠️ Copy selected（pic&link）",
+                        "url": "c:%element{}"
+                    },
+                    {
+                        "name": "🛠️ Copy selected（txt(link)）",
+                        "url": "c:%element{}.replace(/!\\[.*?\\]\\(.*?\\)/g,\"\").replace(/\\[ *\\]\\(.*?\\)\\s*/g,\"\").replace(/\\[((.|\\n)*?)\\](\\(.*?\\))/g,\"$1$3\")"
+                    },
+                    {
+                        "name": "🛠️ Copy selected（{ txt | link }）",
+                        "url": "c:%element{}.replace(/!\\[.*?\\]\\(.*?\\)/g,\"\").replace(/\\[\\s*\\]\\(.*?\\)\\s*/g,\"\").replace(/\\[((.|\\n)*?)\\]\\((.*?)\\)/g,\"{ $1 | $3 }\")"
+                    }
+                ]
+            },
+            {
+                "icon": "recycle",
+                "match": "0",
+                "sites": [],
+                "type": "ごみ箱"
+            }
+        ]
+        break;
     default:
         sitesConfig = [
             {
@@ -558,7 +1025,7 @@ switch (lang) {
                     },
                     {
                         "name": "💲USD to RMB",
-                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/,'')} RMB</i>",
+                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/g,'')} RMB</i>",
                         "kwFilter": "\\d\\$|\\$\\d"
                     },
                     {

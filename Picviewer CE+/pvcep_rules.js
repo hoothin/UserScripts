@@ -18,7 +18,7 @@ or
 }
 Other parameter items can be added as needed.
 Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen should only be used after specifying the url.
-xhr is used to obtain the attributes of the pictures on the inner pages. 
+xhr is used to obtain the attributes of the pictures on the inner pages.
     1. First, use xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
     2. And get pictures through xhr.
         2.1 xhr.query is the picture (you can For multiple, multiple will be added to the gallery) selector or function
@@ -186,9 +186,14 @@ var siteInfo = [
         url: /^https?:\/\/image\.baidu\.com\/.*&word=/i,
         getImage: function(a) {
             if (!a) return;
-            var reg = /&objurl=(http.*?\.(?:jpg|jpeg|png|gif|bmp))/i;
+            var reg = /&objurl=(http.*?\.(?:jpg|jpeg|png|gif|bmp|webp))/i;
             if (a.href.match(reg)) {
-                return decodeURIComponent(RegExp.$1);
+                let url = RegExp.$1;
+                try {
+                    url = decodeURIComponent(url);
+                    url = decodeURIComponent(url);
+                }catch(e){}
+                return url;
             }
         }
     },
@@ -277,28 +282,30 @@ var siteInfo = [
         name:"deviantart",
         url:/^https?:\/\/[^.]*\.deviantart\.com/i,
         getImage: function(a, p) {
-            if (!a) return;
-            let media =Object.keys(a).filter(prop => prop.indexOf("__reactProps") === 0);
-            if (!media || !a[media] || !a[media].children || !a[media].children.props || !a[media].children.props.deviation) return;
-            media = a[media].children.props.deviation.media;
-            let fullview = media.types.filter(d => d.t === "fullview");
-            let ext = media.baseUri.match(/\.\w+$/);
-            if (!fullview || !ext) return;
-            fullview = fullview[0];
-            ext = ext[0];
-            return media.baseUri + `/v1/fill/w_${fullview.w},h_${fullview.h}/${media.prettyName}-fullview${ext}?token=` + media.token[0];
+            if (a) {
+                let media =Object.keys(a).filter(prop => prop.indexOf("__reactProps") === 0);
+                if (media && a[media] && a[media].children && a[media].children.props && a[media].children.props.deviation) {
+                    media = a[media].children.props.deviation.media;
+                    let fullview = media.types.filter(d => d.t === "fullview");
+                    let ext = media.baseUri.match(/\.\w+$/);
+                    if (fullview && ext) {
+                        fullview = fullview[0];
+                        ext = ext[0];
+                        return media.baseUri + `/v1/fill/w_${fullview.w},h_${fullview.h}/${media.prettyName}-fullview${ext}?token=` + media.token[0];
+                    }
+                }
+            }
+            return this.src && this.src.replace(/,q_\d+,/, ",q_100,").replace(/\/v1\/fill\/[^?]+\-pre\.\w+\?/, "?");
         }
     },
     {
         name: '花瓣网',
-        enabled: true,
         url: /^https?:\/\/huaban\.com\//i,
         ext: 'previous-2',
-        r: /(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i,
-        s: '$1_fw658',
+        r: [/(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i, /_fw\d+\w+/i],
+        s: ['$1_fw658', ''],
         description: './../following-sibling::p[@class="description"]',
-        // css: '.pin a.img .cover { display: none; }',
-        exclude: /weixin_code\.png$/i,
+        exclude: /weixin_code\.png$/i
     },
     {
         name: "wikipedia",
@@ -621,8 +628,8 @@ var siteInfo = [
     {
         name: "discordapp",
         url: /(discordapp\.|discord\.)(com|net)/,
-        r: [/\?width=\d+&height=\d+$/i, /.*\/external\/.*\/(https?)\/(.*)\?format.*/],
-        s: ["", "$1://$2"]
+        r: [/\?width=\d+&height=\d+$/i, /.*\/external\/.*\/(https?)\/(.*)\?format.*/, /media\.discordapp\.net/],
+        s: ["", "$1://$2", "cdn.discordapp.com"]
     },
     {
         name: "推特",
@@ -656,7 +663,7 @@ var siteInfo = [
     },
     {
         name: "Fandom",
-        url: /fandom\.com/,
+        url: /\bfandom\.com/,
         r: [/scale\-to\-width\-down\/\d+/i,
             /smart\/width\/\d+\/height\/\d+/i],
         s: ["",""]
@@ -702,7 +709,7 @@ var siteInfo = [
     },
     {
         name: "E621",
-        url: /e621\.net/,
+        url: /\be621\.net/,
         getImage: function(a, p) {
             if(p[2] && p[2].dataset.fileUrl){
                 return p[2].dataset.fileUrl;
@@ -712,7 +719,7 @@ var siteInfo = [
     },
     {
         name: "Pinterest",
-        url: /pinterest\.com/,
+        url: /\bpinterest\.com/,
         getImage: function(a, p) {
             if(this.srcset){
                 var srcs=this.srcset.split(","),minSize=0,newSrc;
@@ -730,43 +737,117 @@ var siteInfo = [
     },
     {
         name: "Zhisheji",
-        url: /zhisheji\.com/,
+        url: /\bzhisheji\.com/,
         r: /thumbnail\/.*/i,
         s: ""
     },
     {
         name: "imgbox",
-        src: /imgbox\.com/,
+        src: /\bimgbox\.com/,
         r: /thumbs(\d\.imgbox.*)_t\./i,
         s: "images$1_o."
     },
     {
-        name: "Reddit",
-        url: /reddit\.com|redd\.it/,
-        getImage: function() {
-            if (this.srcset) {
-                var srcs = this.srcset.split(/[xw],/i);
-                for (let i = 0; i < srcs.length; i++) {
-                    let srcInfo = srcs[i].trim().split(" ")[0];
-                    if (srcInfo.indexOf("?width") == -1) return srcInfo;
+        name: "Twitch",
+        url: /^https:\/\/(www\.twitch\.tv\/|www\.reddit\.com\/r\/TwitchClips\/)/,
+        xhr: {
+            url: function(a, p, xhr) {
+                if (!a) return;
+                if (!/twitch\.tv/.test(a.href)) return;
+                let m = a.href.match(/(\/clip\/|clips\.twitch\.tv\/)([^?]{1,})/);
+                if (m) {
+                    var slug = m[2];
+                    var operationNameClip = "VideoAccessToken_Clip";
+                    var operationNameLiveOrVOD = "PlaybackAccessToken";
+                    var sha256HashClip = "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11";
+                    var sha256HashLiveOrVOD = "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712";
+                    return `https://gql.twitch.tv/gql#p{{"operationName":"${operationNameClip}","variables":{"slug":"${slug}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${sha256HashClip}"}}}}`;
+                } else {
+                    m = a.href.match(/(?:m\.|www\.)?twitch\.tv\/(?:(?!directory|downloads|jobs|store|twitchartists|turbo|privacy)(\w+)$|(?:\w+\/)?videos\/(\d+))/);
+                    if (m) {
+                        return `https://gql.twitch.tv/gql#p{{"operationName":"PlaybackAccessToken_Template","query":"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!, $platform: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: $platform, playerBackend: \\"mediaplayer\\", playerType: $playerType}) @include(if: $isLive) {    value    signature   authorization { isForbidden forbiddenReasonCode }   __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: $platform, playerBackend: \\"mediaplayer\\", playerType: $playerType}) @include(if: $isVod) {    value    signature   __typename  }}","variables":{"isLive":${m[1]?'true':'false'},"login":"${m[1]||''}","isVod":true,"vodID":"${m[2]||''}","playerType":"site","platform":"web"}}}`;
+                    }
                 }
+            },
+            headers: function(url, xhr, getCookie) {
+                return {"Client-ID":"kimne78kx3ncx6brgo4mv6wki5h1ko", "X-Device-Id": getCookie('unique_id') || getCookie('unique_id_durable') || 'd56e8463c57c7cd7'}
+            },
+            cacheNum: 20,
+            query: function(html, doc, u, xhr) {
+                try {
+                    let r = JSON.parse(html);
+                    if (r.data.clip) {
+                        let signature = r.data.clip.playbackAccessToken.signature;
+                        let token = r.data.clip.playbackAccessToken.value;
+                        let t = JSON.parse(token);
+                        let clip_uri = r.data.clip.videoQualities[0].sourceURL;
+                        let fullsizeUrl = clip_uri + '?sig=' + signature + '&token=' + encodeURIComponent(token);
+
+                        return {url: ["video:" + fullsizeUrl], cap: ""};
+                    } else {
+                        let m = u.match(/"login":"(.*?)".*"vodID":"(.*?)"/);
+                        let tokens = r.data.streamPlaybackAccessToken || r.data.videoPlaybackAccessToken;
+                        if (!tokens) return;
+                        let hex = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+                        let url = m[1] ? 'api/channel/hls': 'vod';
+                        let p = Math.floor(999999 * Math.random());
+                        let id = '';
+                        for (let i = 0; i < 32; i++) id += hex[Math.floor(Math.random() * 16)];
+                        return `video:https://usher.ttvnw.net/${url}/${m[1]||m[2]}.m3u8?acmb=eyJBcHBWZXJzaW9uIjoiYjlhNjU4ZWMtMTcyMS00Y2FjLThkMjgtZjk0NmJmY2E3YzUwIn0%3D&allow_source=true&p=${p}&platform=web&play_session_id=${id}&sig=${tokens.signature}&supported_codecs=av1,h264&token=${encodeURIComponent(tokens.value)}&transcode_mode=cbr_v1`;
+                    }
+                } catch { }
+            }
+        }
+    },
+    {
+        name: "streamain",
+        url: /^https:\/\/(streamain\.com\/|www\.reddit\.com\/)/,
+        xhr: {
+            url: /^https:\/\/streamain\.com\/.*\/watch$/,
+            query: '#playbob-video'
+        }
+    },
+    {
+        name: "Reddit",
+        url: /\breddit\.com|redd\.it/,
+        getImage: function(a, p) {
+            if (a && /review\.redd\.it/.test(a.href)) {
+                return a.href;
+            } else if (this.srcset) {
+                let srcs = this.srcset.split(/[xw],\s*/i);
+                let maxSize = 0;
+                let result = "";
+                srcs.forEach(srcset => {
+                    let srcArr = srcset.split(" ");
+                    let curSize = parseInt(srcArr[1]);
+                    if (srcArr[0].indexOf("?width") == -1) return srcArr[0];
+                    if (curSize > maxSize) {
+                        maxSize = curSize;
+                        result = srcArr[0];
+                    }
+                });
+                if (this.src.indexOf("?width") !== -1) return result;
             } else if (/^https?:\/\/preview\./.test(this.src)){
                 return this.src.replace("preview", "i").replace(/\?.*/, "");
             }
             return this.src;
         },
         getExtSrc: function() {
-            if (/^https?:\/\/imgur\.com(\/a)?\/\w{5,}/.test(this.href)) {
-                return this.href.replace(/^https?:\/\/imgur\.com(\/a)?\/(\w+)/, "https://i.imgur.com/$2.webp");
+            if (this.getAttribute("reason") == "nsfw") {
+                if (!this.firstElementChild) return;
+                let img = this.firstElementChild.querySelector("img");
+                if (!img) return;
+                return img.src.replace(/^https:\/\/preview\.redd\.it\/(.*)\?.*/, "https://i.redd.it/$1");
             }
         },
         xhr: {
             url: function(a, p, self) {
-                if (a && a.href && /\/\/v.redd\.it\/\w+\/?$/.test(a.href)) {
-                    return a.href + '/DASHPlaylist.mpd';
-                } else if (a && a.href && /^https:\/\/www\.reddit\.com\/gallery\//.test(a.href)) {
-                    return a.href.replace(/.*(reddit\.com\/)gallery\/([\da-z]+).*/, "https://www.$1by_id/t3_$2.json");
-                } else if (a && a.href && /redgifs\.com\//.test(a.href)) {
+                let aHref = a && a.href;
+                if (/\/\/v.redd\.it\/\w+\/?$/.test(aHref)) {
+                    return aHref + '/DASHPlaylist.mpd';
+                } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(aHref)) {
+                    return aHref.replace(/.*(reddit\.com\/)gallery\/([\da-z]+).*/, "https://www.$1by_id/t3_$2.json");
+                } else if (/redgifs\.com\//.test(aHref)) {
                     const apiUrl = 'https://api.redgifs.com/v2';
                     if (!self.redgifsToken) {
                         self.redgifsToken = "1";
@@ -776,8 +857,8 @@ var siteInfo = [
                             }
                         });
                     }
-                    return apiUrl + "/gifs/" + a.href.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
-                } else if (p[1] && p[1].classList.contains("search-result")) {
+                    return apiUrl + "/gifs/" + aHref.replace(/.*redgifs.com\/(..\/)?(\w+\/)?(\w+)(?:\.\w+)?/, '$3');;
+                } else if (p[1] && p[1].classList && p[1].classList.contains("search-result")) {
                     let link = p[1].querySelector("a.search-link");
                     if (link && link.href) {
                         if (/\/\/v.redd\.it\/\w+\/?$/.test(link.href)) {
@@ -785,6 +866,14 @@ var siteInfo = [
                         } else if (/^https:\/\/www\.reddit\.com\/gallery\//.test(link.href)) {
                             return link.href;
                         }
+                    }
+                } else if (a && this.src && p[2] && p[2].nodeName == "FACEPLATE-IMG") {
+                    return a.href;
+                } else if (p[3]) {
+                    let a = p[3].querySelector("a.group");
+                    if (a) return a.href;
+                    else if(p[3].previousElementSibling && p[3].previousElementSibling.getAttribute('slot') == 'full-post-link') {
+                        return p[3].previousElementSibling.href;
                     }
                 }
             },
@@ -808,10 +897,11 @@ var siteInfo = [
                     } else if (/\/by_id\//.test(url)) {
                         let data;
                         try {
-                            data = JSON.parse(html).data.children[0].data;
+                            data = JSON.parse(html);
                         } catch (e) {
                             return;
                         }
+                        data = data.data.children[0].data;
                         return (data.gallery_data && data.gallery_data.items || []).map(function(c, i) {
                             var u=data.media_metadata[c.media_id].s
                             return [
@@ -819,6 +909,42 @@ var siteInfo = [
                                 (!i ? '[' + new Date(data.created_utc*1e3).toLocaleString() + ' | ' + data.title + '] ' : '') + (c.caption || '')
                             ]
                         })
+                    } else if (/\/r\//.test(url)) {
+                        let imgs = doc.querySelectorAll("img[src*='preview.redd.it/'],img[data-lazy-src^='https://preview.redd.it/']");
+                        let urls = [];
+                        [].forEach.call(imgs, img => {
+                            if (!img.src && img.getAttribute("data-lazy-src")) {
+                                img.src = img.getAttribute("data-lazy-src");
+                            }
+                            if (!img.srcset && img.getAttribute("data-lazy-srcset")) {
+                                img.srcset = img.getAttribute("data-lazy-srcset");
+                            }
+                            if (img.srcset) {
+                                let srcs = img.srcset.split(/[xw],\s*/i);
+                                let maxSize = 0;
+                                let result = "";
+                                srcs.forEach(srcset => {
+                                    let srcArr = srcset.split(" ");
+                                    let curSize = parseInt(srcArr[1]);
+                                    if (srcArr[0].indexOf("?width") == -1) return urls.push(srcArr[0]);
+                                    if (curSize > maxSize) {
+                                        maxSize = curSize;
+                                        result = srcArr[0];
+                                    }
+                                });
+                                if (img.src.indexOf("?width") !== -1) return urls.push(result);
+                            }
+                            urls.push(img.src);
+                        });
+                        if (urls.length) return urls;
+                        let json = doc.querySelector("[packaged-media-json]");
+                        if (json) {
+                            let mediaJson = json.getAttribute("packaged-media-json");
+                            if (mediaJson) {
+                                return JSON.parse(mediaJson).playbackMp4s.permutations.pop().source.url;
+                            }
+                        }
+                        return;
                     }
                     var xmlDoc = (new DOMParser()).parseFromString(html, 'application/xml');
                     var highestRes = [].slice.call(xmlDoc.querySelectorAll('Representation[frameRate]'))
@@ -839,27 +965,104 @@ var siteInfo = [
         }
     },
     {
+        name: "imgurLink",
+        xhr: {
+            url: function(a, p) {
+                if (!a) return;
+                const imgurReg = /^https?:\/\/(?:(?:[im].)?(?:imgur.(?:com|io)|filmot.(?:com|org))\/+(?:(?:(a|gallery(?!\/random|\/custom)|t(?:opic)?\/[^/]+)|r\/[^/]+)\/(?:[^-/]+-)*([^W_]{5}(?:[^_W]{2})?)|(?:[^W_]{5}(?:[^W_]{2})?[,&])+[^_W]{5}(?:[^W_]{2})?)).*/;
+                if (a.href.match && imgurReg.test(a.href)) {
+                    const m = a.href.match(imgurReg);
+                    return m[1] ? 'https://imgur.com/' + (m[1] == 'a' ? 'a/' + m[2] + '/embed' : m[1] + '/' + m[2] + '/hit.json') : m[0];
+                }
+            },
+            query: function(html, doc, url) {
+                if (/^https:\/\/imgur\.com\//.test(url)) {
+                    var cap = [], urls = [], im, g, c, x, i, t, u, l = '//i.imgur.com/', p404='404 page</title>';
+                    try {
+                        if (typeof html == 'string' && html[0]!='{') {
+                            if(html.lastIndexOf(p404, 300) > -1) throw true;
+                            x = html.match(/(?:album|image)\s*[:=] +([^\n\r]+),/);
+                            x = JSON.parse(x[1])
+                            t = window.t; if (window.t) delete window.t;
+                            if (!t&&'title' in x)t = x;
+                            x.album_images&&(x=x.album_images);
+                            x.images&&(x=x.images)||x.items&&(x=x.items);
+                        } else {
+                            html=JSON.parse(html);
+                            if(html.album){
+                                x=html.album
+                                t={title:x.title, description: x.description}
+                                x=x.images
+                            } else {
+                                x=html.data.image
+                                if (x.is_album) {
+                                    t={title:x.title, description: x.description}
+                                    if (x.album_images.count != x.album_images.images.length) {
+                                        window.t=t
+                                        return;
+                                    }
+                                    x=x.album_images.images
+                                }
+                            }
+                            if (window.t) delete window.t;
+                        }
+
+                        if (!x)throw html.lastIndexOf(p404, 300) > -1;
+
+                        t = t && [t.title, t.description].filter(Boolean).join(' - ') || !1
+                        x = Array.isArray(x)?x:[x]
+                        for (i = 0; i < x.length; ++i) {
+                            im = x[i].image||x[i];
+                            c = [im.title, im.caption, im.description].filter(Boolean).join(' - ');
+                            if (!i && t && t!=c) c='['+t+'] ' + c;
+                            im.ext = im.ext || x[i].links.original.match(/\.[^.]+$/)[0];
+                            g = (''+im.animated)=='true'
+                            u = l + im.hash;
+                            urls.push(!g && im.width <= 1200 && im.height <= 1200 ? u + im.ext : (g ? [u + '.mp4', u + '.gif'] : ['#' + u + im.ext, u + 'h' + im.ext]));
+                            cap.push(c);
+                        }
+                    } catch (ex) {}
+                    return urls.length ? {url: urls, cap: cap} : null
+                }
+            }
+        }
+    },
+    {
         name: "Rule34hentai",
-        url: /rule34hentai\.net/,
+        url: /\brule34hentai\.net/,
         r: "/_thumbs/",
         s: "/_images/"
     },
     {
         name: "Rule34",
-        url: /rule34\.xxx/,
+        url: /\b(rule34\.xxx|realbooru\.com)/,
         src: /\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_/i,
-        r: /\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/i,
-        s: ["/images/$2/$4.jpeg","/images/$2/$4.png","/images/$2/$4.jpg"]
+        xhr: {
+            url: function(a, p) {
+                if (!a) return;
+                const re = /^https?:\/\/(?:www\.)?(?:(realbooru\.com|rule34\.xxx))\/index\.php\?page=post&s=view&id=(\d+).*/;
+                const m = a.href.match(re);
+                if (m) {
+                    return a.href;
+                }
+            },
+            query: function(html, doc, url) {
+                try {
+                    const o = doc.querySelector(".link-list>ul>li>a[href^=http]");
+                    return o && o.href;
+                } catch { }
+            }
+        }
     },
     {
         name: "Photosight",
-        url: /photosight\.ru/,
+        url: /\bphotosight\.ru/,
         r: /(cdny\.de.*\/)t\//i,
         s: "$1x/"
     },
     {
         name: "Xiaohongshu",
-        url: /xiaohongshu\.com/,
+        url: /\bxiaohongshu\.com/,
         ext: function(target) {
             if (target.className == 'change-pic') {
                 var imgs=target.previousElementSibling.querySelectorAll('li'),i=0;
@@ -870,12 +1073,12 @@ var siteInfo = [
             }
             return target;
         },
-        r: [/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/i, /.*\.xhscdn\.com.*\/(\w+)(!.*|$)/i],
+        r: [/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/i, /.*\.xhscdn\.com.*\d\/(\w+)(!.*|$)/i],
         s: ["/w/1080/", "https://sns-img-bd.xhscdn.com/$1"]
     },
     {
         name: "Youtube",
-        url: /youtube\.com/,
+        url: /\byoutube\.com/,
         ext: function(target) {
             if (target.tagName == "ytd-thumbnail" || target.id == "thumbnail-container") {
                 return target.querySelector("img");
@@ -888,7 +1091,7 @@ var siteInfo = [
                 if (!img) return;
                 newsrc = img.src;
             }
-            return newsrc.replace(/\?.*$/i,"");
+            return newsrc.replace(/\?.*$/i,"").replace(/\/an_webp\/([^\/]+)\/mqdefault_6s\.webp/, "/vi/$1/maxresdefault.jpg").replace(/hq\w+\.jpg/, "maxresdefault.jpg");
         },
         getImage: function(a, p) {
             var newsrc=this.src;
@@ -896,7 +1099,7 @@ var siteInfo = [
                 newsrc = p[2].querySelector("img").src;
             }
             if(!newsrc || newsrc.indexOf("i.ytimg.com") == -1) return;
-            return newsrc.replace(/\?.*$/i,"");
+            return newsrc.replace(/\?.*$/i,"").replace(/\/an_webp\/([^\/]+)\/mqdefault_6s\.webp/, "/vi/$1/maxresdefault.jpg").replace(/hq\w+\.jpg/, "maxresdefault.jpg");
         }
     },
     {
@@ -1067,13 +1270,13 @@ var siteInfo = [
     },
     {
         name: "gravatar",
-        src: /gravatar\.com\/avatar\/|\/gravatar\//i,
+        src: /\bgravatar\.com\/avatar\/|\/gravatar\//i,
         r: /(avatar\/.*[\?&]s=).*/,
         s: '$11920'
     },
     {
         name: "ucServerAvatar",
-        src: /uc_server\/avatar\.php/i,
+        src: /\buc_server\/avatar\.php/i,
         r: /(uc_server\/avatar\.php\?uid=\d+&size=).*/,
         s: '$1big'
     },
@@ -1081,6 +1284,12 @@ var siteInfo = [
         name: "md",
         src: /\.md\./i,
         r: /\.md(\.[^\.]+)$/i,
+        s: '$1'
+    },
+    {
+        name: "thumbnail",
+        src: /\.thumbnail\./i,
+        r: /\.thumbnail(\.[^\.]+)$/i,
         s: '$1'
     },
     {
@@ -1155,7 +1364,7 @@ var siteInfo = [
     },
     {
         name: "douban",
-        url: /douban\.com/i,
+        url: /\bdouban\.com/i,
         getImage:function(){
             var $ = /(img\d+\.douban\.com\/)(?:(view\/)(?:photo|movie_poster_cover)\/(?!large)[^\/]+|(icon\/u(?=\d))|[sm](?=pic\/))(.*)/i.exec(this.src);
             var newsrc= $ ? ('http://' + $[1] + ($[2] ? $[2] + 'photo/photo' : (($[3]||'') + 'l')) + $[4]) : '';
@@ -1174,7 +1383,7 @@ var siteInfo = [
     },
     {
         name: "taobao",
-        url: /item\.taobao\.com/i,
+        url: /\bitem\.taobao\.com/i,
         r: [/.*((?:img\d\d\.taobaocdn|img(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/i,
             /(.*\.alicdn\.com\/.*?)((.jpg|.png)(\.|_)\d+x\d+.*)\.jpg(_\.webp)?$/i,
             /(.*\.alicdn\.com\/.*?)((\.|_)\d+x\d+.*|\.search|\.summ)\.jpg(_\.webp)?$/i],
@@ -1189,14 +1398,14 @@ var siteInfo = [
     },
     {
         name: "yihaodianimg",
-        url: /yhd\.com/i,
+        url: /\byhd\.com/i,
         src: /yihaodianimg\.com/i,
         r: /(.*\.yihaodianimg\.com\/.*)_\d+x\d+\.jpg$/i,
         s: "$1.jpg"
     },
     {
         name: "jd",
-        url: /jd\.com/i,
+        url: /\bjd\.com/i,
         src: /360buyimg\.com/i,
         r: [/(.*360buyimg\.com\/)n\d\/.+?\_(.*)/i,
             /(.*360buyimg\.com\/)n\d\/(.*)/i,
@@ -1205,20 +1414,20 @@ var siteInfo = [
     },
     {
         name: "dangdang",
-        url: /dangdang\.com/i,
-        src: /ddimg\.cn/i,
+        url: /\bdangdang\.com/i,
+        src: /\bddimg\.cn/i,
         r: /(.*ddimg.cn\/.*?)_[bw]_(\d+\.jpg$)/i,
         s: "$1_e_$2"
     },
     {
         name: "duokan",
-        url: /duokan\.com/i,
+        url: /\bduokan\.com/i,
         r: /(cover.read.duokan.com.*?\.jpg)!\w+$/i,
         s: "$1"
     },
     {
         name: "yyets",
-        url: /yyets\.com/i,
+        url: /\byyets\.com/i,
         r: /^(res\.yyets\.com.*?\/ftp\/(?:attachment\/)?\d+\/\d+)\/[ms]_(.*)/i,
         s: "http://$1/$2"
     },
@@ -1271,35 +1480,35 @@ var siteInfo = [
     },
     {
         name: "nhentai",
-        url: /nhentai\./i,
-        r: [/(cdn\..*\d+)t(\.[a-z]+)$/, /\/\/\w+(\..*\/)(\d+)t(\.[a-z]+)$/i],
+        url: /\bnhentai\./i,
+        r: [/(cdn\..*\d+)t(\.[a-z]+)$/, /\/\/\w+(\..*\/)(\d+)t(\.[a-z]+)(\.[a-z]+)?$/i],
         s: ["$1$2","//i$1$2$3"],
         example: "http://nhentai.net/g/113475/"
     },
     {
         name: "GithubAvatars",
-        url: /github\.com/i,
+        url: /\bgithub\.com/i,
         r: /(avatars\d*\.githubusercontent\.com.*)\?.*$/i,
         s: "$1",
         example: "https://avatars2.githubusercontent.com/u/3233275/"
     },
     {
         name: "ggpht",
-        src: /ggpht\.com/i,
+        src: /\bggpht\.com/i,
         r: /=s\d+.*/i,
         s: "=s9999"
     },
     {
         name: "kodansha",
-        url: /kodansha\.co\.jp/i,
-        src: /kodansha\.co\.jp/i,
+        url: /\bkodansha\.co\.jp/i,
+        src: /\bkodansha\.co\.jp/i,
         r: 't_og_image_center',
         s: 'c_limit'
     },
     {
         name: "fanseven",
-        url: /fanseven\.com/i,
-        src: /fanseven\.com/i,
+        url: /\bfanseven\.com/i,
+        src: /\bfanseven\.com/i,
         r: /w=\d+&h=\d+/i,
         s: 'w=9999&h=9999'
     },
@@ -1368,7 +1577,7 @@ var siteInfo = [
                     const images = items0.image_versions2;
                     const carousel = items0.carousel_media;
                     if (videos) {
-                        const videoUrl = videos[0].url + '.video';
+                        const videoUrl = "video:" + videos[0].url;
                         let videoAudioSubtitlesUrl = videoUrl;
                         const caption = (items0.caption ? items0.caption.text : (items0.accessibility_caption ? items0.accessibility_caption : items0.user.full_name));
                         return {url: [videoUrl], cap: caption};
@@ -1442,10 +1651,26 @@ var siteInfo = [
     {
         name: "Sankaku Complex",
         url:/sankakucomplex\.com/,
-        src:/\/data\/preview\//,
         xhr:{
-            url: "a",
-            query: "img#image"
+            url: ["^https?://(?:www\\.)?(sankaku)complex(\\.com/)(?:\\w{2}/)?(post)s?/(?:show/)?([a-zA-Z0-9]+).*", "https://$1api$2$3s/$4/fu"],
+            query: function(html, doc, url) {
+                const re = /^https?:\/\/((?:idol|chan|www)\.)?(sankaku)complex(\.com\/)(?:\w{2}\/)?(post)s?\/(?:show\/)?([a-zA-Z0-9]+).*/;
+                const $ = url.match(re);
+                if(html[0]!=='{') return;
+                let meta = document.querySelector('head > meta[name="referrer"]');
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    meta.name = 'referrer';
+                    meta.content = 'same-origin';
+                    document.getElementsByTagName('head')[0].appendChild(meta);
+                } else if (meta.attributes.content.value !== 'same-origin') {
+                    meta.attributes.content.value = 'same-origin';
+                }
+                let lowres_url, highres_url;
+                lowres_url = html.match(/(?:(?:Resized: <a|<a id="lowres"[^>]+?) href=|sample_url": ?)"([^"]+)/)?.[1];
+                highres_url = html.match(/(?:(?:Original: <a|<a id="highres"[^>]+?) href="|file_url":"?)([^(,")]+)/)?.[1];
+                return highres_url;
+            }
         }
     },
     {
@@ -1662,7 +1887,7 @@ var siteInfo = [
         name: "behance",
         url: /^https:\/\/www\.behance\.net/,
         xhr: {
-            url: "a[href^='/gallery/']",
+            url: /^\/gallery\//,
             query: "img[class^='ImageElement-image']"
         },
         getExtSrc: function() {
@@ -1676,8 +1901,33 @@ var siteInfo = [
         name: "postimg host",
         src: /^https:\/\/i\.postimg\.cc/,
         xhr: {
-            url: "a[href^='https://postimg.cc/']",
+            url: /^https:\/\/postimg\.cc\//,
             query: "#main-image"
+        }
+    },
+    {
+        name: "postimg Link",
+        xhr: {
+            url: /^https:\/\/postimg\.cc\//,
+            query: function(html, doc, url) {
+                if (url.indexOf("gallery") != -1) {
+                    let urls = [];
+                    [].forEach.call(doc.querySelectorAll("#thumb-list>.thumb-container"), ele => {
+                        let hotlink = ele.dataset.hotlink;
+                        let name = ele.dataset.name;
+                        let ext = ele.dataset.ext;
+                        if (hotlink && name && ext) {
+                            urls.push(`https://i.postimg.cc/${hotlink}/${name}.${ext}`);
+                        }
+                    });
+                    if (urls.length) return urls;
+                }
+                let img = doc.querySelector("#download");
+                if (img) {
+                    return img.href;
+                } else img = doc.querySelector("#main-image");
+                return img && img.src;
+            }
         }
     },
     {
@@ -1699,6 +1949,20 @@ var siteInfo = [
             },
             query: ".main-image"
         }
+    },
+    {
+        name: "Yupoo main",
+        url: /\byupoo\.com\//,
+        xhr: {
+            url: /^\/albums\//,
+            query: "[data-type=photo]>img[data-src]",
+        }
+    },
+    {
+        name: "Google review",
+        url: /\bgoogle\.com\//,
+        r: [/=w\d+\-h\d+\-\w/, /=s\d+/],
+        s: ["=s0-v1", "=s0"]
     },
     {
         name: "MAL Anime/Manga",
@@ -1723,5 +1987,55 @@ var siteInfo = [
         url: "^https://nozomi\\.la",
         r: "///qtn(\\..*)\\.\\w+\\.webp/i",
         s: "//w$1.webp"
+    },
+    {
+        name: "hentaizap",
+        url: /\bhentaizap\.com\//,
+        r: /t\.jpg$/,
+        s: ".webp"
+    },
+    {
+        name: "Wjcodes",
+        url: /^https:\/\/[^\.]+\.wjcodes\.com\//,
+        getImage: function(a, p) {
+            if (!p[0]) return;
+            let dtEle;
+            if (dtEle = p[0].querySelector("[d=t]")) {
+                let onclick = dtEle.getAttribute("onclick");
+                if (onclick) return onclick.replace(/.*download_file\('([^']+).*/, "$1");
+            }
+        }
+    },
+    {
+        name: "anime-pictures",
+        url: /^https:\/\/anime\-pictures\.net\//,
+        xhr: {
+            url: /^\/posts\//,
+            query: "a.icon-download"
+        }
+    },
+    {
+        name: "hentai-sharing",
+        url: /^https:\/\/hentai\-sharing\.net\//,
+        getImage: function(a, p) {
+            if (a && a.href.indexOf("https://hentai-sharing.net/nyaa/") == 0) {
+                let link = atob(a.href.replace("https://hentai-sharing.net/nyaa/", ""));
+                return /\.(?:jpe?|pn)g/.test(link) ? link : '';
+            }
+        }
+    },
+    {
+        name: "streamain",
+        url: "^https://(www\\.)?img(?:inn|sed)\\.com/",
+        xhr: {
+            url: "/^https://(www\\.)?img(?:inn|sed)\\.com/p/[\\w-]/",
+            query: '.swiper-slide,.downloads a'
+        }
+    },
+    {
+        name: "zlib",
+        src: /^https:\/\/[^\/]+\.cdn\-zlib\./i,
+        r: /covers\d+/i,
+        s: 'covers4096'
     }
 ];

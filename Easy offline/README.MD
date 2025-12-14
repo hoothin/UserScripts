@@ -37,14 +37,14 @@ https://github.rc1844.workers.dev${https?://[^/]+(.*)}@@RC1844@@github\.com.*(re
 https://ghproxy.fsou.cc/$url@@Fsou@@github\.com.*(releases\/download|archive\/refs\/)@@@@ffff0f
 </pre>
 
-### 自定義例子2 - Aria2下載
+### 自定義例子2 - Aria2 下載
 同樣是點擊下方導入
 <pre>
 http://aria.hoothin.com/#!/new/$base64@@Aria2@@@@data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABOFBMVEUAAADSVF7SVF7SVF7LVWDSVF7QVF/SVF7SVF7SVF7SVF7SVF7SVF7RVF7SVF7SVF7SVF7SVF7SVF7SVF7SVF7SVF7SVF5ma4Di4uLSVF7v7+9DQ0NvaX1+ZniUYXGtXGppan+cYG+TYXLs7OyyW2h4tsiVlJWxs7ylpaWgoKBwaX2JZHVRVFxNT1VNTU1KSkxGRkd0uMzKysp5tceHipjDV2JYWFrr5ufa2tvT09Pjycu9v8a5u8PCwsK+vr6rrbego6+Tp62pqamZnKmloaGjj5l5fY+MfY60gozDfIa3foJkaHzTX2hYW2i6UVluSEuK2/Pd3d7X0NLExcm1tbWRlKKbm5uohJCOjo6GhoqOeInPgIh0coV8fHx7e3vRbXbObXaNY3SgX25hYmRhYWHJVmGOTFGNTFENIl9FAAAAF3RSTlMAJNEM+vr1iQjpyFfr6pybmjLusJhyIzaw7jcAAAHlSURBVDjLfZNnU+NADIbXduyQBBLq2fK6JcQmF0gvtOOOztGv90Ln//8Ddm3txkNmeD54vNI7klYrkRFaYT6f0/Vcfr6gkXGUklH13HoQ1F2vapSUZ+6JbKbsmIzvR/zrlDPZibT/lerXTc4fuDJj6r6aCjKTq5gJZwDH+FvJzcj0U8to/A+M93hYnlIwv+qh6RhijkQMNakj66PhF8BBr3cAZwEa/GxcYMbB8284CT90whOZxMnwJKUyHvurG/thpxPub3wykXKR9c8QATZtu7YT9nZqlvVVhDA0Uqji4XDVtrdeM95a1uYhGqsFMi2usGfb9uJWrcb81toeGr1pknfxf8nmLFox79Do5smkKOFNWrAkipgkevCSINBRMJ5CCmSK7ZTg47ZMMSqyHwt+fOOCbl8WObrm0OKC4R0X7A5PxTVlo87pFy5oNrngLz0XjZKtXqH/uIBSLmjRhmw1KSaP1WIuIdiltCUfiyjJc7cp/bm2vt5qd7ufbylt43OPBoayqFEUNZtRZJ42KE0GBkeuwgUr7FIAl5cArHWNdjxyWmpomd+8AXh8ALjmNcuhTY/9AODiAsCXYy9RVN/hGRLuXVafWJz06nmAeLh6z5d3AMjAKCpkHG1hTp3V9Vl1biG1/k8fR16xKi9r1wAAAABJRU5ErkJggg==@@ff2a00
 </pre>
 *之所以把Aria2做成自定義是因為每個人的Aria2UI網址都不一樣，用我的伺服器管理本地的Aria2服務需要允許Chrome訪問本地資源，訪問 chrome://flags/#block-insecure-private-network-requests 並關閉即可。不想關閉的話直接打開設置把上面的網址換成自己本地的即可，例如 127.0.0.1
 
-### 自定義例子3 - Post請求RPC遠程下載
+### 自定義例子3 - Post 請求 RPC 遠程下載
 <pre>
 p:http://192.168.32.1:6800/jsonrpc?id=$random&jsonrpc=2.0&method=aria2.addUri&amp;params=["token:123456",["$url"]]@@Aria2RPC@@@@@@df2a00
 </pre>
@@ -66,6 +66,11 @@ https://translate.google.com/?client=gtx&dj=1&q=$text&sl=auto&tl=zh-CN&hl=zh-CN&
 默認是按住Alt鍵劃選，比如h❤ttps://補丁baidu.😀com
 <pre>
 $text{[^\w\-_\.~!\*'();:@&=\+\$,\/\?#\[\]%]}@@GetLink@@@@@@f9ff9f
+</pre>
+
+### 自定義例子7 - Post 請求 OpenList（原AList）遠程下載
+<pre>
+p:https://alist.domain.com/api/fs/add_offline_download?path=/115网盘/OpList离线下载&tool=115%20Cloud&delete_policy=delete_on_upload_succeed&urls=["$url"]$headers{"Content-Type": "application/json","Authorization": "alist-50a563b4-and-more-token-chars", "Accept": "*/*", "Host": "alist.domain.com", "Connection": "keep-alive"}@@OpenList@@@@@@df2a11
 </pre>
 
 
