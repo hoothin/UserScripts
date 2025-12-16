@@ -55,6 +55,7 @@
 // @exclude              *://mega.*/*
 // @exclude              *://*.mega.*/*
 // @exclude              *://onedrive.live.com/*
+// @exclude              *://teams.live.com/*
 // @run-at               document-end
 // @created              2011-6-15
 // @contributionURL      https://ko-fi.com/hoothin
