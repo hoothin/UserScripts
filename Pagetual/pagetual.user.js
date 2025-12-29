@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.126
+// @version      1.9.37.127
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -153,7 +153,7 @@
     }
 
     const noRuleTest = false;
-    const lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
+    var langName = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
     const langData = [
         {
             // English translation update by github.com/https433, admin@abby0666.xyz.
@@ -4135,6 +4135,7 @@
     });
     var i18nData = langData[0].lang;
     function setLang(la) {
+        langName = la;
         for (let i = 0; i < langData.length; i++) {
             let lang = langData[i];
             if (lang && lang.match.indexOf(la) !== -1) {
@@ -4148,7 +4149,7 @@
             }
         }
     }
-    setLang(lang);
+    setLang(langName);
     var enableDebug = true;
     var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_addStyle, _GM_openInTab, _GM_info, _GM_setClipboard;
     function i18n(name, param) {
@@ -4314,7 +4315,8 @@
         });
     }
     const isMobile = ('ontouchstart' in document.documentElement && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-    const configPage = [`https://pagetual.hoothin.com/${lang === 'zh-CN' ? 'cn/' : ''}rule.html`,
+    const cnConfigPage = "https://pagetual.hoothin.com/cn/rule.html";
+    const configPage = ["https://pagetual.hoothin.com/rule.html",
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
     const firstRunPage = "https://pagetual.hoothin.com/firstRun";
@@ -7969,7 +7971,7 @@
                 e.stopPropagation();
             }, true);
 
-            let initX, initY, moving = false;
+            let initX, initY, perX, perY, moving = false;
             let removeTimer;
             move.addEventListener("click", e => {
                 if (!moving) {
@@ -8013,10 +8015,10 @@
                 if (moving) {
                     let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                     let windowWidth = window.innerWidth || document.documentElement.clientWidth;
-                    initX = (clientX(e) - 10 + 40) / windowWidth * 100;
-                    initY = (clientY(e) - 83 + 83) / windowHeight * 100;
-                    this.frame.style.top = `calc(${initY}% - 83px)`;
-                    this.frame.style.left = `calc(${initX}% - 40px)`;
+                    perX = (clientX(e) - 10 + 40) / windowWidth * 100;
+                    perY = (clientY(e) - 83 + 83) / windowHeight * 100;
+                    this.frame.style.top = `calc(${perY}% - 83px)`;
+                    this.frame.style.left = `calc(${perX}% - 40px)`;
                 } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 5) {
                     moving = true;
                     clearTimeout(removeTimer);
@@ -8028,8 +8030,8 @@
                 document.removeEventListener("mouseup", mouseUpHandler, true);
                 document.removeEventListener("touchmove", mouseMoveHandler, true);
                 document.removeEventListener("touchend", mouseUpHandler, true);
-                if (moving) {
-                    rulesData.sideControllerPos = {x: parseInt(initX), y: parseInt(initY)};
+                if (moving && perX && perY && perX > 0 && perX < 100 && perY > 0 && perY < 100) {
+                    rulesData.sideControllerPos = {x: parseInt(perX), y: parseInt(perY)};
                     storage.setItem("rulesData", rulesData);
                 }
             };
@@ -9565,9 +9567,9 @@
                 let rulesExample = document.querySelector("#user-content-rules-example+a,#rules-example>a");
                 if (rulesExample) {
                     rulesExample.innerText = i18n("rulesExample");
-                    if (lang == "zh-CN") {
+                    if (langName == "zh-CN") {
                         rulesExample.href = rulesExample.href.replace("en", "cn");
-                    } else if (lang == "zh-TW" || lang == "zh-HK") {
+                    } else if (langName == "zh-TW" || langName == "zh-HK") {
                         rulesExample.href = rulesExample.href.replace("/en", "");
                     }
                 }
@@ -10463,6 +10465,9 @@
             }
             if (rulesData.lang) {
                 setLang(rulesData.lang);
+                if (langName === 'zh-CN') {
+                    configPage.unshift(cnConfigPage);
+                }
             }
             if (rulesData.firstRun && storage.supportCrossSave()) {
                 rulesData.firstRun = false;
