@@ -1,6 +1,6 @@
 {
   "name": "switch-chinese",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "繁簡轉換，支援簡繁雙向轉換、智慧分詞、自訂詞庫、文字偵測及多種輸出格式，零依賴。 Lightweight Chinese converter library for conversion between Simplified and Traditional Chinese. 轻量级简繁体中文智能转换库，支持简繁双向转换、智能分词、自定义词库、文本检测及多种输出格式，零依赖。",
   "main": "stcasc.lib.js",
   "types": "stcasc.d.ts",
