@@ -1,6 +1,6 @@
 # switch-chinese
 
-[Demo](https://tool.hoothin.com/chinese-converter)
+[Online Demo](https://tool.hoothin.com/chinese-converter)
 
 [简体中文](#简体中文) | [繁體中文](#繁體中文) | [English](#english)
 
