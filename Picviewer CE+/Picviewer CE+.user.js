@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2025.12.19.1
+// @version              2026.1.5.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -12055,6 +12055,186 @@ ImgOps | https://imgops.com/#b#`;
         }
     } else GM_fetch = fetch;
 
+    class ImageSizeFetcher {
+        constructor(gmXhr, config = {}) {
+            if (!gmXhr) throw new Error("GM_xmlhttpRequest is required");
+            this.gmXhr = gmXhr;
+            this.cache = new Map();
+            this.queue = [];
+            this.activeCount = 0;
+            this.concurrency = config.concurrency || 3;
+            this.timeout = config.timeout || 5000;
+        }
+
+        async getSize(url, options = {}) {
+            const { force = false, strategy = 'auto' } = options;
+            if (!url) return null;
+
+            if (!force && this.cache.has(url)) {
+                return this.cache.get(url);
+            }
+
+            if (url.startsWith('data:')) {
+                const size = this._calculateBase64Size(url);
+                this.cache.set(url, size);
+                return size;
+            }
+
+            if (url.startsWith('blob:')) {
+                return this._getBlobSize(url);
+            }
+
+            if (strategy === 'local-only' || strategy === 'auto') {
+                const perfSize = this._getFromPerformance(url);
+                if (perfSize !== null) {
+                    this.cache.set(url, perfSize);
+                    return perfSize;
+                }
+                if (strategy === 'local-only') return null;
+            }
+
+            return this._scheduleRequest(url);
+        }
+
+        _calculateBase64Size(dataUrl) {
+            const base64Str = dataUrl.split(',')[1];
+            if (!base64Str) return 0;
+            const len = base64Str.length;
+            const padding = (base64Str.match(/=/g) || []).length;
+            return (len * 3 / 4) - padding;
+        }
+
+        async _getBlobSize(blobUrl) {
+            try {
+                const response = await fetch(blobUrl);
+                const blob = await response.blob();
+                return blob.size;
+            } catch (e) {
+                console.error('Blob fetch failed', e);
+                return null;
+            }
+        }
+
+        _getFromPerformance(url) {
+            const entries = performance.getEntriesByName(url);
+            if (entries.length > 0) {
+                const entry = entries[entries.length - 1];
+                if (entry.decodedBodySize > 0) return entry.decodedBodySize;
+                if (entry.encodedBodySize > 0) return entry.encodedBodySize;
+            }
+            return null;
+        }
+
+        _scheduleRequest(url) {
+            return new Promise((resolve, reject) => {
+                this.queue.push({ url, resolve, reject });
+                this._processQueue();
+            });
+        }
+
+        _processQueue() {
+            if (this.activeCount >= this.concurrency || this.queue.length === 0) {
+                return;
+            }
+
+            this.activeCount++;
+            const { url, resolve, reject } = this.queue.shift();
+
+            this._fetchByHead(url)
+                .then(size => {
+                    if (size !== null) this.cache.set(url, size);
+                    resolve(size);
+                })
+                .catch(err => {
+                    console.warn(`Fetch size failed for ${url}`, err);
+                    resolve(null);
+                })
+                .finally(() => {
+                    this.activeCount--;
+                    this._processQueue();
+                });
+        }
+
+        _fetchByHead(url) {
+            return new Promise((resolve, reject) => {
+                this.gmXhr({
+                    method: "HEAD",
+                    url: url,
+                    timeout: this.timeout,
+                    onload: (response) => {
+                        const lenStr = response.responseHeaders.match(/content-length:\s*(\d+)/i);
+                        if (lenStr && lenStr[1]) {
+                            resolve(parseInt(lenStr[1], 10));
+                        } else {
+                            resolve(null);
+                        }
+                    },
+                    onerror: (err) => reject(err),
+                    ontimeout: () => reject(new Error("Timeout"))
+                });
+            });
+        }
+    }
+
+    function formatBytes(bytes) {
+        if (bytes === null || typeof bytes === "undefined" || isNaN(bytes) || bytes < 0) return "";
+        const units = ["B", "KB", "MB", "GB", "TB"];
+        let size = bytes;
+        let unitIndex = 0;
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        const precision = size >= 100 ? 0 : (size >= 10 ? 1 : 2);
+        const value = size.toFixed(precision).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, "$1");
+        return value + " " + units[unitIndex];
+    }
+
+    function updateGalleryHeaderSize(gallery, img, strategy) {
+        if (!gallery || !gallery.eleMaps || !gallery.eleMaps['head-left-img-info-size']) return;
+        const sizeSpan = gallery.eleMaps['head-left-img-info-size'];
+        sizeSpan.textContent = "";
+        sizeSpan.title = "";
+        if (!img || img.nodeName !== 'IMG') return;
+        const sizeUrl = img.src;
+        if (!sizeUrl) return;
+        imageSizeFetcher.getSize(sizeUrl, { strategy: strategy || 'auto' }).then(size => {
+            if (size === null) return;
+            if (gallery.img !== img || img.src !== sizeUrl) return;
+            if (img.naturalWidth && img.naturalHeight) {
+                gallery.eleMaps['head-left-img-info-resolution'].textContent = img.naturalWidth + " x " + img.naturalHeight;
+            }
+            const sizeText = formatBytes(size);
+            sizeSpan.textContent = "(" + sizeText + ")";
+            sizeSpan.title = sizeText;
+        });
+    }
+
+    function updateViewmoreSizeLabel(labelNode, baseText, url, strategy, baseTextGetter) {
+        if (!labelNode || !url) return;
+        const initText = typeof baseTextGetter === "function" ? baseTextGetter() : baseText;
+        labelNode.textContent = initText;
+        imageSizeFetcher.getSize(url, { strategy: strategy || 'local-only' }).then(size => {
+            if (size === null) return;
+            const sizeText = formatBytes(size);
+            const currentBase = typeof baseTextGetter === "function" ? baseTextGetter() : baseText;
+            labelNode.textContent = currentBase + " | " + sizeText;
+        });
+    }
+
+    var viewmoreAutoSizeThrottle = { last: 0 };
+    function scheduleViewmoreAutoSize(labelNode, baseText, url, baseTextGetter) {
+        if (!labelNode || !url) return;
+        var now = Date.now();
+        var delay = Math.max(0, 800 - (now - viewmoreAutoSizeThrottle.last));
+        setTimeout(() => {
+            viewmoreAutoSizeThrottle.last = Date.now();
+            updateViewmoreSizeLabel(labelNode, baseText, url, 'auto', baseTextGetter);
+        }, delay);
+    }
+
+    var imageSizeFetcher = new ImageSizeFetcher(_GM_xmlhttpRequest, { concurrency: 3, timeout: 5000 });
+
     var canvas = document.createElement('CANVAS');
     if (document.body) {
         if (canvas.style) canvas.style.display = "none";
@@ -13939,6 +14119,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-head-float-left">'+
                     '<span title="'+i18n("picInfo")+'" class="pv-gallery-head-left-img-info">'+
                     '<span class="pv-gallery-head-left-img-info-resolution" title="'+i18n("resolution")+'">0 x 0</span>'+
+                    '<span class="pv-gallery-head-left-img-info-size" title="Size"></span>'+
                     '<span class="pv-gallery-head-left-img-info-count" title="'+i18n("picNum")+'">（1 / 1）</span>'+
                     '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
@@ -14325,6 +14506,7 @@ ImgOps | https://imgops.com/#b#`;
                     'head-left-img-info',
                     'head-left-img-info-description',
                     'head-left-img-info-resolution',
+                    'head-left-img-info-size',
                     'head-left-img-info-count',
                     'head-left-img-info-scaling',
 
@@ -16289,8 +16471,28 @@ ImgOps | https://imgops.com/#b#`;
                 dlSpan.onclick=clickCb;
                 var topP=document.createElement('p');
                 topP.className="pv-top-banner";
-                topP.innerHTML=createHTML(img.naturalWidth+' x '+img.naturalHeight);
+                var baseTextGetter = () => (img.naturalWidth + ' x ' + img.naturalHeight);
+                var baseText = baseTextGetter();
+                topP.textContent = baseText;
+                updateViewmoreSizeLabel(topP, baseText, curNode.dataset.src, 'local-only', baseTextGetter);
                 topP.title=dlSpan.title;
+                let hoverTimer = null;
+                let autoFetched = false;
+                let onEnter = () => {
+                    if (autoFetched || topP.textContent.indexOf("|") !== -1) return;
+                    hoverTimer = setTimeout(() => {
+                        autoFetched = true;
+                        scheduleViewmoreAutoSize(topP, baseText, curNode.dataset.src, baseTextGetter);
+                    }, 1000);
+                };
+                let onLeave = () => {
+                    if (hoverTimer) {
+                        clearTimeout(hoverTimer);
+                        hoverTimer = null;
+                    }
+                };
+                imgSpan.addEventListener("mouseenter", onEnter, true);
+                imgSpan.addEventListener("mouseleave", onLeave, true);
                 var checkBox=document.createElement('input');
                 checkBox.type="checkbox";
                 let self=this;
@@ -17000,6 +17202,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.imgNaturalSize=imgNaturalSize;
 
                 this.eleMaps['head-left-img-info-resolution'].textContent=imgNaturalSize.w + ' x ' + imgNaturalSize.h;
+                updateGalleryHeaderSize(this, img, 'auto');
                 var thumbnails=this.eleMaps['sidebar-thumbnails-container'].childNodes,i=0;
                 thumbnails=Array.prototype.slice.call(thumbnails).filter(function(thumbnail){
                     if(thumbnail.style.display=="none"){
@@ -17037,6 +17240,7 @@ ImgOps | https://imgops.com/#b#`;
                         this.imgError=true;
                         this.img.style.display='none';
                         this.eleMaps['img_broken'].style.display='inline-block';
+                        this.eleMaps['head-left-img-info-size'].textContent='';
                         dataset(relatedThumb,'naturalSize',JSON.stringify({w: 0, h: 0}));
                     }else{
                         var srcs=dataset(relatedThumb, 'srcs');
@@ -17049,6 +17253,7 @@ ImgOps | https://imgops.com/#b#`;
 
                             self.imgNaturalSize=imgNaturalSize;
                             self.eleMaps['head-left-img-info-resolution'].textContent=imgNaturalSize.w + ' x ' + imgNaturalSize.h;
+                            updateGalleryHeaderSize(self, this, 'auto');
                             dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
                             let key = imgNaturalSize.w + "x" + imgNaturalSize.h;
                             self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
@@ -17584,6 +17789,7 @@ ImgOps | https://imgops.com/#b#`;
                 //清空dom
                 this.eleMaps['sidebar-thumbnails-container'].innerHTML=createHTML('');
                 this.eleMaps['head-left-img-info-resolution'].textContent='0 x 0';
+                this.eleMaps['head-left-img-info-size'].textContent='';
                 this.eleMaps['head-left-img-info-count'].textContent='（1 / 1）';
                 this.eleMaps['head-left-img-info-scaling'].textContent='（100%）';
                 //隐藏滚动条
@@ -18889,6 +19095,10 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-head-left-img-info{\
                     cursor:help;\
+                    }\
+                    .pv-gallery-head-left-img-info-size {\
+                    margin-left: 6px;\
+                    margin-right: 6px;\
                     }\
                     .pv-gallery-head-left-img-info-description {\
                     margin-left: 10px;\
@@ -20624,6 +20834,8 @@ ImgOps | https://imgops.com/#b#`;
             this.initPos = initPos || false;
             this.preview = !!preview;
             this.isImg = this.img.nodeName.toUpperCase() == 'IMG';
+            this.imgSizeBytes = null;
+            this.imgSizeText = "";
             this.init();
             if (data && this.isImg) {
                 this.img.src = location.protocol == "https" ? data.src.replace(/^http:/,"https:") : data.src;
@@ -20838,6 +21050,8 @@ ImgOps | https://imgops.com/#b#`;
                 img.onload = function(e) {
                     if (self.removed) return;
                     self.loaded = true;
+                    self.imgSizeBytes = null;
+                    self.imgSizeText = "";
                     container.style.background='';
                     if (self.preview && img.naturalHeight == 1 && img.naturalWidth == 1) {
                         self.remove();
@@ -20849,6 +21063,7 @@ ImgOps | https://imgops.com/#b#`;
                         w:img.naturalWidth,
                     };
                     self.setToolBadge('zoom',self.zoomLevel);
+                    self.fetchImgSize(self.img.src, 'auto');
                     if (self==uniqueImgWin && prefs.floatBar.globalkeys.previewFollowMouse) {
                         self.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
                     } else {
@@ -20884,7 +21099,8 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (imgNaturalSize.h && imgNaturalSize.w) {
                     container.style.background='';
-                    setSearchState(`<strong>${img.naturalWidth} x ${img.naturalHeight}</strong>`, self.imgState);
+                    self.updateImgState(1);
+                    self.fetchImgSize(self.img.src, 'auto');
                 }
                 if (!this.isImg) {
                     if (/^video$/i.test(img.nodeName)) {
@@ -22775,14 +22991,34 @@ ImgOps | https://imgops.com/#b#`;
                 document.addEventListener('mousemove',moveHandler,true);
                 document.addEventListener('mouseup',mouseupHandler,true);
             },
+            updateImgState:function(zoomValue){
+                if (!this.imgState || !this.img || !this.img.naturalWidth) return;
+                var sizeText = this.imgSizeText ? " (" + this.imgSizeText + ")" : "";
+                var zoomText = (typeof zoomValue === "number" && zoomValue !== 1) ? " (" + parseInt(zoomValue * 100) + "%)" : "";
+                var indexText = (this.curIndex >= 0 && this.data && this.data.all) ? " <b>[" + (this.curIndex + 1) + "/" + this.data.all.length + "]</b>" : "";
+                setSearchState("<strong>" + this.img.naturalWidth + " x " + this.img.naturalHeight + "</strong>" + sizeText + zoomText + indexText, this.imgState);
+                this.descriptionSpan && this.imgState.appendChild(this.descriptionSpan);
+            },
+            fetchImgSize:function(url, strategy){
+                if (!this.isImg) return;
+                var sizeUrl = url || (this.img ? this.img.src : "");
+                if (!sizeUrl) return;
+                var self = this;
+                imageSizeFetcher.getSize(sizeUrl, { strategy: strategy || 'auto' }).then(size => {
+                    if (size === null) return;
+                    if (!self.img || self.img.src !== sizeUrl) return;
+                    self.imgSizeBytes = size;
+                    self.imgSizeText = formatBytes(size);
+                    self.updateImgState(self.zoomLevel || 1);
+                });
+            },
             setToolBadge:function(tool,content){
                 var scale=0;
                 switch(tool){
                     case 'zoom':{
                         scale=2;
                         if (this.img.naturalWidth) {
-                            setSearchState(`<strong>${this.img.naturalWidth} x ${this.img.naturalHeight}</strong>` + (content !== 1 ? ` (${parseInt(content * 100)}%)` : "") + (this.curIndex >=0 ? ` <b>[${this.curIndex + 1}/${this.data.all.length}]</b>` : ""), this.imgState);
-                            this.descriptionSpan && this.imgState.appendChild(this.descriptionSpan);
+                            this.updateImgState(content);
                         }
                     }break;
                     case 'rotate':{
