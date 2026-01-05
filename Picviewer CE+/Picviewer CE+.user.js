@@ -15,7 +15,7 @@
 // @version              2025.12.19.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
-// @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
+// @homepage             https://pv.hoothin.com/
 // @supportURL           https://github.com/hoothin/UserScripts/issues
 // @connect              www.google.com
 // @connect              www.google.com.hk
@@ -26450,7 +26450,7 @@ ImgOps | https://imgops.com/#b#`;
         GM_config.init({
             id: 'pv-prefs',
             title: GM_config.create('a', {
-                href: 'https://hoothin.github.io/UserScripts/Picviewer%20CE%2B',
+                href: 'https://pv.hoothin.com/',
                 target: '_blank',
                 textContent: 'Picviewer CE+ '+i18n("config"),
                 title: i18n("openHomePage")
