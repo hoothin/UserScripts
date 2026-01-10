@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.127
+// @version      1.9.37.128
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -137,6 +137,9 @@
         if (document.body && getComputedStyle(document.body).display === 'none') {
             document.body.style.display = 'block';
         }
+        Element.prototype.scrollIntoView = function() {
+            console.log('ScrollIntoView blocked.');
+        };
         return;
     }
 
@@ -12648,12 +12651,12 @@
             }
             let eles = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true), checkItem;
             if (eles && eles.length > 0) {
-                eles = [].filter.call(eles, ele => {return ele && !compareNodeName(ele, ["style", "script", "meta"])});
-                if (compareNodeName(eles[0], ["ul"]) || eles.length == 1) checkItem = eles[0];
-                else if (eles[0].parentNode == eles[1].parentNode) {
-                    checkItem = eles[0].parentNode;
+                const filterEles = [].filter.call(eles, ele => {return ele && !compareNodeName(ele, ["style", "script", "meta"])});
+                if (compareNodeName(filterEles[0], ["ul"]) || filterEles.length == 1) checkItem = filterEles[0];
+                else if (filterEles[0].parentNode == filterEles[1].parentNode) {
+                    checkItem = filterEles[0].parentNode;
                 } else {
-                    checkItem = eles[0];
+                    checkItem = filterEles[0];
                 }
             }
             if (!checkItem) {
