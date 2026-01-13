@@ -24165,6 +24165,9 @@ ImgOps | https://imgops.com/#b#`;
                     if (top + panelRect.height > window.innerHeight - pad) {
                         top = stageRect.top - panelRect.height - 12;
                     }
+                    if (top + panelRect.height > window.innerHeight - pad || top < pad) {
+                        top = window.innerHeight - panelRect.height - pad;
+                    }
                     left = Math.min(Math.max(pad, left), window.innerWidth - panelRect.width - pad);
                     top = Math.min(Math.max(pad, top), window.innerHeight - panelRect.height - pad);
                     panel.style.left = left + 'px';
