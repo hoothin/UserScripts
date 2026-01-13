@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2026.1.5.1
+// @version              2026.1.13.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=23710
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1714183
-// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1653424
+// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1733533
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -12784,7 +12784,7 @@ ImgOps | https://imgops.com/#b#`;
         // 默认设置，请到设置界面修改
         prefs={
             floatBar:{//浮动工具栏相关设置.
-                butonOrder:['actual','current','gallery','magnifier','download'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
+                butonOrder:['actual','current','gallery','magnifier','download','stitch'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
                 additionalFeature: 'open',
                 invertAdditionalFeature: false,
                 listenBg:true,//监听背景图
@@ -12992,6 +12992,7 @@ ImgOps | https://imgops.com/#b#`;
             gallery:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAP1BMVEUAAAD///94eHgZGRn39/fz8/POzs6xsbGSkpJ9fX1UVFQpKSnb29vJycmmpqafn5+UlJSNjY0/Pz8hISENDQ2fWpEMAAAAcUlEQVQoz43SWQrEIBRE0Xe7M8/T/tcaNSKCKUh95nCDiIaYYa9zUDQRiiaCalANqkE0n6BuBLArWBTUAsa2/3yqfwYdzAl+GeCWAN9YM7nvo4chgoXmgjP8CdoEvqmA/oCQRHgat2p7YM2gvHb9GMRu7acCGLmlyNoAAAAASUVORK5CYII=',
             search:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAXVBMVEUAAAD///+MjIwmJibNzc2UlJTd3d2lpaUKCgrT09O/v78YGBjj4+MvLy8PDw/IyMh5eXn5+fn29vby8vLo6OjDw8O7u7u3t7ewsLCcnJx1dXVubm4+Pj43NzdkZGStc/JSAAAA4ElEQVQoz52RWW7DMAxE9bR635fYcXr/Y5aW7TYIGqDI/EjUAzRDUvFGCvWn/gHMOnmfNeYFJLonqnPVM8hrIA3B7of5BXkK47bXWwbe/ACp3OWqwSYnaI73+zStSST6AKYjE/sbQCZkpi0j0HSlUl/gPdwleM8SgSfIRzd8laRkcl0oIihYIkiVqhnl6hgicPRGrMHW0Ej4gXCYt8xiPoIw6TtANL8CVtpanSu1xvARJHYnpxpIq6tzU8D8UKIywHCNZCcpUDuXteDL57HngVMhf1nUQ9uisG47y492/kbfyJQHZ5yu1AMAAAAASUVORK5CYII=',
             download:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAASFBMVEUAAAD///86Ojq8vLxXV1ciIiKcnJympqZjY2MxMTHc3NywsLBDQ0NPT08VFRV5eXn39/fw8PDZ2dnV1dXKysqUlJTl5eUNDQ1EnTQhAAAAtUlEQVQoz33QWRKDIBAE0Gl2AXFP7n/TDKIEk5j+wKp+ZQ0D4SYE+pkDkrMe3rr0ATEYpUkrE+IFouyppJexgRR6IQQAPodlAqeAMyRoByIyjo8DrGpA2Td43YD2FfJHokR2hOsf8uy1v87oZOnrjHorFu7rreoexKLzhiFlqJsPxJL7dcZagWU532oG0ABNzj7y6wpwVAOgJ8AztgyhhTRyM0TsUQ0MuRi3AqaBayp85T/c5AVMKwUv6mnXTQAAAABJRU5ErkJggg==',
+            stitch:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAgMAAACdGdVrAAAACVBMVEUAAAD///9XV1cawLSAAAAAKUlEQVQI12MIBQMGBwYgYMRBqQawRgAp0QDWEOwUHu349EGNxqsd6kAArN4RJ/MiMK0AAAAASUVORK5CYII=',
             downloadSvgBtn:'<svg class="pv-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Download</title><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z"></path></svg>',
             video:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHZlcnNpb249IjEuMSI+PHBhdGggZD0iTTUxMiA2NEMyNjUuNiA2NCA2NCAyNjUuNiA2NCA1MTJzMjAxLjYgNDQ4IDQ0OCA0NDggNDQ4LTIwMS42IDQ0OC00NDhTNzU4LjQgNjQgNTEyIDY0ek02OTEuMiA1NDRsLTI1NiAxNTYuOEM0MjguOCA3MDQgNDIyLjQgNzA0IDQxNiA3MDRjLTYuNCAwLTkuNiAwLTE2LTMuMkMzOTAuNCA2OTQuNCAzODQgNjg0LjggMzg0IDY3MkwzODQgMzUyYzAtMTIuOCA2LjQtMjIuNCAxNi0yOC44IDkuNi02LjQgMjIuNC02LjQgMzIgMGwyNTYgMTY2LjRjOS42IDYuNCAxNiAxNiAxNiAyOC44QzcwNCA1MjggNzAwLjggNTQwLjggNjkxLjIgNTQ0eiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=',
             audio:'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTc2OCA5MzguNjY2NjY3SDI1NmE4NS4zMzMzMzMgODUuMzMzMzMzIDAgMCAxLTg1LjMzMzMzMy04NS4zMzMzMzRWMTcwLjY2NjY2N2E4NS4zMzMzMzMgODUuMzMzMzMzIDAgMCAxIDg1LjMzMzMzMy04NS4zMzMzMzRoNDIuNjY2NjY3djI5OC42NjY2NjdsMTA2LjY2NjY2Ni02NEw1MTIgMzg0Vjg1LjMzMzMzM2gyNTZhODUuMzMzMzMzIDg1LjMzMzMzMyAwIDAgMSA4NS4zMzMzMzMgODUuMzMzMzM0djY4Mi42NjY2NjZhODUuMzMzMzMzIDg1LjMzMzMzMyAwIDAgMS04NS4zMzMzMzMgODUuMzMzMzM0bS0yMTMuMzMzMzMzLTI5OC42NjY2NjdhODUuMzMzMzMzIDg1LjMzMzMzMyAwIDAgMC04NS4zMzMzMzQgODUuMzMzMzMzIDg1LjMzMzMzMyA4NS4zMzMzMzMgMCAwIDAgODUuMzMzMzM0IDg1LjMzMzMzNCA4NS4zMzMzMzMgODUuMzMzMzMzIDAgMCAwIDg1LjMzMzMzMy04NS4zMzMzMzR2LTIxMy4zMzMzMzNoMTI4di04NS4zMzMzMzNoLTE3MC42NjY2Njd2MjI0Ljg1MzMzM2MtMTIuMzczMzMzLTcuMjUzMzMzLTI3LjMwNjY2Ny0xMS41Mi00Mi42NjY2NjYtMTEuNTJ6IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==',
@@ -13236,6 +13237,22 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function downloadImg(url, name, type, over) {
+            if (/^blob:/.test(url)) {
+                const blob = getBlob(url);
+                if (blob) {
+                    let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
+                    if (ext === "none") ext = "png";
+                    try {
+                        saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                        over && over();
+                        return;
+                    } catch (e) {
+                        _GM_download(url, name, type);
+                        over && over();
+                        return;
+                    }
+                }
+            }
             if(canvas && (/^data:/.test(url) || url.split("/")[2] == document.domain)){
                 urlToBlobWithFetch(url, (blob, ext)=>{
                     if(!blob){
@@ -20991,6 +21008,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.remove();
                 },false);
 
+
                 var maxButton=container.querySelector('.pv-pic-window-max');
                 maxButton.style.cssText='top: -22px;right: 46px;';
                 this.maxButton=maxButton;
@@ -23626,6 +23644,621 @@ ImgOps | https://imgops.com/#b#`;
             }
         }, true);
 
+        function StitcherC() {
+            this.selecting = false;
+            this.previewing = false;
+            this.selected = new Set();
+            this.overlay = null;
+            this.preview = null;
+            this.layout = 'column';
+            this.dragging = false;
+            this.startX = 0;
+            this.startY = 0;
+        }
+
+        StitcherC.prototype = {
+            addStyle: function() {
+                if (StitcherC.style) {
+                    if (!StitcherC.style.parentNode) {
+                        StitcherC.style = _GM_addStyle(StitcherC.style.innerText);
+                    }
+                    return;
+                }
+                StitcherC.style = _GM_addStyle('\
+                    .pv-stitch-overlay {\
+                    position: fixed;\
+                    top: 0;\
+                    left: 0;\
+                    width: 100%;\
+                    height: 100%;\
+                    z-index:'+(prefs.imgWindow.zIndex + 5)+';\
+                    pointer-events: none;\
+                    }\
+                    .pv-stitch-overlay * {\
+                    box-sizing: border-box;\
+                    }\
+                    .pv-stitch-panel {\
+                    position: fixed;\
+                    top: 12px;\
+                    left: 12px;\
+                    display: flex;\
+                    gap: 8px;\
+                    padding: 6px;\
+                    background: rgba(0,0,0,0.65);\
+                    border: 1px solid rgba(255,255,255,0.2);\
+                    border-radius: 6px;\
+                    pointer-events: auto;\
+                    }\
+                    .pv-stitch-panel-inline {\
+                    position: absolute;\
+                    top: 8px;\
+                    right: 8px;\
+                    left: auto;\
+                    }\
+                    .pv-stitch-action {\
+                    width: 28px;\
+                    height: 28px;\
+                    display: flex;\
+                    align-items: center;\
+                    justify-content: center;\
+                    color: #fff;\
+                    background: rgba(255,255,255,0.12);\
+                    border-radius: 4px;\
+                    cursor: pointer;\
+                    }\
+                    .pv-stitch-action:hover {\
+                    background: rgba(255,255,255,0.25);\
+                    }\
+                    .pv-stitch-action.active {\
+                    background: rgba(255,255,255,0.4);\
+                    }\
+                    .pv-stitch-action>svg {\
+                    width: 18px;\
+                    height: 18px;\
+                    fill: none;\
+                    stroke: currentColor;\
+                    stroke-width: 3;\
+                    stroke-linecap: round;\
+                    stroke-linejoin: round;\
+                    }\
+                    .pv-stitch-box {\
+                    position: fixed;\
+                    border: 1px dashed rgba(255,255,255,0.9);\
+                    background: rgba(79,179,255,0.18);\
+                    pointer-events: none;\
+                    display: none;\
+                    }\
+                    .pv-stitch-selected {\
+                    outline: 3px solid rgba(79,179,255,0.95);\
+                    outline-offset: -3px;\
+                    box-shadow: 0 0 0 3px rgba(79,179,255,0.9), 0 0 12px rgba(79,179,255,0.85);\
+                    filter: brightness(0.78) saturate(1.15);\
+                    }\
+                    .pv-stitch-selected-parent {\
+                    outline: 3px solid rgba(79,179,255,0.95);\
+                    outline-offset: -3px;\
+                    box-shadow: 0 0 0 3px rgba(79,179,255,0.9), 0 0 12px rgba(79,179,255,0.85);\
+                    }\
+                    .pv-stitch-preview {\
+                    pointer-events: auto;\
+                    background: rgba(0,0,0,0.6);\
+                    }\
+                    .pv-stitch-stage {\
+                    position: fixed;\
+                    top: 50%;\
+                    left: 50%;\
+                    transform: translate(-50%, -50%);\
+                    max-width: 90vw;\
+                    max-height: 80vh;\
+                    overflow: auto;\
+                    padding: 12px;\
+                    background: rgba(0,0,0,0.75);\
+                    border: 1px solid rgba(255,255,255,0.2);\
+                    border-radius: 8px;\
+                    pointer-events: auto;\
+                    }\
+                    .pv-stitch-items {\
+                    display: flex;\
+                    gap: 10px;\
+                    }\
+                    .pv-stitch-items-horizontal {\
+                    flex-direction: row;\
+                    }\
+                    .pv-stitch-items-vertical {\
+                    flex-direction: column;\
+                    }\
+                    .pv-stitch-item {\
+                    padding: 6px;\
+                    background: rgba(0,0,0,0.55);\
+                    border: 1px solid rgba(255,255,255,0.2);\
+                    border-radius: 6px;\
+                    cursor: move;\
+                    }\
+                    .pv-stitch-item.dragging {\
+                    opacity: 0.4;\
+                    }\
+                    .pv-stitch-item img {\
+                    display: block;\
+                    max-width: 220px;\
+                    max-height: 220px;\
+                    }\
+                    .pv-stitch-selecting, .pv-stitch-selecting * {\
+                    user-select: none;\
+                    }\
+                ');
+            },
+            openSelect: function() {
+                if (this.selecting || this.previewing) return;
+                this.addStyle();
+                this.selecting = true;
+                if (floatBar) floatBar.hide();
+                document.documentElement.classList.add('pv-stitch-selecting');
+                const overlay = document.createElement('div');
+                overlay.className = 'pv-stitch-overlay pv-stitch-select';
+                overlay.innerHTML = createHTML(
+                    '<div class="pv-stitch-panel">'+
+                    '<div class="pv-stitch-action pv-stitch-action-done" title="'+i18n("stitchDone")+'">'+
+                    '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 12l5 5 11-11"></path></svg>'+
+                    '</div>'+
+                    '<div class="pv-stitch-action pv-stitch-action-cancel" title="'+i18n("stitchCancel")+'">'+
+                    '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6l-12 12"></path></svg>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="pv-stitch-box"></div>'
+                );
+                document.body.appendChild(overlay);
+                this.overlay = overlay;
+                this.box = overlay.querySelector('.pv-stitch-box');
+                const panel = overlay.querySelector('.pv-stitch-panel');
+                this.placePanel(panel);
+                overlay.querySelector('.pv-stitch-action-done').addEventListener('click', () => {
+                    if (!this.selected.size) {
+                        this.closeSelect();
+                        return;
+                    }
+                    const selected = Array.from(this.selected);
+                    this.closeSelect(false);
+                    this.openPreview(selected);
+                });
+                overlay.querySelector('.pv-stitch-action-cancel').addEventListener('click', () => {
+                    this.closeSelect();
+                });
+
+                this.onSelectMouseDown = (e) => {
+                    if (!this.selecting) return;
+                    if (panel.contains(e.target)) return;
+                    if (e.button !== 0 && e.button !== 2) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.dragging = true;
+                    panel.style.display = 'none';
+                    this.dragMode = (e.button === 2 || e.altKey || e.shiftKey) ? 'remove' : 'add';
+                    this.startX = e.clientX;
+                    this.startY = e.clientY;
+                    this.updateBox(e.clientX, e.clientY);
+                    this.box.style.display = 'block';
+                };
+                this.onSelectMouseMove = (e) => {
+                    if (!this.dragging) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.updateBox(e.clientX, e.clientY);
+                };
+                this.onSelectMouseUp = (e) => {
+                    if (!this.dragging) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.dragging = false;
+                    const rect = this.getBoxRect(e.clientX, e.clientY);
+                    this.box.style.display = 'none';
+                    if (rect.width < 4 && rect.height < 4) {
+                        const img = this.findImageAt(e.clientX, e.clientY);
+                        if (img) this.toggleSelection(img, this.dragMode);
+                        panel.style.display = '';
+                        this.placePanelNear(panel, e.clientX, e.clientY);
+                        return;
+                    }
+                    this.applySelection(rect, this.dragMode);
+                    panel.style.display = '';
+                    this.placePanelNear(panel, e.clientX, e.clientY);
+                };
+                this.onSelectClick = (e) => {
+                    if (!this.selecting) return;
+                    if (panel.contains(e.target)) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                };
+                this.onSelectContext = (e) => {
+                    if (!this.selecting) return;
+                    if (panel.contains(e.target)) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                };
+                this.onKeyDown = (e) => {
+                    if (e.key !== 'Escape') return;
+                    if (this.selecting) this.closeSelect();
+                    if (this.previewing) this.closePreview();
+                };
+                document.addEventListener('mousedown', this.onSelectMouseDown, true);
+                document.addEventListener('mousemove', this.onSelectMouseMove, true);
+                document.addEventListener('mouseup', this.onSelectMouseUp, true);
+                document.addEventListener('click', this.onSelectClick, true);
+                document.addEventListener('contextmenu', this.onSelectContext, true);
+                document.addEventListener('keydown', this.onKeyDown, true);
+            },
+            closeSelect: function(clear = true) {
+                if (!this.selecting) return;
+                this.selecting = false;
+                document.documentElement.classList.remove('pv-stitch-selecting');
+                if (this.overlay && this.overlay.parentNode) {
+                    this.overlay.parentNode.removeChild(this.overlay);
+                }
+                this.overlay = null;
+                this.box = null;
+                if (clear) this.clearSelection();
+                document.removeEventListener('mousedown', this.onSelectMouseDown, true);
+                document.removeEventListener('mousemove', this.onSelectMouseMove, true);
+                document.removeEventListener('mouseup', this.onSelectMouseUp, true);
+                document.removeEventListener('click', this.onSelectClick, true);
+                document.removeEventListener('contextmenu', this.onSelectContext, true);
+                if (!this.previewing) document.removeEventListener('keydown', this.onKeyDown, true);
+            },
+            clearSelection: function() {
+                this.selected.forEach((img) => {
+                    img.classList.remove('pv-stitch-selected');
+                    this.toggleParentClass(img, false);
+                });
+                this.selected.clear();
+            },
+            updateBox: function(x, y) {
+                const rect = this.getBoxRect(x, y);
+                this.box.style.left = rect.left + 'px';
+                this.box.style.top = rect.top + 'px';
+                this.box.style.width = rect.width + 'px';
+                this.box.style.height = rect.height + 'px';
+            },
+            getBoxRect: function(x, y) {
+                const left = Math.min(this.startX, x);
+                const top = Math.min(this.startY, y);
+                const width = Math.abs(this.startX - x);
+                const height = Math.abs(this.startY - y);
+                return {left, top, width, height, right: left + width, bottom: top + height};
+            },
+            applySelection: function(rect, mode) {
+                const imgs = this.getSelectableImages();
+                imgs.forEach((img) => {
+                    const r = img.getBoundingClientRect();
+                    if (rect.right < r.left || rect.left > r.right || rect.bottom < r.top || rect.top > r.bottom) return;
+                    if (mode === 'remove') this.removeSelection(img);
+                    else this.addSelection(img);
+                });
+            },
+            addSelection: function(img) {
+                if (this.selected.has(img)) return;
+                this.selected.add(img);
+                img.classList.add('pv-stitch-selected');
+                this.toggleParentClass(img, true);
+            },
+            removeSelection: function(img) {
+                if (!this.selected.has(img)) return;
+                this.selected.delete(img);
+                img.classList.remove('pv-stitch-selected');
+                this.toggleParentClass(img, false);
+            },
+            toggleSelection: function(img, mode) {
+                if (mode === 'remove') {
+                    this.removeSelection(img);
+                    return;
+                }
+                if (this.selected.has(img)) this.removeSelection(img);
+                else this.addSelection(img);
+            },
+            toggleParentClass: function(img, isAdd) {
+                const parent = img && img.parentNode;
+                if (!parent || parent.nodeType !== 1) return;
+                const tag = parent.tagName;
+                if (tag === 'BODY' || tag === 'HTML') return;
+                parent.classList.toggle('pv-stitch-selected-parent', isAdd);
+            },
+            findImageAt: function(x, y) {
+                const els = document.elementsFromPoint(x, y);
+                for (let i = 0; i < els.length; i++) {
+                    const el = els[i];
+                    if (this.overlay && this.overlay.contains(el)) continue;
+                    if (el.tagName === 'IMG') return el;
+                }
+                return null;
+            },
+            getSelectableImages: function() {
+                const imgs = document.querySelectorAll('img');
+                const list = [];
+                for (let i = 0; i < imgs.length; i++) {
+                    const img = imgs[i];
+                    if (!img.src && !img.currentSrc) continue;
+                    const style = unsafeWindow.getComputedStyle(img);
+                    if (style.display === 'none' || style.visibility === 'hidden') continue;
+                    const rect = img.getBoundingClientRect();
+                    if (rect.width < 4 || rect.height < 4) continue;
+                    list.push(img);
+                }
+                return list;
+            },
+            getImgSrc: function(img) {
+                const original = this.getOriginalImgSrc(img);
+                if (original) return original;
+                return img.currentSrc || img.src || img.getAttribute('data-src') || img.getAttribute('data-original') || img.getAttribute('data-lazy-src') || img.getAttribute('data-zoom-image') || img.getAttribute('data-large');
+            },
+            getOriginalImgSrc: function(img) {
+                if (!img) return "";
+                let imgPA, imgPE = [];
+                let imgPN = img.parentNode;
+                while (imgPN && imgPN.nodeType === 1 && imgPN.nodeName !== "BODY") {
+                    if (!imgPA && imgPN.nodeName === "A") imgPA = imgPN;
+                    imgPE.push(imgPN);
+                    imgPN = imgPN.parentNode;
+                }
+                try {
+                    if (matchedRule && matchedRule.rules && matchedRule.rules.length > 0 && matchedRule.getImage) {
+                        let src = matchedRule.getImage(img, imgPA, imgPE);
+                        if (Array.isArray(src)) src = src[0];
+                        if (src && src !== img.src) return src;
+                    }
+                } catch (e) {}
+                try {
+                    if (tprules && tprules[0]) {
+                        const src = tprules[0].call(img);
+                        if (src) return src;
+                    }
+                } catch (e) {}
+                if (imgPA && imgPA.href && imageReg.test(imgPA.href) && imgPA.href !== img.src) {
+                    return imgPA.href;
+                }
+                return "";
+            },
+            openPreview: function(selected) {
+                const srcs = [];
+                selected.forEach((img) => {
+                    const src = this.getImgSrc(img);
+                    if (src) srcs.push(src);
+                    img.classList.remove('pv-stitch-selected');
+                    this.toggleParentClass(img, false);
+                });
+                this.selected.clear();
+                if (!srcs.length) return;
+                if (this.previewing) return;
+                this.previewing = true;
+                this.addStyle();
+                const overlay = document.createElement('div');
+                overlay.className = 'pv-stitch-overlay pv-stitch-preview';
+                const isVertical = this.layout === 'column';
+                overlay.innerHTML = createHTML(
+                    '<div class="pv-stitch-stage">'+
+                    '<div class="pv-stitch-panel pv-stitch-panel-inline">'+
+                    '<div class="pv-stitch-action pv-stitch-action-horizontal'+(isVertical ? '' : ' active')+'" title="'+i18n("stitchHorizontal")+'">'+
+                    '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8h6M4 16h6M14 8h6M14 16h6"></path></svg>'+
+                    '</div>'+
+                    '<div class="pv-stitch-action pv-stitch-action-vertical'+(isVertical ? ' active' : '')+'" title="'+i18n("stitchVertical")+'">'+
+                    '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 4v6M16 4v6M8 14v6M16 14v6"></path></svg>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="pv-stitch-items '+(isVertical ? 'pv-stitch-items-vertical' : 'pv-stitch-items-horizontal')+'"></div>'+
+                    '</div>'+
+                    '<div class="pv-stitch-panel pv-stitch-panel-action">'+
+                    '<div class="pv-stitch-action pv-stitch-action-done" title="'+i18n("stitchDone")+'">'+
+                    '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 12l5 5 11-11"></path></svg>'+
+                    '</div>'+
+                    '<div class="pv-stitch-action pv-stitch-action-cancel" title="'+i18n("stitchCancel")+'">'+
+                    '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6l-12 12"></path></svg>'+
+                    '</div>'+
+                    '</div>'
+                );
+                document.body.appendChild(overlay);
+                this.preview = overlay;
+                const itemsCon = overlay.querySelector('.pv-stitch-items');
+                const stage = overlay.querySelector('.pv-stitch-stage');
+                const actionPanel = overlay.querySelector('.pv-stitch-panel-action');
+                this.placeActionPanel(stage, actionPanel);
+                srcs.forEach((src) => {
+                    const item = document.createElement('div');
+                    item.className = 'pv-stitch-item';
+                    item.setAttribute('draggable', 'true');
+                    item.dataset.src = src;
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.addEventListener('load', () => this.placeActionPanel(stage, actionPanel));
+                    item.appendChild(img);
+                    itemsCon.appendChild(item);
+                });
+                setTimeout(() => this.placeActionPanel(stage, actionPanel), 0);
+                let dragItem = null;
+                itemsCon.addEventListener('dragstart', (e) => {
+                    const item = e.target.closest('.pv-stitch-item');
+                    if (!item) return;
+                    dragItem = item;
+                    dragItem.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                itemsCon.addEventListener('dragend', () => {
+                    if (dragItem) dragItem.classList.remove('dragging');
+                    dragItem = null;
+                });
+                itemsCon.addEventListener('dragover', (e) => {
+                    if (!dragItem) return;
+                    const target = e.target.closest('.pv-stitch-item');
+                    if (!target || target === dragItem) return;
+                    e.preventDefault();
+                    const rect = target.getBoundingClientRect();
+                    const before = this.layout === 'row' ? e.clientX < rect.left + rect.width / 2 : e.clientY < rect.top + rect.height / 2;
+                    itemsCon.insertBefore(dragItem, before ? target : target.nextSibling);
+                });
+
+                const btnHorizontal = overlay.querySelector('.pv-stitch-action-horizontal');
+                const btnVertical = overlay.querySelector('.pv-stitch-action-vertical');
+                btnHorizontal.addEventListener('click', () => {
+                    this.setLayout('row', itemsCon, btnHorizontal, btnVertical);
+                    this.placeActionPanel(stage, actionPanel);
+                });
+                btnVertical.addEventListener('click', () => {
+                    this.setLayout('column', itemsCon, btnHorizontal, btnVertical);
+                    this.placeActionPanel(stage, actionPanel);
+                });
+                overlay.querySelector('.pv-stitch-action-done').addEventListener('click', async () => {
+                    const ordered = Array.from(itemsCon.querySelectorAll('.pv-stitch-item')).map(item => item.dataset.src);
+                    this.closePreview();
+                    await this.renderStitch(ordered, this.layout);
+                });
+                overlay.querySelector('.pv-stitch-action-cancel').addEventListener('click', () => {
+                    this.closePreview();
+                });
+                document.addEventListener('keydown', this.onKeyDown, true);
+            },
+            closePreview: function() {
+                if (!this.previewing) return;
+                this.previewing = false;
+                if (this.preview && this.preview.parentNode) {
+                    this.preview.parentNode.removeChild(this.preview);
+                }
+                this.preview = null;
+                if (!this.selecting) document.removeEventListener('keydown', this.onKeyDown, true);
+            },
+            placePanel: function(panel) {
+                if (!panel) return;
+                requestAnimationFrame(() => {
+                    const rect = panel.getBoundingClientRect();
+                    const pad = 8;
+                    const left = Math.min(Math.max(pad, (window.innerWidth - rect.width) / 2), window.innerWidth - rect.width - pad);
+                    let top = Math.round(window.innerHeight * 0.72);
+                    if (top + rect.height > window.innerHeight - pad) {
+                        top = window.innerHeight - rect.height - pad;
+                    }
+                    if (top < pad) top = pad;
+                    panel.style.left = left + 'px';
+                    panel.style.top = top + 'px';
+                });
+            },
+            placePanelNear: function(panel, x, y) {
+                if (!panel) return;
+                requestAnimationFrame(() => {
+                    const rect = panel.getBoundingClientRect();
+                    const pad = 8;
+                    const maxX = Math.max(pad, window.innerWidth - rect.width - pad);
+                    const maxY = Math.max(pad, window.innerHeight - rect.height - pad);
+                    let left = x + 12;
+                    let top = y + 12;
+                    if (left > maxX) left = x - rect.width - 12;
+                    if (top > maxY) top = y - rect.height - 12;
+                    left = Math.min(Math.max(pad, left), maxX);
+                    top = Math.min(Math.max(pad, top), maxY);
+                    panel.style.left = left + 'px';
+                    panel.style.top = top + 'px';
+                });
+            },
+            placeActionPanel: function(stage, panel) {
+                if (!stage || !panel) return;
+                requestAnimationFrame(() => {
+                    const stageRect = stage.getBoundingClientRect();
+                    const panelRect = panel.getBoundingClientRect();
+                    const pad = 8;
+                    const centerX = stageRect.left + stageRect.width / 2 - panelRect.width / 2;
+                    let top = stageRect.bottom + 12;
+                    let left = centerX;
+                    if (top + panelRect.height > window.innerHeight - pad) {
+                        top = stageRect.top - panelRect.height - 12;
+                    }
+                    left = Math.min(Math.max(pad, left), window.innerWidth - panelRect.width - pad);
+                    top = Math.min(Math.max(pad, top), window.innerHeight - panelRect.height - pad);
+                    panel.style.left = left + 'px';
+                    panel.style.top = top + 'px';
+                });
+            },
+            setLayout: function(layout, itemsCon, btnHorizontal, btnVertical) {
+                this.layout = layout === 'column' ? 'column' : 'row';
+                itemsCon.classList.toggle('pv-stitch-items-horizontal', this.layout === 'row');
+                itemsCon.classList.toggle('pv-stitch-items-vertical', this.layout === 'column');
+                btnHorizontal.classList.toggle('active', this.layout === 'row');
+                btnVertical.classList.toggle('active', this.layout === 'column');
+            },
+            loadImageForStitch: function(src) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    let revoke = null;
+                    const onLoad = () => resolve({img, revoke});
+                    const onError = () => reject(new Error('load failed'));
+                    img.onload = onLoad;
+                    img.onerror = onError;
+                    if (/^data:|^blob:/i.test(src)) {
+                        img.src = src;
+                        return;
+                    }
+                    _GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: src,
+                        responseType: 'blob',
+                        onload: (response) => {
+                            if (response.response instanceof Blob) {
+                                const blobUrl = URL.createObjectURL(response.response);
+                                revoke = () => URL.revokeObjectURL(blobUrl);
+                                img.src = blobUrl;
+                                return;
+                            }
+                            img.src = src;
+                        },
+                        onerror: onError
+                    });
+                });
+            },
+            renderStitch: async function(srcs, layout) {
+                if (!srcs || !srcs.length) return;
+                try {
+                    const loaded = await Promise.all(srcs.map(src => this.loadImageForStitch(src)));
+                    let totalW = 0;
+                    let totalH = 0;
+                    if (layout === 'column') {
+                        loaded.forEach(({img}) => {
+                            totalW = Math.max(totalW, img.naturalWidth || img.width);
+                            totalH += img.naturalHeight || img.height;
+                        });
+                    } else {
+                        loaded.forEach(({img}) => {
+                            totalW += img.naturalWidth || img.width;
+                            totalH = Math.max(totalH, img.naturalHeight || img.height);
+                        });
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.max(1, totalW);
+                    canvas.height = Math.max(1, totalH);
+                    const ctx = canvas.getContext('2d');
+                    let offset = 0;
+                    loaded.forEach(({img}) => {
+                        const w = img.naturalWidth || img.width;
+                        const h = img.naturalHeight || img.height;
+                        if (layout === 'column') {
+                            ctx.drawImage(img, 0, offset, w, h);
+                            offset += h;
+                        } else {
+                            ctx.drawImage(img, offset, 0, w, h);
+                            offset += w;
+                        }
+                    });
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    loaded.forEach(({revoke}) => revoke && revoke());
+                    if (!blob) return;
+                    const blobUrl = unsafeWindow.URL.createObjectURL(blob);
+                    const outImg = new Image();
+                    outImg.src = blobUrl;
+                    outImg.title = document.title || '';
+                    outImg.alt = outImg.title;
+                    const data = {img: outImg, imgSrc: blobUrl, src: blobUrl, srcs: [blobUrl]};
+                    new ImgWindowC(outImg, data, true);
+                } catch (e) {
+                    console.warn('[Picviewer CE+] stitch failed', e);
+                }
+            }
+        };
+
+        var stitcher = new StitcherC();
+
         var lastPopupLoading;
         // 载入动画
         function LoadingAnimC(data, buttonType, waitImgLoad, openInTopWindow, initPos) {
@@ -24109,7 +24742,7 @@ ImgOps | https://imgops.com/#b#`;
                 var container=document.createElement('span');
                 container.id='pv-float-bar-container';
                 getBody(document).appendChild(container);
-                for(let i=0;i<5;i++){
+                for(let i=0;i<prefs.floatBar.butonOrder.length;i++){
                     let spanChild=document.createElement('span');
                     spanChild.className='pv-float-bar-button';
                     container.appendChild(spanChild);
@@ -24134,6 +24767,7 @@ ImgOps | https://imgops.com/#b#`;
                         current:i18n("currentBtn").replace(/ ?\(C\)/,` (${prefs.floatBar.keys.current.toUpperCase()})`),
                         magnifier:i18n("magnifierBtn").replace(/ ?\(M\)/,` (${prefs.floatBar.keys.magnifier.toUpperCase()})`),
                         download:i18n("download")+` (${prefs.floatBar.keys.download.toUpperCase()})`,
+                        stitch:i18n("stitch"),
                     };
                     var buttonName=prefs.floatBar.butonOrder[index];
                     if(!buttonName){
@@ -24143,6 +24777,7 @@ ImgOps | https://imgops.com/#b#`;
                     buttons[buttonName]=child;
                     child.title=titleMap[buttonName];
                     child.classList.add('pv-float-bar-button-' + buttonName);
+                    child.style.zIndex = Math.max(1, prefs.floatBar.butonOrder.length - index);
                 });
 
 
@@ -24266,9 +24901,16 @@ ImgOps | https://imgops.com/#b#`;
                     #pv-float-bar-container .pv-float-bar-button-download {\
                     background-image:url("'+ prefs.icons.download +'")!important;\
                     }\
+                    #pv-float-bar-container .pv-float-bar-button-stitch {\
+                    background-image:url("'+ prefs.icons.stitch +'")!important;\
+                    }\
                     ');
             },
             start:function(data){
+                if (stitcher && stitcher.selecting) {
+                    this.hide();
+                    return false;
+                }
 
                 if (data && data.type == "link") {
                     data.hide = true;
@@ -24539,6 +25181,13 @@ ImgOps | https://imgops.com/#b#`;
             open:async function(e,buttonType){
                 if (!this.shown || !this.data || !this.data.imgSrc) return;
                 if (window.getSelection().toString()) return;
+                if (buttonType === 'stitch') {
+                    if (ImgWindowC.all && ImgWindowC.all.length) {
+                        ImgWindowC.all.slice(0).forEach(win => win.remove(true));
+                    }
+                    if (stitcher) stitcher.openSelect();
+                    return;
+                }
                 if (this.data.imgSrc.indexOf("blob:") === 0) {
                     let blobUrl = await getBase64FromBlobUrl(this.data.imgSrc);
                     if (blobUrl) {
@@ -27530,6 +28179,12 @@ ImgOps | https://imgops.com/#b#`;
         }
         _GM_registerMenuCommand(i18n("openConfig"), openPrefs);
         _GM_registerMenuCommand(i18n("openGallery"), openGallery);
+        _GM_registerMenuCommand(i18n("stitch"), () => {
+            if (ImgWindowC.all && ImgWindowC.all.length) {
+                ImgWindowC.all.slice(0).forEach(win => win.remove(true));
+            }
+            if (stitcher) stitcher.openSelect();
+        });
         _GM_registerMenuCommand(i18n("hideIcon") + (hideIcon ? "☑️" : ""), () => {
             hideIcon=!hideIcon;
             storage.setListItem("hideIcon", location.hostname, hideIcon);
