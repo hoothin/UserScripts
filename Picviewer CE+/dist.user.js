@@ -23984,8 +23984,6 @@ ImgOps | https://imgops.com/#b#`;
                 return list;
             },
             getImgSrc: function(img) {
-                const original = this.getOriginalImgSrc(img);
-                if (original) return original;
                 return img.currentSrc || img.src || img.getAttribute('data-src') || img.getAttribute('data-original') || img.getAttribute('data-lazy-src') || img.getAttribute('data-zoom-image') || img.getAttribute('data-large');
             },
             getOriginalImgSrc: function(img) {
@@ -24016,15 +24014,22 @@ ImgOps | https://imgops.com/#b#`;
                 return "";
             },
             openPreview: function(selected) {
-                const srcs = [];
+                const sources = [];
                 selected.forEach((img) => {
-                    const src = this.getImgSrc(img);
-                    if (src) srcs.push(src);
+                    const current = this.getImgSrc(img);
+                    const original = this.getOriginalImgSrc(img);
+                    const displaySrc = current || original;
+                    if (displaySrc) {
+                        sources.push({
+                            current: displaySrc,
+                            original: original && original !== displaySrc ? original : ''
+                        });
+                    }
                     img.classList.remove('pv-stitch-selected');
                     this.toggleParentClass(img, false);
                 });
                 this.selected.clear();
-                if (!srcs.length) return;
+                if (!sources.length) return;
                 if (this.previewing) return;
                 this.previewing = true;
                 this.addStyle();
@@ -24058,13 +24063,14 @@ ImgOps | https://imgops.com/#b#`;
                 const stage = overlay.querySelector('.pv-stitch-stage');
                 const actionPanel = overlay.querySelector('.pv-stitch-panel-action');
                 this.placeActionPanel(stage, actionPanel);
-                srcs.forEach((src) => {
+                sources.forEach((source) => {
                     const item = document.createElement('div');
                     item.className = 'pv-stitch-item';
                     item.setAttribute('draggable', 'true');
-                    item.dataset.src = src;
+                    item.dataset.src = source.current;
+                    if (source.original) item.dataset.original = source.original;
                     const img = document.createElement('img');
-                    img.src = src;
+                    img.src = source.current;
                     img.addEventListener('load', () => this.placeActionPanel(stage, actionPanel));
                     item.appendChild(img);
                     itemsCon.appendChild(item);
@@ -24103,7 +24109,10 @@ ImgOps | https://imgops.com/#b#`;
                     this.placeActionPanel(stage, actionPanel);
                 });
                 overlay.querySelector('.pv-stitch-action-done').addEventListener('click', async () => {
-                    const ordered = Array.from(itemsCon.querySelectorAll('.pv-stitch-item')).map(item => item.dataset.src);
+                    const ordered = Array.from(itemsCon.querySelectorAll('.pv-stitch-item')).map(item => ({
+                        current: item.dataset.src,
+                        original: item.dataset.original || ''
+                    }));
                     this.closePreview();
                     await this.renderStitch(ordered, this.layout);
                 });
@@ -24211,49 +24220,68 @@ ImgOps | https://imgops.com/#b#`;
                     });
                 });
             },
-            renderStitch: async function(srcs, layout) {
-                if (!srcs || !srcs.length) return;
-                try {
-                    const loaded = await Promise.all(srcs.map(src => this.loadImageForStitch(src)));
-                    let totalW = 0;
-                    let totalH = 0;
-                    if (layout === 'column') {
-                        loaded.forEach(({img}) => {
-                            totalW = Math.max(totalW, img.naturalWidth || img.width);
-                            totalH += img.naturalHeight || img.height;
-                        });
-                    } else {
-                        loaded.forEach(({img}) => {
-                            totalW += img.naturalWidth || img.width;
-                            totalH = Math.max(totalH, img.naturalHeight || img.height);
-                        });
-                    }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = Math.max(1, totalW);
-                    canvas.height = Math.max(1, totalH);
-                    const ctx = canvas.getContext('2d');
-                    let offset = 0;
+            createStitchBlobUrl: async function(srcs, layout) {
+                const loaded = await Promise.all(srcs.map(src => this.loadImageForStitch(src)));
+                let totalW = 0;
+                let totalH = 0;
+                if (layout === 'column') {
                     loaded.forEach(({img}) => {
-                        const w = img.naturalWidth || img.width;
-                        const h = img.naturalHeight || img.height;
-                        if (layout === 'column') {
-                            ctx.drawImage(img, 0, offset, w, h);
-                            offset += h;
-                        } else {
-                            ctx.drawImage(img, offset, 0, w, h);
-                            offset += w;
-                        }
+                        totalW = Math.max(totalW, img.naturalWidth || img.width);
+                        totalH += img.naturalHeight || img.height;
                     });
-                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                    loaded.forEach(({revoke}) => revoke && revoke());
-                    if (!blob) return;
-                    const blobUrl = unsafeWindow.URL.createObjectURL(blob);
+                } else {
+                    loaded.forEach(({img}) => {
+                        totalW += img.naturalWidth || img.width;
+                        totalH = Math.max(totalH, img.naturalHeight || img.height);
+                    });
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.max(1, totalW);
+                canvas.height = Math.max(1, totalH);
+                const ctx = canvas.getContext('2d');
+                let offset = 0;
+                loaded.forEach(({img}) => {
+                    const w = img.naturalWidth || img.width;
+                    const h = img.naturalHeight || img.height;
+                    if (layout === 'column') {
+                        ctx.drawImage(img, 0, offset, w, h);
+                        offset += h;
+                    } else {
+                        ctx.drawImage(img, offset, 0, w, h);
+                        offset += w;
+                    }
+                });
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                loaded.forEach(({revoke}) => revoke && revoke());
+                if (!blob) return '';
+                return unsafeWindow.URL.createObjectURL(blob);
+            },
+            renderStitch: async function(items, layout) {
+                if (!items || !items.length) return;
+                try {
+                    const currentSrcs = items.map(item => item.current || item.src || item);
+                    if (currentSrcs.some(src => !src)) return;
+                    const blobUrl = await this.createStitchBlobUrl(currentSrcs, layout);
+                    if (!blobUrl) return;
                     const outImg = new Image();
                     outImg.src = blobUrl;
                     outImg.title = document.title || '';
                     outImg.alt = outImg.title;
                     const data = {img: outImg, imgSrc: blobUrl, src: blobUrl, srcs: [blobUrl]};
-                    new ImgWindowC(outImg, data, true);
+                    const imgWin = new ImgWindowC(outImg, data, true);
+                    const finalSrcs = items.map((item, index) => item.original || currentSrcs[index]);
+                    const needsReplace = finalSrcs.some((src, index) => src && src !== currentSrcs[index]);
+                    if (!needsReplace) return;
+                    this.createStitchBlobUrl(finalSrcs, layout).then((finalBlobUrl) => {
+                        if (!finalBlobUrl) return;
+                        if (!imgWin || imgWin.removed) {
+                            unsafeWindow.URL.revokeObjectURL(finalBlobUrl);
+                            return;
+                        }
+                        imgWin.changeData({img: imgWin.img, imgSrc: finalBlobUrl, src: finalBlobUrl, srcs: [finalBlobUrl]});
+                    }).catch((e) => {
+                        console.warn('[Picviewer CE+] stitch replace failed', e);
+                    });
                 } catch (e) {
                     console.warn('[Picviewer CE+] stitch failed', e);
                 }
