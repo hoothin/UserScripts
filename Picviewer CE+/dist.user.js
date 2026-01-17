@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2026.1.13.1
+// @version              2026.1.17.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -24224,15 +24224,33 @@ ImgOps | https://imgops.com/#b#`;
                 const loaded = await Promise.all(srcs.map(src => this.loadImageForStitch(src)));
                 let totalW = 0;
                 let totalH = 0;
+                let maxW = 0;
+                let maxH = 0;
+                loaded.forEach(({img}) => {
+                    const w = img.naturalWidth || img.width;
+                    const h = img.naturalHeight || img.height;
+                    if (w > maxW) maxW = w;
+                    if (h > maxH) maxH = h;
+                });
                 if (layout === 'column') {
                     loaded.forEach(({img}) => {
-                        totalW = Math.max(totalW, img.naturalWidth || img.width);
-                        totalH += img.naturalHeight || img.height;
+                        const w = img.naturalWidth || img.width;
+                        const h = img.naturalHeight || img.height;
+                        const ratio = w ? (maxW / w) : 1;
+                        const drawW = maxW || w;
+                        const drawH = h * ratio;
+                        totalW = Math.max(totalW, drawW);
+                        totalH += drawH;
                     });
                 } else {
                     loaded.forEach(({img}) => {
-                        totalW += img.naturalWidth || img.width;
-                        totalH = Math.max(totalH, img.naturalHeight || img.height);
+                        const w = img.naturalWidth || img.width;
+                        const h = img.naturalHeight || img.height;
+                        const ratio = h ? (maxH / h) : 1;
+                        const drawH = maxH || h;
+                        const drawW = w * ratio;
+                        totalW += drawW;
+                        totalH = Math.max(totalH, drawH);
                     });
                 }
                 const canvas = document.createElement('canvas');
@@ -24244,11 +24262,17 @@ ImgOps | https://imgops.com/#b#`;
                     const w = img.naturalWidth || img.width;
                     const h = img.naturalHeight || img.height;
                     if (layout === 'column') {
-                        ctx.drawImage(img, 0, offset, w, h);
-                        offset += h;
+                        const ratio = w ? (maxW / w) : 1;
+                        const drawW = maxW || w;
+                        const drawH = h * ratio;
+                        ctx.drawImage(img, 0, offset, drawW, drawH);
+                        offset += drawH;
                     } else {
-                        ctx.drawImage(img, offset, 0, w, h);
-                        offset += w;
+                        const ratio = h ? (maxH / h) : 1;
+                        const drawH = maxH || h;
+                        const drawW = w * ratio;
+                        ctx.drawImage(img, offset, 0, drawW, drawH);
+                        offset += drawW;
                     }
                 });
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
@@ -28266,7 +28290,7 @@ ImgOps | https://imgops.com/#b#`;
         var configStyle = document.createElement("style");
         configStyle.textContent = "#pv-prefs { display: initial; }";
         configStyle.type = 'text/css';
-        if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/") {
+        if ((location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/") || (location.hostname == "pv.hoothin.com" && location.pathname.indexOf("open-settings") !== -1)) {
             openPrefs();
         } else if (location.hostname == "hoothin.github.io" && location.pathname == "/UserScripts/Picviewer%20CE+/gallery.html") {
             let gallery = new GalleryC();
@@ -28382,7 +28406,7 @@ ImgOps | https://imgops.com/#b#`;
 
             setTimeout(()=>{
                 if (GM_config.frame && GM_config.frame.contentDocument.body.innerHTML === "") {
-                    _GM_openInTab("https://hoothin.github.io/UserScripts/Picviewer%20CE+/", {active:true});
+                    _GM_openInTab("https://pv.hoothin.com/open-settings", {active:true});
                     return;
                 }
                 if (GM_config.frame && GM_config.frame.style && GM_config.frame.style.display == "none") {
@@ -28420,6 +28444,7 @@ ImgOps | https://imgops.com/#b#`;
             try {
                 if (localStorage && localStorage.setItem) {
                     if (!storage.getItem('inited')) {
+                        _GM_openInTab("https://pv.hoothin.com/first-run");
                         localStorage.setItem('picviewerCE.config.curTab', 4);
                         storage.setItem('inited', true);
                     }
