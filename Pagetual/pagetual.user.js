@@ -9328,7 +9328,7 @@
                 importBtn.style.fontSize = "20px";
                 importBtn.addEventListener("click", e => {
                     let parentNode = importBtn.parentNode;
-                    if (!parentNode) return;
+                    if (!parentNode || !e.isTrusted) return;
                     parentNode.removeChild(importBtn);
                     try {
                         let rules = parentNode.innerText.trim();
@@ -9522,11 +9522,11 @@
                   padding: 0!important;
                  }
                  #saveBtn {
-                  width: 60vw;
+                  width: var(--config-width, 60vw);
                   position: fixed;
                   z-index: 999;
                   bottom: 0;
-                  left: 20vw;
+                  left: var(--config-left, 20vw);
                   font-size: xx-large;
                   opacity: 0.6;
                   cursor: pointer;
@@ -10021,6 +10021,7 @@
         }
 
         updateP.onclick = e => {
+            if (!e.isTrusted) return;
             updateFail = false;
             //ruleParser.rules = [];
             showTips(i18n("beginUpdate"), "", 30000);
@@ -10105,8 +10106,29 @@
         saveBtn.innerHTML = i18n("save");
         saveBtn.id = "saveBtn";
         configCon.appendChild(saveBtn);
+        saveBtn.style.display = "none";
+        const syncSaveBtnLayout = () => {
+            if (!configCon || !saveBtn) return;
+            const rect = configCon.getBoundingClientRect();
+            if (rect.width > 0) {
+                document.documentElement.style.setProperty("--config-left", `${rect.left}px`);
+                document.documentElement.style.setProperty("--config-width", `${rect.width}px`);
+                saveBtn.style.display = "";
+            } else {
+                saveBtn.style.display = "none";
+            }
+        };
+        syncSaveBtnLayout();
+        window.addEventListener("resize", syncSaveBtnLayout);
+        if (window.ResizeObserver) {
+            const saveBtnResizeObserver = new ResizeObserver(() => {
+                syncSaveBtnLayout();
+            });
+            saveBtnResizeObserver.observe(configCon);
+        }
         saveBtn.onclick = e => {
             try {
+                if (!e.isTrusted) return;
                 let customRules;
                 if (editor) {
                     if (editorChanged) {
