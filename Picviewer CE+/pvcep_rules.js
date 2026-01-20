@@ -302,8 +302,8 @@ var siteInfo = [
         name: '花瓣网',
         url: /^https?:\/\/huaban\.com\//i,
         ext: 'previous-2',
-        r: [/(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i, /_fw\d+\w+/i],
-        s: ['$1_fw658', ''],
+        r: [/(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i, /(\/small)(\/.*)_fw\d+\w+/i, /_fw\d+\w+/i],
+        s: ['$1_fw658', '$2', ''],
         description: './../following-sibling::p[@class="description"]',
         exclude: /weixin_code\.png$/i
     },
