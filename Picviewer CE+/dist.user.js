@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=23710
-// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1714183
+// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1738227
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1733533
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
