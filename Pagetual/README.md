@@ -30,10 +30,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="3"><a href="mailto:rixixi@gmail.com">Send 📧email</a></th>
     </tr>
     <tr>
-        <th colspan="3">Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>
-    </tr>
-    <tr>
-        <th colspan="5"><a href="https://hoothin.com/pagetual/sponsors.svg"><img style="" wmode="transparent" id="sponsors" src="https://hoothin.com/pagetual/sponsors.svg?2023.12.9"></a></th>
+        <th colspan="3"><img width="1000" height="1" /><br>Made with ❤️ by <a href="https://github.com/hoothin">Hoothin</a></th>
     </tr>
 </table>
 
