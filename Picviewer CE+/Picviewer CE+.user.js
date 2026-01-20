@@ -46,7 +46,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1714183/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/438080/1738227/pvcep_rules.js
 // @require              https://update.greasyfork.org/scripts/440698/1733533/pvcep_lang.js
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
