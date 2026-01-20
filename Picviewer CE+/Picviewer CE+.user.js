@@ -27420,6 +27420,8 @@ ImgOps | https://imgops.com/#b#`;
                 "#pv-prefs .section_header_holder { padding-right: 10px; }",
                 "#pv-prefs textarea { width: 100%; }",
                 "#pv-prefs .nav-tabs { white-space: nowrap; width: fit-content; max-width: 100%; margin: 20 auto; display: flex; overflow-x: auto; overflow-y: visible; }",
+                "#pv-prefs_buttons_holder { position: fixed; bottom: 0; width: 100%; right: 10px; background: #EEE; }",
+                "#pv-prefs_wrapper { padding-bottom: 70px; }"
             ].join('\n'),
             fields: {
                 // 浮动工具栏
@@ -28055,6 +28057,9 @@ ImgOps | https://imgops.com/#b#`;
             },
             events: {
                 open: async function(doc, win, frame) {
+                    if (localStorage && localStorage.getItem && localStorage.getItem('picviewerCE.config.curTab') === null) {
+                        localStorage.setItem('picviewerCE.config.curTab', 4);
+                    }
                     isConfigOpen = true;
                     let saveBtn = doc.querySelector("#"+this.id+"_saveBtn");
                     let closeBtn = doc.querySelector("#"+this.id+"_closeBtn");
@@ -28442,12 +28447,9 @@ ImgOps | https://imgops.com/#b#`;
                 }
             });
             try {
-                if (localStorage && localStorage.setItem) {
-                    if (!storage.getItem('inited')) {
-                        _GM_openInTab("https://pv.hoothin.com/first-run");
-                        localStorage.setItem('picviewerCE.config.curTab', 4);
-                        storage.setItem('inited', true);
-                    }
+                if (!storage.getItem('inited')) {
+                    _GM_openInTab("https://pv.hoothin.com/first-run", {active:true});
+                    storage.setItem('inited', true);
                 }
             } catch(e) {}
             if (typeof prefs.gallery.formatConversion == 'undefined') {
