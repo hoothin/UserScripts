@@ -38,8 +38,6 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 <summary><h3>Pagetual User-defined rules cases</h3></summary>
      
 + [TerenceCK pagetualRules](https://github.com/TerenceCK/pagetualRules/blob/main/happymh.json)
-+ [Liu's-Pagetual-Rule](https://github.com/JPLiu/TestFiles/blob/main/UserScripts/Pagetual/Liu's-Pagetual-Rule.json)
-+ [skofkyo pagetualRules_EX](https://github.com/skofkyo/AutoPager/blob/main/pagetualRules_EX.json)
 + [MovByte eToolsPagetual](https://gist.github.com/MovByte/a585456490d2e1c8ca815871db0887f7)
  </details>
 
