@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2026.1.17.1
+// @version              2026.1.23.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -47,7 +47,7 @@
 // @grant                unsafeWindow
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=23710
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1738227
-// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1733533
+// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1740314
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -28254,6 +28254,30 @@ ImgOps | https://imgops.com/#b#`;
                 document.head.removeChild(hideIconStyle);
             }
         });
+        function buildDisableKeyPattern() {
+            let originPattern = location.origin.replace(/^https?/, "https?").replace(/\./g, "\\.");
+            let pathBase = location.pathname.replace(/[^\/]*$/, "");
+            return "^" + originPattern + pathBase;
+        }
+        function isDisableKeyPatternMatched() {
+            let pattern = buildDisableKeyPattern();
+            let list = normalizeDisableKeySites(prefs.floatBar.disableKeySites);
+            return list.indexOf(pattern) !== -1;
+        }
+        _GM_registerMenuCommand(
+            isDisableKeyPatternMatched() ? i18n("restoreKeyForHost") : i18n("disableKeyForHost"),
+            () => {
+                let pattern = buildDisableKeyPattern();
+                let list = normalizeDisableKeySites(prefs.floatBar.disableKeySites);
+                if (list.indexOf(pattern) === -1) {
+                    list.unshift(pattern);
+                    saveDisableKeySites(list);
+                } else {
+                    let nextList = list.filter(item => item !== pattern);
+                    saveDisableKeySites(nextList);
+                }
+            }
+        );
         _GM_registerMenuCommand(i18n("ruleRequest"), () => {
             _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?labels=Picviewer%20CE%2B&template=custom-rule-request.md&title=Request%20Picviewer%20CE%2B%20support%20for%20" + location.hostname, {active:true});
         });
@@ -28346,19 +28370,47 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         // 注册按键
-        let disableKey = false;
-        if (prefs.floatBar.disableKeySites) {
-            let sitesArr = prefs.floatBar.disableKeySites.split("\n");
-            for(let s = 0; s < sitesArr.length; s++) {
-                let siteReg = sitesArr[s].trim();
-                if (new RegExp(siteReg).test(_URL)) {
-                    disableKey = true;
-                    break;
+        function normalizeDisableKeySites(value) {
+            if (!value) return [];
+            return value.split("\n").map(s => s.trim()).filter(Boolean);
+        }
+
+        function isKeyDisabledForUrl(url, host, list) {
+            for (let i = 0; i < list.length; i++) {
+                let siteReg = list[i];
+                try {
+                    let reg = new RegExp(siteReg);
+                    if (reg.test(url) || reg.test(host)) return true;
+                } catch (e) {
                 }
             }
+            return false;
         }
-        if (!disableKey) {
-            document.addEventListener('keydown', keydown, true);
+
+        let keydownBound = false;
+        function updateKeydownListener() {
+            let list = normalizeDisableKeySites(prefs.floatBar.disableKeySites);
+            let disableKey = isKeyDisabledForUrl(_URL, location.hostname, list);
+            if (!disableKey && !keydownBound) {
+                document.addEventListener('keydown', keydown, true);
+                keydownBound = true;
+            } else if (disableKey && keydownBound) {
+                document.removeEventListener('keydown', keydown, true);
+                keydownBound = false;
+            }
+        }
+        updateKeydownListener();
+
+        function saveDisableKeySites(list) {
+            let value = list.join("\n");
+            prefs.floatBar.disableKeySites = value;
+            if (GM_config && GM_config.set) {
+                GM_config.set('floatBar.disableKeySites', value);
+                let field = GM_config.fields && GM_config.fields['floatBar.disableKeySites'];
+                if (field && field.node) field.node.value = value;
+                GM_config.save();
+            }
+            updateKeydownListener();
         }
 
         let canImport = false;
