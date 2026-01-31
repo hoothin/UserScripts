@@ -11925,7 +11925,7 @@ var floatBar;
     'use strict';
 
     //var siteInfo = [{}];
-    var debug;
+    var debug = console.log.bind(console);
     var lang;
     function initLang(){
         let customLang=storage.getItem("customLang")||'auto';
@@ -12744,24 +12744,6 @@ ImgOps | https://imgops.com/#b#`;
             return;
         } catch (e) {
         }
-
-        const existingPolicies = new Set(unsafeWindow.trustedTypes.getPolicyNames());
-        for (const name of allowedNames) {
-            if (name === '*' || existingPolicies.has(name)) {
-                continue;
-            }
-
-            try {
-                escapeHTMLPolicy = unsafeWindow.trustedTypes.createPolicy(name, {
-                    createHTML: (string, sink) => string,
-                    createScriptURL: string => string,
-                    createScript: string => string
-                });
-                return;
-            } catch (e) {
-                debug(`create '${name}' failed, trying next...`);
-            }
-        }
         debug("Could not create any trusted types policy.");
     }
 
@@ -12771,7 +12753,107 @@ ImgOps | https://imgops.com/#b#`;
         return doc.body || doc.querySelector('body') || doc;
     }
     function createHTML(html){
-        return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+        const fragment = document.createDocumentFragment();
+        if (html === null || html === undefined || html === '') return fragment;
+        parseHTMLToFragment(String(html), fragment, document);
+        return fragment;
+    }
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const VOID_TAGS = {
+        area: true,
+        base: true,
+        br: true,
+        col: true,
+        embed: true,
+        hr: true,
+        img: true,
+        input: true,
+        link: true,
+        meta: true,
+        param: true,
+        source: true,
+        track: true,
+        wbr: true
+    };
+    const HTML_ENTITIES = {
+        amp: '&',
+        lt: '<',
+        gt: '>',
+        quot: '"',
+        apos: "'",
+        nbsp: '\u00A0'
+    };
+    function decodeEntities(text){
+        return text.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, function(_, code){
+            if (code[0] === '#') {
+                const isHex = code[1] === 'x' || code[1] === 'X';
+                const num = parseInt(code.slice(isHex ? 2 : 1), isHex ? 16 : 10);
+                if (!isNaN(num)) {
+                    try { return String.fromCodePoint(num); } catch(e) {}
+                }
+                return '&' + code + ';';
+            }
+            const key = code.toLowerCase();
+            return (key in HTML_ENTITIES) ? HTML_ENTITIES[key] : '&' + code + ';';
+        });
+    }
+    function parseHTMLToFragment(html, fragment, doc){
+        const stack = [fragment];
+        const tokenRe = /<!--[\s\S]*?-->|<\/?[a-zA-Z][^>]*>|[^<]+/g;
+        let match;
+        while ((match = tokenRe.exec(html))) {
+            const token = match[0];
+            if (token[0] !== '<') {
+                const text = decodeEntities(token);
+                if (text) stack[stack.length - 1].appendChild(doc.createTextNode(text));
+                continue;
+            }
+            if (token.indexOf('<!--') === 0) {
+                continue;
+            }
+            if (token[1] === '/') {
+                const tag = token.slice(2, -1).trim().toLowerCase();
+                for (let i = stack.length - 1; i > 0; i--) {
+                    const node = stack[i];
+                    if (node.nodeType === 1 && node.nodeName.toLowerCase() === tag) {
+                        stack.length = i;
+                        break;
+                    }
+                }
+                continue;
+            }
+            const tagMatch = /^<\s*([^\s/>]+)/.exec(token);
+            if (!tagMatch) continue;
+            const rawName = tagMatch[1];
+            const tagName = rawName.toLowerCase();
+            const parent = stack[stack.length - 1];
+            const parentIsSvg = parent.nodeType === 1 && parent.namespaceURI === SVG_NS;
+            const isSvg = parentIsSvg || tagName === 'svg';
+            const el = isSvg ? doc.createElementNS(SVG_NS, rawName) : doc.createElement(tagName);
+            const attrPart = token.replace(/^<\s*[^\s/>]+/, '').replace(/\/?>$/, '');
+            if (attrPart) {
+                const attrRe = /([^\s=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+                let attrMatch;
+                while ((attrMatch = attrRe.exec(attrPart))) {
+                    const name = attrMatch[1];
+                    const value = decodeEntities(attrMatch[2] || attrMatch[3] || attrMatch[4] || '');
+                    el.setAttribute(name, value);
+                }
+            }
+            parent.appendChild(el);
+            const selfClosing = token.endsWith('/>');
+            if (!selfClosing && !VOID_TAGS[tagName]) {
+                stack.push(el);
+            }
+        }
+    }
+    function setHTML(target, html){
+        if (!target) return;
+        const fragment = createHTML(html);
+        while (target.firstChild) {
+            target.removeChild(target.firstChild);
+        }
+        target.appendChild(fragment);
     }
     function createScriptURL(html){
         return escapeHTMLPolicy?escapeHTMLPolicy.createScriptURL(html):html;
@@ -14131,7 +14213,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.gallery=container;
                 container.className='pv-gallery-container';
                 container.tabIndex=1;//为了获取焦点，来截获键盘事件
-                container.innerHTML=createHTML(
+                setHTML(container,
                     '<span class="pv-gallery-head">'+
                     '<span class="pv-gallery-head-float-left">'+
                     '<span title="'+i18n("picInfo")+'" class="pv-gallery-head-left-img-info">'+
@@ -14480,7 +14562,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
-                maximizeTrigger.innerHTML=createHTML('-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>');
+                setHTML(maximizeTrigger, '-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>');
                 maximizeTrigger.className='pv-gallery-maximize-trigger';
 
                 getBody(document).appendChild(maximizeTrigger);
@@ -14711,7 +14793,7 @@ ImgOps | https://imgops.com/#b#`;
                         '<label for="pv-gallery-head-command-drop-list-item-category-'+i+'">'+imgStatistics_i.name+'</label>'+
                         '</span>';
                 };
-                eleMaps['head-command-drop-list-category'].innerHTML=createHTML(typeMark);
+                setHTML(eleMaps['head-command-drop-list-category'], typeMark);
 
 
                 //收藏相关
@@ -14817,7 +14899,7 @@ ImgOps | https://imgops.com/#b#`;
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>'+
                                 '</span>';
                         };
-                        container.innerHTML=createHTML(spanMark);
+                        setHTML(container, spanMark);
                         eleMaps['sidebar-thumbnails-container'].appendChild(container);
 
 
@@ -15380,7 +15462,7 @@ ImgOps | https://imgops.com/#b#`;
                         padding-left:24px;">'+shareItem.name+'</span>');
                 };
 
-                eleMaps['head-command-drop-list-share'].innerHTML=createHTML(shareMark);
+                setHTML(eleMaps['head-command-drop-list-share'], shareMark);
 
                 //分享下拉列表的点击处理
                 eleMaps['head-command-drop-list-share'].addEventListener('click',function(e){
@@ -15419,7 +15501,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(ruleArr.length==2){
                         var item=document.createElement('span');
                         item.className="pv-gallery-head-command-drop-list-item";
-                        item.innerHTML=createHTML(ruleArr[0]);
+                        setHTML(item, ruleArr[0]);
                         item.addEventListener('click',function(e){
                             let url=encodeURIComponent(self.src);
                             let urlb=self.src.replace(/https?:\/\//i,"");
@@ -15833,7 +15915,7 @@ ImgOps | https://imgops.com/#b#`;
                                 if(textSpan.innerHTML==i18n("loading")){
                                     return;
                                 }
-                                textSpan.innerHTML=createHTML(i18n("loading"));
+                                setHTML(textSpan, i18n("loading"));
                                 self.completePages=[];
                                 self.pageAllReady=false;
                                 self.pageAction(true, true);
@@ -15964,10 +16046,10 @@ ImgOps | https://imgops.com/#b#`;
                     }else if(eleMaps['head-command-nextPage'].contains(target)){
                         var textSpan=eleMaps['head-command-nextPage'].querySelector("span");
                         if(textSpan.innerHTML==i18n("loading")){
-                            textSpan.innerHTML=createHTML(i18n("loadAll"));
+                            setHTML(textSpan, i18n("loadAll"));
                             return;
                         }
-                        textSpan.innerHTML=createHTML(i18n("loading"));
+                        setHTML(textSpan, i18n("loading"));
                         self.completePages=[];
                         self.pageAllReady=false;
                         self.pageAction(true);
@@ -16275,9 +16357,9 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputH.title="min height: "+sizeInputH.value+"px";
-                sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
+                setHTML(sizeInputHSpan, "H: "+Math.floor(sizeInputH.value)+"px");
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
-                sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
+                setHTML(sizeInputWSpan, "W: "+Math.floor(sizeInputW.value)+"px");
                 clearTimeout(this.saveDefaultSize);
                 var self=this;
                 this.saveDefaultSize = setTimeout(() => {
@@ -16322,12 +16404,12 @@ ImgOps | https://imgops.com/#b#`;
                     sizeInputH.max=maxSizeH;
                     sizeInputH.min=minSizeH;
                     sizeInputH.title="min height: "+sizeInputH.value+"px";
-                    sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
+                    setHTML(sizeInputHSpan, "H: "+Math.floor(sizeInputH.value)+"px");
 
                     sizeInputW.max=maxSizeW;
                     sizeInputW.min=minSizeW;
                     sizeInputW.title="min width: "+sizeInputW.value+"px";
-                    sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
+                    setHTML(sizeInputWSpan, "W: "+Math.floor(sizeInputW.value)+"px");
                     this.bricksInstance.pack();
                 }else{
                     this.data.forEach(function(item) {
@@ -16394,11 +16476,11 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 sizeInputH.title="min height: "+sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
-                sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
+                setHTML(sizeInputHSpan, "H: "+Math.floor(sizeInputH.value)+"px");
 
                 sizeInputW.title="min width: "+sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
+                setHTML(sizeInputWSpan, "W: "+Math.floor(sizeInputW.value)+"px");
                 self.loadThumb();
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
@@ -16464,11 +16546,11 @@ ImgOps | https://imgops.com/#b#`;
                 while (maximizeContainer.firstChild) {
                     maximizeContainer.removeChild(maximizeContainer.firstChild);
                 }
-                viewmoreBar.innerHTML = createHTML('✚');
+                setHTML(viewmoreBar, '✚');
                 viewmoreBar.parentNode.classList.remove("showmore");
                 //viewmoreBar.parentNode.style.backgroundColor = "#000000";
 
-                toggleBarContent.innerHTML = createHTML('▼');
+                setHTML(toggleBarContent, '▼');
                 //this.changeSizeInputReset();
             },
             selectViewmore: function(imgSpan, src) {
@@ -16482,7 +16564,7 @@ ImgOps | https://imgops.com/#b#`;
                 var maximizeContainer = this.eleMaps['maximize-container'];
                 var dlSpan=document.createElement('p');
                 dlSpan.className="pv-bottom-banner";
-                dlSpan.innerHTML=createHTML(prefs.icons.downloadSvgBtn+' '+i18n("download"));
+                setHTML(dlSpan, prefs.icons.downloadSvgBtn+' '+i18n("download"));
                 dlSpan.src=curNode.dataset.src;
                 dlSpan.title=curNode.title||document.title;
                 dlSpan.onclick=clickCb;
@@ -16599,7 +16681,7 @@ ImgOps | https://imgops.com/#b#`;
                             innerHTML = '<img data-src="' + dataset(node, 'src') + '" src="' + thumbSrc + '" />';
                             break;
                     }
-                    imgSpan.innerHTML = createHTML(innerHTML);
+                    setHTML(imgSpan, innerHTML);
                     let img=imgSpan.querySelector("img,video");
                     let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                     let getXhr = async () => {
@@ -16815,8 +16897,8 @@ ImgOps | https://imgops.com/#b#`;
                     imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'hidden';
                     imgCon.style['border' + capitalize(sidebarPosition)] = '0';
                     toggleBar.style[sidebarPosition] = '0';
-                    maximizeContainer.innerHTML = createHTML("");
-                    viewmoreBar.innerHTML = createHTML('✖');
+                    setHTML(maximizeContainer, "");
+                    setHTML(viewmoreBar, '✖');
                     viewmoreBar.parentNode.classList.add("showmore");//.backgroundColor = "#2a2a2a";
 
                     var nodes = this.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)');
@@ -16851,7 +16933,7 @@ ImgOps | https://imgops.com/#b#`;
                 }else{
                     this.gallery.classList.add("pv-gallery-sidebar-toggle-hide");
                 }
-                this.eleMaps['sidebar-toggle-content'].innerHTML = createHTML(isHidden ? '▼' : '▲');
+                setHTML(this.eleMaps['sidebar-toggle-content'], isHidden ? '▼' : '▲');
                 this.eleMaps['sidebar-viewmore'].style.visibility = isHidden ? 'visible' : 'hidden';
             },
             initZoom: function() {  // 如果有放大，则把图片及 sidebar 部分缩放比率改为 1
@@ -17569,18 +17651,18 @@ ImgOps | https://imgops.com/#b#`;
                             var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                             sizeInputW.value=selectData.sizeW;
                             sizeInputW.title="min width: "+sizeInputW.value+"px";
-                            sizeInputWSpan.innerHTML=createHTML("W: "+Math.floor(sizeInputW.value)+"px");
+                            setHTML(sizeInputWSpan, "W: "+Math.floor(sizeInputW.value)+"px");
                         }
                         if(selectData.sizeH<sizeInputH.value){
                             var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                             sizeInputH.value=selectData.sizeH;
                             sizeInputH.title="min height: "+sizeInputH.value+"px";
-                            sizeInputHSpan.innerHTML=createHTML("H: "+Math.floor(sizeInputH.value)+"px");
+                            setHTML(sizeInputHSpan, "H: "+Math.floor(sizeInputH.value)+"px");
                         }
                     }
-                    thumbnails.innerHTML = createHTML("");
+                    setHTML(thumbnails, "");
                     this._dataCache = {};
-                    this.eleMaps['maximize-container'].innerHTML = createHTML("");
+                    setHTML(this.eleMaps['maximize-container'], "");
                 }
                 var self = this;
                 var createSpanMark = item => {
@@ -17617,7 +17699,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             let itemSrc = item.src.replace(/^blob:.*/, "").replace(/^(data[^;]+).*/, "$1...");
                             spanMark.title = title + (itemSrc.length > 150 ? itemSrc.slice(0, 110) + " ... " + itemSrc.slice(-30) : itemSrc);
-                            spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
+                            setHTML(spanMark, '<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                             spanMark.addEventListener('contextmenu', function(e) {
                                 e.preventDefault();
@@ -17804,7 +17886,7 @@ ImgOps | https://imgops.com/#b#`;
                 //读取错误的图片占位符
                 this.eleMaps['img_broken'].style.display='';
                 //清空dom
-                this.eleMaps['sidebar-thumbnails-container'].innerHTML=createHTML('');
+                setHTML(this.eleMaps['sidebar-thumbnails-container'], '');
                 this.eleMaps['head-left-img-info-resolution'].textContent='0 x 0';
                 this.eleMaps['head-left-img-info-size'].textContent='';
                 this.eleMaps['head-left-img-info-count'].textContent='（1 / 1）';
@@ -18099,8 +18181,8 @@ ImgOps | https://imgops.com/#b#`;
                 clearTimeout(this.readyTimeout);
                 this.readyTimeout = setTimeout(() => {
                     if(this.pageAllReady && this.loadingImgNum<=0){
-                        textSpan.innerHTML=createHTML("<font color='red'>"+i18n("loadedAll")+"</font>");
-                        setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
+                        setHTML(textSpan, "<font color='red'>"+i18n("loadedAll")+"</font>");
+                        setTimeout(function(){setHTML(textSpan, i18n("loadAll"));},1500);
                     }
                 }, 1100);
             },
@@ -20907,7 +20989,7 @@ ImgOps | https://imgops.com/#b#`;
                  background:black url("'+prefs.icons.loading+'") center no-repeat;\
                  ';
                 container.className='pv-pic-window-container';
-                container.innerHTML=createHTML(
+                setHTML(container,
                     '<span class="pv-pic-window-imgbox transition-transform"></span>'+
                     '<span class="pv-pic-window-rotate-indicator">'+
                     '<span class="pv-pic-window-rotate-indicator-pointer"></span>'+
@@ -21450,7 +21532,7 @@ ImgOps | https://imgops.com/#b#`;
                     this.img.parentNode.appendChild(compareBox);
                     this.imgWindow.classList.add("compare");
                 }
-                this.compareBox.innerHTML = createHTML("");
+                setHTML(this.compareBox, "");
                 let self = this, count = 0, compareImgConList = [], targetCompareImg;
                 otherSrcs.forEach(src => {
                     count++;
@@ -23795,7 +23877,7 @@ ImgOps | https://imgops.com/#b#`;
                 document.documentElement.classList.add('pv-stitch-selecting');
                 const overlay = document.createElement('div');
                 overlay.className = 'pv-stitch-overlay pv-stitch-select';
-                overlay.innerHTML = createHTML(
+                setHTML(overlay,
                     '<div class="pv-stitch-panel">'+
                     '<div class="pv-stitch-action pv-stitch-action-done" title="'+i18n("stitchDone")+'">'+
                     '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 12l5 5 11-11"></path></svg>'+
@@ -24036,7 +24118,7 @@ ImgOps | https://imgops.com/#b#`;
                 const overlay = document.createElement('div');
                 overlay.className = 'pv-stitch-overlay pv-stitch-preview';
                 const isVertical = this.layout === 'column';
-                overlay.innerHTML = createHTML(
+                setHTML(overlay,
                     '<div class="pv-stitch-stage">'+
                     '<div class="pv-stitch-panel pv-stitch-panel-inline">'+
                     '<div class="pv-stitch-action pv-stitch-action-horizontal'+(isVertical ? '' : ' active')+'" title="'+i18n("stitchHorizontal")+'">'+
@@ -26161,11 +26243,6 @@ ImgOps | https://imgops.com/#b#`;
             return _isunsafe;
         }
         function addPageScript() {
-
-            if(isunsafe())return;
-            var pageScript=document.createElement('script');
-            pageScript.id = 'picviewer-page-script';
-
             var pageScriptText=function(messageID){
                 var frameID=Math.random();
                 var frames={
@@ -26176,7 +26253,7 @@ ImgOps | https://imgops.com/#b#`;
                     var data=e.data;
                     if( !data || !data.messageID || data.messageID != messageID )return;//通信ID认证
                     var source=e.source;
-                    if(source===window){//来自contentscript,发送出去,或者干嘛。
+                    if(source===window || source===unsafeWindow){//来自contentscript,发送出去,或者干嘛。
                         if(data.to){
                             data.from=frameID;
                             frames[data.to].postMessage(data,'*');
@@ -26207,8 +26284,18 @@ ImgOps | https://imgops.com/#b#`;
                 },true)
             };
 
-            pageScript.textContent=createScript('(' + pageScriptText.toString() + ')('+ JSON.stringify(messageID) +')');
-            if(document.head)document.head.appendChild(pageScript);
+            try{
+                if(isunsafe()){
+                    pageScriptText(messageID);
+                }else{
+                    var pageScript=document.createElement('script');
+                    pageScript.id = 'picviewer-page-script';
+                    pageScript.textContent=createScript('(' + pageScriptText.toString() + ')('+ JSON.stringify(messageID) +')');
+                    if(document.head)document.head.appendChild(pageScript);
+                }
+            }catch(e){
+                console.debug("addPageScript function failed", e);
+            }
         }
 
         function clickToOpen(data){
@@ -28639,7 +28726,7 @@ ImgOps | https://imgops.com/#b#`;
     }
 
     function setSearchState(words, imgState){
-        if (imgState) imgState.innerHTML=createHTML(words);
+        if (imgState) setHTML(imgState, words);
     }
 
     var searchSort=["Tineye","Google","Baidu"];
