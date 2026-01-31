@@ -4211,7 +4211,7 @@
     } else {
         _GM_addStyle = cssStr => {
             let styleEle = document.createElement("style");
-            styleEle.innerHTML = cssStr;
+            setHTML(styleEle, cssStr);
             document.head.appendChild(styleEle);
             return styleEle;
         };
@@ -4565,139 +4565,110 @@
         return segs.length ? '/' + segs.join('/') : null;
     }
 
-    function parseTrustedTypes(cspString) {
-        const policies = new Set();
-        let allowDuplicates = false;
-        let ttDirectiveFound = false;
-        const ttRegex = /trusted-types\s+([^;]+)/gi;
-        let match;
-
-        while ((match = ttRegex.exec(cspString)) !== null) {
-            ttDirectiveFound = true;
-
-            const policyNames = match[1].trim().split(/\s+/);
-            for (const name of policyNames) {
-                if (name === "'allow-duplicates'") {
-                    allowDuplicates = true;
-                } else if (name !== "'none'") {
-                    policies.add(name.replace(/'/g, ''));
-                }
-            }
-        }
-        return { names: policies, allowDuplicates: allowDuplicates, ttDirectiveFound: ttDirectiveFound };
+    function createHTML(html, doc) {
+        const targetDoc = doc || document;
+        const fragment = targetDoc.createDocumentFragment();
+        if (html === null || html === undefined || html === '') return fragment;
+        parseHTMLToFragment(String(html), fragment, targetDoc);
+        return fragment;
     }
-
-    async function getCspTrustedTypesInfo() {
-        const combinedPolicies = new Set();
-        let combinedAllowDuplicates = false;
-        let combinedTtDirectiveFound = false;
-
-        const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-        if (meta) {
-            const metaResult = parseTrustedTypes(meta.content);
-            metaResult.names.forEach(name => combinedPolicies.add(name));
-            if (metaResult.allowDuplicates) {
-                combinedAllowDuplicates = true;
-            }
-            if (metaResult.ttDirectiveFound) {
-                combinedTtDirectiveFound = true;
-            }
-        }
-
-        return new Promise((resolve) => {
-            GM_xmlhttpRequest({
-                method: "HEAD",
-                url: window.location.href,
-                onload: function(response) {
-                    const cspHeader = response.responseHeaders.split('\r\n')
-                    .filter(h => h.toLowerCase().startsWith('content-security-policy:'))
-                    .map(h => h.substring(26).trim())
-                    .join('; ');
-
-                    const headerResult = parseTrustedTypes(cspHeader);
-                    headerResult.names.forEach(name => combinedPolicies.add(name));
-                    if (headerResult.allowDuplicates) {
-                        combinedAllowDuplicates = true;
-                    }
-                    if (headerResult.ttDirectiveFound) {
-                        combinedTtDirectiveFound = true;
-                    }
-
-                    resolve({
-                        names: combinedPolicies,
-                        allowDuplicates: combinedAllowDuplicates,
-                        ttDirectiveFound: combinedTtDirectiveFound
-                    });
-                },
-                onerror: function(error) {
-                    resolve({
-                        names: combinedPolicies,
-                        allowDuplicates: combinedAllowDuplicates,
-                        ttDirectiveFound: combinedTtDirectiveFound
-                    });
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const VOID_TAGS = {
+        area: true,
+        base: true,
+        br: true,
+        col: true,
+        embed: true,
+        hr: true,
+        img: true,
+        input: true,
+        link: true,
+        meta: true,
+        param: true,
+        source: true,
+        track: true,
+        wbr: true
+    };
+    const HTML_ENTITIES = {
+        amp: '&',
+        lt: '<',
+        gt: '>',
+        quot: '"',
+        apos: "'",
+        nbsp: '\u00A0'
+    };
+    function decodeEntities(text) {
+        return text.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, function(_, code) {
+            if (code[0] === '#') {
+                const isHex = code[1] === 'x' || code[1] === 'X';
+                const num = parseInt(code.slice(isHex ? 2 : 1), isHex ? 16 : 10);
+                if (!isNaN(num)) {
+                    try { return String.fromCodePoint(num); } catch(e) {}
                 }
-            });
+                return '&' + code + ';';
+            }
+            const key = code.toLowerCase();
+            return (key in HTML_ENTITIES) ? HTML_ENTITIES[key] : '&' + code + ';';
         });
     }
-
-    function isTrustedTypesEnforced() {
-        try {
-            document.createElement('div').innerHTML = '';
-            return false;
-        } catch (e) {
-            return true;
-        }
-    }
-
-    async function createPolicy() {
-        if (!(_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy && isTrustedTypesEnforced())) {
-            return;
-        }
-
-        const { names: allowedNames, allowDuplicates, ttDirectiveFound } = await getCspTrustedTypesInfo();
-
-        if (ttDirectiveFound && !allowDuplicates) {
-            debug("CSP Trusted Types is enforced without 'allow-duplicates'. " +
-                         "Skipping policy creation to avoid conflicts with the page.");
-            return;
-        }
-
-        const MY_POLICY_NAME = 'pvcep_default';
-
-        try {
-            escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(MY_POLICY_NAME, {
-                createHTML: (string, sink) => string,
-                createScriptURL: string => string,
-                createScript: string => string
-            });
-            return;
-        } catch (e) {
-        }
-
-        const existingPolicies = new Set(_unsafeWindow.trustedTypes.getPolicyNames());
-        for (const name of allowedNames) {
-            if (name === '*' || existingPolicies.has(name)) {
+    function parseHTMLToFragment(html, fragment, doc) {
+        const stack = [fragment];
+        const tokenRe = /<!--[\s\S]*?-->|<\/?[a-zA-Z][^>]*>|[^<]+/g;
+        let match;
+        while ((match = tokenRe.exec(html))) {
+            const token = match[0];
+            if (token[0] !== '<') {
+                const text = decodeEntities(token);
+                if (text) stack[stack.length - 1].appendChild(doc.createTextNode(text));
                 continue;
             }
-
-            try {
-                escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy(name, {
-                    createHTML: (string, sink) => string,
-                    createScriptURL: string => string,
-                    createScript: string => string
-                });
-                return;
-            } catch (e) {
-                debug(`create '${name}' failed, trying next...`);
+            if (token.indexOf('<!--') === 0) {
+                continue;
+            }
+            if (token[1] === '/') {
+                const tag = token.slice(2, -1).trim().toLowerCase();
+                for (let i = stack.length - 1; i > 0; i--) {
+                    const node = stack[i];
+                    if (node.nodeType === 1 && node.nodeName.toLowerCase() === tag) {
+                        stack.length = i;
+                        break;
+                    }
+                }
+                continue;
+            }
+            const tagMatch = /^<\s*([^\s/>]+)/.exec(token);
+            if (!tagMatch) continue;
+            const rawName = tagMatch[1];
+            const tagName = rawName.toLowerCase();
+            const parent = stack[stack.length - 1];
+            const parentIsSvg = parent.nodeType === 1 && parent.namespaceURI === SVG_NS;
+            const isSvg = parentIsSvg || tagName === 'svg';
+            const el = isSvg ? doc.createElementNS(SVG_NS, rawName) : doc.createElement(tagName);
+            const attrPart = token.replace(/^<\s*[^\s/>]+/, '').replace(/\/?>$/, '');
+            if (attrPart) {
+                const attrRe = /([^\s=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+                let attrMatch;
+                while ((attrMatch = attrRe.exec(attrPart))) {
+                    const name = attrMatch[1];
+                    const value = decodeEntities(attrMatch[2] || attrMatch[3] || attrMatch[4] || '');
+                    el.setAttribute(name, value);
+                }
+            }
+            parent.appendChild(el);
+            const selfClosing = token.endsWith('/>');
+            if (!selfClosing && !VOID_TAGS[tagName]) {
+                stack.push(el);
             }
         }
-        debug("Could not create any trusted types policy.");
     }
-
-    let escapeHTMLPolicy = null;
-
-    function createHTML(html) {
-        return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
+    function setHTML(target, html, doc) {
+        if (!target) return;
+        const targetDoc = doc || target.ownerDocument || document;
+        const fragment = createHTML(html, targetDoc);
+        while (target.firstChild) {
+            target.removeChild(target.firstChild);
+        }
+        target.appendChild(fragment);
     }
 
     const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
@@ -6930,7 +6901,7 @@
                 var doc = null;
                 try {
                     doc = document.implementation.createHTMLDocument('');
-                    doc.documentElement.innerHTML = createHTML(data);
+                    setHTML(doc.documentElement, data, doc);
                     var body = getBody(doc);
                     if (!self.preloadDiv) {
                         self.preloadDiv = document.createElement('div');
@@ -7578,7 +7549,7 @@
                         let cssArr = css.split("inIframe:");
                         if (cssArr && cssArr.length == 2) {
                             let styleEle = document.createElement("style");
-                            styleEle.innerHTML = cssArr[1];
+                            setHTML(styleEle, cssArr[1]);
                             parent.appendChild(styleEle);
                         }
                     }
@@ -7825,7 +7796,7 @@
             `;
             let frame = document.createElement("div");
             frame.id = "pagetual-sideController";
-            frame.innerHTML = createHTML(`
+            setHTML(frame, `
                 <div class="extra">
                   <svg id="loadNow" class="pagetual" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("loadNow")}</title><path d="M712.106667 525.653333l-291.413334 247.893334a21.333333 21.333333 0 0 1-14.506666 5.546666 20.053333 20.053333 0 0 1-22.186667-19.2V264.106667a20.053333 20.053333 0 0 1 20.906667-19.2 20.906667 20.906667 0 0 1 14.506666 5.546666l291.413334 247.893334a17.92 17.92 0 0 1 1.28 27.306666zM512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z" fill="#5E5C5C"></path></svg>
                   <svg id="scroll" class="pagetual" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("sideControllerScroll")}</title><path d="M912 544v82.64C912 846.096 732.912 1024 512 1024S112 846.096 112 626.64V544h800z" fill="#5E5C5C"></path><path d="M478.656 0v43.328a96 96 0 0 1-32.48 71.952c-27.68 24.448-41.968 48.128-42.896 71.04l-0.096 4.352v104c0 24.224 14.512 49.344 43.52 75.312a96 96 0 0 1 31.952 71.52V496H112.032L112 393.712C112 181.648 264.848 8.72 472.352 0.208L478.656 0z" fill="#999999"></path><path d="M534.24 0C747.584 5.232 912 179.504 912 393.728v102.256L534.208 496v-52.912a96 96 0 0 1 33.536-72.88c28.48-24.416 43.2-48.16 44.16-71.2l0.096-4.336v-104c0-24.352-14.928-49.52-44.784-75.488a96 96 0 0 1-33.008-72.432V0z" fill="#5E5C5C"></path></svg>
@@ -7853,7 +7824,7 @@
             if (rulesData.sideControllerLoadNow === false) {
                 loadNow.style.display = "none";
             }
-            if (sideControllerIcon) move.innerHTML = sideControllerIcon;
+            if (sideControllerIcon) setHTML(move, sideControllerIcon);
 
             frame.addEventListener("dblclick", e => {
                 e.preventDefault();
@@ -8075,7 +8046,7 @@
             if (!isPause) {
                 this.frame.classList.remove("stop");
             }
-            this.pagenum.innerHTML = createHTML(curPage);
+            setHTML(this.pagenum, curPage);
             this.frame.title = i18n("page") + curPage;
             if (!this.validPage) {
                 if (curPage === 1) {
@@ -8184,7 +8155,7 @@
             `;
             let frame = document.createElement("div");
             frame.id = "pagetual-nextSwitch";
-            frame.innerHTML = createHTML(`
+            setHTML(frame, `
                 <div class="title">${i18n("nextSwitch")}</div>
                 <button type="button" class="closeSwitch">
                   <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2754">
@@ -8207,9 +8178,9 @@
                 let index = "<b>" + (i + 1) + "</b>: ";
                 if (target) {
                     let targetInner = target.innerText.trim();
-                    span.innerHTML = index + (targetInner || link);
+                    setHTML(span, index + (targetInner || link));
                 } else {
-                    span.innerHTML = index + "Not Found";
+                    setHTML(span, index + "Not Found");
                 }
                 span.title = link;
                 span.addEventListener("click", e => {
@@ -8559,7 +8530,7 @@
             this.allSignDiv = [];
             let frame = document.createElement("div");
             frame.id = "pagetual-picker";
-            frame.innerHTML = createHTML(`
+            setHTML(frame, `
                 <button title="Pagetual" type="button" class="logoIcon">
                   <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" style="fill: #604b4a;" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" style="fill: #604b4a;" fill="#604b4a"></path></svg>
                 </button>
@@ -9014,7 +8985,7 @@
 
         setSelectorDiv(selector) {
             let self = this;
-            this.allpath.innerHTML = createHTML("");
+            setHTML(this.allpath, "");
             if (selector) {
                 if (this.xpath.checked) {
                     let span = document.createElement("span");
@@ -9180,7 +9151,7 @@
                 configCon.appendChild(container);
             }
             container.style.height = '800px';
-            container.innerHTML = "";
+            setHTML(container, "");
             try {
                 editor = new _unsafeWindow.JSONEditor(container, options);
                 editor.set(ruleParser.customRules);
@@ -9272,7 +9243,7 @@
                 let starButton = document.createElement("a");
                 starButton.href = "https://github.com/hoothin/UserScripts#star";
                 starButton.className = "js-toggler-target rounded-left-2 btn-with-aria-count btn-sm btn";
-                starButton.innerHTML = createHTML('<svg height="16" viewBox="0 0 16 16" version="1.1" width="16" class="octicon octicon-star d-inline-block mr-2"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg><span class="d-inline">Star</span>');
+                setHTML(starButton, '<svg height="16" viewBox="0 0 16 16" version="1.1" width="16" class="octicon octicon-star d-inline-block mr-2"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg><span class="d-inline">Star</span>');
                 starButton.style.float = "right";
                 document.querySelector(".Layout-main>h2").appendChild(starButton);
                 return true;
@@ -9600,16 +9571,16 @@
                 this.item.dataset.id = id;
                 let url = document.createElement("a");
                 url.href = ruleUrl.url;
-                url.innerHTML = ruleUrl.url;
+                setHTML(url, ruleUrl.url);
                 url.title = ruleUrl.url;
                 let up = document.createElement("span");
-                up.innerHTML = "↑ ";
+                setHTML(up, "↑ ");
                 up.title = i18n("sortTitle");
                 let down = document.createElement("span");
-                down.innerHTML = "↓ ";
+                setHTML(down, "↓ ");
                 down.title = i18n("sortTitle");
                 let del = document.createElement("span");
-                del.innerHTML = "× ";
+                setHTML(del, "× ");
                 up.onclick = e => {
                     this.moveUp();
                 };
@@ -9633,7 +9604,7 @@
                     let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == id ? 1 : 0), 0);
                     let idSpan = document.createElement("span");
                     idSpan.style.float = "right";
-                    idSpan.innerHTML = `[rules: ${rulesLength}]`;
+                    setHTML(idSpan, `[rules: ${rulesLength}]`);
                     this.item.appendChild(idSpan);
                     this.idSpan = idSpan;
                 }
@@ -9642,7 +9613,7 @@
             updateNum() {
                 if (ruleParser.rules) {
                     let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == this.item.dataset.id ? 1 : 0), 0);
-                    this.idSpan.innerHTML = `[rules: ${rulesLength}]`;
+                    setHTML(this.idSpan, `[rules: ${rulesLength}]`);
                 }
             }
             saveSort() {
@@ -9749,7 +9720,7 @@
 
         let rulebarList = [], updateFail = false;
         updateP.className = "updateDate";
-        updateP.innerHTML = passStr;
+        setHTML(updateP, passStr);
         updateP.title = i18n("update") + " - " + pastDate;
         configCon.appendChild(updateP);
         if (ruleUrls) {
@@ -9760,7 +9731,7 @@
             });
         }
         let customUrlsTitle = document.createElement("h2");
-        customUrlsTitle.innerHTML = i18n("customUrls");
+        setHTML(customUrlsTitle, i18n("customUrls"));
         configCon.appendChild(customUrlsTitle);
         let customUrlsInput = document.createElement("textarea");
         customUrlsInput.style.width = "100%";
@@ -9777,7 +9748,7 @@
         let upBtnImgTitle = document.createElement("h2");
         upBtnImgTitle.style.whiteSpace = "nowrap";
         upBtnImgTitle.style.overflow = "auto";
-        upBtnImgTitle.innerHTML = i18n("upBtnImg");
+        setHTML(upBtnImgTitle, i18n("upBtnImg"));
         upBtnImg.appendChild(upBtnImgTitle);
         let upBtnImgInput = document.createElement("input");
         upBtnImgInput.style.width = "100%";
@@ -9793,7 +9764,7 @@
         let downBtnImgTitle = document.createElement("h2");
         downBtnImgTitle.style.whiteSpace = "nowrap";
         downBtnImgTitle.style.overflow = "auto";
-        downBtnImgTitle.innerHTML = i18n("downBtnImg");
+        setHTML(downBtnImgTitle, i18n("downBtnImg"));
         downBtnImg.appendChild(downBtnImgTitle);
         let downBtnImgInput = document.createElement("input");
         downBtnImgInput.style.width = "100%";
@@ -9809,7 +9780,7 @@
         let sideControllerIconTitle = document.createElement("h2");
         sideControllerIconTitle.style.whiteSpace = "nowrap";
         sideControllerIconTitle.style.overflow = "auto";
-        sideControllerIconTitle.innerHTML = i18n("sideControllerIcon");
+        setHTML(sideControllerIconTitle, i18n("sideControllerIcon"));
         sideControllerIconDiv.appendChild(sideControllerIconTitle);
         let sideControllerIconInput = document.createElement("input");
         sideControllerIconInput.style.width = "100%";
@@ -9828,7 +9799,7 @@
         let loadingTextTitle = document.createElement("h2");
         loadingTextTitle.style.whiteSpace = "nowrap";
         loadingTextTitle.style.overflow = "auto";
-        loadingTextTitle.innerHTML = i18n("loadingTextTitle");
+        setHTML(loadingTextTitle, i18n("loadingTextTitle"));
         loadingText.appendChild(loadingTextTitle);
         let loadingTextInput = document.createElement("input");
         loadingTextInput.value = rulesData.loadingText || '';
@@ -9844,7 +9815,7 @@
         let opacityTitle = document.createElement("h2");
         opacityTitle.style.whiteSpace = "nowrap";
         opacityTitle.style.overflow = "visible";
-        opacityTitle.innerHTML = i18n("opacity");
+        setHTML(opacityTitle, i18n("opacity"));
         opacity.appendChild(opacityTitle);
         let opacityInput = document.createElement("input");
         opacityInput.value = rulesData.opacity * 100;
@@ -9866,7 +9837,7 @@
         let pageElementCss = document.createElement("div");
         pageElementCss.style.marginBottom = "30px";
         let pageElementCssTitle = document.createElement("h2");
-        pageElementCssTitle.innerHTML = i18n("pageElementCss");
+        setHTML(pageElementCssTitle, i18n("pageElementCss"));
         pageElementCss.appendChild(pageElementCssTitle);
         let pageElementCssInput = document.createElement("input");
         pageElementCssInput.value = rulesData.pageElementCss || '';
@@ -9881,7 +9852,7 @@
         let customCss = document.createElement("div");
         customCss.style.marginBottom = "50px";
         let customCssTitle = document.createElement("h2");
-        customCssTitle.innerHTML = i18n("customCss");
+        setHTML(customCssTitle, i18n("customCss"));
         customCss.appendChild(customCssTitle);
         let customCssInput = document.createElement("textarea");
         customCssInput.value = rulesData.customCss || '';
@@ -9903,7 +9874,7 @@
         function createCheckbox(innerText, val, tag, parentCheck, otherType, alwaysShow) {
             if (typeof val == 'undefined') val = "";
             let title = document.createElement(tag || "h3");
-            title.innerHTML = innerText;
+            setHTML(title, innerText);
             title.style.overflowWrap = "normal";
             let input = document.createElement("input");
             if (otherType === 'key') {
@@ -10035,7 +10006,7 @@
                     }
                     if (click2import) click2import.style.display = "none";
                 }
-                updateP.innerHTML = i18n("passSec", 0);
+                setHTML(updateP, i18n("passSec", 0));
                 updateP.title = i18n("update");
                 rulebarList.forEach(rulebar => {
                     rulebar.updateNum();
@@ -10052,7 +10023,7 @@
             });
         };
         let customRulesTitle = document.createElement("h2");
-        customRulesTitle.innerHTML = i18n("customRules", /tree/.test(location.href) ? location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json' : 'https://github.com/hoothin/UserScripts/edit/master/Pagetual/pagetualRules.json');
+        setHTML(customRulesTitle, i18n("customRules", /tree/.test(location.href) ? location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json' : 'https://github.com/hoothin/UserScripts/edit/master/Pagetual/pagetualRules.json'));
         configCon.appendChild(customRulesTitle);
         customRulesInput = document.createElement("textarea");
         customRulesInput.spellcheck = false;
@@ -10103,7 +10074,7 @@
                 location.reload();
             }, 500);
         };
-        saveBtn.innerHTML = i18n("save");
+        setHTML(saveBtn, i18n("save"));
         saveBtn.id = "saveBtn";
         configCon.appendChild(saveBtn);
         saveBtn.style.display = "none";
@@ -10454,7 +10425,6 @@
 
     let pageReady = false;
     async function initRules(callback) {
-        await createPolicy();
         charset = (document.characterSet || document.charset || document.inputEncoding);
         let equiv = document.querySelector('[http-equiv="Content-Type"]');
         if (equiv && equiv.content) {
@@ -10804,7 +10774,7 @@
                 var doc = null, response = res.response;
                 try {
                     doc = document.implementation.createHTMLDocument('');
-                    doc.documentElement.innerHTML = response;
+                    setHTML(doc.documentElement, response, doc);
                 } catch (e) {
                     debug('parse error:' + e.toString());
                 }
@@ -10822,7 +10792,7 @@
                         }
                         if (typeof preResult !== "undefined") {
                             if (typeof preResult === "string") {
-                                doc.documentElement.innerHTML = preResult;
+                                setHTML(doc.documentElement, preResult, doc);
                             } else pageElement = preResult;
                         }
                     } catch(e) {
@@ -11177,7 +11147,7 @@
 
     const loadingCSS = `font-size: initial; text-indent: unset; display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
     function setLoadingDiv(loadingText) {
-        loadingDiv.innerHTML = createHTML(`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;width: 100%;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" style="fill: #6e6e6e;" fill="#6e6e6e"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" style="fill: #6e6e6e;" fill="#6e6e6e"></path></svg></div>`}`);
+        setHTML(loadingDiv, `<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;width: 100%;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" style="fill: #6e6e6e;" fill="#6e6e6e"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" style="fill: #6e6e6e;" fill="#6e6e6e"></path></svg></div>`}`);
     }
 
     var upSvg = `<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: baseline;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" style="fill: #604b4a;" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" style="fill: #604b4a;" fill="#604b4a"></path></svg>`;
@@ -11516,7 +11486,7 @@
                 let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 if (scrollH && curScroll <= 60) {
                     if (sideController.inited && sideController.pagenum.innerHTML !== "1") {
-                        sideController.pagenum.innerHTML = createHTML("1");
+                        setHTML(sideController.pagenum, "1");
                     }
                 }
                 if (ruleParser.curSiteRule.lockScroll) {
@@ -11690,10 +11660,10 @@
         let _time = 1500;
         if (href) {
             _time = 3500;
-            tipsWords.innerHTML = createHTML(`<a href='${href}' target='_blank'>${content}</a>`);
+            setHTML(tipsWords, `<a href='${href}' target='_blank'>${content}</a>`);
             tipsWords.style.pointerEvents = 'all';
         } else {
-            tipsWords.innerHTML = createHTML(content);
+            setHTML(tipsWords, content);
         }
         tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
         setTimeout(() => {
@@ -11827,11 +11797,11 @@
             pageBar.style.order = exampleStyle.order;
         }
         pageBar.title = i18n(isPause ? "enable" : "disable");
-        upSpan.innerHTML = createHTML(upSvg);
+        setHTML(upSpan, upSvg);
         upSpan.children[0].style.cssText = upSvgCSS;
         upSpan.title = i18n("toTop");
         upSpan.href = ruleParser.initUrl || '';
-        downSpan.innerHTML = createHTML(downSvg);
+        setHTML(downSpan, downSvg);
         downSpan.children[0].style.cssText = downSvgCSS;
         downSpan.title = i18n("toBottom");
         upSpan.style.cssText = initStyle;
@@ -11849,15 +11819,15 @@
             getBody(document).removeEventListener('touchstart', touchBodyHandler, { passive: false, capture: false });
         };
         if (ruleParser.nextTitle) {
-            pageText.innerHTML = createHTML(ruleParser.nextTitle + " ");
+            setHTML(pageText, ruleParser.nextTitle + " ");
             pageText.title = ruleParser.nextTitle;
         }
         if (ruleParser.curSiteRule.pageNum || pageNumReg.test(url)) {
-            pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page"));
+            setHTML(pageText, pageText.innerHTML + i18n("page"));
             pageNum = document.createElement("span");
             let num = ruleParser.getPageNumFromUrl(url, curPage);
             localPage = num;
-            pageNum.innerHTML = createHTML(num + "<i style='font-size: 0;'>&nbsp;</i>");
+            setHTML(pageNum, num + "<i style='font-size: 0;'>&nbsp;</i>");
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
             pageNum.style.cssText = pageTextStyle;
@@ -11882,16 +11852,16 @@
             });
             pageBar.appendChild(pageNum);
         } else {
-            pageText.innerHTML = createHTML(pageText.innerHTML + i18n("page") + curPage + "<i style='font-size: 0;'>&nbsp;</i>");
+            setHTML(pageText, pageText.innerHTML + i18n("page") + curPage + "<i style='font-size: 0;'>&nbsp;</i>");
         }
         pageBar.id = "pagetual_pageBar" + localPage;
         let preBtn = document.createElement("span");
-        preBtn.innerHTML = createHTML("∧");
+        setHTML(preBtn, "∧");
         preBtn.title = i18n("prevPage");
         preBtn.className = "prevScreen";
         preBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px; border-radius: 20px 20px 0 0; margin-top: -30px; ";
         let nextBtn = document.createElement("span");
-        nextBtn.innerHTML = createHTML("∨");
+        setHTML(nextBtn, "∨");
         nextBtn.title = i18n("nextPage");
         nextBtn.className = "nextScreen";
         nextBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px; border-radius: 0 0 20px 20px; margin-top: 30px; ";
@@ -11927,7 +11897,7 @@
             let bgRing = document.createElement("span");
             bgRing.className = "refreshRing";
             bgRing.style.display = "none";
-            bgRing.innerHTML = createHTML(upSvg);
+            setHTML(bgRing, upSvg);
             pageText.title = "Refresh";
             pageText.appendChild(bgRing);
             pageText.addEventListener("click", e => {
@@ -12088,7 +12058,7 @@
             try {
                 let observer = new IntersectionObserver(entries => {
                     if (entries[0].intersectionRatio > 0 && sideController.pagenum.innerHTML != localPage) {
-                        sideController.pagenum.innerHTML = createHTML(localPage);
+                        setHTML(sideController.pagenum, localPage);
                     }
                 });
                 observer.observe(pageBar);
@@ -12165,7 +12135,7 @@
             var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
             nativeTextareaValueSetter.call(input, v);
         } else {
-            input.innerHTML = createHTML(v);
+            setHTML(input, v);
         }
         event = new Event('input', { bubbles: true });
         let tracker = input._valueTracker;
@@ -12299,7 +12269,7 @@
             var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
             nativeTextareaValueSetter.call(input, v);
         } else {
-            input.innerHTML = createHTML(v);
+            setHTML(input, v);
         }
         event = new Event('input', { bubbles: true });
         let tracker = input._valueTracker;
@@ -12397,7 +12367,7 @@
                                 }
                                 if (typeof preResult !== "undefined") {
                                     if (typeof preResult === "string") {
-                                        doc.documentElement.innerHTML = preResult;
+                                        setHTML(doc.documentElement, preResult, doc);
                                     } else eles = preResult;
                                 }
                             } catch(e) {
@@ -13062,7 +13032,7 @@
                 let cssArr = css.split("inIframe:");
                 if (cssArr && cssArr.length > 1) {
                     let styleEle = iframeDoc.createElement("style");
-                    styleEle.innerHTML = cssArr[1];
+                    setHTML(styleEle, cssArr[1]);
                     iframeDoc.head.appendChild(styleEle);
                 }
             }
