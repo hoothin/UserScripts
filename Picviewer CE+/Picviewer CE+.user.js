@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2026.1.23.1
+// @version              2026.1.31.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -12400,7 +12400,7 @@ ImgOps | https://imgops.com/#b#`;
     }
     function urlToBlobWithFetch(urlString, cb){
         fetch(urlString).then(response => response.blob()).then(blob => {
-            let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
+            let ext = extFromMimeAndUrl(blob.type, urlString);
             if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 1000) return cb(null, '');
             if (ext === "none") ext = "webp";
             let conversion = formatDict.get(ext);
@@ -12577,6 +12577,23 @@ ImgOps | https://imgops.com/#b#`;
         return "";
     }
     var cookie;
+    function extFromMimeAndUrl(mimeType, url) {
+        let ext = '';
+        if (mimeType) {
+            const cleanMime = mimeType.split(';')[0].trim().toLowerCase();
+            if (cleanMime.indexOf('image/') === 0) {
+                ext = cleanMime.slice(6);
+            } else if (cleanMime.indexOf('text/html') === 0) {
+                ext = 'text/html';
+            }
+        }
+        if (!ext) {
+            const m = String(url || '').match(/\.([a-z0-9]+)(?:$|[?#])/i);
+            ext = m ? m[1].toLowerCase() : '';
+        }
+        if (ext.indexOf('/') !== -1) ext = '';
+        return ext;
+    }
     function urlToBlob(url, cb, forcePng, tryTimes = 0) {
         tryTimes++;
         if (tryTimes > 3) {
@@ -12596,7 +12613,7 @@ ImgOps | https://imgops.com/#b#`;
             onload: function(d) {
                 let blob = d.response;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
-                let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
+                let ext = extFromMimeAndUrl(blob.type, url);
                 if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 100000) {
                     urlToBlobWithFetch(url, cb);
                     return;
@@ -24756,7 +24773,7 @@ ImgOps | https://imgops.com/#b#`;
                     },'*');
                 };
 
-                if(this.openInTopWindow && isFrame && topWindowValid!==false && buttonType!='magnifier'){
+                if(this.openInTopWindow && isFrame && topWindowValid!==false && buttonType!='magnifier' && !isLargeFrame()){
                     if(topWindowValid){
                         openInTop();
                     }else{//先发消息问问顶层窗口是不是非frameset窗口
@@ -26133,6 +26150,15 @@ ImgOps | https://imgops.com/#b#`;
         };
 
         var isFrame=window!=window.parent;
+        function isLargeFrame(){
+            try{
+                var topWin = window.top;
+                return window.innerWidth >= topWin.innerWidth * 0.5 &&
+                       window.innerHeight >= topWin.innerHeight * 0.5;
+            }catch(e){
+                return false;
+            }
+        }
         var topWindowValid;
         var frameSentData;
         var frameSentSuccessData;
