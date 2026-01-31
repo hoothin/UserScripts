@@ -12401,7 +12401,7 @@ ImgOps | https://imgops.com/#b#`;
     function urlToBlobWithFetch(urlString, cb){
         fetch(urlString).then(response => response.blob()).then(blob => {
             let ext = extFromMimeAndUrl(blob.type, urlString);
-            if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 1000) return cb(null, '');
+            if (blob.type && blob.type.indexOf("text/html") === 0 && (blob.size || 0) < 1000) return cb(null, '');
             if (ext === "none") ext = "webp";
             let conversion = formatDict.get(ext);
             if (canvas && conversion) {
@@ -12614,7 +12614,7 @@ ImgOps | https://imgops.com/#b#`;
                 let blob = d.response;
                 if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
                 let ext = extFromMimeAndUrl(blob.type, url);
-                if (ext && ext.indexOf("text/html") === 0 && (blob.size || 0) < 100000) {
+                if (blob.type && blob.type.indexOf("text/html") === 0 && (blob.size || 0) < 100000) {
                     urlToBlobWithFetch(url, cb);
                     return;
                 }
