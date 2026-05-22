@@ -6491,6 +6491,7 @@
 {
     "name": "xHamster",
     "url": "^https://([\\w]+\\.)?(xhamster|xhaccess|xhamster19)\\.(com|desi)/",
+    "author": "Vieller",
     "pageElement": "//div[contains(@class, 'thumb-list__item') and not(contains(@class, 'loading'))]",
     "nextLink": "//a[@data-page='next' or @rel='next']",
     "action": 0,
