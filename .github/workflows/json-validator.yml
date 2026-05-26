@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: json-yaml-validate
-        uses: GrantBirki/json-yaml-validate@v3.0.0
+        uses: GrantBirki/json-yaml-validate@v5
         id: json-yaml-validate
         with:
           json_schema: Pagetual/pagetual.schema.json
