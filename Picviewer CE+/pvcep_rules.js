@@ -1132,8 +1132,8 @@ var siteInfo = [
         name: "gelbooru",
         url: /gelbooru\.com/,
         src: /(thumbnails|samples)\/(.*)\/(thumbnail|sample)_/i,
-        r: /.*\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/i,
-        s: ["https://img2.gelbooru.com/images/$2/$4.png","https://img2.gelbooru.com/images/$2/$4.jpg","https://img2.gelbooru.com/images/$2/$4.jpeg","https://img2.gelbooru.com/images/$2/$4.gif"]
+        r: /.*\/(img\d+)\.gelbooru\.com\/+(?:thumbnails|samples)\/([0-9a-f]+\/[0-9a-f]+)\/(?:thumbnail|sample)_([0-9a-f]+)\..*/i,
+        s: ["https://$1.gelbooru.com/images/$2/$3.png","https://$1.gelbooru.com/images/$2/$3.jpg","https://$1.gelbooru.com/images/$2/$3.jpeg","https://$1.gelbooru.com/images/$2/$3.gif"]
     },
     {
         name: "donmai",
