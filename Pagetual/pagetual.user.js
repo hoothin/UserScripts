@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.132
+// @version      1.9.37.133
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -6337,6 +6337,7 @@
             }
             if (next) {
                 let innerText = next.innerText;
+                next = next.querySelector("a") || next;
                 let isJs = !this.linkHasHref(next);
                 if (innerText && nextTextReg2.test(innerText.trim())) {
                     if (isJs) {
@@ -6381,8 +6382,9 @@
                 await sleep(1);
                 let pageDiv = body.querySelector("[class*=paging],.pagination,.pagination-list");
                 if (pageDiv) {
-                    cur = pageDiv.querySelector("[class*=current],[class*=active],.page-selected,[aria-current]");
-                    if (cur) {
+                    cur = pageDiv.querySelectorAll("[class*=current],[class*=active],.page-selected,[aria-current]");
+                    if (cur && cur.length == 1) {
+                        cur = cur[0];
                         if (cur.parentNode == pageDiv) {
                             next = cur.nextElementSibling;
                             if (next && next.nodeName === cur.nodeName) next = next.nodeName == "A" ? next : next.querySelector("a");
@@ -6394,8 +6396,9 @@
                         }
                     } else {
                         if (!pageDiv.querySelector("a")) {
-                            cur = pageDiv.querySelector("[class*=current],[class*=active]");
-                            if (cur) {
+                            cur = pageDiv.querySelectorAll("[class*=current],[class*=active]");
+                            if (cur && cur.length == 1) {
+                                cur = cur[0];
                                 jsNext = cur.nextElementSibling;
                                 if (jsNext && jsNext.nodeName !== cur.nodeName) jsNext = null;
                             }
@@ -6858,7 +6861,7 @@
                     }
                     let parent = nextLink;
                     while (parent && !compareNodeName(parent, ["body"])) {
-                        if (parent.hasAttribute && parent.hasAttribute("disabled")) {
+                        if (parent.hasAttribute && parent.hasAttribute("disabled") && parent.getAttribute("disabled") != 'false') {
                             this.nextLinkHref = false;
                             return null;
                         }
