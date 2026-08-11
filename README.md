@@ -42,4 +42,4 @@
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=hoothin/UserScripts&type=Date)](https://star-history.com/#hoothin/UserScripts&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=hoothin/UserScripts&type=Date)](https://star-history.dera.page/#hoothin/UserScripts&Date)
