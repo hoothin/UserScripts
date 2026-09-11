@@ -2773,6 +2773,19 @@
     "nextLink": "#content > section.reader-bar > div.reader-pagination > a.next"
 },
 {
+  "name": "Danbooru",
+  "author": "yydfh33",
+  "example": "https://danbooru.donmai.us/posts",
+  "url": "^https://danbooru\\.donmai\\.us/posts(\\?|$)",
+  "action": 0,
+  "pageElement": "div.posts-container>article",
+  "insert": "div.posts-container",
+  "insertPos": 2,
+  "nextLink": ["a[rel=next]", "a.paginator-next"],
+  "fitWidth": false,
+  "pageAction": "const targets = []; eles.forEach(el => { if (el.matches('article.post-preview')) targets.push(el); else targets.push(...el.querySelectorAll('article.post-preview')); }); let tries = 0; const run = () => { tries++; try { const seed = document.querySelector('article.post-preview.blacklist-initialized'); const bl = seed && seed.post && seed.post.blacklist; if (bl && window.Danbooru && Danbooru.Blacklist && Danbooru.Blacklist.Post) { targets.forEach(p => { if (!p.classList.contains('blacklist-initialized')) bl.posts.push(new Danbooru.Blacklist.Post(p, bl)); }); bl.apply(); const ref = seed.querySelector('picture>source'); const refAttr = ref && (ref.getAttribute('srcset') ? 'srcset' : (ref.getAttribute('src') ? 'src' : null)); targets.forEach(p => { const s = p.querySelector('picture>source'); const i = p.querySelector('img'); if (!s || !i) return; const u = s.getAttribute('src') || s.getAttribute('srcset'); if (!u) return; if (refAttr === 'srcset') { s.setAttribute('srcset', u); } else { const orig = i.getAttribute('src'); i.onerror = () => { i.onerror = null; i.src = orig; }; i.src = u; } }); return; } } catch(e) { console.warn('[pagetual danbooru]', e); return; } if (tries < 20) setTimeout(run, 150); else console.warn('[pagetual danbooru] blacklist instance not found'); }; run();"
+},
+{
     "name": "Danbooru",
     "author": "skofkyo",
     "example": "danbooru.donmai.us，e621.net",
