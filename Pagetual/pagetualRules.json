@@ -4448,7 +4448,7 @@
     "pageBarTop": 55,
     "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
     "replaceElement": "[role='navigation']>[role='presentation']",
-    "css": "inIframe:#searchform,[data-l],[data-is-desktop]{display:none;}"
+    "css": "div.ITCGwe{display:none!important;}inIframe:#searchform,[data-l],[data-is-desktop]{display:none;}"
 },
 {
     "name": "Google Trends",

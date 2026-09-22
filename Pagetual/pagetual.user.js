@@ -31,7 +31,7 @@
 // @name:da      Pagetual
 // @name:fr-CA   Pagetual
 // @namespace    hoothin
-// @version      1.9.37.133
+// @version      1.9.37.134
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -206,6 +206,7 @@
                 turnRate: "Turn the next page when it's less than 【X】 times page height from the footer",
                 inputPageNum: "Enter page number to jump",
                 enableHistory: "Write browsing history after page turning",
+                autopagerizeEvents: "Trigger AutoPagerize compatibility events",
                 enableHistoryAfterInsert: "Write browsing history immediately after splicing, otherwise write after browsing",
                 contentVisibility: "Automatically switch content-visibility to improve rendering performance",
                 initRun: "Turn pages immediately after opening",
@@ -330,6 +331,7 @@
                 turnRate: "바닥글로부터 페이지 높이의 【X】배 미만일 때 다음 페이지로 넘기기",
                 inputPageNum: "이동할 페이지 번호를 입력하세요",
                 enableHistory: "페이지 넘김 후 방문 기록 저장",
+                autopagerizeEvents: "AutoPagerize 호환 이벤트 발생",
                 enableHistoryAfterInsert: "페이지 결합 직후 방문 기록 저장, 그렇지 않으면 탐색 후 저장",
                 contentVisibility: "렌더링 성능 향상을 위해 content-visibility 자동 전환",
                 initRun: "페이지 열람 직후 자동 넘김 시작",
@@ -454,6 +456,7 @@
                 turnRate: "Blättern zur nächsten Seite, wenn sie weniger als 【X】 Mal die Seitenshöhe vom Fußbereich entfernt ist",
                 inputPageNum: "Seitenzahl eingeben, um zu springen",
                 enableHistory: "Browserverlauf nach dem Blättern aufzeichnen",
+                autopagerizeEvents: "AutoPagerize-Kompatibilitätsereignisse auslösen",
                 enableHistoryAfterInsert: "Browserverlauf sofort nach dem Einfügen aufzeichnen, andernfalls nach dem Browsen aufzeichnen",
                 contentVisibility: "Inhaltssichtbarkeit automatisch umschalten, um die Render-Leistung zu verbessern",
                 initRun: "Seiten sofort nach dem Öffnen blättern",
@@ -578,6 +581,7 @@
                 turnRate: "เปลี่ยนหน้าถัดไปเมื่ออยู่ห่างจากส่วนท้ายน้อยกว่า【X】เท่าของความสูงของหน้า",
                 inputPageNum: "ป้อนหมายเลขหน้าเพื่อข้ามไป",
                 enableHistory: "เขียนประวัติการเข้าชมหลังจากการเปลี่ยนหน้า",
+                autopagerizeEvents: "ส่งเหตุการณ์ที่เข้ากันได้กับ AutoPagerize",
                 enableHistoryAfterInsert: "เขียนประวัติการเข้าชมทันทีหลังจากต่อเข้าด้วยกัน มิฉะนั้นจะเขียนหลังจากการเข้าชม",
                 contentVisibility: "สลับ content-visibility โดยอัตโนมัติเพื่อปรับปรุงประสิทธิภาพการเรนเดอร์",
                 initRun: "เปลี่ยนหน้าทันทีหลังจากเปิด",
@@ -702,6 +706,7 @@
                 turnRate: "Snu til neste side når det er mindre enn 【X】 ganger sidehøyden fra bunnteksten",
                 inputPageNum: "Skriv inn sidetall for å hoppe",
                 enableHistory: "Skriv nettleserlogg etter sidevending",
+                autopagerizeEvents: "Utløs AutoPagerize-kompatible hendelser",
                 enableHistoryAfterInsert: "Skriv nettleserlogg umiddelbart etter spleising, ellers skriv etter surfing",
                 contentVisibility: "Bytt automatisk innholdssynlighet for å forbedre gjengivelsesytelsen",
                 initRun: "Snu sider umiddelbart etter åpning",
@@ -826,6 +831,7 @@
                 turnRate: "Vänd till nästa sida när det är mindre än 【X】 gånger sidhöjden från sidfoten",
                 inputPageNum: "Ange sidnummer för att hoppa",
                 enableHistory: "Skriv webbhistorik efter sidvändning",
+                autopagerizeEvents: "Utlös AutoPagerize-kompatibla händelser",
                 enableHistoryAfterInsert: "Skriv webbhistorik omedelbart efter sammanfogning, annars skriv efter surfning",
                 contentVisibility: "Växla automatiskt innehållssynlighet för att förbättra renderingsprestanda",
                 initRun: "Vänd sidor omedelbart efter öppning",
@@ -950,6 +956,7 @@
                 turnRate: "Окрените следећу страницу када је мање од 【X】 пута висине странице од подножја",
                 inputPageNum: "Унесите број странице за скок",
                 enableHistory: "Упиши историју прегледања након окретања странице",
+                autopagerizeEvents: "Покрени догађаје компатибилне са AutoPagerize",
                 enableHistoryAfterInsert: "Упиши историју прегледања одмах након спајања, у супротном упиши након прегледања",
                 contentVisibility: "Аутоматски промени видљивост садржаја да би се побољшале перформансе приказивања",
                 initRun: "Окрени странице одмах након отварања",
@@ -1074,6 +1081,7 @@
                 turnRate: "Otočte na ďalšiu stránku, keď je menej ako 【X】 násobok výšky stránky od pätičky",
                 inputPageNum: "Zadajte číslo stránky na preskočenie",
                 enableHistory: "Zapísať históriu prehliadania po otočení stránky",
+                autopagerizeEvents: "Spúšťať udalosti kompatibilné s AutoPagerize",
                 enableHistoryAfterInsert: "Zapísať históriu prehliadania ihneď po spojení, inak zapísať po prehliadaní",
                 contentVisibility: "Automaticky prepínať viditeľnosť obsahu na zlepšenie výkonu vykresľovania",
                 initRun: "Otočiť stránky ihneď po otvorení",
@@ -1198,6 +1206,7 @@
                 turnRate: "Lapozzon a következő oldalra, ha a lábléctől mért távolság kevesebb, mint az oldal magasságának 【X】-szerese",
                 inputPageNum: "Adja meg az ugrani kívánt oldalszámot",
                 enableHistory: "Böngészési előzmények írása lapozás után",
+                autopagerizeEvents: "AutoPagerize-kompatibilis események kiváltása",
                 enableHistoryAfterInsert: "Böngészési előzmények írása azonnal az illesztés után, egyébként a böngészés után",
                 contentVisibility: "A content-visibility automatikus váltása a renderelési teljesítmény javítása érdekében",
                 initRun: "Oldalak lapozása azonnal a megnyitás után",
@@ -1322,6 +1331,7 @@
                 turnRate: "Întoarceți la pagina următoare când este mai puțin de 【X】 ori înălțimea paginii de la subsol",
                 inputPageNum: "Introduceți numărul paginii pentru a sări",
                 enableHistory: "Scrieți istoricul de navigare după întoarcerea paginii",
+                autopagerizeEvents: "Declanșați evenimente compatibile cu AutoPagerize",
                 enableHistoryAfterInsert: "Scrieți istoricul de navigare imediat după îmbinare, altfel scrieți după navigare",
                 contentVisibility: "Comutați automat vizibilitatea conținutului pentru a îmbunătăți performanța de randare",
                 initRun: "Întoarceți paginile imediat după deschidere",
@@ -1446,6 +1456,7 @@
                 turnRate: "Vaihda seuraavalle sivulle, kun se on alle 【X】 kertaa sivun korkeuden päässä alatunnisteesta",
                 inputPageNum: "Syötä sivunumero siirtyäksesi",
                 enableHistory: "Kirjoita selaushistoria sivunvaihdon jälkeen",
+                autopagerizeEvents: "Lähetä AutoPagerize-yhteensopivia tapahtumia",
                 enableHistoryAfterInsert: "Kirjoita selaushistoria heti liittämisen jälkeen, muuten kirjoita selauksen jälkeen",
                 contentVisibility: "Vaihda automaattisesti sisällön näkyvyyttä parantaaksesi renderöintisuorituskykyä",
                 initRun: "Vaihda sivuja heti avaamisen jälkeen",
@@ -1570,6 +1581,7 @@
                 turnRate: "Μετάβαση στην επόμενη σελίδα όταν απέχει λιγότερο από 【X】 φορές το ύψος της σελίδας από το υποσέλιδο",
                 inputPageNum: "Εισαγάγετε τον αριθμό σελίδας για μετάβαση",
                 enableHistory: "Εγγραφή ιστορικού περιήγησης μετά την αλλαγή σελίδας",
+                autopagerizeEvents: "Ενεργοποίηση συμβάντων συμβατών με AutoPagerize",
                 enableHistoryAfterInsert: "Εγγραφή ιστορικού περιήγησης αμέσως μετά τη συγκόλληση, διαφορετικά εγγραφή μετά την περιήγηση",
                 contentVisibility: "Αυτόματη εναλλαγή της ορατότητας περιεχομένου για βελτίωση της απόδοσης απόδοσης",
                 initRun: "Αλλαγή σελίδων αμέσως μετά το άνοιγμα",
@@ -1694,6 +1706,7 @@
                 turnRate: "Turnu la sekvan paĝon kiam ĝi estas malpli ol 【X】 fojojn la paĝa alteco de la piedlinio",
                 inputPageNum: "Enigu paĝan numeron por salti",
                 enableHistory: "Skribi foliumhistorion post paĝo-turnado",
+                autopagerizeEvents: "Eligi eventojn kongruajn kun AutoPagerize",
                 enableHistoryAfterInsert: "Skribi foliumhistorion tuj post kunigo, alie skribi post foliumado",
                 contentVisibility: "Aŭtomate baskuligi enhavan videblecon por plibonigi bildigan rendimenton",
                 initRun: "Turni paĝojn tuj post malfermo",
@@ -1818,6 +1831,7 @@
                 turnRate: "Превъртете на следващата страница, когато е на по-малко от 【X】 пъти височината на страницата от долния колонтитул",
                 inputPageNum: "Въведете номер на страница за прескачане",
                 enableHistory: "Записване на историята на сърфиране след прелистване на страница",
+                autopagerizeEvents: "Задействане на събития, съвместими с AutoPagerize",
                 enableHistoryAfterInsert: "Записване на историята на сърфиране веднага след снаждане, в противен случай записване след сърфиране",
                 contentVisibility: "Автоматично превключване на видимостта на съдържанието за подобряване на производителността на изобразяване",
                 initRun: "Превъртане на страници веднага след отваряне",
@@ -1942,6 +1956,7 @@
                 turnRate: "Otočte na další stránku, když je méně než 【X】 násobek výšky stránky od zápatí",
                 inputPageNum: "Zadejte číslo stránky pro skok",
                 enableHistory: "Zapsat historii procházení po otočení stránky",
+                autopagerizeEvents: "Spouštět události kompatibilní s AutoPagerize",
                 enableHistoryAfterInsert: "Zapsat historii procházení ihned po spojení, jinak zapsat po procházení",
                 contentVisibility: "Automaticky přepínat viditelnost obsahu pro zlepšení výkonu vykreslování",
                 initRun: "Otočit stránky ihned po otevření",
@@ -2066,6 +2081,7 @@
                 turnRate: "Chuyển sang trang tiếp theo khi còn cách chân trang chưa đến 【X】 lần chiều cao trang",
                 inputPageNum: "Nhập số trang để chuyển đến",
                 enableHistory: "Ghi lại lịch sử duyệt web sau khi chuyển trang",
+                autopagerizeEvents: "Phát sự kiện tương thích với AutoPagerize",
                 enableHistoryAfterInsert: "Ghi lại lịch sử duyệt web ngay sau khi ghép nối, nếu không thì ghi lại sau khi duyệt",
                 contentVisibility: "Tự động chuyển đổi khả năng hiển thị nội dung để cải thiện hiệu suất hiển thị",
                 initRun: "Chuyển trang ngay sau khi mở",
@@ -2190,6 +2206,7 @@
                 turnRate: "Przewróć na następną stronę, gdy odległość od stopki jest mniejsza niż 【X】-krotność wysokości strony",
                 inputPageNum: "Wprowadź numer strony, aby przejść",
                 enableHistory: "Zapisuj historię przeglądania po przewróceniu strony",
+                autopagerizeEvents: "Wywołuj zdarzenia zgodne z AutoPagerize",
                 enableHistoryAfterInsert: "Zapisuj historię przeglądania natychmiast po połączeniu, w przeciwnym razie zapisuj po przeglądaniu",
                 contentVisibility: "Automatycznie przełączaj widoczność zawartości, aby poprawić wydajność renderowania",
                 initRun: "Przewracaj strony natychmiast po otwarciu",
@@ -2314,6 +2331,7 @@
                 turnRate: "Перегорніть на наступну сторінку, коли до нижнього колонтитула залишиться менше 【X】 висот сторінки",
                 inputPageNum: "Введіть номер сторінки для переходу",
                 enableHistory: "Записувати історію переглядів після перегортання сторінки",
+                autopagerizeEvents: "Надсилати події, сумісні з AutoPagerize",
                 enableHistoryAfterInsert: "Записувати історію переглядів одразу після з'єднання, інакше записувати після перегляду",
                 contentVisibility: "Автоматично перемикати видимість вмісту для покращення продуктивності рендерингу",
                 initRun: "Перегортати сторінки одразу після відкриття",
@@ -2438,6 +2456,7 @@
                 turnRate: "Altbilgiden sayfa yüksekliğinin 【X】 katından daha az olduğunda sonraki sayfaya geçin",
                 inputPageNum: "Atlamak için sayfa numarasını girin",
                 enableHistory: "Sayfa çevirdikten sonra tarama geçmişini yaz",
+                autopagerizeEvents: "AutoPagerize uyumlu olayları tetikle",
                 enableHistoryAfterInsert: "Birleştirmeden hemen sonra tarama geçmişini yaz, aksi takdirde taramadan sonra yaz",
                 contentVisibility: "Oluşturma performansını iyileştirmek için içerik görünürlüğünü otomatik olarak değiştir",
                 initRun: "Açtıktan hemen sonra sayfaları çevir",
@@ -2562,6 +2581,7 @@
                 turnRate: "Sla de volgende pagina om wanneer deze minder dan 【X】 keer de paginahoogte van de voettekst is",
                 inputPageNum: "Voer paginanummer in om te springen",
                 enableHistory: "Schrijf browsegeschiedenis na het omslaan van de pagina",
+                autopagerizeEvents: "AutoPagerize-compatibele gebeurtenissen activeren",
                 enableHistoryAfterInsert: "Schrijf browsegeschiedenis onmiddellijk na het splitsen, anders schrijven na het browsen",
                 contentVisibility: "Schakel automatisch de zichtbaarheid van inhoud om de renderprestaties te verbeteren",
                 initRun: "Sla pagina's onmiddellijk na het openen om",
@@ -2686,6 +2706,7 @@
                 turnRate: "Vend til næste side, når den er mindre end 【X】 gange sidehøjden fra sidefoden",
                 inputPageNum: "Indtast sidetal for at hoppe",
                 enableHistory: "Skriv browserhistorik efter sidevending",
+                autopagerizeEvents: "Udløs AutoPagerize-kompatible hændelser",
                 enableHistoryAfterInsert: "Skriv browserhistorik umiddelbart efter splejsning, ellers skriv efter browsing",
                 contentVisibility: "Skift automatisk indholdssynlighed for at forbedre gengivelsesydelsen",
                 initRun: "Vend sider umiddelbart efter åbning",
@@ -2810,6 +2831,7 @@
                 turnRate: "Passer à la page suivante lorsqu'elle est à moins de 【X】 fois la hauteur de la page du pied de page",
                 inputPageNum: "Entrez le numéro de page pour y accéder",
                 enableHistory: "Inscrire l'historique de navigation après le changement de page",
+                autopagerizeEvents: "Déclencher les événements compatibles avec AutoPagerize",
                 enableHistoryAfterInsert: "Inscrire l'historique de navigation immédiatement après la jonction, sinon après la navigation",
                 contentVisibility: "Basculer automatiquement content-visibility pour améliorer les performances de rendu",
                 initRun: "Changer de page immédiatement après l'ouverture",
@@ -2934,6 +2956,7 @@
                 turnRate: "Buka halaman berikutnya saat jarak dari footer kurang dari 【X】 kali tinggi halaman",
                 inputPageNum: "Masukkan nomor halaman untuk melompat",
                 enableHistory: "Tulis riwayat penjelajahan setelah membalik halaman",
+                autopagerizeEvents: "Picu peristiwa yang kompatibel dengan AutoPagerize",
                 enableHistoryAfterInsert: "Tulis riwayat penjelajahan segera setelah penyambungan, jika tidak, tulis setelah menjelajah",
                 contentVisibility: "Secara otomatis mengganti content-visibility untuk meningkatkan kinerja rendering",
                 initRun: "Balik halaman segera setelah dibuka",
@@ -3059,6 +3082,7 @@
                 turnRate: "Mudar para a próxima página quando estiver a menos de 【X】 vezes a altura da página do rodapé",
                 inputPageNum: "Digite o número da página para pular",
                 enableHistory: "Gravar histórico de navegação após virar a página",
+                autopagerizeEvents: "Disparar eventos compatíveis com AutoPagerize",
                 enableHistoryAfterInsert: "Gravar histórico de navegação imediatamente após a inclusão, caso contrário, gravar após a navegação",
                 contentVisibility: "Alternar automaticamente a visibilidade do conteúdo para melhorar o desempenho de renderização",
                 initRun: "Virar páginas imediatamente após a abertura",
@@ -3183,6 +3207,7 @@
                 turnRate: "Passer à la page suivante lorsqu'elle est à moins de 【X】 fois la hauteur de la page du pied de page",
                 inputPageNum: "Entrez le numéro de page pour y accéder",
                 enableHistory: "Inscrire l'historique de navigation après le changement de page",
+                autopagerizeEvents: "Déclencher les événements compatibles avec AutoPagerize",
                 enableHistoryAfterInsert: "Inscrire l'historique de navigation immédiatement après la jonction, sinon après la navigation",
                 contentVisibility: "Basculer automatiquement content-visibility pour améliorer les performances de rendu",
                 initRun: "Changer de page immédiatement après l'ouverture",
@@ -3307,6 +3332,7 @@
                 turnRate: "Gira alla pagina successiva quando la distanza dal fondo è inferiore a 【X】 volte l'altezza della pagina",
                 inputPageNum: "Inserisci il numero di pagina a cui saltare",
                 enableHistory: "Scrivi la cronologia di navigazione dopo aver girato pagina",
+                autopagerizeEvents: "Attiva eventi compatibili con AutoPagerize",
                 enableHistoryAfterInsert: "Scrivi la cronologia subito dopo l'unione, altrimenti dopo la navigazione",
                 contentVisibility: "Cambia automaticamente content-visibility per migliorare le prestazioni di rendering",
                 initRun: "Inizia a girare le pagine subito dopo l'apertura",
@@ -3432,6 +3458,7 @@
                 turnRate: "Pasar a la siguiente página cuando esté a menos de 【X】 veces la altura de la página desde el pie de página",
                 inputPageNum: "Ingrese el número de página para saltar",
                 enableHistory: "Escribir historial de navegación después de pasar la página",
+                autopagerizeEvents: "Activar eventos compatibles con AutoPagerize",
                 enableHistoryAfterInsert: "Escribir historial de navegación inmediatamente después de unir, de lo contrario escribir después de navegar",
                 contentVisibility: "Cambiar automáticamente la visibilidad del contenido para mejorar el rendimiento de renderización",
                 initRun: "Pasar páginas inmediatamente después de abrir",
@@ -3558,6 +3585,7 @@
                 turnRate: "%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D8%B9%D9%86%D8%AF%D9%85%D8%A7%20%D8%AA%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%81%D8%A9%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20%E3%80%90X%E3%80%91%20%D9%85%D8%B1%D8%A7%D8%AA%20%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D8%AA%D8%B0%D9%8A%D9%8A%D9%84",
                 inputPageNum: "%D8%A3%D8%AF%D8%AE%D9%84%20%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%84%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84",
                 enableHistory: "%D9%83%D8%AA%D8%A7%D8%A8%D8%A9%20%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%AD%D9%88%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                autopagerizeEvents: "%D8%A5%D8%B7%D9%84%D8%A7%D9%82%20%D8%A3%D8%AD%D8%AF%D8%A7%D8%AB%20%D9%85%D8%AA%D9%88%D8%A7%D9%81%D9%82%D8%A9%20%D9%85%D8%B9%20AutoPagerize",
                 enableHistoryAfterInsert: "%D9%83%D8%AA%D8%A7%D8%A8%D8%A9%20%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D9%81%D9%88%D8%B1%D9%8B%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC%D8%8C%20%D8%A3%D9%88%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD",
                 contentVisibility: "%D8%A7%D9%84%D8%AA%D9%86%D9%82%D9%84%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%20%D9%84%D8%B1%D8%A4%D9%8A%D8%A9%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89,%20%D9%84%D8%AA%D8%AD%D8%B3%D9%8A%D9%86%20%D8%A3%D8%AF%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6",
                 initRun: "%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%81%D9%88%D8%B1%20%D8%A7%D9%84%D9%81%D8%AA%D8%AD",
@@ -3682,6 +3710,7 @@
                 turnRate: "距离页尾【X】倍页面高度时就开始翻页",
                 inputPageNum: "输入页码跳转",
                 enableHistory: "翻页后写入历史记录",
+                autopagerizeEvents: "触发 AutoPagerize 兼容事件",
                 enableHistoryAfterInsert: "拼接后立即写入历史记录，否则浏览完毕后再行写入",
                 contentVisibility: "自动切换 contentVisibility，提升渲染性能",
                 initRun: "打开页面后立即尝试翻页，否则滚动至页尾再翻页",
@@ -3806,6 +3835,7 @@
                 turnRate: "距離頁尾【X】倍頁面高度時就開始翻頁",
                 inputPageNum: "輸入頁碼跳轉",
                 enableHistory: "翻頁后寫入歷史記錄",
+                autopagerizeEvents: "觸發 AutoPagerize 相容事件",
                 enableHistoryAfterInsert: "拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
                 contentVisibility: "自動切換 contentVisibility，提升渲染性能",
                 initRun: "打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
@@ -3930,6 +3960,7 @@
                 turnRate: "ページの端からページの高さの【X】倍になったらページをめくる",
                 inputPageNum: "ジャンプするページ番号を入力",
                 enableHistory: "ページめくり後の履歴を書く",
+                autopagerizeEvents: "AutoPagerize 互換イベントを発火する",
                 enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
                 contentVisibility: "contentVisibility を自動的に切り替えてレンダリング パフォーマンスを向上させる",
                 initRun: "Webページを開いた直後にページをめくる",
@@ -4054,6 +4085,7 @@
                 turnRate: "Подгрузить страницу, когда она будет в 【X】 раз больше высоты страницы от конца страницы",
                 inputPageNum: "Введите номер страницы для перехода",
                 enableHistory: "Записать историю после переключения страниц",
+                autopagerizeEvents: "Отправлять события, совместимые с AutoPagerize",
                 enableHistoryAfterInsert: "Записать запись истории сразу после вставки, иначе записать после просмотра",
                 contentVisibility: "Автоматически переключать contentVisibility для повышения производительности рендеринга",
                 initRun: "Подгружать страницы сразу после открытия",
@@ -4529,7 +4561,7 @@
         return doc.body || doc.querySelector('body') || doc;
     }
 
-    function getElementByXpath(xpath, doc, contextNode) {
+    function getElementByXpath(xpath, doc, contextNode, onError) {
         if (doc && doc.ownerDocument) doc = doc.ownerDocument;
         doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
@@ -4549,11 +4581,12 @@
             }
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
+            if (typeof onError === "function") onError(err);
         }
         return null;
     }
 
-    function getAllElementsByXpath(xpath, contextNode, doc) {
+    function getAllElementsByXpath(xpath, contextNode, doc, onError) {
         if (doc && doc.ownerDocument) doc = doc.ownerDocument;
         doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
@@ -4568,6 +4601,7 @@
             }
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
+            if (typeof onError === "function") onError(err);
         }
         return result;
     }
@@ -4579,10 +4613,10 @@
         return /^\(*(descendant::|\.\/|\/|id\()/.test(xpath);
     }
 
-    function getAllElements(sel, doc, contextNode) {
+    function getAllElements(sel, doc, contextNode, onError) {
         try {
             if (sel.indexOf(" =>> ") !== -1) {
-                let result = getElement(sel, doc, contextNode);
+                let result = getElement(sel, doc, contextNode, false, onError);
                 return result && [result];
             }
             if (!isXPath(sel)) {
@@ -4590,11 +4624,12 @@
             }
         } catch(e) {
             debug(e, 'Error selector');
+            return getAllElementsByXpath(sel, contextNode, doc, typeof onError === "function" ? () => onError(e) : onError);
         }
-        return getAllElementsByXpath(sel, contextNode, doc);
+        return getAllElementsByXpath(sel, contextNode, doc, onError);
     }
 
-    function getElement(sel, doc, contextNode, bySort) {
+    function getElement(sel, doc, contextNode, bySort, onError) {
         try {
             if (!isXPath(sel)) {
                 let checkShadow = s => {
@@ -4623,8 +4658,9 @@
             }
         } catch(e) {
             debug(e, 'Error selector');
+            return getElementByXpath(sel, doc, contextNode, typeof onError === "function" ? () => onError(e) : onError);
         }
-        return getElementByXpath(sel, doc, contextNode);
+        return getElementByXpath(sel, doc, contextNode, onError);
     }
 
     function compareNodeName(node, names) {
@@ -6176,6 +6212,43 @@
             return /^(javascript|#|$)/.test(href.trim().replace("#p{", "").replace(location.href, ""));
         }
 
+        isFormPage(doc) {
+            // ponytail: check observable workflow markup once per detection; no candidate or event monitoring.
+            let view = (doc.ownerDocument || doc).defaultView;
+            let pageReg = /page|paginat|下[一ー─1]?[页頁]|次のページ/i;
+            let flowReg = /payment|checkout|3d.?secure|card.?auth|authenticat|survey|questionnaire|quiz|问卷|問卷|アンケート|お支払|決済|本人認証|カード認証|クレジット|信用卡|支付|付款/i;
+            for (let field of doc.querySelectorAll("input,iframe")) {
+                if (compareNodeName(field, ["iframe"]) && /3d.?secure|3ds.?challenge|\/acs(?:[\/.?#]|$)|card.?auth/i.test((field.getAttribute("src") || "") + " " + field.title)) return true;
+                if (/^(creq|cres|threeDSSessionData|threeDSMethodData|PaReq|PaRes)$/i.test(field.name)) return true;
+                if (field.type === "hidden" || field.closest("[hidden]") || (view && !field.getClientRects().length)) continue;
+                if (/(^|\s)cc-(number|csc|exp(?:-month|-year)?)(\s|$)/i.test(field.getAttribute("autocomplete") || "")) return true;
+            }
+            for (let form of doc.querySelectorAll('form,[role="form"]')) {
+                if (form.closest("[hidden]") || (view && !form.getClientRects().length)) continue;
+                let heading = form.querySelector("legend,h1,h2,h3");
+                let hint = form.id + " " + form.className + " " + form.getAttribute("aria-label") + " " + (form.getAttribute("action") || "").split(/[?#]/)[0] + " " + (heading ? heading.textContent.slice(0, 1000) : "");
+                if (flowReg.test(hint)) return true;
+            }
+            for (let button of doc.querySelectorAll('button,input[type="submit"],input[type="button"],[role="button"]')) {
+                let form = button.form || button.closest('form,[role="form"]');
+                if (!form || button.disabled || (view && !button.getClientRects().length)) continue;
+                let text = (button.textContent || button.value || "").slice(0, 1000).trim();
+                let hint = button.className + " " + button.id + " " + text + " " + button.title + " " + button.getAttribute("aria-label");
+                if (!/\b(next|continue)\b|下一步|次へ|继续|繼續|進む/i.test(hint)) continue;
+                if (!pageReg.test(hint + " " + form.className + " " + form.id + " " + form.getAttribute("aria-label"))) return true;
+            }
+            for (let ele of doc.querySelectorAll("*")) {
+                let child = ele.shadowRoot || (compareNodeName(ele, ["iframe"]) && ele.contentDocument);
+                if (child && this.isFormPage(child)) return true;
+            }
+            return false;
+        }
+
+        allowAutoPaging(doc = document, rule = this.curSiteRule) {
+            if (rule.pageElementByJs || rule.nextLinkByJs || rule.nextLinkByUrl || typeof rule.nextLink !== "undefined") return true;
+            return rule === this.curSiteRule && !this.isFormPage(doc);
+        }
+
         async querySelectorList(source, list, defaultView) {
             for (let i = 0; i < list.length; i++) {
                 await sleep(1);
@@ -6223,6 +6296,7 @@
         }
 
         async getPage(doc, exist) {
+            if (this.isFormPage(doc)) return {next: null, canSave: false};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
@@ -6849,11 +6923,7 @@
                 if (nextLink) {
                     if (compareNodeName(nextLink, ["input"]) || nextLink.type === "submit") {
                         if (!/next/i.test(nextLink.getAttribute("onclick"))) {
-                            let form = nextLink.parentNode;
-                            while (form) {
-                                if (compareNodeName(form, ["form"])) break;
-                                else form = form.parentNode;
-                            }
+                            let form = nextLink.form || nextLink.closest("form");
                             if (form) {
                                 nextLink.href = getNextLinkByForm(form, nextLink);
                             }
@@ -7195,6 +7265,7 @@
                 try {
                     doc = document.implementation.createHTMLDocument('');
                     setHTML(doc.documentElement, data, doc);
+                    if (!self.allowAutoPaging() || !self.allowAutoPaging(doc)) return;
                     var body = getBody(doc);
                     if (!self.preloadDiv) {
                         self.preloadDiv = document.createElement('div');
@@ -7768,6 +7839,12 @@
             }
         }
 
+        notifyNextPageDoc(doc) {
+            if (this.curSiteRule.autopagerizeEvents == null ? rulesData.autopagerizeEvents : this.curSiteRule.autopagerizeEvents) {
+                document.dispatchEvent(new _unsafeWindow.MouseEvent(rulesData.nextPageDocEvent || "GM_AutoPagerizeNextPageDoc", {bubbles: true, relatedTarget: doc}));
+            }
+        }
+
         async insertPage(doc, eles, url, callback, tried) {
             this.oldUrl = this.curUrl;
             let oldTitle = document.title;
@@ -7902,6 +7979,17 @@
                 }
             }
             isLoading = false;
+            if (this.curSiteRule.autopagerizeEvents == null ? rulesData.autopagerizeEvents : this.curSiteRule.autopagerizeEvents) {
+                let frame = !newEles.length && eles && !eles.length && doc.defaultView && doc.defaultView.frameElement;
+                let eventEles = (frame ? [frame] : newEles).filter(ele => ele.isConnected);
+                eventEles.forEach(ele => {
+                    // detail also exposes the URL across script sandboxes where expando fields are isolated.
+                    let event = new _unsafeWindow.CustomEvent(rulesData.nodeInsertedEvent || "AutoPagerize_DOMNodeInserted", {bubbles: true, detail: url || location.href});
+                    Object.assign(event, {relatedNode: ele.parentNode, prevValue: null, newValue: url || location.href, attrName: null, attrChange: 0});
+                    ele.dispatchEvent(event);
+                });
+                if (eventEles.length) document.dispatchEvent(new _unsafeWindow.Event(rulesData.nextPageLoadedEvent || "GM_AutoPagerizeNextPageLoaded", {bubbles: true}));
+            }
             _unsafeWindow.postMessage({
                 action: "insert",
                 command: 'pagetual'
@@ -8609,10 +8697,11 @@
              #pagetual-picker>.logoIcon.showSign>svg>path {
               fill: gray!important;
              }
-             #pagetual-picker textarea{
+             #pagetual-picker textarea,
+             #pagetual-picker input[list] {
               display: inline-block;
               width: calc(100% - 65px);
-              height: 20px;
+              height: 24px;
               min-width: 250px;
               max-width: calc(65vw - 50px);
               min-height: unset;
@@ -8633,7 +8722,8 @@
               box-shadow: 0 1px 5px 1px #ddd;
               overflow-wrap: anywhere;
              }
-             #pagetual-picker textarea:focus {
+             #pagetual-picker textarea:focus,
+             #pagetual-picker input[list]:focus {
               color: black;
               background-color: #fff;
               border-color: #80bdff;
@@ -8780,11 +8870,20 @@
              #pagetual-picker.showDetail .addProp {
               display: flex;
              }
-             #pagetual-picker .addProp>button {
+             #pagetual-picker .addProp>button,
+             #pagetual-picker .propForm>button {
               font-size: 30px;
               font-family: Arial,sans-serif;
               line-height: 35px;
               color: #161616;
+             }
+             #pagetual-picker .propForm:not([hidden]) {
+              display: flow-root;
+              clear: both;
+              padding-top: 10px;
+             }
+             #pagetual-picker:not(.showDetail) .propForm {
+              display: none;
              }
              #pagetual-picker #edit{
               -webkit-animation: jumpAnimation .6s 5;
@@ -8832,10 +8931,13 @@
                   <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" style="fill: #604b4a;" fill="#604b4a"></path></svg>
                 </button>
                 <div class="allpath" title="${i18n("switchSelector")}"></div>
-                <div>
+                <div style="display: flex;">
                   <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
                   <button id="check" title="${i18n("pickerCheck")}" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" style="fill: #604b4a;" fill="#604b4a"></path></svg>
+                  </button>
+                  <button id="pick" title="${i18n("picker")}" type="button" style="margin-left: 10px;">
+                    <svg style="color: #604b4a;" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2m8-16h2a2 2 0 0 1 2 2v2m-4 12h2a2 2 0 0 0 2-2v-2M9 12h6m-3-3v6"></path></svg>
                   </button>
                 </div>
                 <div class="bottom">
@@ -8866,6 +8968,11 @@
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
                 <button id="autoScroll" class="command" title="${i18n("toggleAutoScroll")}" type="button"></button>
                 <button id="ruleRequest" class="command" title="${i18n("ruleRequest")}" type="button">${i18n("ruleRequest")}</button>
+                <form class="propForm" hidden>
+                  <input name="propName" list="pagetual-rule-props" placeholder="${i18n("propName")}" aria-label="${i18n("propName")}" autocomplete="off" required />
+                  <datalist id="pagetual-rule-props"></datalist>
+                  <button title="${i18n("addOtherProp")}" type="submit">+</button>
+                </form>
                 <div>
                   <textarea class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
@@ -8948,8 +9055,19 @@
                 setListData("autoScroll", location.host + location.pathname, autoScroll);
                 startAutoScroll();
             }, true);
-            addOtherProp.addEventListener("click", e => {
-                let propName = prompt(i18n("propName"), "author");
+            let propForm = frame.querySelector(".propForm"), propInput = propForm.elements.propName;
+            addOtherProp.addEventListener("click", async e => {
+                if (!propForm.hidden) return propForm.hidden = true;
+                let props = new Set([await getData("pickerLastProp") || "author", ..."author name url example action autopagerizeEvents nextLink pageElement nextLinkByUrl nextLinkByJs pageElementByJs insert insertPos replaceElement loadMore wait waitElement sleep css pageElementCss init initRun pageInit pageAction iframeInit filter autoClick history pinUrl stopSign pageNum pageBar pageBarText pagePre include exclude enable autoLoadNum clickMode delay fitWidth hookUrl lazyImgSrc listenUrlChange listenHashChange lockScroll manualMode openInNewTab pageElementStyle preloadImages rate refreshByClick sideController wheel".split(" ")]);
+                setHTML(propInput.list, "");
+                props.forEach(prop => propInput.list.appendChild(new Option(prop, prop)));
+                propForm.hidden = false;
+                propInput.value = "";
+                propInput.focus();
+            }, true);
+            propForm.addEventListener("submit", e => {
+                e.preventDefault();
+                let propName = propInput.value.trim();
                 if (!propName) return;
                 let propValue = prompt(i18n("propValue"));
                 if (!propValue) return;
@@ -8960,10 +9078,12 @@
                     author = propValue;
                     storage.setItem("author", propValue);
                 }
-                let editTemp = self.getTempRule(false, true);
+                let editTemp = self.getTempRule(true, true);
                 if (!editTemp) return;
                 editTemp[propName] = propValue;
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
+                if (propName !== "nextLink" && propName !== "pageElement") storage.setItem("pickerLastProp", propName);
+                propForm.hidden = true;
             }, true);
             addOtherProp.addEventListener("contextmenu", e => {
                 e.preventDefault();
@@ -9102,13 +9222,24 @@
                 self.clearSigns();
             });
             checkBtn.addEventListener("click", e => {
-                self.checkInputSelector();
+                let error;
+                self.checkInputSelector(true, e => error = e);
+                if (error) {
+                    showTips(error.message.replace(/^[\s\S]*?: /, "").replace(/&/g, "&amp;").replace(/</g, "&lt;"), "", 5000);
+                    return;
+                }
                 if (this.selectorInput.value && self.foundEle) {
                     debug(self.foundEle);
                     self.foundEle[0].scrollIntoView({ behavior: "smooth" });
                     _GM_setClipboard(this.selectorInput.value);
                     showTips(i18n("copied"));
                 } else showTips("Null");
+            });
+            frame.querySelector("#pick").addEventListener("click", e => {
+                if (!self.showSign) logoBtn.click();
+                self.clearSigns();
+                frame.style.display = "none";
+                document.documentElement.appendChild(self.mainSignDiv);
             });
             xpath.addEventListener("click", e => {
                 if (!selectorInput.value) {
@@ -9163,6 +9294,7 @@
                 let target = self.getTarget(e.target);
                 let selector = self.getSelectorFromEle(target);
                 selectorInput.value = selector;
+                frame.style.display = "";
                 self.setSelectorDiv(selector);
             };
         }
@@ -9325,12 +9457,12 @@
             this.allpath.appendChild(span);
         }
 
-        checkInputSelector(fill = true) {
+        checkInputSelector(fill = true, onError) {
             let self = this;
             this.clearSigns();
-            if (!this.selectorInput.value) return;
-            let eles = getAllElements(this.selectorInput.value, document);
             this.foundEle = null;
+            if (!this.selectorInput.value) return;
+            let eles = getAllElements(this.selectorInput.value, document, null, onError);
             if (eles && eles.length > 0) {
                 this.foundEle = eles;
                 eles.forEach(ele => {
@@ -9354,6 +9486,7 @@
             this.init();
             if (this.inPicker) return;
             this.inPicker = true;
+            this.frame.style.display = "";
             if (!this.styleEle || !this.styleEle.parentNode) {
                 this.styleEle = _GM_addStyle(this.cssText);
             }
@@ -10235,6 +10368,12 @@
         let sideControllerLoadNowInput = createCheckbox(i18n("loadNow"), rulesData.sideControllerLoadNow !== false, "h4", sideControllerInput);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
+        let autopagerizeEventsInput = createCheckbox(i18n("autopagerizeEvents"), rulesData.autopagerizeEvents);
+        let nextPageDocEventInput = createCheckbox("GM_AutoPagerizeNextPageDoc", rulesData.nextPageDocEvent || "GM_AutoPagerizeNextPageDoc", "h4", autopagerizeEventsInput, "text");
+        let nodeInsertedEventInput = createCheckbox("AutoPagerize_DOMNodeInserted", rulesData.nodeInsertedEvent || "AutoPagerize_DOMNodeInserted", "h4", autopagerizeEventsInput, "text");
+        let nextPageLoadedEventInput = createCheckbox("GM_AutoPagerizeNextPageLoaded", rulesData.nextPageLoadedEvent || "GM_AutoPagerizeNextPageLoaded", "h4", autopagerizeEventsInput, "text");
+        [nextPageDocEventInput, nodeInsertedEventInput, nextPageLoadedEventInput].forEach(input => input.style.cssText += "width: 100%; max-width: 350px; float: none; display: block; box-sizing: border-box;");
+        nextPageDocEventInput.parentNode.parentNode.parentNode.style.cssText = "display: flex; flex-direction: column;";
         let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true, "h4", enableHistoryInput);
         let openInNewTabInput = createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab != false);
         let hidePageBarInput = createCheckbox(i18n("hideBarTips"), rulesData.opacity == 0);
@@ -10454,6 +10593,10 @@
             rulesData.enableDebug = enableDebugInput.checked;
             rulesData.updateNotification = updateNotificationInput.checked;
             rulesData.enableHistory = enableHistoryInput.checked;
+            rulesData.autopagerizeEvents = autopagerizeEventsInput.checked;
+            rulesData.nextPageDocEvent = nextPageDocEventInput.value.trim();
+            rulesData.nodeInsertedEvent = nodeInsertedEventInput.value.trim();
+            rulesData.nextPageLoadedEvent = nextPageLoadedEventInput.value.trim();
             rulesData.enableHistoryAfterInsert = enableHistoryAfterInsertInput.checked;
             rulesData.openInNewTab = openInNewTabInput.checked;
             rulesData.hideLoadingIcon = hideLoadingIconInput.checked;
@@ -11105,6 +11248,8 @@
                 } catch (e) {
                     debug('parse error:' + e.toString());
                 }
+                if (!ruleParser.allowAutoPaging(doc)) return callback(false);
+                ruleParser.notifyNextPageDoc(doc);
                 let pageElement = null;
                 let preCode = ruleParser.curSiteRule.pagePre;
                 if (preCode) {
@@ -12012,6 +12157,7 @@
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         let loadMoreSel = ruleParser.curSiteRule.loadMore;
         if (!ruleParser.curSiteRule.smart && !loadMoreSel) return null;
+        if (!loadMoreSel && ruleParser.isFormPage(doc)) return null;
         if (loadmoreBtn) return loadmoreBtn;
         let btnSel = loadMoreSel || defaultLoadmoreSel;
         if (btnSel) {
@@ -12666,21 +12812,33 @@
             let doc;
             try {
                 doc = iframe.contentDocument || iframe.contentWindow.document;
+                if (!ruleParser.allowAutoPaging(doc)) {
+                    if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                    return callback(false, false);
+                }
                 doc.hasFocus = () => true;
             } catch(e) {}
-            let pageEleTryTimes = 0;
+            let pageEleTryTimes = 0, pageDocNotified = false;
             async function checkIframe() {
                 if (urlChanged || isPause) {
                     return callback(false, false);
                 }
                 try {
                     doc = doc || iframe.contentDocument || iframe.contentWindow.document;
+                    if (!ruleParser.allowAutoPaging(doc)) {
+                        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                        return callback(false, false);
+                    }
                     if (checkEval && !await checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
                         }, waitTime);
                         return;
                     } else {
+                        if (!pageDocNotified) {
+                            pageDocNotified = true;
+                            ruleParser.notifyNextPageDoc(doc);
+                        }
                         let preCode = ruleParser.curSiteRule.pagePre, eles = null;
                         if (preCode) {
                             try {
@@ -12744,6 +12902,12 @@
                     nextPage();
                 }
                 if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
+            }
+            let maxHeight = Math.max(getBody(doc).scrollHeight, doc.documentElement.scrollHeight),currentScrollTop = 0;
+            while(currentScrollTop < maxHeight) {
+                currentScrollTop += 200;
+                getBody(doc).scrollTop = currentScrollTop;
+                doc.documentElement.scrollTop = currentScrollTop;
             }
             setTimeout(() => {
                 checkIframe();
@@ -13010,6 +13174,8 @@
                         returnFalse("Stop as same content");
                     } else {
                         orgContent = preContent;
+                        ruleParser.notifyNextPageDoc(iframeDoc);
+                        eles = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true);
                         await ruleParser.hookUrl(iframeDoc);
                         if (!nextLink || !nextLink.offsetParent) {
                             nextLink = await ruleParser.getNextLink(iframeDoc, true);
@@ -13053,6 +13219,7 @@
             emuIframe.addEventListener("load", e => {
                 try {
                     iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+                    if (!ruleParser.allowAutoPaging(iframeDoc)) return callback(false, false);
                     iframeDoc.hasFocus = () => true;
                 } catch(e) {
                     if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
@@ -13254,6 +13421,7 @@
 
     var curForceIframe;
     function forceIframe(url, callback) {
+        let pageRule = ruleParser.curSiteRule;
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let curIframe = document.createElement('iframe'), iframeDoc, pageElement = null, inAction = true;
         let loadedHandler = () => {
@@ -13328,6 +13496,8 @@
                 }, waitTime);
                 return;
             }
+            if (checkEval && !ruleParser.allowAutoPaging(iframeDoc, pageRule)) return callback(false);
+            ruleParser.notifyNextPageDoc(iframeDoc);
             loadedHandler();
         }
         curIframe.name = 'pagetual-iframe';
@@ -13340,6 +13510,7 @@
             if (isPause) return callback(false);
             try {
                 iframeDoc = curIframe.contentDocument || curIframe.contentWindow.document;
+                if (!ruleParser.allowAutoPaging(iframeDoc, pageRule)) return callback(false);
             } catch(e) {
                 debug(corsTips);
                 isPause = true;
@@ -13460,6 +13631,7 @@
 
     async function nextPage() {
         if (isPause || isLoading || forceState === 1) return;
+        let pageRule = ruleParser.curSiteRule;
         if (ruleParser.curSiteRule.delay) {
             try {
                 let checkDelay = ((typeof ruleParser.curSiteRule.delay === 'function') ? ruleParser.curSiteRule.delay : Function('"use strict";' + ruleParser.curSiteRule.delay))();
@@ -13528,6 +13700,7 @@
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
             setTimeout(() => {
+                if (!ruleParser.allowAutoPaging(document, pageRule)) return loadPageOver();
                 if (ruleParser.curSiteRule.pageElementByJs) {
                     var over = eles => {
                         if (urlChanged || isPause) {
