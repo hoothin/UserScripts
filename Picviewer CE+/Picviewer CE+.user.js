@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2026.2.6.1
+// @version              2026.9.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -55,6 +55,7 @@
 // @exclude              *://mega.*/*
 // @exclude              *://*.mega.*/*
 // @exclude              *://onedrive.live.com/*
+// @exclude              *://teams.live.com/*
 // @run-at               document-end
 // @created              2011-6-15
 // @contributionURL      https://ko-fi.com/hoothin
@@ -25005,6 +25006,12 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 var self=this;
+                document.addEventListener('click',function(e){
+                    if(self.ignoreEvents || e.pointerType === 'touch' || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) || container.contains(e.target))return;
+                    self.hide();
+                    self.ignoreEvents=true;
+                    setTimeout(() => self.ignoreEvents=false,1000);
+                },true);
                 container.addEventListener('click',function(e){
                     var buttonType;
                     var target=e.target;
@@ -27085,6 +27092,7 @@ ImgOps | https://imgops.com/#b#`;
 
         var checkFloatBarTimer, initMouse = false, composedTarget, checking = false, target, type, clientX, clientY, altKey;
         function globalMouseoverHandler(e) {
+            if (floatBar && floatBar.ignoreEvents) return;
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
             let canPreview = checkPreview(e);
