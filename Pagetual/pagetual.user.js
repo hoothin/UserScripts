@@ -8678,7 +8678,6 @@
               transition: transform .15s ease-in-out;
               float: right;
               cursor: pointer;
-              overflow: hidden;
               background-color: unset!important;
              }
              #pagetual-picker button:hover {
@@ -12152,7 +12151,7 @@
     }
 
     const loadmoreReg = /^\s*((点击?)?(这里)?((看|显示|加载|展开)(更多|剩余)|继续加载)|(點擊?)?(這裡)?((看|顯示|加載|展開)(更多|剩餘)|繼續加載)|load\s*more|もっと読み込む)[\.…▼\s\d%]*$/i;
-    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class^='load-more'],[class*=' load-more'],.show-more,button.show_more,button[data-testid='more-results-button'],#dataMoreBtn,#btn_preview_remain,.view-more-btn";
+    const defaultLoadmoreSel = ".loadMore,.LoadMore,[class^='load-more'],[class*=' load-more'],[class*='show-more'],.show-more,button.show_more,button[data-testid='more-results-button'],#dataMoreBtn,#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         let loadMoreSel = ruleParser.curSiteRule.loadMore;
