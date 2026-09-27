@@ -443,12 +443,12 @@ switch (lang) {
                     },
                     {
                         "name": "解释以下内容-Gemini",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=请解释以下内容\n`%s`} ",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=请解释以下内容\n`%s`} ",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
                         "name": "Bard",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=%s}",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
@@ -805,12 +805,12 @@ switch (lang) {
                     {
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg",
                         "name": "この内容を解説 (Gemini)",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=以下の内容を説明してください\n`%s`} "
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=以下の内容を説明してください\n`%s`} "
                     },
                     {
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg",
                         "name": "Gemini",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}"
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=%s}"
                     },
                     {
                         "name": "Poe - AIチャット",
@@ -1289,12 +1289,12 @@ switch (lang) {
                 "sites": [
                     {
                         "name": "Explain the following-Gemini",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=Explain the following content please\n`%s`} ",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=Explain the following content please\n`%s`} ",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
                         "name": "Bard",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=%s}",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
