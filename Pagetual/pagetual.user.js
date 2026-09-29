@@ -6255,6 +6255,9 @@
                 let sel = list[i];
                 let result = getAllElements(sel, source);
                 if (result.length > 0) {
+                    let links = [], others = [];
+                    for (let ele of result) (this.linkHasHref(ele) ? links : others).push(ele);
+                    result = others.concat(links);
                     for (let i = result.length - 1; i >= 0; i--) {
                         let ele = result[i];
                         if (prevReg.test(ele.innerText)) continue;
