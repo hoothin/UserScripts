@@ -12,7 +12,7 @@
 // @description:ja       画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2026.9.22.1
+// @version              2026.9.29.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://pv.hoothin.com/
@@ -46,8 +46,8 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/GM_config%20CN.js?v=23710
-// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1738227
-// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1740314
+// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_rules.js?v=1945644
+// @require              https://hoothin.github.io/UserScripts/Picviewer%20CE%2B/pvcep_lang.js?v=1945643
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -12348,20 +12348,19 @@ ImgOps | https://imgops.com/#b#`;
         return (absolute_regex.test(src) ? src : ((src.charAt(0) === "/" ? root_domain : root_page) + src));
     }
 
-    var _GM_download = (typeof GM_download == 'undefined') ? (url, name, type) => {
+    var _GM_download = (typeof GM_download == 'undefined') ? (url, name) => {
         url = canonicalUri(url);
         urlToBlob(url, (blob, ext) => {
             if(blob){
                 try {
-                    saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " + getRightSaveName(url, name, type, ext));
+                    saveAs(blob, ext && /^\w{2,5}$/.test(ext) ? name.replace(/\.\w+$/, '') + '.' + ext : name);
                 } catch(e) {
                     console.log(e);
                 }
             }
         });
-    } : (url, name, type) => {
+    } : (url, name) => {
         url = canonicalUri(url);
-        name = document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " + getRightSaveName(url, name, type);
         let urlSplit = ["", ""];
         if (url.split) {
             urlSplit = url.split("/");
@@ -13396,18 +13395,52 @@ ImgOps | https://imgops.com/#b#`;
             unsafeWindow.URL.createObjectURL = createObjectURLProxy;
         }
 
-        function downloadImg(url, name, type, over) {
+        function getSaveName(url, name, type, data = {}) {
+            const original = getRightSaveName(url, name, type);
+            const img = data.img || null;
+            const pageTitle = data.pageTitle || document.title;
+            const rule = matchedRule && matchedRule.saveName;
+            if (rule != null && rule !== '') {
+                const link = img && img.closest && img.closest('a[href]');
+                const context = {
+                    url: url,
+                    pageUrl: data.pageUrl || location.href,
+                    linkUrl: data.iPASrc || (data.imgPA && data.imgPA.href) || (link && link.href) || '',
+                    img: img,
+                    title: pageTitle,
+                    filename: getRightSaveName(url, '', 0).replace(/\.\w+$/, ''),
+                    description: data.description || name || (img && (img.title || img.alt)) || ''
+                };
+                try {
+                    let custom = typeof rule === 'function' ? rule(context) :
+                        typeof rule === 'string' ? rule.replace(/\{(url|pageUrl|linkUrl|title|filename|description)\}/g, (_, key) => context[key]) : rule;
+                    if (typeof custom !== 'string') throw new TypeError('saveName must return a string');
+                    custom = custom.replace(/[\x00-\x1f"*\/:<>?\\|]/g, '').trim().replace(/[. ]+$/, '').replace(/\.(?:jpe?g|png|gif|webp|avif|bmp|svg|ico|tiff?)$/i, '');
+                    if (custom) return custom.slice(-200) + original.slice(original.lastIndexOf('.'));
+                } catch (e) {
+                    console.warn('Picviewer CE+: invalid saveName rule', e);
+                }
+            }
+            return (prefs.saveNameAddTitle ? pageTitle.replace(/[\*\/:<>\?\\\|]/g, '') + ' - ' : '') + original;
+        }
+
+        function downloadImg(url, name, type, over, data) {
+            downloadNamedImg(url, getSaveName(url, name, type, data), over);
+        }
+
+        // The name is already resolved; retries and batch downloads must not apply the rule again.
+        function downloadNamedImg(url, name, over) {
             if (/^blob:/.test(url)) {
                 const blob = getBlob(url);
                 if (blob) {
                     let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
                     if (ext === "none") ext = "png";
                     try {
-                        saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                        saveAs(blob, ext && /^\w{2,5}$/.test(ext) ? name.replace(/\.\w+$/, '') + '.' + ext : name);
                         over && over();
                         return;
                     } catch (e) {
-                        _GM_download(url, name, type);
+                        _GM_download(url, name);
                         over && over();
                         return;
                     }
@@ -13416,15 +13449,15 @@ ImgOps | https://imgops.com/#b#`;
             if(canvas && (/^data:/.test(url) || url.split("/")[2] == document.domain)){
                 urlToBlobWithFetch(url, (blob, ext)=>{
                     if(!blob){
-                        _GM_download(url, name, type);
+                        _GM_download(url, name);
                         over && over();
                         return;
                     }
                     try {
-                        saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                        saveAs(blob, ext && /^\w{2,5}$/.test(ext) ? name.replace(/\.\w+$/, '') + '.' + ext : name);
                         over && over();
                     } catch(e) {
-                        _GM_download(url, name, type);
+                        _GM_download(url, name);
                         over && over();
                     }
                 });
@@ -13432,14 +13465,14 @@ ImgOps | https://imgops.com/#b#`;
                 urlToBlob(url, (blob, ext) => {
                     if(blob){
                         try {
-                            saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                            saveAs(blob, ext && /^\w{2,5}$/.test(ext) ? name.replace(/\.\w+$/, '') + '.' + ext : name);
                             over && over();
                         } catch(e) {
-                            _GM_download(url, name, type);
+                            _GM_download(url, name);
                             over && over();
                         }
                     }else{
-                        _GM_download(url, name, type);
+                        _GM_download(url, name);
                         over && over();
                     }
                 });
@@ -15211,14 +15244,12 @@ ImgOps | https://imgops.com/#b#`;
                 }
 
                 eleMaps['head-command-drop-list-others'].querySelector('input[data-command="scrollToEndAndReload"]').checked = prefs.gallery.scrollEndAndLoad;
-                let srcSplit, downloading=false, saveParams;
+                let downloading=false, saveParams;
                 async function getSaveParams() {
                     let nodes = self.eleMaps['sidebar-thumbnails-container'].querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]:not(.ignore)');
-                    let saveParams = [],saveIndex=0;
+                    let saveParams = [];
                     for (const node of nodes) {
                         if (unsafeWindow.getComputedStyle(node).display !== "none") {
-                            saveIndex++;
-
                             let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                             if (xhr) {
                                 self.showTips("Sending request...", 3000);
@@ -15249,22 +15280,14 @@ ImgOps | https://imgops.com/#b#`;
                             }
 
 
-                            if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
-                            else {
-                                srcSplit = node.dataset.src || '';
-                            }
                             let title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
                             title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
-                            title = getRightSaveName(srcSplit, title, prefs.saveName);
-                            let picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
-                            let host = hostArr[hostArr.length-2];
-                            saveParams.push([node.dataset.src, picName]);
-                            if (node.dataset.srcs && node.dataset.srcs != node.dataset.src) {
-                                node.dataset.srcs.split(",").forEach(src => {
-                                    saveParams.push([src, picName]);
-                                });
-                            }
-                            //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
+                            const data = self.getPropBySpanMark(node);
+                            const srcs = new Set([node.dataset.src].concat(node.dataset.srcs ? node.dataset.srcs.split(",") : []));
+                            srcs.forEach(src => {
+                                const picName = String(saveParams.length + 1).padStart(3, '0') + '-' + getSaveName(src, title, prefs.saveName, data);
+                                saveParams.push([src, picName]);
+                            });
                         }
                     }
                     return saveParams;
@@ -15465,7 +15488,7 @@ ImgOps | https://imgops.com/#b#`;
                                 imgReady(self.src, {
                                     ready:function() {
                                         self.img.style.display = "none";
-                                        fiddleWindow = new ImgWindowC(this);
+                                        fiddleWindow = new ImgWindowC(this, {...self.getPropBySpanMark(self.selected), src: this.src});
                                         let targetSrc = self.src;
                                         fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
                                             if (self.img.style.display === "none") {
@@ -15477,7 +15500,7 @@ ImgOps | https://imgops.com/#b#`;
                             } else {
                                 let target = self.img;
                                 let classNameBak = target.className;
-                                fiddleWindow = new ImgWindowC(target);
+                                fiddleWindow = new ImgWindowC(target, {...self.getPropBySpanMark(self.selected), src: target.src});
                                 self.img = null;
                                 let targetSrc = self.src;
                                 fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
@@ -15833,7 +15856,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (self.img === null || self.img.style.display === 'none') return;
                     if (/^video$/i.test(target.nodeName)) {
                         let classNameBak = target.className;
-                        let fiddleWindow = new ImgWindowC(target);
+                        let fiddleWindow = new ImgWindowC(target, {...self.getPropBySpanMark(self.selected), src: target.src});
                         self.img = null;
                         fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
                             if (self.img == null) {
@@ -15849,7 +15872,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
 
                     let listenRemove = (img) => {
-                        var fiddleWindow = new ImgWindowC(img);
+                        var fiddleWindow = new ImgWindowC(img, {...self.getPropBySpanMark(self.selected), src: img.src});
                         fiddleWindow.imgWindow.addEventListener("pv-removeImgWindow", e => {
                             if (self.img.style.display === 'none') {
                                 self.img.style.display = "";
@@ -16066,13 +16089,8 @@ ImgOps | https://imgops.com/#b#`;
                         let title=node.nextElementSibling.title;
                         title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
                         title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
-                        let srcSplit;
-                        if (imgSrc.indexOf('data') === 0) srcSplit = "";
-                        else {
-                            srcSplit=imgSrc || '';
-                        }
-                        title = getRightSaveName(srcSplit, title, prefs.saveName);
-                        var picName = (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title || title == document.title ? "" : "-" + title);
+                        title = getSaveName(imgSrc, title, prefs.saveName, self.getPropBySpanMark(conItem._spanMark));
+                        var picName = String(saveIndex).padStart(3, '0') + '-' + title;
                         saveParams.push([imgSrc, picName]);
                     }
                     self.batchDownload(saveParams, ()=>{
@@ -16415,7 +16433,7 @@ ImgOps | https://imgops.com/#b#`;
                     for(let i=0;i<threadNum;i++){
                         let saveParam=saveParams.shift();
                         if(saveParam){
-                            downloadImg(saveParam[0], saveParam[1], prefs.saveName);
+                            downloadNamedImg(saveParam[0], saveParam[1]);
                         }else{
                             callback();
                             break;
@@ -16703,9 +16721,10 @@ ImgOps | https://imgops.com/#b#`;
                     var nodeStyle = unsafeWindow.getComputedStyle(node);
                     let curNode = node;
                     let imgSpan = document.createElement('span');
+                    imgSpan._spanMark = node;
                     if (nodeStyle.display == "none") imgSpan.style.display = "none";
                     let popupImgWin = (i) => {
-                        let imgwin=new ImgWindowC(i);
+                        let imgwin=new ImgWindowC(i, {...self.getPropBySpanMark(curNode), src: i.src});
                         if(prefs.imgWindow.overlayer.shown){
                             imgwin.blur(true);
                             self.curImgWin=imgwin;
@@ -16725,7 +16744,7 @@ ImgOps | https://imgops.com/#b#`;
                                             self.curImgWin.remove();
                                             let curImgEle=document.createElement("img");
                                             curImgEle.src=imgNode.dataset.src||imgNode.src;
-                                            let imgwin=new ImgWindowC(curImgEle);
+                                            let imgwin=new ImgWindowC(curImgEle, {...self.getPropBySpanMark(targetImgSpan._spanMark), src: curImgEle.src});
                                             imgwin.blur(true);
                                             self.curImgWin=imgwin;
                                             self.selectViewmore(targetImgSpan, imgNode.src);
@@ -16922,7 +16941,7 @@ ImgOps | https://imgops.com/#b#`;
                     let defaultDl=()=>{
                         self.addDlSpan(img, imgSpan, curNode, e=>{
                             e.stopPropagation();
-                            downloadImg(curNode.dataset.src, curNode.title, prefs.saveName);
+                            downloadImg(curNode.dataset.src, curNode.title, prefs.saveName, null, self.getPropBySpanMark(curNode));
                             return true;
                         });
                     };
@@ -16936,7 +16955,7 @@ ImgOps | https://imgops.com/#b#`;
                                 if(img.width>=88 && img.height>=88){
                                     self.addDlSpan(img, imgSpan, curNode, e=>{
                                         e.stopPropagation();
-                                        downloadImg(curNode.dataset.src, curNode.title, prefs.saveName);
+                                        downloadImg(curNode.dataset.src, curNode.title, prefs.saveName, null, self.getPropBySpanMark(curNode));
                                         return true;
                                     });
                                 }
@@ -17706,7 +17725,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (!src) return;
                 for (let i = 0; i < this.data.length; i++) {
                     if (this.data[i].src == src) {
-                        return this.data[i][key];
+                        return key ? this.data[i][key] : this.data[i];
                     }
                 }
                 return;
@@ -18058,15 +18077,16 @@ ImgOps | https://imgops.com/#b#`;
                     case prefs.floatBar.keys.actual:
                     case prefs.floatBar.keys.current:
                         if (e.shiftKey) return;
+                        const data = this.getPropBySpanMark(this.selected);
                         imgReady(this.src,{
                             ready:function(){
-                                new ImgWindowC(this);
+                                new ImgWindowC(this, {...data, src: this.src});
                             },
                         });
                         break;
                     case prefs.floatBar.keys.download:
                         if (e.shiftKey) return;
-                        downloadImg(this.img.src, this.selected.title, prefs.saveName);
+                        downloadImg(this.img.src, this.selected.title, prefs.saveName, null, this.getPropBySpanMark(this.selected));
                         break;
                 }
             },
@@ -21162,7 +21182,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
                         _GM_openInTab(self.img.src, {active:false});
                     } else {
-                        downloadImg(self.img.src, (self.data.img.title || self.data.img.alt), prefs.saveName);
+                        downloadImg(self.img.src, (self.data.img.title || self.data.img.alt), prefs.saveName, null, self.data);
                     }
                 }, true);
 
@@ -23355,7 +23375,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (!prefs.floatBar.keys.enable) return;
                 if (window.getSelection().toString()) return;
                 if (this.data && this.data.img && e.key.toLowerCase() == prefs.floatBar.keys.download) {
-                    downloadImg(this.img.src, (this.data.img.title || this.data.img.alt), prefs.saveName);
+                    downloadImg(this.img.src, (this.data.img.title || this.data.img.alt), prefs.saveName, null, this.data);
                     e.preventDefault();
                     e.stopPropagation();
                     return;
@@ -24840,7 +24860,7 @@ ImgOps | https://imgops.com/#b#`;
                     },'*');
                 };
 
-                if(this.openInTopWindow && isFrame && topWindowValid!==false && buttonType!='magnifier' && !isLargeFrame()){
+                if(this.openInTopWindow && isFrame && topWindowValid!==false && buttonType!='magnifier' && buttonType!='download' && !isLargeFrame()){
                     if(topWindowValid){
                         openInTop();
                     }else{//先发消息问问顶层窗口是不是非frameset窗口
@@ -24912,7 +24932,7 @@ ImgOps | https://imgops.com/#b#`;
                         new MagnifierC(this.img,this.data);
                         break;
                     case 'download':
-                        downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
+                        downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName, null, this.data);
                         break;
                     case "copy":
                         _GM_setClipboard(this.data.src || this.data.imgSrc);
@@ -25134,6 +25154,10 @@ ImgOps | https://imgops.com/#b#`;
                     ');
             },
             start:function(data){
+                data.pageUrl = data.pageUrl || location.href;
+                data.pageTitle = data.pageTitle || document.title;
+                const link = data.img && data.img.closest && data.img.closest('a[href]');
+                data.iPASrc = data.iPASrc || (link && link.href) || '';
                 if (stitcher && stitcher.selecting) {
                     this.hide();
                     return false;
@@ -25428,7 +25452,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 if (buttonType === 'download' && !this.data.xhr) {
                     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
-                    downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
+                    downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName, null, this.data);
                     e.stopPropagation();
                     e.preventDefault();
                     return;
@@ -25839,6 +25863,8 @@ ImgOps | https://imgops.com/#b#`;
 
             var ret = {
                 all: matchedRule.all,
+                pageUrl: img.ownerDocument.location ? img.ownerDocument.location.href : img.ownerDocument.baseURI,
+                pageTitle: img.ownerDocument.title,
                 src: src,                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
                 type: type,                // 通过哪种方式得到的
@@ -25988,6 +26014,9 @@ ImgOps | https://imgops.com/#b#`;
                                     }
                                     if (site.description) {
                                         self.description = site.description;
+                                    }
+                                    if (site.saveName != null) {
+                                        self.saveName = site.saveName;
                                     }
                                     if (site.clickToOpen) {
                                         self.clickToOpen = site.clickToOpen;
@@ -26245,7 +26274,7 @@ ImgOps | https://imgops.com/#b#`;
                     switch(command){
                         case 'open':{
                             if (data.buttonType === 'download') {
-                                downloadImg(data.src, document.title, prefs.saveName);
+                                downloadImg(data.src, document.title, prefs.saveName, null, data.data);
                                 return;
                             }
                             var img=document.createElement('img');
@@ -28204,7 +28233,7 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("saveName"),
                     type: 'select',
                     options: {
-                        0: i18n("default"),
+                        0: i18nData.saveNameUrlFirst || i18n("default"),
                         1: i18n("textFirst"),
                         2: i18n("onlyUrl"),
                         3: i18n("urlAndText")
