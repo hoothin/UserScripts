@@ -6385,6 +6385,7 @@
                 "body [class*=paging]>em+a",
                 "body [class*=paginat] [class*=current]+li>a",
                 "a.page_next",
+                "._nextEpisode",
                 "body a[class*=page__next]",
                 "body [class*=pager]>a.next",
                 "body [class*=pagination-next]>a",
