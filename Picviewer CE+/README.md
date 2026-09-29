@@ -214,6 +214,59 @@ They won't limited by websites that have a strict Content Security Policy that d
 </ul>
  </details>
 
+## Custom download filenames
+
+In settings, **Image file naming** chooses between the original filename (from the image URL), the image description (usually title/alt), or both. **Prefix filenames with the page title** adds the page title.
+
+A site rule can override both settings with `saveName`. Use a template for a fixed artist name:
+
+```json
+{
+    "name": "My artist",
+    "url": "^https://example\\.com/",
+    "saveName": "my-artist-{filename}"
+}
+```
+
+Templates accept `{url}`, `{pageUrl}`, `{linkUrl}`, `{title}`, `{filename}` and `{description}`. For example, `my-artist-{filename}` saves `photo.jpg` as `my-artist-photo.jpg`.
+
+For URL extraction, add a synchronous function to a JavaScript rule in the standalone custom-rule userscript shown above (functions cannot be written in JSON):
+
+```js
+{
+    name: "Artist from URL",
+    url: /^https:\/\/example\.com\//,
+    saveName: ({ linkUrl, pageUrl, filename }) => {
+        const artist = new URL(linkUrl || pageUrl).pathname.match(/\/users\/([^/]+)/);
+        return artist ? artist[1] + "-" + filename : "";
+    }
+}
+```
+
+For a query parameter such as `?user_id=12345`, replace the function with:
+
+```js
+saveName: ({ pageUrl, filename }) => {
+    const uid = new URL(pageUrl).searchParams.get("user_id");
+    return uid ? uid + "-" + filename : "";
+}
+```
+
+| Field | Value passed to the function |
+| --- | --- |
+| `url` | Image URL being downloaded |
+| `pageUrl` | Page URL recorded when the image was collected |
+| `linkUrl` | Link surrounding the original image, or an empty string |
+| `img` | Original image element, or `null` if unavailable |
+| `title` | Source page title |
+| `filename` | Original filename without extension; defaults to `image` |
+| `description` | Image description from the rule or title/alt |
+
+Specify `url` for a site naming rule, or reuse an existing rule's `name` to inherit its URL match. Invalid filename characters are removed and the image extension is added automatically. Empty results, invalid return values and errors fall back to the global settings. Batch downloads add a sequence number to prevent duplicate names in ZIP files.
+
+URL extraction only uses the provided URLs; it makes no extra requests. For sites such as X, a numeric UID can only be extracted if it is already present in one of those URLs. Use a fixed custom prefix otherwise.
+
+
 ## Blank Gallery Page
 [https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html](https://hoothin.github.io/UserScripts/Picviewer%20CE+/gallery.html)
 

@@ -17,7 +17,8 @@ or
   getImage(a, p): Replace the image URL when pointing to an image, 'a' refers to the first parent A element, and 'p' is an array of all parent elements, see the example below for details
 }
 Other parameter items can be added as needed.
-Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen should only be used after specifying the url.
+Note that css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen/saveName should only be used after specifying the url.
+saveName overrides download filenames with a template (e.g. "artist-{filename}") or a synchronous function receiving {url, pageUrl, linkUrl, img, title, filename, description}; see README.md for examples.
 xhr is used to obtain the attributes of the pictures on the inner pages.
     1. First, use xhr.url() to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
     2. And get pictures through xhr.
@@ -635,6 +636,12 @@ var siteInfo = [
         name: "推特",
         url: /https:\/\/(www\.)?(x|twitter)\.com|pbs\.twimg\.com/,
         description: ["./..", "aria-label"],
+        saveName: function({url, pageUrl, linkUrl}) {
+            const media = new URL(url).pathname.match(/^\/media\/([^/.?:]+)/);
+            if (!media) return "";
+            const tweet = [linkUrl, pageUrl].map(href => href.match(/^https?:\/\/(?:www\.)?(?:x|twitter)\.com\/(\w+)\/status\/(\d+)(?:\/photo\/(\d+))?(?:[/?#]|$)/i)).find(Boolean);
+            return tweet ? tweet[1] + "-" + tweet[2] + "-" + (tweet[3] || media[1]) : media[1];
+        },
         getImage: function(a, p){
             let newsrc = this.src.replace("_normal.",".").replace("_200x200.",".").replace("_mini.",".").replace("_bigger.",".").replace(/_x\d+\./,".");
             if (newsrc != this.src) return newsrc;
