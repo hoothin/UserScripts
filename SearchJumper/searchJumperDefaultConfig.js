@@ -1,5 +1,66 @@
 //Open setting page to change data, NOT HERE!
 let lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
+const linkPreviewLabels = {
+    "zh-CN": ["在新标签页打开", "关闭预览", "链接预览"],
+    "zh-TW": ["在新分頁開啟", "關閉預覽", "連結預覽"],
+    "ja": ["新しいタブで開く", "プレビューを閉じる", "リンクプレビュー"],
+    "ru": ["Открыть в новой вкладке", "Закрыть просмотр", "Предпросмотр ссылки"]
+}[lang === "zh-SG" ? "zh-CN" : lang] || ["Open in new tab", "Close preview", "Link preview"];
+const linkPreviewUrl = `showTips:
+<style>
+.search-jumper-tips:has(.sj-link-preview) {
+  background: none; box-shadow: none; border: 0; padding: 0;
+  max-width: calc(100vw - 24px); max-height: calc(100vh - 24px);
+  width: auto; overflow: visible;
+}
+.search-jumper-tips:has(.sj-link-preview) > div { padding: 0; margin: 0; max-width: none; }
+.sj-link-preview {
+  --preview-surface: #fff; --preview-header: #f5f6f8; --preview-text: #30353c;
+  --preview-muted: #6a7380; --preview-line: #dde1e6; --preview-hover: #e7eaf0;
+  display: flex; flex-direction: column; box-sizing: border-box;
+  width: min(640px, calc(100vw - 24px)); height: min(540px, calc(100vh - 24px));
+  min-width: min(280px, calc(100vw - 24px)); min-height: min(200px, calc(100vh - 24px));
+  max-width: calc(100vw - 24px); max-height: calc(100vh - 24px);
+  resize: both; overflow: hidden; border: 1px solid var(--preview-line); border-radius: 10px;
+  background: var(--preview-surface); color: var(--preview-text);
+  box-shadow: 0 8px 28px #0002; font: 14px/1.4 system-ui, sans-serif; text-shadow: none; text-align: left;
+}
+.sj-link-preview * { margin: 0; max-width: none; }
+.sj-link-preview .sj-preview-header {
+  display: flex; align-items: center; gap: 10px; flex: 0 0 42px; box-sizing: border-box; width: 100%;
+  padding: 0 8px 0 14px; border-bottom: 1px solid var(--preview-line);
+  background: var(--preview-header);
+}
+.sj-link-preview .sj-preview-header svg { width: 16px; height: 16px; flex: none; color: var(--preview-muted); }
+.sj-link-preview .sj-preview-header a {
+  display: block; flex: 1; min-width: 0; overflow: hidden; white-space: nowrap;
+  text-overflow: ellipsis; color: inherit; text-decoration: none; font: 500 13px/1.5 system-ui, sans-serif;
+}
+.sj-link-preview .sj-preview-header a:hover { text-decoration: underline; }
+.search-jumper-tips .sj-link-preview button[data-close] {
+  position: static; display: grid; place-items: center; flex: none; width: 28px; height: 28px;
+  margin: 0; padding: 0; border: 0; border-radius: 6px; cursor: pointer;
+  background: transparent; color: var(--preview-muted); font: 22px/1 system-ui, sans-serif;
+}
+.search-jumper-tips .sj-link-preview button[data-close]:hover { background: var(--preview-hover); color: var(--preview-text); }
+.sj-link-preview a:focus-visible, .sj-link-preview button:focus-visible { outline: 2px solid #8ca8c9; outline-offset: 2px; }
+.sj-link-preview iframe { display: block; flex: 1; min-height: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+@media (prefers-color-scheme: dark) {
+  .sj-link-preview {
+    --preview-surface: #1c2127; --preview-header: #24292f; --preview-text: #d3d8df;
+    --preview-muted: #9aa4b1; --preview-line: #ffffff1a; --preview-hover: #ffffff12;
+    color-scheme: dark; box-shadow: 0 8px 28px #0005;
+  }
+}
+</style>
+<div class="sj-link-preview">
+  <div class="sj-preview-header" data-drag>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14 4h6v6m0-6L10 14M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg>
+    <a href="%t" target="_blank" rel="noopener noreferrer" title="${linkPreviewLabels[0]}" data-drag>%t</a>
+    <button type="button" data-close title="${linkPreviewLabels[1]}" aria-label="${linkPreviewLabels[1]}">×</button>
+  </div>
+  <iframe src="%t" title="${linkPreviewLabels[2]}"></iframe>
+</div>`;
 let sitesConfig = {};
 switch (lang) {
     case "zh-CN":
@@ -274,7 +335,7 @@ switch (lang) {
                     },
                     {
                         "name": "🔗 链接预览",
-                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>",
+                        "url": linkPreviewUrl,
                         "description": "需要配合扩展“Ignore X-Frame headers”使用"
                     },
                     {
@@ -382,12 +443,12 @@ switch (lang) {
                     },
                     {
                         "name": "解释以下内容-Gemini",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=请解释以下内容\n`%s`} ",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=请解释以下内容\n`%s`} ",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
                         "name": "Bard",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=%s}",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
@@ -669,7 +730,7 @@ switch (lang) {
                     {
                         "description": "拡張機能“Ignore X-Frame headers”と併用する必要があります",
                         "name": "🔗  リンクプレビュー",
-                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
+                        "url": linkPreviewUrl
                     },
                     {
                         "description": "ctrl バックグラウンドタブ alt 小窓 ctrl+shift シークレットウィンドウ",
@@ -744,12 +805,12 @@ switch (lang) {
                     {
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg",
                         "name": "この内容を解説 (Gemini)",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=以下の内容を説明してください\n`%s`} "
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=以下の内容を説明してください\n`%s`} "
                     },
                     {
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg",
                         "name": "Gemini",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}"
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=%s}"
                     },
                     {
                         "name": "Poe - AIチャット",
@@ -1134,7 +1195,7 @@ switch (lang) {
                     },
                     {
                         "name": "🔗 Preview link",
-                        "url": "showTips:\n<style>\n.search-jumper-tips{\n    background:unset;\n    box-shadow:unset;\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips * {\n    max-width: unset;\n    width: auto;\n}\n.search-jumper-tips iframe{\n    background: #f5f5f5e0;\n    box-shadow: 0px 0px 10px 0px #000;\n    width: 620px;\n    height: 500px;\n    resize: auto;\n}\n</style>\n<iframe src=\"%t\"></iframe>"
+                        "url": linkPreviewUrl
                     },
                     {
                         "name": "Cheap VPS",
@@ -1228,12 +1289,12 @@ switch (lang) {
                 "sites": [
                     {
                         "name": "Explain the following-Gemini",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=Explain the following content please\n`%s`} ",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=Explain the following content please\n`%s`} ",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
                         "name": "Bard",
-                        "url": "https://gemini.google.com/app#p{.ql-editor.textarea=%s}",
+                        "url": "https://gemini.google.com/app#p{rich-textarea>div>p=%s}",
                         "icon": "https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg"
                     },
                     {
