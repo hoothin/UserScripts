@@ -6502,6 +6502,17 @@
     "action": 2
 },
 {
+    "name": "Meneame",
+    "type": 0,
+    "action": 1,
+    "url": "^https://(www\\.)?meneame\\.net",
+    "author": "vieller",
+    "pageElement": "id('newswrap')[not(@class='story')]/div[contains(@class, 'news-summary')]|//div[@class='contents-body']/div[contains(@class, 'news-summary')]|//ol[contains(@class, 'comments-list')]|//div[@class='vote-negative-alert']|//div[contains(@class, 'pages')][last()]",
+    "nextLink": "//span[@class='current']/following-sibling::a[last()]",
+    "css": ".avatar {display: initial !important;}",
+    "pageAction": "$('span.ts').each(to_date);"
+},
+{
   "name": "xHamster",
   "url": "^https://([\\w]+\\.)?(xhamster|xhaccess|xhamster19)\\.(com|desi)/",
   "author": "vieller",
