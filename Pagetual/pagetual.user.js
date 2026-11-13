@@ -4542,7 +4542,7 @@
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
     const firstRunPage = "https://pagetual.hoothin.com/firstRun";
-    const wedataRulesUrl = "http://wedata.net/databases/AutoPagerize/items_all.json";
+    const wedataRulesUrl = "https://hoothin.github.io/UserScripts/Pagetual/items_all.json"; // wedata.net DNS is dead (SERVFAIL); use the GitHub mirror
     const wedataMirrorRulesUrl = "https://hoothin.github.io/UserScripts/Pagetual/items_all.json";
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)|^https:\/\/pagetual\.hoothin\.com\/.*first(Run|-run)\.html/i;
